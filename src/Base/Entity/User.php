@@ -71,4 +71,12 @@ class User
     {
         return $this->surname;
     }
+
+    /**
+     * @return string
+     */
+    public function getFullname()
+    {
+        return $this->forename . ' ' . $this->surname;
+    }
 }
