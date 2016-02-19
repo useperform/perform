@@ -1,2 +1,5 @@
 /vendor/
 /composer.lock
+src/*/node_modules
+src/*/Resources/vendor
+src/*/Resources/public/css

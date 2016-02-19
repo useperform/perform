@@ -1,0 +1,15 @@
+{
+  "name": "AdminBaseBundle",
+  "authors": [
+    "Glynn Forrest <me@glynnforrest.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "proprietary",
+  "homepage": "",
+  "private": true,
+  "dependencies": {
+    "bootstrap-sass": "^3.3.6"
+  }
+}
