@@ -1,0 +1,22 @@
+{
+    "name": "glynnforrest/admin-bundles",
+    "description": "Symfony admin bundles",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Glynn Forrest",
+            "email": "me@glynnforrest.com"
+        }
+    ],
+    "require": {
+        "symfony/framework-bundle": "^3.0",
+        "phpunit/phpunit": "^4.8"
+    },
+    "require-dev": {
+    },
+    "autoload": {
+        "psr-4": {
+            "Admin\\": "src"
+        }
+    }
+}
