@@ -2,5 +2,4 @@
 /composer.lock
 src/*/node_modules
 src/*/Resources/vendor
-src/*/Resources/public/css
-src/Base/Resources/public/fa-fonts
+src/*/Resources/public
