@@ -1,7 +1,3 @@
-var $ = require('jquery');
-require("./lib/dcjqaccordian.js")
-require("../vendor/jquery.cookie/jquery.cookie.js")
-
 $(function() {
   $('#nav-accordion').dcAccordion({
     eventType: 'click',
