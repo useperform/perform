@@ -1,0 +1,7 @@
+services:
+    admin_base.routing.crud:
+        class: Admin\Base\Routing\CrudControllerLoader
+        public: false
+        arguments: ['@controller_name_converter']
+        tags:
+            - {name: routing.loader}
