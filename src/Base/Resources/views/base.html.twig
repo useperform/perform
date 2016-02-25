@@ -7,7 +7,64 @@
     <link rel="stylesheet" type="text/css" href="{{asset('bundles/adminbase/css/app.css')}}" />
   </head>
   <body>
-    {% block content %}
-    {% endblock %}
+    <section id="container">
+      <header class="header black-bg">
+        <div class="sidebar-toggle-box">
+          <div class="fa fa-minus-square-o" id="menu-toggle" data-toggle="tooltip" data-placement="right" title="Toggle Navigation"></div>
+        </div>
+
+        <a href="{{path('admin_base_dashboard_index')}}" class="logo">Site Administration</a>
+        <div class="top-menu">
+          <ul class="nav pull-right top-menu">
+            <li><a class="logout" href="/">Logout</a></li>
+          </ul>
+        </div>
+      </header>
+
+      <aside>
+        <div id="sidebar" class="nav-collapse ">
+          <ul class="sidebar-menu" id="nav-accordion">
+
+            <li class="mt">
+              <a href="">
+                <i class="fa fa-dashboard"></i>
+                Dashboard
+              </a>
+            </li>
+            <li class="sub-menu">
+              <a href="javascript:;" >
+                <i class="fa fa-briefcase"></i>
+                Media
+              </a>
+              <ul class="sub">
+                <li><a href="">List</a></li>
+                <li><a href="">Upload</a></li>
+              </ul>
+            </li>
+
+          </ul>
+        </div>
+      </aside>
+
+      <section id="main-content">
+        <section class="wrapper site-min-height">
+          {% block workspace %}
+          {% endblock %}
+        </section>
+      </section>
+
+      <footer class="site-footer">
+        <div class="text-center">
+          A <a target="_blank" href="//glynnforrest.com">glynnforrest.com</a> project.
+        </div>
+      </footer>
+
+    </section>
+
+    <script src="{{asset('bundles/adminbase/vendor/jquery/dist/jquery.min.js')}}"></script>
+    <script src="{{asset('bundles/adminbase/vendor/jquery.cookie/jquery.cookie.js')}}"></script>
+    <script src="{{asset('bundles/adminbase/js/lib/dcjqaccordian.js')}}"></script>
+    <script src="{{asset('bundles/adminbase/vendor/bootstrap-sass/assets/javascripts/bootstrap.min.js')}}"></script>
+    <script src="{{asset('bundles/adminbase/js/admin-base.js')}}"></script>
   </body>
 </html>
