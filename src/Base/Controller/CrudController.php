@@ -12,6 +12,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
  **/
 abstract class CrudController extends Controller
 {
+    public static function getCrudActions()
+    {
+        return [
+            '/list' => 'list',
+            '/view' => 'view',
+            '/create' => 'create',
+            '/edit' => 'edit',
+            '/delete' => 'delete',
+        ];
+    }
+
     /**
      * @Template
      */
