@@ -5,3 +5,13 @@ services:
         arguments: ['@controller_name_converter']
         tags:
             - {name: routing.loader}
+
+    admin_base.listener.crud_template:
+        class: Admin\Base\EventListener\CrudTemplateListener
+        arguments: ['@service_container']
+        tags:
+            -
+                name: kernel.event_listener
+                event: kernel.controller
+                method: onKernelController
+                priority: -200
