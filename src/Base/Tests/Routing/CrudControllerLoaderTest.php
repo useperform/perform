@@ -39,7 +39,7 @@ class CrudControllerLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
 
         $routes = [
-            '/list' => 'list',
+            '/' => 'list',
             '/view' => 'view',
             '/create' => 'create',
             '/edit' => 'edit',
