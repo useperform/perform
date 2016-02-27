@@ -16,10 +16,10 @@ abstract class CrudController extends Controller
     {
         return [
             '/' => 'list',
-            '/view' => 'view',
+            '/view/{id}' => 'view',
             '/create' => 'create',
-            '/edit' => 'edit',
-            '/delete' => 'delete',
+            '/edit/{id}' => 'edit',
+            '/delete/{id}' => 'delete',
         ];
     }
 

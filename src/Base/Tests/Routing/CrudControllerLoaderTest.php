@@ -40,10 +40,10 @@ class CrudControllerLoaderTest extends \PHPUnit_Framework_TestCase
 
         $routes = [
             '/' => 'list',
-            '/view' => 'view',
+            '/view/{id}' => 'view',
             '/create' => 'create',
-            '/edit' => 'edit',
-            '/delete' => 'delete',
+            '/edit/{id}' => 'edit',
+            '/delete/{id}' => 'delete',
         ];
 
         foreach ($collection as $route) {
