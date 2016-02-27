@@ -16,7 +16,10 @@
               {% for entity in entities %}
                 <tr>
                   <td>{{entity.id}}</td>
-                  <td><a href="view/{{entity.id}}">View</a></td>
+                  <td>
+                    <a href="view/{{entity.id}}">View</a>
+                    <a href="#" data-action="delete/{{entity.id}}" data-toggle="modal" data-target="#modal-delete">Delete</a>
+                  </td>
                 </tr>
               {% endfor %}
             </tbody>
@@ -25,4 +28,8 @@
       </div>
     </div>
   </div>
+{% endblock %}
+
+{% block extras %}
+  {% include 'AdminBaseBundle:Crud/modal/delete.html.twig' %}
 {% endblock %}
