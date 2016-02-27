@@ -25,7 +25,11 @@ abstract class CrudController extends Controller
 
     public function listAction()
     {
-        return [];
+        $repo = $this->getDoctrine()->getRepository($this->entity);
+
+        return [
+            'entities' => $repo->findAll(),
+        ];
     }
 
     public function viewAction()
