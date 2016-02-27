@@ -2,4 +2,19 @@
 
 {% block workspace %}
   <h3><i class="fa fa-angle-right"></i> View</h3>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      Entity
+    </div>
+    <div class="panel-body">
+      <div class="form-group">
+        <label class="col-sm-2 control-label">
+          ID
+        </label>
+        <div class="col-sm-10">
+          {{entity.id}}
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}

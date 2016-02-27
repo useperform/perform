@@ -4,6 +4,7 @@ namespace Admin\Base\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * CrudController
@@ -32,9 +33,17 @@ abstract class CrudController extends Controller
         ];
     }
 
-    public function viewAction()
+    public function viewAction($id)
     {
-        return [];
+        $repo = $this->getDoctrine()->getRepository($this->entity);
+        $entity = $repo->find($id);
+        if (!$entity) {
+            throw new NotFoundHttpException();
+        }
+
+        return [
+            'entity' => $entity,
+        ];
     }
 
     public function createAction()
