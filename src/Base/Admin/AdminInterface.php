@@ -9,4 +9,8 @@ namespace Admin\Base\Admin;
  **/
 interface AdminInterface
 {
+    /**
+     * @return array
+     */
+    public function getListFields();
 }

@@ -40,13 +40,14 @@ abstract class CrudController extends Controller
 
     public function listAction()
     {
+        $admin = new \Admin\Base\Admin\UserAdmin();
         $repo = $this->getDoctrine()->getRepository($this->entity);
         $deleteForm = $this->createFormBuilder()->getForm();
         $deleteFormView = $deleteForm->createView();
         $this->get('twig')->getExtension('form')->renderer->setTheme($deleteFormView, 'bootstrap_3_layout.html.twig');
 
         return [
-            'fields' => ['id', 'forename', 'surname'],
+            'fields' => $admin->getListFields(),
             'entities' => $repo->findAll(),
             'deleteForm' => $deleteFormView,
         ];

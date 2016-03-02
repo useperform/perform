@@ -9,4 +9,13 @@ namespace Admin\Base\Admin;
  **/
 class UserAdmin implements AdminInterface
 {
+    protected $listFields = [
+        'forename',
+        'surname',
+    ];
+
+    public function getListFields()
+    {
+        return $this->listFields;
+    }
 }
