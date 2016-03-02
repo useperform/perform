@@ -8,14 +8,16 @@
         <div class="panel-body">
           <table class="table">
             <thead>
-              <th>
-                ID
-              </th>
+              {% for label, field in fields %}
+                <th>{{ sensible(label, field) }}</th>
+              {% endfor %}
             </thead>
             <tbody>
               {% for entity in entities %}
                 <tr>
-                  <td>{{entity.id}}</td>
+              {% for label, field in fields %}
+                <th>{{ attribute(entity, field) }}</th>
+              {% endfor %}
                   <td>
                     <a href="view/{{entity.id}}">View</a>
                     <a href="edit/{{entity.id}}">Edit</a>

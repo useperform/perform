@@ -46,6 +46,7 @@ abstract class CrudController extends Controller
         $this->get('twig')->getExtension('form')->renderer->setTheme($deleteFormView, 'bootstrap_3_layout.html.twig');
 
         return [
+            'fields' => ['id', 'forename', 'surname'],
             'entities' => $repo->findAll(),
             'deleteForm' => $deleteFormView,
         ];
