@@ -7,14 +7,21 @@
       Entity
     </div>
     <div class="panel-body">
-      <div class="form-group">
-        <label class="col-sm-2 control-label">
-          ID
-        </label>
-        <div class="col-sm-10">
-          {{entity.id}}
-        </div>
-      </div>
+      <table class="table">
+        <tbody>
+          {% for label, field in fields %}
+            <tr>
+              <th>
+                {{sensible(label, field)}}
+              </th>
+              <td>
+                {{attribute(entity, field)}}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <a href="../" class="btn btn-default">Back</a>
     </div>
   </div>
 {% endblock %}

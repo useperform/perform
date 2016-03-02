@@ -65,6 +65,7 @@ abstract class CrudController extends Controller
     public function viewAction($id)
     {
         return [
+            'fields' => $this->getAdmin()->getViewFields(),
             'entity' => $this->getEntity($id),
         ];
     }
