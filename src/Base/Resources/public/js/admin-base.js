@@ -52,7 +52,6 @@ $(function() {
   });
 
   $('#modal-delete').on('show.bs.modal', function (e) {
-    debugger;
     var link = $(e.relatedTarget);
     $(this).find('form').attr('action', link.data('action'));
   });
