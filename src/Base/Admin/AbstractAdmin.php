@@ -3,6 +3,7 @@
 namespace Admin\Base\Admin;
 
 use Symfony\Component\Form\FormBuilderInterface;
+use Admin\Base\Form\Type\AdminType;
 
 /**
  * AbstractAdmin
@@ -14,6 +15,7 @@ abstract class AbstractAdmin implements AdminInterface
     protected $listFields = [];
     protected $viewFields = [];
     protected $createFields = [];
+    protected $editFields = [];
 
     public function getListFields()
     {
@@ -25,10 +27,18 @@ abstract class AbstractAdmin implements AdminInterface
         return $this->viewFields;
     }
 
-    public function buildCreateForm(FormBuilderInterface $builder, $entity)
+    public function getCreateFields()
     {
-        foreach ($this->createFields as $label => $field) {
-            $builder->add($field);
-        }
+        return $this->createFields;
+    }
+
+    public function getEditFields()
+    {
+        return $this->editFields;
+    }
+
+    public function getFormType()
+    {
+        return AdminType::CLASS;
     }
 }

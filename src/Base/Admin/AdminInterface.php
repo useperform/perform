@@ -2,8 +2,6 @@
 
 namespace Admin\Base\Admin;
 
-use Symfony\Component\Form\FormBuilderInterface;
-
 /**
  * AdminInterface.
  *
@@ -22,8 +20,17 @@ interface AdminInterface
     public function getViewFields();
 
     /**
-     * @param FormBuilderInterface $builder
-     * @param mixed                $entity
+     * @return array
      */
-    public function buildCreateForm(FormBuilderInterface $builder, $entity);
+    public function getCreateFields();
+
+    /**
+     * @return array
+     */
+    public function getEditFields();
+
+    /**
+     * @return string
+     */
+    public function getFormType();
 }

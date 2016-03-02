@@ -73,8 +73,11 @@ abstract class CrudController extends Controller
     public function createAction(Request $request)
     {
         $builder = $this->createFormBuilder($entity = new User());
-        $this->getAdmin()->buildCreateForm($builder, $entity);
-        $form = $builder->getForm();
+        $admin = $this->getAdmin();
+        $form = $this->createForm($admin->getFormType(), $entity, [
+            'admin' => $admin,
+            'context' => 'create',
+        ]);
 
         $form->handleRequest($request);
 
@@ -97,10 +100,11 @@ abstract class CrudController extends Controller
     public function editAction(Request $request, $id)
     {
         $entity = $this->getEntity($id);
-        $form = $this->createFormBuilder($entity)
-              ->add('forename')
-              ->add('surname')
-              ->getForm();
+        $admin = $this->getAdmin();
+        $form = $this->createForm($admin->getFormType(), $entity, [
+            'admin' => $admin,
+            'context' => 'edit',
+        ]);
 
         $form->handleRequest($request);
 
