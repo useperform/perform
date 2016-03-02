@@ -21,4 +21,8 @@ class UserAdmin extends AbstractAdmin
         'forename',
         'surname',
     ];
+    protected $editFields = [
+        'forename',
+        'surname',
+    ];
 }
