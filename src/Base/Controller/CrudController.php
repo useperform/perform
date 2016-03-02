@@ -83,9 +83,30 @@ abstract class CrudController extends Controller
         ];
     }
 
-    public function editAction()
+    public function editAction(Request $request, $id)
     {
-        return [];
+        $entity = $this->getEntity($id);
+        $form = $this->createFormBuilder($entity)
+              ->add('forename')
+              ->add('surname')
+              ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $manager = $this->getDoctrine()->getEntityManager();
+            $manager->persist($entity);
+            $manager->flush();
+
+            return $this->redirect('/admin/users');
+        }
+
+        $formView = $form->createView();
+        $this->get('twig')->getExtension('form')->renderer->setTheme($formView, 'bootstrap_3_layout.html.twig');
+
+        return [
+            'form' => $formView,
+        ];
     }
 
     public function deleteAction(Request $request, $id)
