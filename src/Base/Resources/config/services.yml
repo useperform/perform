@@ -1,0 +1,31 @@
+services:
+    admin_base.admin.registry:
+        class: Admin\Base\Admin\AdminRegistry
+        arguments: ['@service_container']
+
+    admin_base.admin.user:
+        class: Admin\Base\Admin\UserAdmin
+        tags:
+            - {name: admin_base.admin, entityClass: "AdminBaseBundle:User"}
+
+    admin_base.routing.crud:
+        class: Admin\Base\Routing\CrudControllerLoader
+        public: false
+        arguments: ['@controller_name_converter']
+        tags:
+            - {name: routing.loader}
+
+    admin_base.listener.crud_template:
+        class: Admin\Base\EventListener\CrudTemplateListener
+        arguments: ['@service_container']
+        tags:
+            -
+                name: kernel.event_listener
+                event: kernel.controller
+                method: onKernelController
+                priority: -200
+
+    admin_base.twig.crud:
+        class: Admin\Base\Twig\Extension\CrudExtension
+        tags:
+            - {name: twig.extension}

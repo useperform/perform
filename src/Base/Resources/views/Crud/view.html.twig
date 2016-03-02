@@ -1,0 +1,27 @@
+{% extends 'AdminBaseBundle::base.html.twig' %}
+
+{% block workspace %}
+  <h3><i class="fa fa-angle-right"></i> View</h3>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      Entity
+    </div>
+    <div class="panel-body">
+      <table class="table">
+        <tbody>
+          {% for label, field in fields %}
+            <tr>
+              <th>
+                {{sensible(label, field)}}
+              </th>
+              <td>
+                {{attribute(entity, field)}}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <a href="../" class="btn btn-default">Back</a>
+    </div>
+  </div>
+{% endblock %}
