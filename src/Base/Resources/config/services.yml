@@ -3,6 +3,11 @@ services:
         class: Admin\Base\Admin\AdminRegistry
         arguments: ['@service_container']
 
+    admin_base.admin.user:
+        class: Admin\Base\Admin\UserAdmin
+        tags:
+            - {name: admin_base.admin, entityClass: "AdminBaseBundle:User"}
+
     admin_base.routing.crud:
         class: Admin\Base\Routing\CrudControllerLoader
         public: false

@@ -27,6 +27,15 @@ abstract class CrudController extends Controller
         ];
     }
 
+    /**
+     * @return AdminInterface
+     */
+    protected function getAdmin()
+    {
+        return $this->get('admin_base.admin.registry')
+            ->getAdmin($this->entity);
+    }
+
     protected function getEntity($id)
     {
         $repo = $this->getDoctrine()->getRepository($this->entity);
@@ -40,7 +49,7 @@ abstract class CrudController extends Controller
 
     public function listAction()
     {
-        $admin = new \Admin\Base\Admin\UserAdmin();
+        $admin = $this->getAdmin();
         $repo = $this->getDoctrine()->getRepository($this->entity);
         $deleteForm = $this->createFormBuilder()->getForm();
         $deleteFormView = $deleteForm->createView();
