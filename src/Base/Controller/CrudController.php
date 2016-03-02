@@ -7,7 +7,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Admin\Base\Entity\User;
 
 /**
  * CrudController
@@ -36,7 +35,17 @@ abstract class CrudController extends Controller
             ->getAdmin($this->entity);
     }
 
-    protected function getEntity($id)
+    protected function newEntity()
+    {
+        $className = $this->getDoctrine()
+                   ->getManager()
+                   ->getClassMetadata($this->entity)
+                   ->name;
+
+        return new $className();
+    }
+
+    protected function findEntity($id)
     {
         $repo = $this->getDoctrine()->getRepository($this->entity);
         $entity = $repo->find($id);
@@ -66,13 +75,13 @@ abstract class CrudController extends Controller
     {
         return [
             'fields' => $this->getAdmin()->getViewFields(),
-            'entity' => $this->getEntity($id),
+            'entity' => $this->findEntity($id),
         ];
     }
 
     public function createAction(Request $request)
     {
-        $builder = $this->createFormBuilder($entity = new User());
+        $builder = $this->createFormBuilder($entity = $this->newEntity());
         $admin = $this->getAdmin();
         $form = $this->createForm($admin->getFormType(), $entity, [
             'admin' => $admin,
@@ -99,7 +108,7 @@ abstract class CrudController extends Controller
 
     public function editAction(Request $request, $id)
     {
-        $entity = $this->getEntity($id);
+        $entity = $this->findEntity($id);
         $admin = $this->getAdmin();
         $form = $this->createForm($admin->getFormType(), $entity, [
             'admin' => $admin,
@@ -129,7 +138,7 @@ abstract class CrudController extends Controller
         if ($request->getMethod() !== 'POST') {
             throw new NotFoundHttpException();
         }
-        $entity = $this->getEntity($id);
+        $entity = $this->findEntity($id);
 
         $form = $this->createFormBuilder()->getForm();
         $form->handleRequest($request);
