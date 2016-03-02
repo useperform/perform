@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Admin\Base\Entity\User;
 
 /**
  * CrudController
@@ -26,18 +27,7 @@ abstract class CrudController extends Controller
         ];
     }
 
-    public function listAction()
-    {
-        $repo = $this->getDoctrine()->getRepository($this->entity);
-        $deleteForm = $this->createFormBuilder()->getForm();
-
-        return [
-            'entities' => $repo->findAll(),
-            'deleteForm' => $deleteForm->createView(),
-        ];
-    }
-
-    public function viewAction($id)
+    protected function getEntity($id)
     {
         $repo = $this->getDoctrine()->getRepository($this->entity);
         $entity = $repo->find($id);
@@ -45,14 +35,52 @@ abstract class CrudController extends Controller
             throw new NotFoundHttpException();
         }
 
+        return $entity;
+    }
+
+    public function listAction()
+    {
+        $repo = $this->getDoctrine()->getRepository($this->entity);
+        $deleteForm = $this->createFormBuilder()->getForm();
+        $deleteFormView = $deleteForm->createView();
+        $this->get('twig')->getExtension('form')->renderer->setTheme($deleteFormView, 'bootstrap_3_layout.html.twig');
+
         return [
-            'entity' => $entity,
+            'entities' => $repo->findAll(),
+            'deleteForm' => $deleteFormView,
         ];
     }
 
-    public function createAction()
+    public function viewAction($id)
     {
-        return [];
+        return [
+            'entity' => $this->getEntity($id),
+        ];
+    }
+
+    public function createAction(Request $request)
+    {
+        $form = $this->createFormBuilder($entity = new User())
+              ->add('forename')
+              ->add('surname')
+              ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $manager = $this->getDoctrine()->getEntityManager();
+            $manager->persist($entity);
+            $manager->flush();
+
+            return $this->redirect('/admin/users');
+        }
+
+        $formView = $form->createView();
+        $this->get('twig')->getExtension('form')->renderer->setTheme($formView, 'bootstrap_3_layout.html.twig');
+
+        return [
+            'form' => $formView,
+        ];
     }
 
     public function editAction()
@@ -65,11 +93,7 @@ abstract class CrudController extends Controller
         if ($request->getMethod() !== 'POST') {
             throw new NotFoundHttpException();
         }
-        $repo = $this->getDoctrine()->getRepository($this->entity);
-        $entity = $repo->find($id);
-        if (!$entity) {
-            throw new NotFoundHttpException();
-        }
+        $entity = $this->getEntity($id);
 
         $form = $this->createFormBuilder()->getForm();
         $form->handleRequest($request);
