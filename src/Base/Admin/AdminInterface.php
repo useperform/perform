@@ -13,4 +13,9 @@ interface AdminInterface
      * @return array
      */
     public function getListFields();
+
+    /**
+     * @return array
+     */
+    public function getViewFields();
 }

@@ -7,15 +7,15 @@ namespace Admin\Base\Admin;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class UserAdmin implements AdminInterface
+class UserAdmin extends AbstractAdmin
 {
     protected $listFields = [
         'forename',
         'surname',
     ];
-
-    public function getListFields()
-    {
-        return $this->listFields;
-    }
+    protected $viewFields = [
+        'id',
+        'forename',
+        'surname',
+    ];
 }
