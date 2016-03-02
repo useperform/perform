@@ -27,7 +27,7 @@ class CrudControllerLoader extends Loader
         $refl = new \ReflectionClass($class);
 
         if (!$refl->isSubclassOf('Admin\Base\Controller\CrudController')) {
-            throw new \InvalidArgumentException($className. ' must be an instance of Admin\Base\Controller\CrudController to use crud routing');
+            throw new \InvalidArgumentException($class. ' must be an instance of Admin\Base\Controller\CrudController to use crud routing');
         }
 
         $collection = new RouteCollection();
