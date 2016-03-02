@@ -1,0 +1,3 @@
+team:
+    resource: "AdminTeamBundle:Team"
+    type:     crud

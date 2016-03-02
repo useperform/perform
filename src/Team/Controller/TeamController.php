@@ -2,23 +2,14 @@
 
 namespace Admin\Team\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Admin\Base\Controller\CrudController;
 
 /**
  * TeamController
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class TeamController extends Controller
+class TeamController extends CrudController
 {
-    /**
-     * @Route("/")
-     * @Template
-     */
-    public function indexAction()
-    {
-        return [];
-    }
+    protected $entity = 'AdminTeamBundle:TeamMember';
 }
