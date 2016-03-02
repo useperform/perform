@@ -14,7 +14,10 @@ class UserAdmin extends AbstractAdmin
         'surname',
     ];
     protected $viewFields = [
-        'id',
+        'forename',
+        'surname',
+    ];
+    protected $createFields = [
         'forename',
         'surname',
     ];
