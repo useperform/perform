@@ -29,4 +29,5 @@ class TeamMemberAdmin extends AbstractAdmin
         'role',
         'description',
     ];
+    protected $routePrefix = 'admin_team_team_';
 }
