@@ -15,13 +15,13 @@
             <tbody>
               {% for entity in entities %}
                 <tr>
-              {% for label, field in fields %}
-                <th>{{ attribute(entity, field) }}</th>
-              {% endfor %}
+                  {% for label, field in fields %}
+                    <th>{{ attribute(entity, field) }}</th>
+                  {% endfor %}
                   <td>
-                    <a href="view/{{entity.id}}">View</a>
-                    <a href="edit/{{entity.id}}">Edit</a>
-                    <a href="#" data-action="delete/{{entity.id}}" data-toggle="modal" data-target="#modal-delete">Delete</a>
+                    <a href="{{crud_route(entity, 'view')}}">View</a>
+                    <a href="{{crud_route(entity, 'edit')}}">Edit</a>
+                    <a href="#" data-action="{{crud_route(entity, 'delete')}}" data-toggle="modal" data-target="#modal-delete">Delete</a>
                   </td>
                 </tr>
               {% endfor %}
