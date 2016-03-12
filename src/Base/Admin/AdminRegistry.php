@@ -61,7 +61,7 @@ class AdminRegistry
             return $this->getAdmin($this->aliases[$entityClass]);
         }
 
-        throw new AdminNotFoundException(sprintf('Admin not found for entity "%s"', $entity));
+        throw new AdminNotFoundException(sprintf('Admin not found for entity "%s"', $entityClass));
     }
 
     /**
