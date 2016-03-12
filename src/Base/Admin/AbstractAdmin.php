@@ -16,6 +16,7 @@ abstract class AbstractAdmin implements AdminInterface
     protected $viewFields = [];
     protected $createFields = [];
     protected $editFields = [];
+    protected $routePrefix;
 
     public function getListFields()
     {
@@ -40,5 +41,10 @@ abstract class AbstractAdmin implements AdminInterface
     public function getFormType()
     {
         return AdminType::CLASS;
+    }
+
+    public function getRoutePrefix()
+    {
+        return $this->routePrefix;
     }
 }
