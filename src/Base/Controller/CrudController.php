@@ -66,6 +66,7 @@ abstract class CrudController extends Controller
 
         return [
             'fields' => $admin->getListFields(),
+            'routePrefix' => $admin->getRoutePrefix(),
             'entities' => $repo->findAll(),
             'deleteForm' => $deleteFormView,
         ];
