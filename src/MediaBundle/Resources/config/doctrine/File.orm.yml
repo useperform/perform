@@ -11,6 +11,8 @@ Admin\MediaBundle\Entity\File:
             type: string
         filename:
             type: string
+        type:
+            type: string
         mimeType:
             type: string
         charset:

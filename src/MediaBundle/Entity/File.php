@@ -27,6 +27,11 @@ class File
     /**
      * @var string
      */
+    protected $type;
+
+    /**
+     * @var string
+     */
     protected $mimeType;
 
     /**
@@ -107,6 +112,31 @@ class File
     public function getFilename()
     {
         return $this->filename;
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return File
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function hasType()
+    {
+        return !!$this->type;
     }
 
     /**
