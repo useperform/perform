@@ -103,6 +103,7 @@ abstract class CrudController extends Controller
         $this->get('twig')->getExtension('form')->renderer->setTheme($formView, 'bootstrap_3_layout.html.twig');
 
         return [
+            'entity' => $entity,
             'form' => $formView,
         ];
     }
@@ -130,6 +131,7 @@ abstract class CrudController extends Controller
         $this->get('twig')->getExtension('form')->renderer->setTheme($formView, 'bootstrap_3_layout.html.twig');
 
         return [
+            'entity' => $entity,
             'form' => $formView,
         ];
     }
