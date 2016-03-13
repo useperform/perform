@@ -14,6 +14,7 @@ class AdminRegistry
 {
     protected $container;
     protected $admins = [];
+    protected $aliases = [];
 
     public function __construct(ContainerInterface $container)
     {
@@ -21,23 +22,53 @@ class AdminRegistry
     }
 
     /**
-     * @param string $entityClass in the style of doctrine, e.g. AdminBaseBundle:User
+     * Register an admin service with the registry.
+     *
+     * For performance reasons, the service is fetched lazily, and
+     * alias and class name are required in advance.
+     *
+     * @param string $entity      in the style of doctrine, e.g. AdminBaseBundle:User
+     * @param string $entityClass the fully qualified class name of the entity
      * @param string $service     the name of the service in the container
      */
-    public function addAdmin($entityClass, $service)
+    public function addAdmin($entity, $entityClass, $service)
     {
-        $this->admins[$entityClass] = $service;
+        if (strpos($entity, '\\') !== false || strpos($entity, ':') === false) {
+            throw new \InvalidArgumentException('An admin service must be registered with the entity alias, e.g. AdminBaseBundle:User.');
+        }
+
+        $this->admins[$entity] = $service;
+        $this->aliases[$entityClass] = $entity;
     }
 
     /**
-     * Get the Admin instance for managing $entityClass.
+     * Get the Admin instance for managing $entity.
+     *
+     * @param string $entity in the style of doctrine, e.g. AdminBaseBundle:User
      */
-    public function getAdmin($entityClass)
+    public function getAdmin($entity)
     {
-        if (isset($this->admins[$entityClass])) {
-            return $this->container->get($this->admins[$entityClass]);
+        if (isset($this->admins[$entity])) {
+            return $this->container->get($this->admins[$entity]);
+        }
+
+        throw new AdminNotFoundException(sprintf('Admin not found for entity "%s"', $entity));
+    }
+
+    public function getAdminForClass($entityClass)
+    {
+        if (isset($this->aliases[$entityClass])) {
+            return $this->getAdmin($this->aliases[$entityClass]);
         }
 
         throw new AdminNotFoundException(sprintf('Admin not found for entity "%s"', $entityClass));
+    }
+
+    /**
+     * Get the Admin instance for managing an entity.
+     */
+    public function getAdminForEntity($entity)
+    {
+        return $this->getAdminForClass(get_class($entity));
     }
 }

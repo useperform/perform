@@ -6,7 +6,7 @@ services:
     admin_base.admin.user:
         class: Admin\Base\Admin\UserAdmin
         tags:
-            - {name: admin_base.admin, entityClass: "AdminBaseBundle:User"}
+            - {name: admin_base.admin, entity: "AdminBaseBundle:User", entityClass: "Admin\\Base\\Entity\\User"}
 
     admin_base.routing.crud:
         class: Admin\Base\Routing\CrudControllerLoader
@@ -14,6 +14,10 @@ services:
         arguments: ['@controller_name_converter']
         tags:
             - {name: routing.loader}
+
+    admin_base.routing.crud_url:
+        class: Admin\Base\Routing\CrudUrlGenerator
+        arguments: ['@admin_base.admin.registry', '@router']
 
     admin_base.listener.crud_template:
         class: Admin\Base\EventListener\CrudTemplateListener
@@ -27,5 +31,6 @@ services:
 
     admin_base.twig.crud:
         class: Admin\Base\Twig\Extension\CrudExtension
+        arguments: ['@admin_base.routing.crud_url']
         tags:
             - {name: twig.extension}

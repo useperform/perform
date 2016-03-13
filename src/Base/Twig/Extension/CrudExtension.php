@@ -2,6 +2,8 @@
 
 namespace Admin\Base\Twig\Extension;
 
+use Admin\Base\Routing\CrudUrlGenerator;
+
 /**
  * CrudExtension.
  *
@@ -9,10 +11,18 @@ namespace Admin\Base\Twig\Extension;
  **/
 class CrudExtension extends \Twig_Extension
 {
+    protected $urlGenerator;
+
+    public function __construct(CrudUrlGenerator $urlGenerator)
+    {
+        $this->urlGenerator = $urlGenerator;
+    }
+
     public function getFunctions()
     {
         return [
             new \Twig_SimpleFunction('sensible', [$this, 'sensible']),
+            new \Twig_SimpleFunction('crud_route', [$this->urlGenerator, 'generate']),
         ];
     }
 

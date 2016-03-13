@@ -1,5 +1,5 @@
 services:
-    admin_base.admin.team_member:
+    admin_team.admin.team_member:
         class: Admin\Team\Admin\TeamMemberAdmin
         tags:
-            - {name: admin_base.admin, entityClass: "AdminTeamBundle:TeamMember"}
+            - {name: admin_base.admin, entity: "AdminTeamBundle:TeamMember", entityClass: "Admin\\Team\\Entity\\TeamMember"}

@@ -66,6 +66,7 @@ abstract class CrudController extends Controller
 
         return [
             'fields' => $admin->getListFields(),
+            'routePrefix' => $admin->getRoutePrefix(),
             'entities' => $repo->findAll(),
             'deleteForm' => $deleteFormView,
         ];
@@ -95,13 +96,14 @@ abstract class CrudController extends Controller
             $manager->persist($entity);
             $manager->flush();
 
-            return $this->redirect('/admin/users');
+            return $this->redirect($this->get('admin_base.routing.crud_url')->generate($entity, 'list'));
         }
 
         $formView = $form->createView();
         $this->get('twig')->getExtension('form')->renderer->setTheme($formView, 'bootstrap_3_layout.html.twig');
 
         return [
+            'entity' => $entity,
             'form' => $formView,
         ];
     }
@@ -122,13 +124,14 @@ abstract class CrudController extends Controller
             $manager->persist($entity);
             $manager->flush();
 
-            return $this->redirect('/admin/users');
+            return $this->redirect($this->get('admin_base.routing.crud_url')->generate($entity, 'list'));
         }
 
         $formView = $form->createView();
         $this->get('twig')->getExtension('form')->renderer->setTheme($formView, 'bootstrap_3_layout.html.twig');
 
         return [
+            'entity' => $entity,
             'form' => $formView,
         ];
     }
@@ -148,7 +151,7 @@ abstract class CrudController extends Controller
             $manager->remove($entity);
             $manager->flush();
 
-            return new RedirectResponse('/admin/users');
+            return $this->redirect($this->get('admin_base.routing.crud_url')->generate($entity, 'list'));
         }
     }
 }

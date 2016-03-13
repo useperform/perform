@@ -33,4 +33,9 @@ interface AdminInterface
      * @return string
      */
     public function getFormType();
+
+    /**
+     * @return string
+     */
+    public function getRoutePrefix();
 }
