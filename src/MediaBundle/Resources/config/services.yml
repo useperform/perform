@@ -1,0 +1,7 @@
+services:
+    admin_media.importer.file:
+        class: Admin\MediaBundle\Importer\FileImporter
+        arguments:
+            - "@oneup_flysystem.main_filesystem"
+            - "@doctrine.orm.entity_manager"
+            - "@event_dispatcher"

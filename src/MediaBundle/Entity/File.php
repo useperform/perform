@@ -50,6 +50,18 @@ class File
     protected $owner;
 
     /**
+     * @param guid $id
+     *
+     * @return File
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * @return guid
      */
     public function getId()
