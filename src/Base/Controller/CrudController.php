@@ -95,7 +95,7 @@ abstract class CrudController extends Controller
             $manager->persist($entity);
             $manager->flush();
 
-            return $this->redirect('/admin/users');
+            return $this->redirect($this->get('admin_base.routing.crud_url')->generate($entity, 'list'));
         }
 
         $formView = $form->createView();
@@ -122,7 +122,7 @@ abstract class CrudController extends Controller
             $manager->persist($entity);
             $manager->flush();
 
-            return $this->redirect('/admin/users');
+            return $this->redirect($this->get('admin_base.routing.crud_url')->generate($entity, 'list'));
         }
 
         $formView = $form->createView();
@@ -148,7 +148,7 @@ abstract class CrudController extends Controller
             $manager->remove($entity);
             $manager->flush();
 
-            return new RedirectResponse('/admin/users');
+            return $this->redirect($this->get('admin_base.routing.crud_url')->generate($entity, 'list'));
         }
     }
 }
