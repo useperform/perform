@@ -15,6 +15,10 @@ services:
         tags:
             - {name: routing.loader}
 
+    admin_base.routing.crud_url:
+        class: Admin\Base\Routing\CrudUrlGenerator
+        arguments: ['@admin_base.admin.registry', '@router']
+
     admin_base.listener.crud_template:
         class: Admin\Base\EventListener\CrudTemplateListener
         arguments: ['@service_container']
@@ -27,6 +31,6 @@ services:
 
     admin_base.twig.crud:
         class: Admin\Base\Twig\Extension\CrudExtension
-        arguments: ['@admin_base.admin.registry', '@router']
+        arguments: ['@admin_base.routing.crud_url']
         tags:
             - {name: twig.extension}

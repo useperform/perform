@@ -2,8 +2,7 @@
 
 namespace Admin\Base\Twig\Extension;
 
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Admin\Base\Admin\AdminRegistry;
+use Admin\Base\Routing\CrudUrlGenerator;
 
 /**
  * CrudExtension.
@@ -12,12 +11,10 @@ use Admin\Base\Admin\AdminRegistry;
  **/
 class CrudExtension extends \Twig_Extension
 {
-    protected $adminRegistry;
     protected $urlGenerator;
 
-    public function __construct(AdminRegistry $adminRegistry, UrlGeneratorInterface $urlGenerator)
+    public function __construct(CrudUrlGenerator $urlGenerator)
     {
-        $this->adminRegistry = $adminRegistry;
         $this->urlGenerator = $urlGenerator;
     }
 
@@ -25,7 +22,7 @@ class CrudExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFunction('sensible', [$this, 'sensible']),
-            new \Twig_SimpleFunction('crud_route', [$this, 'crudRoute']),
+            new \Twig_SimpleFunction('crud_route', [$this->urlGenerator, 'generate']),
         ];
     }
 
@@ -48,22 +45,6 @@ class CrudExtension extends \Twig_Extension
         $string = str_replace(['-', '_'], ' ', $string);
 
         return ucfirst(trim(strtolower($string)));
-    }
-
-    /**
-     * Get the url to a crud action for an entity.
-     *
-     * @param mixed $entity
-     * @param string $action
-     *
-     * @return string
-     */
-    public function crudRoute($entity, $action)
-    {
-        $params = $action === 'list' ? [] : ['id' => $entity->getId()];
-        $prefix = rtrim($this->adminRegistry->getAdminForEntity($entity)->getRoutePrefix(), '_');
-
-        return $this->urlGenerator->generate($prefix.'_'.$action, $params);
     }
 
     public function getName()
