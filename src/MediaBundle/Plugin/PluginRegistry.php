@@ -62,6 +62,15 @@ class PluginRegistry
         }
     }
 
+    public function getFilePlugin(File $file)
+    {
+        if (!isset($this->plugins[$file->getType()])) {
+            throw new PluginNotFoundException(sprintf('Media plugin "%s" not found.', $file->getType()));
+        }
+
+        return $this->plugins[$file->getType()];
+    }
+
     /**
      * Get the absolute url to a stored file entity.
      *
@@ -73,24 +82,36 @@ class PluginRegistry
             return '';
         }
 
-        if (isset($this->plugins[$file->getType()])) {
-            return $this->plugins[$file->getType()]->getUrl($file);
-        }
-        return $file->filename;
+        return $this->getFilePlugin($file)->getUrl($file);
     }
 
     /**
      * Get an HTML preview of a file entity.
      *
-     * @param File
+     * @param File|null
      */
     public function getPreview(File $file = null)
     {
-        $type = $file->getType();
-        if (!$file || !isset($this->plugins[$type])) {
-            return '<i class="fa fa-file-o"></i>';
+        if (!$file) {
+            return '';
         }
 
-        return $this->plugins[$type]->getPreview($file);
+        return $this->getFilePlugin($file)->getPreview($file);
+    }
+
+    /**
+     * Get the name of a file type, suitable for a user-facing listing.
+     *
+     * @param File|null
+     *
+     * @return string
+     */
+    public function getListingType(File $file = null)
+    {
+        if (!$file) {
+            return '';
+        }
+
+        return $this->getFilePlugin($file)->getListingName($file);
     }
 }
