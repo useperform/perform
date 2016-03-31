@@ -32,3 +32,11 @@ services:
             - "@admin_media.url.simple"
         tags:
             - {name: admin_media.file_plugin, pluginName: other}
+
+    admin_media.plugin.pdf:
+        class: Admin\MediaBundle\Plugin\PdfPlugin
+        arguments:
+            - "@oneup_flysystem.main_filesystem"
+            - "@admin_media.url.simple"
+        tags:
+            - {name: admin_media.file_plugin, pluginName: pdf}
