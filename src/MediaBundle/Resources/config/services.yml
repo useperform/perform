@@ -5,3 +5,6 @@ services:
             - "@oneup_flysystem.main_filesystem"
             - "@doctrine.orm.entity_manager"
             - "@event_dispatcher"
+
+    admin_media.plugin.registry:
+        class: Admin\MediaBundle\Plugin\PluginRegistry
