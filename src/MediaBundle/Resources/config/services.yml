@@ -15,6 +15,12 @@ services:
         tags:
             - {name: kernel.event_subscriber}
 
+    admin_media.twig.file:
+        class: Admin\MediaBundle\Twig\Extension\FileExtension
+        arguments: ["@admin_media.plugin.registry"]
+        tags:
+            - {name: twig.extension}
+
     admin_media.url.simple:
         class: Admin\MediaBundle\Url\SimpleFileUrlGenerator
         arguments: [""]
