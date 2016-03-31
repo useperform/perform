@@ -8,3 +8,9 @@ services:
 
     admin_media.plugin.registry:
         class: Admin\MediaBundle\Plugin\PluginRegistry
+
+    admin_media.listener.file_plugin:
+        class: Admin\MediaBundle\EventListener\FilePluginListener
+        arguments: ["@admin_media.plugin.registry"]
+        tags:
+            - {name: kernel.event_subscriber}
