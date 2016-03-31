@@ -5,6 +5,7 @@ namespace Admin\MediaBundle\Importer;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Dflydev\ApacheMimeTypes\PhpRepository as MimeTypesRepository;
 use League\Flysystem\FilesystemInterface;
+use League\Flysystem\FileNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Admin\MediaBundle\Entity\File;
