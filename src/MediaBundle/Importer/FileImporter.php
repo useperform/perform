@@ -70,7 +70,7 @@ class FileImporter
      * @param string|null $name     Optionally, the name to give the file
      * @param User        $user     The optional owner of the file
      */
-    public function importFile($pathname, $name = null, User $owner = null)
+    public function import($pathname, $name = null, User $owner = null)
     {
         if (!file_exists($pathname)) {
             throw new \InvalidArgumentException("$pathname does not exist.");

@@ -34,7 +34,7 @@ class FileImportCommand extends ContainerAwareCommand
     {
         $importer = $this->getContainer()->get('admin_media.importer.file');
         foreach ($this->getFiles($input->getArgument('path')) as $file) {
-            $importer->importFile($file->getPathname());
+            $importer->import($file->getPathname());
             $output->writeln(sprintf('Imported <info>%s</info>', $file->getPathname()));
         }
     }
