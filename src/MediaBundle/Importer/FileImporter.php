@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Admin\MediaBundle\Entity\File;
 use Doctrine\ORM\Id\UuidGenerator;
 use Admin\AppBundle\Entity\User;
+use Admin\MediaBundle\Event\FileEvent;
 
 /**
  * Add files to the media library.
@@ -93,10 +94,10 @@ class FileImporter
             }
 
             $this->storage->writeStream($file->getFilename(), fopen($pathname, 'r'));
-            //send create event
+            $this->dispatcher->dispatch(FileEvent::CREATE, new FileEvent($file));
             $this->entityManager->persist($file);
             $this->entityManager->flush();
-            //send process event
+            $this->dispatcher->dispatch(FileEvent::PROCESS, new FileEvent($file));
 
             $connection->commit();
 
