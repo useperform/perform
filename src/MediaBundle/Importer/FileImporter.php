@@ -112,6 +112,27 @@ class FileImporter
         }
     }
 
+    /**
+     * Remove a file from the database, delete it and perform any cleanup operations.
+     *
+     * @param File $file
+     */
+    public function delete(File $file)
+    {
+        $connection = $this->entityManager->getConnection();
+        $connection->transactional(function($connection) use ($file) {
+            $this->entityManager->remove($file);
+            $this->entityManager->flush();
+
+            try {
+                $this->storage->delete($file->getFilename());
+            } catch (FileNotFoundException $e) {
+            }
+
+            $this->dispatcher->dispatch(FileEvent::DELETE, new FileEvent($file));
+        });
+    }
+
     protected function setMimeType(File $file, $filename)
     {
         $finfo = new \Finfo(FILEINFO_MIME);
