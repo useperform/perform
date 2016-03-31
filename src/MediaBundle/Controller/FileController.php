@@ -32,8 +32,6 @@ class FileController extends Controller
      */
     public function uploadAction()
     {
-        return [
-
-        ];
+        return [];
     }
 }
