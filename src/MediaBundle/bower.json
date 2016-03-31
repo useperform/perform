@@ -1,0 +1,15 @@
+{
+  "name": "AdminMediaBundle",
+  "authors": [
+    "Glynn Forrest <me@glynnforrest.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "proprietary",
+  "homepage": "",
+  "private": true,
+  "dependencies": {
+    "jquery-file-uploads": "^9.7.0"
+  }
+}
