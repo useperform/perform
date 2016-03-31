@@ -10,12 +10,20 @@
           <table class="table">
             <thead>
               <th>Name</th>
+              <th>Type</th>
+              <th>Preview</th>
             </thead>
             <tbody>
               {% for file in files %}
                 <tr>
                   <td>
                     {{file.name}}
+                  </td>
+                  <td>
+                    {{fileListingType(file)}}
+                  </td>
+                  <td>
+                    {{filePreview(file)}}
                   </td>
                 </tr>
               {% endfor %}
