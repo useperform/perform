@@ -14,3 +14,7 @@ services:
         arguments: ["@admin_media.plugin.registry"]
         tags:
             - {name: kernel.event_subscriber}
+
+    admin_media.url.simple:
+        class: Admin\MediaBundle\Url\SimpleFileUrlGenerator
+        arguments: [""]
