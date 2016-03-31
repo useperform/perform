@@ -18,3 +18,11 @@ services:
     admin_media.url.simple:
         class: Admin\MediaBundle\Url\SimpleFileUrlGenerator
         arguments: [""]
+
+    admin_media.plugin.other:
+        class: Admin\MediaBundle\Plugin\OtherPlugin
+        arguments:
+            - "@oneup_flysystem.main_filesystem"
+            - "@admin_media.url.simple"
+        tags:
+            - {name: admin_media.file_plugin, pluginName: other}
