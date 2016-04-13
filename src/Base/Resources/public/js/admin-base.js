@@ -55,4 +55,11 @@ $(function() {
     var link = $(e.relatedTarget);
     $(this).find('form').attr('action', link.data('action'));
   });
+
+  //for backbone
+  var app = {
+    models: {},
+    views: {}
+  };
+  window.app = app;
 });
