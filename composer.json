@@ -11,10 +11,12 @@
     "require": {
         "symfony/framework-bundle": "^3.0",
         "sensio/framework-extra-bundle": "^3.0",
-        "oneup/flysystem-bundle": "^1.3"
+        "oneup/flysystem-bundle": "^1.3",
+        "dflydev/apache-mime-types": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.8"
+        "phpunit/phpunit": "^4.8",
+        "glynnforrest/temping": "^0.5.0"
     },
     "autoload": {
         "psr-4": {
