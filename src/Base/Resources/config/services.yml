@@ -35,8 +35,13 @@ services:
         tags:
             - {name: twig.extension}
 
-    admin_base.menu.builder:
+    admin_base.menu_builder:
         class: Admin\Base\Menu\MenuBuilder
         arguments: ["@knp_menu.factory"]
         tags:
             - { name: knp_menu.menu_builder, method: createMainMenu, alias: main }
+
+    admin_base.menu_link.dashboard:
+        class: Admin\Base\Menu\DashboardLinkProvider
+        tags:
+            - { name: admin_base.link_provider, alias: dashboard }
