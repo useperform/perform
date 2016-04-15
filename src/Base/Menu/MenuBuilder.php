@@ -12,37 +12,24 @@ use Knp\Menu\FactoryInterface;
 class MenuBuilder
 {
     protected $factory;
+    protected $providers = [];
 
     public function __construct(FactoryInterface $factory)
     {
         $this->factory = $factory;
     }
 
+    public function addLinkProvider(LinkProviderInterface $linkProvider)
+    {
+        $this->providers[] = $linkProvider;
+    }
+
     public function createMainMenu(array $options)
     {
         $menu = $this->factory->createItem('root');
-
-        $menu->addChild('Dashboard', [
-            'route' => 'admin_base_dashboard_index',
-        ])->setExtra('icon', 'dashboard');
-
-        $media = $menu->addChild('Media', [
-            'uri' => '#'
-        ])->setExtra('icon', 'briefcase');
-        $media->addChild('List', [
-                'route' => 'admin_media_file_list'
-            ]);
-        $media->addChild('Import', [
-                'route' => 'admin_media_file_upload'
-            ]);
-
-        $menu->addChild('Members', [
-            'route' => 'admin_team_team_list',
-        ])->setExtra('icon', 'users');
-
-        //add menu builders to this class in a compiler pass
-        //loop through each
-        //call createMenu() on each
+        foreach ($this->providers as $provider) {
+            $provider->addLinks($menu);
+        }
 
         return $menu;
     }
