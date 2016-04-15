@@ -1,0 +1,13 @@
+{% extends 'knp_menu.html.twig' %}
+
+{% block root %}
+{% set listAttributes = {class:'sidebar-menu', id:'nav-accordion'} %}
+{{ block('list') -}}
+{% endblock %}
+
+{% block label %}
+  {% if item.extras.icon is defined %}
+    <i class="fa fa-{{item.extras.icon}}"></i>
+  {% endif %}
+  {{ parent() }}
+{% endblock %}

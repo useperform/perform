@@ -246,10 +246,6 @@ ul.top-menu > li > .logout {
   position: relative;
 }
 
-#sidebar .sub-menu > .sub li  {
-  padding-left: 32px;
-}
-
 /*LEFT NAVIGATION ICON*/
 .dcjq-icon {
   height:17px;
@@ -273,76 +269,27 @@ ul.top-menu > li > .logout {
 }
 
 ul.sidebar-menu {
-  margin: 0;
   padding: 0;
+  margin: 75px 0 0;
 
-  ul.sub {
+  ul {
     margin:0;
     padding:0;
+    li {
+      line-height: 15px;
+      a {
+        padding: 10px 32px;
+      }
+    }
   }
-}
-
-ul.sidebar-menu {
-  margin-top: 75px;
-}
-
-#sidebar > ul > li > ul.sub {
-  display: none;
-}
-
-#sidebar > ul > li.active > ul.sub, #sidebar > ul > li > ul.sub > li > a {
-  display: block;
-}
-
-ul.sidebar-menu li ul.sub li{
-  background: #424a5d;
-  margin-bottom: 0;
-  margin-left: 0;
-  margin-right: 0;
-}
-
-ul.sidebar-menu li ul.sub li:last-child{
-  border-radius: 0 0 4px 4px;
-  -webkit-border-radius: 0 0 4px 4px;
-}
-
-ul.sidebar-menu li ul.sub li a {
-  font-size: 12px;
-  padding: 0 10px;
-  line-height: 35px;
-  height: 35px;
-  -webkit-transition: all 0.3s ease;
-  -moz-transition: all 0.3s ease;
-  -o-transition: all 0.3s ease;
-  -ms-transition: all 0.3s ease;
-  transition: all 0.3s ease;
-  color: #aeb2b7;
-}
-
-ul.sidebar-menu li ul.sub li.active a {
-  color: #68dff0;
-  -webkit-transition: all 0.3s ease;
-  -moz-transition: all 0.3s ease;
-  -o-transition: all 0.3s ease;
-  -ms-transition: all 0.3s ease;
-  transition: all 0.3s ease;
-  display: block;
 }
 
 ul.sidebar-menu li{
   margin: 0 10px;
 }
 
-ul.sidebar-menu li.sub-menu{
-  line-height: 15px;
-}
-
-ul.sidebar-menu li a span{
-  display: inline-block;
-}
-
 ul.sidebar-menu li a{
-  color: #aeb2b7;
+  color: $gray-lighter;
   text-decoration: none;
   display: block;
   padding: 15px 0 15px 10px;
@@ -365,15 +312,6 @@ ul.sidebar-menu li a i {
   font-size: 15px;
   padding-right: 6px;
 }
-
-ul.sidebar-menu li a:hover i, ul.sidebar-menu li a:focus i {
-                                color: #fff;
-                              }
-
-ul.sidebar-menu li a.active i {
-  color: #fff;
-}
-
 
 .mail-info, .mail-info:hover {
               margin: -3px 6px 0 0;

@@ -23,32 +23,7 @@
 
       <aside>
         <div id="sidebar" class="nav-collapse ">
-          <ul class="sidebar-menu" id="nav-accordion">
-
-            <li>
-              <a href="{{path('admin_base_dashboard_index')}}">
-                <i class="fa fa-dashboard"></i>
-                Dashboard
-              </a>
-            </li>
-            <li class="sub-menu">
-              <a href="javascript:;" >
-                <i class="fa fa-briefcase"></i>
-                Media
-              </a>
-              <ul class="sub">
-                <li><a href="">List</a></li>
-                <li><a href="">Upload</a></li>
-              </ul>
-            </li>
-            <li>
-              <a href="{{path('admin_team_team_list')}}">
-                <i class="fa fa-users"></i>
-                Members
-              </a>
-            </li>
-
-          </ul>
+          {{ knp_menu_render('main') }}
         </div>
       </aside>
 
