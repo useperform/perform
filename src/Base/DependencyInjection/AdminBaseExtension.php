@@ -24,5 +24,6 @@ class AdminBaseExtension extends Extension
         $definition = $container->register('admin_base.type_registry', 'Admin\Base\Type\TypeRegistry');
         $definition->addArgument(new Reference('service_container'));
         $definition->addMethodCall('addType', ['string', 'Admin\Base\Type\StringType']);
+        $definition->addMethodCall('addType', ['text', 'Admin\Base\Type\TextType']);
     }
 }
