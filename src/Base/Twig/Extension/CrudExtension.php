@@ -4,6 +4,7 @@ namespace Admin\Base\Twig\Extension;
 
 use Admin\Base\Routing\CrudUrlGenerator;
 use Admin\Base\Util\StringUtils;
+use Admin\Base\Type\TypeRegistry;
 
 /**
  * CrudExtension.
@@ -13,10 +14,12 @@ use Admin\Base\Util\StringUtils;
 class CrudExtension extends \Twig_Extension
 {
     protected $urlGenerator;
+    protected $typeRegistry;
 
-    public function __construct(CrudUrlGenerator $urlGenerator)
+    public function __construct(CrudUrlGenerator $urlGenerator, TypeRegistry $typeRegistry)
     {
         $this->urlGenerator = $urlGenerator;
+        $this->typeRegistry = $typeRegistry;
     }
 
     public function getFunctions()
@@ -24,6 +27,8 @@ class CrudExtension extends \Twig_Extension
         return [
             new \Twig_SimpleFunction('crud_label', [$this, 'label']),
             new \Twig_SimpleFunction('crud_route', [$this->urlGenerator, 'generate']),
+            new \Twig_SimpleFunction('crud_list_context', [$this, 'listContext']),
+            new \Twig_SimpleFunction('crud_view_context', [$this, 'viewContext']),
         ];
     }
 
@@ -43,6 +48,16 @@ class CrudExtension extends \Twig_Extension
         }
 
         return StringUtils::sensible($field);
+    }
+
+    public function listContext($entity, $field, array $options)
+    {
+        return $this->typeRegistry->getType($options['type'])->listContext($entity, $field, $options);
+    }
+
+    public function viewContext($entity, $field, array $options)
+    {
+        return $this->typeRegistry->getType($options['type'])->viewContext($entity, $field, $options);
     }
 
     public function getName()

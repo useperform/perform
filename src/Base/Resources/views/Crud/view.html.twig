@@ -15,7 +15,7 @@
                 {{crud_label(field, options)}}
               </th>
               <td>
-                {{attribute(entity, field)}}
+                {{crud_view_context(entity, field, options)}}
               </td>
             </tr>
           {% endfor %}
