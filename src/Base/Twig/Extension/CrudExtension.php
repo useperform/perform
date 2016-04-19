@@ -3,6 +3,7 @@
 namespace Admin\Base\Twig\Extension;
 
 use Admin\Base\Routing\CrudUrlGenerator;
+use Admin\Base\Util\StringUtils;
 
 /**
  * CrudExtension.
@@ -21,30 +22,27 @@ class CrudExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('sensible', [$this, 'sensible']),
+            new \Twig_SimpleFunction('crud_label', [$this, 'label']),
             new \Twig_SimpleFunction('crud_route', [$this->urlGenerator, 'generate']),
         ];
     }
 
     /**
-     * Create a sensible, human readable default for $string,
-     * e.g. creating a label for the name of form inputs.
+     * Get the configured label for a field from supplied options, or
+     * create a sensible label if not configured.
      *
-     * @param mixed  $label
      * @param string $field
+     * @param array  $options
      *
      * @return string
      */
-    public function sensible($label, $field)
+    public function label($field, array $options)
     {
-        if (!is_int($label)) {
-            return $label;
+        if (isset($options['label'])) {
+            return $options['label'];
         }
 
-        $string = preg_replace('`([A-Z])`', '-\1', $field);
-        $string = str_replace(['-', '_'], ' ', $string);
-
-        return ucfirst(trim(strtolower($string)));
+        return StringUtils::sensible($field);
     }
 
     public function getName()

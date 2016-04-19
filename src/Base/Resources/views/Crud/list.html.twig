@@ -9,14 +9,14 @@
         <div class="panel-body">
           <table class="table">
             <thead>
-              {% for label, field in fields %}
-                <th>{{ sensible(label, field) }}</th>
+              {% for field, options in fields %}
+                <th>{{crud_label(field, options)}}</th>
               {% endfor %}
             </thead>
             <tbody>
               {% for entity in entities %}
                 <tr>
-                  {% for label, field in fields %}
+                  {% for field, options in fields %}
                     <th>{{ attribute(entity, field) }}</th>
                   {% endfor %}
                   <td>
