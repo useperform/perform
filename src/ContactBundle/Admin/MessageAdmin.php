@@ -14,12 +14,17 @@ class MessageAdmin extends AbstractAdmin
     protected $listFields = [
         'name',
         'email',
-        // 'timeSent',
+        'timeSent',
     ];
     protected $viewFields = [
         'name',
         'email',
-        // 'timeSent',
+        'timeSent',
+    ];
+    protected $fieldOptions = [
+        'timeSent' => [
+            'type' => 'datetime',
+        ]
     ];
     protected $routePrefix = 'admin_contact_message_';
 }
