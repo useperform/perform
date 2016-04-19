@@ -3,7 +3,7 @@
 namespace Admin\MediaBundle\Tests\Upload;
 
 use Temping\Temping;
-use Admin\Media\Upload\UploadHandler;
+use Admin\MediaBundle\Upload\UploadHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
