@@ -1,6 +1,6 @@
 <?php
 
-namespace Base\Tests\Admin;
+namespace Admin\Base\Tests\Admin;
 
 use Admin\Base\Admin\UserAdmin;
 
