@@ -9,10 +9,10 @@
     <div class="panel-body">
       <table class="table">
         <tbody>
-          {% for label, field in fields %}
+          {% for field, options in fields %}
             <tr>
               <th>
-                {{sensible(label, field)}}
+                {{crud_label(field, options)}}
               </th>
               <td>
                 {{attribute(entity, field)}}
