@@ -11,3 +11,7 @@ Admin\Base\Entity\User:
             type: string
         surname:
             type: string
+        password:
+            type: string
+        email:
+            type: string
