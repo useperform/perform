@@ -1,0 +1,10 @@
+{% extends 'AdminBaseBundle:Crud:list.html.twig' %}
+
+{% block actions %}
+{% endblock %}
+
+{% block entityActions %}
+  <td>
+    <a href="{{crud_route(entity, 'view')}}">View</a>
+  </td>
+{% endblock %}

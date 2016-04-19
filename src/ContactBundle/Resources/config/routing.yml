@@ -1,0 +1,3 @@
+team:
+    resource: "AdminContactBundle:Message"
+    type:     crud

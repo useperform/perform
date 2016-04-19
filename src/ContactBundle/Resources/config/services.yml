@@ -1,0 +1,10 @@
+services:
+    admin_contact.admin.message:
+        class: Admin\ContactBundle\Admin\MessageAdmin
+        tags:
+            - { name: admin_base.admin, entity: "AdminContactBundle:Message" }
+
+    admin_contact.menu_link.contact:
+        class: Admin\ContactBundle\Menu\ContactLinkProvider
+        tags:
+            - { name: admin_base.link_provider, alias: contact }
