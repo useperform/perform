@@ -17,7 +17,7 @@
               {% for entity in entities %}
                 <tr>
                   {% for field, options in fields %}
-                    <th>{{ attribute(entity, field) }}</th>
+                    <th>{{ crud_list_context(entity, field, options) }}</th>
                   {% endfor %}
                   <td>
                     <a href="{{crud_route(entity, 'view')}}">View</a>
