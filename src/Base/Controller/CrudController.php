@@ -86,6 +86,7 @@ abstract class CrudController extends Controller
         $admin = $this->getAdmin();
         $form = $this->createForm($admin->getFormType(), $entity, [
             'admin' => $admin,
+            'typeRegistry' => $this->get('admin_base.type_registry'),
             'context' => 'create',
         ]);
 
@@ -114,6 +115,7 @@ abstract class CrudController extends Controller
         $admin = $this->getAdmin();
         $form = $this->createForm($admin->getFormType(), $entity, [
             'admin' => $admin,
+            'typeRegistry' => $this->get('admin_base.type_registry'),
             'context' => 'edit',
         ]);
 
