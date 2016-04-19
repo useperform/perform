@@ -7,40 +7,43 @@
     <link rel="stylesheet" type="text/css" href="{{asset('bundles/adminbase/css/app.css')}}" />
   </head>
   <body>
-    <section id="container">
-      <header class="header black-bg">
-        <div class="sidebar-toggle-box">
-          <div class="fa fa-minus-square-o" id="menu-toggle" data-toggle="tooltip" data-placement="right" title="Toggle Navigation"></div>
-        </div>
+    {% block body %}
+      <section id="container">
+        <header class="header black-bg">
+          <div class="sidebar-toggle-box">
+            <div class="fa fa-minus-square-o" id="menu-toggle" data-toggle="tooltip" data-placement="right" title="Toggle Navigation"></div>
+          </div>
 
-        <a href="{{path('admin_base_dashboard_index')}}" class="logo">Site Administration</a>
-        <div class="top-menu">
-          <ul class="nav pull-right top-menu">
-            <li><a class="logout" href="/">Logout</a></li>
-          </ul>
-        </div>
-      </header>
+          <a href="{{path('admin_base_dashboard_index')}}" class="logo">Site Administration</a>
+          <div class="top-menu">
+            <ul class="nav pull-right top-menu">
+              <li><a class="logout" href="/">Logout</a></li>
+            </ul>
+          </div>
+        </header>
 
-      <aside>
-        <div id="sidebar" class="nav-collapse ">
-          {{ knp_menu_render('main') }}
-        </div>
-      </aside>
+        <aside>
+          <div id="sidebar" class="nav-collapse ">
+            {{ knp_menu_render('main') }}
+          </div>
+        </aside>
 
-      <section id="main-content">
-        <section class="wrapper site-min-height">
-          {% block workspace %}
-          {% endblock %}
+        <section id="main-content">
+          <section class="wrapper site-min-height">
+            {% block workspace %}
+            {% endblock %}
+          </section>
         </section>
+
+        <footer class="site-footer">
+          <div class="text-center">
+            A <a target="_blank" href="//glynnforrest.com">glynnforrest.com</a> project.
+          </div>
+        </footer>
+
       </section>
 
-      <footer class="site-footer">
-        <div class="text-center">
-          A <a target="_blank" href="//glynnforrest.com">glynnforrest.com</a> project.
-        </div>
-      </footer>
-
-    </section>
+    {% endblock %}
 
     {% block extras %}
     {% endblock %}
