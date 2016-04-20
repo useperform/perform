@@ -35,6 +35,11 @@ class User implements UserInterface, RecipientInterface
     /**
      * @var string
      */
+    protected $plainPassword;
+
+    /**
+     * @var string
+     */
     protected $email;
 
     /**
@@ -143,7 +148,7 @@ class User implements UserInterface, RecipientInterface
 
     public function eraseCredentials()
     {
-        $this->password = null;
+        $this->plainPassword = null;
     }
 
     /**
