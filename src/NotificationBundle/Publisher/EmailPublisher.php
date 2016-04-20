@@ -1,10 +1,9 @@
 <?php
 
-namespace Admin\Base\Notification;
+namespace Admin\NotificationBundle\Publisher;
 
 use Admin\Base\Email\Mailer;
 use Admin\NotificationBundle\Notification;
-use Admin\NotificationBundle\Publisher\PublisherInterface;
 use Symfony\Component\Templating\EngineInterface;
 
 /**

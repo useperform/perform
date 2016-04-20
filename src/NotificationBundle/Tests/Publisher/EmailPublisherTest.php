@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\Base\Tests\Publisher;
+namespace Admin\NotificationBundle\Tests\Publisher;
 
-use Admin\Base\Notification\EmailPublisher;
+use Admin\NotificationBundle\Publisher\EmailPublisher;
 use Admin\NotificationBundle\Notification;
 
 /**

@@ -49,11 +49,3 @@ services:
     admin_base.email.mailer:
         class: Admin\Base\Email\Mailer
         arguments: ["@swiftmailer.mailer", "@twig", "%admin_base.mailer.from_address%", "@logger"]
-
-    admin_base.notification.publisher.email:
-        class: Admin\Base\Notification\EmailPublisher
-        arguments:
-            - "@admin_base.email.mailer"
-            - "@templating"
-        tags:
-            - {name: admin_notification.publisher}

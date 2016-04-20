@@ -1,20 +1,29 @@
 services:
+    admin_notification.notifier:
+        class: Admin\NotificationBundle\Notifier
+
     admin_notification.publisher.local:
         class: Admin\NotificationBundle\Publisher\LocalPublisher
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@templating"
+        tags:
+            - {name: admin_notification.publisher}
 
     admin_notification.publisher.logger:
         class: Admin\NotificationBundle\Publisher\LoggerPublisher
         arguments:
             - "@logger"
+        tags:
+            - {name: admin_notification.publisher}
 
-    admin_notification.notifier:
-        class: Admin\NotificationBundle\Notifier
-        calls:
-            - [addPublisher, ["@admin_notification.publisher.local"]]
-            - [addPublisher, ["@admin_notification.publisher.logger"]]
+    admin_notification.publisher.email:
+        class: Admin\NotificationBundle\Publisher\EmailPublisher
+        arguments:
+            - "@admin_base.email.mailer"
+            - "@templating"
+        tags:
+            - {name: admin_notification.publisher}
 
     admin_notification.repository.notification_log:
         class: Admin\NotificationBundle\Repository\NotificationLogRepository
