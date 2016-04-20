@@ -5,12 +5,12 @@ namespace Admin\NotificationBundle\RecipientProvider;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * DefaultRecipientProvider assumes your default user entity
+ * CurrentUserProvider assumes your default user entity
  * implements RecipientInterface.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class DefaultRecipientProvider implements ActiveRecipientProviderInterface
+class CurrentUserProvider implements RecipientProviderInterface
 {
     protected $tokenStorage;
 
@@ -19,13 +19,14 @@ class DefaultRecipientProvider implements ActiveRecipientProviderInterface
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function getActiveRecipient()
+    public function getRecipients(array $criteria = [])
     {
         $token = $this->tokenStorage->getToken();
         if (!$token) {
             return;
         }
+        $user = $token->getUser();
 
-        return $token->getUser();
+        return $user ? [$user] : [];
     }
 }

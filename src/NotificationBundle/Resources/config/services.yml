@@ -22,12 +22,12 @@ services:
         arguments:
           - AdminNotificationBundle:NotificationLog
 
-    admin_notification.recipient_provider.default:
-        class: Admin\NotificationBundle\RecipientProvider\DefaultRecipientProvider
+    admin_notification.provider.current_user:
+        class: Admin\NotificationBundle\RecipientProvider\CurrentUserProvider
         arguments: ["@security.token_storage"]
 
     admin_notification.twig.notification:
         class: Admin\NotificationBundle\Twig\Extension\NotificationExtension
-        arguments: ['@admin_notification.recipient_provider.default', '@admin_notification.repository.notification_log']
+        arguments: ['@admin_notification.provider.current_user', '@admin_notification.repository.notification_log']
         tags:
             - {name: twig.extension}
