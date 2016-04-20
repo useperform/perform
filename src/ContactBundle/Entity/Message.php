@@ -36,7 +36,12 @@ class Message
     /**
      * @var \Datetime
      */
-    protected $timeSent;
+    protected $createdAt;
+
+    /**
+     * @var \Datetime
+     */
+    protected $updatedAt;
 
     /**
      * @var int
@@ -112,13 +117,13 @@ class Message
     }
 
     /**
-     * @param \DateTime $timeSent
+     * @param \DateTime $createdAt
      *
      * @return Message
      */
-    public function setTimeSent(\DateTime $timeSent)
+    public function setCreatedAt(\DateTime $createdAt)
     {
-        $this->timeSent = $timeSent;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
@@ -126,9 +131,29 @@ class Message
     /**
      * @return \DateTime
      */
-    public function getTimeSent()
+    public function getCreatedAt()
     {
-        return $this->timeSent;
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTime $updatedAt
+     *
+     * @return Message
+     */
+    public function setUpdatedAt(\DateTime $updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
     }
 
     /**

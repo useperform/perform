@@ -13,7 +13,15 @@ Admin\ContactBundle\Entity\Message:
             type: string
         message:
             type: text
-        timeSent:
-            type: datetime
         status:
             type: integer
+        createdAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: create
+        updatedAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: update
