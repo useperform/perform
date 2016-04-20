@@ -11,8 +11,8 @@ Create an instance of
 `Admin\NotificationBundle\Notifier` to send it.
 
 Notification is an immutable value object that requires an array of
-recipients (implementing the `Admin\NotificationBundle\Recipient`
-interface), the notification type, and any context variables relevant
+recipients (implementing `Admin\NotificationBundle\RecipientInterface`),
+the notification type, and any context variables relevant
 to the notification type.
 
 You can specify the publishers to use, or leave empty to use the
