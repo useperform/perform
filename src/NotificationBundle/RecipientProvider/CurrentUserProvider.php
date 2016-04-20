@@ -23,7 +23,7 @@ class CurrentUserProvider implements RecipientProviderInterface
     {
         $token = $this->tokenStorage->getToken();
         if (!$token) {
-            return;
+            return [];
         }
         $user = $token->getUser();
 
