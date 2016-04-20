@@ -5,7 +5,7 @@ namespace Admin\NotificationBundle\Publisher;
 use Admin\NotificationBundle\Entity\NotificationLog;
 use Admin\NotificationBundle\Notification;
 use Admin\NotificationBundle\RecipientInterface;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
@@ -18,7 +18,7 @@ class LocalPublisher implements PublisherInterface
     protected $entityManager;
     protected $templating;
 
-    public function __construct(EntityManagerInterface $entityManager, EngineInterface $templating)
+    public function __construct(ObjectManager $entityManager, EngineInterface $templating)
     {
         $this->entityManager = $entityManager;
         $this->templating = $templating;
@@ -27,7 +27,10 @@ class LocalPublisher implements PublisherInterface
     public function send(Notification $notification)
     {
         $type = $notification->getType();
-        $template = "AdminNotificationBundle:$type:local.html.twig";
+        $pieces = explode(':', $type, 2);
+        $template = count($pieces) === 2 ?
+                  $pieces[0].':notifications:'.$pieces[1].'/local.html.twig' :
+                  "AdminNotificationBundle:$type:local.html.twig";
 
         foreach ($notification->getRecipients() as $recipient) {
             $log = new NotificationLog();
