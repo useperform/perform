@@ -19,5 +19,11 @@ class AdminNotificationExtension extends Extension
 
         $notifier = $container->getDefinition('admin_notification.notifier');
         $notifier->addMethodCall('setDefaultPublishers', [$config['default_publishers']]);
+
+        if (isset($config['active_recipient_provider'])) {
+            $twigExtension = $container->getDefinition('admin_notification.twig.notification');
+            $twigExtension->replaceArgument(0, new Reference($config['active_recipient_provider']));
+        }
+
     }
 }

@@ -20,6 +20,9 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('default_publishers')
                     ->performNoDeepMerging()
                     ->prototype('scalar')
+                    ->end()
+                ->end()
+                ->scalarNode('active_recipient_provider')
                 ->end()
             ->end();
 
