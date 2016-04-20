@@ -1,0 +1,28 @@
+Admin\NotificationBundle\Entity\NotificationLog:
+    type: entity
+    repositoryClass: Admin\NotificationBundle\Repository\NotificationLogRepository
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        recipientId:
+            type: guid
+        type:
+            type: string
+        content:
+            type: text
+        status:
+            type: smallint
+        createdAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: create
+        updatedAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: update
