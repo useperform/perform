@@ -4,7 +4,7 @@ namespace Admin\NotificationBundle\Twig\Extension;
 
 use Admin\NotificationBundle\Repository\NotificationLogRepository;
 use Admin\NotificationBundle\RecipientInterface;
-use Admin\NotificationBundle\RecipientProvider\ActiveRecipientProviderInterface;
+use Admin\NotificationBundle\RecipientProvider\RecipientProviderInterface;
 
 /**
  * NotificationExtension.
@@ -14,7 +14,7 @@ class NotificationExtension extends \Twig_Extension
     protected $provider;
     protected $repository;
 
-    public function __construct(ActiveRecipientProviderInterface $provider, NotificationLogRepository $repository)
+    public function __construct(RecipientProviderInterface $provider, NotificationLogRepository $repository)
     {
         $this->provider = $provider;
         $this->repository = $repository;
@@ -37,7 +37,7 @@ class NotificationExtension extends \Twig_Extension
      */
     public function getUnreadNotificationCount()
     {
-        $recipient = $this->provider->getActiveRecipient();
+        $recipient = $this->provider->getRecipients();
         if (!$recipient instanceof RecipientInterface) {
             return 0;
         }
