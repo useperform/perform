@@ -8,3 +8,11 @@ services:
         class: Admin\ContactBundle\Menu\ContactLinkProvider
         tags:
             - { name: admin_base.link_provider, alias: contact }
+
+    admin_contact.form.handler.contact:
+        class: Admin\ContactBundle\Form\Handler\ContactFormHandler
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@admin_notification.notifier"
+            - "@admin_notification.provider.settings"
+            - "@logger"
