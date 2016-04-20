@@ -26,6 +26,10 @@ services:
         class: Admin\NotificationBundle\RecipientProvider\CurrentUserProvider
         arguments: ["@security.token_storage"]
 
+    admin_notification.provider.settings:
+        class: Admin\NotificationBundle\RecipientProvider\SettingsProvider
+        arguments: ["@doctrine.orm.entity_manager"]
+
     admin_notification.twig.notification:
         class: Admin\NotificationBundle\Twig\Extension\NotificationExtension
         arguments: ['@admin_notification.provider.current_user', '@admin_notification.repository.notification_log']
