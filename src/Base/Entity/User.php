@@ -3,13 +3,14 @@
 namespace Admin\Base\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
+use Admin\NotificationBundle\RecipientInterface;
 
 /**
  * User
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class User implements UserInterface
+class User implements UserInterface, RecipientInterface
 {
     /**
      * @var guid
@@ -30,6 +31,11 @@ class User implements UserInterface
      * @var string
      */
     protected $password;
+
+    /**
+     * @var string
+     */
+    protected $plainPassword;
 
     /**
      * @var string
@@ -142,7 +148,7 @@ class User implements UserInterface
 
     public function eraseCredentials()
     {
-        $this->password = null;
+        $this->plainPassword = null;
     }
 
     /**

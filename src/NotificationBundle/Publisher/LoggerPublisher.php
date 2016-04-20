@@ -1,0 +1,28 @@
+<?php
+
+namespace Admin\NotificationBundle\Publisher;
+
+use Psr\Log\LoggerInterface;
+use Admin\NotificationBundle\Notification;
+
+class LoggerPublisher implements PublisherInterface
+{
+    protected $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    public function send(Notification $notification)
+    {
+        $this->logger->debug(sprintf('New notification of type "%s"', $notification->getType()), [
+            'recipients' => $notification->getRecipients()
+        ]);
+    }
+
+    public function getName()
+    {
+        return 'logger';
+    }
+}
