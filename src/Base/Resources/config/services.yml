@@ -45,3 +45,7 @@ services:
         class: Admin\Base\Menu\DashboardLinkProvider
         tags:
             - { name: admin_base.link_provider, alias: dashboard }
+
+    admin_base.email.mailer:
+        class: Admin\Base\Email\Mailer
+        arguments: ["@swiftmailer.mailer", "@twig", "%admin_base.mailer.from_address%", "@logger"]
