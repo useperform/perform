@@ -19,6 +19,9 @@ use Admin\NotificationBundle\Notification;
  **/
 class ContactFormHandler
 {
+    const RESULT_OK = 1;
+    const RESULT_SPAM = 2;
+
     protected $entityManager;
     protected $notifier;
     protected $recipientProvider;
@@ -38,6 +41,9 @@ class ContactFormHandler
         $this->spamCheckers[] = $checker;
     }
 
+    /**
+     * @return mixed A result constant if the form is valid, otherwise false
+     */
     public function handleRequest(Request $request, FormInterface $form)
     {
         $form->handleRequest($request);
@@ -55,9 +61,8 @@ class ContactFormHandler
         $this->entityManager->flush();
 
         if ($message->getStatus() === Message::STATUS_SPAM) {
-            //don't notify on spam, but return a successful response
-            //regardless
-            return true;
+            //don't notify on spam
+            return static::RESULT_SPAM;
         }
 
         $recipients = $this->recipientProvider->getRecipients([
@@ -73,6 +78,6 @@ class ContactFormHandler
             $this->logger->info(sprintf('Contact message submitted from %s at %s', $message->getEmail(), $message->getCreatedAt()->format('Y/m/d H:i:s')));
         }
 
-        return true;
+        return static::RESULT_OK;
     }
 }
