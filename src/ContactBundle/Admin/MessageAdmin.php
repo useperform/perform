@@ -14,15 +14,15 @@ class MessageAdmin extends AbstractAdmin
     protected $listFields = [
         'name',
         'email',
-        'timeSent',
+        'createdAt',
     ];
     protected $viewFields = [
         'name',
         'email',
-        'timeSent',
+        'createdAt',
     ];
     protected $fieldOptions = [
-        'timeSent' => [
+        'createdAt' => [
             'type' => 'datetime',
         ]
     ];
