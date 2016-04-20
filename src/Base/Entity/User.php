@@ -3,13 +3,14 @@
 namespace Admin\Base\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
+use Admin\NotificationBundle\RecipientInterface;
 
 /**
  * User
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class User implements UserInterface
+class User implements UserInterface, RecipientInterface
 {
     /**
      * @var guid
