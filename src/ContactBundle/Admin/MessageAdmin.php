@@ -20,6 +20,7 @@ class MessageAdmin extends AbstractAdmin
         'name',
         'email',
         'createdAt',
+        'message',
     ];
     protected $fieldOptions = [
         'createdAt' => [
