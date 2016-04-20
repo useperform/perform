@@ -25,44 +25,38 @@ $notifier->send($notification);
 ```
 
 ```php
-//send using the local and email publishers
+//send using the local and logger publishers
 $notification = new Notification($recipient, 'test', ['context' => 'some_context_variable']);
-$notifier->send($notification, ['local', 'email']);
+$notifier->send($notification, ['local', 'logger]);
 ```
 
 ```php
 //send to multiple recipients
 $notification = new Notification([$recipient, $recipient2], 'test', ['context' => 'some_context_variable']);
-$notifier->send($notification, ['local', 'email']);
+$notifier->send($notification, ['local', 'logger]);
 ```
 
 ### Templates
 
-The 'local' and 'email' publishers render notifications using twig,
-with the context variables passed in. Additionally, the following
-variables are set automatically:
+Some publishers render notifications using twig, with the context
+variables passed in. Additionally, the following variables are set
+automatically:
 
 * currentRecipient - The identifier of the recipient for this message
   (a notification may be sent to many recipients).
-* notification - The notification object
+* notification - The notification object.
 
-The template to use is decided by looking in the following
-locations:
-
-* AdminNotificationBundle:<type>:<publisher>.html.twig
-* AdminNotificationBundle:<type>:general.html.twig
+Each publisher looks for a template in
+`AdminNotificationBundle:<type>:<publisher>.html.twig`.
 
 For example, sending a notification with type 'new_task', using the
-'email' publisher:
-
-* AdminNotificationBundle:new_task:email.html.twig
-* AdminNotificationBundle:new_task:general.html.twig
+'local' publisher, will render `AdminNotificationBundle:new_task:local.html.twig`.
 
 To add a template without modifying this bundle, place them in
 `app/Resources/AdminNotificationBundle/views`.
 
-e.g. `AdminNotificationBundle:new_task:email.html.twig` ->
-`app/Resources/AdminNotificationBundle/views/new_task/email.html.twig`.
+e.g. `AdminNotificationBundle:new_task:local.html.twig` ->
+`app/Resources/AdminNotificationBundle/views/new_task/local.html.twig`.
 
 ### Adding a notification publisher
 
