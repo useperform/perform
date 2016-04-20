@@ -21,3 +21,13 @@ services:
         factory: ['@doctrine.orm.default_entity_manager', 'getRepository']
         arguments:
           - AdminNotificationBundle:NotificationLog
+
+    admin_notification.recipient_provider.default:
+        class: Admin\NotificationBundle\RecipientProvider\DefaultRecipientProvider
+        arguments: ["@security.token_storage"]
+
+    admin_notification.twig.notification:
+        class: Admin\NotificationBundle\Twig\Extension\NotificationExtension
+        arguments: ['@admin_notification.recipient_provider.default', '@admin_notification.repository.notification_log']
+        tags:
+            - {name: twig.extension}
