@@ -1,5 +1,6 @@
 Admin\Base\Entity\User:
     type: entity
+    repositoryClass: Admin\Base\Repository\UserRepository
     id:
         id:
             type: guid
