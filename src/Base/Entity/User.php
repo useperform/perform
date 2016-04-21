@@ -105,7 +105,7 @@ class User implements UserInterface, RecipientInterface
      */
     public function setEmail($email)
     {
-        $this->email = strtolower($email);
+        $this->email = mb_convert_case($email, MB_CASE_LOWER, mb_detect_encoding($email));
 
         return $this;
     }
