@@ -1,0 +1,31 @@
+Admin\EventsBundle\Entity\Event:
+    type: entity
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        title:
+            type: string
+        slug:
+            type: string
+        startTime:
+            type: datetime
+        endTime:
+            type: datetime
+        location:
+            type: string
+        description:
+            type: text
+        createdAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: create
+        updatedAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: update
