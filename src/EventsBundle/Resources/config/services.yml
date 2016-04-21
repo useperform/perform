@@ -1,0 +1,10 @@
+services:
+    admin_events.admin.event:
+        class: Admin\EventsBundle\Admin\EventAdmin
+        tags:
+            - { name: admin_base.admin, entity: "AdminEventsBundle:Event" }
+
+    admin_events.menu_link.events:
+        class: Admin\EventsBundle\Menu\EventsLinkProvider
+        tags:
+            - { name: admin_base.link_provider, alias: events }
