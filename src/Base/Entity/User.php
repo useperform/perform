@@ -146,6 +146,26 @@ class User implements UserInterface, RecipientInterface
         return $this->password;
     }
 
+    /**
+     * @param string $plainPassword
+     *
+     * @return User
+     */
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
     public function eraseCredentials()
     {
         $this->plainPassword = null;
