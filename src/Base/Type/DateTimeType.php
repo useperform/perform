@@ -3,8 +3,8 @@
 namespace Admin\Base\Type;
 
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType as FormDateTimeType;
 use Carbon\Carbon;
+use Admin\Base\Form\Type\DatePickerType;
 
 /**
  * DateTimeType
@@ -14,13 +14,8 @@ use Carbon\Carbon;
 class DateTimeType extends AbstractType
 {
     protected $defaultOptions = [
-        'format' => 'Y/m/d H:i',
+        'format' => 'g:ia d/m/Y',
     ];
-
-    public function getName()
-    {
-        return 'datetime';
-    }
 
     public function listContext($entity, $field, array $options = [])
     {
@@ -54,6 +49,9 @@ class DateTimeType extends AbstractType
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
-        $builder->add($field, FormDateTimeType::class);
+        $builder->add($field, DatePickerType::class, [
+            'format' => 'h:mma dd/MM/y',
+            'datepicker_format' => 'h:mmA DD/MM/YYYY',
+        ]);
     }
 }

@@ -18,6 +18,7 @@ class AdminBaseExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
+        $this->ensureUTC();
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
@@ -34,6 +35,7 @@ class AdminBaseExtension extends Extension
         $definition->addArgument(new Reference('service_container'));
         $definition->addMethodCall('addType', ['string', 'Admin\Base\Type\StringType']);
         $definition->addMethodCall('addType', ['text', 'Admin\Base\Type\TextType']);
+        $definition->addMethodCall('addType', ['date', 'Admin\Base\Type\DateType']);
         $definition->addMethodCall('addType', ['datetime', 'Admin\Base\Type\DateTimeType']);
     }
 
@@ -49,5 +51,15 @@ class AdminBaseExtension extends Extension
 
         $definition = $container->getDefinition('admin_base.email.mailer');
         $definition->addMethodCall('setExcludedDomains', [$config['mailer']['excluded_domains']]);
+    }
+
+    /**
+     * Stop the show is the server is running anything but UTC timezone.
+     */
+    protected function ensureUTC()
+    {
+        if ('UTC' !== date_default_timezone_get()) {
+            throw new \Exception('The server timezone must be set to UTC');
+        }
     }
 }

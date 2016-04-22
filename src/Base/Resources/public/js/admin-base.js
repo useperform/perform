@@ -59,7 +59,24 @@ $(function() {
   //for backbone
   var app = {
     models: {},
-    views: {}
+    views: {},
+    func: {
+      fancyForm: function(form) {
+        // form.find('.select2').select2();
+        form.find('.datepicker').each(function() {
+          $(this).datetimepicker({
+            format: $(this).data('format'),
+            showTodayButton: true,
+            showClear: true
+          });
+        });
+      }
+    }
   };
+
+  $('.wrapper form').each(function() {
+    app.func.fancyForm($(this));
+  });
+
   window.app = app;
 });
