@@ -50,7 +50,7 @@ class DateTimeType extends AbstractType
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
         $builder->add($field, DatePickerType::class, [
-            'format' => 'K:mma dd/MM/y',
+            'format' => 'h:mma dd/MM/y',
             'datepicker_format' => 'h:mmA DD/MM/YYYY',
         ]);
     }
