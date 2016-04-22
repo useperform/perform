@@ -62,7 +62,7 @@ abstract class CrudController extends Controller
         $repo = $this->getDoctrine()->getRepository($this->entity);
         $deleteForm = $this->createFormBuilder()->getForm();
         $deleteFormView = $deleteForm->createView();
-        $this->get('twig')->getExtension('form')->renderer->setTheme($deleteFormView, 'bootstrap_3_layout.html.twig');
+        $this->get('twig')->getExtension('form')->renderer->setTheme($deleteFormView, 'AdminBaseBundle::form_theme.html.twig');
 
         return [
             'fields' => $admin->getListFields(),
@@ -101,7 +101,7 @@ abstract class CrudController extends Controller
         }
 
         $formView = $form->createView();
-        $this->get('twig')->getExtension('form')->renderer->setTheme($formView, 'bootstrap_3_layout.html.twig');
+        $this->get('twig')->getExtension('form')->renderer->setTheme($formView, 'AdminBaseBundle::form_theme.html.twig');
 
         return [
             'entity' => $entity,
@@ -130,7 +130,7 @@ abstract class CrudController extends Controller
         }
 
         $formView = $form->createView();
-        $this->get('twig')->getExtension('form')->renderer->setTheme($formView, 'bootstrap_3_layout.html.twig');
+        $this->get('twig')->getExtension('form')->renderer->setTheme($formView, 'AdminBaseBundle::form_theme.html.twig');
 
         return [
             'entity' => $entity,
