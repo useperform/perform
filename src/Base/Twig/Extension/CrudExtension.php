@@ -3,7 +3,7 @@
 namespace Admin\Base\Twig\Extension;
 
 use Admin\Base\Routing\CrudUrlGenerator;
-use Admin\Base\Util\StringUtils;
+use Admin\Base\Util\StringUtil;
 use Admin\Base\Type\TypeRegistry;
 
 /**
@@ -47,7 +47,7 @@ class CrudExtension extends \Twig_Extension
             return $options['label'];
         }
 
-        return StringUtils::sensible($field);
+        return StringUtil::sensible($field);
     }
 
     public function listContext($entity, $field, array $options)

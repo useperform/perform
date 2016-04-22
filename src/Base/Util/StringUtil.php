@@ -3,11 +3,11 @@
 namespace Admin\Base\Util;
 
 /**
- * StringUtils
+ * StringUtil
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class StringUtils
+class StringUtil
 {
     /**
      * Create a sensible, human readable default for $string,
