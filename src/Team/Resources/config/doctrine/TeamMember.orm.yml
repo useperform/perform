@@ -1,5 +1,6 @@
 Admin\Team\Entity\TeamMember:
     type: entity
+    table: admin_team_team_member
     id:
         id:
             type: guid
