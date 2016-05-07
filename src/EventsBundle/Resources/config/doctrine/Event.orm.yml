@@ -1,5 +1,6 @@
 Admin\EventsBundle\Entity\Event:
     type: entity
+    table: admin_events_event
     id:
         id:
             type: guid

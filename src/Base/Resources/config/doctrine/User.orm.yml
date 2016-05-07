@@ -1,5 +1,6 @@
 Admin\Base\Entity\User:
     type: entity
+    table: admin_base_user
     repositoryClass: Admin\Base\Repository\UserRepository
     id:
         id:
