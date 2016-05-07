@@ -24,7 +24,24 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('admins')
+                    ->prototype('array')
+                        ->prototype('array')
+                            ->prototype('array')
+                                ->prototype('scalar')
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
+
+        // how to configure admin options:
+        // admins:
+        //     AdminTeamBundle:TeamMember:
+        //         fieldOptions:
+        //             role:
+        //                 label: 'ROLE ID'
 
         return $treeBuilder;
     }
