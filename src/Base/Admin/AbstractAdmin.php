@@ -23,6 +23,28 @@ abstract class AbstractAdmin implements AdminInterface
     protected $editFieldOptions = [];
     protected $routePrefix;
 
+    public function configure(array $options)
+    {
+        $properties = [
+            'fieldOptions' => &$this->fieldOptions,
+            'listFieldOptions' => &$this->listFieldOptions,
+            'viewFieldOptions' => &$this->viewFieldOptions,
+            'createFieldOptions' => &$this->createFieldOptions,
+            'editFieldOptions' => &$this->editFieldOptions,
+        ];
+
+        foreach ($properties as $key => &$property) {
+            if (!isset($options[$key])) {
+                continue;
+            }
+            foreach ($options[$key] as $field => $fieldOptions) {
+                $property[$field] = array_merge(
+                    isset($property[$field]) ? $property[$field] : [],
+                    $fieldOptions);
+            }
+        }
+    }
+
     public function getListFields()
     {
         return $this->resolveFields($this->listFields, $this->listFieldOptions);
