@@ -25,6 +25,7 @@ class AdminBaseExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
+        $container->setParameter('admin_base.admins', $config['admins']);
         $this->configureTypeRegistry($container);
         $this->configureMailer($config, $container);
     }
