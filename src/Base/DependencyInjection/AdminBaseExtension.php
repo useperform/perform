@@ -37,6 +37,7 @@ class AdminBaseExtension extends Extension
         $definition->addMethodCall('addType', ['text', 'Admin\Base\Type\TextType']);
         $definition->addMethodCall('addType', ['date', 'Admin\Base\Type\DateType']);
         $definition->addMethodCall('addType', ['datetime', 'Admin\Base\Type\DateTimeType']);
+        $definition->addMethodCall('addType', ['boolean', 'Admin\Base\Type\BooleanType']);
     }
 
     protected function configureMailer(array $config, ContainerBuilder $container)
@@ -54,7 +55,7 @@ class AdminBaseExtension extends Extension
     }
 
     /**
-     * Stop the show is the server is running anything but UTC timezone.
+     * Stop the show if the server is running anything but UTC timezone.
      */
     protected function ensureUTC()
     {

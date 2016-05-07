@@ -19,6 +19,8 @@ Admin\EventsBundle\Entity\Event:
             type: string
         description:
             type: text
+        enabled:
+            type: boolean
         createdAt:
             type: datetime
             gedmo:
