@@ -25,6 +25,7 @@ class AdminBaseExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
+        $container->setParameter('admin_base.admins', $config['admins']);
         $this->configureTypeRegistry($container);
         $this->configureMailer($config, $container);
     }
@@ -42,7 +43,7 @@ class AdminBaseExtension extends Extension
 
     protected function configureMailer(array $config, ContainerBuilder $container)
     {
-        if (!$container->hasParameter('noreply@glynnforrest.com')) {
+        if (!$container->hasParameter('admin_base.mailer.from_address')) {
             $container->setParameter('admin_base.mailer.from_address', 'noreply@glynnforrest.com');
         }
 

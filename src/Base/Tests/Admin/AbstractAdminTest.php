@@ -78,4 +78,42 @@ class AbstractAdminTest extends \PHPUnit_Framework_TestCase
         ];
         $this->assertEquals($expected, $this->admin->getEditFields());
     }
+
+    public function testExistingFieldsCanBeConfigured()
+    {
+        $options = [
+            'fieldOptions' => [
+                'one' => [
+                    'type' => 'text',
+                ],
+            ],
+            'editFieldOptions' => [
+                'eight' => [
+                    'label' => 'some crazy label',
+                ],
+            ],
+        ];
+        $this->admin->configure($options);
+        $expected = [
+            'one' => [
+                'type' => 'text',
+            ],
+            'two' => [
+                'type' => 'string',
+            ],
+        ];
+        $this->assertEquals($expected, $this->admin->getListFields());
+
+        $expected = [
+            'seven' => [
+                'type' => 'type_for_editing',
+            ],
+            'eight' => [
+                'label' => 'some crazy label',
+                'type' => 'string',
+                'foo' => 'bar',
+            ],
+        ];
+        $this->assertEquals($expected, $this->admin->getEditFields());
+    }
 }
