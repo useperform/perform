@@ -43,7 +43,7 @@ class AdminBaseExtension extends Extension
 
     protected function configureMailer(array $config, ContainerBuilder $container)
     {
-        if (!$container->hasParameter('noreply@glynnforrest.com')) {
+        if (!$container->hasParameter('admin_base.mailer.from_address')) {
             $container->setParameter('admin_base.mailer.from_address', 'noreply@glynnforrest.com');
         }
 
