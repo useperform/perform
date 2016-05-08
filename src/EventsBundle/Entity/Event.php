@@ -55,6 +55,11 @@ class Event
     protected $updatedAt;
 
     /**
+     * @var bool
+     */
+    protected $enabled = true;
+
+    /**
      * @return uuid
      */
     public function getId()
@@ -220,5 +225,25 @@ class Event
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @param bool $enabled
+     *
+     * @return Event
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getEnabled()
+    {
+        return $this->enabled;
     }
 }
