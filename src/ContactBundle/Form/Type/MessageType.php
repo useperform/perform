@@ -5,6 +5,7 @@ namespace Admin\ContactBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 /**
  * MessageType
@@ -18,7 +19,11 @@ class MessageType extends AbstractType
         $builder
             ->add('name')
             ->add('email')
-            ->add('message')
+            ->add('message', TextareaType::class, [
+                'attr' => [
+                    'rows' => 12,
+                ],
+            ])
             ;
     }
 
