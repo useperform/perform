@@ -31,6 +31,7 @@ class LoadTeamMemberData extends AbstractFixture implements OrderedFixtureInterf
             $member->setName($faker->firstName.' '.$faker->lastName);
             $member->setRole($roles[array_rand($roles)]);
             $member->setDescription($faker->paragraph);
+            $member->setSortOrder($i);
             $manager->persist($member);
         }
         $manager->flush();
