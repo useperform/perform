@@ -20,6 +20,11 @@ class TeamMember
     protected $name;
 
     /**
+     * @var string
+     */
+    protected $slug;
+
+    /**
      * Role / job title in the team
      *
      * @var string
@@ -62,6 +67,26 @@ class TeamMember
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @param string $slug
+     *
+     * @return TeamMember
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
     }
 
     /**

@@ -10,6 +10,13 @@ Admin\Team\Entity\TeamMember:
     fields:
         name:
             type: string
+        slug:
+            type: string
+            gedmo:
+                slug:
+                    separator: -
+                    fields:
+                        - name
         role:
             type: string
         description:
@@ -17,3 +24,6 @@ Admin\Team\Entity\TeamMember:
         sortOrder:
             type: integer
             nullable: true
+    uniqueConstraints:
+        slug:
+            columns: [slug]
