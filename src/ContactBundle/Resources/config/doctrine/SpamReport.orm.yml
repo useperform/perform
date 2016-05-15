@@ -1,0 +1,29 @@
+Admin\ContactBundle\Entity\SpamReport:
+    type: entity
+    table: admin_contact_spam_report
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        report:
+            type: text
+        ip:
+            type: string
+        userAgent:
+            type: string
+        lang:
+            type: string
+        createdAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: create
+    manyToOne:
+        message:
+            targetEntity: Admin\ContactBundle\Entity\Message
+            joinColumn:
+                nullable: false
+            
