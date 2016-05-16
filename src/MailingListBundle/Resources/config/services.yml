@@ -1,0 +1,6 @@
+services:
+    admin_mailing_list.form.handler.subscriber:
+        class: Admin\MailingListBundle\Form\Handler\SubscriberFormHandler
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@logger"
