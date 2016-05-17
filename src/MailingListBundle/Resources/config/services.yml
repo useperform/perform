@@ -11,3 +11,9 @@ services:
             - "@form.factory"
         tags:
             - {name: twig.extension}
+
+    admin_mailing_list.panel.subscribers:
+        class: Admin\MailingListBundle\Panel\SubscribersPanel
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@templating"
