@@ -1,6 +1,7 @@
 Admin\EventsBundle\Entity\Event:
     type: entity
     table: admin_events_event
+    repositoryClass: Admin\EventsBundle\Repository\EventRepository
     id:
         id:
             type: guid
