@@ -14,13 +14,11 @@ class EventAdmin extends AbstractAdmin
     protected $listFields = [
         'title',
         'startTime',
-        'endTime',
     ];
     protected $viewFields = [
         'title',
         'slug',
         'startTime',
-        'endTime',
         'location',
         'description',
     ];
@@ -28,7 +26,6 @@ class EventAdmin extends AbstractAdmin
         'title',
         'slug',
         'startTime',
-        'endTime',
         'location',
         'description',
     ];
@@ -36,15 +33,11 @@ class EventAdmin extends AbstractAdmin
         'title',
         'slug',
         'startTime',
-        'endTime',
         'location',
         'description',
     ];
     protected $fieldOptions = [
         'startTime' => [
-            'type' => 'datetime',
-        ],
-        'endTime' => [
             'type' => 'datetime',
         ],
         'description' => [
@@ -53,9 +46,6 @@ class EventAdmin extends AbstractAdmin
     ];
     protected $listFieldOptions = [
         'startTime' => [
-            'human' => false
-        ],
-        'endTime' => [
             'human' => false
         ],
     ];
