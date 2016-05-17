@@ -12,6 +12,11 @@ Admin\EventsBundle\Entity\Event:
             type: string
         slug:
             type: string
+            gedmo:
+                slug:
+                    separator: -
+                    fields:
+                        - title
         startTime:
             type: datetime
         location:
@@ -30,3 +35,6 @@ Admin\EventsBundle\Entity\Event:
             gedmo:
                 timestampable:
                     on: update
+    uniqueConstraints:
+        slug:
+            columns: [slug]
