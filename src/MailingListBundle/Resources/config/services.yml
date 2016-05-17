@@ -4,3 +4,10 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@logger"
+
+    admin_mailing_list.twig.form:
+        class: Admin\MailingListBundle\Twig\Extension\FormExtension
+        arguments:
+            - "@form.factory"
+        tags:
+            - {name: twig.extension}
