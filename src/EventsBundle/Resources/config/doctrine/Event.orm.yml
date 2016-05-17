@@ -14,8 +14,6 @@ Admin\EventsBundle\Entity\Event:
             type: string
         startTime:
             type: datetime
-        endTime:
-            type: datetime
         location:
             type: string
         description:

@@ -30,11 +30,6 @@ class Event
     protected $startTime;
 
     /**
-     * @var \DateTime
-     */
-    protected $endTime;
-
-    /**
      * @var string
      */
     protected $location;
@@ -125,26 +120,6 @@ class Event
     public function getStartTime()
     {
         return $this->startTime;
-    }
-
-    /**
-     * @param \DateTime $endTime
-     *
-     * @return Event
-     */
-    public function setEndTime(\DateTime $endTime)
-    {
-        $this->endTime = $endTime;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getEndTime()
-    {
-        return $this->endTime;
     }
 
     /**
