@@ -26,6 +26,8 @@ class AdminBaseExtension extends Extension
         $loader->load('services.yml');
 
         $container->setParameter('admin_base.admins', $config['admins']);
+        $container->setParameter('admin_base.panels.left', $config['panels']['left']);
+        $container->setParameter('admin_base.panels.right', $config['panels']['right']);
         $this->configureTypeRegistry($container);
         $this->configureMailer($config, $container);
     }
