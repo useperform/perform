@@ -9,11 +9,11 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Admin\MailingListBundle\Entity\Subscriber;
 
 /**
- * LoadUserData
+ * LoadSubscriberData
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
+class LoadSubscriberData extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
