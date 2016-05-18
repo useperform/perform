@@ -23,7 +23,7 @@ services:
 
     admin_media.url.simple:
         class: Admin\MediaBundle\Url\SimpleFileUrlGenerator
-        arguments: [""]
+        arguments: ["/uploads"]
 
     admin_media.plugin.other:
         class: Admin\MediaBundle\Plugin\OtherPlugin
