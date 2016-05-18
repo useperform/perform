@@ -41,6 +41,14 @@ services:
         tags:
             - {name: admin_media.file_plugin, pluginName: pdf}
 
+    admin_media.plugin.image:
+        class: Admin\MediaBundle\Plugin\ImagePlugin
+        arguments:
+            - "@oneup_flysystem.main_filesystem"
+            - "@admin_media.url.simple"
+        tags:
+            - {name: admin_media.file_plugin, pluginName: image}
+
     admin_media.menu_link.media:
         class: Admin\MediaBundle\Menu\MediaLinkProvider
         tags:
