@@ -27,13 +27,7 @@ class RegisterFilePluginsPass implements CompilerPassInterface
             $pluginServices[$tag[0]['pluginName']] = $service;
         }
 
-        // is there a better way to get the resolved configuration without having to do it manually?
-        $processor = new Processor();
-        $config = $processor->processConfiguration(new Configuration(), $container->getExtensionConfig('admin_media'));
-        $plugins = $config['plugins'];
-
-
-        foreach ($plugins as $plugin) {
+        foreach ($container->getParameter('admin_media.plugins') as $plugin) {
             if (!isset($pluginServices[$plugin])) {
                 throw new PluginNotFoundException(sprintf('"%s" plugin not found while loading admin_media configuration.', $plugin));
             }
