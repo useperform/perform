@@ -1,6 +1,7 @@
 <?php
 
 namespace Admin\EventsBundle\Entity;
+use Admin\MediaBundle\Entity\File;
 
 /**
  * Event
@@ -53,6 +54,11 @@ class Event
      * @var bool
      */
     protected $enabled = true;
+
+    /**
+     * @var File
+     */
+    protected $image;
 
     /**
      * @return uuid
@@ -220,5 +226,25 @@ class Event
     public function getEnabled()
     {
         return $this->enabled;
+    }
+
+    /**
+     * @param File $image
+     *
+     * @return Event
+     */
+    public function setImage(File $image)
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return File
+     */
+    public function getImage()
+    {
+        return $this->image;
     }
 }

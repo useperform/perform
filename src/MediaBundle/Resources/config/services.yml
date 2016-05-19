@@ -23,7 +23,7 @@ services:
 
     admin_media.url.simple:
         class: Admin\MediaBundle\Url\SimpleFileUrlGenerator
-        arguments: [""]
+        arguments: ["/uploads"]
 
     admin_media.plugin.other:
         class: Admin\MediaBundle\Plugin\OtherPlugin
@@ -41,7 +41,20 @@ services:
         tags:
             - {name: admin_media.file_plugin, pluginName: pdf}
 
+    admin_media.plugin.image:
+        class: Admin\MediaBundle\Plugin\ImagePlugin
+        arguments:
+            - "@oneup_flysystem.main_filesystem"
+            - "@admin_media.url.simple"
+        tags:
+            - {name: admin_media.file_plugin, pluginName: image}
+
     admin_media.menu_link.media:
         class: Admin\MediaBundle\Menu\MediaLinkProvider
         tags:
             - { name: admin_base.link_provider, alias: media }
+
+    admin_media.type.image:
+        class: Admin\MediaBundle\Type\ImageType
+        arguments:
+            - "@admin_media.plugin.registry"
