@@ -11,14 +11,31 @@ use Doctrine\ORM\EntityRepository;
  **/
 class EventRepository extends EntityRepository
 {
-    public function findUpcoming($limit)
+    public function findUpcoming($limit = 0)
     {
-        return $this->createQueryBuilder('e')
+        $qb = $this->createQueryBuilder('e')
             ->where('e.startTime > :now')
             ->orderBy('e.startTime', 'ASC')
-            ->setParameter('now', new \DateTime())
-            ->setMaxResults($limit)
-            ->getQuery()
+            ->setParameter('now', new \DateTime());
+        if ($limit > 0) {
+            $qb->setMaxResults($limit);
+        }
+
+        return $qb->getQuery()
+            ->getResult();
+    }
+
+    public function findPast($limit = 0)
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->where('e.startTime < :now')
+            ->orderBy('e.startTime', 'DESC')
+            ->setParameter('now', new \DateTime());
+        if ($limit > 0) {
+            $qb->setMaxResults($limit);
+        }
+
+        return $qb->getQuery()
             ->getResult();
     }
 }
