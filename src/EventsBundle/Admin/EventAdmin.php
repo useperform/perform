@@ -20,6 +20,7 @@ class EventAdmin extends AbstractAdmin
         'slug',
         'startTime',
         'location',
+        'image',
         'description',
     ];
     protected $createFields = [
@@ -27,6 +28,7 @@ class EventAdmin extends AbstractAdmin
         'slug',
         'startTime',
         'location',
+        'image',
         'description',
     ];
     protected $editFields = [
@@ -34,6 +36,7 @@ class EventAdmin extends AbstractAdmin
         'slug',
         'startTime',
         'location',
+        'image',
         'description',
     ];
     protected $fieldOptions = [
@@ -42,6 +45,9 @@ class EventAdmin extends AbstractAdmin
         ],
         'description' => [
             'type' => 'text',
+        ],
+        'image' => [
+            'type' => 'image',
         ],
     ];
     protected $listFieldOptions = [
