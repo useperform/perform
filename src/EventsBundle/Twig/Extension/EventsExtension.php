@@ -23,6 +23,7 @@ class EventsExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFunction('upcomingEvents', [$this, 'getUpcoming']),
+            new \Twig_SimpleFunction('pastEvents', [$this, 'getPast']),
         ];
     }
 
@@ -31,6 +32,13 @@ class EventsExtension extends \Twig_Extension
         return $this->entityManager
             ->getRepository('AdminEventsBundle:Event')
             ->findUpcoming($limit);
+    }
+
+    public function getPast($limit = 5)
+    {
+        return $this->entityManager
+            ->getRepository('AdminEventsBundle:Event')
+            ->findPast($limit);
     }
 
     public function getName()
