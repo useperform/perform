@@ -39,3 +39,8 @@ Admin\EventsBundle\Entity\Event:
     uniqueConstraints:
         slug:
             columns: [slug]
+    oneToOne:
+        image:
+            targetEntity: Admin\MediaBundle\Entity\File
+            joinColumn:
+                nullable: true
