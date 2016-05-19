@@ -53,3 +53,8 @@ services:
         class: Admin\MediaBundle\Menu\MediaLinkProvider
         tags:
             - { name: admin_base.link_provider, alias: media }
+
+    admin_media.type.image:
+        class: Admin\MediaBundle\Type\ImageType
+        arguments:
+            - "@admin_media.plugin.registry"
