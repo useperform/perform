@@ -7,6 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Config\Definition\Processor;
 use Admin\MediaBundle\DependencyInjection\Configuration;
+use Admin\MediaBundle\Exception\PluginNotFoundException;
 
 /**
  * RegisterFilePluginsPass
@@ -27,15 +28,9 @@ class RegisterFilePluginsPass implements CompilerPassInterface
             $pluginServices[$tag[0]['pluginName']] = $service;
         }
 
-        // is there a better way to get the resolved configuration without having to do it manually?
-        $processor = new Processor();
-        $config = $processor->processConfiguration(new Configuration(), $container->getExtensionConfig('admin_media'));
-        $plugins = $config['plugins'];
-
-
-        foreach ($plugins as $plugin) {
+        foreach ($container->getParameter('admin_media.plugins') as $plugin) {
             if (!isset($pluginServices[$plugin])) {
-                throw new PluginNotFoundException(sprintf('"%s" plugin not found while loading admin_media configuration.', $plugin));
+                throw new PluginNotFoundException(sprintf('"%s" media plugin not found.', $plugin));
             }
 
             $registry->addMethodCall('addPlugin', [new Reference($pluginServices[$plugin])]);

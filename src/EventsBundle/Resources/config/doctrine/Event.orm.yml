@@ -1,5 +1,7 @@
 Admin\EventsBundle\Entity\Event:
     type: entity
+    table: admin_events_event
+    repositoryClass: Admin\EventsBundle\Repository\EventRepository
     id:
         id:
             type: guid
@@ -11,14 +13,19 @@ Admin\EventsBundle\Entity\Event:
             type: string
         slug:
             type: string
+            gedmo:
+                slug:
+                    separator: -
+                    fields:
+                        - title
         startTime:
-            type: datetime
-        endTime:
             type: datetime
         location:
             type: string
         description:
             type: text
+        enabled:
+            type: boolean
         createdAt:
             type: datetime
             gedmo:
@@ -29,3 +36,11 @@ Admin\EventsBundle\Entity\Event:
             gedmo:
                 timestampable:
                     on: update
+    uniqueConstraints:
+        slug:
+            columns: [slug]
+    oneToOne:
+        image:
+            targetEntity: Admin\MediaBundle\Entity\File
+            joinColumn:
+                nullable: true

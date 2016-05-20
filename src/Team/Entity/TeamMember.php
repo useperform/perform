@@ -20,6 +20,11 @@ class TeamMember
     protected $name;
 
     /**
+     * @var string
+     */
+    protected $slug;
+
+    /**
      * Role / job title in the team
      *
      * @var string
@@ -35,6 +40,16 @@ class TeamMember
      * @var int
      */
     protected $sortOrder;
+
+    /**
+     * @var \DateTime
+     */
+    protected $createdAt;
+
+    /**
+     * @var \DateTime
+     */
+    protected $updatedAt;
 
     /**
      * @return uuid
@@ -62,6 +77,26 @@ class TeamMember
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @param string $slug
+     *
+     * @return TeamMember
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
     }
 
     /**
@@ -122,5 +157,45 @@ class TeamMember
     public function getSortOrder()
     {
         return $this->sortOrder;
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     *
+     * @return TeamMember
+     */
+    public function setCreatedAt(\DateTime $createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTime $updatedAt
+     *
+     * @return TeamMember
+     */
+    public function setUpdatedAt(\DateTime $updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
     }
 }

@@ -16,3 +16,9 @@ services:
             - "@admin_notification.notifier"
             - "@admin_notification.provider.settings"
             - "@logger"
+
+    admin_contact.panel.messages:
+        class: Admin\ContactBundle\Panel\MessagesPanel
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@templating"

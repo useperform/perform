@@ -8,3 +8,10 @@ services:
         class: Admin\EventsBundle\Menu\EventsLinkProvider
         tags:
             - { name: admin_base.link_provider, alias: events }
+
+    admin_events.twig.events:
+        class: Admin\EventsBundle\Twig\Extension\EventsExtension
+        arguments:
+            - "@doctrine.orm.entity_manager"
+        tags:
+            - { name: twig.extension }

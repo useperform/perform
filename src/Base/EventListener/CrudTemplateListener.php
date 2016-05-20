@@ -52,6 +52,9 @@ class CrudTemplateListener
             $template = 'AdminBaseBundle:Crud:'.$segment.'.html.twig';
         }
 
-        $request->attributes->set('_template', $template);
+        $annotation = new Template([]);
+        $annotation->setTemplate($template);
+        $annotation->setOwner($controller);
+        $request->attributes->set('_template', $annotation);
     }
 }

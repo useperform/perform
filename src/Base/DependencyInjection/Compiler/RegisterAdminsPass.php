@@ -13,6 +13,7 @@ class RegisterAdminsPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         $definition = $container->getDefinition('admin_base.admin.registry');
+        $adminConfiguration = $container->getParameter('admin_base.admins');
 
         foreach ($container->findTaggedServiceIds('admin_base.admin') as $service => $tag) {
             if (!isset($tag[0]['entity'])) {
@@ -22,6 +23,10 @@ class RegisterAdminsPass implements CompilerPassInterface
             $entityClass = isset($tag[0]['entityClass']) ? $tag[0]['entityClass'] : $this->guessEntityClass($entityAlias);
 
             $definition->addMethodCall('addAdmin', [$entityAlias, $entityClass, $service]);
+            if (isset($adminConfiguration[$entityAlias])) {
+                $adminDefinition = $container->getDefinition($service);
+                $adminDefinition->addMethodCall('configure', [$adminConfiguration[$entityAlias]]);
+            }
         }
     }
 

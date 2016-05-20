@@ -1,5 +1,6 @@
 Admin\Team\Entity\TeamMember:
     type: entity
+    table: admin_team_team_member
     id:
         id:
             type: guid
@@ -9,6 +10,13 @@ Admin\Team\Entity\TeamMember:
     fields:
         name:
             type: string
+        slug:
+            type: string
+            gedmo:
+                slug:
+                    separator: -
+                    fields:
+                        - name
         role:
             type: string
         description:
@@ -16,3 +24,16 @@ Admin\Team\Entity\TeamMember:
         sortOrder:
             type: integer
             nullable: true
+        createdAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: create
+        updatedAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: update
+    uniqueConstraints:
+        slug:
+            columns: [slug]
