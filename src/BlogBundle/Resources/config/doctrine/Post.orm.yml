@@ -13,6 +13,11 @@ Admin\BlogBundle\Entity\Post:
             type: string
         slug:
             type: string
+            gedmo:
+                slug:
+                    separator: -
+                    fields:
+                        - title
         publishDate:
             type: datetime
         content:
