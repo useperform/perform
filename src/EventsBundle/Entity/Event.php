@@ -171,7 +171,7 @@ class Event
     /**
      * @param \DateTime $createdAt
      *
-     * @return Message
+     * @return Event
      */
     public function setCreatedAt(\DateTime $createdAt)
     {
@@ -191,7 +191,7 @@ class Event
     /**
      * @param \DateTime $updatedAt
      *
-     * @return Message
+     * @return Event
      */
     public function setUpdatedAt(\DateTime $updatedAt)
     {
