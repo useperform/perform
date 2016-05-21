@@ -1,0 +1,33 @@
+Admin\BlogBundle\Entity\Post:
+    type: entity
+    table: admin_blog_post
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        title:
+            type: string
+        slug:
+            type: string
+        publishDate:
+            type: datetime
+        content:
+            type: text
+        enabled:
+            type: boolean
+        createdAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: create
+        updatedAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: update
+    uniqueConstraints:
+        slug:
+            columns: [slug]
