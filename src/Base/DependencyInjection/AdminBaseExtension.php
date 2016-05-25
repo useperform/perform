@@ -7,6 +7,10 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\Config\Resource\DirectoryResource;
+use Doctrine\Common\Persistence\Mapping\MappingException;
 
 /**
  * AdminBaseExtension.
@@ -30,6 +34,7 @@ class AdminBaseExtension extends Extension
         $container->setParameter('admin_base.panels.right', $config['panels']['right']);
         $this->configureTypeRegistry($container);
         $this->configureMailer($config, $container);
+        $this->findExtendedEntities($container);
     }
 
     protected function configureTypeRegistry(ContainerBuilder $container)
@@ -68,5 +73,44 @@ class AdminBaseExtension extends Extension
         if ('UTC' !== date_default_timezone_get()) {
             throw new \Exception('The server timezone must be set to UTC');
         }
+    }
+
+    protected function findExtendedEntities(ContainerBuilder $container)
+    {
+        $bundles = $container->getParameter('kernel.bundles');
+        $entities = [];
+        foreach ($bundles as $bundleClass) {
+            $reflection = new \ReflectionClass($bundleClass);
+            $dirname = dirname($reflection->getFileName());
+            $namespace = $reflection->getNamespaceName().'\\Entity\\';
+
+            if (is_dir($dir = $dirname.'/Entity')) {
+                foreach (Finder::create()->files()->in($dir)->name('*.php') as $file) {
+                    $entityClass = $namespace.$file->getBasename('.php');
+                    if (!class_exists($entityClass)) {
+                        continue;
+                    }
+
+                    $entityReflection = new \ReflectionClass($entityClass);
+
+                    $entities[$entityClass] = $entityReflection->getParentClass() ? $entityReflection->getParentClass()->getName() : false;
+                    $container->addResource(new FileResource($file->getRealpath()));
+                }
+                $container->addResource(new DirectoryResource($dir));
+            }
+        }
+
+        $extendedEntities = [];
+        foreach ($entities as $child => $parent) {
+            if (isset($entities[$parent])) {
+                if (isset($extendedEntities[$parent])) {
+                    throw new MappingException(sprintf('Unable to auto-extend parent entity "%s" in child entity "%s", as it has already been extended by "%s".', $parent, $child, $extendedEntities[$parent]));
+                }
+
+                $extendedEntities[$parent] = $child;
+            }
+        }
+
+        $container->setParameter('admin_base.extended_entities', $extendedEntities);
     }
 }
