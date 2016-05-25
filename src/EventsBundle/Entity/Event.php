@@ -1,6 +1,7 @@
 <?php
 
 namespace Admin\EventsBundle\Entity;
+use Admin\MediaBundle\Entity\File;
 
 /**
  * Event
@@ -30,11 +31,6 @@ class Event
     protected $startTime;
 
     /**
-     * @var \DateTime
-     */
-    protected $endTime;
-
-    /**
      * @var string
      */
     protected $location;
@@ -58,6 +54,11 @@ class Event
      * @var bool
      */
     protected $enabled = true;
+
+    /**
+     * @var File
+     */
+    protected $image;
 
     /**
      * @return uuid
@@ -128,26 +129,6 @@ class Event
     }
 
     /**
-     * @param \DateTime $endTime
-     *
-     * @return Event
-     */
-    public function setEndTime(\DateTime $endTime)
-    {
-        $this->endTime = $endTime;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getEndTime()
-    {
-        return $this->endTime;
-    }
-
-    /**
      * @param string $location
      *
      * @return Event
@@ -190,7 +171,7 @@ class Event
     /**
      * @param \DateTime $createdAt
      *
-     * @return Message
+     * @return Event
      */
     public function setCreatedAt(\DateTime $createdAt)
     {
@@ -210,7 +191,7 @@ class Event
     /**
      * @param \DateTime $updatedAt
      *
-     * @return Message
+     * @return Event
      */
     public function setUpdatedAt(\DateTime $updatedAt)
     {
@@ -245,5 +226,25 @@ class Event
     public function getEnabled()
     {
         return $this->enabled;
+    }
+
+    /**
+     * @param File $image
+     *
+     * @return Event
+     */
+    public function setImage(File $image)
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return File
+     */
+    public function getImage()
+    {
+        return $this->image;
     }
 }

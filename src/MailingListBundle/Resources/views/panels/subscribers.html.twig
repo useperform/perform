@@ -1,0 +1,16 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <i class="fa fa-users fa-fw"></i> New Mailing List Subscribers
+  </div>
+  <div class="panel-body">
+    <div class="list-group">
+      {% for subscriber in subscribers %}
+        <a href="#" class="list-group-item">
+          <i class="fa fa-comment fa-fw"></i> {{subscriber.fullname}}
+        </a>
+      {% else %}
+        No subscribers
+      {% endfor %}
+    </div>
+  </div>
+</div>

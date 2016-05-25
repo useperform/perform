@@ -14,48 +14,44 @@ class EventAdmin extends AbstractAdmin
     protected $listFields = [
         'title',
         'startTime',
-        'endTime',
     ];
     protected $viewFields = [
         'title',
         'slug',
         'startTime',
-        'endTime',
         'location',
+        'image',
         'description',
     ];
     protected $createFields = [
         'title',
         'slug',
         'startTime',
-        'endTime',
         'location',
+        'image',
         'description',
     ];
     protected $editFields = [
         'title',
         'slug',
         'startTime',
-        'endTime',
         'location',
+        'image',
         'description',
     ];
     protected $fieldOptions = [
         'startTime' => [
             'type' => 'datetime',
         ],
-        'endTime' => [
-            'type' => 'datetime',
-        ],
         'description' => [
             'type' => 'text',
+        ],
+        'image' => [
+            'type' => 'image',
         ],
     ];
     protected $listFieldOptions = [
         'startTime' => [
-            'human' => false
-        ],
-        'endTime' => [
             'human' => false
         ],
     ];

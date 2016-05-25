@@ -26,6 +26,8 @@ class AdminBaseExtension extends Extension
         $loader->load('services.yml');
 
         $container->setParameter('admin_base.admins', $config['admins']);
+        $container->setParameter('admin_base.panels.left', $config['panels']['left']);
+        $container->setParameter('admin_base.panels.right', $config['panels']['right']);
         $this->configureTypeRegistry($container);
         $this->configureMailer($config, $container);
     }
@@ -39,6 +41,9 @@ class AdminBaseExtension extends Extension
         $definition->addMethodCall('addType', ['date', 'Admin\Base\Type\DateType']);
         $definition->addMethodCall('addType', ['datetime', 'Admin\Base\Type\DateTimeType']);
         $definition->addMethodCall('addType', ['boolean', 'Admin\Base\Type\BooleanType']);
+
+        // pull from other bundles in a compiler pass
+        $definition->addMethodCall('addTypeService', ['image', 'admin_media.type.image']);
     }
 
     protected function configureMailer(array $config, ContainerBuilder $container)

@@ -1,0 +1,5 @@
+services:
+    admin_twitter.fetcher:
+        class: Admin\TwitterBundle\Client\Fetcher
+        # arguments to be added from configuration
+
