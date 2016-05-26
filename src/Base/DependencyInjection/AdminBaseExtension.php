@@ -43,6 +43,7 @@ class AdminBaseExtension extends Extension
         $definition->addArgument(new Reference('service_container'));
         $definition->addMethodCall('addType', ['string', 'Admin\Base\Type\StringType']);
         $definition->addMethodCall('addType', ['text', 'Admin\Base\Type\TextType']);
+        $definition->addMethodCall('addType', ['password', 'Admin\Base\Type\PasswordType']);
         $definition->addMethodCall('addType', ['date', 'Admin\Base\Type\DateType']);
         $definition->addMethodCall('addType', ['datetime', 'Admin\Base\Type\DateTimeType']);
         $definition->addMethodCall('addType', ['boolean', 'Admin\Base\Type\BooleanType']);
