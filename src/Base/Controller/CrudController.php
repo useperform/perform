@@ -19,7 +19,7 @@ class CrudController extends Controller
 
     protected function initialize(Request $request)
     {
-        $this->entity = $request->attributes->get('_entity');
+        $this->entity = $this->get('admin_base.doctrine.entity_resolver')->resolve($request->attributes->get('_entity'));
     }
 
     /**

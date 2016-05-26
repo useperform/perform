@@ -3,10 +3,24 @@ services:
         class: Admin\Base\Admin\AdminRegistry
         arguments: ['@service_container']
 
+    admin_base.doctrine.entity_resolver:
+        class: Admin\Base\Doctrine\EntityResolver
+        arguments: ['%admin_base.extended_entity_aliases%', '%admin_base.extended_entities%']
+
     admin_base.admin.user:
         class: Admin\Base\Admin\UserAdmin
         tags:
-            - {name: admin_base.admin, entity: "AdminBaseBundle:User", entityClass: "Admin\\Base\\Entity\\User"}
+            - {name: admin_base.admin, entity: "AdminBaseBundle:User"}
+
+    admin_base.admin_collector:
+        class: Admin\Base\DataCollector\AdminsDataCollector
+        public: false
+        arguments: ['@admin_base.admin.registry']
+        tags:
+            -
+                name: data_collector
+                template: 'AdminBaseBundle:data_collector:admins.html.twig'
+                id: 'admin_base.admins'
 
     admin_base.routing.crud:
         class: Admin\Base\Routing\CrudLoader
