@@ -45,7 +45,7 @@ class AdminRegistryTest extends \PHPUnit_Framework_TestCase
             ->with('admin.service')
             ->will($this->returnValue($admin));
 
-        $this->assertSame($admin, $this->registry->getAdminForClass('Admin\Base\Entity\User'));
+        $this->assertSame($admin, $this->registry->getAdmin('Admin\Base\Entity\User'));
     }
 
     public function testGetAdminForEntity()

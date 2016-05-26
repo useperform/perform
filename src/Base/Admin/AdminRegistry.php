@@ -38,13 +38,13 @@ class AdminRegistry
         }
 
         $this->admins[$entity] = $service;
-        $this->aliases[$entityClass] = $entity;
+        $this->admins[$entityClass] = $service;
     }
 
     /**
      * Get the Admin instance for managing $entity.
      *
-     * @param string $entity in the style of doctrine, e.g. AdminBaseBundle:User
+     * @param string $entity in the style of doctrine (e.g. AdminBaseBundle:User), or the full class name of the entity
      */
     public function getAdmin($entity)
     {
@@ -55,20 +55,11 @@ class AdminRegistry
         throw new AdminNotFoundException(sprintf('Admin not found for entity "%s"', $entity));
     }
 
-    public function getAdminForClass($entityClass)
-    {
-        if (isset($this->aliases[$entityClass])) {
-            return $this->getAdmin($this->aliases[$entityClass]);
-        }
-
-        throw new AdminNotFoundException(sprintf('Admin not found for entity "%s"', $entityClass));
-    }
-
     /**
      * Get the Admin instance for managing an entity.
      */
     public function getAdminForEntity($entity)
     {
-        return $this->getAdminForClass(get_class($entity));
+        return $this->getAdmin(get_class($entity));
     }
 }
