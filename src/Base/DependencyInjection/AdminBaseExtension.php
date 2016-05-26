@@ -79,7 +79,8 @@ class AdminBaseExtension extends Extension
     {
         $bundles = $container->getParameter('kernel.bundles');
         $entities = [];
-        foreach ($bundles as $bundleClass) {
+        $entityAliases = [];
+        foreach ($bundles as $bundleName => $bundleClass) {
             $reflection = new \ReflectionClass($bundleClass);
             $dirname = dirname($reflection->getFileName());
             $namespace = $reflection->getNamespaceName().'\\Entity\\';
@@ -94,6 +95,7 @@ class AdminBaseExtension extends Extension
                     $entityReflection = new \ReflectionClass($entityClass);
 
                     $entities[$entityClass] = $entityReflection->getParentClass() ? $entityReflection->getParentClass()->getName() : false;
+                    $aliases[$entityClass] = $bundleName.':'.$file->getBasename('.php');
                     $container->addResource(new FileResource($file->getRealpath()));
                 }
                 $container->addResource(new DirectoryResource($dir));
@@ -101,16 +103,21 @@ class AdminBaseExtension extends Extension
         }
 
         $extendedEntities = [];
+        $extendedAliases = [];
         foreach ($entities as $child => $parent) {
             if (isset($entities[$parent])) {
+                //skip if parent is abstract
                 if (isset($extendedEntities[$parent])) {
                     throw new MappingException(sprintf('Unable to auto-extend parent entity "%s" in child entity "%s", as it has already been extended by "%s".', $parent, $child, $extendedEntities[$parent]));
                 }
 
                 $extendedEntities[$parent] = $child;
+                $extendedAliases[$aliases[$parent]] = $aliases[$child];
             }
         }
 
         $container->setParameter('admin_base.extended_entities', $extendedEntities);
+        $container->setParameter('admin_base.entity_aliases', array_flip($aliases));
+        $container->setParameter('admin_base.extended_entity_aliases', $extendedAliases);
     }
 }
