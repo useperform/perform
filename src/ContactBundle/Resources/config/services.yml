@@ -20,5 +20,6 @@ services:
     admin_contact.panel.messages:
         class: Admin\ContactBundle\Panel\MessagesPanel
         arguments:
+            - "@admin_base.doctrine.entity_resolver"
             - "@doctrine.orm.entity_manager"
             - "@templating"
