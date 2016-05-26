@@ -16,18 +16,8 @@ class RegisterAdminsPassTest extends \PHPUnit_Framework_TestCase
         $this->pass = new RegisterAdminsPass();
     }
 
-    public function guessEntityProvider()
+    public function testIsCompilerPass()
     {
-        return [
-            ['AdminBaseBundle:User', 'Admin\BaseBundle\Entity\User'],
-        ];
-    }
-
-    /**
-     * @dataProvider guessEntityProvider
-     */
-    public function testGuessEntityClass($alias, $expected)
-    {
-        $this->assertSame($expected, $this->pass->guessEntityClass($alias));
+        $this->assertInstanceOf('Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface', $this->pass);
     }
 }

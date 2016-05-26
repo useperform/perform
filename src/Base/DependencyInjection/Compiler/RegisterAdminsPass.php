@@ -14,13 +14,18 @@ class RegisterAdminsPass implements CompilerPassInterface
     {
         $definition = $container->getDefinition('admin_base.admin.registry');
         $adminConfiguration = $container->getParameter('admin_base.admins');
+        $entityAliases = $container->getParameter('admin_base.entity_aliases');
 
         foreach ($container->findTaggedServiceIds('admin_base.admin') as $service => $tag) {
             if (!isset($tag[0]['entity'])) {
-                throw new \InvalidArgumentException(sprintf('The service %s tagged with "admin_base.admin" must set the "entity" option in the tag.', $service));
+                throw new \InvalidArgumentException(sprintf('The service "%s" tagged with "admin_base.admin" must set the "entity" option in the tag.', $service));
             }
             $entityAlias = $tag[0]['entity'];
-            $entityClass = isset($tag[0]['entityClass']) ? $tag[0]['entityClass'] : $this->guessEntityClass($entityAlias);
+            if (!isset($entityAliases[$entityAlias])) {
+                throw new \InvalidArgumentException(sprintf('The service "%s" references an unknown entity "%s".', $service, $entityAlias));
+            }
+
+            $entityClass = $entityAliases[$entityAlias];
 
             $definition->addMethodCall('addAdmin', [$entityAlias, $entityClass, $service]);
             if (isset($adminConfiguration[$entityAlias])) {
@@ -28,18 +33,5 @@ class RegisterAdminsPass implements CompilerPassInterface
                 $adminDefinition->addMethodCall('configure', [$adminConfiguration[$entityAlias]]);
             }
         }
-    }
-
-    public function guessEntityClass($entityAlias)
-    {
-        $pieces = explode(':', $entityAlias);
-        if (!isset($pieces[1])) {
-            throw new \InvalidArgumentException('Invalid entity alias.');
-        }
-
-        list($bundle, $entity) = $pieces;
-        $namespace = trim(preg_replace('/([A-Z][a-z])+/', '\\\\\1', substr($bundle, 0, -6)).'Bundle', '\\');
-
-        return $namespace.'\\Entity\\'.$entity;
     }
 }
