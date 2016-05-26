@@ -32,6 +32,7 @@ class AdminBaseExtension extends Extension
         $container->setParameter('admin_base.admins', $config['admins']);
         $container->setParameter('admin_base.panels.left', $config['panels']['left']);
         $container->setParameter('admin_base.panels.right', $config['panels']['right']);
+        $container->setParameter('admin_base.menu_order', isset($config['menu']['order']) ? $config['menu']['order'] : []);
         $this->configureTypeRegistry($container);
         $this->configureMailer($config, $container);
         $this->findExtendedEntities($container);

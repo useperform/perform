@@ -44,6 +44,13 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('menu')
+                    ->children()
+                        ->arrayNode('order')
+                            ->prototype('scalar')->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
 
         // how to configure admin options:
