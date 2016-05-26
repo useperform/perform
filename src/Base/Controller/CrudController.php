@@ -13,17 +13,13 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-abstract class CrudController extends Controller
+class CrudController extends Controller
 {
-    public static function getCrudActions()
+    protected $entity;
+
+    protected function initialize(Request $request)
     {
-        return [
-            '/' => 'list',
-            '/view/{id}' => 'view',
-            '/create' => 'create',
-            '/edit/{id}' => 'edit',
-            '/delete/{id}' => 'delete',
-        ];
+        $this->entity = $request->attributes->get('_entity');
     }
 
     /**
@@ -56,8 +52,9 @@ abstract class CrudController extends Controller
         return $entity;
     }
 
-    public function listAction()
+    public function listAction(Request $request)
     {
+        $this->initialize($request);
         $admin = $this->getAdmin();
         $repo = $this->getDoctrine()->getRepository($this->entity);
         $deleteForm = $this->createFormBuilder()->getForm();
@@ -72,8 +69,10 @@ abstract class CrudController extends Controller
         ];
     }
 
-    public function viewAction($id)
+    public function viewAction(Request $request, $id)
     {
+        $this->initialize($request);
+
         return [
             'fields' => $this->getAdmin()->getViewFields(),
             'entity' => $this->findEntity($id),
@@ -82,6 +81,7 @@ abstract class CrudController extends Controller
 
     public function createAction(Request $request)
     {
+        $this->initialize($request);
         $builder = $this->createFormBuilder($entity = $this->newEntity());
         $admin = $this->getAdmin();
         $form = $this->createForm($admin->getFormType(), $entity, [
@@ -111,6 +111,7 @@ abstract class CrudController extends Controller
 
     public function editAction(Request $request, $id)
     {
+        $this->initialize($request);
         $entity = $this->findEntity($id);
         $admin = $this->getAdmin();
         $form = $this->createForm($admin->getFormType(), $entity, [
@@ -140,6 +141,7 @@ abstract class CrudController extends Controller
 
     public function deleteAction(Request $request, $id)
     {
+        $this->initialize($request);
         if ($request->getMethod() !== 'POST') {
             throw new NotFoundHttpException();
         }
