@@ -38,4 +38,14 @@ interface AdminInterface
      * @return string
      */
     public function getRoutePrefix();
+
+    /**
+     * @return string
+     */
+    public function getControllerName();
+
+    /**
+     * @return array
+     */
+    public function getActions();
 }
