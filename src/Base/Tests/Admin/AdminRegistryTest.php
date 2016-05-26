@@ -36,7 +36,7 @@ class AdminRegistryTest extends \PHPUnit_Framework_TestCase
         $this->registry->getAdmin('AdminBaseBundle:Foo');
     }
 
-    public function testGetAdminForClass()
+    public function testGetAdminByClass()
     {
         $admin = $this->getMock('Admin\Base\Admin\AdminInterface');
         $this->registry->addAdmin('AdminBaseBundle:User', 'Admin\Base\Entity\User', 'admin.service');

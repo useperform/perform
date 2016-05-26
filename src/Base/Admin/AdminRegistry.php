@@ -62,4 +62,12 @@ class AdminRegistry
     {
         return $this->getAdmin(get_class($entity));
     }
+
+    /**
+     * @return array
+     */
+    public function getAdmins()
+    {
+        return $this->admins;
+    }
 }
