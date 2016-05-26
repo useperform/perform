@@ -6,7 +6,7 @@ services:
     admin_base.admin.user:
         class: Admin\Base\Admin\UserAdmin
         tags:
-            - {name: admin_base.admin, entity: "AdminBaseBundle:User", entityClass: "Admin\\Base\\Entity\\User"}
+            - {name: admin_base.admin, entity: "AdminBaseBundle:User"}
 
     admin_base.routing.crud:
         class: Admin\Base\Routing\CrudLoader
