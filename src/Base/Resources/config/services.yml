@@ -9,7 +9,7 @@ services:
             - {name: admin_base.admin, entity: "AdminBaseBundle:User", entityClass: "Admin\\Base\\Entity\\User"}
 
     admin_base.routing.crud:
-        class: Admin\Base\Routing\CrudControllerLoader
+        class: Admin\Base\Routing\CrudLoader
         public: false
         arguments: ['@admin_base.admin.registry']
         tags:

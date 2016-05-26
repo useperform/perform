@@ -2,14 +2,14 @@
 
 namespace Admin\Base\Tests\Routing;
 
-use Admin\Base\Routing\CrudControllerLoader;
+use Admin\Base\Routing\CrudLoader;
 
 /**
- * CrudControllerLoaderTest
+ * CrudLoaderTest
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class CrudControllerLoaderTest extends \PHPUnit_Framework_TestCase
+class CrudLoaderTest extends \PHPUnit_Framework_TestCase
 {
     protected $registry;
     protected $loader;
@@ -19,7 +19,7 @@ class CrudControllerLoaderTest extends \PHPUnit_Framework_TestCase
         $this->registry = $this->getMockBuilder('Admin\Base\Admin\AdminRegistry')
                                 ->disableOriginalConstructor()
                                 ->getMock();
-        $this->loader = new CrudControllerLoader($this->registry);
+        $this->loader = new CrudLoader($this->registry);
     }
 
     protected function expectAdmin($controller, $routePrefix, array $actions)

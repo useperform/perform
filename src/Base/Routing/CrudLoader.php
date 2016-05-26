@@ -9,11 +9,11 @@ use Admin\Base\Admin\AdminRegistry;
 use Symfony\Component\Config\Resource\FileResource;
 
 /**
- * CrudControllerLoader creates crud routes dynamically for an entity admin.
+ * CrudLoader creates crud routes dynamically for an entity admin.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class CrudControllerLoader extends Loader
+class CrudLoader extends Loader
 {
     protected $registry;
 
