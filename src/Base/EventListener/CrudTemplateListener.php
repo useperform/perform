@@ -38,17 +38,17 @@ class CrudTemplateListener
 
         $request = $event->getRequest();
         //don't override @Template annotation
-        if ($request->attributes->has('_template')) {
+        if ($request->attributes->has('_template') || !$request->attributes->has('_entity')) {
             return;
         }
 
-        $guesser = $this->container->get('sensio_framework_extra.view.guesser');
-        $template = $guesser->guessTemplateName($controller, $request);
+        $entity = $request->attributes->get('_entity');
+        $segment = substr($controller[1], 0, -6);
+        $template = $entity.':'.$segment.'.html.twig';
         $templating = $this->container->get('templating');
 
         if (!$templating->exists($template)) {
             //remove Action
-            $segment = substr($controller[1], 0, -6);
             $template = 'AdminBaseBundle:Crud:'.$segment.'.html.twig';
         }
 
