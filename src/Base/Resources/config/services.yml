@@ -3,6 +3,10 @@ services:
         class: Admin\Base\Admin\AdminRegistry
         arguments: ['@service_container']
 
+    admin_base.doctrine.entity_resolver:
+        class: Admin\Base\Doctrine\EntityResolver
+        arguments: ['%admin_base.extended_entity_aliases%', '%admin_base.extended_entities%']
+
     admin_base.admin.user:
         class: Admin\Base\Admin\UserAdmin
         tags:
