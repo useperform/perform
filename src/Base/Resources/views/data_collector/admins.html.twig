@@ -1,0 +1,40 @@
+{% extends 'WebProfilerBundle:Profiler:layout.html.twig' %}
+
+{% block toolbar %}
+  {% set count =  collector.admins | length %}
+  {% if collector.activeAdmin is not null %}
+  {% set icon %}
+  <span class="sf-toolbar-value">{{collector.activeAdmin}}</span>
+  {% endset %}
+  {% endif %}
+
+  {{ include('@WebProfiler/Profiler/toolbar_item.html.twig') }}
+{% endblock %}
+
+{% block menu %}
+  <span class="label">
+    <span class="icon">{{ include('@AdminBase/data_collector/admins.svg') }}</span>
+    <strong>Admins</strong>
+  </span>
+{% endblock %}
+
+{% block panel %}
+  <h2>Loaded Admins</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Entity</th>
+        <th scope="col">Admin</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entity, admin in collector.admins %}
+        <tr>
+          <td>{{ entity }}</td>
+          <td class="font-normal">{{ admin }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
