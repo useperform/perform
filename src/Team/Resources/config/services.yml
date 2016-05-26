@@ -2,7 +2,7 @@ services:
     admin_team.admin.team_member:
         class: Admin\Team\Admin\TeamMemberAdmin
         tags:
-            - {name: admin_base.admin, entity: "AdminTeamBundle:TeamMember", entityClass: "Admin\\Team\\Entity\\TeamMember"}
+            - {name: admin_base.admin, entity: "AdminTeamBundle:TeamMember"}
 
     admin_team.menu_link.team:
         class: Admin\Team\Menu\TeamLinkProvider
