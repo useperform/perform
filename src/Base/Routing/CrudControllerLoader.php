@@ -5,45 +5,46 @@ namespace Admin\Base\Routing;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
+use Admin\Base\Admin\AdminRegistry;
+use Symfony\Component\Config\Resource\FileResource;
 
 /**
- * CrudControllerLoader creates routes dynamically for a CrudController.
+ * CrudControllerLoader creates crud routes dynamically for an entity admin.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class CrudControllerLoader extends Loader
 {
-    protected $parser;
+    protected $registry;
 
-    public function __construct(ControllerNameParser $parser)
+    public function __construct(AdminRegistry $registry)
     {
-        $this->parser = $parser;
+        $this->registry = $registry;
     }
 
-    public function load($controller, $type = null)
+    public function load($entity, $type = null)
     {
-        $class = explode(':', $this->parser->parse($controller.':_crud_'))[0];
+        $admin = $this->registry->getAdmin($entity);
+        $class = $admin->getControllerName();
         $refl = new \ReflectionClass($class);
 
-        if (!$refl->isSubclassOf('Admin\Base\Controller\CrudController')) {
-            throw new \InvalidArgumentException($class. ' must be an instance of Admin\Base\Controller\CrudController to use crud routing');
+        $crudClass = 'Admin\Base\Controller\CrudController';
+        if ($refl->getName() !== $crudClass && !$refl->isSubclassOf($crudClass)) {
+            throw new \InvalidArgumentException($class.' must be an instance of Admin\Base\Controller\CrudController to use crud routing');
         }
 
         $collection = new RouteCollection();
-        foreach ($class::getCrudActions() as $path => $action) {
-            $route = new Route($path, ['_controller' => $class.'::'.$action.'Action']);
-            $collection->add($this->createRouteName($class, $action), $route);
+        foreach ($admin->getActions() as $path => $action) {
+            $route = new Route($path, [
+                '_controller' => $class.'::'.$action.'Action',
+                '_entity' => $entity,
+            ]);
+            $collection->add($admin->getRoutePrefix().$action, $route);
         }
+        $adminRefl = new \ReflectionClass($admin);
+        $collection->addResource(new FileResource($adminRefl->getFileName()));
 
         return $collection;
-    }
-
-    protected function createRouteName($class, $method)
-    {
-        $name = strtolower(str_replace('\\', '_', $class).'_'.$method);
-
-        return preg_replace(['/(bundle|controller)_/', '/__/'], '_', $name);
     }
 
     public function supports($resource, $type = null)

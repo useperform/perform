@@ -11,15 +11,33 @@ use Admin\Base\Routing\CrudControllerLoader;
  **/
 class CrudControllerLoaderTest extends \PHPUnit_Framework_TestCase
 {
-    protected $parser;
+    protected $registry;
     protected $loader;
 
     public function setUp()
     {
-        $this->parser = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser')
+        $this->registry = $this->getMockBuilder('Admin\Base\Admin\AdminRegistry')
                                 ->disableOriginalConstructor()
                                 ->getMock();
-        $this->loader = new CrudControllerLoader($this->parser);
+        $this->loader = new CrudControllerLoader($this->registry);
+    }
+
+    protected function expectAdmin($controller, $routePrefix, array $actions)
+    {
+        $admin = $this->getMock('Admin\Base\Admin\AdminInterface');
+        $admin->expects($this->any())
+            ->method('getControllerName')
+            ->will($this->returnValue($controller));
+        $admin->expects($this->any())
+            ->method('getRoutePrefix')
+            ->will($this->returnValue($routePrefix));
+        $admin->expects($this->any())
+            ->method('getActions')
+            ->will($this->returnValue($actions));
+
+        $this->registry->expects($this->any())
+            ->method('getAdmin')
+            ->will($this->returnValue($admin));
     }
 
     public function testSupports()
@@ -31,13 +49,8 @@ class CrudControllerLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testDefaultRoutes()
     {
-        $this->parser->expects($this->any())
-            ->method('parse')
-            ->with('test:stub:_crud_')
-            ->will($this->returnValue('Admin\Base\Tests\Routing\StubController::_crud_'));
-        $collection = $this->loader->load('test:stub');
-        $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
-
+        $controller = 'Admin\Base\Controller\CrudController';
+        $routePrefix = 'some_foo_';
         $routes = [
             '/' => 'list',
             '/view/{id}' => 'view',
@@ -45,13 +58,18 @@ class CrudControllerLoaderTest extends \PHPUnit_Framework_TestCase
             '/edit/{id}' => 'edit',
             '/delete/{id}' => 'delete',
         ];
+        $this->expectAdmin($controller, $routePrefix, $routes);
 
-        foreach ($collection as $route) {
+        $collection = $this->loader->load('SomeBundle:Foo');
+        $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
+
+        foreach ($collection as $name => $route) {
             $this->assertTrue(isset($routes[$route->getPath()]));
             $this->assertSame(
-                'Admin\Base\Tests\Routing\StubController::'.$routes[$route->getPath()].'Action',
+                $controller.'::'.$routes[$route->getPath()].'Action',
                 $route->getDefault('_controller')
             );
+            $this->assertStringStartsWith($routePrefix, $name);
         }
     }
 }
