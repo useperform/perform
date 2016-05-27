@@ -10,6 +10,7 @@ Admin\Base\Entity\Setting:
     fields:
         key:
             type: string
+            column: key_name
         value:
             type: text
         defaultValue:
