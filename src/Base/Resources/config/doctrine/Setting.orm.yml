@@ -13,6 +13,7 @@ Admin\Base\Entity\Setting:
             column: key_name
         value:
             type: text
+            nullable: true
         defaultValue:
             type: text
             nullable: true
@@ -20,6 +21,7 @@ Admin\Base\Entity\Setting:
             type: string
         requiredRole:
             type: string
+            nullable: true
         global:
             type: boolean
     manyToOne:
