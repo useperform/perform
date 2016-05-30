@@ -15,10 +15,12 @@ use Admin\Base\Admin\AdminRegistry;
 class AdminsDataCollector extends DataCollector
 {
     protected $registry;
+    protected $extendedEntities;
 
-    public function __construct(AdminRegistry $registry)
+    public function __construct(AdminRegistry $registry, array $extendedEntities)
     {
         $this->registry = $registry;
+        $this->extendedEntities = $extendedEntities;
     }
 
     public function collect(Request $request, Response $response, \Exception $exception = null)
@@ -33,6 +35,7 @@ class AdminsDataCollector extends DataCollector
         ksort($admins);
         $this->data = [
             'admins' => $admins,
+            'extendedEntities' => $this->extendedEntities,
         ];
         if ($request->attributes->has('_entity')) {
             $this->data['activeEntity'] = $request->attributes->get('_entity');
@@ -53,6 +56,11 @@ class AdminsDataCollector extends DataCollector
     public function getActiveAdmin()
     {
         return isset($this->data['activeAdmin']) ? $this->data['activeAdmin'] : null;
+    }
+
+    public function getExtendedEntities()
+    {
+        return $this->data['extendedEntities'];
     }
 
     public function getName()

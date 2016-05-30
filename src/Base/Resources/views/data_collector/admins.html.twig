@@ -19,8 +19,12 @@
 {% endblock %}
 
 {% block panel %}
-  <h2>Loaded Admins</h2>
+  {% if collector.activeAdmin is not null %}
+    <h2>Active Admin</h2>
+    {{collector.activeAdmin}}
+  {% endif %}
 
+  <h2>Loaded Admins</h2>
   <table>
     <thead>
       <tr>
@@ -33,6 +37,24 @@
         <tr>
           <td>{{ entity }}</td>
           <td class="font-normal">{{ admin }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h2>Extended Entities</h2>
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Parent</th>
+        <th scope="col">Child</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for parent, child in collector.extendedEntities %}
+        <tr>
+          <td>{{ parent }}</td>
+          <td>{{ child }}</td>
         </tr>
       {% endfor %}
     </tbody>

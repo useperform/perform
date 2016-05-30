@@ -15,7 +15,7 @@ services:
     admin_base.admin_collector:
         class: Admin\Base\DataCollector\AdminsDataCollector
         public: false
-        arguments: ['@admin_base.admin.registry']
+        arguments: ['@admin_base.admin.registry', '%admin_base.extended_entities%']
         tags:
             -
                 name: data_collector
