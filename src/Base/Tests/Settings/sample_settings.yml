@@ -1,0 +1,8 @@
+setting_one:
+    type: string
+
+setting_two:
+    type: boolean
+    defaultValue: true
+    requiredRole: ROLE_ADMIN
+    global: false
