@@ -2,8 +2,10 @@
 
 namespace Admin\Base\Settings;
 
+use Symfony\Component\Yaml\Yaml;
 use Admin\Base\Entity\Setting;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * SettingsImporter adds and updates settings in the database according to a
@@ -43,11 +45,47 @@ class SettingsImporter
         $this->entityManager->flush();
     }
 
+    public function importYamlFile($path)
+    {
+        foreach ($this->parseYamlFile($path) as $setting) {
+            $this->import($setting);
+        }
+    }
+
     protected function find($key)
     {
         if (!is_string($key)) {
         }
 
         return $this->repo->findOneBy(['key' => $key]);
+    }
+
+    public function parseYamlFile($path)
+    {
+        $config = Yaml::parse(file_get_contents($path));
+
+        foreach ($config as $key => $definition) {
+            $collection[] = $this->newSetting($key, $definition);
+        }
+
+        return $collection;
+    }
+
+    protected function newSetting($key, array $definition)
+    {
+        $resolver = new OptionsResolver();
+        $resolver->setRequired('type')
+            ->setDefault('defaultValue', null)
+            ->setDefault('requiredRole', null)
+            ->setDefault('global', true);
+        $definition = $resolver->resolve($definition);
+
+        $setting = new Setting($key);
+        $setting->setType($definition['type'])
+            ->setGlobal($definition['global'])
+            ->setDefaultValue($definition['defaultValue'])
+            ->setRequiredRole($definition['requiredRole']);
+
+        return $setting;
     }
 }

@@ -78,4 +78,31 @@ class SettingsImporterTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($existing->requiresUpdate($new));
         $this->assertSame('existing_value', $existing->getValue());
     }
+
+    public function testParseYamlFile()
+    {
+        $settings = $this->importer->parseYamlFile(__DIR__.'/sample_settings.yml');
+        $this->assertSame(2, count($settings));
+
+        $one = $settings[0];
+        $this->assertSame('setting_one', $one->getKey());
+        $this->assertSame('string', $one->getType());
+        $this->assertTrue($one->isGlobal());
+
+        $two = $settings[1];
+        $this->assertSame('setting_two', $two->getKey());
+        $this->assertSame('boolean', $two->getType());
+        $this->assertFalse($two->isGlobal());
+        $this->assertSame(true, $two->getDefaultValue());
+        $this->assertSame('ROLE_ADMIN', $two->getRequiredRole());
+    }
+
+    public function testImportYamlFile()
+    {
+        $this->entityManager->expects($this->exactly(2))
+            ->method('persist');
+        $this->entityManager->expects($this->exactly(2))
+            ->method('flush');
+        $this->importer->importYamlFile(__DIR__.'/sample_settings.yml');
+    }
 }
