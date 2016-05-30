@@ -1,12 +1,22 @@
 {% extends 'WebProfilerBundle:Profiler:layout.html.twig' %}
 
 {% block toolbar %}
-  {% set count =  collector.admins | length %}
   {% if collector.activeAdmin is not null %}
   {% set icon %}
   <span class="sf-toolbar-value">{{collector.activeAdmin}}</span>
   {% endset %}
   {% endif %}
+
+  {% set text %}
+  <div class="sf-toolbar-info-piece">
+    <b>Loaded Admins</b>
+    <span class="sf-toolbar-status">{{ collector.admins | length }}</span>
+  </div>
+  <div class="sf-toolbar-info-piece">
+    <b>Extended Entities</b>
+    <span class="sf-toolbar-status">{{ collector.extendedEntities | length }}</span>
+  </div>
+  {% endset %}
 
   {{ include('@WebProfiler/Profiler/toolbar_item.html.twig') }}
 {% endblock %}
