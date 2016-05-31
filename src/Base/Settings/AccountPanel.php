@@ -3,6 +3,8 @@
 namespace Admin\Base\Settings;
 
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Admin\Base\Settings\SettingsManager;
 
 /**
  * AccountPanel
@@ -11,7 +13,11 @@ use Symfony\Component\Form\FormBuilderInterface;
  **/
 class AccountPanel implements SettingsPanelInterface
 {
-    public function buildForm(FormBuilderInterface $builder)
+    public function buildForm(FormBuilderInterface $builder, SettingsManager $manager)
+    {
+    }
+
+    public function handleSubmission(FormInterface $form, SettingsManager $manager)
     {
     }
 
