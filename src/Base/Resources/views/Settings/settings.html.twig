@@ -25,7 +25,7 @@
         <div class="panel-body">
           <div class="tab-content">
             {{form_start(form)}}
-            {% set panel %}{{ registry.getTemplate(activePanel).renderBlock('panel', {form: form}) }}{% endset %}
+            {% set panel %}{{ registry.getTemplate(activePanel).renderBlock('panel', {app: app, form: form}) }}{% endset %}
             {{form_errors(form)}}
             {{panel|raw}}
             <div class="row">

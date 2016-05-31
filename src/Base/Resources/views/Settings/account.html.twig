@@ -1,0 +1,19 @@
+{% block title %}
+  <i class="fa fa-user"></i>
+  Account
+{% endblock %}
+
+{% block panel_title %}
+  Account Settings
+{% endblock %}
+
+{% block panel %}
+  <table class="table">
+    <tbody>
+      <tr>
+        <th>Email address</th>
+        <td>{{app.user.email}}</td>
+      </tr>
+    </tbody>
+  </table>
+{% endblock %}

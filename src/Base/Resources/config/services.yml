@@ -78,3 +78,12 @@ services:
     admin_base.settings_importer:
         class: Admin\Base\Settings\SettingsImporter
         arguments: ["@doctrine.orm.entity_manager"]
+
+    admin_base.settings_panel_registry:
+        class: Admin\Base\Settings\SettingsPanelRegistry
+        arguments: ["@twig", []]
+
+    admin_base.settings.account:
+        class: Admin\Base\Settings\AccountPanel
+        tags:
+            - { name: admin_base.settings_panel, alias: account }
