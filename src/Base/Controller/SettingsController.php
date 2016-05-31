@@ -22,24 +22,34 @@ class SettingsController extends Controller
     public function settingsAction(Request $request, $panel = null)
     {
         //fetch sort order from config, use first here
-        $panel = $panel ?: 'account';
+        $panelName = $panel ?: 'account';
         $builder = $this->createFormBuilder();
         $registry = $this->get('admin_base.settings_panel_registry');
-        if (!$registry->getPanel($panel)->isEnabled()) {
+        $manager = $this->get('admin_base.settings_manager');
+        $panel = $registry->getPanel($panelName);
+        if (!$panel->isEnabled()) {
             throw new NotFoundHttpException();
         }
-        $registry->getPanel($panel)->buildForm($builder);
+        $panel->buildForm($builder, $manager);
         $form = $builder->getForm();
 
         $form->handleRequest($request);
         if ($form->isValid()) {
             //handle update
+            try {
+                $panel->handleSubmission($form, $manager);
+                $this->addFlash('success', 'Settings updated.');
+
+                return $this->redirectToRoute('admin_base_settings_settings', ['panel' => $panelName]);
+            } catch (\Exception $e) {
+                $this->addFlash('danger', 'An error occurred.');
+            }
         }
 
         return [
             'registry' => $registry,
             'form' => $form->createView(),
-            'activePanel' => $panel,
+            'activePanel' => $panelName,
         ];
     }
 }
