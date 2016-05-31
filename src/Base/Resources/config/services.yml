@@ -65,6 +65,11 @@ services:
         tags:
             - { name: admin_base.link_provider, alias: users }
 
+    admin_base.menu_link.settings:
+        class: Admin\Base\Menu\SettingsLinkProvider
+        tags:
+            - { name: admin_base.link_provider, alias: settings }
+
     admin_base.email.mailer:
         class: Admin\Base\Email\Mailer
         arguments: ["@swiftmailer.mailer", "@twig", "%admin_base.mailer.from_address%", "@logger"]
