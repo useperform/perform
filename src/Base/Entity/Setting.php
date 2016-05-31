@@ -54,6 +54,14 @@ class Setting
      */
     public function __construct($key)
     {
+        if (!is_string($key)) {
+            throw new \InvalidArgumentException('A setting key must be string.');
+        }
+
+        if (!strlen($key) === 0 || !preg_match('/^[_a-z]+$/', $key)) {
+            throw new \InvalidArgumentException(sprintf('The key for a setting must be string containing lower case characters and underscores, "%s" given.', $key));
+        }
+
         $this->key = $key;
     }
 

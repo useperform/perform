@@ -104,4 +104,25 @@ class SettingTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\InvalidArgumentException');
         (new Setting('foo'))->update(new Setting('bar'));
     }
+
+    public function illegalKeyProvider()
+    {
+        return [
+            ['FOO'],
+            ['bar-bar'],
+            ['bundle.something'],
+            ['  '],
+            [''],
+            [[]],
+        ];
+    }
+
+    /**
+     * @dataProvider illegalKeyProvider
+     */
+    public function testKeyCannotContainIllegalCharacters($key)
+    {
+        $this->setExpectedException('\InvalidArgumentException');
+        new Setting($key);
+    }
 }
