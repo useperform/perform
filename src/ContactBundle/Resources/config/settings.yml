@@ -1,0 +1,3 @@
+admin_contact_contact_form_email:
+    type: string
+    defaultValue: me@glynnforrest.com
