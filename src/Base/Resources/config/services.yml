@@ -84,6 +84,10 @@ services:
         class: Admin\Base\Settings\SettingsImporter
         arguments: ["@doctrine.orm.entity_manager"]
 
+    admin_base.settings_manager:
+        class: Admin\Base\Settings\SettingsManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
     admin_base.settings_panel_registry:
         class: Admin\Base\Settings\SettingsPanelRegistry
         arguments: ["@twig", []]
