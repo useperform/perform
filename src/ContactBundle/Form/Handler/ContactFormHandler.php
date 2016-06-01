@@ -66,7 +66,7 @@ class ContactFormHandler
         }
 
         $recipients = $this->recipientProvider->getRecipients([
-            'setting' => 'admin_contact.form_address',
+            'setting' => 'admin_contact_notify_address',
         ]);
         $notification = new Notification($recipients, 'AdminContactBundle:new_message', [
             'subject' => 'New contact form message from '.$message->getName(),
