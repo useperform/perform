@@ -15,7 +15,9 @@ class PostRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('p')
             ->where('p.enabled = TRUE')
-            ->orderBy('p.publishDate', 'DESC');
+            ->andWhere('p.publishDate < :now')
+            ->orderBy('p.publishDate', 'DESC')
+            ->setParameter('now', new \DateTime());
         if ($limit > 0) {
             $qb->setMaxResults($limit);
         }
