@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Team\DataFixtures\ORM;
+namespace Admin\BlogBundle\DataFixtures\ORM;
 
 use Faker;
 use Doctrine\Common\DataFixtures\AbstractFixture;
