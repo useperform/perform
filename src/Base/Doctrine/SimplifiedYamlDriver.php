@@ -2,16 +2,22 @@
 
 namespace Admin\Base\Doctrine;
 
-use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
+use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver as BaseDriver;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * ExtendedYamlDriver sets bundle entities as mappedSuperclasses if they are
+ * SimplifiedYamlDriver sets bundle entities as mappedSuperclasses if they are
  * extended by the application.
+ *
+ * This class must be called Simplified<Format>Driver so it can be interpreted
+ * correctly by doctrine-extensions.
+ *
+ * See getDriver() in
+ * vendor/gedmo/doctrine-extensions/lib/Gedmo/Mapping/ExtensionMetadataFactory.php
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ExtendedYamlDriver extends SimplifiedYamlDriver
+class SimplifiedYamlDriver extends BaseDriver
 {
     protected $extendedEntities = [];
 

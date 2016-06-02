@@ -2,18 +2,18 @@
 
 namespace Admin\Base\Tests\Doctrine;
 
-use Admin\Base\Doctrine\ExtendedYamlDriver;
+use Admin\Base\Doctrine\SimplifiedYamlDriver;
 
 /**
- * ExtendedYamlDriverTest.
+ * SimplifiedYamlDriverTest.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ExtendedYamlDriverTest extends \PHPUnit_Framework_TestCase
+class SimplifiedYamlDriverTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->driver = new ExtendedYamlDriver([], '.orm.yml', [
+        $this->driver = new SimplifiedYamlDriver([], '.orm.yml', [
             'ParentBundle\Entity\Message' => 'Application\Entity\Message',
         ]);
     }
