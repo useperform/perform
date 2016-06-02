@@ -3,6 +3,7 @@
 namespace Admin\NotificationBundle\RecipientProvider;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Admin\Base\Settings\SettingsManager;
 
 /**
  * SettingsProvider finds users whose email addresses are set in a given
@@ -13,10 +14,12 @@ use Doctrine\ORM\EntityManagerInterface;
 class SettingsProvider implements RecipientProviderInterface
 {
     protected $entityManager;
+    protected $settings;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, SettingsManager $settings)
     {
         $this->entityManager = $entityManager;
+        $this->settings = $settings;
     }
 
     public function getRecipients(array $criteria = [])
@@ -26,9 +29,12 @@ class SettingsProvider implements RecipientProviderInterface
         }
 
         //fetch emails using the settings store
-        $emails = ['me@glynnforrest.com'];
-
-        return $this->entityManager->getRepository('AdminBaseBundle:User')
+        $emails = (array) $this->settings->getValue($criteria['setting']);
+        $users = $this->entityManager->getRepository('AdminBaseBundle:User')
             ->findByEmails($emails);
+
+        //if some emails are missing, create them with default names
+
+        return $users;
     }
 }
