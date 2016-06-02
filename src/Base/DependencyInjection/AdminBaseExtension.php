@@ -11,6 +11,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Config\Resource\DirectoryResource;
 use Doctrine\Common\Persistence\Mapping\MappingException;
+use Admin\Base\Util\BundleSearcher;
 
 /**
  * AdminBaseExtension.
@@ -79,47 +80,43 @@ class AdminBaseExtension extends Extension
 
     protected function findExtendedEntities(ContainerBuilder $container)
     {
-        $bundles = $container->getParameter('kernel.bundles');
-        $entities = [];
-        $entityAliases = [];
-        foreach ($bundles as $bundleName => $bundleClass) {
-            $reflection = new \ReflectionClass($bundleClass);
-            $dirname = dirname($reflection->getFileName());
-            $namespace = $reflection->getNamespaceName().'\\Entity\\';
+        $mapper = function($class, $classBasename, $bundleName, $bundleClass) use ($container) {
+            $refl = new \ReflectionClass($class);
+            $parent = $refl->getParentClass() ? $refl->getParentClass()->getName() : false;
+            //skip if parent is abstract
 
-            if (is_dir($dir = $dirname.'/Entity')) {
-                foreach (Finder::create()->files()->in($dir)->name('*.php') as $file) {
-                    $entityClass = $namespace.$file->getBasename('.php');
-                    if (!class_exists($entityClass)) {
-                        continue;
-                    }
+            $file = $refl->getFileName();
+            $container->addResource(new FileResource($file));
+            $container->addResource(new DirectoryResource(dirname($file)));
 
-                    $entityReflection = new \ReflectionClass($entityClass);
-
-                    $entities[$entityClass] = $entityReflection->getParentClass() ? $entityReflection->getParentClass()->getName() : false;
-                    $aliases[$entityClass] = $bundleName.':'.$file->getBasename('.php');
-                    $container->addResource(new FileResource($file->getRealpath()));
-                }
-                $container->addResource(new DirectoryResource($dir));
-            }
-        }
+            return [
+                $bundleName.':'.$classBasename,
+                $parent
+            ];
+        };
+        $searcher = new BundleSearcher($container);
+        $entities = $searcher->findItemsInNamespaceSegment('Entity', $mapper);
 
         $extendedEntities = [];
+        $entityAliases = [];
         $extendedAliases = [];
-        foreach ($entities as $child => $parent) {
-            if (isset($entities[$parent])) {
-                //skip if parent is abstract
-                if (isset($extendedEntities[$parent])) {
-                    throw new MappingException(sprintf('Unable to auto-extend parent entity "%s" in child entity "%s", as it has already been extended by "%s".', $parent, $child, $extendedEntities[$parent]));
-                }
-
-                $extendedEntities[$parent] = $child;
-                $extendedAliases[$aliases[$parent]] = $aliases[$child];
+        foreach ($entities as $class => $item) {
+            $alias = $item[0];
+            $entityAliases[$alias] = $class;
+            if (false === $parent = $item[1]) {
+                continue;
             }
+            if (isset($extendedEntities[$parent])) {
+                throw new MappingException(sprintf('Unable to auto-extend parent entity "%s" in child entity "%s", as it has already been extended by "%s".', $parent, $child, $extendedEntities[$parent]));
+            }
+
+            $extendedEntities[$parent] = $class;
+            $parentAlias = $entities[$parent][0];
+            $extendedAliases[$parentAlias] = $alias;
         }
 
         $container->setParameter('admin_base.extended_entities', $extendedEntities);
-        $container->setParameter('admin_base.entity_aliases', array_flip($aliases));
+        $container->setParameter('admin_base.entity_aliases', $entityAliases);
         $container->setParameter('admin_base.extended_entity_aliases', $extendedAliases);
     }
 }

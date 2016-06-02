@@ -1,0 +1,43 @@
+{% extends 'AdminBaseBundle::base.html.twig' %}
+
+{% block workspace %}
+  <h3><i class="fa fa-angle-right"></i> Settings</h3>
+  <div class="row mt">
+    <div class="col-lg-2">
+      <ul class="nav nav-pills nav-stacked">
+        {% for name in registry.enabledPanels %}
+          {% set title %}{{ registry.getTemplate(name).renderBlock('title', {}) }}{% endset %}
+          <li role="presentation"{% if name == activePanel %} class="active"{% endif %}>
+            <a href="{{path('admin_base_settings_settings', {panel: name})}}" aria-controls="{{name}}" role="tab">
+              {{title|raw}}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="col-lg-10">
+      <div class="panel panel-default">
+        {% set panel_title %}{{ registry.getTemplate(activePanel).renderBlock('panel_title', {}) }}{% endset %}
+        <div class="panel-heading">
+          <h3>{{panel_title|raw}}</h3>
+        </div>
+
+        <div class="panel-body">
+          <div class="tab-content">
+            {{form_start(form)}}
+            {% set panel %}{{ registry.getTemplate(activePanel).renderBlock('panel', {app: app, form: form}) }}{% endset %}
+            {{form_errors(form)}}
+            {{panel|raw}}
+            <div class="row">
+              <div class="col-md-6">
+                <button class="btn btn-primary">Save</button>
+              </div>
+            </div>
+            {{form_end(form)}}
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

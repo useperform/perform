@@ -1,0 +1,14 @@
+{% block title %}
+  <i class="fa fa-envelope"></i>
+  Contact Form
+{% endblock %}
+
+{% block panel_title %}
+  Contact Form Settings
+{% endblock %}
+
+{% block panel %}
+  {% for row in form %}
+    {{form_row(row)}}
+  {% endfor %}
+{% endblock %}

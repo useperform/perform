@@ -15,7 +15,7 @@ services:
     admin_base.admin_collector:
         class: Admin\Base\DataCollector\AdminsDataCollector
         public: false
-        arguments: ['@admin_base.admin.registry']
+        arguments: ['@admin_base.admin.registry', '%admin_base.extended_entities%']
         tags:
             -
                 name: data_collector
@@ -65,6 +65,11 @@ services:
         tags:
             - { name: admin_base.link_provider, alias: users }
 
+    admin_base.menu_link.settings:
+        class: Admin\Base\Menu\SettingsLinkProvider
+        tags:
+            - { name: admin_base.link_provider, alias: settings }
+
     admin_base.email.mailer:
         class: Admin\Base\Email\Mailer
         arguments: ["@swiftmailer.mailer", "@twig", "%admin_base.mailer.from_address%", "@logger"]
@@ -74,3 +79,20 @@ services:
         arguments: ["@service_container"]
         tags:
             - { name: doctrine.event_subscriber }
+
+    admin_base.settings_importer:
+        class: Admin\Base\Settings\SettingsImporter
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    admin_base.settings_manager:
+        class: Admin\Base\Settings\SettingsManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    admin_base.settings_panel_registry:
+        class: Admin\Base\Settings\SettingsPanelRegistry
+        arguments: ["@twig", []]
+
+    admin_base.settings.account:
+        class: Admin\Base\Settings\AccountPanel
+        tags:
+            - { name: admin_base.settings_panel, alias: account }
