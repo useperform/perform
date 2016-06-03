@@ -4,6 +4,11 @@ services:
         tags:
             - {name: admin_base.admin, entity: "AdminBlogBundle:Post"}
 
+    admin_blog.menu_link.blog:
+        class: Admin\BlogBundle\Menu\BlogLinkProvider
+        tags:
+            - { name: admin_base.link_provider, alias: blog }
+
     admin_blog.twig.blog:
         class: Admin\BlogBundle\Twig\Extension\BlogExtension
         arguments:
