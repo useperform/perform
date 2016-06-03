@@ -1,4 +1,9 @@
 services:
+    admin_blog.admin.post:
+        class: Admin\BlogBundle\Admin\PostAdmin
+        tags:
+            - {name: admin_base.admin, entity: "AdminBlogBundle:Post"}
+
     admin_blog.twig.blog:
         class: Admin\BlogBundle\Twig\Extension\BlogExtension
         arguments:

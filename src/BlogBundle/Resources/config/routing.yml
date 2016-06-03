@@ -1,0 +1,3 @@
+team:
+    resource: "AdminBlogBundle:Post"
+    type:     crud
