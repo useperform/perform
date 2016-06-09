@@ -11,7 +11,6 @@ use Lyrixx\Twitter\Twitter;
  **/
 class InMemoryFactory implements FactoryInterface
 {
-    protected $client;
     protected $consumerKey;
     protected $consumerSecret;
     protected $accessToken;
@@ -25,17 +24,13 @@ class InMemoryFactory implements FactoryInterface
         $this->accessTokenSecret = $accessTokenSecret;
     }
 
-    public function getClient()
+    public function create()
     {
-        if (!$this->client) {
-            $this->client = new Twitter(
-                $this->consumerKey,
-                $this->consumerSecret,
-                $this->accessToken,
-                $this->accessTokenSecret
-            );
-        }
-
-        return $this->client;
+        return new Twitter(
+            $this->consumerKey,
+            $this->consumerSecret,
+            $this->accessToken,
+            $this->accessTokenSecret
+        );
     }
 }

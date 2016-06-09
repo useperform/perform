@@ -9,5 +9,8 @@ namespace Admin\TwitterBundle\Factory;
  **/
 interface FactoryInterface
 {
-    public function getClient();
+    /**
+     * @return Twitter
+     */
+    public function create();
 }
