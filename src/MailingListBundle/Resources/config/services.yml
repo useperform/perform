@@ -10,6 +10,11 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@logger"
 
+    admin_mailing_list.menu.mailing_list:
+        class: Admin\MailingListBundle\Menu\MailingListLinkProvider
+        tags:
+            - { name: admin_base.link_provider, alias: mailing_list }
+
     admin_mailing_list.twig.form:
         class: Admin\MailingListBundle\Twig\Extension\FormExtension
         arguments:
