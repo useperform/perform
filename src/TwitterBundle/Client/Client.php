@@ -5,28 +5,50 @@ namespace Admin\TwitterBundle\Client;
 use Carbon\Carbon;
 use Doctrine\Common\Cache\Cache;
 use Admin\TwitterBundle\Factory\FactoryInterface;
+use Lyrixx\Twitter\Twitter;
+use Psr\Log\LoggerInterface;
 
 /**
- * Fetcher
+ * Client
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class Fetcher
+class Client
 {
     protected $factory;
     protected $cache;
+    protected $client;
+    protected $logger;
 
-    public function __construct(FactoryInterface $factory, Cache $cache = null)
+    public function __construct(FactoryInterface $factory, Cache $cache)
     {
         $this->factory = $factory;
         $this->cache = $cache;
     }
 
-    public function setLogger($logger)
+    /**
+     * @return Twitter
+     */
+    public function getApiClient()
     {
-        $this->factory->getClient()->setLogger($logger);
+        if (!$this->client) {
+            $this->client = $this->factory->create();
+            if ($this->logger) {
+                $this->client->setLogger($this->logger);
+            }
+        }
+
+        return $this->client;
     }
 
+    public function setLogger(LoggerInterface $logger)
+    {
+        if ($this->client) {
+            $this->client->setLogger($logger);
+        }
+
+        $this->logger = $logger;
+    }
 
     /**
      * Return a subset of the user timeline suitable for public
@@ -41,7 +63,7 @@ class Fetcher
             'count' => $count,
         ];
 
-        $response = $this->factory->getClient()->query('GET', 'statuses/user_timeline', $params);
+        $response = $this->getApiClient()->query('GET', 'statuses/user_timeline', $params);
         $tweets = json_decode($response->getBody(), true);
 
         foreach ($tweets as &$tweet) {
@@ -53,4 +75,5 @@ class Fetcher
 
         return $tweets;
     }
+
 }
