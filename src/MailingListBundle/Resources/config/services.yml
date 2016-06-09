@@ -1,4 +1,9 @@
 services:
+    admin_mailing_list.admin.subscriber:
+        class: Admin\MailingListBundle\Admin\SubscriberAdmin
+        tags:
+            - {name: admin_base.admin, entity: "AdminMailingListBundle:Subscriber"}
+
     admin_mailing_list.form.handler.subscriber:
         class: Admin\MailingListBundle\Form\Handler\SubscriberFormHandler
         arguments:
