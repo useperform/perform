@@ -8,6 +8,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Config\Definition\Exception\UnsetKeyException;
+use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * AdminTwitterExtension.
@@ -28,10 +29,10 @@ class AdminTwitterExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $this->configureFetcher($config, $container);
+        $this->configureClient($config, $container);
     }
 
-    protected function configureFetcher(array $config, ContainerBuilder $container)
+    protected function configureClient(array $config, ContainerBuilder $container)
     {
         $credentialsSource = $config['credentials_source'];
         if ($credentialsSource ==='config') {
@@ -54,7 +55,10 @@ class AdminTwitterExtension extends Extension
             // $defintion->addArgument(new Reference('admin_base.settings.manager'));
         }
 
-        $fetcher = $container->getDefinition('admin_twitter.fetcher');
-        $fetcher->addArgument(new Reference('admin_twitter.factory'));
+        $client = $container->getDefinition('admin_twitter.client');
+        $client->addArgument(new Reference('admin_twitter.factory'));
+        //fetch cache from doctrine bundle here
+        $client->addArgument(new Definition('Doctrine\Common\Cache\ArrayCache'));
+        $client->addMethodCall('setLogger', [new Reference('logger')]);
     }
 }

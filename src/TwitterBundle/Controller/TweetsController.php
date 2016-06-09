@@ -14,9 +14,8 @@ class TweetsController extends Controller
 
         $screenname = $this->getParameter('admin_twitter.screen_name');
         $ttl = $this->getParameter('admin_twitter.cache_ttl');
-        $fetcher = $this->get('admin_twitter.fetcher');
+        $client = $this->get('admin_twitter.client');
 
-        $fetcher->setLogger($this->get('logger'));
-        return new JsonResponse($fetcher->getUserTimeline($screenname, $count));
+        return new JsonResponse($client->getUserTimeline($screenname, $count));
     }
 }
