@@ -8,7 +8,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Config\Definition\Exception\UnsetKeyException;
-use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * AdminTwitterExtension.
@@ -35,7 +34,7 @@ class AdminTwitterExtension extends Extension
     protected function configureClient(array $config, ContainerBuilder $container)
     {
         $credentialsSource = $config['credentials_source'];
-        if ($credentialsSource ==='config') {
+        if ($credentialsSource === 'config') {
             $definition = $container->register('admin_twitter.factory', 'Admin\TwitterBundle\Factory\InMemoryFactory');
             $keys = [
                 'consumer_key',
@@ -57,8 +56,7 @@ class AdminTwitterExtension extends Extension
 
         $client = $container->getDefinition('admin_twitter.client');
         $client->addArgument(new Reference('admin_twitter.factory'));
-        //fetch cache from doctrine bundle here
-        $client->addArgument(new Definition('Doctrine\Common\Cache\ArrayCache'));
+        $client->addArgument(new Reference('doctrine_cache.providers.'.$config['cache_provider']));
         $client->addMethodCall('setLogger', [new Reference('logger')]);
     }
 }
