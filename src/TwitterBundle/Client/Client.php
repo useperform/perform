@@ -17,13 +17,15 @@ class Client
 {
     protected $factory;
     protected $cache;
+    protected $ttl;
     protected $client;
     protected $logger;
 
-    public function __construct(FactoryInterface $factory, Cache $cache)
+    public function __construct(FactoryInterface $factory, Cache $cache, $cacheTimeToLive = 300)
     {
         $this->factory = $factory;
         $this->cache = $cache;
+        $this->ttl = $cacheTimeToLive;
     }
 
     /**
@@ -58,6 +60,12 @@ class Client
      */
     public function getUserTimeline($screenname, $count = 5)
     {
+        $cacheKey = 'admin_twitter.timeline.'.$screenname;
+        $tweets = $this->cache->fetch($cacheKey);
+        if (is_array($tweets)) {
+            return $tweets;
+        }
+
         $params = [
             'screen_name' => $screenname,
             'count' => $count,
@@ -73,7 +81,8 @@ class Client
             $tweet['time_ago'] = Carbon::instance($sent)->diffForHumans();
         }
 
+        $this->cache->save($cacheKey, $tweets, $this->ttl);
+
         return $tweets;
     }
-
 }
