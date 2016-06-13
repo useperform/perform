@@ -63,6 +63,10 @@ class Client
         $cacheKey = 'admin_twitter.timeline.'.$screenname;
         $tweets = $this->cache->fetch($cacheKey);
         if (is_array($tweets)) {
+            if ($this->logger) {
+                $this->logger->debug(sprintf('Fetched twitter timeline for "%s" from cache.', $screenname));
+            }
+
             return $tweets;
         }
 
@@ -82,6 +86,9 @@ class Client
         }
 
         $this->cache->save($cacheKey, $tweets, $this->ttl);
+        if ($this->logger) {
+            $this->logger->debug(sprintf('Saving twitter timeline for "%s" to cache, ttl %s.', $screenname, $this->ttl));
+        }
 
         return $tweets;
     }
