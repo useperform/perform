@@ -57,6 +57,7 @@ class AdminTwitterExtension extends Extension
         $client = $container->getDefinition('admin_twitter.client');
         $client->addArgument(new Reference('admin_twitter.factory'));
         $client->addArgument(new Reference('doctrine_cache.providers.'.$config['cache_provider']));
+        $client->addArgument($container->getParameter('admin_twitter.cache_ttl'));
         $client->addMethodCall('setLogger', [new Reference('logger')]);
     }
 }
