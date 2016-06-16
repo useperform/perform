@@ -90,13 +90,13 @@ class PluginRegistry
      *
      * @param File|null
      */
-    public function getPreview(File $file = null)
+    public function getPreview(File $file = null, array $options = [])
     {
         if (!$file) {
             return '';
         }
 
-        return $this->getFilePlugin($file)->getPreview($file);
+        return $this->getFilePlugin($file)->getPreview($file, $options);
     }
 
     /**
