@@ -33,14 +33,9 @@ class ImagePlugin implements FilePluginInterface
         return 'Image';
     }
 
-    public function getUrl(File $file)
-    {
-        return $this->urlGenerator->getUrl($file);
-    }
-
     public function getPreview(File $file, array $options = [])
     {
-        $url = $this->urlGenerator->getUrl($file);
+        $url = $this->urlGenerator->getUrl($file->getFilename());
         //thumbUrl should find a linked private variation of the file and get the url for that.
         $thumbUrl = $url;
 

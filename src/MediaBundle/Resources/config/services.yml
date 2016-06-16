@@ -8,6 +8,8 @@ services:
 
     admin_media.plugin.registry:
         class: Admin\MediaBundle\Plugin\PluginRegistry
+        arguments:
+            - "@admin_media.url.simple"
 
     admin_media.listener.file_plugin:
         class: Admin\MediaBundle\EventListener\FilePluginListener
@@ -29,7 +31,6 @@ services:
         class: Admin\MediaBundle\Plugin\OtherPlugin
         arguments:
             - "@oneup_flysystem.main_filesystem"
-            - "@admin_media.url.simple"
         tags:
             - {name: admin_media.file_plugin, pluginName: other}
 

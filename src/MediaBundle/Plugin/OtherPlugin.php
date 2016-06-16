@@ -3,7 +3,6 @@
 namespace Admin\MediaBundle\Plugin;
 
 use Admin\MediaBundle\Entity\File;
-use Admin\MediaBundle\Url\FileUrlGeneratorInterface;
 use League\Flysystem\FilesystemInterface;
 
 /**
@@ -15,12 +14,10 @@ class OtherPlugin implements FilePluginInterface
 {
     protected $type = 'other';
     protected $storage;
-    protected $urlGenerator;
 
-    public function __construct(FilesystemInterface $storage, FileUrlGeneratorInterface $urlGenerator)
+    public function __construct(FilesystemInterface $storage)
     {
         $this->storage = $storage;
-        $this->urlGenerator = $urlGenerator;
     }
 
     public function getName()
@@ -31,11 +28,6 @@ class OtherPlugin implements FilePluginInterface
     public function getListingName()
     {
         return 'Other';
-    }
-
-    public function getUrl(File $file)
-    {
-        return $this->urlGenerator->getUrl($file);
     }
 
     public function getPreview(File $file, array $options = [])
