@@ -33,7 +33,7 @@ interface FilePluginInterface
      *
      * @param File
      */
-    public function getPreview(File $file);
+    public function getPreview(File $file, array $options = []);
 
     public function onCreate(File $file);
 

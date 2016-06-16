@@ -38,7 +38,7 @@ class OtherPlugin implements FilePluginInterface
         return $this->urlGenerator->getUrl($file);
     }
 
-    public function getPreview(File $file)
+    public function getPreview(File $file, array $options = [])
     {
         return '<i class="fa fa-file-o"></i>';
     }
