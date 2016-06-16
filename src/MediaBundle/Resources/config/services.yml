@@ -42,11 +42,15 @@ services:
         tags:
             - {name: admin_media.file_plugin, pluginName: pdf}
 
+    admin_media.imagine:
+        class: Imagine\Gd\Imagine
+
     admin_media.plugin.image:
         class: Admin\MediaBundle\Plugin\ImagePlugin
         arguments:
             - "@oneup_flysystem.main_filesystem"
             - "@admin_media.url.simple"
+            - "@admin_media.imagine"
         tags:
             - {name: admin_media.file_plugin, pluginName: image}
 
