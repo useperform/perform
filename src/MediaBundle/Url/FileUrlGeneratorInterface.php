@@ -17,9 +17,9 @@ interface FileUrlGeneratorInterface
     public function getRootUrl();
 
     /**
-     * @param File $file
+     * @param string $filename
      *
      * @return string
      */
-    public function getUrl(File $file);
+    public function getUrl($filename);
 }

@@ -22,8 +22,8 @@ class SimpleFileUrlGenerator implements FileUrlGeneratorInterface
         return $this->rootUrl;
     }
 
-    public function getUrl(File $file)
+    public function getUrl($filename)
     {
-        return $this->rootUrl . $file->getFilename();
+        return $this->rootUrl . $filename;
     }
 }
