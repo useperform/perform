@@ -30,6 +30,11 @@ class File
     protected $type;
 
     /**
+     * @var array
+     */
+    protected $typeOptions = [];
+
+    /**
      * @var string
      */
     protected $mimeType;
@@ -137,6 +142,26 @@ class File
     public function hasType()
     {
         return !!$this->type;
+    }
+
+    /**
+     * @param array $typeOptions
+     *
+     * @return File
+     */
+    public function setTypeOptions(array $typeOptions)
+    {
+        $this->typeOptions = $typeOptions;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTypeOptions()
+    {
+        return $this->typeOptions;
     }
 
     /**
