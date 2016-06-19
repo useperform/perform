@@ -39,7 +39,7 @@ Admin\EventsBundle\Entity\Event:
     uniqueConstraints:
         slug:
             columns: [slug]
-    oneToOne:
+    manyToOne:
         image:
             targetEntity: Admin\MediaBundle\Entity\File
             joinColumn:
