@@ -42,7 +42,12 @@ class CrudLoader extends Loader
             $collection->add($admin->getRoutePrefix().$action, $route);
         }
         $adminRefl = new \ReflectionClass($admin);
-        $collection->addResource(new FileResource($adminRefl->getFileName()));
+        $filename = $adminRefl->getFileName();
+        try {
+            $collection->addResource(new FileResource($filename));
+        } catch (\InvalidArgumentException $e) {
+            //file doesn't exist, do nothing
+        }
 
         return $collection;
     }
