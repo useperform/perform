@@ -78,5 +78,7 @@ $(function() {
     app.func.fancyForm($(this));
   });
 
+  $('.tooltips').tooltip();
+
   window.app = app;
 });

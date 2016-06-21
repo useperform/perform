@@ -720,8 +720,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
 
 
 .custom-bar-chart .bar .value:hover {
-  background: #2f2f2f;
-  color: #fff;
+  background: darken(#ff865c, 25);
 }
 
 .y-axis {
