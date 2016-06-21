@@ -6,8 +6,10 @@
     <div class="list-group">
       {% for message in messages %}
         <a href="{{path('admin_contact_message_view', {id: message.id})}}" class="list-group-item">
-          <i class="fa fa-comment fa-fw"></i> {{message.name}}
-          <span class="pull-right text-muted small"><em></em>
+          {{message.name}}
+          <br/>
+          <span class="text-muted small">
+            <em>{{message.createdAt | human_date}}</em>
           </span>
         </a>
       {% else %}
