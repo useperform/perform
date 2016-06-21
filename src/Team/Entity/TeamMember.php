@@ -206,11 +206,11 @@ class TeamMember
     }
 
     /**
-     * @param File $image
+     * @param File|null $image
      *
      * @return TeamMember
      */
-    public function setImage(File $image)
+    public function setImage(File $image = null)
     {
         $this->image = $image;
 
