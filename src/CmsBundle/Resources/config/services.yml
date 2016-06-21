@@ -1,0 +1,7 @@
+services:
+    admin_cms.listener.toolbar:
+        class: Admin\CmsBundle\EventListener\ToolbarListener
+        arguments:
+            - "@twig"
+        tags:
+            - {name: kernel.event_subscriber}
