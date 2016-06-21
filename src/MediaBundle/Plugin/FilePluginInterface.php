@@ -22,18 +22,11 @@ interface FilePluginInterface
     public function getListingName();
 
     /**
-     * Get the absolute url to a stored file entity.
-     *
-     * @param File
-     */
-    public function getUrl(File $file);
-
-    /**
      * Get an HTML preview of a file entity.
      *
      * @param File
      */
-    public function getPreview(File $file);
+    public function getPreview(File $file, array $options = []);
 
     public function onCreate(File $file);
 

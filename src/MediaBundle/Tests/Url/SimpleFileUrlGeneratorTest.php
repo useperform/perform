@@ -3,7 +3,6 @@
 namespace MediaBundle\Tests\Url;
 
 use Admin\MediaBundle\Url\SimpleFileUrlGenerator;
-use Admin\MediaBundle\Entity\File;
 
 /**
  * SimpleFileUrlGeneratorTest
@@ -26,8 +25,6 @@ class SimpleFileUrlGeneratorTest extends \PHPUnit_Framework_TestCase
 
     public function testGetUrl()
     {
-        $file = new File();
-        $file->setFilename('foo.jpg');
-        $this->assertSame('http://example.com/uploads/foo.jpg', $this->generator->getUrl($file));
+        $this->assertSame('http://example.com/uploads/foo.jpg', $this->generator->getUrl('foo.jpg'));
     }
 }

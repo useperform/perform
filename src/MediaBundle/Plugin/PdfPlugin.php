@@ -33,12 +33,7 @@ class PdfPlugin implements FilePluginInterface
         return 'PDF';
     }
 
-    public function getUrl(File $file)
-    {
-        return $this->storage->getRootUrl().$file->filename;
-    }
-
-    public function getPreview(File $file)
+    public function getPreview(File $file, array $options = [])
     {
         return '<i class="fa fa-file-pdf-o"></i>';
     }

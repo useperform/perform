@@ -7,7 +7,7 @@
     <div class="col-lg-12">
       <div class="panel panel-default">
         <div class="panel-body">
-          <table class="table">
+          <table class="table media-listing">
             <thead>
               <th>Name</th>
               <th>Type</th>
@@ -23,7 +23,7 @@
                     {{fileListingType(file)}}
                   </td>
                   <td>
-                    {{filePreview(file)}}
+                    {{filePreview(file, {size: 'small'})}}
                   </td>
                 </tr>
               {% endfor %}
