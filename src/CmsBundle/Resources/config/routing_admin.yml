@@ -1,0 +1,4 @@
+sessions:
+    resource: "@AdminCmsBundle/Controller/SessionController.php"
+    type:     annotation
+    prefix: session
