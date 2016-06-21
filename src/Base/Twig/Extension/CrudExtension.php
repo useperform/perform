@@ -5,6 +5,7 @@ namespace Admin\Base\Twig\Extension;
 use Admin\Base\Routing\CrudUrlGenerator;
 use Admin\Base\Util\StringUtil;
 use Admin\Base\Type\TypeRegistry;
+use Carbon\Carbon;
 
 /**
  * CrudExtension.
@@ -29,6 +30,13 @@ class CrudExtension extends \Twig_Extension
             new \Twig_SimpleFunction('crud_route', [$this->urlGenerator, 'generate']),
             new \Twig_SimpleFunction('crud_list_context', [$this, 'listContext']),
             new \Twig_SimpleFunction('crud_view_context', [$this, 'viewContext']),
+        ];
+    }
+
+    public function getFilters()
+    {
+        return [
+            new \Twig_SimpleFilter('human_date', [$this, 'humanDate']),
         ];
     }
 
@@ -58,6 +66,14 @@ class CrudExtension extends \Twig_Extension
     public function viewContext($entity, $field, array $options)
     {
         return $this->typeRegistry->getType($options['type'])->viewContext($entity, $field, $options);
+    }
+
+    public function humanDate(\DateTime $date = null)
+    {
+        if (!$date) {
+            return '';
+        }
+        return Carbon::instance($date)->diffForHumans();
     }
 
     public function getName()
