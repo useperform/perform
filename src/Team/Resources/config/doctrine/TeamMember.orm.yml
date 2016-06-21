@@ -37,3 +37,8 @@ Admin\Team\Entity\TeamMember:
     uniqueConstraints:
         slug:
             columns: [slug]
+    manyToOne:
+        image:
+            targetEntity: Admin\MediaBundle\Entity\File
+            joinColumn:
+                nullable: true

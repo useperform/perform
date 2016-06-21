@@ -1,6 +1,7 @@
 <?php
 
 namespace Admin\Team\Entity;
+use Admin\MediaBundle\Entity\File;
 
 /**
  * TeamMember
@@ -50,6 +51,11 @@ class TeamMember
      * @var \DateTime
      */
     protected $updatedAt;
+
+    /**
+     * @var File
+     */
+    protected $image;
 
     /**
      * @return uuid
@@ -197,5 +203,25 @@ class TeamMember
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @param File $image
+     *
+     * @return TeamMember
+     */
+    public function setImage(File $image)
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return File
+     */
+    public function getImage()
+    {
+        return $this->image;
     }
 }
