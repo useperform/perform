@@ -1,0 +1,12 @@
+services:
+    admin_cms.listener.toolbar:
+        class: Admin\CmsBundle\EventListener\ToolbarListener
+        arguments:
+            - "@twig"
+        tags:
+            - {name: kernel.event_subscriber}
+
+    admin_cms.menu_link.cms:
+        class: Admin\CmsBundle\Menu\CmsLinkProvider
+        tags:
+            - { name: admin_base.link_provider, alias: cms }
