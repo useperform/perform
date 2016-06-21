@@ -8,6 +8,7 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * ToolbarListenerTest.
@@ -37,31 +38,56 @@ class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
             $this->listener->getSubscribedEvents());
     }
 
-    public function testToolbarIsAddedToWellFormedResponse()
+    protected function createEvent($content, $withSession = true)
     {
         $request = new Request();
+        if ($withSession) {
+            $session = $this->getMock('Symfony\Component\HttpFoundation\Session\SessionInterface');
+            $session->expects($this->any())
+                ->method('get')
+                ->with(ToolbarListener::SESSION_KEY)
+                ->will($this->returnValue(true));
+            $request->setSession($session);
+        }
+
+
         $response = new Response();
-        $response->setContent('<body><div>Hello</div></body>');
+        $response->setContent($content);
         $event = new FilterResponseEvent($this->kernel, $request, HttpKernelInterface::MASTER_REQUEST, $response);
+
+        return $event;
+    }
+
+
+    public function testToolbarIsAddedToWellFormedResponse()
+    {
         $this->twig->expects($this->once())
             ->method('render')
             ->with('AdminCmsBundle::toolbar.html.twig')
             ->will($this->returnValue('<div>TOOLBAR</div>'));
 
+        $event = $this->createEvent('<body><div>Hello</div></body>');
         $this->listener->onKernelResponse($event);
-        $this->assertSame('<body><div>Hello</div><div>TOOLBAR</div></body>', $response->getContent());
+        $this->assertSame('<body><div>Hello</div><div>TOOLBAR</div></body>', $event->getResponse()->getContent());
     }
 
     public function testToolbarIsNotAddedToUnformedResponse()
     {
-        $request = new Request();
-        $response = new Response();
-        $response->setContent('{"foo":"bar"}');
-        $event = new FilterResponseEvent($this->kernel, $request, HttpKernelInterface::MASTER_REQUEST, $response);
+        $event = $this->createEvent('{"foo":"bar"}');
         $this->twig->expects($this->never())
             ->method('render');
 
         $this->listener->onKernelResponse($event);
-        $this->assertSame('{"foo":"bar"}', $response->getContent());
+        $this->assertSame('{"foo":"bar"}', $event->getResponse()->getContent());
+    }
+
+    public function testToolbarIsNotAddedWhenSessionNotSet()
+    {
+        $event = $this->createEvent('<body></body>', false);
+        $this->twig->expects($this->never())
+            ->method('render');
+
+        $this->listener->onKernelResponse($event);
+        $this->assertSame('<body></body>', $event->getResponse()->getContent());
     }
 }

@@ -13,6 +13,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
  **/
 class ToolbarListener implements EventSubscriberInterface
 {
+    const SESSION_KEY = 'cms_toolbar';
+
     protected $twig;
 
     public function __construct(\Twig_Environment $twig)
@@ -22,7 +24,16 @@ class ToolbarListener implements EventSubscriberInterface
 
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if (!$event->isMasterRequest() || $event->getRequest()->isXmlHttpRequest()) {
+        if (!$event->isMasterRequest()) {
+            return;
+        }
+
+        $request = $event->getRequest();
+        if ($request->isXmlHttpRequest()) {
+            return;
+        }
+        $session = $request->getSession();
+        if (!$session || $session->get(self::SESSION_KEY) !== true) {
             return;
         }
 
