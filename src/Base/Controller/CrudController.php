@@ -96,6 +96,7 @@ class CrudController extends Controller
             $manager = $this->getDoctrine()->getEntityManager();
             $manager->persist($entity);
             $manager->flush();
+            $this->addFlash('success', 'Item created successfully.');
 
             return $this->redirect($this->get('admin_base.routing.crud_url')->generate($entity, 'list'));
         }
@@ -126,6 +127,7 @@ class CrudController extends Controller
             $manager = $this->getDoctrine()->getEntityManager();
             $manager->persist($entity);
             $manager->flush();
+            $this->addFlash('success', 'Item updated successfully.');
 
             return $this->redirect($this->get('admin_base.routing.crud_url')->generate($entity, 'list'));
         }
@@ -154,6 +156,7 @@ class CrudController extends Controller
             $manager = $this->getDoctrine()->getEntityManager();
             $manager->remove($entity);
             $manager->flush();
+            $this->addFlash('success', 'Item removed successfully.');
 
             return $this->redirect($this->get('admin_base.routing.crud_url')->generate($entity, 'list'));
         }

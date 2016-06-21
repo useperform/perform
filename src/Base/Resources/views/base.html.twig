@@ -30,6 +30,21 @@
 
         <section id="main-content">
           <section class="wrapper site-min-height">
+            <div class="row">
+              <div class="col-md-8 col-md-offset-2 flash-messages">
+                {% for class, messages in app.session.flashbag.all %}
+                  {% for message in messages %}
+                    <div class="alert alert-{{ class }}">
+                      {{ message }}
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                  {% endfor %}
+                {% endfor %}
+              </div>
+            </div>
+
             {% block workspace %}
             {% endblock %}
           </section>
