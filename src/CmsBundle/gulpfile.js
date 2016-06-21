@@ -15,6 +15,7 @@ gulp.task('sass', function () {
 
 gulp.task('watch', function () {
   gulp.watch('Resources/scss/*.scss', ['sass']);
+  gulp.watch('../Base/Resources/scss/*.scss', ['sass']);
 });
 
 gulp.task('develop', ['watch', 'sass']);
