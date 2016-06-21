@@ -47,7 +47,7 @@ class ImagePlugin implements FilePluginInterface
             $thumbUrl = $url;
         }
 
-        return sprintf('<img src="%s" ref="%s"/>', $thumbUrl, $url);
+        return sprintf('<img class="img-responsive" src="%s" ref="%s"/>', $thumbUrl, $url);
     }
 
     public function onCreate(File $file)
