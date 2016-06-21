@@ -1,4 +1,14 @@
 <div class="perform-cms">
-  <div class="cms-toolbar">
-  </div>
+  <header>
+    <a href="{{path('admin_base_dashboard_index')}}" class="logo">Page Editor</a>
+    <div class="top-menu">
+      <ul class="nav pull-right top-menu">
+        <li>
+          <a class="btn btn-danger" href="{{path('admin_cms_session_end')}}">
+            Finish Editing
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
 </div>
