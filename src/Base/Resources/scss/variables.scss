@@ -2,6 +2,15 @@ $panel-border-radius: 0;
 $input-border-radius: 0;
 $alert-border-radius: 0;
 $btn-border-radius-base: 0;
+$navbar-border-radius: 0;
+$navbar-height: 60px;
+$navbar-default-bg: #a5d777;
+$navbar-default-brand-color: #ffffff;
+$navbar-default-brand-hover-color: darken(#ffffff, 2);
+$navbar-default-link-color: #ffffff;
+$navbar-default-link-hover-color: darken(#ffffff, 2);
+
+$brand-info: #68dff0;
 
 //relative to css/app.css
 $icon-font-path: '../vendor/bootstrap-sass/assets/fonts/bootstrap/';

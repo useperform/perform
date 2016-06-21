@@ -8,55 +8,54 @@
   </head>
   <body>
     {% block body %}
-      <section id="container">
-        <header>
+      <nav class="navbar navbar-default navbar-top">
+        <div class="navbar-header">
           <div class="sidebar-toggle-box">
             <div class="fa fa-minus-square-o" id="menu-toggle" data-toggle="tooltip" data-placement="right" title="Toggle Navigation"></div>
           </div>
+          <a href="{{path('admin_base_dashboard_index')}}" class="navbar-brand">
+            Site Administration
+          </a>
+        </div>
 
-          <a href="{{path('admin_base_dashboard_index')}}" class="logo">Site Administration</a>
-          <div class="top-menu">
-            <ul class="nav pull-right top-menu">
-              <li><a class="logout" href="{{path('admin_base_logout')}}">Logout</a></li>
-            </ul>
-          </div>
-        </header>
+        <div class="navbar-right">
+          <a class="btn btn-info navbar-btn" href="{{path('admin_base_logout')}}">Logout</a>
+        </div>
+      </nav>
 
-        <aside>
-          <div id="sidebar" class="nav-collapse ">
-            {{ knp_menu_render('main') }}
-          </div>
-        </aside>
+      <aside>
+        <div id="sidebar" class="nav-collapse ">
+          {{ knp_menu_render('main') }}
+        </div>
+      </aside>
 
-        <section id="main-content">
-          <section class="wrapper site-min-height">
-            <div class="row">
-              <div class="col-md-8 col-md-offset-2 flash-messages">
-                {% for class, messages in app.session.flashbag.all %}
-                  {% for message in messages %}
-                    <div class="alert alert-{{ class }}">
-                      {{ message }}
-                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                  {% endfor %}
+      <section id="main-content">
+        <section class="wrapper site-min-height">
+          <div class="row">
+            <div class="col-md-8 col-md-offset-2 flash-messages">
+              {% for class, messages in app.session.flashbag.all %}
+                {% for message in messages %}
+                  <div class="alert alert-{{ class }}">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
                 {% endfor %}
-              </div>
+              {% endfor %}
             </div>
-
-            {% block workspace %}
-            {% endblock %}
-          </section>
-        </section>
-
-        <footer class="site-footer">
-          <div class="text-center">
-            A <a target="_blank" href="//glynnforrest.com">glynnforrest.com</a> project.
           </div>
-        </footer>
 
+          {% block workspace %}
+          {% endblock %}
+        </section>
       </section>
+
+      <footer class="site-footer">
+        <div class="text-center">
+          A <a target="_blank" href="//glynnforrest.com">glynnforrest.com</a> project.
+        </div>
+      </footer>
 
     {% endblock %}
 

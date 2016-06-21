@@ -1,31 +1,13 @@
-header, .footer {
-  min-height: 60px;
-  padding: 0 15px;
-}
-
-header {
+.navbar-top {
   position: fixed;
   left: 0;
   right: 0;
   top: 0;
+  padding: 0 20px;
   z-index: 1002;
-  background: #ffd777;
-  border-bottom: 1px solid #c9aa5f;
 
-  .logo {
+  .navbar-brand {
     font-size: 20px;
-    color: #ffffff;
-    float: left;
-    margin-top: 15px;
     text-transform: uppercase;
-    &:hover,
-    &:focus {
-      text-decoration: none;
-      outline: none;
-    }
-    b {
-      font-weight: 900;
-    }
   }
-
 }
