@@ -6,7 +6,7 @@
     <div class="list-group">
       {% for subscriber in subscribers %}
         <a href="{{path('admin_mailing_list_subscriber_view', {id: subscriber.id})}}" class="list-group-item">
-          <i class="fa fa-comment fa-fw"></i> {{subscriber.fullname}}
+          {{subscriber.fullname}}
         </a>
       {% else %}
         No subscribers
