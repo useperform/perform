@@ -18,3 +18,8 @@ services:
             - "@doctrine.orm.entity_manager"
         tags:
             - {name: twig.extension}
+
+    admin_cms.publisher:
+        class: Admin\CmsBundle\Publisher\Publisher
+        arguments:
+            - "@doctrine.orm.entity_manager"
