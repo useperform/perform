@@ -14,3 +14,7 @@ Admin\CmsBundle\Entity\Version:
             type: string
         published:
             type: boolean
+    oneToMany:
+        sections:
+            targetEntity: Section
+            mappedBy: version

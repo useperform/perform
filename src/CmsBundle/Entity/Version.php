@@ -2,6 +2,8 @@
 
 namespace Admin\CmsBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Version.
  *
@@ -28,6 +30,16 @@ class Version
      * @var bool
      */
     protected $published = false;
+
+    /**
+     * @var Collection
+     */
+    protected $sections;
+
+    public function __construct()
+    {
+        $this->sections = new ArrayCollection();
+    }
 
     /**
      * @return uuid
@@ -95,5 +107,26 @@ class Version
     public function isPublished()
     {
         return $this->published;
+    }
+
+    /**
+     * @param Section $section
+     *
+     * @return Version
+     */
+    public function addSection(Section $section)
+    {
+        $this->sections[] = $section;
+        $section->setVersion($this);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getSections()
+    {
+        return $this->sections;
     }
 }
