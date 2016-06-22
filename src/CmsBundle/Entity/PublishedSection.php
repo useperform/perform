@@ -3,11 +3,11 @@
 namespace Admin\CmsBundle\Entity;
 
 /**
- * PublishedContent
+ * PublishedSection
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class PublishedContent
+class PublishedSection
 {
     /**
      * @var uuid
@@ -22,7 +22,7 @@ class PublishedContent
     /**
      * @var string
      */
-    protected $section;
+    protected $name;
 
     /**
      * @var string
@@ -40,7 +40,7 @@ class PublishedContent
     /**
      * @param string $page
      *
-     * @return PublishedContent
+     * @return PublishedSection
      */
     public function setPage($page)
     {
@@ -58,13 +58,13 @@ class PublishedContent
     }
 
     /**
-     * @param string $section
+     * @param string $name
      *
-     * @return PublishedContent
+     * @return PublishedSection
      */
-    public function setSection($section)
+    public function setName($name)
     {
-        $this->section = $section;
+        $this->name = $name;
 
         return $this;
     }
@@ -72,15 +72,15 @@ class PublishedContent
     /**
      * @return string
      */
-    public function getSection()
+    public function getName()
     {
-        return $this->section;
+        return $this->name;
     }
 
     /**
      * @param string $content
      *
-     * @return PublishedContent
+     * @return PublishedSection
      */
     public function setContent($content)
     {

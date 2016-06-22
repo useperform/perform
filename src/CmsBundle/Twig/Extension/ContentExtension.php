@@ -25,13 +25,13 @@ class ContentExtension extends \Twig_Extension
         ];
     }
 
-    public function getContent($page, $section)
+    public function getContent($page, $sectionName)
     {
         $published = $this->entityManager
-            ->getRepository('AdminCmsBundle:PublishedContent')
+            ->getRepository('AdminCmsBundle:PublishedSection')
             ->findOneBy([
                 'page' => $page,
-                'section' => $section,
+                'name' => $sectionName,
             ]);
 
         if (!$published) {

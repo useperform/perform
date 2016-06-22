@@ -1,6 +1,6 @@
-Admin\CmsBundle\Entity\PublishedContent:
+Admin\CmsBundle\Entity\PublishedSection:
     type: entity
-    table: admin_cms_published
+    table: admin_cms_published_section
     id:
         id:
             type: guid
@@ -10,7 +10,7 @@ Admin\CmsBundle\Entity\PublishedContent:
     fields:
         page:
             type: string
-        section:
+        name:
             type: string
         content:
             type: text
