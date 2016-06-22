@@ -17,3 +17,4 @@ Admin\CmsBundle\Entity\Block:
     manyToOne:
         section:
             targetEntity: Section
+            inversedBy: blocks

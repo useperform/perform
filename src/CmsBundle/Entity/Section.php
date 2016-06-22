@@ -2,6 +2,8 @@
 
 namespace Admin\CmsBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Section.
  *
@@ -23,6 +25,16 @@ class Section
      * @var Version
      */
     protected $version;
+
+    /**
+     * @var Collection
+     */
+    protected $blocks;
+
+    public function __construct()
+    {
+        $this->blocks = new ArrayCollection();
+    }
 
     /**
      * @return uuid
@@ -70,5 +82,26 @@ class Section
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * @param Block $block
+     *
+     * @return Section
+     */
+    public function addBlock(Block $block)
+    {
+        $this->blocks[] = $block;
+        $block->setSection($this);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getBlocks()
+    {
+        return $this->blocks;
     }
 }

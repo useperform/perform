@@ -13,3 +13,8 @@ Admin\CmsBundle\Entity\Section:
     manyToOne:
         version:
             targetEntity: Version
+            inversedBy: sections
+    oneToMany:
+        blocks:
+            targetEntity: Block
+            mappedBy: section
