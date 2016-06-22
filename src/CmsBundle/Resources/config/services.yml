@@ -9,4 +9,12 @@ services:
     admin_cms.menu_link.cms:
         class: Admin\CmsBundle\Menu\CmsLinkProvider
         tags:
-            - { name: admin_base.link_provider, alias: cms }
+            - {name: admin_base.link_provider, alias: cms}
+
+
+    admin_cms.twig.content:
+        class: Admin\CmsBundle\Twig\Extension\ContentExtension
+        arguments:
+            - "@doctrine.orm.entity_manager"
+        tags:
+            - {name: twig.extension}
