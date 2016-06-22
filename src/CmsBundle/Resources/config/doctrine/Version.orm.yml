@@ -1,5 +1,6 @@
 Admin\CmsBundle\Entity\Version:
     type: entity
+    repositoryClass: Admin\CmsBundle\Repository\VersionRepository
     table: admin_cms_version
     id:
         id:
