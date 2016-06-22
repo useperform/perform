@@ -1,0 +1,16 @@
+Admin\CmsBundle\Entity\Version:
+    type: entity
+    table: admin_cms_version
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        title:
+            type: string
+        page:
+            type: string
+        published:
+            type: boolean
