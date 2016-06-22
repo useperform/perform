@@ -1,0 +1,16 @@
+Admin\CmsBundle\Entity\PublishedContent:
+    type: entity
+    table: admin_cms_published
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        page:
+            type: string
+        section:
+            type: string
+        content:
+            type: text
