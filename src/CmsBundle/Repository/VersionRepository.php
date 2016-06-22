@@ -28,4 +28,33 @@ class VersionRepository extends EntityRepository
         $this->_em->persist($version);
         $this->_em->flush();
     }
+
+    /**
+     * Get the names of all pages.
+     */
+    public function getPageNames()
+    {
+        $query = $this->_em->createQuery(
+            'SELECT DISTINCT v.page FROM AdminCmsBundle:Version v ORDER BY v.page ASC'
+        );
+
+        return array_map(function($result) {
+            return $result['page'];
+        }, $query->getScalarResult());
+    }
+
+    /**
+     * Get all version titles for a page.
+     */
+    public function getTitlesForPage($page)
+    {
+        $query = $this->_em->createQuery(
+            'SELECT v.title FROM AdminCmsBundle:Version v WHERE v.page = :page'
+        );
+        $query->setParameter('page', $page);
+
+        return array_map(function($result) {
+            return $result['title'];
+        }, $query->getScalarResult());
+    }
 }
