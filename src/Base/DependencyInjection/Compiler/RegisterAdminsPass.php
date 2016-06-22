@@ -14,32 +14,50 @@ class RegisterAdminsPass implements CompilerPassInterface
     {
         $definition = $container->getDefinition('admin_base.admin.registry');
         $adminConfiguration = $container->getParameter('admin_base.admins');
+        $entityAliases = $container->getParameter('admin_base.entity_aliases');
+        $extendedAliases = $container->getParameter('admin_base.extended_entity_aliases');
+        $admins = [];
 
         foreach ($container->findTaggedServiceIds('admin_base.admin') as $service => $tag) {
             if (!isset($tag[0]['entity'])) {
-                throw new \InvalidArgumentException(sprintf('The service %s tagged with "admin_base.admin" must set the "entity" option in the tag.', $service));
+                throw new \InvalidArgumentException(sprintf('The service "%s" tagged with "admin_base.admin" must set the "entity" option in the tag.', $service));
             }
             $entityAlias = $tag[0]['entity'];
-            $entityClass = isset($tag[0]['entityClass']) ? $tag[0]['entityClass'] : $this->guessEntityClass($entityAlias);
-
-            $definition->addMethodCall('addAdmin', [$entityAlias, $entityClass, $service]);
+            if (!isset($entityAliases[$entityAlias])) {
+                throw new \InvalidArgumentException(sprintf('The service "%s" references an unknown entity "%s".', $service, $entityAlias));
+            }
             if (isset($adminConfiguration[$entityAlias])) {
                 $adminDefinition = $container->getDefinition($service);
                 $adminDefinition->addMethodCall('configure', [$adminConfiguration[$entityAlias]]);
             }
-        }
-    }
 
-    public function guessEntityClass($entityAlias)
-    {
-        $pieces = explode(':', $entityAlias);
-        if (!isset($pieces[1])) {
-            throw new \InvalidArgumentException('Invalid entity alias.');
+            $admins[$entityAlias] = $service;
         }
 
-        list($bundle, $entity) = $pieces;
-        $namespace = trim(preg_replace('/([A-Z][a-z])+/', '\\\\\1', substr($bundle, 0, -6)).'Bundle', '\\');
+        foreach ($admins as $entityAlias => $service) {
+            $entityClass = $entityAliases[$entityAlias];
 
-        return $namespace.'\\Entity\\'.$entity;
+            //entity is extended
+            if (isset($extendedAliases[$entityAlias])) {
+                $childAlias = $extendedAliases[$entityAlias];
+                //if the child has no admin, register both for the parent admin.
+                //if the child has an admin, register both for the child admin.
+                $service = isset($admins[$childAlias]) ? $admins[$childAlias] : $service;
+
+                //parent
+                $definition->addMethodCall('addAdmin', [$entityAlias, $entityClass, $service]);
+                //child
+                $definition->addMethodCall('addAdmin', [$childAlias, $entityAliases[$childAlias], $service]);
+                continue;
+            }
+
+            //entity is extending, covered above
+            if (in_array($entityAlias, $extendedAliases)) {
+                continue;
+            }
+
+            //normal entity
+            $definition->addMethodCall('addAdmin', [$entityAlias, $entityClass, $service]);
+        }
     }
 }

@@ -15,7 +15,7 @@ use Admin\Base\Panel\PanelInterface;
 class DashboardController extends Controller
 {
     /**
-     * @Route("/dashboard")
+     * @Route()
      * @Template
      */
     public function indexAction()

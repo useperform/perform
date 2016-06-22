@@ -4,6 +4,7 @@ namespace Admin\MediaBundle\Plugin;
 
 use Admin\MediaBundle\Entity\File;
 use Admin\MediaBundle\Exception\PluginNotFoundException;
+use Admin\MediaBundle\Url\FileUrlGeneratorInterface;
 
 /**
  * PluginRegistry
@@ -13,6 +14,12 @@ use Admin\MediaBundle\Exception\PluginNotFoundException;
 class PluginRegistry
 {
     protected $plugins = [];
+    protected $urlGenerator;
+
+    public function __construct(FileUrlGeneratorInterface $urlGenerator)
+    {
+        $this->urlGenerator = $urlGenerator;
+    }
 
     public function addPlugin(FilePluginInterface $plugin)
     {
@@ -72,7 +79,7 @@ class PluginRegistry
     }
 
     /**
-     * Get the absolute url to a stored file entity.
+     * Get the absolute url of a stored file entity.
      *
      * @param File
      */
@@ -82,7 +89,7 @@ class PluginRegistry
             return '';
         }
 
-        return $this->getFilePlugin($file)->getUrl($file);
+        return $this->urlGenerator->getUrl($file->getFilename());
     }
 
     /**
@@ -90,13 +97,13 @@ class PluginRegistry
      *
      * @param File|null
      */
-    public function getPreview(File $file = null)
+    public function getPreview(File $file = null, array $options = [])
     {
         if (!$file) {
             return '';
         }
 
-        return $this->getFilePlugin($file)->getPreview($file);
+        return $this->getFilePlugin($file)->getPreview($file, $options);
     }
 
     /**

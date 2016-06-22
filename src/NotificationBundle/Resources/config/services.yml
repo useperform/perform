@@ -37,7 +37,7 @@ services:
 
     admin_notification.provider.settings:
         class: Admin\NotificationBundle\RecipientProvider\SettingsProvider
-        arguments: ["@doctrine.orm.entity_manager"]
+        arguments: ["@doctrine.orm.entity_manager", "@admin_base.settings_manager"]
 
     admin_notification.twig.notification:
         class: Admin\NotificationBundle\Twig\Extension\NotificationExtension

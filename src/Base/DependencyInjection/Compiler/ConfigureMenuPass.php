@@ -20,10 +20,17 @@ class ConfigureMenuPass implements CompilerPassInterface
             if (!isset($tag[0]['alias'])) {
                 throw new \InvalidArgumentException(sprintf('The service %s tagged with "admin_base.link_provider" must set the "alias" option in the tag.', $service));
             }
-            $alias = $tag[0]['alias'];
-            $services[] = $service;
+            $services[$tag[0]['alias']] = $service;
         }
-        //sort services by admin_base.menu.order in the config file, if defined
+
+        $orderedServices = [];
+        foreach ($container->getParameter('admin_base.menu_order') as $alias) {
+            if (!isset($services[$alias])) {
+                throw new \InvalidArgumentException(sprintf('Unknown menu alias "%s"', $alias));
+            }
+            $orderedServices[] = $services[$alias];
+        }
+        $services = empty($orderedServices) ? array_values($services) : $orderedServices;
 
         $definition = $container->getDefinition('admin_base.menu_builder');
         foreach ($services as $service) {

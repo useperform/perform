@@ -1,0 +1,5 @@
+services:
+    admin_analytics.panel.hits:
+        class: Admin\AnalyticsBundle\Panel\HitsPanel
+        arguments:
+            - "@templating"

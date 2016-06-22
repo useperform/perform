@@ -6,6 +6,8 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Admin\Base\DependencyInjection\Compiler\RegisterAdminsPass;
 use Admin\Base\DependencyInjection\Compiler\ConfigureMenuPass;
+use Admin\Base\DependencyInjection\Compiler\ConfigureSettingsPass;
+use Admin\Base\DependencyInjection\Compiler\ExtendEntitiesPass;
 
 /**
  * AdminBaseBundle
@@ -19,5 +21,7 @@ class AdminBaseBundle extends Bundle
         parent::build($container);
         $container->addCompilerPass(new RegisterAdminsPass());
         $container->addCompilerPass(new ConfigureMenuPass());
+        $container->addCompilerPass(new ConfigureSettingsPass());
+        $container->addCompilerPass(new ExtendEntitiesPass());
     }
 }

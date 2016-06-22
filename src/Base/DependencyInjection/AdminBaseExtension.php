@@ -7,6 +7,11 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\Config\Resource\DirectoryResource;
+use Doctrine\Common\Persistence\Mapping\MappingException;
+use Admin\Base\Util\BundleSearcher;
 
 /**
  * AdminBaseExtension.
@@ -28,8 +33,10 @@ class AdminBaseExtension extends Extension
         $container->setParameter('admin_base.admins', $config['admins']);
         $container->setParameter('admin_base.panels.left', $config['panels']['left']);
         $container->setParameter('admin_base.panels.right', $config['panels']['right']);
+        $container->setParameter('admin_base.menu_order', isset($config['menu']['order']) ? $config['menu']['order'] : []);
         $this->configureTypeRegistry($container);
         $this->configureMailer($config, $container);
+        $this->findExtendedEntities($container);
     }
 
     protected function configureTypeRegistry(ContainerBuilder $container)
@@ -38,6 +45,7 @@ class AdminBaseExtension extends Extension
         $definition->addArgument(new Reference('service_container'));
         $definition->addMethodCall('addType', ['string', 'Admin\Base\Type\StringType']);
         $definition->addMethodCall('addType', ['text', 'Admin\Base\Type\TextType']);
+        $definition->addMethodCall('addType', ['password', 'Admin\Base\Type\PasswordType']);
         $definition->addMethodCall('addType', ['date', 'Admin\Base\Type\DateType']);
         $definition->addMethodCall('addType', ['datetime', 'Admin\Base\Type\DateTimeType']);
         $definition->addMethodCall('addType', ['boolean', 'Admin\Base\Type\BooleanType']);
@@ -68,5 +76,47 @@ class AdminBaseExtension extends Extension
         if ('UTC' !== date_default_timezone_get()) {
             throw new \Exception('The server timezone must be set to UTC');
         }
+    }
+
+    protected function findExtendedEntities(ContainerBuilder $container)
+    {
+        $mapper = function($class, $classBasename, $bundleName, $bundleClass) use ($container) {
+            $refl = new \ReflectionClass($class);
+            $parent = $refl->getParentClass() ? $refl->getParentClass()->getName() : false;
+            //skip if parent is abstract
+
+            $file = $refl->getFileName();
+            $container->addResource(new FileResource($file));
+            $container->addResource(new DirectoryResource(dirname($file)));
+
+            return [
+                $bundleName.':'.$classBasename,
+                $parent
+            ];
+        };
+        $searcher = new BundleSearcher($container);
+        $entities = $searcher->findItemsInNamespaceSegment('Entity', $mapper);
+
+        $extendedEntities = [];
+        $entityAliases = [];
+        $extendedAliases = [];
+        foreach ($entities as $class => $item) {
+            $alias = $item[0];
+            $entityAliases[$alias] = $class;
+            if (false === $parent = $item[1]) {
+                continue;
+            }
+            if (isset($extendedEntities[$parent])) {
+                throw new MappingException(sprintf('Unable to auto-extend parent entity "%s" in child entity "%s", as it has already been extended by "%s".', $parent, $child, $extendedEntities[$parent]));
+            }
+
+            $extendedEntities[$parent] = $class;
+            $parentAlias = $entities[$parent][0];
+            $extendedAliases[$parentAlias] = $alias;
+        }
+
+        $container->setParameter('admin_base.extended_entities', $extendedEntities);
+        $container->setParameter('admin_base.entity_aliases', $entityAliases);
+        $container->setParameter('admin_base.extended_entity_aliases', $extendedAliases);
     }
 }

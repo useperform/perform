@@ -93,4 +93,20 @@ abstract class AbstractAdmin implements AdminInterface
     {
         return $this->routePrefix;
     }
+
+    public function getControllerName()
+    {
+        return 'Admin\Base\Controller\CrudController';
+    }
+
+    public function getActions()
+    {
+        return [
+            '/' => 'list',
+            '/view/{id}' => 'view',
+            '/create' => 'create',
+            '/edit/{id}' => 'edit',
+            '/delete/{id}' => 'delete',
+        ];
+    }
 }

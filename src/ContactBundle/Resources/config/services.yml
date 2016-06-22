@@ -20,5 +20,11 @@ services:
     admin_contact.panel.messages:
         class: Admin\ContactBundle\Panel\MessagesPanel
         arguments:
+            - "@admin_base.doctrine.entity_resolver"
             - "@doctrine.orm.entity_manager"
             - "@templating"
+
+    admin_contact.settings.contact_form:
+        class: Admin\ContactBundle\Settings\ContactFormPanel
+        tags:
+            - { name: admin_base.settings_panel, alias: contact_form }

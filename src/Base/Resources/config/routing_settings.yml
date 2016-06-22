@@ -1,0 +1,3 @@
+settings:
+    resource: "@AdminBaseBundle/Controller/SettingsController.php"
+    type:     annotation

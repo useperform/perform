@@ -3,6 +3,8 @@
 namespace MediaBundle\Tests\Plugin;
 
 use Admin\MediaBundle\Plugin\PluginRegistry;
+use Admin\MediaBundle\Url\SimpleFileUrlGenerator;
+use Admin\MediaBundle\Entity\File;
 
 /**
  * PluginRegistryTest
@@ -12,10 +14,12 @@ use Admin\MediaBundle\Plugin\PluginRegistry;
 class PluginRegistryTest extends \PHPUnit_Framework_TestCase
 {
     protected $registry;
+    protected $urlGenerator;
 
     public function setUp()
     {
-        $this->registry = new PluginRegistry();
+        $this->urlGenerator = new SimpleFileUrlGenerator('example.com');
+        $this->registry = new PluginRegistry($this->urlGenerator);
     }
 
     public function testAddAndGetPlugin()
@@ -35,4 +39,10 @@ class PluginRegistryTest extends \PHPUnit_Framework_TestCase
         $this->registry->getPlugin('foo');
     }
 
+    public function testGetUrl()
+    {
+        $file = new File();
+        $file->setFilename('foo.jpg');
+        $this->assertSame('example.com/foo.jpg', $this->registry->getUrl($file));
+    }
 }

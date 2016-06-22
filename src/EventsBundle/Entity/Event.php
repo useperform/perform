@@ -171,7 +171,7 @@ class Event
     /**
      * @param \DateTime $createdAt
      *
-     * @return Message
+     * @return Event
      */
     public function setCreatedAt(\DateTime $createdAt)
     {
@@ -191,7 +191,7 @@ class Event
     /**
      * @param \DateTime $updatedAt
      *
-     * @return Message
+     * @return Event
      */
     public function setUpdatedAt(\DateTime $updatedAt)
     {
@@ -229,11 +229,11 @@ class Event
     }
 
     /**
-     * @param File $image
+     * @param File|null $image
      *
      * @return Event
      */
-    public function setImage(File $image)
+    public function setImage(File $image = null)
     {
         $this->image = $image;
 

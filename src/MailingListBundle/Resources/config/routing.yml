@@ -1,0 +1,4 @@
+team:
+    resource: "AdminMailingListBundle:Subscriber"
+    type:     crud
+    prefix: /subscribers

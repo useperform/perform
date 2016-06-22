@@ -28,4 +28,12 @@ class MessageAdmin extends AbstractAdmin
         ]
     ];
     protected $routePrefix = 'admin_contact_message_';
+
+    public function getActions()
+    {
+        return [
+            '/' => 'list',
+            '/view/{id}' => 'view',
+        ];
+    }
 }

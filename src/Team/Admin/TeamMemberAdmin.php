@@ -22,16 +22,21 @@ class TeamMemberAdmin extends AbstractAdmin
     protected $createFields = [
         'name',
         'role',
+        'image',
         'description',
     ];
     protected $editFields = [
         'name',
         'role',
+        'image',
         'description',
     ];
     protected $fieldOptions = [
         'description' => [
             'type' => 'text',
+        ],
+        'image' => [
+            'type' => 'image',
         ],
     ];
     protected $routePrefix = 'admin_team_team_';

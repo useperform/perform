@@ -31,22 +31,17 @@ a:focus {
 }
 ::selection {
 
-  background: #68dff0;
+  background: $brand-info;
   color: #fff;
 }
 ::-moz-selection {
-  background: #68dff0;
+  background: $brand-info;
   color: #fff;
-}
-
-#container {
-  width: 100%;
-  height: 100%;
 }
 
 /* Bootstrap Modifications */
 .modal-header {
-  background: #68dff0;
+  background: $brand-info;
 }
 
 .modal-title {
@@ -76,7 +71,7 @@ a:focus {
 /*Theme Backgrounds*/
 
 .bg-theme {
-  background-color: #68dff0;
+  background-color: $brand-info;
 }
 
 .bg-theme02 {
@@ -94,7 +89,7 @@ a:focus {
 
 .btn-theme {
   color: #fff;
-  background-color: #68dff0;
+  background-color: $brand-info;
   border-color: #48bcb4;
 }
 .btn-theme:hover,
@@ -208,11 +203,11 @@ hr {
 /*Exclusive Theme Colors Configuration*/
 
 .label-theme {
-  background-color: #68dff0;
+  background-color: $brand-info;
 }
 
 .bg-theme {
-  background-color: #68dff0;
+  background-color: $brand-info;
 }
 
 ul.top-menu > li > .logout {
@@ -223,7 +218,7 @@ ul.top-menu > li > .logout {
   border: 1px solid #64c3c2 !important;
   padding: 5px 15px;
   margin-right: 15px;
-  background: #68dff0;
+  background: $brand-info;
   margin-top: 15px;
 }
 
@@ -303,7 +298,7 @@ ul.sidebar-menu li a{
 }
 
 ul.sidebar-menu li a:hover {
-  background: #68dff0;
+  background: $brand-info;
   color: #fff;
   display: block;
 }
@@ -323,21 +318,11 @@ ul.sidebar-menu li a i {
   margin-left: 210px;
 }
 
-.header, .footer {
+@import "toolbar";
+
+.footer {
   min-height: 60px;
   padding: 0 15px;
-}
-
-.header {
-  position: fixed;
-  left: 0;
-  right: 0;
-  z-index: 1002;
-}
-
-.black-bg {
-  background: #ffd777;
-  border-bottom: 1px solid #c9aa5f;
 }
 
 .wrapper {
@@ -350,33 +335,7 @@ ul.sidebar-menu li a i {
   width: 100%;
 }
 
-a.logo {
-  font-size: 20px;
-  color: #ffffff;
-  float: left;
-  margin-top: 15px;
-  text-transform: uppercase;
-}
-
-a.logo b {
-  font-weight: 900;
-}
-
-a.logo:hover, a.logo:focus {
-                text-decoration: none;
-                outline: none;
-              }
-
-a.logo span {
-  color: #68dff0;
-}
-
-
 /*notification*/
-#top_menu .nav > li, ul.top-menu > li {
-  float: left;
-}
-
 .notify-row {
   float: left;
   margin-top: 15px;
@@ -446,7 +405,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
 }
 
 .dropdown-menu.extended li p.green {
-  background-color: #68dff0;
+  background-color: $brand-info;
   color: #fff;
 }
 
@@ -521,102 +480,6 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
   font-size: 11px;
 }
 
-.top-nav  {
-  margin-top: 7px;
-}
-
-.top-nav ul.top-menu > li .dropdown-menu.logout {
-  width: 268px !important;
-
-}
-
-.top-nav li.dropdown .dropdown-menu {
-  float: right;
-  right: 0;
-  left: auto;
-}
-
-.dropdown-menu.extended.logout > li {
-  float: left;
-  text-align: center;
-  width: 33.3%;
-}
-
-.dropdown-menu.extended.logout > li:last-child {
-  float: left;
-  text-align: center;
-  width: 100%;
-  background: #a9d96c;
-  border-radius: 0 0 3px 3px;
-}
-
-.dropdown-menu.extended.logout > li:last-child > a, .dropdown-menu.extended.logout > li:last-child > a:hover {
-                                                      color: #fff;
-                                                      border-bottom: none !important;
-                                                      text-transform: uppercase;
-                                                    }
-
-.dropdown-menu.extended.logout > li:last-child > a:hover > i{
-  color: #fff;
-}
-
-.dropdown-menu.extended.logout > li > a {
-  color: #a4abbb;
-  border-bottom: none !important;
-}
-
-.full-width .dropdown-menu.extended.logout > li > a:hover {
-  background: none !important;
-  color: #50c8ea !important;
-}
-
-.dropdown-menu.extended.logout > li > a:hover {
-  background: none !important;
-}
-
-.dropdown-menu.extended.logout > li > a:hover i {
-  color: #50c8ea;
-}
-
-.dropdown-menu.extended.logout > li > a i {
-  font-size: 17px;
-}
-
-.dropdown-menu.extended.logout > li > a > i {
-  display: block;
-}
-
-.top-nav ul.top-menu > li > a {
-  border: 1px solid #eeeeee;
-  border-radius: 4px;
-  -webkit-border-radius: 4px;
-  padding: 6px;
-  background: none;
-  margin-right: 0;
-}
-.top-nav ul.top-menu > li {
-  margin-left: 10px;
-}
-
-.top-nav ul.top-menu > li > a:hover, .top-nav ul.top-menu > li > a:focus {
-                                       border:1px solid #F1F2F7;
-                                       background: #F1F2F7;
-
-                                     }
-
-.top-nav .dropdown-menu.extended.logout {
-  top: 50px;
-}
-
-.top-nav .nav .caret {
-  border-bottom-color: #A4AABA;
-  border-top-color: #A4AABA;
-}
-.top-nav ul.top-menu > li > a:hover .caret {
-  border-bottom-color: #000;
-  border-top-color: #000;
-}
-
 .log-arrow-up {
   background: url("../img/arrow-up.png") no-repeat;
   width: 20px;
@@ -650,9 +513,9 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
   border-top-color: #FCB322 !important;
 }
 .notify-arrow-green {
-  border-color: transparent transparent #68dff0;
-  border-bottom-color: #68dff0 !important;
-  border-top-color: #68dff0 !important;
+  border-color: transparent transparent $brand-info;
+  border-bottom-color: $brand-info !important;
+  border-top-color: $brand-info !important;
 }
 
 
@@ -746,7 +609,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
 }
 
 .ds a {
-  color: #68dff0;
+  color: $brand-info;
 }
 
 /* LINE ICONS CONFIGURATION */
@@ -842,7 +705,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
   position: absolute;
   bottom: 0;
   background: #ff865c;
-  color: #68dff0;
+  color: $brand-info;
   width: 100%;
   -webkit-border-radius: 5px 5px 0 0;
   -moz-border-radius: 5px 5px 0 0;
@@ -857,8 +720,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
 
 
 .custom-bar-chart .bar .value:hover {
-  background: #2f2f2f;
-  color: #fff;
+  background: darken(#ff865c, 25);
 }
 
 .y-axis {
@@ -976,7 +838,7 @@ PANELS CONFIGURATIONS
 /*Green Panel*/
 .green-panel {
   text-align: center;
-  background: #68dff0;
+  background: $brand-info;
 }
 .green-panel .green-header {
   background: #43b1a9;
@@ -1020,7 +882,7 @@ PANELS CONFIGURATIONS
 }
 
 .white-panel i {
-  color: #68dff0;
+  color: $brand-info;
   padding-right: 4px;
   font-size: 14px;
 }
@@ -1426,7 +1288,7 @@ PANELS CONFIGURATIONS
   font-weight: 900;
 }
 .profile-01 {
-  background: #68dff0;
+  background: $brand-info;
   height: 50px;
 }
 .profile-01:hover {
@@ -1474,7 +1336,7 @@ PANELS CONFIGURATIONS
   color: #cdcdcd;
 }
 .pr2-social a:hover {
-  color: #68dff0;
+  color: $brand-info;
 }
 .pr2-social i {
   margin-top: 15px;
@@ -1530,7 +1392,7 @@ PANELS CONFIGURATIONS
   font-size: 12px;
 }
 .panel.terques-chart .chart-tittle .value a:hover, .panel.terques-chart .chart-tittle .value a.active {
-  color: #68dff0;
+  color: $brand-info;
   font-size: 12px;
 }
 .panel.terques-chart .chart-tittle {
@@ -1585,7 +1447,7 @@ PANELS CONFIGURATIONS
   display: block;
   position: relative;
   overflow: hidden;
-  background-color: #68dff0;
+  background-color: $brand-info;
   -webkit-transition: background-color 0.4s;
   -moz-transition: background-color 0.4s;
   -o-transition: background-color 0.4s;
@@ -1605,7 +1467,7 @@ PANELS CONFIGURATIONS
 }
 
 .project:hover .photo-wrapper {
-  background-color: #68dff0;
+  background-color: $brand-info;
   background-image:url(../img/zoom.png);
   background-repeat:no-repeat;
   background-position:center;
@@ -1848,7 +1710,7 @@ label {
   margin: 0;
   padding: 25px 20px;
   text-align: center;
-  background: #68dff0;
+  background: $brand-info;
   border-radius: 5px 5px 0 0;
   -webkit-border-radius: 5px 5px 0 0;
   color: #fff;
@@ -2128,7 +1990,7 @@ label {
 
 /*footer*/
 .site-footer {
-  background: #68dff0;
+  background: $brand-info;
   color: #fff;
   padding: 10px 0;
 }
@@ -2390,9 +2252,6 @@ label {
     display: none;
   }
 
-  #top_menu .nav > li, ul.top-menu > li {
-    float: right;
-  }
   .hidden-phone {
     display: none !important;
   }
@@ -2416,10 +2275,6 @@ label {
 
   .notify-row, .search, .dont-show, .inbox-head .sr-input, .inbox-head .sr-btn {
     display: none;
-  }
-
-  #top_menu .nav > li, ul.top-menu > li {
-    float: right;
   }
 
   .hidden-phone {
