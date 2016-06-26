@@ -4,16 +4,15 @@ namespace Admin\ContactBundle\DataFixtures\ORM;
 
 use Faker;
 use Admin\ContactBundle\Entity\Message;
-use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
+use Admin\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
 
 /**
- * LoadMessageData
+ * LoadMessageData.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class LoadMessageData extends AbstractFixture implements OrderedFixtureInterface
+class LoadMessageData implements EntityDeclaringFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
@@ -23,7 +22,7 @@ class LoadMessageData extends AbstractFixture implements OrderedFixtureInterface
             Message::STATUS_UNREAD,
             Message::STATUS_SPAM,
         ];
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 50; ++$i) {
             $message = new Message();
             $message->setName($faker->name);
             $message->setEmail($faker->safeEmail);
@@ -37,5 +36,12 @@ class LoadMessageData extends AbstractFixture implements OrderedFixtureInterface
     public function getOrder()
     {
         return 1;
+    }
+
+    public function getEntityClasses()
+    {
+        return [
+            Message::class,
+        ];
     }
 }
