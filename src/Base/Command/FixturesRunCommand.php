@@ -58,6 +58,10 @@ class FixturesRunCommand extends ContainerAwareCommand
             $this->getContainer()->getParameter('admin_base.extended_entities'));
 
         $fixtures = $this->getFixtures($this->getInputBundles($input), $output);
+        if (empty($fixtures)) {
+            $output->writeln('No fixtures found.');
+            return;
+        }
         $purger = new Purger($em, $this->getDeclaredClasses($input, $fixtures));
         $executor = new ORMExecutor($em, $purger);
         $executor->setLogger(function ($message) use ($output) {
@@ -125,23 +129,48 @@ class FixturesRunCommand extends ContainerAwareCommand
      */
     protected function getInputBundles(InputInterface $input)
     {
+        $bundles = $this->getApplication()->getKernel()->getBundles();
+
         if ($input->getOption('only-bundles')) {
-            return $input->getOption('only-bundles');
-        }
+            $included = $this->normaliseBundleNames($input->getOption('only-bundles'));
 
-        if ($input->getOption('exclude-bundles')) {
-            $excludedBundles = $input->getOption('exclude-bundles');
-
-            $bundles = array_filter($this->getApplication()->getKernel()->getBundles(), function ($bundle) use ($excludedBundles) {
-                return !in_array($bundle->getName(), $excludedBundles);
+            $bundles = array_filter($bundles, function ($bundle) use ($included) {
+                foreach ($included as $name) {
+                    if ($name === strtolower($bundle->getName())) {
+                        return true;
+                    }
+                }
+                return false;
             });
-        } else {
-            $bundles = $this->getApplication()->getKernel()->getBundles();
+
+        } else if ($input->getOption('exclude-bundles')) {
+            $excluded = $this->normaliseBundleNames($input->getOption('exclude-bundles'));
+
+            $bundles = array_filter($bundles, function ($bundle) use ($excluded) {
+                foreach ($excluded as $name) {
+                    if ($name === strtolower($bundle->getName())) {
+                        return false;
+                    }
+                }
+                return true;
+            });
         }
 
         return array_map(function ($bundle) {
             return $bundle->getName();
         }, $bundles);
+    }
+
+    protected function normaliseBundleNames(array $bundleNames)
+    {
+        return array_map(function($name) {
+            $name = strtolower($name);
+            if (substr($name, -6) !== 'bundle') {
+                $name .= 'bundle';
+            }
+
+            return $name;
+        }, $bundleNames);
     }
 
     private function askConfirmation(InputInterface $input, OutputInterface $output, $question, $default)
