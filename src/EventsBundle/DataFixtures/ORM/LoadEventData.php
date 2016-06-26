@@ -3,22 +3,21 @@
 namespace Admin\EventsBundle\DataFixtures\ORM;
 
 use Faker;
-use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Admin\EventsBundle\Entity\Event;
+use Admin\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
 
 /**
- * LoadEventData
+ * LoadEventData.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class LoadEventData extends AbstractFixture implements OrderedFixtureInterface
+class LoadEventData implements EntityDeclaringFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
         $faker = Faker\Factory::create('en_GB');
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 10; ++$i) {
             $event = new Event();
             $event->setTitle($faker->sentence);
             $event->setDescription(implode("\n\n", $faker->paragraphs(3)));
@@ -33,5 +32,12 @@ class LoadEventData extends AbstractFixture implements OrderedFixtureInterface
     public function getOrder()
     {
         return 1;
+    }
+
+    public function getEntityClasses()
+    {
+        return [
+            Event::class,
+        ];
     }
 }
