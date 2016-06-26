@@ -3,17 +3,16 @@
 namespace Admin\BlogBundle\DataFixtures\ORM;
 
 use Faker;
-use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Admin\BlogBundle\Entity\Post;
+use Admin\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
 
 /**
  * LoadTeamMemberData.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class LoadPostData extends AbstractFixture implements OrderedFixtureInterface
+class LoadPostData implements EntityDeclaringFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
@@ -32,5 +31,12 @@ class LoadPostData extends AbstractFixture implements OrderedFixtureInterface
     public function getOrder()
     {
         return 1;
+    }
+
+    public function getEntityClasses()
+    {
+        return [
+            Post::class,
+        ];
     }
 }
