@@ -3,17 +3,16 @@
 namespace Admin\Team\DataFixtures\ORM;
 
 use Faker;
-use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Admin\Team\Entity\TeamMember;
+use Admin\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
 
 /**
- * LoadTeamMemberData
+ * LoadTeamMemberData.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class LoadTeamMemberData extends AbstractFixture implements OrderedFixtureInterface
+class LoadTeamMemberData implements EntityDeclaringFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
@@ -26,7 +25,7 @@ class LoadTeamMemberData extends AbstractFixture implements OrderedFixtureInterf
             'Trombone',
             'Percussion',
         ];
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 10; ++$i) {
             $member = new TeamMember();
             $member->setName($faker->firstName.' '.$faker->lastName);
             $member->setRole($roles[array_rand($roles)]);
@@ -40,5 +39,12 @@ class LoadTeamMemberData extends AbstractFixture implements OrderedFixtureInterf
     public function getOrder()
     {
         return 1;
+    }
+
+    public function getEntityClasses()
+    {
+        return [
+            TeamMember::class,
+        ];
     }
 }
