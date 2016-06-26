@@ -5,12 +5,12 @@ namespace Admin\Base\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Logger\ConsoleLogger;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
+use Admin\Base\Util\BundleSearcher;
+use Admin\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
+use Admin\Base\DataFixtures\ORM\Purger;
 
 /**
  * FixturesRunCommand.
@@ -19,26 +19,28 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
  **/
 class FixturesRunCommand extends ContainerAwareCommand
 {
+    protected $excludedEntities = [];
+
     protected function configure()
     {
         $this->setName('admin:base:fixtures_run')
             ->setDescription('Run database fixtures')
             ->addOption(
-            'bundles',
-            'b',
-            InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
-            'Only run fixtures for the given bundles'
-        )->addOption(
-            'exclude-bundles',
-            'x',
-            InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
-            'Exclude fixtures in the given bundles'
-        )->addOption(
-            'append',
-            '',
-            InputOption::VALUE_NONE,
-            'Don\'t empty database tables'
-        );
+                'only-bundles',
+                'o',
+                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
+                'Only run fixtures for the given bundles'
+            )->addOption(
+                'exclude-bundles',
+                'x',
+                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
+                'Exclude the given bundles'
+            )->addOption(
+                'append',
+                '',
+                InputOption::VALUE_NONE,
+                'Don\'t empty database tables'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -47,17 +49,16 @@ class FixturesRunCommand extends ContainerAwareCommand
         $em = $doctrine->getManager();
 
         if ($input->isInteractive() && !$input->getOption('append')) {
-            if (!$this->askConfirmation($input, $output, '<question>Database will be emptied. Are you sure y/n ?</question>', false)) {
+            if (!$this->askConfirmation($input, $output, '<question>Some database tables will be emptied. Are you sure y/n ?</question>', false)) {
                 return;
             }
         }
 
-        $fixtures = [];
-        foreach ($this->getInputBundles($input) as $bundle) {
-            $fixtures = array_merge($fixtures, $this->getBundleFixtures($bundle));
-        }
+        $this->excludedEntities = array_keys(
+            $this->getContainer()->getParameter('admin_base.extended_entities'));
 
-        $purger = new ORMPurger($em);
+        $fixtures = $this->getFixtures($this->getInputBundles($input), $output);
+        $purger = new Purger($em, $fixtures);
         $executor = new ORMExecutor($em, $purger);
         $executor->setLogger(function ($message) use ($output) {
             $output->writeln(sprintf('  <comment>></comment> <info>%s</info>', $message));
@@ -69,55 +70,59 @@ class FixturesRunCommand extends ContainerAwareCommand
         $output->writeln(sprintf('Ran <info>%s</info> %s.', $count, $inflection));
     }
 
-    protected function getBundleFixtures(BundleInterface $bundle)
+    protected function getFixtures(array $bundleNames, OutputInterface $output)
     {
-        $namespace = $bundle->getNamespace().'\\DataFixtures\\ORM\\';
-        $directory = $bundle->getPath().'/DataFixtures/ORM';
-        if (!is_dir($directory)) {
-            return [];
-        }
-
-        $fixtures = [];
-        $files = new \DirectoryIterator($directory);
-        foreach ($files as $file) {
-            if (!$file->isFile() || substr($file->getFilename(), -4) !== '.php') {
-                continue;
-            }
-            $class = $namespace.$file->getBasename('.php');
+        $mapper = function ($class) use ($output) {
             $r = new \ReflectionClass($class);
-            if (!$r->isSubclassOf('Doctrine\Common\DataFixtures\FixtureInterface') || $r->isAbstract()) {
-                continue;
+            if (!$r->isSubclassOf(EntityDeclaringFixtureInterface::class) || $r->isAbstract()) {
+                return false;
             }
-            $fixtures[] = $r->newInstance();
-        }
+            $fixture = $r->newInstance();
+            $usedExcludedEntities = array_intersect($fixture->getEntityClasses(), $this->excludedEntities);
+            if (count($usedExcludedEntities) > 0) {
+                $output->writeln(sprintf(
+                    'Skipping <info>%s</info> because <info>%s</info> has been extended',
+                    get_class($fixture),
+                    $usedExcludedEntities[0]));
+
+                return false;
+            }
+
+            return $fixture;
+        };
+
+        $searcher = new BundleSearcher($this->getContainer());
+        $fixtures = $searcher->findItemsInNamespaceSegment('DataFixtures\\ORM', $mapper, $bundleNames);
 
         return $fixtures;
     }
 
     /**
-     * Get bundles from the given input.
-     * --bundles takes priority over --exclude-bundles.
+     * Get bundle names from the given input.
+     * --only-bundles takes priority over --exclude-bundles.
      * Defaults to all bundles.
      *
      * @param InputInterface $input
      */
     protected function getInputBundles(InputInterface $input)
     {
-        if ($input->getOption('bundles')) {
-            return array_map(function ($bundleName) {
-                return $this->getApplication()->getKernel()->getBundle($bundleName);
-            }, $input->getOption('bundles'));
+        if ($input->getOption('only-bundles')) {
+            return $input->getOption('only-bundles');
         }
 
         if ($input->getOption('exclude-bundles')) {
             $excludedBundles = $input->getOption('exclude-bundles');
 
-            return array_filter($this->getApplication()->getKernel()->getBundles(), function ($bundle) use ($excludedBundles) {
+            $bundles = array_filter($this->getApplication()->getKernel()->getBundles(), function ($bundle) use ($excludedBundles) {
                 return !in_array($bundle->getName(), $excludedBundles);
             });
+        } else {
+            $bundles = $this->getApplication()->getKernel()->getBundles();
         }
 
-        return $this->getApplication()->getKernel()->getBundles();
+        return array_map(function ($bundle) {
+            return $bundle->getName();
+        }, $bundles);
     }
 
     private function askConfirmation(InputInterface $input, OutputInterface $output, $question, $default)
