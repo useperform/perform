@@ -58,7 +58,7 @@ class FixturesRunCommand extends ContainerAwareCommand
             $this->getContainer()->getParameter('admin_base.extended_entities'));
 
         $fixtures = $this->getFixtures($this->getInputBundles($input), $output);
-        $purger = new Purger($em, $fixtures);
+        $purger = new Purger($em, $this->getDeclaredClasses($input, $fixtures));
         $executor = new ORMExecutor($em, $purger);
         $executor->setLogger(function ($message) use ($output) {
             $output->writeln(sprintf('  <comment>></comment> <info>%s</info>', $message));
@@ -95,6 +95,25 @@ class FixturesRunCommand extends ContainerAwareCommand
         $fixtures = $searcher->findItemsInNamespaceSegment('DataFixtures\\ORM', $mapper, $bundleNames);
 
         return $fixtures;
+    }
+
+    /**
+     * Get an array of declared entity classes from a set of fixtures, but only
+     * if --only-bundles or --exclude-bundles has been set. Otherwise, return an
+     * empty array.
+     */
+    protected function getDeclaredClasses(InputInterface $input, array $fixtures)
+    {
+        if (!$input->getOption('only-bundles') && !$input->getOption('exclude-bundles')) {
+            return [];
+        }
+
+        $declaredClasses = [];
+        foreach ($fixtures as $fixture) {
+            $declaredClasses = array_merge($declaredClasses, $fixture->getEntityClasses());
+        }
+
+        return $declaredClasses;
     }
 
     /**
