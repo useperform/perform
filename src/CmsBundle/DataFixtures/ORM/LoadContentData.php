@@ -5,16 +5,15 @@ namespace Admin\CmsBundle\DataFixtures\ORM;
 use Admin\CmsBundle\Entity\Block;
 use Admin\CmsBundle\Entity\Version;
 use Admin\CmsBundle\Entity\Section;
-use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Admin\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
 
 /**
  * LoadContentData.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class LoadContentData extends AbstractFixture implements OrderedFixtureInterface
+class LoadContentData implements EntityDeclaringFixtureInterface
 {
     protected $faker;
 
@@ -70,5 +69,14 @@ class LoadContentData extends AbstractFixture implements OrderedFixtureInterface
     public function getOrder()
     {
         return 1;
+    }
+
+    public function getEntityClasses()
+    {
+        return [
+            Version::class,
+            Section::class,
+            Block::class,
+        ];
     }
 }
