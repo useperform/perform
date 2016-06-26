@@ -3,17 +3,16 @@
 namespace Admin\Base\DataFixtures\ORM;
 
 use Faker;
-use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Admin\Base\Entity\User;
+use Admin\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
 
 /**
  * LoadUserData
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
+class LoadUserData implements EntityDeclaringFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
@@ -39,5 +38,12 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
     public function getOrder()
     {
         return 1;
+    }
+
+    public function getEntityClasses()
+    {
+        return [
+            User::class,
+        ];
     }
 }

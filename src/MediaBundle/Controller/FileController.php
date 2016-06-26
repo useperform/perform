@@ -83,7 +83,7 @@ class FileController extends Controller
                 $msg = 'An error occurred';
             }
 
-            $this->get('logger')->warning($e->getMessage(), $context);
+            $this->get('logger')->error($e->getMessage(), $context);
 
             return new JsonResponse(['message' => $msg], 500);
         }

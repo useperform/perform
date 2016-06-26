@@ -31,19 +31,20 @@ class BundleSearcher
 
     /**
      * @param string $namespace The sub-namespace, e.g. 'Entity' or 'Admin\Type'
+     * @param Closure $mapper
+     * @param array $bundleNames An array of bundle names to use. If empty, use all bundles.
      */
-    public function findItemsInNamespaceSegment($namespaceSegment, \Closure $mapper)
+    public function findItemsInNamespaceSegment($namespaceSegment, \Closure $mapper, array $bundleNames = [])
     {
         $namespaceSegment = trim($namespaceSegment, '/\\');
-        $bundles = $this->container->getParameter('kernel.bundles');
         $items = [];
 
-        foreach ($bundles as $bundleName => $bundleClass) {
+        foreach ($this->resolveBundles($bundleNames) as $bundleName => $bundleClass) {
             $reflection = new \ReflectionClass($bundleClass);
             $dirname = dirname($reflection->getFileName());
             $namespace = $reflection->getNamespaceName().'\\'.$namespaceSegment.'\\';
 
-            if (!is_dir($dir = $dirname.'/'.$namespaceSegment)) {
+            if (!is_dir($dir = $dirname.'/'.str_replace('\\', '/', $namespaceSegment))) {
                 continue;
             }
             foreach (Finder::create()->files()->in($dir)->name('*.php') as $file) {
@@ -52,7 +53,10 @@ class BundleSearcher
                     continue;
                 }
 
-                $items[$class] = $mapper($class, $file->getBasename('.php'), $bundleName, $bundleClass);
+                $item = $mapper($class, $file->getBasename('.php'), $bundleName, $bundleClass);
+                if ($item !== false) {
+                    $items[$class] = $item;
+                }
             }
         }
 
@@ -83,5 +87,19 @@ class BundleSearcher
         }
 
         return $files;
+    }
+
+    protected function resolveBundles(array $bundleNames)
+    {
+        $bundles = $this->container->getParameter('kernel.bundles');
+        if (empty($bundleNames)) {
+            return $bundles;
+        }
+        return array_filter(
+            $bundles,
+            function ($bundleName) use ($bundleNames) {
+                return in_array($bundleName, $bundleNames);
+            },
+            ARRAY_FILTER_USE_KEY);
     }
 }
