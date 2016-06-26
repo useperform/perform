@@ -58,6 +58,10 @@ class FixturesRunCommand extends ContainerAwareCommand
             $this->getContainer()->getParameter('admin_base.extended_entities'));
 
         $fixtures = $this->getFixtures($this->getInputBundles($input), $output);
+        if (empty($fixtures)) {
+            $output->writeln('No fixtures found.');
+            return;
+        }
         $purger = new Purger($em, $this->getDeclaredClasses($input, $fixtures));
         $executor = new ORMExecutor($em, $purger);
         $executor->setLogger(function ($message) use ($output) {
