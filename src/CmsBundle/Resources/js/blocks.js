@@ -12,6 +12,11 @@ $(function() {
     initialize: function() {
       this.bind('change', app.func.setDirty)
     },
+
+    viewClass: function() {
+      var type = this.get('type');
+      return type.charAt(0).toUpperCase() + type.slice(1) + 'BlockView';
+    },
   });
 
   app.views.BlockView = Backbone.View.extend({
@@ -81,4 +86,27 @@ $(function() {
       // app.func.setDirty();
     }
   });
+
+  app.views.SectionView = Backbone.View.extend({
+    blockViews: [],
+
+    initialize: function() {
+      this.listenTo(this.collection, 'add', this.add);
+      this.listenTo(this.collection, 'remove', this.remove);
+    },
+
+    add: function(block) {
+      var view = new app.views[block.viewClass()]({
+        model: block
+      });
+      this.$el.append(view.render().$el);
+      this.blockViews[block.cid] = view;
+    },
+
+    remove: function(block) {
+      this.blockViews[block.cid].remove();
+      this.blockViews[block.cid] = null;
+    }
+  });
+
 });
