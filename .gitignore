@@ -4,3 +4,4 @@ src/*/node_modules
 src/*/Resources/public/vendor
 src/*/Resources/public/css
 /test_results.xml
+src/CmsBundle/Resources/public/js
