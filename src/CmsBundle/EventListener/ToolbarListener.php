@@ -5,6 +5,10 @@ namespace Admin\CmsBundle\EventListener;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpFoundation\Request;
+use Admin\CmsBundle\Twig\Extension\ContentExtension;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\KernelEvent;
 
 /**
  * ToolbarListener.
@@ -16,24 +20,43 @@ class ToolbarListener implements EventSubscriberInterface
     const SESSION_KEY = 'cms_toolbar';
 
     protected $twig;
+    protected $extension;
 
-    public function __construct(\Twig_Environment $twig)
+    public function __construct(\Twig_Environment $twig, ContentExtension $extension)
     {
         $this->twig = $twig;
+        $this->extension = $extension;
+    }
+
+    protected function inEditMode(KernelEvent $event)
+    {
+        if (!$event->isMasterRequest()) {
+            return false;
+        }
+        $request = $event->getRequest();
+        if ($request->isXmlHttpRequest()) {
+            return false;
+        }
+        $session = $request->getSession();
+        if (!$session || $session->get(self::SESSION_KEY) !== true) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function onKernelRequest(GetResponseEvent $event)
+    {
+        if (!$this->inEditMode($event)) {
+            return;
+        }
+
+        $this->extension->setMode(ContentExtension::MODE_EDIT);
     }
 
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if (!$event->isMasterRequest()) {
-            return;
-        }
-
-        $request = $event->getRequest();
-        if ($request->isXmlHttpRequest()) {
-            return;
-        }
-        $session = $request->getSession();
-        if (!$session || $session->get(self::SESSION_KEY) !== true) {
+        if (!$this->inEditMode($event)) {
             return;
         }
 
@@ -55,6 +78,7 @@ class ToolbarListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
+            KernelEvents::REQUEST => ['onKernelRequest', -128],
             KernelEvents::RESPONSE => ['onKernelResponse', -128],
         ];
     }

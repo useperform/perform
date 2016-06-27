@@ -3,6 +3,7 @@ services:
         class: Admin\CmsBundle\EventListener\ToolbarListener
         arguments:
             - "@twig"
+            - "@admin_cms.twig.content"
         tags:
             - {name: kernel.event_subscriber}
 
