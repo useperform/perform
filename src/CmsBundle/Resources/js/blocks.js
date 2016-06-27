@@ -42,7 +42,6 @@ $(function() {
 
     initialize: function() {
       this.listenTo(this.model, 'change', this.render);
-      this.listenTo(this.model, 'destroy', this.remove);
     },
 
     render: function() {
@@ -82,8 +81,9 @@ $(function() {
     },
 
     destroy: function() {
-      this.model.destroy();
+      this.model = null;
       // app.func.setDirty();
+      this.remove();
     }
   });
 
@@ -104,7 +104,7 @@ $(function() {
     },
 
     remove: function(block) {
-      this.blockViews[block.cid].remove();
+      this.blockViews[block.cid].destroy();
       this.blockViews[block.cid] = null;
     }
   });
