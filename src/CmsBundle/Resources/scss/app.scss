@@ -22,9 +22,13 @@
     &:hover {
       border: 1px solid $brand-info;
       margin: -1px;
+      cursor: move;
     }
 
     .controls {
+      .cancel, .done {
+        display: none;
+      }
     }
 
     .content {

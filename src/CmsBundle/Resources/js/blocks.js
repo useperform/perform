@@ -58,23 +58,40 @@ $(function() {
 
     updateContent: function() {},
 
+    editControls: function() {
+      this.$('.controls .edit').hide();
+      this.$('.controls .remove').hide();
+      this.$('.controls .done').show();
+      this.$('.controls .cancel').show();
+    },
+
+    defaultControls: function() {
+      this.$('.controls .done').hide();
+      this.$('.controls .cancel').hide();
+      this.$('.controls .edit').show();
+      this.$('.controls .remove').show();
+    },
+
     edit: function() {
       if (!this.editorInit) {
         this.initEditor();
         this.editorInit = true;
       }
 
+      this.editControls();
       this.content.hide();
       this.editor.show();
     },
 
     cancel: function() {
+      this.defaultControls();
       this.editor.hide();
       this.resetEditor();
       this.content.show();
     },
 
     done: function() {
+      this.defaultControls();
       this.editor.hide();
       this.updateContent();
       this.content.show();
