@@ -42,8 +42,8 @@ $(function() {
 
     render: function() {
       this.$el.html(this.template(this.model.toJSON().value));
-      this.editor = this.$('.content-block-editor');
-      this.content = this.$('.content-block-content');
+      this.editor = this.$('.editor');
+      this.content = this.$('.content');
       this.editorInit = null;
       return this;
     },
