@@ -16,6 +16,7 @@ services:
         class: Admin\CmsBundle\Twig\Extension\ContentExtension
         arguments:
             - "@doctrine.orm.entity_manager"
+            - "@twig"
         tags:
             - {name: twig.extension}
 
