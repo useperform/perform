@@ -43,6 +43,11 @@ services:
                 method: onKernelController
                 priority: -200
 
+    admin_base.listener.ajax:
+        class: Admin\Base\EventListener\AjaxListener
+        tags:
+            - {name: kernel.event_subscriber}
+
     admin_base.twig.crud:
         class: Admin\Base\Twig\Extension\CrudExtension
         arguments: ['@admin_base.routing.crud_url', '@admin_base.type_registry']
