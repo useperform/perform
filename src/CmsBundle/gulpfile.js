@@ -3,6 +3,7 @@ var sass = require('gulp-sass');
 var uglify = require('gulp-uglify');
 var pump = require('pump');
 var concat = require('gulp-concat');
+var jshint = require('gulp-jshint');
 
 gulp.task('sass', function (cb) {
   pump([
@@ -19,6 +20,9 @@ gulp.task('js', function (cb) {
       'Resources/js/*.block.js',
       'Resources/js/app.js',
     ]),
+    jshint(),
+    jshint.reporter('default', { verbose: true }),
+    jshint.reporter('fail'),
     concat('app.js'),
     // uglify(),
     gulp.dest('Resources/public/js')
