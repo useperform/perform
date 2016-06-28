@@ -129,4 +129,27 @@ class Version
     {
         return $this->sections;
     }
+
+    /**
+     * Return an array representation of this version, child sections, and child
+     * blocks of those sections.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        $data = [];
+        foreach ($this->sections as $section) {
+            $name = $section->getName();
+            $data[$name] = [];
+            foreach ($section->getBlocks() as $block) {
+                $data[$name][] = [
+                    'type' => $block->getType(),
+                    'value' => $block->getValue(),
+                ];
+            }
+        }
+
+        return $data;
+    }
 }
