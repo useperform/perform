@@ -56,10 +56,11 @@ $(function() {
     $(this).find('form').attr('action', link.data('action'));
   });
 
-  //for backbone
   var app = {
     models: {},
     views: {},
+    collections: {},
+    vars: {},
     func: {
       fancyForm: function(form) {
         // form.find('.select2').select2();
