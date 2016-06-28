@@ -10,7 +10,7 @@ $(function() {
     },
 
     initialize: function() {
-      this.bind('change', app.func.setDirty)
+      this.bind('change', app.func.setDirty);
     },
 
     viewClass: function() {
@@ -104,6 +104,22 @@ $(function() {
     }
   });
 
+  app.collections.Section = Backbone.Collection.extend({
+    removeAt: function(index) {
+      var block = this.at(index);
+      if (block) {
+        return this.remove(block);
+      }
+    },
+
+    insertAt: function(block, index) {
+      block.insertingAt = index;
+
+      //block will go at the end if target index is not set
+      return this.add(block, {at: index});
+    }
+  });
+
   app.views.SectionView = Backbone.View.extend({
     blockViews: [],
 
@@ -116,8 +132,18 @@ $(function() {
       var view = new app.views[block.viewClass()]({
         model: block
       });
-      this.$el.append(view.render().$el);
       this.blockViews[block.cid] = view;
+
+      var index = block.insertingAt;
+      delete block.insertingAt;
+
+      if (typeof index !== 'undefined') {
+        var existingBlocks = this.$('.block');
+        if (existingBlocks.length > index) {
+          return existingBlocks.eq(index).before(view.render().$el);
+        }
+      }
+      this.$el.append(view.render().$el);
     },
 
     remove: function(block) {
