@@ -37,4 +37,22 @@ $(function() {
       app.func.insertBlock(block, targetName, targetIndex);
     }
   };
+
+  app.func.loadVersion = function(url) {
+    //show load mask
+    //load blocks
+    //replace current blocks with loaded
+    //remove load mask
+    $.ajax({
+      url: url,
+      type: 'get',
+      data: {},
+      success: function (data) {
+        _.each(data, function(blocks, sectionName) {
+          app.func.createSection(sectionName);
+          app.func.loadSection(sectionName, blocks);
+        });
+      }
+    });
+  };
 });
