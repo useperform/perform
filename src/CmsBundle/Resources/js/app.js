@@ -72,11 +72,14 @@ $(function() {
     });
   };
 
-  $('.perform-cms .version-selector .version').click(function() {
+  $('.perform-cms .version-selector .version').click(function(e) {
+    e.preventDefault();
     app.func.loadVersion($(this).data('url'));
     var newTitle = $(this).html();
     $(this).parent().parent().find('.version').removeClass('active');
     $(this).addClass('active');
     $('.current-version-title').html(newTitle);
   });
+
+  $('.perform-cms .version-selector .active').click();
 });
