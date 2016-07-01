@@ -40,7 +40,7 @@ class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(
             [
                 KernelEvents::REQUEST => ['onKernelRequest', -128],
-                KernelEvents::RESPONSE => ['onKernelResponse', -128],
+                KernelEvents::RESPONSE => ['onKernelResponse', -99],
             ],
             $this->listener->getSubscribedEvents());
     }

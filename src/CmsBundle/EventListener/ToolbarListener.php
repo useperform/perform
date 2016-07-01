@@ -79,7 +79,9 @@ class ToolbarListener implements EventSubscriberInterface
     {
         return [
             KernelEvents::REQUEST => ['onKernelRequest', -128],
-            KernelEvents::RESPONSE => ['onKernelResponse', -128],
+            //just before the profiler listener, to make sure resources used by
+            //the toolbar are included
+            KernelEvents::RESPONSE => ['onKernelResponse', -99],
         ];
     }
 }
