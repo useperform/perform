@@ -74,5 +74,9 @@ $(function() {
 
   $('.perform-cms .version-selector .version').click(function() {
     app.func.loadVersion($(this).data('url'));
+    var newTitle = $(this).html();
+    $(this).parent().parent().find('.version').removeClass('active');
+    $(this).addClass('active');
+    $('.current-version-title').html(newTitle);
   });
 });
