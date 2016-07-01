@@ -57,4 +57,31 @@ class VersionRepository extends EntityRepository
             return $result['title'];
         }, $query->getScalarResult());
     }
+
+    /**
+     * Find the current version for a page - either the published version, or
+     * the most recent version if no version has been published yet. A new
+     * version will be created if none exist.
+     */
+    public function findCurrentVersion($page)
+    {
+        $published = $this->findOneBy(['published' => true, 'page' => $page]);
+        if ($published) {
+            return $published;
+        }
+
+        $mostRecent = $this->findOneBy(['page' => $page], ['updatedAt' => 'DESC']);
+        if ($mostRecent) {
+            return $mostRecent;
+        }
+
+        $now = new \DateTime();
+        $firstVersion = new Version();
+        $firstVersion->setPage($page)
+            ->setTitle('Untitled '.$now->format('Y/m/d h:i:s'));
+        $this->_em->persist($firstVersion);
+        $this->_em->flush();
+
+        return $firstVersion;
+    }
 }
