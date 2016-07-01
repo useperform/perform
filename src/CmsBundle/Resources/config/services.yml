@@ -4,6 +4,7 @@ services:
         arguments:
             - "@twig"
             - "@admin_cms.twig.content"
+            - "@doctrine.orm.entity_manager"
         tags:
             - {name: kernel.event_subscriber}
 

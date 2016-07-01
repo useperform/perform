@@ -40,6 +40,12 @@
     }
   }
 
+  .version-selector {
+    .active {
+      background-color: $navbar-default-bg;
+    }
+  }
+
   #load-mask {
     .modal-dialog {
       margin-top: 200px;

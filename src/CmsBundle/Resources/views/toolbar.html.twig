@@ -6,14 +6,21 @@
     <ul class="nav navbar-nav">
       <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-          <i class="fa fa-clock-o"></i> Untitled (Published) <i class="fa fa-caret-down"></i>
+          <i class="fa fa-clock-o"></i>
+          <span class="current-version-title">{{currentVersion.title}}</span>
+          <i class="fa fa-caret-down"></i>
         </a>
-        <ul class="dropdown-menu">
-          <li>
-            <a href="#">
-              Untitled 2
-            </a>
-          </li>
+        <ul class="dropdown-menu version-selector">
+          {% for version in versions %}
+            <li>
+              <a href="#" class="{% if version == currentVersion %}active {% endif %}version" data-url="{{path('admin_cms_editor_loadversion', {id: version.id})}}">
+                {{version.title}}
+                {% if version.published %}
+                  (published)
+                {% endif %}
+              </a>
+            </li>
+          {% endfor %}
           <li class="divider"></li>
           <li><a href="#">Show all</a></li>
         </ul>

@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Admin\CmsBundle\Twig\Extension\ContentExtension;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * ToolbarListener.
@@ -21,11 +22,13 @@ class ToolbarListener implements EventSubscriberInterface
 
     protected $twig;
     protected $extension;
+    protected $entityManager;
 
-    public function __construct(\Twig_Environment $twig, ContentExtension $extension)
+    public function __construct(\Twig_Environment $twig, ContentExtension $extension, EntityManagerInterface $entityManager)
     {
         $this->twig = $twig;
         $this->extension = $extension;
+        $this->entityManager = $entityManager;
     }
 
     protected function inEditMode(KernelEvent $event)
@@ -67,9 +70,17 @@ class ToolbarListener implements EventSubscriberInterface
         if (false === $pos) {
             return;
         }
+
+        $repo = $this->entityManager->getRepository('AdminCmsBundle:Version');
+        $versions = $repo->findByPage('home');
+        $current = $repo->findCurrentVersion('home');
+
         $toolbar = $this->twig->render(
             'AdminCmsBundle::toolbar.html.twig',
-            []
+            [
+                'versions' => $versions,
+                'currentVersion' => $current,
+            ]
         );
         $content = substr($content, 0, $pos).$toolbar.substr($content, $pos);
         $response->setContent($content);

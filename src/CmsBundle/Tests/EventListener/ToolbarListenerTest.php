@@ -30,7 +30,15 @@ class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
         $this->contentExtension = $this->getMockBuilder('Admin\CmsBundle\Twig\Extension\ContentExtension')
                                 ->disableOriginalConstructor()
                                 ->getMock();
-        $this->listener = new ToolbarListener($this->twig, $this->contentExtension);
+        $repo = $this->getMockBuilder('Admin\CmsBundle\Repository\VersionRepository')
+              ->disableOriginalConstructor()
+              ->getMock();
+        $entityManager = $this->getMock('Doctrine\ORM\EntityManagerInterface');
+        $entityManager->expects($this->any())
+            ->method('getRepository')
+            ->will($this->returnValue($repo));
+
+        $this->listener = new ToolbarListener($this->twig, $this->contentExtension, $entityManager);
         $this->kernel = $this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface');
     }
 
