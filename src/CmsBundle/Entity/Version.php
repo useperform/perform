@@ -32,6 +32,16 @@ class Version
     protected $published = false;
 
     /**
+     * @var \Datetime
+     */
+    protected $createdAt;
+
+    /**
+     * @var \Datetime
+     */
+    protected $updatedAt;
+
+    /**
      * @var Collection
      */
     protected $sections;
@@ -107,6 +117,46 @@ class Version
     public function isPublished()
     {
         return $this->published;
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     *
+     * @return Version
+     */
+    public function setCreatedAt(\DateTime $createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTime $updatedAt
+     *
+     * @return Version
+     */
+    public function setUpdatedAt(\DateTime $updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
     }
 
     /**

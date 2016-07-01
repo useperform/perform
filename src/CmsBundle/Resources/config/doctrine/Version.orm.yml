@@ -15,6 +15,16 @@ Admin\CmsBundle\Entity\Version:
             type: string
         published:
             type: boolean
+        createdAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: create
+        updatedAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: update
     oneToMany:
         sections:
             targetEntity: Section
