@@ -12,6 +12,11 @@ $(function() {
   };
 
   app.func.loadSection = function(name, data) {
+    if (!app.sections[name]) {
+      app.func.createSection(name);
+    }
+    app.sections[name].removeAll();
+
     for (var i = 0; i < data.length; i++) {
       var type = data[i].type;
       var blockType = type.charAt(0).toUpperCase() + type.slice(1) + 'Block';
@@ -49,10 +54,13 @@ $(function() {
       data: {},
       success: function (data) {
         _.each(data, function(blocks, sectionName) {
-          app.func.createSection(sectionName);
           app.func.loadSection(sectionName, blocks);
         });
       }
     });
   };
+
+  $('.perform-cms .version-selector .version').click(function() {
+    app.func.loadVersion($(this).data('url'));
+  });
 });

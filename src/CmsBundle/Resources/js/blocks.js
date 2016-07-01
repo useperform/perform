@@ -117,6 +117,10 @@ $(function() {
 
       //block will go at the end if target index is not set
       return this.add(block, {at: index});
+    },
+
+    removeAll: function() {
+      this.remove(this.models);
     }
   });
 
