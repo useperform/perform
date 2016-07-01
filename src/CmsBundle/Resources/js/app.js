@@ -43,11 +43,20 @@ $(function() {
     }
   };
 
+  app.func.showLoadMask = function() {
+    $('#load-mask').modal('show');
+  };
+
+  app.func.hideLoadMask = function() {
+    $('#load-mask').modal('hide');
+  };
+
   app.func.loadVersion = function(url) {
-    //show load mask
-    //load blocks
-    //replace current blocks with loaded
-    //remove load mask
+    //should get the required blocks to load instead
+    //each page could have sections from a mixture of pages, maybe a shared
+    //only sections from one page should be editable at a time???
+    //maybe just indicate you are editing a shared section
+    app.func.showLoadMask();
     $.ajax({
       url: url,
       type: 'get',
@@ -56,6 +65,9 @@ $(function() {
         _.each(data, function(blocks, sectionName) {
           app.func.loadSection(sectionName, blocks);
         });
+      },
+      complete: function() {
+        app.func.hideLoadMask();
       }
     });
   };

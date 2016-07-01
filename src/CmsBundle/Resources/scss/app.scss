@@ -6,6 +6,7 @@
   @import "../../../Base/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/navs";
   @import "../../../Base/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/forms";
   @import "../../../Base/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/navbar";
+  @import "../../../Base/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/modals";
   @import "../../../Base/Resources/scss/toolbar";
 
   nav, .block .controls, .block .editor {
@@ -36,6 +37,17 @@
 
     .editor {
       display:none;
+    }
+  }
+
+  #load-mask {
+    .modal-dialog {
+      margin-top: 200px;
+    }
+
+    .fa-spin {
+      font-size: 150px;
+      color: $brand-primary;
     }
   }
 }
