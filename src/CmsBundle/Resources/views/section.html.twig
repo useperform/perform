@@ -1,4 +1,12 @@
-<div class="perform-cms">
-  <div class="section" id="section-{{sectionName}}">
+{% if not shared %}
+  <div class="perform-cms">
+    <div class="section" id="section-{{sectionName}}">
+    </div>
   </div>
-</div>
+{% else %}
+  {# shared sections from other pages are not editable #}
+  <div class="perform-cms">
+    <div class="shared-section" id="section-{{sectionName}}__{{page}}" data-page="{{page}}", data-name="{{sectionName}}">
+    </div>
+  </div>
+{% endif %}

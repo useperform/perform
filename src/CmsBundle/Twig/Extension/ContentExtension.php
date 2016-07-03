@@ -44,13 +44,13 @@ class ContentExtension extends \Twig_Extension
 
     public function getContent($sectionName, $page = null)
     {
-        if ($this->mode === self::MODE_EDIT) {
-            return $this->createEditorSection($sectionName);
-        }
-
         $page = $page ?: $this->page;
         if (!$page) {
             throw new \Exception(sprintf('Page name must be declared to load content.'));
+        }
+
+        if ($this->mode === self::MODE_EDIT) {
+            return $this->createEditorSection($page, $sectionName);
         }
 
         return $this->getPublishedContent($page, $sectionName);
@@ -72,10 +72,13 @@ class ContentExtension extends \Twig_Extension
         return $published->getContent();
     }
 
-    protected function createEditorSection($sectionName)
+    protected function createEditorSection($page, $sectionName)
     {
         return $this->twig->render('AdminCmsBundle::section.html.twig', [
             'sectionName' => $sectionName,
+            'page' => $page,
+            //the block is shared and not editable if it is from another page
+            'shared' => $page !== $this->page,
         ]);
     }
 
