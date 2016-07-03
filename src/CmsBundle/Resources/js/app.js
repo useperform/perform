@@ -22,7 +22,7 @@ $(function() {
       var blockType = type.charAt(0).toUpperCase() + type.slice(1) + 'Block';
       var block = new app.models[blockType]({
         value: data[i].value,
-        readonly: typeof readonly === 'undefined' ? false : Boolean(readonly);
+        readonly: typeof readonly === 'undefined' ? false : Boolean(readonly)
       });
 
       app.func.insertBlock(block, name);

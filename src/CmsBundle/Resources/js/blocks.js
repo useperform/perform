@@ -2,14 +2,6 @@ $(function() {
   var app = window.app;
 
   app.models.ContentBlock = Backbone.Model.extend({
-    defaults: function() {
-      return {
-        type: null,
-        value: {},
-        readonly: false,
-      };
-    },
-
     initialize: function() {
       this.bind('change', app.func.setDirty);
     },
