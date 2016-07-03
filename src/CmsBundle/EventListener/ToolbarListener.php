@@ -10,6 +10,8 @@ use Admin\CmsBundle\Twig\Extension\ContentExtension;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Doctrine\ORM\EntityManagerInterface;
+use Admin\CmsBundle\Annotation\Page;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
 /**
  * ToolbarListener.
@@ -23,6 +25,7 @@ class ToolbarListener implements EventSubscriberInterface
     protected $twig;
     protected $extension;
     protected $entityManager;
+    protected $page;
 
     public function __construct(\Twig_Environment $twig, ContentExtension $extension, EntityManagerInterface $entityManager)
     {
@@ -57,6 +60,15 @@ class ToolbarListener implements EventSubscriberInterface
         $this->extension->setMode(ContentExtension::MODE_EDIT);
     }
 
+    public function onKernelController(FilterControllerEvent $event)
+    {
+        $annotation = $event->getRequest()->attributes->get('_page');
+        if (!$annotation instanceof Page) {
+            return;
+        }
+        $this->extension->setPage($this->page = $annotation->getPage());
+    }
+
     public function onKernelResponse(FilterResponseEvent $event)
     {
         if (!$this->inEditMode($event)) {
@@ -72,8 +84,8 @@ class ToolbarListener implements EventSubscriberInterface
         }
 
         $repo = $this->entityManager->getRepository('AdminCmsBundle:Version');
-        $versions = $repo->findByPage('home');
-        $current = $repo->findCurrentVersion('home');
+        $versions = $this->page ? $repo->findByPage($this->page) : [];
+        $current = $this->page ? $repo->findCurrentVersion($this->page) : null;
 
         $toolbar = $this->twig->render(
             'AdminCmsBundle::toolbar.html.twig',
@@ -90,6 +102,7 @@ class ToolbarListener implements EventSubscriberInterface
     {
         return [
             KernelEvents::REQUEST => ['onKernelRequest', -128],
+            KernelEvents::CONTROLLER => ['onKernelController', -128],
             //just before the profiler listener, to make sure resources used by
             //the toolbar are included
             KernelEvents::RESPONSE => ['onKernelResponse', -99],
