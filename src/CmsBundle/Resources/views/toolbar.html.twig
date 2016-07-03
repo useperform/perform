@@ -61,8 +61,14 @@
 </div>
 
 <script type="text/template" id="content-block-html">
-  {% include 'AdminCmsBundle:blocks:html.html.twig' %}
+  <div class="content">
+    {% include 'AdminCmsBundle:blocks/content:html.html.twig' %}
+  </div>
+
   <% if (!readonly) { %>
+  <div class="editor">
+    {% include 'AdminCmsBundle:blocks/editor:html.html.twig' %}
+  </div>
   <div class="controls">
     <a class="edit">Edit</a>
     <a class="done">Ok</a>
