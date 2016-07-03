@@ -191,13 +191,7 @@ class Version
         $data = [];
         foreach ($this->sections as $section) {
             $name = $section->getName();
-            $data[$name] = [];
-            foreach ($section->getBlocks() as $block) {
-                $data[$name][] = [
-                    'type' => $block->getType(),
-                    'value' => $block->getValue(),
-                ];
-            }
+            $data[$name] = $section->toArray();
         }
 
         return $data;

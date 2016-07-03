@@ -21,4 +21,26 @@ class SectionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($block, $section->getBlocks()[0]);
         $this->assertSame($section, $block->getSection());
     }
+
+    public function testToArray()
+    {
+        $section = (new Section())->setName('one');
+        $block = (new Block())->setType('html')->setValue(['content' => 'one.one']);
+        $section->addBlock($block);
+        $block = (new Block())->setType('html')->setValue(['content' => 'one.two']);
+        $section->addBlock($block);
+
+        $expected = [
+            [
+                'type' => 'html',
+                'value' => ['content' => 'one.one'],
+            ],
+            [
+                'type' => 'html',
+                'value' => ['content' => 'one.two'],
+            ],
+        ];
+
+        $this->assertSame($expected, $section->toArray());
+    }
 }

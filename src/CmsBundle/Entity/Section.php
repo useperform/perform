@@ -104,4 +104,22 @@ class Section
     {
         return $this->blocks;
     }
+
+    /**
+     * Return an array representation of this section and child blocks.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        $data = [];
+        foreach ($this->blocks as $block) {
+            $data[] = [
+                'type' => $block->getType(),
+                'value' => $block->getValue(),
+            ];
+        }
+
+        return $data;
+    }
 }
