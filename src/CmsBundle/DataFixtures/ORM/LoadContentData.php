@@ -7,47 +7,83 @@ use Admin\CmsBundle\Entity\Version;
 use Admin\CmsBundle\Entity\Section;
 use Doctrine\Common\Persistence\ObjectManager;
 use Admin\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Admin\CmsBundle\Annotation\Page;
+use Admin\Base\Util\BundleSearcher;
 
 /**
  * LoadContentData.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class LoadContentData implements EntityDeclaringFixtureInterface
+class LoadContentData implements EntityDeclaringFixtureInterface, ContainerAwareInterface
 {
+    protected $container;
     protected $faker;
 
     public function load(ObjectManager $manager)
     {
         $this->faker = \Faker\Factory::create();
-        $pages = [
-            'home',
-            'about',
-        ];
-        foreach ($pages as $page) {
-            $count = rand(1, 5);
+        foreach ($this->locatePages() as $page => $sections) {
+            $count = rand(2, 5);
             for ($i = 0; $i < $count; ++$i) {
-                $this->createVersion($manager, $page, $i);
+                $this->createVersion($manager, $page, $i, $sections);
             }
         }
 
         $manager->flush();
     }
 
-    protected function createVersion(ObjectManager $manager, $page, $number)
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
+    protected function locatePages()
+    {
+        if (!$this->container) {
+            return [];
+        }
+        $searcher = new BundleSearcher($this->container);
+        $controllers = $searcher->findClassesInNamespaceSegment('Controller');
+        $reader = $this->container->get('annotation_reader');
+        $pages = [];
+
+        foreach ($controllers as $class) {
+            $r = new \ReflectionClass($class);
+            foreach ($r->getMethods() as $method) {
+                $annotation = $reader->getMethodAnnotation($method, Page::class);
+                if (!$annotation) {
+                    continue;
+                }
+
+                $page = $annotation->getPage();
+                if (!isset($pages[$page])) {
+                    $pages[$page] = [];
+                }
+
+                $pages[$page] = array_merge($pages[$page], $annotation->getSections());
+            }
+        }
+
+        return $pages;
+    }
+
+    protected function createVersion(ObjectManager $manager, $page, $number, array $sections)
     {
         $version = new Version();
         $version->setTitle('Version number '.$number);
         $version->setPage($page);
         $manager->persist($version);
 
-        foreach (['main', 'aside'] as $sectionName) {
+        foreach ($sections as $sectionName) {
             $section = new Section();
             $section->setName($sectionName);
             $section->setVersion($version);
             $manager->persist($section);
 
-            $count = rand(1, 4);
+            $count = rand(2, 5);
             for ($k = 0; $k < $count; ++$k) {
                 $block = $this->createBlock($section, $k);
                 $manager->persist($block);
