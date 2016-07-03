@@ -14,6 +14,7 @@ class ContentExtension extends \Twig_Extension
     protected $entityManager;
     protected $twig;
     protected $mode = self::MODE_VIEW;
+    protected $page;
 
     const MODE_VIEW = 0;
     const MODE_EDIT = 1;
@@ -29,6 +30,11 @@ class ContentExtension extends \Twig_Extension
         $this->mode = $mode;
     }
 
+    public function setPage($page)
+    {
+        $this->page = $page;
+    }
+
     public function getFunctions()
     {
         return [
@@ -36,10 +42,15 @@ class ContentExtension extends \Twig_Extension
         ];
     }
 
-    public function getContent($page, $sectionName)
+    public function getContent($sectionName, $page = null)
     {
         if ($this->mode === self::MODE_EDIT) {
             return $this->createEditorSection($sectionName);
+        }
+
+        $page = $page ?: $this->page;
+        if (!$page) {
+            throw new \Exception(sprintf('Page name must be declared to load content.'));
         }
 
         return $this->getPublishedContent($page, $sectionName);
