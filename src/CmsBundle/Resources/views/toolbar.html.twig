@@ -62,10 +62,12 @@
 
 <script type="text/template" id="content-block-html">
   {% include 'AdminCmsBundle:blocks:html.html.twig' %}
+  <% if (!readonly) { %>
   <div class="controls">
     <a class="edit">Edit</a>
     <a class="done">Ok</a>
     <a class="cancel">Cancel</a>
     <a class="remove">Remove</a>
   </div>
+  <% } %>
 </script>

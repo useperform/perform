@@ -11,7 +11,7 @@ $(function() {
     view.render();
   };
 
-  app.func.loadSection = function(name, data) {
+  app.func.loadSection = function(name, data, readonly) {
     if (!app.sections[name]) {
       app.func.createSection(name);
     }
@@ -21,7 +21,8 @@ $(function() {
       var type = data[i].type;
       var blockType = type.charAt(0).toUpperCase() + type.slice(1) + 'Block';
       var block = new app.models[blockType]({
-        value: data[i].value
+        value: data[i].value,
+        readonly: typeof readonly === 'undefined' ? false : Boolean(readonly);
       });
 
       app.func.insertBlock(block, name);

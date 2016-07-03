@@ -6,6 +6,7 @@ $(function() {
       return {
         type: null,
         value: {},
+        readonly: false,
       };
     },
 
@@ -45,7 +46,7 @@ $(function() {
     },
 
     render: function() {
-      this.$el.html(this.template(this.model.toJSON().value));
+      this.$el.html(this.template(this.model.toJSON()));
       this.editor = this.$('.editor');
       this.content = this.$('.content');
       this.editorInit = null;
