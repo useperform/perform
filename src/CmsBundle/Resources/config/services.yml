@@ -13,7 +13,6 @@ services:
         tags:
             - {name: admin_base.link_provider, alias: cms}
 
-
     admin_cms.twig.content:
         class: Admin\CmsBundle\Twig\Extension\ContentExtension
         arguments:
@@ -26,3 +25,16 @@ services:
         class: Admin\CmsBundle\Publisher\Publisher
         arguments:
             - "@doctrine.orm.entity_manager"
+
+    admin_cms.repo.version:
+        class: Admin\CmsBundle\Repository\VersionRepository
+        factory:
+            - "@doctrine.orm.entity_manager"
+            - "getRepository"
+        arguments:
+            - "AdminCmsBundle:Version"
+
+    admin_cms.section_locator:
+        class: Admin\CmsBundle\Locator\SectionLocator
+        arguments:
+            - "@admin_cms.repo.version"
