@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Admin\Base\Annotation\Ajax;
 use Admin\CmsBundle\Entity\Version;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * EditorController.
@@ -18,8 +19,14 @@ class EditorController extends Controller
      * @Ajax()
      * @Route("/load-version/{id}")
      */
-    public function loadVersionAction(Version $version)
+    public function loadVersionAction(Request $request, Version $version)
     {
-        return $version->toArray();
+        $sharedSections = $this->get('admin_cms.section_locator')
+                        ->findCurrentSections($request->query->get('shared', []));
+
+        return [
+            'sections' => $version->toArray(),
+            'sharedSections' => $sharedSections,
+        ];
     }
 }
