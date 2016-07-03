@@ -53,18 +53,30 @@ $(function() {
   };
 
   app.func.loadVersion = function(url) {
-    //should get the required blocks to load instead
-    //each page could have sections from a mixture of pages, maybe a shared
-    //only sections from one page should be editable at a time???
-    //maybe just indicate you are editing a shared section
+    var sharedSections = {};
+    $('.perform-cms .shared-section').each(function() {
+      var page = $(this).data('page');
+      var name = $(this).data('name');
+      if (!sharedSections[page]) {
+        sharedSections[page] = [];
+      }
+      sharedSections[page].push(name);
+    });
     app.func.showLoadMask();
     $.ajax({
       url: url,
       type: 'get',
-      data: {},
+      data: {
+        shared: sharedSections
+      },
       success: function (data) {
-        _.each(data, function(blocks, sectionName) {
+        _.each(data.sections, function(blocks, sectionName) {
           app.func.loadSection(sectionName, blocks);
+        });
+        _.each(data.sharedSections, function(sections, page) {
+          _.each(sections, function(blocks, sectionName) {
+            app.func.loadSection(sectionName+'__'+page, blocks, true);
+          });
         });
       },
       complete: function() {
