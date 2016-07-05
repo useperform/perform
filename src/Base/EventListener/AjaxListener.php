@@ -36,7 +36,9 @@ class AjaxListener implements EventSubscriberInterface
 
         $content = $event->getControllerResult();
         if (is_array($content)) {
-            $event->setResponse(new JsonResponse($content));
+            $code = isset($content['code']) ? $content['code'] : JsonResponse::HTTP_OK;
+            unset($content['code']);
+            $event->setResponse(new JsonResponse($content, $code));
         }
     }
 
