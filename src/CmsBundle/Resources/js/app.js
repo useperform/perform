@@ -1,8 +1,9 @@
 $(function() {
   app.sections = {};
 
-  app.func.createSection = function(name) {
+  app.func.createSection = function(name, readonly) {
     var section = new app.collections.Section();
+    section.readonly = Boolean(readonly);
     app.sections[name] = section;
     var view = new app.views.SectionView({
       collection: section,
@@ -13,7 +14,7 @@ $(function() {
 
   app.func.loadSection = function(name, data, readonly) {
     if (!app.sections[name]) {
-      app.func.createSection(name);
+      app.func.createSection(name, readonly);
     }
     app.sections[name].removeAll();
 
@@ -85,13 +86,44 @@ $(function() {
     });
   };
 
+  app.func.writableData = function() {
+    var sections = {};
+    _.each(app.sections, function(section, sectionName) {
+      if (section.readonly) {
+        return;
+      }
+      sections[sectionName] = section.writableData();
+    });
+
+    return sections;
+  };
+
+  app.func.saveVersion = function(url) {
+    $.ajax({
+      url: url,
+      type: 'post',
+      data: {
+        sections: app.func.writableData()
+      },
+      success: function (data) {
+        console.log(data);
+      }
+    });
+  };
+
+  $('.perform-cms .action-save').click(function(e) {
+    e.preventDefault();
+    app.func.saveVersion($(this).data('url'));
+  });
+
   $('.perform-cms .version-selector .version').click(function(e) {
     e.preventDefault();
     app.func.loadVersion($(this).data('url'));
     var newTitle = $(this).html();
     $(this).parent().parent().find('.version').removeClass('active');
     $(this).addClass('active');
-    $('.current-version-title').html(newTitle);
+    $('.perform-cms .current-version-title').html(newTitle);
+    $('.perform-cms .action-save').data('url', $(this).data('save-url'));
   });
 
   $('.perform-cms .version-selector .active').click();

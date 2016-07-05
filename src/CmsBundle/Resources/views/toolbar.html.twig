@@ -14,7 +14,10 @@
           <ul class="dropdown-menu version-selector">
             {% for version in versions %}
               <li>
-                <a href="#" class="{% if version == currentVersion %}active {% endif %}version" data-url="{{path('admin_cms_editor_loadversion', {id: version.id})}}">
+                <a href="#"
+                   class="{% if version == currentVersion %}active {% endif %}version"
+                   data-save-url="{{path('admin_cms_editor_saveversion', {id: version.id})}}"
+                   data-url="{{path('admin_cms_editor_loadversion', {id: version.id})}}">
                   {{version.title}}
                   {% if version.published %}
                     (published)
@@ -27,7 +30,7 @@
           </ul>
         </li>
         <li>
-          <a href="#">
+          <a class="action-save" href="#">
             Save
           </a>
         </li>

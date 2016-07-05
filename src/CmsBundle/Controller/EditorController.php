@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Admin\Base\Annotation\Ajax;
 use Admin\CmsBundle\Entity\Version;
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 /**
  * EditorController.
@@ -17,7 +18,7 @@ class EditorController extends Controller
 {
     /**
      * @Ajax()
-     * @Route("/load-version/{id}")
+     * @Route("/load/{id}")
      */
     public function loadVersionAction(Request $request, Version $version)
     {
@@ -27,6 +28,20 @@ class EditorController extends Controller
         return [
             'sections' => $version->toArray(),
             'sharedSections' => $sharedSections,
+        ];
+    }
+
+    /**
+     * @Ajax
+     * @Route("/save/{id}")
+     * @Method("POST")
+     */
+    public function saveVersionAction(Request $request, Version $version)
+    {
+        $sections = $request->request->get('sections');
+
+        return [
+            'message' => sprintf('Version %s saved successfully.', $version->getTitle()),
         ];
     }
 }

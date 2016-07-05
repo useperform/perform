@@ -114,6 +114,21 @@ $(function() {
 
     removeAll: function() {
       this.remove(this.models);
+    },
+
+    writableData: function() {
+      var data = [];
+      var blocks = _.filter(this.models, function(block) {
+        return !block.get('readonly');
+      });
+      _.each(blocks, function(block) {
+        data.push({
+          type: block.get('type'),
+          value: block.get('value')
+        });
+      });
+
+      return data;
     }
   });
 
