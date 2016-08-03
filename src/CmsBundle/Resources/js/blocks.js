@@ -91,7 +91,7 @@ $(function() {
     },
 
     destroy: function() {
-      this.model = null;
+      this.model.destroy();
       // app.func.setDirty();
       this.remove();
     }
