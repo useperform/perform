@@ -38,3 +38,8 @@ services:
         class: Admin\CmsBundle\Locator\SectionLocator
         arguments:
             - "@admin_cms.repo.version"
+
+    admin_cms.version_updater:
+        class: Admin\CmsBundle\Updater\VersionUpdater
+        arguments:
+            - "@doctrine.orm.entity_manager"
