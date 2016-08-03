@@ -43,4 +43,30 @@ class SectionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($expected, $section->toArray());
     }
+
+    public function testAddBlockAtIndex()
+    {
+        $section = new Section();
+        $this->assertSame($section, $section->addBlock($zero = new Block()));
+        $this->assertSame($section, $section->addBlock($two = new Block(), 2));
+        $this->assertSame($section, $section->addBlock($one = new Block(), 1));
+        $this->assertSame($section, $section->addBlock($three = new Block()));
+
+        $this->assertSame(0, $zero->getSortOrder());
+        $this->assertSame(1, $one->getSortOrder());
+        $this->assertSame(2, $two->getSortOrder());
+        $this->assertSame(3, $three->getSortOrder());
+
+        $section->getBlocks()->clear();
+        $this->assertSame(0, count($section->getBlocks()));
+        $this->assertSame($section, $section->addBlock($null = new Block()));
+        $this->assertSame($section, $section->addBlock($zwei = new Block(), 2));
+        $this->assertSame($section, $section->addBlock($eins = new Block(), 1));
+        $this->assertSame($section, $section->addBlock($drei = new Block()));
+
+        $this->assertSame(0, $null->getSortOrder());
+        $this->assertSame(1, $eins->getSortOrder());
+        $this->assertSame(2, $zwei->getSortOrder());
+        $this->assertSame(3, $drei->getSortOrder());
+    }
 }

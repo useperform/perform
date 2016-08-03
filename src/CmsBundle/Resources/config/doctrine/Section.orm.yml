@@ -18,3 +18,4 @@ Admin\CmsBundle\Entity\Section:
         blocks:
             targetEntity: Block
             mappedBy: section
+            cascade: ['persist']

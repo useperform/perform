@@ -86,12 +86,14 @@ class Section
 
     /**
      * @param Block $block
+     * @param int|null $index
      *
      * @return Section
      */
-    public function addBlock(Block $block)
+    public function addBlock(Block $block, $index = null)
     {
-        $this->blocks[] = $block;
+        $this->blocks[$index] = $block;
+        $block->setSortOrder($this->blocks->indexOf($block));
         $block->setSection($this);
 
         return $this;
