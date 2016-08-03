@@ -39,9 +39,25 @@ class EditorController extends Controller
     public function saveVersionAction(Request $request, Version $version)
     {
         $sections = $request->request->get('sections');
+        try {
+            $this->get('admin_cms.version_updater')
+                ->update($version, $sections);
 
-        return [
-            'message' => sprintf('Version %s saved successfully.', $version->getTitle()),
-        ];
+            if ($version->isPublished()) {
+                $this->get('admin_cms.publisher')->publishVersion($version);
+                //change the message to say it was published as well
+            }
+
+            return [
+                'message' => sprintf('Version "%s" saved successfully.', $version->getTitle()),
+            ];
+        } catch (\Exception $e) {
+            $this->get('logger')->error($e);
+
+            return [
+                'message' => sprintf('An error occurred saving version "%s".', $version->getTitle()),
+                'code' => 500,
+            ];
+        }
     }
 }
