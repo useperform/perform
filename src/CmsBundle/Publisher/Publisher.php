@@ -39,7 +39,6 @@ class Publisher
             }
             $this->entityManager->flush();
 
-            // throw new \Exception('oh bother');
             $this->connection->commit();
         } catch (\Exception $e) {
             $this->connection->rollback();

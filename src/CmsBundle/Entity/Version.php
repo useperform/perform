@@ -180,6 +180,21 @@ class Version
         return $this->sections;
     }
 
+    public function getOrCreateSection($name)
+    {
+        foreach ($this->sections as $section) {
+            if ($section->getName() === $name) {
+                return $section;
+            }
+        }
+
+        $section = new Section();
+        $section->setName($name);
+        $this->addSection($section);
+
+        return $section;
+    }
+
     /**
      * Return an array representation of this version, child sections, and child
      * blocks of those sections.
