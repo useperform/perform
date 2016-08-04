@@ -31,19 +31,8 @@
 
       <section id="main-content">
         <section class="wrapper site-min-height">
-          <div class="row">
-            <div class="col-md-8 col-md-offset-2 flash-messages">
-              {% for class, messages in app.session.flashbag.all %}
-                {% for message in messages %}
-                  <div class="alert alert-{{ class }}">
-                    {{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                {% endfor %}
-              {% endfor %}
-            </div>
+
+          <div class="flash-messages">
           </div>
 
           {% block workspace %}
@@ -72,6 +61,22 @@
       <script src="{{asset('bundles/adminbase/vendor/moment/min/moment.min.js')}}"></script>
       <script src="{{asset('bundles/adminbase/vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js')}}"></script>
       <script src="{{asset('bundles/adminbase/js/admin-base.js')}}"></script>
+
+      <script type="text/template" id="template-flash-message">
+        <div id="flash-message-<%- id %>" class="alert alert-<%- type %> message">
+          <%- message %>
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        </div>
+      </script>
+      <script>
+        $(function() {
+        {% for class, messages in app.session.flashbag.all %}
+          {% for message in messages %}
+            app.func.showMessage('{{class}}', '{{message}}');
+          {% endfor %}
+        {% endfor %}
+        });
+      </script>
     {% endblock %}
     {% block js %}
     {% endblock %}
