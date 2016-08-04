@@ -59,4 +59,28 @@ class EditorController extends Controller
             ];
         }
     }
+
+    /**
+     * @Ajax
+     * @Route("/publish/{id}")
+     * @Method("POST")
+     */
+    public function publishVersionAction(Version $version)
+    {
+        try {
+            $this->get('admin_cms.publisher')
+                ->publishVersion($version);
+
+            return [
+                'message' => sprintf('Version "%s" published successfully.', $version->getTitle()),
+            ];
+        } catch (\Exception $e) {
+            $this->get('logger')->error($e);
+
+            return [
+                'message' => sprintf('An error occurred publishing version "%s".', $version->getTitle()),
+                'code' => 500,
+            ];
+        }
+    }
 }
