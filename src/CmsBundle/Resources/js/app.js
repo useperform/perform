@@ -2,6 +2,7 @@ $(function() {
   app.sections = {};
 
   app.currentVersion = null;
+  app.currentSection = null;
 
   app.func.createSection = function(name, readonly) {
     var section = new app.collections.Section();
@@ -21,15 +22,21 @@ $(function() {
     app.sections[name].removeAll();
 
     for (var i = 0; i < data.length; i++) {
-      var type = data[i].type;
-      var blockType = type.charAt(0).toUpperCase() + type.slice(1) + 'Block';
-      var block = new app.models[blockType]({
-        value: data[i].value,
-        readonly: typeof readonly === 'undefined' ? false : Boolean(readonly)
-      });
-
+      var block = app.func.createBlock(data[i].type, data[i].value, readonly);
       app.func.insertBlock(block, name);
     }
+  };
+
+  app.func.createBlock = function(type, value, readonly) {
+    var blockType = type.charAt(0).toUpperCase() + type.slice(1) + 'Block';
+    if (!app.models[blockType]) {
+      console.error('Unknown block type: '+type);
+      return;
+    }
+    return new app.models[blockType]({
+      value: value,
+      readonly: typeof readonly === 'undefined' ? false : Boolean(readonly)
+    });
   };
 
   app.func.insertBlock = function(block, targetName, targetIndex) {
@@ -161,6 +168,17 @@ $(function() {
   $('.perform-cms .action-save').click(function(e) {
     e.preventDefault();
     app.func.saveVersion(app.currentVersion);
+  });
+
+  $('.perform-cms .add-block').click(function(e) {
+    e.preventDefault();
+    app.currentSection = $(this).data('section');
+    $('#modal-perform-cms').modal('show');
+  });
+
+  $('.perform-cms .add-block-type').click(function(e) {
+    e.preventDefault();
+    app.func.insertBlock(app.func.createBlock($(this).data('type')), app.currentSection);
   });
 
   $('.perform-cms .action-publish').click(function(e) {
