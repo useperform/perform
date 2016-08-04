@@ -106,7 +106,10 @@ $(function() {
         sections: app.func.writableData()
       },
       success: function (data) {
-        console.log(data);
+        app.func.showSuccess(data.message);
+      },
+      error: function (data) {
+        app.func.showError(data.responseJSON.message);
       }
     });
   };

@@ -45,7 +45,6 @@ class EditorController extends Controller
 
             if ($version->isPublished()) {
                 $this->get('admin_cms.publisher')->publishVersion($version);
-                //change the message to say it was published as well
             }
 
             return [
