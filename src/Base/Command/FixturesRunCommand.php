@@ -76,6 +76,10 @@ class FixturesRunCommand extends ContainerAwareCommand
 
     protected function getFixtures(array $bundleNames, OutputInterface $output)
     {
+        if (empty($bundleNames)) {
+            return [];
+        }
+
         $mapper = function ($class) use ($output) {
             $r = new \ReflectionClass($class);
             if (!$r->isSubclassOf(EntityDeclaringFixtureInterface::class) || $r->isAbstract()) {
