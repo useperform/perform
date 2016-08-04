@@ -24,9 +24,14 @@
       border: 1px solid $brand-info;
       margin: -1px;
       cursor: move;
+
+      .controls {
+        display:block;
+      }
     }
 
     .controls {
+      display:none;
       .cancel, .done {
         display: none;
       }
