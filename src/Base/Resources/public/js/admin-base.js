@@ -87,7 +87,7 @@ $(function() {
         };
         //store message history for possible fanciness later
         msgs.push(msg);
-        $('.flash-messages').html(template(msg));
+        $('.admin-flash-messages').html(template(msg));
 
         setTimeout(function() {
           $('#flash-message-'+id).slideUp();
