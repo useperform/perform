@@ -15,13 +15,17 @@
             {% for version in versions %}
               <li>
                 <a href="#"
-                   class="{% if version == currentVersion %}active {% endif %}version"
+                   class="{% if version == currentVersion %}active {% endif %}version version-{{version.id}}"
+                   data-id="{{version.id}}"
+                   data-publish-url="{{path('admin_cms_editor_publishversion', {id: version.id})}}"
                    data-save-url="{{path('admin_cms_editor_saveversion', {id: version.id})}}"
-                   data-url="{{path('admin_cms_editor_loadversion', {id: version.id})}}">
+                   data-load-url="{{path('admin_cms_editor_loadversion', {id: version.id})}}">
                   {{version.title}}
-                  {% if version.published %}
-                    (published)
-                  {% endif %}
+                  <span class="published-indicator">
+                    {% if version.published %}
+                      (published)
+                    {% endif %}
+                  </span>
                 </a>
               </li>
             {% endfor %}
@@ -40,7 +44,7 @@
           </a>
         </li>
         <li>
-          <a href="#">
+          <a class="action-publish" href="#">
             Publish
           </a>
         </li>

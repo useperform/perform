@@ -1,6 +1,8 @@
 $(function() {
   app.sections = {};
 
+  app.currentVersion = null;
+
   app.func.createSection = function(name, readonly) {
     var section = new app.collections.Section();
     section.readonly = Boolean(readonly);
@@ -53,7 +55,18 @@ $(function() {
     $('#load-mask').modal('hide');
   };
 
-  app.func.loadVersion = function(url) {
+  app.func.selectVersion = function(id) {
+    var version = $('.perform-cms .version-'+id);
+    if (version.length !== 1) {
+      console.error('Version '+id+' not found.');
+    }
+
+    return version;
+  };
+
+  app.func.loadVersion = function(id) {
+    var version = app.func.selectVersion(id);
+    var url = version.data('load-url');
     var sharedSections = {};
     $('.perform-cms .shared-section').each(function() {
       var page = $(this).data('page');
@@ -79,6 +92,12 @@ $(function() {
             app.func.loadSection(sectionName+'__'+page, blocks, true);
           });
         });
+        app.currentVersion = id;
+
+        var newTitle = version.html();
+        version.parent().parent().find('.version').removeClass('active');
+        version.addClass('active');
+        $('.perform-cms .current-version-title').html(newTitle);
       },
       complete: function() {
         app.func.hideLoadMask();
@@ -98,7 +117,12 @@ $(function() {
     return sections;
   };
 
-  app.func.saveVersion = function(url) {
+  app.func.saveVersion = function(id) {
+    var url = app.func.selectVersion(id).data('save-url');
+    if (!url) {
+      app.func.showError('An error occurred.');
+      return;
+    }
     $.ajax({
       url: url,
       type: 'post',
@@ -114,19 +138,39 @@ $(function() {
     });
   };
 
+  app.func.publishVersion = function(id) {
+    var version = $('.version-'+id);
+    var url = version.data('publish-url');
+    $.ajax({
+      url: url,
+      type: 'post',
+      success: function (data) {
+        app.func.showSuccess(data.message);
+
+        var newTitle = version.html();
+        version.parent().parent().find('.version .published-indicator').html('');
+        version.find('.published-indicator').html('(published)');
+        $('.perform-cms .current-version-title .published-indicator').html('(published)');
+      },
+      error: function (data) {
+        app.func.showError(data.responseJSON.message);
+      }
+    });
+  };
+
   $('.perform-cms .action-save').click(function(e) {
     e.preventDefault();
-    app.func.saveVersion($(this).data('url'));
+    app.func.saveVersion(app.currentVersion);
+  });
+
+  $('.perform-cms .action-publish').click(function(e) {
+    e.preventDefault();
+    app.func.publishVersion(app.currentVersion);
   });
 
   $('.perform-cms .version-selector .version').click(function(e) {
     e.preventDefault();
-    app.func.loadVersion($(this).data('url'));
-    var newTitle = $(this).html();
-    $(this).parent().parent().find('.version').removeClass('active');
-    $(this).addClass('active');
-    $('.perform-cms .current-version-title').html(newTitle);
-    $('.perform-cms .action-save').data('url', $(this).data('save-url'));
+    app.func.loadVersion($(this).data('id'));
   });
 
   $('.perform-cms .version-selector .active').click();
