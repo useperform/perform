@@ -12,14 +12,14 @@ $(function () {
 
   app.views.HtmlBlockView = app.views.BlockView.extend({
     name: 'html',
+  });
 
-    resetEditor: function() {
-      this.$el.find('.editor textarea').html(this.model.get('value').content);
-    },
+  app.views.HtmlEditorView = app.views.EditorView.extend({
+    name: 'html',
 
-    updateContent: function() {
+    updateModel: function() {
       var value = {
-        content: this.$el.find('.editor textarea').val()
+        content: this.$el.find('textarea').val()
       };
       this.model.set('value', value);
     },

@@ -10,6 +10,17 @@ $(function() {
       var type = this.get('type');
       return type.charAt(0).toUpperCase() + type.slice(1) + 'BlockView';
     },
+
+    editorClass: function() {
+      var type = this.get('type');
+      return type.charAt(0).toUpperCase() + type.slice(1) + 'EditorView';
+    },
+
+    createEditor: function() {
+      return new app.views[this.editorClass()]({
+        model: this
+      });
+    },
   });
 
   app.views.BlockView = Backbone.View.extend({
@@ -29,8 +40,6 @@ $(function() {
     events: {
       "click a.edit": "edit",
       "click a.remove": "destroy",
-      "click a.done": "done",
-      "click a.cancel": "cancel",
     },
 
     initialize: function() {
@@ -39,55 +48,12 @@ $(function() {
 
     render: function() {
       this.$el.html(this.template(this.model.toJSON()));
-      this.editor = this.$('.editor');
       this.content = this.$('.content');
-      this.editorInit = null;
       return this;
     },
 
-    initEditor: function() {},
-
-    resetEditor: function() {},
-
-    updateContent: function() {},
-
-    editControls: function() {
-      this.$('.controls .edit').hide();
-      this.$('.controls .remove').hide();
-      this.$('.controls .done').show();
-      this.$('.controls .cancel').show();
-    },
-
-    defaultControls: function() {
-      this.$('.controls .done').hide();
-      this.$('.controls .cancel').hide();
-      this.$('.controls .edit').show();
-      this.$('.controls .remove').show();
-    },
-
     edit: function() {
-      if (!this.editorInit) {
-        this.initEditor();
-        this.editorInit = true;
-      }
-
-      this.editControls();
-      this.content.hide();
-      this.editor.show();
-    },
-
-    cancel: function() {
-      this.defaultControls();
-      this.editor.hide();
-      this.resetEditor();
-      this.content.show();
-    },
-
-    done: function() {
-      this.defaultControls();
-      this.editor.hide();
-      this.updateContent();
-      this.content.show();
+      app.func.editBlock(this.model);
     },
 
     destroy: function() {
@@ -95,6 +61,21 @@ $(function() {
       // app.func.setDirty();
       this.remove();
     }
+  });
+
+  app.views.EditorView = Backbone.View.extend({
+    tagName: "div",
+
+    template: function(json) {
+      return _.template($('#content-editor-' + this.name).html())(json);
+    },
+
+    render: function() {
+      this.$el.html(this.template(this.model.toJSON()));
+      return this;
+    },
+
+    updateModel: function() {}
   });
 
   app.collections.Section = Backbone.Collection.extend({
@@ -164,4 +145,24 @@ $(function() {
     }
   });
 
+  app.views.AddBlockView = Backbone.View.extend({
+    tagName: "div",
+
+    render: function(blocks) {
+      var template = _.template($('#template-add-block').html());
+      this.$el.html(template(blocks));
+      return this;
+    },
+
+    events: {
+      "click a.add-block-type": "addBlock",
+    },
+
+    addBlock: function(e) {
+      e.preventDefault();
+      // var type = $(this).data('type');
+      var type = 'html';
+      app.func.addBlock(type);
+    },
+  });
 });

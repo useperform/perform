@@ -3,6 +3,7 @@ $(function() {
 
   app.currentVersion = null;
   app.currentSection = null;
+  app.currentEditor = null;
 
   app.func.createSection = function(name, readonly) {
     var section = new app.collections.Section();
@@ -37,6 +38,36 @@ $(function() {
       value: value,
       readonly: typeof readonly === 'undefined' ? false : Boolean(readonly)
     });
+  };
+
+  app.func.showBlockTypePicker = function(section) {
+    app.currentSection = section;
+    var modal = $('#modal-perform-cms');
+    var blockTypes = {};
+    var editor = new app.views.AddBlockView();
+    editor.render(blockTypes);
+    modal.find('.modal-body').html(editor.$el);
+    app.currentEditor = editor;
+    modal.modal('show');
+  };
+
+  app.func.addBlock = function(type) {
+    var block = app.func.createBlock(type);
+    app.func.insertBlock(block, app.currentSection);
+    if (app.currentEditor) {
+      app.currentEditor.remove();
+      app.currentEditor = null;
+    }
+    app.func.editBlock(block);
+  };
+
+  app.func.editBlock = function(block) {
+    var modal = $('#modal-perform-cms');
+    var editor = block.createEditor();
+    editor.render();
+    modal.find('.modal-body').html(editor.$el);
+    app.currentEditor = editor;
+    modal.modal('show');
   };
 
   app.func.insertBlock = function(block, targetName, targetIndex) {
@@ -165,6 +196,20 @@ $(function() {
     });
   };
 
+  $('#modal-perform-cms .modal-footer .save').click(function(e) {
+    e.preventDefault();
+    if (app.currentEditor) {
+      app.currentEditor.updateModel();
+    }
+    $('#modal-perform-cms').modal('hide');
+  });
+
+  $('#modal-perform-cms').on('hidden.bs.modal', function(e) {
+    if (app.currentEditor) {
+      app.currentEditor.remove();
+    }
+  });
+
   $('.perform-cms .action-save').click(function(e) {
     e.preventDefault();
     app.func.saveVersion(app.currentVersion);
@@ -172,13 +217,7 @@ $(function() {
 
   $('.perform-cms .add-block').click(function(e) {
     e.preventDefault();
-    app.currentSection = $(this).data('section');
-    $('#modal-perform-cms').modal('show');
-  });
-
-  $('.perform-cms .add-block-type').click(function(e) {
-    e.preventDefault();
-    app.func.insertBlock(app.func.createBlock($(this).data('type')), app.currentSection);
+    app.func.showBlockTypePicker($(this).data('section'));
   });
 
   $('.perform-cms .action-publish').click(function(e) {
