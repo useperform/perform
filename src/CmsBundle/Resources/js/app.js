@@ -48,6 +48,7 @@ $(function() {
     editor.render(blockTypes);
     modal.find('.modal-body').html(editor.$el);
     app.currentEditor = editor;
+    app.func.setModalTitle('Add Block');
     modal.modal('show');
   };
 
@@ -67,6 +68,7 @@ $(function() {
     editor.render();
     modal.find('.modal-body').html(editor.$el);
     app.currentEditor = editor;
+    app.func.setModalTitle('Edit Block');
     modal.modal('show');
   };
 
@@ -194,6 +196,10 @@ $(function() {
         app.func.showError(data.responseJSON.message);
       }
     });
+  };
+
+  app.func.setModalTitle = function(title) {
+    $('.perform-cms #modal-label-perform-cms').text(title);
   };
 
   $('#modal-perform-cms .modal-footer .save').click(function(e) {
