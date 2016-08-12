@@ -5,6 +5,7 @@ services:
             - "@twig"
             - "@admin_cms.twig.content"
             - "@doctrine.orm.entity_manager"
+            - "@admin_cms.block_type_registry"
         tags:
             - {name: kernel.event_subscriber}
 

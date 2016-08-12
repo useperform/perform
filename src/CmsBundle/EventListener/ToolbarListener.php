@@ -12,6 +12,7 @@ use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Admin\CmsBundle\Annotation\Page;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Admin\CmsBundle\Block\BlockTypeRegistry;
 
 /**
  * ToolbarListener.
@@ -25,13 +26,15 @@ class ToolbarListener implements EventSubscriberInterface
     protected $twig;
     protected $extension;
     protected $entityManager;
+    protected $registry;
     protected $page;
 
-    public function __construct(\Twig_Environment $twig, ContentExtension $extension, EntityManagerInterface $entityManager)
+    public function __construct(\Twig_Environment $twig, ContentExtension $extension, EntityManagerInterface $entityManager, BlockTypeRegistry $registry)
     {
         $this->twig = $twig;
         $this->extension = $extension;
         $this->entityManager = $entityManager;
+        $this->registry = $registry;
     }
 
     protected function inEditMode(KernelEvent $event)
@@ -92,6 +95,7 @@ class ToolbarListener implements EventSubscriberInterface
             [
                 'versions' => $versions,
                 'currentVersion' => $current,
+                'blockTypes' => $this->registry->getTypes(),
             ]
         );
         $content = substr($content, 0, $pos).$toolbar.substr($content, $pos);
