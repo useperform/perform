@@ -14,12 +14,11 @@ gulp.task('sass', function (cb) {
 });
 
 gulp.task('js', function (cb) {
+  delete require.cache[require.resolve('./gulp-sources')];
+  var sources = require('./gulp-sources');
+  console.log(sources);
   pump([
-    gulp.src([
-      'Resources/js/blocks.js',
-      'Resources/js/*.block.js',
-      'Resources/js/app.js',
-    ]),
+    gulp.src(sources),
     jshint(),
     jshint.reporter('default', { verbose: true }),
     jshint.reporter('fail'),
@@ -33,6 +32,7 @@ gulp.task('watch', function () {
   gulp.watch('Resources/scss/*.scss', ['sass']);
   gulp.watch('../Base/Resources/scss/*.scss', ['sass']);
   gulp.watch('Resources/js/*.js', ['js']);
+  gulp.watch('gulp-sources.js', ['js']);
 });
 
 gulp.task('build', ['sass']);
