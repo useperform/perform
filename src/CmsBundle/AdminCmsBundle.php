@@ -3,6 +3,8 @@
 namespace Admin\CmsBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Admin\CmsBundle\DependencyInjection\Compiler\RegisterBlockTypesPass;
 
 /**
  * AdminCmsBundle
@@ -11,4 +13,9 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  **/
 class AdminCmsBundle extends Bundle
 {
+    public function build(ContainerBuilder $container)
+    {
+        parent::build($container);
+        $container->addCompilerPass(new RegisterBlockTypesPass());
+    }
 }
