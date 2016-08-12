@@ -5,3 +5,4 @@ src/*/Resources/public/vendor
 src/*/Resources/public/css
 /test_results.xml
 src/CmsBundle/Resources/public/js
+/src/CmsBundle/gulp-sources.js
