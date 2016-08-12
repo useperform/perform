@@ -33,4 +33,9 @@ class BlockTypeRegistry
 
         return $this->types[$name];
     }
+
+    public function getTypes()
+    {
+        return $this->types;
+    }
 }
