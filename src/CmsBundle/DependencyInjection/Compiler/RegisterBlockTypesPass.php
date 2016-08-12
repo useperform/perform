@@ -33,11 +33,11 @@ class RegisterBlockTypesPass implements CompilerPassInterface
             if (!isset($availableTypes[$type])) {
                 throw new \InvalidArgumentException(sprintf('Unknown cms block type "%s"', $type));
             }
-            $usedTypes[] = $availableTypes[$type];
+            $usedTypes[$type] = $availableTypes[$type];
         }
 
-        foreach ($usedTypes as $service) {
-            $registry->addMethodCall('addType', [new Reference($service)]);
+        foreach ($usedTypes as $type => $service) {
+            $registry->addMethodCall('addType', [$type, new Reference($service)]);
         }
 
         foreach ($availableTypes as $service) {
