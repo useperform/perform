@@ -43,3 +43,11 @@ services:
         class: Admin\CmsBundle\Updater\VersionUpdater
         arguments:
             - "@doctrine.orm.entity_manager"
+
+    admin_cms.block_type_registry:
+        class: Admin\CmsBundle\Block\BlockTypeRegistry
+
+    admin_cms.block.html:
+        class: Admin\CmsBundle\Block\HtmlBlockType
+        tags:
+            - {name: admin_cms.block_type, type: html}
