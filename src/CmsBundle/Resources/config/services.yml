@@ -1,3 +1,6 @@
+imports:
+    - { resource: blocks.yml }
+
 services:
     admin_cms.listener.toolbar:
         class: Admin\CmsBundle\EventListener\ToolbarListener
@@ -54,8 +57,3 @@ services:
 
     admin_cms.block_type_registry:
         class: Admin\CmsBundle\Block\BlockTypeRegistry
-
-    admin_cms.block.html:
-        class: Admin\CmsBundle\Block\HtmlBlockType
-        tags:
-            - {name: admin_cms.block_type, type: html}
