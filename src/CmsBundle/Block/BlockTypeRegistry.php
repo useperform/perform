@@ -3,6 +3,7 @@
 namespace Admin\CmsBundle\Block;
 
 use Admin\CmsBundle\Exception\BlockTypeNotFoundException;
+use Admin\CmsBundle\Entity\Block;
 
 /**
  * BlockTypeRegistry
@@ -32,6 +33,15 @@ class BlockTypeRegistry
         }
 
         return $this->types[$name];
+    }
+
+    /**
+     * @param Block
+     * @return string
+     */
+    public function renderBlock(Block $block)
+    {
+        return $this->getType($block->getType())->render($block);
     }
 
     public function getTypes()

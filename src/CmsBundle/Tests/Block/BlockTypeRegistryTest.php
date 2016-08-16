@@ -5,6 +5,7 @@ namespace Admin\CmsBundle\Tests\Block;
 use Admin\CmsBundle\Block\BlockTypeRegistry;
 use Admin\CmsBundle\Block\BlockTypeInterface;
 use Admin\CmsBundle\Exception\BlockTypeNotFoundException;
+use Admin\CmsBundle\Entity\Block;
 
 /**
  * BlockTypeRegistryTest
@@ -41,5 +42,19 @@ class BlockTypeRegistryTest extends \PHPUnit_Framework_TestCase
             'bar' => $type,
         ];
         $this->assertSame($expected, $this->registry->getTypes());
+    }
+
+    public function testRenderBlock()
+    {
+        $type = $this->getMock(BlockTypeInterface::class);
+        $this->registry->addType('foo', $type);
+        $block = new Block();
+        $block->setType('foo');
+        $type->expects($this->once())
+            ->method('render')
+            ->with($block)
+            ->will($this->returnValue('rendered content'));
+
+        $this->assertSame('rendered content', $this->registry->renderBlock($block));
     }
 }
