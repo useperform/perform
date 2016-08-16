@@ -36,6 +36,7 @@ services:
         class: Admin\CmsBundle\Publisher\Publisher
         arguments:
             - "@doctrine.orm.entity_manager"
+            - "@admin_cms.block_type_registry"
 
     admin_cms.repo.version:
         class: Admin\CmsBundle\Repository\VersionRepository

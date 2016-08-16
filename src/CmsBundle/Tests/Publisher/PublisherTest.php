@@ -6,6 +6,8 @@ use Admin\CmsBundle\Publisher\Publisher;
 use Admin\CmsBundle\Entity\Version;
 use Admin\CmsBundle\Entity\Block;
 use Admin\CmsBundle\Entity\Section;
+use Admin\CmsBundle\Block\BlockTypeRegistry;
+use Admin\CmsBundle\Block\HtmlBlockType;
 
 /**
  * PublisherTest.
@@ -14,10 +16,15 @@ use Admin\CmsBundle\Entity\Section;
  **/
 class PublisherTest extends \PHPUnit_Framework_TestCase
 {
+    protected $entityManager;
+    protected $registry;
+
     public function setUp()
     {
         $this->entityManager = $this->getMock('Doctrine\ORM\EntityManagerInterface');
-        $this->publisher = new Publisher($this->entityManager);
+        $this->registry = new BlockTypeRegistry();
+        $this->registry->addType('html', new HtmlBlockType());
+        $this->publisher = new Publisher($this->entityManager, $this->registry);
     }
 
     public function testCreatePublishedSections()

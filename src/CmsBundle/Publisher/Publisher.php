@@ -5,7 +5,7 @@ namespace Admin\CmsBundle\Publisher;
 use Doctrine\ORM\EntityManagerInterface;
 use Admin\CmsBundle\Entity\Version;
 use Admin\CmsBundle\Entity\PublishedSection;
-use Admin\CmsBundle\Block\HtmlBlockType;
+use Admin\CmsBundle\Block\BlockTypeRegistry;
 
 /**
  * Publisher.
@@ -16,11 +16,13 @@ class Publisher
 {
     protected $entityManager;
     protected $connection;
+    protected $registry;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, BlockTypeRegistry $registry)
     {
         $this->entityManager = $entityManager;
         $this->connection = $entityManager->getConnection();
+        $this->registry = $registry;
     }
 
     public function publishVersion(Version $version)
@@ -62,9 +64,8 @@ class Publisher
             $published->setName($section->getName());
             $published->setPage($version->getPage());
             $html = '';
-            $blockType = new HtmlBlockType();
             foreach ($section->getBlocks() as $block) {
-                $html .= $blockType->render($block);
+                $html .= $this->registry->renderBlock($block);
             }
             $published->setContent($html);
 
