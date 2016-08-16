@@ -160,8 +160,11 @@ $(function() {
 
     addBlock: function(e) {
       e.preventDefault();
-      // var type = $(this).data('type');
-      var type = 'html';
+      var type = $(e.target).data('type');
+      if (!type) {
+        console.error('.add-block-type link must have a type');
+        return;
+      }
       app.func.addBlock(type);
     },
   });

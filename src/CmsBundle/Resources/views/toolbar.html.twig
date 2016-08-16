@@ -79,7 +79,7 @@
 </script>
 
 {% for name, type in blockTypes %}
-  <script type="text/template" id="content-block-html">
+  <script type="text/template" id="content-block-{{name}}">
     <div class="content">
       {% include 'AdminCmsBundle:blocks/content:'~name~'.html.twig' %}
     </div>
