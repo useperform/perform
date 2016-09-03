@@ -49,6 +49,7 @@ class AdminBaseExtension extends Extension
         $definition->addMethodCall('addType', ['date', 'Admin\Base\Type\DateType']);
         $definition->addMethodCall('addType', ['datetime', 'Admin\Base\Type\DateTimeType']);
         $definition->addMethodCall('addType', ['boolean', 'Admin\Base\Type\BooleanType']);
+        $definition->addMethodCall('addType', ['integer', 'Admin\Base\Type\IntegerType']);
 
         // pull from other bundles in a compiler pass
         $definition->addMethodCall('addTypeService', ['image', 'admin_media.type.image']);
