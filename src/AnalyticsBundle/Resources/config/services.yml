@@ -4,7 +4,13 @@ services:
         arguments:
             - "@templating"
 
-    admin_base.settings.analytics:
+    admin_analytics.settings.analytics:
         class: Admin\AnalyticsBundle\Settings\AnalyticsPanel
         tags:
             - { name: admin_base.settings_panel, alias: analytics }
+
+    admin_analytics.twig.analytics:
+        class: Admin\AnalyticsBundle\Twig\Extension\AnalyticsExtension
+        arguments: ["@admin_base.settings_manager"]
+        tags:
+            - {name: twig.extension}
