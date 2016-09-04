@@ -7,6 +7,7 @@ $(function() {
 
   app.func.createSection = function(name, readonly) {
     var section = new app.collections.Section();
+    section.name = name;
     section.readonly = Boolean(readonly);
     app.sections[name] = section;
     var view = new app.views.SectionView({

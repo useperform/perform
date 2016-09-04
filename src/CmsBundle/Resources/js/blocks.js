@@ -38,6 +38,8 @@ $(function() {
     },
 
     events: {
+      "click a.move-up": "moveUp",
+      "click a.move-down": "moveDown",
       "click a.edit": "edit",
       "click a.remove": "destroy",
     },
@@ -50,6 +52,26 @@ $(function() {
       this.$el.html(this.template(this.model.toJSON()));
       this.content = this.$('.content');
       return this;
+    },
+
+    moveUp: function() {
+      var currentIndex = this.model.collection.indexOf(this.model);
+      var currentSection = this.model.collection.name;
+      if (currentIndex === -1 || currentIndex === 0) {
+        return;
+      }
+
+      app.func.moveBlock(currentSection, currentIndex, currentSection, currentIndex - 1);
+    },
+
+    moveDown: function() {
+      var currentIndex = this.model.collection.indexOf(this.model);
+      var currentSection = this.model.collection.name;
+      if (currentIndex === -1 || currentIndex + 1 === this.model.collection.models.length) {
+        return;
+      }
+
+      app.func.moveBlock(currentSection, currentIndex, currentSection, currentIndex + 1);
     },
 
     edit: function() {
