@@ -3,3 +3,8 @@ services:
         class: Admin\AnalyticsBundle\Panel\HitsPanel
         arguments:
             - "@templating"
+
+    admin_base.settings.analytics:
+        class: Admin\AnalyticsBundle\Settings\AnalyticsPanel
+        tags:
+            - { name: admin_base.settings_panel, alias: analytics }

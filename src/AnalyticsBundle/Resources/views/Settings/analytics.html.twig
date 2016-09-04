@@ -1,0 +1,14 @@
+{% block title %}
+  <i class="fa fa-user"></i>
+  Analytics
+{% endblock %}
+
+{% block panel_title %}
+  Analytics Settings
+{% endblock %}
+
+{% block panel %}
+  {% for row in form %}
+    {{form_row(row)}}
+  {% endfor %}
+{% endblock %}
