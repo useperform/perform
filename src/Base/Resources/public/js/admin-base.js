@@ -56,10 +56,11 @@ $(function() {
     $(this).find('form').attr('action', link.data('action'));
   });
 
-  //for backbone
   var app = {
     models: {},
     views: {},
+    collections: {},
+    vars: {},
     func: {
       fancyForm: function(form) {
         // form.find('.select2').select2();
@@ -86,7 +87,7 @@ $(function() {
         };
         //store message history for possible fanciness later
         msgs.push(msg);
-        $('.flash-messages').html(template(msg));
+        $('.admin-flash-messages').html(template(msg));
 
         setTimeout(function() {
           $('#flash-message-'+id).slideUp();

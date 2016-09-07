@@ -1,0 +1,10 @@
+services:
+    admin_cms.block.html:
+        class: Admin\CmsBundle\Block\HtmlBlockType
+        tags:
+            - {name: admin_cms.block_type, type: html}
+
+    admin_cms.block.text:
+        class: Admin\CmsBundle\Block\TextBlockType
+        tags:
+            - {name: admin_cms.block_type, type: text}

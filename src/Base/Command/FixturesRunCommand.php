@@ -11,6 +11,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Admin\Base\Util\BundleSearcher;
 use Admin\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
 use Admin\Base\DataFixtures\ORM\Purger;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 /**
  * FixturesRunCommand.
@@ -94,6 +95,10 @@ class FixturesRunCommand extends ContainerAwareCommand
                     $usedExcludedEntities[0]));
 
                 return false;
+            }
+
+            if ($fixture instanceof ContainerAwareInterface) {
+                $fixture->setContainer($this->getContainer());
             }
 
             return $fixture;

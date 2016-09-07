@@ -23,6 +23,9 @@
         </div>
       </nav>
 
+      <div class="admin-flash-messages">
+      </div>
+
       <aside>
         <div id="sidebar" class="nav-collapse ">
           {{ knp_menu_render('main') }}
@@ -31,9 +34,6 @@
 
       <section id="main-content">
         <section class="wrapper site-min-height">
-
-          <div class="flash-messages">
-          </div>
 
           {% block workspace %}
           {% endblock %}
@@ -52,31 +52,8 @@
     {% endblock %}
 
     {% block baseJs %}
-      <script src="{{asset('bundles/adminbase/vendor/jquery/dist/jquery.min.js')}}"></script>
-      <script src="{{asset('bundles/adminbase/vendor/jquery.cookie/jquery.cookie.js')}}"></script>
-      <script src="{{asset('bundles/adminbase/js/lib/dcjqaccordian.js')}}"></script>
-      <script src="{{asset('bundles/adminbase/vendor/bootstrap-sass/assets/javascripts/bootstrap.min.js')}}"></script>
-      <script src="{{asset('bundles/adminbase/vendor/underscore/underscore-min.js')}}"></script>
-      <script src="{{asset('bundles/adminbase/vendor/backbone/backbone-min.js')}}"></script>
-      <script src="{{asset('bundles/adminbase/vendor/moment/min/moment.min.js')}}"></script>
-      <script src="{{asset('bundles/adminbase/vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js')}}"></script>
-      <script src="{{asset('bundles/adminbase/js/admin-base.js')}}"></script>
-
-      <script type="text/template" id="template-flash-message">
-        <div id="flash-message-<%- id %>" class="alert alert-<%- type %> message">
-          <%- message %>
-          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        </div>
-      </script>
-      <script>
-        $(function() {
-        {% for class, messages in app.session.flashbag.all %}
-          {% for message in messages %}
-            app.func.showMessage('{{class}}', '{{message}}');
-          {% endfor %}
-        {% endfor %}
-        });
-      </script>
+      {% include 'AdminBaseBundle::scripts.html.twig' %}
+      {% include 'AdminBaseBundle::flash_messages.html.twig' %}
     {% endblock %}
     {% block js %}
     {% endblock %}

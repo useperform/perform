@@ -2,3 +2,8 @@ sessions:
     resource: "@AdminCmsBundle/Controller/SessionController.php"
     type:     annotation
     prefix: session
+
+editor:
+    resource: "@AdminCmsBundle/Controller/EditorController.php"
+    type:     annotation
+    prefix: editor

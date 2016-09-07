@@ -1,0 +1,20 @@
+Admin\CmsBundle\Entity\Block:
+    type: entity
+    table: admin_cms_block
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        type:
+            type: string
+        sortOrder:
+            type: integer
+        value:
+            type: json_array
+    manyToOne:
+        section:
+            targetEntity: Section
+            inversedBy: blocks
