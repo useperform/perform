@@ -95,7 +95,7 @@ class ToolbarListener implements EventSubscriberInterface
             [
                 'versions' => $versions,
                 'currentVersion' => $current,
-                'blockTypes' => $this->registry->getTypes(),
+                'registry' => $this->registry,
             ]
         );
         $content = substr($content, 0, $pos).$toolbar.substr($content, $pos);

@@ -73,15 +73,15 @@
 </div>
 
 <script type="text/template" id="template-add-block">
-  {% for name, type in blockTypes %}
+  {% for name, type in registry.getTypes() %}
     <a class="add-block-type" data-type="{{name}}">{{name}}</a>
   {% endfor %}
 </script>
 
-{% for name, type in blockTypes %}
+{% for name, type in registry.getTypes() %}
   <script type="text/template" id="content-block-{{name}}">
     <div class="content">
-      {% include 'AdminCmsBundle:blocks/content:'~name~'.html.twig' %}
+      {{registry.getEditorTemplate(name).renderBlock('content', {})}}
     </div>
 
     <% if (!readonly) { %>
@@ -95,6 +95,6 @@
   </script>
 
   <script type="text/template" id="content-editor-{{name}}">
-    {% include 'AdminCmsBundle:blocks/editor:'~name~'.html.twig' %}
+    {{registry.getEditorTemplate(name).renderBlock('editor', {})}}
   </script>
 {% endfor %}
