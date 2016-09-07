@@ -22,7 +22,7 @@ class PublisherTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->entityManager = $this->getMock('Doctrine\ORM\EntityManagerInterface');
-        $this->registry = new BlockTypeRegistry();
+        $this->registry = new BlockTypeRegistry($this->getMock('\Twig_Environment'));
         $this->registry->addType('html', new HtmlBlockType());
         $this->publisher = new Publisher($this->entityManager, $this->registry);
     }
