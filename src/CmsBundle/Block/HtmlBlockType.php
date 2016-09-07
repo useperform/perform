@@ -17,4 +17,9 @@ class HtmlBlockType implements BlockTypeInterface
 
         return isset($value['content']) ? $value['content'] : '';
     }
+
+    public function getEditorTemplate()
+    {
+        return 'AdminCmsBundle:blocks:html.html.twig';
+    }
 }

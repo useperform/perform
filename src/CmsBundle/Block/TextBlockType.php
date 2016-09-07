@@ -18,4 +18,9 @@ class TextBlockType implements BlockTypeInterface
         return sprintf('<p>%s</p>', isset($value['content']) ?
                        htmlspecialchars($value['content'])  : '');
     }
+
+    public function getEditorTemplate()
+    {
+        return 'AdminCmsBundle:blocks:text.html.twig';
+    }
 }

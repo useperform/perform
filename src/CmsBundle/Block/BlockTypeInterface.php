@@ -19,4 +19,9 @@ interface BlockTypeInterface
      * @return string
      */
     public function render(Block $block);
+
+    /**
+     * @return string
+     */
+    public function getEditorTemplate();
 }
