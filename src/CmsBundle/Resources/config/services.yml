@@ -58,3 +58,5 @@ services:
 
     admin_cms.block_type_registry:
         class: Admin\CmsBundle\Block\BlockTypeRegistry
+        arguments:
+            - "@twig"

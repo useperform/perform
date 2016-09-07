@@ -12,7 +12,13 @@ use Admin\CmsBundle\Entity\Block;
  **/
 class BlockTypeRegistry
 {
+    protected $twig;
     protected $types = [];
+
+    public function __construct(\Twig_Environment $twig)
+    {
+        $this->twig = $twig;
+    }
 
     /**
      * @param string $name
@@ -42,6 +48,14 @@ class BlockTypeRegistry
     public function renderBlock(Block $block)
     {
         return $this->getType($block->getType())->render($block);
+    }
+
+    /**
+     * @return Twig_TemplateInterface
+     */
+    public function getEditorTemplate($name)
+    {
+        return $this->twig->loadTemplate($this->getType($name)->getEditorTemplate());
     }
 
     public function getTypes()
