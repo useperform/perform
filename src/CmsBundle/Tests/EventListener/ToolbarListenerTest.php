@@ -11,6 +11,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Admin\CmsBundle\Twig\Extension\ContentExtension;
+use Admin\CmsBundle\Block\BlockTypeRegistry;
 
 /**
  * ToolbarListenerTest.
@@ -37,7 +38,7 @@ class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
         $entityManager->expects($this->any())
             ->method('getRepository')
             ->will($this->returnValue($repo));
-        $registry = $this->getMock('Admin\CmsBundle\Block\BlockTypeRegistry');
+        $registry = new BlockTypeRegistry($this->twig);
 
         $this->listener = new ToolbarListener($this->twig, $this->contentExtension, $entityManager, $registry);
         $this->kernel = $this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface');

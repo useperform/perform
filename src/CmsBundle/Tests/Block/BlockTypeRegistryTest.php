@@ -14,9 +14,13 @@ use Admin\CmsBundle\Entity\Block;
  **/
 class BlockTypeRegistryTest extends \PHPUnit_Framework_TestCase
 {
+    protected $twig;
+    protected $registry;
+
     public function setUp()
     {
-        $this->registry = new BlockTypeRegistry();
+        $this->twig = $this->getMock('\Twig_Environment');
+        $this->registry = new BlockTypeRegistry($this->twig);
     }
 
     public function testGetType()
