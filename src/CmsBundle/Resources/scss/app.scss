@@ -20,6 +20,8 @@
   }
 
   .block {
+    position: relative;
+
     &:hover {
       border: 1px solid $brand-info;
       margin: -1px;
@@ -31,7 +33,13 @@
     }
 
     .controls {
+      top: 0;
+      right: 0;
+      position: absolute;
+      padding: 3px;
+      background-color: $gray;
       display:none;
+      z-index: 1000;
     }
 
     .content {
