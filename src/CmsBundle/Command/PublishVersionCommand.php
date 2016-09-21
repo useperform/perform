@@ -66,7 +66,7 @@ class PublishVersionCommand extends ContainerAwareCommand
             throw new \Exception(sprintf('Version not found for page "%s" with title "%s"', $page, $title));
         }
 
-        $this->getContainer()->get('admin_cms.publisher')->publishVersion($version);
+        $this->getContainer()->get('perform_cms.publisher')->publishVersion($version);
         $output->writeln(sprintf('Published page <info>%s</info>, title <info>%s</info>', $page, $title));
     }
 }

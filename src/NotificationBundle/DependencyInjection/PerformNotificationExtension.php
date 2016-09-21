@@ -17,11 +17,11 @@ class PerformNotificationExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $notifier = $container->getDefinition('admin_notification.notifier');
+        $notifier = $container->getDefinition('perform_notification.notifier');
         $notifier->addMethodCall('setDefaultPublishers', [$config['default_publishers']]);
 
         if (isset($config['active_recipient_provider'])) {
-            $twigExtension = $container->getDefinition('admin_notification.twig.notification');
+            $twigExtension = $container->getDefinition('perform_notification.twig.notification');
             $twigExtension->replaceArgument(0, new Reference($config['active_recipient_provider']));
         }
 

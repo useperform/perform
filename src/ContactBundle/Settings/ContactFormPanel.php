@@ -18,7 +18,7 @@ class ContactFormPanel implements SettingsPanelInterface
     public function buildForm(FormBuilderInterface $builder, SettingsManager $manager)
     {
         //auto add??
-        $key = 'admin_contact_notify_address';
+        $key = 'perform_contact_notify_address';
         $builder->add($key, TextType::class, [
             'data' => $manager->getValue($key),
             'label' => 'Email address to notify',
@@ -27,7 +27,7 @@ class ContactFormPanel implements SettingsPanelInterface
 
     public function handleSubmission(FormInterface $form, SettingsManager $manager)
     {
-        $key = 'admin_contact_notify_address';
+        $key = 'perform_contact_notify_address';
         $manager->setValue($key, $form->get($key)->getData());
     }
 

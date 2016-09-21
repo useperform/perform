@@ -15,7 +15,7 @@ class ContactLinkProvider implements LinkProviderInterface
     public function addLinks(ItemInterface $menu)
     {
         $menu->addChild('Contact Form', [
-            'route' => 'admin_contact_message_list',
+            'route' => 'perform_contact_message_list',
         ])->setExtra('icon', 'envelope');
     }
 }

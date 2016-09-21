@@ -1,6 +1,6 @@
 Perform\NotificationBundle\Entity\NotificationLog:
     type: entity
-    table: admin_notification_notification_log
+    table: perform_notification_notification_log
     repositoryClass: Perform\NotificationBundle\Repository\NotificationLogRepository
     id:
         id:

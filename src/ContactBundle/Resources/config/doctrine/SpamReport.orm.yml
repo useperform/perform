@@ -1,6 +1,6 @@
 Perform\ContactBundle\Entity\SpamReport:
     type: entity
-    table: admin_contact_spam_report
+    table: perform_contact_spam_report
     id:
         id:
             type: guid

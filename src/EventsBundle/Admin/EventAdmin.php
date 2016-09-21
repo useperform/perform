@@ -55,5 +55,5 @@ class EventAdmin extends AbstractAdmin
             'human' => false
         ],
     ];
-    protected $routePrefix = 'admin_events_events_';
+    protected $routePrefix = 'perform_events_events_';
 }

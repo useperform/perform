@@ -8,7 +8,7 @@
         {% for name in registry.enabledPanels %}
           {% set title %}{{ registry.getTemplate(name).renderBlock('title', {}) }}{% endset %}
           <li role="presentation"{% if name == activePanel %} class="active"{% endif %}>
-            <a href="{{path('admin_base_settings_settings', {panel: name})}}" aria-controls="{{name}}" role="tab">
+            <a href="{{path('perform_base_settings_settings', {panel: name})}}" aria-controls="{{name}}" role="tab">
               {{title|raw}}
             </a>
           </li>

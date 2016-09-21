@@ -1,6 +1,6 @@
 Perform\Base\Entity\Setting:
     type: entity
-    table: admin_base_setting
+    table: perform_base_setting
     id:
         id:
             type: guid

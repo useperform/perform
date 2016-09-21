@@ -15,19 +15,19 @@ class RegisterBlockTypesPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        $registry = $container->getDefinition('admin_cms.block_type_registry');
+        $registry = $container->getDefinition('perform_cms.block_type_registry');
 
         $availableTypes = [];
 
-        foreach ($container->findTaggedServiceIds('admin_cms.block_type') as $service => $tag) {
+        foreach ($container->findTaggedServiceIds('perform_cms.block_type') as $service => $tag) {
             if (!isset($tag[0]['type'])) {
-                throw new \InvalidArgumentException(sprintf('The service "%s" tagged with "admin_cms.block_type" must set the "type" option in the tag.', $service));
+                throw new \InvalidArgumentException(sprintf('The service "%s" tagged with "perform_cms.block_type" must set the "type" option in the tag.', $service));
             }
 
             $availableTypes[$tag[0]['type']] = $service;
         }
 
-        $requestedTypes = $container->getParameter('admin_cms.block_types');
+        $requestedTypes = $container->getParameter('perform_cms.block_types');
         $usedTypes = [];
         foreach ($requestedTypes as $type) {
             if (!isset($availableTypes[$type])) {

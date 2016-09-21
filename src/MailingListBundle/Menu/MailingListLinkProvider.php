@@ -15,7 +15,7 @@ class MailingListLinkProvider implements LinkProviderInterface
     public function addLinks(ItemInterface $menu)
     {
         $menu->addChild('Mailing List Subscribers', [
-            'route' => 'admin_mailing_list_subscriber_list',
+            'route' => 'perform_mailing_list_subscriber_list',
         ])->setExtra('icon', 'users');
     }
 }

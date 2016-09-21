@@ -23,7 +23,7 @@ class DashboardController extends Controller
         $panels = [];
         foreach (['left' => 'panels.left', 'right' => 'panels.right'] as $side => $parameter) {
             $panels[$side] = [];
-            foreach ($this->getParameter('admin_base.'.$parameter, []) as $service) {
+            foreach ($this->getParameter('perform_base.'.$parameter, []) as $service) {
                 $panel = $this->get($service);
                 if (!$panel instanceof PanelInterface) {
                     throw new \InvalidArgumentException(sprintf('Panel service "%s" must be an instance of Perform\Base\Panel\PanelInterface, %s given', $service, get_class($panel)));

@@ -2,22 +2,22 @@ imports:
     - { resource: blocks.yml }
 
 services:
-    admin_cms.listener.toolbar:
+    perform_cms.listener.toolbar:
         class: Perform\CmsBundle\EventListener\ToolbarListener
         arguments:
             - "@twig"
-            - "@admin_cms.twig.content"
+            - "@perform_cms.twig.content"
             - "@doctrine.orm.entity_manager"
-            - "@admin_cms.block_type_registry"
+            - "@perform_cms.block_type_registry"
         tags:
             - {name: kernel.event_subscriber}
 
-    admin_cms.menu_link.cms:
+    perform_cms.menu_link.cms:
         class: Perform\CmsBundle\Menu\CmsLinkProvider
         tags:
-            - {name: admin_base.link_provider, alias: cms}
+            - {name: perform_base.link_provider, alias: cms}
 
-    admin_cms.twig.content:
+    perform_cms.twig.content:
         class: Perform\CmsBundle\Twig\Extension\ContentExtension
         arguments:
             - "@doctrine.orm.entity_manager"
@@ -25,20 +25,20 @@ services:
         tags:
             - {name: twig.extension}
 
-    admin_cms.warmer.gulp:
+    perform_cms.warmer.gulp:
         class: Perform\CmsBundle\CacheWarmer\GulpSourcesWarmer
         arguments:
-            - "@admin_cms.block_type_registry"
+            - "@perform_cms.block_type_registry"
         tags:
             - {name: kernel.cache_warmer}
 
-    admin_cms.publisher:
+    perform_cms.publisher:
         class: Perform\CmsBundle\Publisher\Publisher
         arguments:
             - "@doctrine.orm.entity_manager"
-            - "@admin_cms.block_type_registry"
+            - "@perform_cms.block_type_registry"
 
-    admin_cms.repo.version:
+    perform_cms.repo.version:
         class: Perform\CmsBundle\Repository\VersionRepository
         factory:
             - "@doctrine.orm.entity_manager"
@@ -46,17 +46,17 @@ services:
         arguments:
             - "PerformCmsBundle:Version"
 
-    admin_cms.section_locator:
+    perform_cms.section_locator:
         class: Perform\CmsBundle\Locator\SectionLocator
         arguments:
-            - "@admin_cms.repo.version"
+            - "@perform_cms.repo.version"
 
-    admin_cms.version_updater:
+    perform_cms.version_updater:
         class: Perform\CmsBundle\Updater\VersionUpdater
         arguments:
             - "@doctrine.orm.entity_manager"
 
-    admin_cms.block_type_registry:
+    perform_cms.block_type_registry:
         class: Perform\CmsBundle\Block\BlockTypeRegistry
         arguments:
             - "@twig"

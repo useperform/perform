@@ -19,7 +19,7 @@ class CrudController extends Controller
 
     protected function initialize(Request $request)
     {
-        $this->entity = $this->get('admin_base.doctrine.entity_resolver')->resolve($request->attributes->get('_entity'));
+        $this->entity = $this->get('perform_base.doctrine.entity_resolver')->resolve($request->attributes->get('_entity'));
     }
 
     /**
@@ -27,7 +27,7 @@ class CrudController extends Controller
      */
     protected function getAdmin()
     {
-        return $this->get('admin_base.admin.registry')
+        return $this->get('perform_base.admin.registry')
             ->getAdmin($this->entity);
     }
 
@@ -86,7 +86,7 @@ class CrudController extends Controller
         $admin = $this->getAdmin();
         $form = $this->createForm($admin->getFormType(), $entity, [
             'admin' => $admin,
-            'typeRegistry' => $this->get('admin_base.type_registry'),
+            'typeRegistry' => $this->get('perform_base.type_registry'),
             'context' => 'create',
         ]);
 
@@ -98,7 +98,7 @@ class CrudController extends Controller
             $manager->flush();
             $this->addFlash('success', 'Item created successfully.');
 
-            return $this->redirect($this->get('admin_base.routing.crud_url')->generate($entity, 'list'));
+            return $this->redirect($this->get('perform_base.routing.crud_url')->generate($entity, 'list'));
         }
 
         $formView = $form->createView();
@@ -117,7 +117,7 @@ class CrudController extends Controller
         $admin = $this->getAdmin();
         $form = $this->createForm($admin->getFormType(), $entity, [
             'admin' => $admin,
-            'typeRegistry' => $this->get('admin_base.type_registry'),
+            'typeRegistry' => $this->get('perform_base.type_registry'),
             'context' => 'edit',
         ]);
 
@@ -129,7 +129,7 @@ class CrudController extends Controller
             $manager->flush();
             $this->addFlash('success', 'Item updated successfully.');
 
-            return $this->redirect($this->get('admin_base.routing.crud_url')->generate($entity, 'list'));
+            return $this->redirect($this->get('perform_base.routing.crud_url')->generate($entity, 'list'));
         }
 
         $formView = $form->createView();
@@ -158,7 +158,7 @@ class CrudController extends Controller
             $manager->flush();
             $this->addFlash('success', 'Item removed successfully.');
 
-            return $this->redirect($this->get('admin_base.routing.crud_url')->generate($entity, 'list'));
+            return $this->redirect($this->get('perform_base.routing.crud_url')->generate($entity, 'list'));
         }
     }
 }

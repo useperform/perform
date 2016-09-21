@@ -38,5 +38,5 @@ class SubscriberAdmin extends AbstractAdmin
             'label' => 'Sign-up date',
         ],
     ];
-    protected $routePrefix = 'admin_mailing_list_subscriber_';
+    protected $routePrefix = 'perform_mailing_list_subscriber_';
 }

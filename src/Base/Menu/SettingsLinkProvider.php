@@ -14,7 +14,7 @@ class SettingsLinkProvider implements LinkProviderInterface
     public function addLinks(ItemInterface $menu)
     {
         $menu->addChild('Settings', [
-            'route' => 'admin_base_settings_settings',
+            'route' => 'perform_base_settings_settings',
         ])->setExtra('icon', 'cogs');
     }
 }

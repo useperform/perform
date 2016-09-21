@@ -1,30 +1,30 @@
 services:
-    admin_contact.admin.message:
+    perform_contact.admin.message:
         class: Perform\ContactBundle\Admin\MessageAdmin
         tags:
-            - { name: admin_base.admin, entity: "PerformContactBundle:Message" }
+            - { name: perform_base.admin, entity: "PerformContactBundle:Message" }
 
-    admin_contact.menu_link.contact:
+    perform_contact.menu_link.contact:
         class: Perform\ContactBundle\Menu\ContactLinkProvider
         tags:
-            - { name: admin_base.link_provider, alias: contact }
+            - { name: perform_base.link_provider, alias: contact }
 
-    admin_contact.form.handler.contact:
+    perform_contact.form.handler.contact:
         class: Perform\ContactBundle\Form\Handler\ContactFormHandler
         arguments:
             - "@doctrine.orm.entity_manager"
-            - "@admin_notification.notifier"
-            - "@admin_notification.provider.settings"
+            - "@perform_notification.notifier"
+            - "@perform_notification.provider.settings"
             - "@logger"
 
-    admin_contact.panel.messages:
+    perform_contact.panel.messages:
         class: Perform\ContactBundle\Panel\MessagesPanel
         arguments:
-            - "@admin_base.doctrine.entity_resolver"
+            - "@perform_base.doctrine.entity_resolver"
             - "@doctrine.orm.entity_manager"
             - "@templating"
 
-    admin_contact.settings.contact_form:
+    perform_contact.settings.contact_form:
         class: Perform\ContactBundle\Settings\ContactFormPanel
         tags:
-            - { name: admin_base.settings_panel, alias: contact_form }
+            - { name: perform_base.settings_panel, alias: contact_form }

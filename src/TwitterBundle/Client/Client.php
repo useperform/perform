@@ -60,7 +60,7 @@ class Client
      */
     public function getUserTimeline($screenname, $count = 5)
     {
-        $cacheKey = 'admin_twitter.timeline.'.$screenname;
+        $cacheKey = 'perform_twitter.timeline.'.$screenname;
         $tweets = $this->cache->fetch($cacheKey);
         if (is_array($tweets)) {
             if ($this->logger) {

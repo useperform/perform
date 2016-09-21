@@ -55,7 +55,7 @@ class FileController extends Controller
             $handler->process($request, $upload);
 
             //import all completed files (1 at most in this case)
-            $importer = $this->get('admin_media.importer.file');
+            $importer = $this->get('perform_media.importer.file');
             foreach ($handler->getCompletedFiles() as $name => $file) {
                 $importer->import($file->getPathname(), $name);
             }

@@ -18,10 +18,10 @@ class MediaLinkProvider implements LinkProviderInterface
             'uri' => '#'
         ])->setExtra('icon', 'briefcase');
         $media->addChild('List', [
-            'route' => 'admin_media_file_list'
+            'route' => 'perform_media_file_list'
         ]);
         $media->addChild('Import', [
-            'route' => 'admin_media_file_upload'
+            'route' => 'perform_media_file_upload'
         ]);
     }
 }

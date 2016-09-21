@@ -17,6 +17,6 @@ class ExtendEntitiesPass implements CompilerPassInterface
         $definition = $container->getDefinition('doctrine.orm.default_yml_metadata_driver');
         $definition->setClass('Perform\Base\Doctrine\SimplifiedYamlDriver');
         $definition->addArgument('.orm.yml');
-        $definition->addArgument($container->getParameter('admin_base.extended_entities'));
+        $definition->addArgument($container->getParameter('perform_base.extended_entities'));
     }
 }

@@ -1,7 +1,7 @@
-admin_base_login:
+perform_base_login:
     path: /login
     defaults:
-        _controller: AdminBaseBundle:Security:login
+        _controller: PerformBaseBundle:Security:login
 
-admin_base_logout:
+perform_base_logout:
     path: /logout

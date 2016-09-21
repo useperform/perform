@@ -1,6 +1,6 @@
 {
-    "name": "glynnforrest/admin-bundles",
-    "description": "Symfony admin bundles",
+    "name": "glynnforrest/perform",
+    "description": "Perform Symfony bundles",
     "license": "proprietary",
     "authors": [
         {

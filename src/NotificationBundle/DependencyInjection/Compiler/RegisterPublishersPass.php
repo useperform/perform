@@ -13,9 +13,9 @@ class RegisterPublishersPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        $definition = $container->getDefinition('admin_notification.notifier');
+        $definition = $container->getDefinition('perform_notification.notifier');
 
-        foreach ($container->findTaggedServiceIds('admin_notification.publisher') as $service => $tag) {
+        foreach ($container->findTaggedServiceIds('perform_notification.publisher') as $service => $tag) {
             $definition->addMethodCall('addPublisher', [new Reference($service)]);
         }
     }

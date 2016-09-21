@@ -39,5 +39,5 @@ class TeamMemberAdmin extends AbstractAdmin
             'type' => 'image',
         ],
     ];
-    protected $routePrefix = 'admin_team_team_';
+    protected $routePrefix = 'perform_team_team_';
 }

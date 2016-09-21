@@ -1,6 +1,6 @@
 Perform\Base\Entity\User:
     type: entity
-    table: admin_base_user
+    table: perform_base_user
     repositoryClass: Perform\Base\Repository\UserRepository
     id:
         id:

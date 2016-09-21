@@ -1,7 +1,7 @@
 Perform\CmsBundle\Entity\Version:
     type: entity
     repositoryClass: Perform\CmsBundle\Repository\VersionRepository
-    table: admin_cms_version
+    table: perform_cms_version
     id:
         id:
             type: guid

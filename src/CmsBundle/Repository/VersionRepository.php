@@ -19,7 +19,7 @@ class VersionRepository extends EntityRepository
     public function markPublished(Version $version)
     {
         $query = $this->_em->createQuery(
-            'UPDATE AdminCmsBundle:Version v SET v.published = false WHERE v.page = :page'
+            'UPDATE PerformCmsBundle:Version v SET v.published = false WHERE v.page = :page'
         );
         $query->setParameter('page', $version->getPage());
         $query->execute();
@@ -35,7 +35,7 @@ class VersionRepository extends EntityRepository
     public function getPageNames()
     {
         $query = $this->_em->createQuery(
-            'SELECT DISTINCT v.page FROM AdminCmsBundle:Version v ORDER BY v.page ASC'
+            'SELECT DISTINCT v.page FROM PerformCmsBundle:Version v ORDER BY v.page ASC'
         );
 
         return array_map(function($result) {
@@ -49,7 +49,7 @@ class VersionRepository extends EntityRepository
     public function getTitlesForPage($page)
     {
         $query = $this->_em->createQuery(
-            'SELECT v.title FROM AdminCmsBundle:Version v WHERE v.page = :page'
+            'SELECT v.title FROM PerformCmsBundle:Version v WHERE v.page = :page'
         );
         $query->setParameter('page', $page);
 

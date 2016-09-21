@@ -1,39 +1,39 @@
 services:
-    admin_base.admin.registry:
+    perform_base.admin.registry:
         class: Perform\Base\Admin\AdminRegistry
         arguments: ['@service_container']
 
-    admin_base.doctrine.entity_resolver:
+    perform_base.doctrine.entity_resolver:
         class: Perform\Base\Doctrine\EntityResolver
-        arguments: ['%admin_base.extended_entity_aliases%', '%admin_base.extended_entities%']
+        arguments: ['%perform_base.extended_entity_aliases%', '%perform_base.extended_entities%']
 
-    admin_base.admin.user:
+    perform_base.admin.user:
         class: Perform\Base\Admin\UserAdmin
         tags:
-            - {name: admin_base.admin, entity: "PerformBaseBundle:User"}
+            - {name: perform_base.admin, entity: "PerformBaseBundle:User"}
 
-    admin_base.admin_collector:
+    perform_base.admin_collector:
         class: Perform\Base\DataCollector\AdminsDataCollector
         public: false
-        arguments: ['@admin_base.admin.registry', '%admin_base.extended_entities%']
+        arguments: ['@perform_base.admin.registry', '%perform_base.extended_entities%']
         tags:
             -
                 name: data_collector
                 template: 'PerformBaseBundle:data_collector:admins.html.twig'
-                id: 'admin_base.admins'
+                id: 'perform_base.admins'
 
-    admin_base.routing.crud:
+    perform_base.routing.crud:
         class: Perform\Base\Routing\CrudLoader
         public: false
-        arguments: ['@admin_base.admin.registry']
+        arguments: ['@perform_base.admin.registry']
         tags:
             - {name: routing.loader}
 
-    admin_base.routing.crud_url:
+    perform_base.routing.crud_url:
         class: Perform\Base\Routing\CrudUrlGenerator
-        arguments: ['@admin_base.admin.registry', '@router']
+        arguments: ['@perform_base.admin.registry', '@router']
 
-    admin_base.listener.crud_template:
+    perform_base.listener.crud_template:
         class: Perform\Base\EventListener\CrudTemplateListener
         arguments: ['@service_container']
         tags:
@@ -43,61 +43,61 @@ services:
                 method: onKernelController
                 priority: -200
 
-    admin_base.listener.ajax:
+    perform_base.listener.ajax:
         class: Perform\Base\EventListener\AjaxListener
         tags:
             - {name: kernel.event_subscriber}
 
-    admin_base.twig.crud:
+    perform_base.twig.crud:
         class: Perform\Base\Twig\Extension\CrudExtension
-        arguments: ['@admin_base.routing.crud_url', '@admin_base.type_registry']
+        arguments: ['@perform_base.routing.crud_url', '@perform_base.type_registry']
         tags:
             - {name: twig.extension}
 
-    admin_base.menu_builder:
+    perform_base.menu_builder:
         class: Perform\Base\Menu\MenuBuilder
         arguments: ["@knp_menu.factory"]
         tags:
             - { name: knp_menu.menu_builder, method: createMainMenu, alias: main }
 
-    admin_base.menu_link.dashboard:
+    perform_base.menu_link.dashboard:
         class: Perform\Base\Menu\DashboardLinkProvider
         tags:
-            - { name: admin_base.link_provider, alias: dashboard }
+            - { name: perform_base.link_provider, alias: dashboard }
 
-    admin_base.menu_link.users:
+    perform_base.menu_link.users:
         class: Perform\Base\Menu\UsersLinkProvider
         tags:
-            - { name: admin_base.link_provider, alias: users }
+            - { name: perform_base.link_provider, alias: users }
 
-    admin_base.menu_link.settings:
+    perform_base.menu_link.settings:
         class: Perform\Base\Menu\SettingsLinkProvider
         tags:
-            - { name: admin_base.link_provider, alias: settings }
+            - { name: perform_base.link_provider, alias: settings }
 
-    admin_base.email.mailer:
+    perform_base.email.mailer:
         class: Perform\Base\Email\Mailer
-        arguments: ["@swiftmailer.mailer", "@twig", "%admin_base.mailer.from_address%", "@logger"]
+        arguments: ["@swiftmailer.mailer", "@twig", "%perform_base.mailer.from_address%", "@logger"]
 
-    admin_base.doctrine.user_listener:
+    perform_base.doctrine.user_listener:
         class: Perform\Base\Doctrine\UserListener
         arguments: ["@service_container"]
         tags:
             - { name: doctrine.event_subscriber }
 
-    admin_base.settings_importer:
+    perform_base.settings_importer:
         class: Perform\Base\Settings\SettingsImporter
         arguments: ["@doctrine.orm.entity_manager"]
 
-    admin_base.settings_manager:
+    perform_base.settings_manager:
         class: Perform\Base\Settings\SettingsManager
         arguments: ["@doctrine.orm.entity_manager"]
 
-    admin_base.settings_panel_registry:
+    perform_base.settings_panel_registry:
         class: Perform\Base\Settings\SettingsPanelRegistry
         arguments: ["@twig", []]
 
-    admin_base.settings.account:
+    perform_base.settings.account:
         class: Perform\Base\Settings\AccountPanel
         tags:
-            - { name: admin_base.settings_panel, alias: account }
+            - { name: perform_base.settings_panel, alias: account }

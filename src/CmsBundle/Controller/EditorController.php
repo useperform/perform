@@ -22,7 +22,7 @@ class EditorController extends Controller
      */
     public function loadVersionAction(Request $request, Version $version)
     {
-        $sharedSections = $this->get('admin_cms.section_locator')
+        $sharedSections = $this->get('perform_cms.section_locator')
                         ->findCurrentSections($request->query->get('shared', []));
 
         return [
@@ -40,11 +40,11 @@ class EditorController extends Controller
     {
         $sections = $request->request->get('sections');
         try {
-            $this->get('admin_cms.version_updater')
+            $this->get('perform_cms.version_updater')
                 ->update($version, $sections);
 
             if ($version->isPublished()) {
-                $this->get('admin_cms.publisher')->publishVersion($version);
+                $this->get('perform_cms.publisher')->publishVersion($version);
             }
 
             return [
@@ -68,7 +68,7 @@ class EditorController extends Controller
     public function publishVersionAction(Version $version)
     {
         try {
-            $this->get('admin_cms.publisher')
+            $this->get('perform_cms.publisher')
                 ->publishVersion($version);
 
             return [

@@ -4,14 +4,14 @@ Bundle for sending notifications to users in an application using a variety of p
 
 ## Usage
 
-The `admin_notification.notifier` service is used to send notifications.
+The `perform_notification.notifier` service is used to send notifications.
 
 Create an instance of
-`Admin\NotificationBundle\Notification`, then use the
-`Admin\NotificationBundle\Notifier` to send it.
+`Perform\NotificationBundle\Notification`, then use the
+`Perform\NotificationBundle\Notifier` to send it.
 
 Notification is an immutable value object that requires an array of
-recipients (implementing `Admin\NotificationBundle\RecipientInterface`),
+recipients (implementing `Perform\NotificationBundle\RecipientInterface`),
 the notification type, and any context variables relevant
 to the notification type.
 
@@ -47,17 +47,17 @@ automatically:
 * notification - The notification object.
 
 Each publisher looks for a template in
-`AdminNotificationBundle:<type>:<publisher>.html.twig`.
+`PerformNotificationBundle:<type>:<publisher>.html.twig`.
 
 For example, sending a notification with type 'new_task', using the
-'local' publisher, will render `AdminNotificationBundle:new_task:local.html.twig`.
+'local' publisher, will render `PerformNotificationBundle:new_task:local.html.twig`.
 
 To add a template without modifying this bundle, place them in
-`app/Resources/AdminNotificationBundle/views`.
+`app/Resources/PerformNotificationBundle/views`.
 
-e.g. `AdminNotificationBundle:new_task:local.html.twig` ->
-`app/Resources/AdminNotificationBundle/views/new_task/local.html.twig`.
+e.g. `PerformNotificationBundle:new_task:local.html.twig` ->
+`app/Resources/PerformNotificationBundle/views/new_task/local.html.twig`.
 
 ### Adding a notification publisher
 
-Implement `Admin\NotificationBundle\Publisher\PublisherInterface`.
+Implement `Perform\NotificationBundle\Publisher\PublisherInterface`.

@@ -30,10 +30,10 @@ class PerformBaseExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $container->setParameter('admin_base.admins', $config['admins']);
-        $container->setParameter('admin_base.panels.left', $config['panels']['left']);
-        $container->setParameter('admin_base.panels.right', $config['panels']['right']);
-        $container->setParameter('admin_base.menu_order', isset($config['menu']['order']) ? $config['menu']['order'] : []);
+        $container->setParameter('perform_base.admins', $config['admins']);
+        $container->setParameter('perform_base.panels.left', $config['panels']['left']);
+        $container->setParameter('perform_base.panels.right', $config['panels']['right']);
+        $container->setParameter('perform_base.menu_order', isset($config['menu']['order']) ? $config['menu']['order'] : []);
         $this->configureTypeRegistry($container);
         $this->configureMailer($config, $container);
         $this->findExtendedEntities($container);
@@ -41,7 +41,7 @@ class PerformBaseExtension extends Extension
 
     protected function configureTypeRegistry(ContainerBuilder $container)
     {
-        $definition = $container->register('admin_base.type_registry', 'Perform\Base\Type\TypeRegistry');
+        $definition = $container->register('perform_base.type_registry', 'Perform\Base\Type\TypeRegistry');
         $definition->addArgument(new Reference('service_container'));
         $definition->addMethodCall('addType', ['string', 'Perform\Base\Type\StringType']);
         $definition->addMethodCall('addType', ['text', 'Perform\Base\Type\TextType']);
@@ -52,20 +52,20 @@ class PerformBaseExtension extends Extension
         $definition->addMethodCall('addType', ['integer', 'Perform\Base\Type\IntegerType']);
 
         // pull from other bundles in a compiler pass
-        $definition->addMethodCall('addTypeService', ['image', 'admin_media.type.image']);
+        $definition->addMethodCall('addTypeService', ['image', 'perform_media.type.image']);
     }
 
     protected function configureMailer(array $config, ContainerBuilder $container)
     {
-        if (!$container->hasParameter('admin_base.mailer.from_address')) {
-            $container->setParameter('admin_base.mailer.from_address', 'noreply@glynnforrest.com');
+        if (!$container->hasParameter('perform_base.mailer.from_address')) {
+            $container->setParameter('perform_base.mailer.from_address', 'noreply@glynnforrest.com');
         }
 
         if (!isset($config['mailer']['excluded_domains'])) {
             return;
         }
 
-        $definition = $container->getDefinition('admin_base.email.mailer');
+        $definition = $container->getDefinition('perform_base.email.mailer');
         $definition->addMethodCall('setExcludedDomains', [$config['mailer']['excluded_domains']]);
     }
 
@@ -116,8 +116,8 @@ class PerformBaseExtension extends Extension
             $extendedAliases[$parentAlias] = $alias;
         }
 
-        $container->setParameter('admin_base.extended_entities', $extendedEntities);
-        $container->setParameter('admin_base.entity_aliases', $entityAliases);
-        $container->setParameter('admin_base.extended_entity_aliases', $extendedAliases);
+        $container->setParameter('perform_base.extended_entities', $extendedEntities);
+        $container->setParameter('perform_base.entity_aliases', $entityAliases);
+        $container->setParameter('perform_base.extended_entity_aliases', $extendedAliases);
     }
 }

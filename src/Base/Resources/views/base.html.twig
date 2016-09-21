@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Site Administration</title>
-    <link rel="stylesheet" type="text/css" href="{{asset('bundles/adminbase/css/app.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{asset('bundles/performbase/css/app.css')}}" />
   </head>
   <body>
     {% block body %}
@@ -13,13 +13,13 @@
           <div class="sidebar-toggle-box">
             <div class="fa fa-minus-square-o" id="menu-toggle" data-toggle="tooltip" data-placement="right" title="Toggle Navigation"></div>
           </div>
-          <a href="{{path('admin_base_dashboard_index')}}" class="navbar-brand">
+          <a href="{{path('perform_base_dashboard_index')}}" class="navbar-brand">
             Site Administration
           </a>
         </div>
 
         <div class="navbar-right">
-          <a class="btn btn-info navbar-btn" href="{{path('admin_base_logout')}}">Logout</a>
+          <a class="btn btn-info navbar-btn" href="{{path('perform_base_logout')}}">Logout</a>
         </div>
       </nav>
 

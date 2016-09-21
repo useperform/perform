@@ -1,7 +1,7 @@
 Perform\CmsBundle\Entity\PublishedSection:
     type: entity
     repositoryClass: Perform\CmsBundle\Repository\PublishedSectionRepository
-    table: admin_cms_published_section
+    table: perform_cms_published_section
     id:
         id:
             type: guid

@@ -1,4 +1,4 @@
-admin_twitter_timeline:
+perform_twitter_timeline:
     path: /timeline
     defaults:
-        _controller: AdminTwitterBundle:Tweets:timeline
+        _controller: PerformTwitterBundle:Tweets:timeline

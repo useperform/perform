@@ -19,9 +19,9 @@ class RegisterAdminsPassTest extends \PHPUnit_Framework_TestCase
     {
         $this->pass = new RegisterAdminsPass();
         $this->container = new ContainerBuilder();
-        $this->registry = $this->container->register('admin_base.admin.registry', 'Perform\Base\Type\TypeRegistry');
-        $this->container->setParameter('admin_base.admins', []);
-        $this->container->setParameter('admin_base.extended_entity_aliases', []);
+        $this->registry = $this->container->register('perform_base.admin.registry', 'Perform\Base\Type\TypeRegistry');
+        $this->container->setParameter('perform_base.admins', []);
+        $this->container->setParameter('perform_base.extended_entity_aliases', []);
     }
 
     public function testIsCompilerPass()
@@ -31,14 +31,14 @@ class RegisterAdminsPassTest extends \PHPUnit_Framework_TestCase
 
     public function testRegisterAdmins()
     {
-        $this->container->setParameter('admin_base.entity_aliases', [
+        $this->container->setParameter('perform_base.entity_aliases', [
             'TestBundle:Foo' => 'TestBundle\Entity\Foo',
             'TestBundle:Bar' => 'TestBundle\Entity\Bar',
         ]);
         $this->container->register('test.admin.foo', 'TestBundle\Admin\FooAdmin')
-            ->addTag('admin_base.admin', ['entity' => 'TestBundle:Foo']);
+            ->addTag('perform_base.admin', ['entity' => 'TestBundle:Foo']);
         $this->container->register('test.admin.bar', 'TestBundle\Admin\BarAdmin')
-            ->addTag('admin_base.admin', ['entity' => 'TestBundle:Bar']);
+            ->addTag('perform_base.admin', ['entity' => 'TestBundle:Bar']);
 
         $this->pass->process($this->container);
         $calls = [
@@ -58,13 +58,13 @@ class RegisterAdminsPassTest extends \PHPUnit_Framework_TestCase
     {
         //an entity has been extended, but the same admin is being used (no
         //admin registered for the extended entity).
-        $this->container->setParameter('admin_base.entity_aliases', [
+        $this->container->setParameter('perform_base.entity_aliases', [
             'PerformBaseBundle:Foo' => 'Perform\BaseBundle\Entity\Foo',
             'TestBundle:Foo' => 'TestBundle\Entity\Foo',
         ]);
-        $this->container->register('admin_base.admin.foo', 'Perform\BaseBundle\Admin\FooAdmin')
-            ->addTag('admin_base.admin', ['entity' => 'PerformBaseBundle:Foo']);
-        $this->container->setParameter('admin_base.extended_entity_aliases', [
+        $this->container->register('perform_base.admin.foo', 'Perform\BaseBundle\Admin\FooAdmin')
+            ->addTag('perform_base.admin', ['entity' => 'PerformBaseBundle:Foo']);
+        $this->container->setParameter('perform_base.extended_entity_aliases', [
             'PerformBaseBundle:Foo' => 'TestBundle:Foo',
         ]);
 
@@ -72,11 +72,11 @@ class RegisterAdminsPassTest extends \PHPUnit_Framework_TestCase
         $calls = [
             [
                 'addAdmin',
-                ['PerformBaseBundle:Foo', 'Perform\BaseBundle\Entity\Foo', 'admin_base.admin.foo'],
+                ['PerformBaseBundle:Foo', 'Perform\BaseBundle\Entity\Foo', 'perform_base.admin.foo'],
             ],
             [
                 'addAdmin',
-                ['TestBundle:Foo', 'TestBundle\Entity\Foo', 'admin_base.admin.foo'],
+                ['TestBundle:Foo', 'TestBundle\Entity\Foo', 'perform_base.admin.foo'],
             ],
         ];
         $this->assertSame($calls, $this->registry->getMethodCalls());
@@ -85,15 +85,15 @@ class RegisterAdminsPassTest extends \PHPUnit_Framework_TestCase
     public function testExtendedEntitiesUseNewAdmin()
     {
         //an entity has been extended, and a new admin is being used.
-        $this->container->setParameter('admin_base.entity_aliases', [
+        $this->container->setParameter('perform_base.entity_aliases', [
             'PerformBaseBundle:Foo' => 'Perform\BaseBundle\Entity\Foo',
             'TestBundle:Foo' => 'TestBundle\Entity\Foo',
         ]);
-        $this->container->register('admin_base.admin.foo', 'Perform\BaseBundle\Admin\FooAdmin')
-            ->addTag('admin_base.admin', ['entity' => 'PerformBaseBundle:Foo']);
+        $this->container->register('perform_base.admin.foo', 'Perform\BaseBundle\Admin\FooAdmin')
+            ->addTag('perform_base.admin', ['entity' => 'PerformBaseBundle:Foo']);
         $this->container->register('test.admin.foo', 'TestBundle\Admin\FooAdmin')
-            ->addTag('admin_base.admin', ['entity' => 'TestBundle:Foo']);
-        $this->container->setParameter('admin_base.extended_entity_aliases', [
+            ->addTag('perform_base.admin', ['entity' => 'TestBundle:Foo']);
+        $this->container->setParameter('perform_base.extended_entity_aliases', [
             'PerformBaseBundle:Foo' => 'TestBundle:Foo',
         ]);
 

@@ -1,6 +1,6 @@
 Perform\BlogBundle\Entity\Post:
     type: entity
-    table: admin_blog_post
+    table: perform_blog_post
     repositoryClass: Perform\BlogBundle\Repository\PostRepository
     id:
         id:

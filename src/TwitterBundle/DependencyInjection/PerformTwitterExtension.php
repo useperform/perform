@@ -22,7 +22,7 @@ class PerformTwitterExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
         foreach (['screen_name', 'cache_ttl'] as $key) {
-            $container->setParameter('admin_twitter.'.$key, $config[$key]);
+            $container->setParameter('perform_twitter.'.$key, $config[$key]);
         }
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
@@ -35,7 +35,7 @@ class PerformTwitterExtension extends Extension
     {
         $credentialsSource = $config['credentials_source'];
         if ($credentialsSource === 'config') {
-            $definition = $container->register('admin_twitter.factory', 'Perform\TwitterBundle\Factory\InMemoryFactory');
+            $definition = $container->register('perform_twitter.factory', 'Perform\TwitterBundle\Factory\InMemoryFactory');
             $keys = [
                 'consumer_key',
                 'consumer_secret',
@@ -44,20 +44,20 @@ class PerformTwitterExtension extends Extension
             ];
             foreach ($keys as $key) {
                 if (!isset($config['credentials'][$key])) {
-                    throw new UnsetKeyException('admin_twitter.credentials.'.$key.' must be set.');
+                    throw new UnsetKeyException('perform_twitter.credentials.'.$key.' must be set.');
                 }
 
                 $definition->addArgument($config['credentials'][$key]);
             }
         } else {
-            $definition = $container->register('admin_twitter.factory', 'Perform\TwitterBundle\Factory\SettingsFactory');
-            // $defintion->addArgument(new Reference('admin_base.settings.manager'));
+            $definition = $container->register('perform_twitter.factory', 'Perform\TwitterBundle\Factory\SettingsFactory');
+            // $defintion->addArgument(new Reference('perform_base.settings.manager'));
         }
 
-        $client = $container->getDefinition('admin_twitter.client');
-        $client->addArgument(new Reference('admin_twitter.factory'));
+        $client = $container->getDefinition('perform_twitter.client');
+        $client->addArgument(new Reference('perform_twitter.factory'));
         $client->addArgument(new Reference('doctrine_cache.providers.'.$config['cache_provider']));
-        $client->addArgument($container->getParameter('admin_twitter.cache_ttl'));
+        $client->addArgument($container->getParameter('perform_twitter.cache_ttl'));
         $client->addMethodCall('setLogger', [new Reference('logger')]);
     }
 }

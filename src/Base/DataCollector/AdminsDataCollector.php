@@ -65,6 +65,6 @@ class AdminsDataCollector extends DataCollector
 
     public function getName()
     {
-        return 'admin_base.admins';
+        return 'perform_base.admins';
     }
 }

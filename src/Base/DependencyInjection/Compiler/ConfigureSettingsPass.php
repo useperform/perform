@@ -14,9 +14,9 @@ class ConfigureSettingsPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         $services = [];
-        foreach ($container->findTaggedServiceIds('admin_base.settings_panel') as $service => $tag) {
+        foreach ($container->findTaggedServiceIds('perform_base.settings_panel') as $service => $tag) {
             if (!isset($tag[0]['alias'])) {
-                throw new \InvalidArgumentException(sprintf('The service %s tagged with "admin_base.settings_panel" must set the "alias" option in the tag.', $service));
+                throw new \InvalidArgumentException(sprintf('The service %s tagged with "perform_base.settings_panel" must set the "alias" option in the tag.', $service));
             }
             $name = $tag[0]['alias'];
             $services[$name] = new Reference($service);
@@ -24,7 +24,7 @@ class ConfigureSettingsPass implements CompilerPassInterface
             $container->getDefinition($service)->setPublic(false);
         }
 
-        $definition = $container->getDefinition('admin_base.settings_panel_registry');
+        $definition = $container->getDefinition('perform_base.settings_panel_registry');
         $definition->replaceArgument(1, $services);
     }
 }

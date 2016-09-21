@@ -19,7 +19,7 @@ class PublishedSectionRepository extends EntityRepository
     public function deletePage($page)
     {
         $query = $this->_em->createQuery(
-            'DELETE FROM AdminCmsBundle:PublishedSection s WHERE s.page = :page'
+            'DELETE FROM PerformCmsBundle:PublishedSection s WHERE s.page = :page'
         );
         $query->setParameter('page', $page);
         $query->execute();

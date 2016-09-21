@@ -18,6 +18,6 @@ class IndexController extends Controller
      */
     public function indexAction()
     {
-        return $this->redirectToRoute('admin_base_dashboard_index');
+        return $this->redirectToRoute('perform_base_dashboard_index');
     }
 }

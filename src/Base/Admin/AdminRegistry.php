@@ -27,14 +27,14 @@ class AdminRegistry
      * For performance reasons, the service is fetched lazily, and
      * alias and class name are required in advance.
      *
-     * @param string $entity      in the style of doctrine, e.g. AdminBaseBundle:User
+     * @param string $entity      in the style of doctrine, e.g. PerformBaseBundle:User
      * @param string $entityClass the fully qualified class name of the entity
      * @param string $service     the name of the service in the container
      */
     public function addAdmin($entity, $entityClass, $service)
     {
         if (strpos($entity, '\\') !== false || strpos($entity, ':') === false) {
-            throw new \InvalidArgumentException('An admin service must be registered with the entity alias, e.g. AdminBaseBundle:User.');
+            throw new \InvalidArgumentException('An admin service must be registered with the entity alias, e.g. PerformBaseBundle:User.');
         }
 
         $this->admins[$entity] = $service;
@@ -44,7 +44,7 @@ class AdminRegistry
     /**
      * Get the Admin instance for managing $entity.
      *
-     * @param string $entity in the style of doctrine (e.g. AdminBaseBundle:User), or the full class name of the entity
+     * @param string $entity in the style of doctrine (e.g. PerformBaseBundle:User), or the full class name of the entity
      */
     public function getAdmin($entity)
     {

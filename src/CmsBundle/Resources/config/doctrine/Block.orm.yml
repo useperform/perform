@@ -1,6 +1,6 @@
-Admin\CmsBundle\Entity\Block:
+Perform\CmsBundle\Entity\Block:
     type: entity
-    table: admin_cms_block
+    table: perform_cms_block
     id:
         id:
             type: guid

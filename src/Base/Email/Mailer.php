@@ -51,7 +51,7 @@ class Mailer
      *
      * @param string|array $recipient
      * @param string       $subject
-     * @param string       $template        The name of twig template, e.g. AdminBaseBundle:Email:test.txt.twig
+     * @param string       $template        The name of twig template, e.g. PerformBaseBundle:Email:test.txt.twig
      * @param array        $templateContext
      *
      * @return \Swift_Message
@@ -64,7 +64,7 @@ class Mailer
     /**
      * @param string|array $recipient
      * @param string       $subject
-     * @param string       $template        The name of twig template, e.g. AdminBaseBundle:Email:test.txt.twig
+     * @param string       $template        The name of twig template, e.g. PerformBaseBundle:Email:test.txt.twig
      * @param array        $templateContext
      *
      * @return \Swift_Message

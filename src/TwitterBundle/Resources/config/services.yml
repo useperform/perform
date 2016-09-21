@@ -1,5 +1,5 @@
 services:
-    admin_twitter.client:
+    perform_twitter.client:
         class: Perform\TwitterBundle\Client\Client
         # arguments to be added from configuration
 

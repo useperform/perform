@@ -1,10 +1,10 @@
 services:
-    admin_team.admin.team_member:
+    perform_team.admin.team_member:
         class: Perform\Team\Admin\TeamMemberAdmin
         tags:
-            - {name: admin_base.admin, entity: "PerformTeamBundle:TeamMember"}
+            - {name: perform_base.admin, entity: "PerformTeamBundle:TeamMember"}
 
-    admin_team.menu_link.team:
+    perform_team.menu_link.team:
         class: Perform\Team\Menu\TeamLinkProvider
         tags:
-            - { name: admin_base.link_provider, alias: team }
+            - { name: perform_base.link_provider, alias: team }

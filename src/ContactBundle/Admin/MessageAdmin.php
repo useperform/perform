@@ -27,7 +27,7 @@ class MessageAdmin extends AbstractAdmin
             'type' => 'datetime',
         ]
     ];
-    protected $routePrefix = 'admin_contact_message_';
+    protected $routePrefix = 'perform_contact_message_';
 
     public function getActions()
     {

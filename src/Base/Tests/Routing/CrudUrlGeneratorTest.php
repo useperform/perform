@@ -35,7 +35,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(new UserAdmin()));
         $this->urlGenerator->expects($this->any())
             ->method('generate')
-            ->with('admin_base_user_list')
+            ->with('perform_base_user_list')
             ->will($this->returnValue('/admin/users'));
 
         $this->assertSame('/admin/users', $this->generator->generate($user, 'list'));
@@ -53,7 +53,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(new UserAdmin()));
         $this->urlGenerator->expects($this->any())
             ->method('generate')
-            ->with('admin_base_user_view', ['id' => 1])
+            ->with('perform_base_user_view', ['id' => 1])
             ->will($this->returnValue('/admin/users/view/1'));
 
         $this->assertSame('/admin/users/view/1', $this->generator->generate($user, 'view'));
@@ -71,7 +71,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(new UserAdmin()));
         $this->urlGenerator->expects($this->any())
             ->method('generate')
-            ->with('admin_base_user_edit', ['id' => 1])
+            ->with('perform_base_user_edit', ['id' => 1])
             ->will($this->returnValue('/admin/users/edit/1'));
 
         $this->assertSame('/admin/users/edit/1', $this->generator->generate($user, 'edit'));
@@ -89,7 +89,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(new UserAdmin()));
         $this->urlGenerator->expects($this->any())
             ->method('generate')
-            ->with('admin_base_user_delete', ['id' => 1])
+            ->with('perform_base_user_delete', ['id' => 1])
             ->will($this->returnValue('/admin/users/delete/1'));
 
         $this->assertSame('/admin/users/delete/1', $this->generator->generate($user, 'delete'));

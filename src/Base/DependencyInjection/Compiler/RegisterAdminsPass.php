@@ -12,15 +12,15 @@ class RegisterAdminsPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        $definition = $container->getDefinition('admin_base.admin.registry');
-        $adminConfiguration = $container->getParameter('admin_base.admins');
-        $entityAliases = $container->getParameter('admin_base.entity_aliases');
-        $extendedAliases = $container->getParameter('admin_base.extended_entity_aliases');
+        $definition = $container->getDefinition('perform_base.admin.registry');
+        $adminConfiguration = $container->getParameter('perform_base.admins');
+        $entityAliases = $container->getParameter('perform_base.entity_aliases');
+        $extendedAliases = $container->getParameter('perform_base.extended_entity_aliases');
         $admins = [];
 
-        foreach ($container->findTaggedServiceIds('admin_base.admin') as $service => $tag) {
+        foreach ($container->findTaggedServiceIds('perform_base.admin') as $service => $tag) {
             if (!isset($tag[0]['entity'])) {
-                throw new \InvalidArgumentException(sprintf('The service "%s" tagged with "admin_base.admin" must set the "entity" option in the tag.', $service));
+                throw new \InvalidArgumentException(sprintf('The service "%s" tagged with "perform_base.admin" must set the "entity" option in the tag.', $service));
             }
             $entityAlias = $tag[0]['entity'];
             if (!isset($entityAliases[$entityAlias])) {

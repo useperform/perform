@@ -14,7 +14,7 @@ class UsersLinkProvider implements LinkProviderInterface
     public function addLinks(ItemInterface $menu)
     {
         $menu->addChild('Users', [
-            'route' => 'admin_base_user_list',
+            'route' => 'perform_base_user_list',
         ])->setExtra('icon', 'users');
     }
 }

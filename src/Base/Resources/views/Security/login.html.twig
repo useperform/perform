@@ -15,7 +15,7 @@
             </div>
           {% endif %}
 
-          <form action="{{ path('admin_base_login') }}" method="post">
+          <form action="{{ path('perform_base_login') }}" method="post">
             <div class="form-group">
               <label for="username" class="control-label">Email</label>
               <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}" />

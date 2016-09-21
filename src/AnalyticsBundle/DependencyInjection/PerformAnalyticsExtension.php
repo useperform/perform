@@ -8,9 +8,9 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
 /**
- * AdminAnalyticsExtension.
+ * PerformAnalyticsExtension.
  **/
-class AdminAnalyticsExtension extends Extension
+class PerformAnalyticsExtension extends Extension
 {
     /**
      * {@inheritdoc}

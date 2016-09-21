@@ -31,7 +31,7 @@ class FileDeleteCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $container = $this->getContainer();
-        $importer = $container->get('admin_media.importer.file');
+        $importer = $container->get('perform_media.importer.file');
         $file = $container->get('doctrine.orm.entity_manager')->getRepository('PerformMediaBundle:File')->find($input->getArgument('id'));
 
         if (!$file) {

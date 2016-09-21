@@ -22,6 +22,6 @@ class PerformMediaExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $container->setParameter('admin_media.plugins', $config['plugins']);
+        $container->setParameter('perform_media.plugins', $config['plugins']);
     }
 }

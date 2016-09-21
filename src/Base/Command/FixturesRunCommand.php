@@ -56,7 +56,7 @@ class FixturesRunCommand extends ContainerAwareCommand
         }
 
         $this->excludedEntities = array_keys(
-            $this->getContainer()->getParameter('admin_base.extended_entities'));
+            $this->getContainer()->getParameter('perform_base.extended_entities'));
 
         $fixtures = $this->getFixtures($this->getInputBundles($input), $output);
         if (empty($fixtures)) {

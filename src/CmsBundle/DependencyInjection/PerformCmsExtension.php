@@ -23,6 +23,6 @@ class PerformCmsExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $container->setParameter('admin_cms.block_types', $config['block_types']);
+        $container->setParameter('perform_cms.block_types', $config['block_types']);
     }
 }

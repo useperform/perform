@@ -44,5 +44,5 @@ class PostAdmin extends AbstractAdmin
             'type' => 'text',
         ],
     ];
-    protected $routePrefix = 'admin_blog_post_';
+    protected $routePrefix = 'perform_blog_post_';
 }

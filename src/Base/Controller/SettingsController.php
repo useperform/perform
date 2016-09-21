@@ -24,8 +24,8 @@ class SettingsController extends Controller
         //fetch sort order from config, use first here
         $panelName = $panel ?: 'account';
         $builder = $this->createFormBuilder();
-        $registry = $this->get('admin_base.settings_panel_registry');
-        $manager = $this->get('admin_base.settings_manager');
+        $registry = $this->get('perform_base.settings_panel_registry');
+        $manager = $this->get('perform_base.settings_manager');
         $panel = $registry->getPanel($panelName);
         if (!$panel->isEnabled()) {
             throw new NotFoundHttpException();
@@ -40,7 +40,7 @@ class SettingsController extends Controller
                 $panel->handleSubmission($form, $manager);
                 $this->addFlash('success', 'Settings updated.');
 
-                return $this->redirectToRoute('admin_base_settings_settings', ['panel' => $panelName]);
+                return $this->redirectToRoute('perform_base_settings_settings', ['panel' => $panelName]);
             } catch (\Exception $e) {
                 $this->addFlash('danger', 'An error occurred.');
             }

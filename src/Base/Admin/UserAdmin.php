@@ -25,5 +25,5 @@ class UserAdmin extends AbstractAdmin
         'forename',
         'surname',
     ];
-    protected $routePrefix = 'admin_base_user_';
+    protected $routePrefix = 'perform_base_user_';
 }
