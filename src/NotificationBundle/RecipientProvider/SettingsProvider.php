@@ -3,7 +3,7 @@
 namespace Perform\NotificationBundle\RecipientProvider;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Perform\Base\Settings\SettingsManager;
+use Perform\BaseBundle\Settings\SettingsManager;
 
 /**
  * SettingsProvider finds users whose email addresses are set in a given

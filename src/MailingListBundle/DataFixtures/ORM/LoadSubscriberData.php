@@ -5,7 +5,7 @@ namespace Perform\MailingListBundle\DataFixtures\ORM;
 use Faker;
 use Doctrine\Common\Persistence\ObjectManager;
 use Perform\MailingListBundle\Entity\Subscriber;
-use Perform\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
+use Perform\BaseBundle\DataFixtures\ORM\EntityDeclaringFixtureInterface;
 
 /**
  * LoadSubscriberData.

@@ -4,7 +4,7 @@ namespace Perform\MediaBundle\Type;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Perform\Base\Type\AbstractType;
+use Perform\BaseBundle\Type\AbstractType;
 use Perform\MediaBundle\Plugin\PluginRegistry;
 
 /**

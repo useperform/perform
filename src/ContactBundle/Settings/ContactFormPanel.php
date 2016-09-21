@@ -2,11 +2,11 @@
 
 namespace Perform\ContactBundle\Settings;
 
-use Perform\Base\Settings\SettingsPanelInterface;
+use Perform\BaseBundle\Settings\SettingsPanelInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
-use Perform\Base\Settings\SettingsManager;
+use Perform\BaseBundle\Settings\SettingsManager;
 
 /**
  * ContactFormPanel

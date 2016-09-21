@@ -2,7 +2,7 @@
 
 namespace Perform\NotificationBundle\Publisher;
 
-use Perform\Base\Email\Mailer;
+use Perform\BaseBundle\Email\Mailer;
 use Perform\NotificationBundle\Notification;
 use Symfony\Component\Templating\EngineInterface;
 

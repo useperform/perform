@@ -2,7 +2,7 @@
 
 namespace Perform\MailingListBundle\Admin;
 
-use Perform\Base\Admin\AbstractAdmin;
+use Perform\BaseBundle\Admin\AbstractAdmin;
 
 /**
  * SubscriberAdmin

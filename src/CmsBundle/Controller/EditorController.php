@@ -4,7 +4,7 @@ namespace Perform\CmsBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Perform\Base\Annotation\Ajax;
+use Perform\BaseBundle\Annotation\Ajax;
 use Perform\CmsBundle\Entity\Version;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;

@@ -5,7 +5,7 @@ namespace Perform\ContactBundle\DataFixtures\ORM;
 use Faker;
 use Perform\ContactBundle\Entity\Message;
 use Doctrine\Common\Persistence\ObjectManager;
-use Perform\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
+use Perform\BaseBundle\DataFixtures\ORM\EntityDeclaringFixtureInterface;
 
 /**
  * LoadMessageData.

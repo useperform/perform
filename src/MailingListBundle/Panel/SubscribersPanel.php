@@ -2,7 +2,7 @@
 
 namespace Perform\MailingListBundle\Panel;
 
-use Perform\Base\Panel\PanelInterface;
+use Perform\BaseBundle\Panel\PanelInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Doctrine\ORM\EntityManagerInterface;
 

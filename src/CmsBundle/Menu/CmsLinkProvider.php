@@ -3,7 +3,7 @@
 namespace Perform\CmsBundle\Menu;
 
 use Knp\Menu\ItemInterface;
-use Perform\Base\Menu\LinkProviderInterface;
+use Perform\BaseBundle\Menu\LinkProviderInterface;
 
 /**
  * CmsLinkProvider.

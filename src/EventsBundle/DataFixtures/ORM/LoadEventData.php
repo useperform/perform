@@ -5,7 +5,7 @@ namespace Perform\EventsBundle\DataFixtures\ORM;
 use Faker;
 use Doctrine\Common\Persistence\ObjectManager;
 use Perform\EventsBundle\Entity\Event;
-use Perform\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
+use Perform\BaseBundle\DataFixtures\ORM\EntityDeclaringFixtureInterface;
 
 /**
  * LoadEventData.

@@ -6,11 +6,11 @@ use Perform\CmsBundle\Entity\Block;
 use Perform\CmsBundle\Entity\Version;
 use Perform\CmsBundle\Entity\Section;
 use Doctrine\Common\Persistence\ObjectManager;
-use Perform\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
+use Perform\BaseBundle\DataFixtures\ORM\EntityDeclaringFixtureInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Perform\CmsBundle\Annotation\Page;
-use Perform\Base\Util\BundleSearcher;
+use Perform\BaseBundle\Util\BundleSearcher;
 
 /**
  * LoadContentData.

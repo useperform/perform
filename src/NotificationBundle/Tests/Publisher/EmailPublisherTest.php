@@ -18,7 +18,7 @@ class EmailPublisherTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->mailer = $this->getMockBuilder('Perform\Base\Email\Mailer')
+        $this->mailer = $this->getMockBuilder('Perform\BaseBundle\Email\Mailer')
                       ->disableOriginalConstructor()
                       ->getMock();
         $this->templating = $this->getMock('Symfony\Component\Templating\EngineInterface');

@@ -2,7 +2,7 @@
 
 namespace Perform\Team\Admin;
 
-use Perform\Base\Admin\AbstractAdmin;
+use Perform\BaseBundle\Admin\AbstractAdmin;
 
 /**
  * TeamMemberAdmin

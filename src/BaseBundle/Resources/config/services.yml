@@ -1,0 +1,103 @@
+services:
+    perform_base.admin.registry:
+        class: Perform\BaseBundle\Admin\AdminRegistry
+        arguments: ['@service_container']
+
+    perform_base.doctrine.entity_resolver:
+        class: Perform\BaseBundle\Doctrine\EntityResolver
+        arguments: ['%perform_base.extended_entity_aliases%', '%perform_base.extended_entities%']
+
+    perform_base.admin.user:
+        class: Perform\BaseBundle\Admin\UserAdmin
+        tags:
+            - {name: perform_base.admin, entity: "PerformBaseBundle:User"}
+
+    perform_base.admin_collector:
+        class: Perform\BaseBundle\DataCollector\AdminsDataCollector
+        public: false
+        arguments: ['@perform_base.admin.registry', '%perform_base.extended_entities%']
+        tags:
+            -
+                name: data_collector
+                template: 'PerformBaseBundle:data_collector:admins.html.twig'
+                id: 'perform_base.admins'
+
+    perform_base.routing.crud:
+        class: Perform\BaseBundle\Routing\CrudLoader
+        public: false
+        arguments: ['@perform_base.admin.registry']
+        tags:
+            - {name: routing.loader}
+
+    perform_base.routing.crud_url:
+        class: Perform\BaseBundle\Routing\CrudUrlGenerator
+        arguments: ['@perform_base.admin.registry', '@router']
+
+    perform_base.listener.crud_template:
+        class: Perform\BaseBundle\EventListener\CrudTemplateListener
+        arguments: ['@service_container']
+        tags:
+            -
+                name: kernel.event_listener
+                event: kernel.controller
+                method: onKernelController
+                priority: -200
+
+    perform_base.listener.ajax:
+        class: Perform\BaseBundle\EventListener\AjaxListener
+        tags:
+            - {name: kernel.event_subscriber}
+
+    perform_base.twig.crud:
+        class: Perform\BaseBundle\Twig\Extension\CrudExtension
+        arguments: ['@perform_base.routing.crud_url', '@perform_base.type_registry']
+        tags:
+            - {name: twig.extension}
+
+    perform_base.menu_builder:
+        class: Perform\BaseBundle\Menu\MenuBuilder
+        arguments: ["@knp_menu.factory"]
+        tags:
+            - { name: knp_menu.menu_builder, method: createMainMenu, alias: main }
+
+    perform_base.menu_link.dashboard:
+        class: Perform\BaseBundle\Menu\DashboardLinkProvider
+        tags:
+            - { name: perform_base.link_provider, alias: dashboard }
+
+    perform_base.menu_link.users:
+        class: Perform\BaseBundle\Menu\UsersLinkProvider
+        tags:
+            - { name: perform_base.link_provider, alias: users }
+
+    perform_base.menu_link.settings:
+        class: Perform\BaseBundle\Menu\SettingsLinkProvider
+        tags:
+            - { name: perform_base.link_provider, alias: settings }
+
+    perform_base.email.mailer:
+        class: Perform\BaseBundle\Email\Mailer
+        arguments: ["@swiftmailer.mailer", "@twig", "%perform_base.mailer.from_address%", "@logger"]
+
+    perform_base.doctrine.user_listener:
+        class: Perform\BaseBundle\Doctrine\UserListener
+        arguments: ["@service_container"]
+        tags:
+            - { name: doctrine.event_subscriber }
+
+    perform_base.settings_importer:
+        class: Perform\BaseBundle\Settings\SettingsImporter
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    perform_base.settings_manager:
+        class: Perform\BaseBundle\Settings\SettingsManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    perform_base.settings_panel_registry:
+        class: Perform\BaseBundle\Settings\SettingsPanelRegistry
+        arguments: ["@twig", []]
+
+    perform_base.settings.account:
+        class: Perform\BaseBundle\Settings\AccountPanel
+        tags:
+            - { name: perform_base.settings_panel, alias: account }

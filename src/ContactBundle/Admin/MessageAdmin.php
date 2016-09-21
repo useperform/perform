@@ -2,7 +2,7 @@
 
 namespace Perform\ContactBundle\Admin;
 
-use Perform\Base\Admin\AbstractAdmin;
+use Perform\BaseBundle\Admin\AbstractAdmin;
 
 /**
  * MessageAdmin

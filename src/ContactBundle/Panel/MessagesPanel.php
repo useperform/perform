@@ -2,10 +2,10 @@
 
 namespace Perform\ContactBundle\Panel;
 
-use Perform\Base\Panel\PanelInterface;
+use Perform\BaseBundle\Panel\PanelInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use Perform\Base\Doctrine\EntityResolver;
+use Perform\BaseBundle\Doctrine\EntityResolver;
 
 /**
  * MessagesPanel

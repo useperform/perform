@@ -2,7 +2,7 @@
 
 namespace Perform\BlogBundle\Admin;
 
-use Perform\Base\Admin\AbstractAdmin;
+use Perform\BaseBundle\Admin\AbstractAdmin;
 
 /**
  * PostAdmin

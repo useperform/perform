@@ -5,7 +5,7 @@ namespace Perform\Team\DataFixtures\ORM;
 use Faker;
 use Doctrine\Common\Persistence\ObjectManager;
 use Perform\Team\Entity\TeamMember;
-use Perform\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
+use Perform\BaseBundle\DataFixtures\ORM\EntityDeclaringFixtureInterface;
 
 /**
  * LoadTeamMemberData.
