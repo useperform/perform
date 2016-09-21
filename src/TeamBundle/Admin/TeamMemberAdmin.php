@@ -1,6 +1,6 @@
 <?php
 
-namespace Perform\Team\Admin;
+namespace Perform\TeamBundle\Admin;
 
 use Perform\BaseBundle\Admin\AbstractAdmin;
 

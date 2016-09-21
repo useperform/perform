@@ -1,6 +1,6 @@
 <?php
 
-namespace Perform\Team\Entity;
+namespace Perform\TeamBundle\Entity;
 use Perform\MediaBundle\Entity\File;
 
 /**

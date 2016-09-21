@@ -1,6 +1,6 @@
 <?php
 
-namespace Perform\Team;
+namespace Perform\TeamBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

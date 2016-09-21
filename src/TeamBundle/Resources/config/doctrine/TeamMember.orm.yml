@@ -1,4 +1,4 @@
-Perform\Team\Entity\TeamMember:
+Perform\TeamBundle\Entity\TeamMember:
     type: entity
     table: perform_team_team_member
     id:

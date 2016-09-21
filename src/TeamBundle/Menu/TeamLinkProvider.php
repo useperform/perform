@@ -1,6 +1,6 @@
 <?php
 
-namespace Perform\Team\Menu;
+namespace Perform\TeamBundle\Menu;
 
 use Knp\Menu\ItemInterface;
 use Perform\BaseBundle\Menu\LinkProviderInterface;

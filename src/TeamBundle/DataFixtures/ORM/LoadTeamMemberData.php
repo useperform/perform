@@ -1,10 +1,10 @@
 <?php
 
-namespace Perform\Team\DataFixtures\ORM;
+namespace Perform\TeamBundle\DataFixtures\ORM;
 
 use Faker;
 use Doctrine\Common\Persistence\ObjectManager;
-use Perform\Team\Entity\TeamMember;
+use Perform\TeamBundle\Entity\TeamMember;
 use Perform\BaseBundle\DataFixtures\ORM\EntityDeclaringFixtureInterface;
 
 /**
