@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Base\Repository;
+namespace Perform\Base\Repository;
 
 use Doctrine\ORM\EntityRepository;
 

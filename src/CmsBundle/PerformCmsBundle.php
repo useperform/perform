@@ -1,17 +1,17 @@
 <?php
 
-namespace Admin\CmsBundle;
+namespace Perform\CmsBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Admin\CmsBundle\DependencyInjection\Compiler\RegisterBlockTypesPass;
+use Perform\CmsBundle\DependencyInjection\Compiler\RegisterBlockTypesPass;
 
 /**
- * AdminCmsBundle
+ * PerformCmsBundle
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class AdminCmsBundle extends Bundle
+class PerformCmsBundle extends Bundle
 {
     public function build(ContainerBuilder $container)
     {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\Base\Tests\Type;
+namespace Perform\Base\Tests\Type;
 
-use Admin\Base\Type\TypeRegistry;
+use Perform\Base\Type\TypeRegistry;
 use Symfony\Component\DependencyInjection\Container;
 
 /**
@@ -23,20 +23,20 @@ class TypeRegistryTest extends \PHPUnit_Framework_TestCase
 
     public function testTypeClass()
     {
-        $this->registry->addType('string', 'Admin\Base\Type\StringType');
+        $this->registry->addType('string', 'Perform\Base\Type\StringType');
 
         $one = $this->registry->getType('string');
-        $this->assertInstanceOf('Admin\Base\Type\StringType', $one);
+        $this->assertInstanceOf('Perform\Base\Type\StringType', $one);
 
         $two = $this->registry->getType('string');
-        $this->assertInstanceOf('Admin\Base\Type\StringType', $two);
+        $this->assertInstanceOf('Perform\Base\Type\StringType', $two);
 
         $this->assertSame($one, $two);
     }
 
     public function testTypeService()
     {
-        $type = $this->getMock('Admin\Base\Type\TypeInterface');
+        $type = $this->getMock('Perform\Base\Type\TypeInterface');
         $this->container->set('type_service', $type);
         $this->registry->addTypeService('test', 'type_service');
 
@@ -45,7 +45,7 @@ class TypeRegistryTest extends \PHPUnit_Framework_TestCase
 
     public function testNotFound()
     {
-        $this->setExpectedException('Admin\Base\Exception\TypeNotFoundException');
+        $this->setExpectedException('Perform\Base\Exception\TypeNotFoundException');
         $this->registry->getType('foo');
     }
 }

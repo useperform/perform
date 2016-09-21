@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\BlogBundle\Admin;
+namespace Perform\BlogBundle\Admin;
 
-use Admin\Base\Admin\AbstractAdmin;
+use Perform\Base\Admin\AbstractAdmin;
 
 /**
  * PostAdmin

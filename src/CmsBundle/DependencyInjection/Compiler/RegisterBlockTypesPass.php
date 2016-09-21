@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\CmsBundle\DependencyInjection\Compiler;
+namespace Perform\CmsBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

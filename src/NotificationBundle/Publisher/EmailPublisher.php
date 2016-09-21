@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\NotificationBundle\Publisher;
+namespace Perform\NotificationBundle\Publisher;
 
-use Admin\Base\Email\Mailer;
-use Admin\NotificationBundle\Notification;
+use Perform\Base\Email\Mailer;
+use Perform\NotificationBundle\Notification;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
@@ -26,7 +26,7 @@ class EmailPublisher implements PublisherInterface
         $pieces = explode(':', $type, 2);
         $template = count($pieces) === 2 ?
                   $pieces[0].':notifications:'.$pieces[1].'/email.html.twig' :
-                  "AdminNotificationBundle:$type:email.html.twig";
+                  "PerformNotificationBundle:$type:email.html.twig";
         $context = $notification->getContext();
 
         if (!isset($context['subject'])) {

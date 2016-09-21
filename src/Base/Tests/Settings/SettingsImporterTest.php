@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\Base\Tests\Settings;
+namespace Perform\Base\Tests\Settings;
 
-use Admin\Base\Settings\SettingsImporter;
-use Admin\Base\Entity\Setting;
+use Perform\Base\Settings\SettingsImporter;
+use Perform\Base\Entity\Setting;
 
 /**
  * SettingsImporterTest.
@@ -22,7 +22,7 @@ class SettingsImporterTest extends \PHPUnit_Framework_TestCase
         $this->repo = $this->getMock('Doctrine\Common\Persistence\ObjectRepository');
         $this->entityManager->expects($this->any())
             ->method('getRepository')
-            ->with('AdminBaseBundle:Setting')
+            ->with('PerformBaseBundle:Setting')
             ->will($this->returnValue($this->repo));
         $this->importer = new SettingsImporter($this->entityManager);
     }

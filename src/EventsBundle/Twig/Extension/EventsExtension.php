@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\EventsBundle\Twig\Extension;
+namespace Perform\EventsBundle\Twig\Extension;
 
 use Symfony\Component\Form\FormFactoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -30,14 +30,14 @@ class EventsExtension extends \Twig_Extension
     public function getUpcoming($limit = 5)
     {
         return $this->entityManager
-            ->getRepository('AdminEventsBundle:Event')
+            ->getRepository('PerformEventsBundle:Event')
             ->findUpcoming($limit);
     }
 
     public function getPast($limit = 5)
     {
         return $this->entityManager
-            ->getRepository('AdminEventsBundle:Event')
+            ->getRepository('PerformEventsBundle:Event')
             ->findPast($limit);
     }
 

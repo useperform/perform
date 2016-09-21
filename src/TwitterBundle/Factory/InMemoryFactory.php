@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\TwitterBundle\Factory;
+namespace Perform\TwitterBundle\Factory;
 
 use Lyrixx\Twitter\Twitter;
 

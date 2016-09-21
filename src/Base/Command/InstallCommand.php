@@ -1,12 +1,12 @@
 <?php
 
-namespace Admin\Base\Command;
+namespace Perform\Base\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Admin\Base\Util\BundleSearcher;
+use Perform\Base\Util\BundleSearcher;
 
 class InstallCommand extends ContainerAwareCommand
 {
@@ -36,7 +36,7 @@ class InstallCommand extends ContainerAwareCommand
 
         foreach ($classes as $class) {
             $r = new \ReflectionClass($class);
-            if (!$r->isSubclassOf('Admin\\Base\\Installer\\InstallerInterface') || $r->isAbstract()) {
+            if (!$r->isSubclassOf('Perform\\Base\\Installer\\InstallerInterface') || $r->isAbstract()) {
                 continue;
             }
             $installers[] = $r->newInstance();

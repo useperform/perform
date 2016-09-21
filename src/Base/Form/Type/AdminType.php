@@ -1,12 +1,12 @@
 <?php
 
-namespace Admin\Base\Form\Type;
+namespace Perform\Base\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Admin\Base\Admin\AdminInterface;
+use Perform\Base\Admin\AdminInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Admin\Base\Type\TypeRegistry;
+use Perform\Base\Type\TypeRegistry;
 
 /**
  * AdminType

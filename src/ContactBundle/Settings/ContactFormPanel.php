@@ -1,12 +1,12 @@
 <?php
 
-namespace Admin\ContactBundle\Settings;
+namespace Perform\ContactBundle\Settings;
 
-use Admin\Base\Settings\SettingsPanelInterface;
+use Perform\Base\Settings\SettingsPanelInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
-use Admin\Base\Settings\SettingsManager;
+use Perform\Base\Settings\SettingsManager;
 
 /**
  * ContactFormPanel
@@ -33,7 +33,7 @@ class ContactFormPanel implements SettingsPanelInterface
 
     public function getTemplate()
     {
-        return 'AdminContactBundle:Settings:contactForm.html.twig';
+        return 'PerformContactBundle:Settings:contactForm.html.twig';
     }
 
     public function isEnabled()

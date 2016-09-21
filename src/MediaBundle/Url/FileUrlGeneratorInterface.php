@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\MediaBundle\Url;
+namespace Perform\MediaBundle\Url;
 
-use Admin\MediaBundle\Entity\File;
+use Perform\MediaBundle\Entity\File;
 
 /**
  * Get a url to an uploaded file.

@@ -1,14 +1,14 @@
 <?php
 
-namespace Admin\ContactBundle;
+namespace Perform\Team;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * AdminContactBundle
+ * PerformTeamBundle
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class AdminContactBundle extends Bundle
+class PerformTeamBundle extends Bundle
 {
 }

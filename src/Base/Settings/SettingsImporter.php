@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\Base\Settings;
+namespace Perform\Base\Settings;
 
 use Symfony\Component\Yaml\Yaml;
-use Admin\Base\Entity\Setting;
+use Perform\Base\Entity\Setting;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -23,7 +23,7 @@ class SettingsImporter
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
-        $this->repo = $entityManager->getRepository('AdminBaseBundle:Setting');
+        $this->repo = $entityManager->getRepository('PerformBaseBundle:Setting');
     }
 
     public function import(Setting $setting)

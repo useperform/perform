@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\ContactBundle\Admin;
+namespace Perform\ContactBundle\Admin;
 
-use Admin\Base\Admin\AbstractAdmin;
+use Perform\Base\Admin\AbstractAdmin;
 
 /**
  * MessageAdmin

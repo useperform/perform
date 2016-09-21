@@ -1,10 +1,10 @@
 <?php
 
-namespace Admin\Base\Installer;
+namespace Perform\Base\Installer;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Admin\Base\Util\BundleSearcher;
+use Perform\Base\Util\BundleSearcher;
 
 /**
  * SettingsInstaller.

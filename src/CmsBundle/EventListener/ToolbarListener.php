@@ -1,18 +1,18 @@
 <?php
 
-namespace Admin\CmsBundle\EventListener;
+namespace Perform\CmsBundle\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpFoundation\Request;
-use Admin\CmsBundle\Twig\Extension\ContentExtension;
+use Perform\CmsBundle\Twig\Extension\ContentExtension;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Doctrine\ORM\EntityManagerInterface;
-use Admin\CmsBundle\Annotation\Page;
+use Perform\CmsBundle\Annotation\Page;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Admin\CmsBundle\Block\BlockTypeRegistry;
+use Perform\CmsBundle\Block\BlockTypeRegistry;
 
 /**
  * ToolbarListener.
@@ -86,12 +86,12 @@ class ToolbarListener implements EventSubscriberInterface
             return;
         }
 
-        $repo = $this->entityManager->getRepository('AdminCmsBundle:Version');
+        $repo = $this->entityManager->getRepository('PerformCmsBundle:Version');
         $versions = $this->page ? $repo->findByPage($this->page) : [];
         $current = $this->page ? $repo->findCurrentVersion($this->page) : null;
 
         $toolbar = $this->twig->render(
-            'AdminCmsBundle::toolbar.html.twig',
+            'PerformCmsBundle::toolbar.html.twig',
             [
                 'versions' => $versions,
                 'currentVersion' => $current,

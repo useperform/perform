@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Base\Doctrine;
+namespace Perform\Base\Doctrine;
 
 /**
  * EntityResolver resolves references to entities that have been extended by the

@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\CmsBundle\Exception;
+namespace Perform\CmsBundle\Exception;
 
 /**
  * BlockTypeNotFoundException

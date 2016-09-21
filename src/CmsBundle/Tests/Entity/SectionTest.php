@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\CmsBundle\Tests\Entity;
+namespace Perform\CmsBundle\Tests\Entity;
 
-use Admin\CmsBundle\Entity\Section;
-use Admin\CmsBundle\Entity\Block;
+use Perform\CmsBundle\Entity\Section;
+use Perform\CmsBundle\Entity\Block;
 
 /**
  * SectionTest

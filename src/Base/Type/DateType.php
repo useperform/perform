@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\Base\Type;
+namespace Perform\Base\Type;
 
 use Symfony\Component\Form\FormBuilderInterface;
-use Admin\Base\Form\Type\DatePickerType;
+use Perform\Base\Form\Type\DatePickerType;
 
 /**
  * DateType.

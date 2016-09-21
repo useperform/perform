@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Base\Util;
+namespace Perform\Base\Util;
 
 /**
  * StringUtil

@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Base\Email;
+namespace Perform\Base\Email;
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;

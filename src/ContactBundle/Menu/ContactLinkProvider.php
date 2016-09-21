@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\ContactBundle\Menu;
+namespace Perform\ContactBundle\Menu;
 
 use Knp\Menu\ItemInterface;
-use Admin\Base\Menu\LinkProviderInterface;
+use Perform\Base\Menu\LinkProviderInterface;
 
 /**
  * ContactLinkProvider.

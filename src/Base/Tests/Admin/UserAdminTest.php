@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\Base\Tests\Admin;
+namespace Perform\Base\Tests\Admin;
 
-use Admin\Base\Admin\UserAdmin;
+use Perform\Base\Admin\UserAdmin;
 
 /**
  * UserAdminTest
@@ -18,6 +18,6 @@ class UserAdminTest extends \PHPUnit_Framework_TestCase
 
     public function testIsAdmin()
     {
-        $this->assertInstanceOf('Admin\Base\Admin\AdminInterface', $this->admin);
+        $this->assertInstanceOf('Perform\Base\Admin\AdminInterface', $this->admin);
     }
 }

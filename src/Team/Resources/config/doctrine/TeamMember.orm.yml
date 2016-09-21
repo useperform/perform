@@ -1,4 +1,4 @@
-Admin\Team\Entity\TeamMember:
+Perform\Team\Entity\TeamMember:
     type: entity
     table: admin_team_team_member
     id:
@@ -39,6 +39,6 @@ Admin\Team\Entity\TeamMember:
             columns: [slug]
     manyToOne:
         image:
-            targetEntity: Admin\MediaBundle\Entity\File
+            targetEntity: Perform\MediaBundle\Entity\File
             joinColumn:
                 nullable: true

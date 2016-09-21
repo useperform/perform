@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Base\Doctrine;
+namespace Perform\Base\Doctrine;
 
 use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver as BaseDriver;
 use Symfony\Component\Yaml\Yaml;

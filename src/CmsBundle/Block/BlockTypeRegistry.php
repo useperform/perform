@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\CmsBundle\Block;
+namespace Perform\CmsBundle\Block;
 
-use Admin\CmsBundle\Exception\BlockTypeNotFoundException;
-use Admin\CmsBundle\Entity\Block;
+use Perform\CmsBundle\Exception\BlockTypeNotFoundException;
+use Perform\CmsBundle\Entity\Block;
 
 /**
  * BlockTypeRegistry

@@ -1,10 +1,10 @@
 <?php
 
-namespace Admin\Base\Settings;
+namespace Perform\Base\Settings;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
-use Admin\Base\Settings\SettingsManager;
+use Perform\Base\Settings\SettingsManager;
 
 /**
  * AccountPanel
@@ -23,7 +23,7 @@ class AccountPanel implements SettingsPanelInterface
 
     public function getTemplate()
     {
-        return 'AdminBaseBundle:Settings:account.html.twig';
+        return 'PerformBaseBundle:Settings:account.html.twig';
     }
 
     public function isEnabled()

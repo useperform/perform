@@ -3,7 +3,7 @@ imports:
 
 services:
     admin_cms.listener.toolbar:
-        class: Admin\CmsBundle\EventListener\ToolbarListener
+        class: Perform\CmsBundle\EventListener\ToolbarListener
         arguments:
             - "@twig"
             - "@admin_cms.twig.content"
@@ -13,12 +13,12 @@ services:
             - {name: kernel.event_subscriber}
 
     admin_cms.menu_link.cms:
-        class: Admin\CmsBundle\Menu\CmsLinkProvider
+        class: Perform\CmsBundle\Menu\CmsLinkProvider
         tags:
             - {name: admin_base.link_provider, alias: cms}
 
     admin_cms.twig.content:
-        class: Admin\CmsBundle\Twig\Extension\ContentExtension
+        class: Perform\CmsBundle\Twig\Extension\ContentExtension
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@twig"
@@ -26,37 +26,37 @@ services:
             - {name: twig.extension}
 
     admin_cms.warmer.gulp:
-        class: Admin\CmsBundle\CacheWarmer\GulpSourcesWarmer
+        class: Perform\CmsBundle\CacheWarmer\GulpSourcesWarmer
         arguments:
             - "@admin_cms.block_type_registry"
         tags:
             - {name: kernel.cache_warmer}
 
     admin_cms.publisher:
-        class: Admin\CmsBundle\Publisher\Publisher
+        class: Perform\CmsBundle\Publisher\Publisher
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@admin_cms.block_type_registry"
 
     admin_cms.repo.version:
-        class: Admin\CmsBundle\Repository\VersionRepository
+        class: Perform\CmsBundle\Repository\VersionRepository
         factory:
             - "@doctrine.orm.entity_manager"
             - "getRepository"
         arguments:
-            - "AdminCmsBundle:Version"
+            - "PerformCmsBundle:Version"
 
     admin_cms.section_locator:
-        class: Admin\CmsBundle\Locator\SectionLocator
+        class: Perform\CmsBundle\Locator\SectionLocator
         arguments:
             - "@admin_cms.repo.version"
 
     admin_cms.version_updater:
-        class: Admin\CmsBundle\Updater\VersionUpdater
+        class: Perform\CmsBundle\Updater\VersionUpdater
         arguments:
             - "@doctrine.orm.entity_manager"
 
     admin_cms.block_type_registry:
-        class: Admin\CmsBundle\Block\BlockTypeRegistry
+        class: Perform\CmsBundle\Block\BlockTypeRegistry
         arguments:
             - "@twig"

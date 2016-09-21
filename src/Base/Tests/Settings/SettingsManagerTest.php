@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\Base\Tests\Settings;
+namespace Perform\Base\Tests\Settings;
 
-use Admin\Base\Settings\SettingsManager;
-use Admin\Base\Entity\Setting;
+use Perform\Base\Settings\SettingsManager;
+use Perform\Base\Entity\Setting;
 
 /**
  * SettingsManagerTest

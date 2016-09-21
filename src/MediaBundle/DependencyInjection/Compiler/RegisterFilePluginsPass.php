@@ -1,13 +1,13 @@
 <?php
 
-namespace Admin\MediaBundle\DependencyInjection\Compiler;
+namespace Perform\MediaBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Config\Definition\Processor;
-use Admin\MediaBundle\DependencyInjection\Configuration;
-use Admin\MediaBundle\Exception\PluginNotFoundException;
+use Perform\MediaBundle\DependencyInjection\Configuration;
+use Perform\MediaBundle\Exception\PluginNotFoundException;
 
 /**
  * RegisterFilePluginsPass

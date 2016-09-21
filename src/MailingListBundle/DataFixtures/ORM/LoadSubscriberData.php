@@ -1,11 +1,11 @@
 <?php
 
-namespace Admin\MailingListBundle\DataFixtures\ORM;
+namespace Perform\MailingListBundle\DataFixtures\ORM;
 
 use Faker;
 use Doctrine\Common\Persistence\ObjectManager;
-use Admin\MailingListBundle\Entity\Subscriber;
-use Admin\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
+use Perform\MailingListBundle\Entity\Subscriber;
+use Perform\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
 
 /**
  * LoadSubscriberData.

@@ -1,11 +1,11 @@
 <?php
 
-namespace Admin\CmsBundle\Controller;
+namespace Perform\CmsBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Admin\Base\Annotation\Ajax;
-use Admin\CmsBundle\Entity\Version;
+use Perform\Base\Annotation\Ajax;
+use Perform\CmsBundle\Entity\Version;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 

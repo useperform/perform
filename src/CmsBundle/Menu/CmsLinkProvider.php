@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\CmsBundle\Menu;
+namespace Perform\CmsBundle\Menu;
 
 use Knp\Menu\ItemInterface;
-use Admin\Base\Menu\LinkProviderInterface;
+use Perform\Base\Menu\LinkProviderInterface;
 
 /**
  * CmsLinkProvider.

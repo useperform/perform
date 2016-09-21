@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\CmsBundle\Command;
+namespace Perform\CmsBundle\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -39,7 +39,7 @@ class PublishVersionCommand extends ContainerAwareCommand
         $page = $input->getArgument('page');
         $repo = $this->getContainer()
               ->get('doctrine.orm.entity_manager')
-              ->getRepository('AdminCmsBundle:Version');
+              ->getRepository('PerformCmsBundle:Version');
         $helper = $this->getHelper('question');
         if (!$page) {
             $pages = $repo->getPageNames();

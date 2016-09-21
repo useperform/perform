@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\EventsBundle\Admin;
+namespace Perform\EventsBundle\Admin;
 
-use Admin\Base\Admin\AbstractAdmin;
+use Perform\Base\Admin\AbstractAdmin;
 
 /**
  * EventAdmin

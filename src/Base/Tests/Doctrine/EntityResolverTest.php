@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\Base\Tests\Doctrine;
+namespace Perform\Base\Tests\Doctrine;
 
-use Admin\Base\Doctrine\EntityResolver;
+use Perform\Base\Doctrine\EntityResolver;
 
 /**
  * EntityResolverTest.
@@ -14,20 +14,20 @@ class EntityResolverTest extends \PHPUnit_Framework_TestCase
     public function testResolve()
     {
         $extendedAliases = [
-            'AdminBaseBundle:Foo' => 'TestBundle:Foo',
+            'PerformBaseBundle:Foo' => 'TestBundle:Foo',
         ];
         $extended = [
-            'Admin\BaseBundle\Entity\Foo' => 'TestBundle\Entity\Foo',
+            'Perform\BaseBundle\Entity\Foo' => 'TestBundle\Entity\Foo',
         ];
         $resolver = new EntityResolver($extendedAliases, $extended);
-        $this->assertSame('TestBundle:Foo', $resolver->resolve('AdminBaseBundle:Foo'));
-        $this->assertSame('TestBundle\Entity\Foo', $resolver->resolve('Admin\BaseBundle\Entity\Foo'));
+        $this->assertSame('TestBundle:Foo', $resolver->resolve('PerformBaseBundle:Foo'));
+        $this->assertSame('TestBundle\Entity\Foo', $resolver->resolve('Perform\BaseBundle\Entity\Foo'));
     }
 
     public function testResolveReturnsSameNameForUnknown()
     {
         $resolver = new EntityResolver();
-        $this->assertSame('AdminBaseBundle:Bar', $resolver->resolve('AdminBaseBundle:Bar'));
-        $this->assertSame('Admin\BaseBundle\Entity\Bar', $resolver->resolve('Admin\BaseBundle\Entity\Bar'));
+        $this->assertSame('PerformBaseBundle:Bar', $resolver->resolve('PerformBaseBundle:Bar'));
+        $this->assertSame('Perform\BaseBundle\Entity\Bar', $resolver->resolve('Perform\BaseBundle\Entity\Bar'));
     }
 }

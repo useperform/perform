@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\TwitterBundle\DependencyInjection;
+namespace Perform\TwitterBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -10,9 +10,9 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Config\Definition\Exception\UnsetKeyException;
 
 /**
- * AdminTwitterExtension.
+ * PerformTwitterExtension.
  **/
-class AdminTwitterExtension extends Extension
+class PerformTwitterExtension extends Extension
 {
     /**
      * {@inheritdoc}
@@ -35,7 +35,7 @@ class AdminTwitterExtension extends Extension
     {
         $credentialsSource = $config['credentials_source'];
         if ($credentialsSource === 'config') {
-            $definition = $container->register('admin_twitter.factory', 'Admin\TwitterBundle\Factory\InMemoryFactory');
+            $definition = $container->register('admin_twitter.factory', 'Perform\TwitterBundle\Factory\InMemoryFactory');
             $keys = [
                 'consumer_key',
                 'consumer_secret',
@@ -50,7 +50,7 @@ class AdminTwitterExtension extends Extension
                 $definition->addArgument($config['credentials'][$key]);
             }
         } else {
-            $definition = $container->register('admin_twitter.factory', 'Admin\TwitterBundle\Factory\SettingsFactory');
+            $definition = $container->register('admin_twitter.factory', 'Perform\TwitterBundle\Factory\SettingsFactory');
             // $defintion->addArgument(new Reference('admin_base.settings.manager'));
         }
 

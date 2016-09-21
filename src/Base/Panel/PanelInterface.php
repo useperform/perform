@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Base\Panel;
+namespace Perform\Base\Panel;
 
 /**
  * PanelInterface

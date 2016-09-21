@@ -1,6 +1,6 @@
-Admin\CmsBundle\Entity\PublishedSection:
+Perform\CmsBundle\Entity\PublishedSection:
     type: entity
-    repositoryClass: Admin\CmsBundle\Repository\PublishedSectionRepository
+    repositoryClass: Perform\CmsBundle\Repository\PublishedSectionRepository
     table: admin_cms_published_section
     id:
         id:

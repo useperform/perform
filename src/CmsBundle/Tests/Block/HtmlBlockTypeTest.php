@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\CmsBundle\Tests\Block;
+namespace Perform\CmsBundle\Tests\Block;
 
-use Admin\CmsBundle\Entity\Block;
-use Admin\CmsBundle\Block\HtmlBlockType;
+use Perform\CmsBundle\Entity\Block;
+use Perform\CmsBundle\Block\HtmlBlockType;
 
 /**
  * HtmlBlockTypeTest

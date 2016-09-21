@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\CmsBundle\Annotation;
+namespace Perform\CmsBundle\Annotation;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface;
 

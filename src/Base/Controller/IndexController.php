@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Base\Controller;
+namespace Perform\Base\Controller;
 
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\MailingListBundle\Menu;
+namespace Perform\MailingListBundle\Menu;
 
 use Knp\Menu\ItemInterface;
-use Admin\Base\Menu\LinkProviderInterface;
+use Perform\Base\Menu\LinkProviderInterface;
 
 /**
  * MailingListLinkProvider.

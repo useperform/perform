@@ -1,7 +1,7 @@
 <?php
 
-namespace Admin\Team\Entity;
-use Admin\MediaBundle\Entity\File;
+namespace Perform\Team\Entity;
+use Perform\MediaBundle\Entity\File;
 
 /**
  * TeamMember

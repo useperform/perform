@@ -1,14 +1,14 @@
 <?php
 
-namespace Admin\Team;
+namespace Perform\AnalyticsBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * AdminTeamBundle
+ * PerformAnalyticsBundle
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class AdminTeamBundle extends Bundle
+class PerformAnalyticsBundle extends Bundle
 {
 }

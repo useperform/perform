@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\Base\Entity;
+namespace Perform\Base\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
-use Admin\NotificationBundle\RecipientInterface;
+use Perform\NotificationBundle\RecipientInterface;
 
 /**
  * User

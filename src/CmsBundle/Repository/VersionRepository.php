@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\CmsBundle\Repository;
+namespace Perform\CmsBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Admin\CmsBundle\Entity\Version;
+use Perform\CmsBundle\Entity\Version;
 
 /**
  * VersionRepository

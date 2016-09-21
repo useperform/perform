@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Base\Annotation;
+namespace Perform\Base\Annotation;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface;
 

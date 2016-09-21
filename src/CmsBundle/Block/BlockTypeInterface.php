@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\CmsBundle\Block;
+namespace Perform\CmsBundle\Block;
 
-use Admin\CmsBundle\Entity\Block;
+use Perform\CmsBundle\Entity\Block;
 
 /**
  * BlockTypeInterface

@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\ContactBundle\SpamChecker;
+namespace Perform\ContactBundle\SpamChecker;
 
-use Admin\ContactBundle\Entity\Message;
+use Perform\ContactBundle\Entity\Message;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormInterface;
 

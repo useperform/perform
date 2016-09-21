@@ -1,13 +1,13 @@
 <?php
 
-namespace Admin\Base\Doctrine;
+namespace Perform\Base\Doctrine;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Admin\Base\Entity\User;
+use Perform\Base\Entity\User;
 
 /**
  * Update the password hash when saving a user.

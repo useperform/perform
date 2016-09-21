@@ -1,14 +1,20 @@
 <?php
 
-namespace Admin\NotificationBundle\DependencyInjection;
+namespace Perform\CmsBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
-class AdminNotificationExtension extends Extension
+/**
+ * PerformCmsExtension.
+ **/
+class PerformCmsExtension extends Extension
 {
+    /**
+     * {@inheritdoc}
+     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
@@ -17,13 +23,6 @@ class AdminNotificationExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $notifier = $container->getDefinition('admin_notification.notifier');
-        $notifier->addMethodCall('setDefaultPublishers', [$config['default_publishers']]);
-
-        if (isset($config['active_recipient_provider'])) {
-            $twigExtension = $container->getDefinition('admin_notification.twig.notification');
-            $twigExtension->replaceArgument(0, new Reference($config['active_recipient_provider']));
-        }
-
+        $container->setParameter('admin_cms.block_types', $config['block_types']);
     }
 }

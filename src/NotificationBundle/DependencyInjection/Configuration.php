@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\NotificationBundle\DependencyInjection;
+namespace Perform\NotificationBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

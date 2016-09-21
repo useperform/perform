@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Base\DependencyInjection\Compiler;
+namespace Perform\Base\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -13,7 +13,7 @@ class ConfigureMenuPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        $container->setParameter('knp_menu.renderer.twig.template', 'AdminBaseBundle::menu.html.twig');
+        $container->setParameter('knp_menu.renderer.twig.template', 'PerformBaseBundle::menu.html.twig');
 
         $services = [];
         foreach ($container->findTaggedServiceIds('admin_base.link_provider') as $service => $tag) {

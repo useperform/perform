@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\CmsBundle\Block;
+namespace Perform\CmsBundle\Block;
 
-use Admin\CmsBundle\Entity\Block;
+use Perform\CmsBundle\Entity\Block;
 
 /**
  * HtmlBlockType
@@ -20,6 +20,6 @@ class HtmlBlockType implements BlockTypeInterface
 
     public function getEditorTemplate()
     {
-        return 'AdminCmsBundle:blocks:html.html.twig';
+        return 'PerformCmsBundle:blocks:html.html.twig';
     }
 }

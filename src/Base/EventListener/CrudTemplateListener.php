@@ -1,11 +1,11 @@
 <?php
 
-namespace Admin\Base\EventListener;
+namespace Perform\Base\EventListener;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Admin\Base\Controller\CrudController;
+use Perform\Base\Controller\CrudController;
 
 /**
  * Allows crud controllers to optionally override crud templates.
@@ -49,7 +49,7 @@ class CrudTemplateListener
 
         if (!$templating->exists($template)) {
             //remove Action
-            $template = 'AdminBaseBundle:Crud:'.$segment.'.html.twig';
+            $template = 'PerformBaseBundle:Crud:'.$segment.'.html.twig';
         }
 
         $annotation = new Template([]);

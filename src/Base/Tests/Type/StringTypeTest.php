@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\Base\Tests\Type;
+namespace Perform\Base\Tests\Type;
 
-use Admin\Base\Entity\User;
-use Admin\Base\Type\StringType;
+use Perform\Base\Entity\User;
+use Perform\Base\Type\StringType;
 
 /**
  * StringTypeTest

@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Team\DependencyInjection;
+namespace Perform\EventsBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -8,9 +8,9 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
 /**
- * AdminTeamExtension.
+ * PerformEventsExtension.
  **/
-class AdminTeamExtension extends Extension
+class PerformEventsExtension extends Extension
 {
     /**
      * {@inheritdoc}

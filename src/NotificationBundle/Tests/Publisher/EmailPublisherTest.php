@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\NotificationBundle\Tests\Publisher;
+namespace Perform\NotificationBundle\Tests\Publisher;
 
-use Admin\NotificationBundle\Publisher\EmailPublisher;
-use Admin\NotificationBundle\Notification;
+use Perform\NotificationBundle\Publisher\EmailPublisher;
+use Perform\NotificationBundle\Notification;
 
 /**
  * EmailPublisherTest
@@ -18,7 +18,7 @@ class EmailPublisherTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->mailer = $this->getMockBuilder('Admin\Base\Email\Mailer')
+        $this->mailer = $this->getMockBuilder('Perform\Base\Email\Mailer')
                       ->disableOriginalConstructor()
                       ->getMock();
         $this->templating = $this->getMock('Symfony\Component\Templating\EngineInterface');
@@ -27,7 +27,7 @@ class EmailPublisherTest extends \PHPUnit_Framework_TestCase
 
     protected function newNotification($type)
     {
-        $recipient = $this->getMock('Admin\NotificationBundle\RecipientInterface');
+        $recipient = $this->getMock('Perform\NotificationBundle\RecipientInterface');
         $recipient->expects($this->any())
             ->method('getEmail')
             ->will($this->returnValue('test@example.com'));
@@ -42,7 +42,7 @@ class EmailPublisherTest extends \PHPUnit_Framework_TestCase
     {
         $this->mailer->expects($this->once())
             ->method('send')
-            ->with('test@example.com', 'Test subject', 'AdminNotificationBundle:test:email.html.twig');
+            ->with('test@example.com', 'Test subject', 'PerformNotificationBundle:test:email.html.twig');
 
         $this->publisher->send($this->newNotification('test'));
     }
@@ -51,8 +51,8 @@ class EmailPublisherTest extends \PHPUnit_Framework_TestCase
     {
         $this->mailer->expects($this->once())
             ->method('send')
-            ->with('test@example.com', 'Test subject', 'AdminBaseBundle:notifications:crud_update/email.html.twig');
+            ->with('test@example.com', 'Test subject', 'PerformBaseBundle:notifications:crud_update/email.html.twig');
 
-        $this->publisher->send($this->newNotification('AdminBaseBundle:crud_update'));
+        $this->publisher->send($this->newNotification('PerformBaseBundle:crud_update'));
     }
 }

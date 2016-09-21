@@ -1,14 +1,14 @@
 <?php
 
-namespace Admin\BlogBundle;
+namespace Perform\EventsBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * AdminBlogBundle
+ * PerformEventsBundle
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class AdminBlogBundle extends Bundle
+class PerformEventsBundle extends Bundle
 {
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Base\Type;
+namespace Perform\Base\Type;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;

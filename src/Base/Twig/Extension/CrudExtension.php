@@ -1,10 +1,10 @@
 <?php
 
-namespace Admin\Base\Twig\Extension;
+namespace Perform\Base\Twig\Extension;
 
-use Admin\Base\Routing\CrudUrlGenerator;
-use Admin\Base\Util\StringUtil;
-use Admin\Base\Type\TypeRegistry;
+use Perform\Base\Routing\CrudUrlGenerator;
+use Perform\Base\Util\StringUtil;
+use Perform\Base\Type\TypeRegistry;
 use Carbon\Carbon;
 
 /**

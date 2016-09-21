@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\Base\Tests\Routing;
+namespace Perform\Base\Tests\Routing;
 
-use Admin\Base\Routing\CrudLoader;
+use Perform\Base\Routing\CrudLoader;
 
 /**
  * CrudLoaderTest
@@ -16,7 +16,7 @@ class CrudLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->registry = $this->getMockBuilder('Admin\Base\Admin\AdminRegistry')
+        $this->registry = $this->getMockBuilder('Perform\Base\Admin\AdminRegistry')
                                 ->disableOriginalConstructor()
                                 ->getMock();
         $this->loader = new CrudLoader($this->registry);
@@ -24,7 +24,7 @@ class CrudLoaderTest extends \PHPUnit_Framework_TestCase
 
     protected function expectAdmin($controller, $routePrefix, array $actions)
     {
-        $admin = $this->getMock('Admin\Base\Admin\AdminInterface');
+        $admin = $this->getMock('Perform\Base\Admin\AdminInterface');
         $admin->expects($this->any())
             ->method('getControllerName')
             ->will($this->returnValue($controller));
@@ -49,7 +49,7 @@ class CrudLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testDefaultRoutes()
     {
-        $controller = 'Admin\Base\Controller\CrudController';
+        $controller = 'Perform\Base\Controller\CrudController';
         $routePrefix = 'some_foo_';
         $routes = [
             '/' => 'list',

@@ -1,17 +1,17 @@
 <?php
 
-namespace Admin\MediaBundle;
+namespace Perform\MediaBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Admin\MediaBundle\DependencyInjection\Compiler\RegisterFilePluginsPass;
+use Perform\MediaBundle\DependencyInjection\Compiler\RegisterFilePluginsPass;
 
 /**
- * AdminMediaBundle
+ * PerformMediaBundle
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class AdminMediaBundle extends Bundle
+class PerformMediaBundle extends Bundle
 {
     public function build(ContainerBuilder $container)
     {

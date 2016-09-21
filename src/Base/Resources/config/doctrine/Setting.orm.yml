@@ -1,4 +1,4 @@
-Admin\Base\Entity\Setting:
+Perform\Base\Entity\Setting:
     type: entity
     table: admin_base_setting
     id:
@@ -26,6 +26,6 @@ Admin\Base\Entity\Setting:
             type: boolean
     manyToOne:
         user:
-            targetEntity: Admin\Base\Entity\User
+            targetEntity: Perform\Base\Entity\User
             joinColumn:
                 nullable: true

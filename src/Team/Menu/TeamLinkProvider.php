@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\Team\Menu;
+namespace Perform\Team\Menu;
 
 use Knp\Menu\ItemInterface;
-use Admin\Base\Menu\LinkProviderInterface;
+use Perform\Base\Menu\LinkProviderInterface;
 
 /**
  * TeamLinkProvider.

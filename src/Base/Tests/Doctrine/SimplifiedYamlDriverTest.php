@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\Base\Tests\Doctrine;
+namespace Perform\Base\Tests\Doctrine;
 
-use Admin\Base\Doctrine\SimplifiedYamlDriver;
+use Perform\Base\Doctrine\SimplifiedYamlDriver;
 
 /**
  * SimplifiedYamlDriverTest.

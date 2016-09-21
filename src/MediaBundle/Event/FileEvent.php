@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\MediaBundle\Event;
+namespace Perform\MediaBundle\Event;
 
-use Admin\MediaBundle\Entity\File;
+use Perform\MediaBundle\Entity\File;
 use Symfony\Component\EventDispatcher\Event;
 
 /**

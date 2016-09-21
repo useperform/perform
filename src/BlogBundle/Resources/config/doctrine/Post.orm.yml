@@ -1,7 +1,7 @@
-Admin\BlogBundle\Entity\Post:
+Perform\BlogBundle\Entity\Post:
     type: entity
     table: admin_blog_post
-    repositoryClass: Admin\BlogBundle\Repository\PostRepository
+    repositoryClass: Perform\BlogBundle\Repository\PostRepository
     id:
         id:
             type: guid

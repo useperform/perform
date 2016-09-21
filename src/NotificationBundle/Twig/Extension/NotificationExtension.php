@@ -1,10 +1,10 @@
 <?php
 
-namespace Admin\NotificationBundle\Twig\Extension;
+namespace Perform\NotificationBundle\Twig\Extension;
 
-use Admin\NotificationBundle\Repository\NotificationLogRepository;
-use Admin\NotificationBundle\RecipientInterface;
-use Admin\NotificationBundle\RecipientProvider\RecipientProviderInterface;
+use Perform\NotificationBundle\Repository\NotificationLogRepository;
+use Perform\NotificationBundle\RecipientInterface;
+use Perform\NotificationBundle\RecipientProvider\RecipientProviderInterface;
 
 /**
  * NotificationExtension.

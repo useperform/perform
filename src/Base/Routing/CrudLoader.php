@@ -1,11 +1,11 @@
 <?php
 
-namespace Admin\Base\Routing;
+namespace Perform\Base\Routing;
 
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
-use Admin\Base\Admin\AdminRegistry;
+use Perform\Base\Admin\AdminRegistry;
 use Symfony\Component\Config\Resource\FileResource;
 
 /**
@@ -28,9 +28,9 @@ class CrudLoader extends Loader
         $class = $admin->getControllerName();
         $refl = new \ReflectionClass($class);
 
-        $crudClass = 'Admin\Base\Controller\CrudController';
+        $crudClass = 'Perform\Base\Controller\CrudController';
         if ($refl->getName() !== $crudClass && !$refl->isSubclassOf($crudClass)) {
-            throw new \InvalidArgumentException($class.' must be an instance of Admin\Base\Controller\CrudController to use crud routing');
+            throw new \InvalidArgumentException($class.' must be an instance of Perform\Base\Controller\CrudController to use crud routing');
         }
 
         $collection = new RouteCollection();

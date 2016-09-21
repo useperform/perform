@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\MailingListBundle\Entity;
+namespace Perform\MailingListBundle\Entity;
 
 /**
  * Subscriber

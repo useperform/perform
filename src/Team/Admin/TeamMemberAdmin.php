@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\Team\Admin;
+namespace Perform\Team\Admin;
 
-use Admin\Base\Admin\AbstractAdmin;
+use Perform\Base\Admin\AbstractAdmin;
 
 /**
  * TeamMemberAdmin

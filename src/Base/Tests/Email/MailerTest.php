@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\Base\Tests\Email;
+namespace Perform\Base\Tests\Email;
 
-use Admin\Base\Email\Mailer;
+use Perform\Base\Email\Mailer;
 
 /**
  * MailerTest

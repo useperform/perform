@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\CmsBundle\Tests\EventListener;
+namespace Perform\CmsBundle\Tests\EventListener;
 
-use Admin\CmsBundle\EventListener\ToolbarListener;
+use Perform\CmsBundle\EventListener\ToolbarListener;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpFoundation\Request;
@@ -10,8 +10,8 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Admin\CmsBundle\Twig\Extension\ContentExtension;
-use Admin\CmsBundle\Block\BlockTypeRegistry;
+use Perform\CmsBundle\Twig\Extension\ContentExtension;
+use Perform\CmsBundle\Block\BlockTypeRegistry;
 
 /**
  * ToolbarListenerTest.
@@ -28,10 +28,10 @@ class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->twig = $this->getMock('\Twig_Environment');
-        $this->contentExtension = $this->getMockBuilder('Admin\CmsBundle\Twig\Extension\ContentExtension')
+        $this->contentExtension = $this->getMockBuilder('Perform\CmsBundle\Twig\Extension\ContentExtension')
                                 ->disableOriginalConstructor()
                                 ->getMock();
-        $repo = $this->getMockBuilder('Admin\CmsBundle\Repository\VersionRepository')
+        $repo = $this->getMockBuilder('Perform\CmsBundle\Repository\VersionRepository')
               ->disableOriginalConstructor()
               ->getMock();
         $entityManager = $this->getMock('Doctrine\ORM\EntityManagerInterface');
@@ -85,7 +85,7 @@ class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
     {
         $this->twig->expects($this->once())
             ->method('render')
-            ->with('AdminCmsBundle::toolbar.html.twig')
+            ->with('PerformCmsBundle::toolbar.html.twig')
             ->will($this->returnValue('<div>TOOLBAR</div>'));
 
         $event = $this->createEvent('<body><div>Hello</div></body>');

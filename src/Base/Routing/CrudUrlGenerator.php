@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\Base\Routing;
+namespace Perform\Base\Routing;
 
-use Admin\Base\Admin\AdminRegistry;
+use Perform\Base\Admin\AdminRegistry;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**

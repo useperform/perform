@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\BlogBundle\Menu;
+namespace Perform\BlogBundle\Menu;
 
 use Knp\Menu\ItemInterface;
-use Admin\Base\Menu\LinkProviderInterface;
+use Perform\Base\Menu\LinkProviderInterface;
 
 /**
  * BlogLinkProvider.

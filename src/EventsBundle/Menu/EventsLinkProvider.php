@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\EventsBundle\Menu;
+namespace Perform\EventsBundle\Menu;
 
 use Knp\Menu\ItemInterface;
-use Admin\Base\Menu\LinkProviderInterface;
+use Perform\Base\Menu\LinkProviderInterface;
 
 /**
  * EventsLinkProvider.

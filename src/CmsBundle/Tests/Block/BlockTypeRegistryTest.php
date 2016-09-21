@@ -1,11 +1,11 @@
 <?php
 
-namespace Admin\CmsBundle\Tests\Block;
+namespace Perform\CmsBundle\Tests\Block;
 
-use Admin\CmsBundle\Block\BlockTypeRegistry;
-use Admin\CmsBundle\Block\BlockTypeInterface;
-use Admin\CmsBundle\Exception\BlockTypeNotFoundException;
-use Admin\CmsBundle\Entity\Block;
+use Perform\CmsBundle\Block\BlockTypeRegistry;
+use Perform\CmsBundle\Block\BlockTypeInterface;
+use Perform\CmsBundle\Exception\BlockTypeNotFoundException;
+use Perform\CmsBundle\Entity\Block;
 
 /**
  * BlockTypeRegistryTest

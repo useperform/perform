@@ -1,11 +1,11 @@
 <?php
 
-namespace Admin\CmsBundle\Publisher;
+namespace Perform\CmsBundle\Publisher;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Admin\CmsBundle\Entity\Version;
-use Admin\CmsBundle\Entity\PublishedSection;
-use Admin\CmsBundle\Block\BlockTypeRegistry;
+use Perform\CmsBundle\Entity\Version;
+use Perform\CmsBundle\Entity\PublishedSection;
+use Perform\CmsBundle\Block\BlockTypeRegistry;
 
 /**
  * Publisher.
@@ -30,10 +30,10 @@ class Publisher
         $this->connection->beginTransaction();
 
         try {
-            $this->entityManager->getRepository('AdminCmsBundle:PublishedSection')
+            $this->entityManager->getRepository('PerformCmsBundle:PublishedSection')
                 ->deletePage($version->getPage());
 
-            $this->entityManager->getRepository('AdminCmsBundle:Version')
+            $this->entityManager->getRepository('PerformCmsBundle:Version')
                 ->markPublished($version);
 
             foreach ($this->createPublishedSections($version) as $section) {

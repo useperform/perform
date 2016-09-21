@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\MediaBundle\Upload;
+namespace Perform\MediaBundle\Upload;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\File\UploadedFile;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\NotificationBundle;
+namespace Perform\NotificationBundle;
 
 /**
  * Immutable notification object, sent with Notifier.
@@ -21,7 +21,7 @@ class Notification
         $this->recipients = is_array($recipients) ? $recipients : [$recipients];
         foreach ($this->recipients as $recipient) {
             if (!$recipient instanceof RecipientInterface) {
-                throw new \InvalidArgumentException(sprintf('%s must be supplied an array of objects implementing Admin\NotificationBundle\RecipientInterface, %s given.', __CLASS__, is_object($recipient) ? get_class($recipient) : var_export($recipient, true)));
+                throw new \InvalidArgumentException(sprintf('%s must be supplied an array of objects implementing Perform\NotificationBundle\RecipientInterface, %s given.', __CLASS__, is_object($recipient) ? get_class($recipient) : var_export($recipient, true)));
             }
         }
 

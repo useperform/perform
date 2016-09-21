@@ -1,16 +1,16 @@
 <?php
 
-namespace Admin\ContactBundle\Form\Handler;
+namespace Perform\ContactBundle\Form\Handler;
 
 use Symfony\Component\HttpFoundation\Request;
-use Admin\ContactBundle\SpamChecker\SpamCheckerInterface;
+use Perform\ContactBundle\SpamChecker\SpamCheckerInterface;
 use Psr\Log\LoggerInterface;
-use Admin\NotificationBundle\Notifier;
+use Perform\NotificationBundle\Notifier;
 use Symfony\Component\Form\FormInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Admin\ContactBundle\Entity\Message;
-use Admin\NotificationBundle\RecipientProvider\RecipientProviderInterface;
-use Admin\NotificationBundle\Notification;
+use Perform\ContactBundle\Entity\Message;
+use Perform\NotificationBundle\RecipientProvider\RecipientProviderInterface;
+use Perform\NotificationBundle\Notification;
 
 /**
  * ContactFormHandler.
@@ -68,7 +68,7 @@ class ContactFormHandler
         $recipients = $this->recipientProvider->getRecipients([
             'setting' => 'admin_contact_notify_address',
         ]);
-        $notification = new Notification($recipients, 'AdminContactBundle:new_message', [
+        $notification = new Notification($recipients, 'PerformContactBundle:new_message', [
             'subject' => 'New contact form message from '.$message->getName(),
             'message' => $message,
         ]);

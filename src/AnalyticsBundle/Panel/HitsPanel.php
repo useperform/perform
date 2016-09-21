@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\AnalyticsBundle\Panel;
+namespace Perform\AnalyticsBundle\Panel;
 
-use Admin\Base\Panel\PanelInterface;
+use Perform\Base\Panel\PanelInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 
 /**
@@ -21,6 +21,6 @@ class HitsPanel implements PanelInterface
 
     public function render()
     {
-        return $this->templating->render('AdminAnalyticsBundle:panels:hits.html.twig', []);
+        return $this->templating->render('PerformAnalyticsBundle:panels:hits.html.twig', []);
     }
 }

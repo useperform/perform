@@ -1,41 +1,41 @@
 services:
     admin_media.importer.file:
-        class: Admin\MediaBundle\Importer\FileImporter
+        class: Perform\MediaBundle\Importer\FileImporter
         arguments:
             - "@oneup_flysystem.main_filesystem"
             - "@doctrine.orm.entity_manager"
             - "@event_dispatcher"
 
     admin_media.plugin.registry:
-        class: Admin\MediaBundle\Plugin\PluginRegistry
+        class: Perform\MediaBundle\Plugin\PluginRegistry
         arguments:
             - "@admin_media.url.simple"
 
     admin_media.listener.file_plugin:
-        class: Admin\MediaBundle\EventListener\FilePluginListener
+        class: Perform\MediaBundle\EventListener\FilePluginListener
         arguments: ["@admin_media.plugin.registry"]
         tags:
             - {name: kernel.event_subscriber}
 
     admin_media.twig.file:
-        class: Admin\MediaBundle\Twig\Extension\FileExtension
+        class: Perform\MediaBundle\Twig\Extension\FileExtension
         arguments: ["@admin_media.plugin.registry"]
         tags:
             - {name: twig.extension}
 
     admin_media.url.simple:
-        class: Admin\MediaBundle\Url\SimpleFileUrlGenerator
+        class: Perform\MediaBundle\Url\SimpleFileUrlGenerator
         arguments: ["/uploads"]
 
     admin_media.plugin.other:
-        class: Admin\MediaBundle\Plugin\OtherPlugin
+        class: Perform\MediaBundle\Plugin\OtherPlugin
         arguments:
             - "@oneup_flysystem.main_filesystem"
         tags:
             - {name: admin_media.file_plugin, pluginName: other}
 
     admin_media.plugin.pdf:
-        class: Admin\MediaBundle\Plugin\PdfPlugin
+        class: Perform\MediaBundle\Plugin\PdfPlugin
         arguments:
             - "@oneup_flysystem.main_filesystem"
             - "@admin_media.url.simple"
@@ -46,7 +46,7 @@ services:
         class: Imagine\Gd\Imagine
 
     admin_media.plugin.image:
-        class: Admin\MediaBundle\Plugin\ImagePlugin
+        class: Perform\MediaBundle\Plugin\ImagePlugin
         arguments:
             - "@oneup_flysystem.main_filesystem"
             - "@admin_media.url.simple"
@@ -55,11 +55,11 @@ services:
             - {name: admin_media.file_plugin, pluginName: image}
 
     admin_media.menu_link.media:
-        class: Admin\MediaBundle\Menu\MediaLinkProvider
+        class: Perform\MediaBundle\Menu\MediaLinkProvider
         tags:
             - { name: admin_base.link_provider, alias: media }
 
     admin_media.type.image:
-        class: Admin\MediaBundle\Type\ImageType
+        class: Perform\MediaBundle\Type\ImageType
         arguments:
             - "@admin_media.plugin.registry"

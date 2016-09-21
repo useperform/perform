@@ -2,9 +2,9 @@
 
 namespace MediaBundle\Tests\Plugin;
 
-use Admin\MediaBundle\Plugin\PluginRegistry;
-use Admin\MediaBundle\Url\SimpleFileUrlGenerator;
-use Admin\MediaBundle\Entity\File;
+use Perform\MediaBundle\Plugin\PluginRegistry;
+use Perform\MediaBundle\Url\SimpleFileUrlGenerator;
+use Perform\MediaBundle\Entity\File;
 
 /**
  * PluginRegistryTest
@@ -24,7 +24,7 @@ class PluginRegistryTest extends \PHPUnit_Framework_TestCase
 
     public function testAddAndGetPlugin()
     {
-        $plugin = $this->getMock('Admin\MediaBundle\Plugin\FilePluginInterface');
+        $plugin = $this->getMock('Perform\MediaBundle\Plugin\FilePluginInterface');
         $plugin->expects($this->any())
             ->method('getName')
             ->will($this->returnValue('test'));
@@ -35,7 +35,7 @@ class PluginRegistryTest extends \PHPUnit_Framework_TestCase
 
     public function testGetUnknownPlugin()
     {
-        $this->setExpectedException('Admin\MediaBundle\Exception\PluginNotFoundException');
+        $this->setExpectedException('Perform\MediaBundle\Exception\PluginNotFoundException');
         $this->registry->getPlugin('foo');
     }
 

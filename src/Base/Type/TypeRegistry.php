@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\Base\Type;
+namespace Perform\Base\Type;
 
-use Admin\Base\Exception\TypeNotFoundException;
+use Perform\Base\Exception\TypeNotFoundException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

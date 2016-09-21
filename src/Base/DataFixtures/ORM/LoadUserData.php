@@ -1,11 +1,11 @@
 <?php
 
-namespace Admin\Base\DataFixtures\ORM;
+namespace Perform\Base\DataFixtures\ORM;
 
 use Faker;
 use Doctrine\Common\Persistence\ObjectManager;
-use Admin\Base\Entity\User;
-use Admin\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
+use Perform\Base\Entity\User;
+use Perform\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
 
 /**
  * LoadUserData

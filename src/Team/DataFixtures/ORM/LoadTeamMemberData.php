@@ -1,11 +1,11 @@
 <?php
 
-namespace Admin\Team\DataFixtures\ORM;
+namespace Perform\Team\DataFixtures\ORM;
 
 use Faker;
 use Doctrine\Common\Persistence\ObjectManager;
-use Admin\Team\Entity\TeamMember;
-use Admin\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
+use Perform\Team\Entity\TeamMember;
+use Perform\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
 
 /**
  * LoadTeamMemberData.

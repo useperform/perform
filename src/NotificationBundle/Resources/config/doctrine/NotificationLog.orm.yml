@@ -1,7 +1,7 @@
-Admin\NotificationBundle\Entity\NotificationLog:
+Perform\NotificationBundle\Entity\NotificationLog:
     type: entity
     table: admin_notification_notification_log
-    repositoryClass: Admin\NotificationBundle\Repository\NotificationLogRepository
+    repositoryClass: Perform\NotificationBundle\Repository\NotificationLogRepository
     id:
         id:
             type: guid

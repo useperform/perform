@@ -1,10 +1,10 @@
 <?php
 
-namespace Admin\Base\EventListener;
+namespace Perform\Base\EventListener;
 
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Admin\Base\Annotation\Ajax;
+use Perform\Base\Annotation\Ajax;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;

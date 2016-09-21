@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\MailingListBundle\DependencyInjection;
+namespace Perform\BlogBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -8,9 +8,11 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
 /**
- * AdminMailingListExtension.
+ * PerformBlogExtension
+ *
+ * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class AdminMailingListExtension extends Extension
+class PerformBlogExtension extends Extension
 {
     /**
      * {@inheritdoc}

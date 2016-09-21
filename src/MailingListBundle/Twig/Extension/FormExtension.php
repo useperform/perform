@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\MailingListBundle\Twig\Extension;
+namespace Perform\MailingListBundle\Twig\Extension;
 
 use Symfony\Component\Form\FormFactoryInterface;
-use Admin\MailingListBundle\Form\Type\SubscriberType;
+use Perform\MailingListBundle\Form\Type\SubscriberType;
 
 /**
  * FormExtension

@@ -1,14 +1,14 @@
 <?php
 
-namespace Admin\AnalyticsBundle;
+namespace Perform\TwitterBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * AdminAnalyticsBundle
+ * PerformTwitterBundle
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class AdminAnalyticsBundle extends Bundle
+class PerformTwitterBundle extends Bundle
 {
 }

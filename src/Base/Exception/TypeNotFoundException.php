@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Base\Exception;
+namespace Perform\Base\Exception;
 
 /**
  * TypeNotFoundException

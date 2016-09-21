@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\MediaBundle\Importer;
+namespace Perform\MediaBundle\Importer;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Dflydev\ApacheMimeTypes\PhpRepository as MimeTypesRepository;
@@ -8,10 +8,10 @@ use League\Flysystem\FilesystemInterface;
 use League\Flysystem\FileNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Admin\MediaBundle\Entity\File;
+use Perform\MediaBundle\Entity\File;
 use Doctrine\ORM\Id\UuidGenerator;
-use Admin\AppBundle\Entity\User;
-use Admin\MediaBundle\Event\FileEvent;
+use Perform\AppBundle\Entity\User;
+use Perform\MediaBundle\Event\FileEvent;
 
 /**
  * Add files to the media library.
@@ -27,7 +27,7 @@ class FileImporter
     {
         $this->storage = $storage;
         $this->entityManager = $entityManager;
-        $this->repository = $entityManager->getRepository('AdminMediaBundle:File');
+        $this->repository = $entityManager->getRepository('PerformMediaBundle:File');
         $this->dispatcher = $dispatcher;
     }
 

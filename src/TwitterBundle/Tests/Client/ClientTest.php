@@ -3,7 +3,7 @@
 namespace TwitterBundle\Tests\Client;
 
 use Doctrine\Common\Cache\ArrayCache;
-use Admin\TwitterBundle\Client\Client;
+use Perform\TwitterBundle\Client\Client;
 use Guzzle\Http\Message\Response;
 
 /**
@@ -20,7 +20,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->cache = new ArrayCache();
-        $this->factory = $this->getMock('Admin\TwitterBundle\Factory\FactoryInterface');
+        $this->factory = $this->getMock('Perform\TwitterBundle\Factory\FactoryInterface');
         $this->client = new Client($this->factory, $this->cache);
     }
 

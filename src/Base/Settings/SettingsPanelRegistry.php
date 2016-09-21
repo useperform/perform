@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Base\Settings;
+namespace Perform\Base\Settings;
 
 /**
  * SettingsPanelRegistry.

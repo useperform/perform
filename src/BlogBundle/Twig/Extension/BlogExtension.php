@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\BlogBundle\Twig\Extension;
+namespace Perform\BlogBundle\Twig\Extension;
 
 use Symfony\Component\Form\FormFactoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,7 +29,7 @@ class BlogExtension extends \Twig_Extension
     public function getPosts($limit = 5)
     {
         return $this->entityManager
-            ->getRepository('AdminBlogBundle:Post')
+            ->getRepository('PerformBlogBundle:Post')
             ->findRecent($limit);
     }
 

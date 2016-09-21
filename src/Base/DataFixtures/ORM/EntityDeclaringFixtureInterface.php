@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Base\DataFixtures\ORM;
+namespace Perform\Base\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\DataFixtures\FixtureInterface;

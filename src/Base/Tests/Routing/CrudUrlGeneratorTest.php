@@ -1,10 +1,10 @@
 <?php
 
-namespace Admin\Base\Tests\Routing;
+namespace Perform\Base\Tests\Routing;
 
-use Admin\Base\Routing\CrudUrlGenerator;
-use Admin\Base\Entity\User;
-use Admin\Base\Admin\UserAdmin;
+use Perform\Base\Routing\CrudUrlGenerator;
+use Perform\Base\Entity\User;
+use Perform\Base\Admin\UserAdmin;
 
 /**
  * CrudUrlGeneratorTest.
@@ -19,7 +19,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->adminRegistry = $this->getMockBuilder('Admin\Base\Admin\AdminRegistry')
+        $this->adminRegistry = $this->getMockBuilder('Perform\Base\Admin\AdminRegistry')
                              ->disableOriginalConstructor()
                              ->getMock();
         $this->urlGenerator = $this->getMock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
@@ -43,7 +43,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
 
     public function testGenerateView()
     {
-        $user = $this->getMock('Admin\Base\Entity\User');
+        $user = $this->getMock('Perform\Base\Entity\User');
         $user->expects($this->any())
             ->method('getId')
             ->will($this->returnValue(1));
@@ -61,7 +61,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
 
     public function testGenerateEdit()
     {
-        $user = $this->getMock('Admin\Base\Entity\User');
+        $user = $this->getMock('Perform\Base\Entity\User');
         $user->expects($this->any())
             ->method('getId')
             ->will($this->returnValue(1));
@@ -79,7 +79,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
 
     public function testGenerateDelete()
     {
-        $user = $this->getMock('Admin\Base\Entity\User');
+        $user = $this->getMock('Perform\Base\Entity\User');
         $user->expects($this->any())
             ->method('getId')
             ->will($this->returnValue(1));

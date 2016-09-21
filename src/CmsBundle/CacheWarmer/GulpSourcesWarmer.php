@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\CmsBundle\CacheWarmer;
+namespace Perform\CmsBundle\CacheWarmer;
 
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
-use Admin\CmsBundle\Block\BlockTypeRegistry;
+use Perform\CmsBundle\Block\BlockTypeRegistry;
 
 /**
  * GulpSourcesWarmer

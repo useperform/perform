@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Base\DependencyInjection;
+namespace Perform\Base\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -11,12 +11,12 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Config\Resource\DirectoryResource;
 use Doctrine\Common\Persistence\Mapping\MappingException;
-use Admin\Base\Util\BundleSearcher;
+use Perform\Base\Util\BundleSearcher;
 
 /**
- * AdminBaseExtension.
+ * PerformBaseExtension.
  **/
-class AdminBaseExtension extends Extension
+class PerformBaseExtension extends Extension
 {
     /**
      * {@inheritdoc}
@@ -41,15 +41,15 @@ class AdminBaseExtension extends Extension
 
     protected function configureTypeRegistry(ContainerBuilder $container)
     {
-        $definition = $container->register('admin_base.type_registry', 'Admin\Base\Type\TypeRegistry');
+        $definition = $container->register('admin_base.type_registry', 'Perform\Base\Type\TypeRegistry');
         $definition->addArgument(new Reference('service_container'));
-        $definition->addMethodCall('addType', ['string', 'Admin\Base\Type\StringType']);
-        $definition->addMethodCall('addType', ['text', 'Admin\Base\Type\TextType']);
-        $definition->addMethodCall('addType', ['password', 'Admin\Base\Type\PasswordType']);
-        $definition->addMethodCall('addType', ['date', 'Admin\Base\Type\DateType']);
-        $definition->addMethodCall('addType', ['datetime', 'Admin\Base\Type\DateTimeType']);
-        $definition->addMethodCall('addType', ['boolean', 'Admin\Base\Type\BooleanType']);
-        $definition->addMethodCall('addType', ['integer', 'Admin\Base\Type\IntegerType']);
+        $definition->addMethodCall('addType', ['string', 'Perform\Base\Type\StringType']);
+        $definition->addMethodCall('addType', ['text', 'Perform\Base\Type\TextType']);
+        $definition->addMethodCall('addType', ['password', 'Perform\Base\Type\PasswordType']);
+        $definition->addMethodCall('addType', ['date', 'Perform\Base\Type\DateType']);
+        $definition->addMethodCall('addType', ['datetime', 'Perform\Base\Type\DateTimeType']);
+        $definition->addMethodCall('addType', ['boolean', 'Perform\Base\Type\BooleanType']);
+        $definition->addMethodCall('addType', ['integer', 'Perform\Base\Type\IntegerType']);
 
         // pull from other bundles in a compiler pass
         $definition->addMethodCall('addTypeService', ['image', 'admin_media.type.image']);

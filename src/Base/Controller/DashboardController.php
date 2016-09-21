@@ -1,11 +1,11 @@
 <?php
 
-namespace Admin\Base\Controller;
+namespace Perform\Base\Controller;
 
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Admin\Base\Panel\PanelInterface;
+use Perform\Base\Panel\PanelInterface;
 
 /**
  * DashboardController
@@ -26,7 +26,7 @@ class DashboardController extends Controller
             foreach ($this->getParameter('admin_base.'.$parameter, []) as $service) {
                 $panel = $this->get($service);
                 if (!$panel instanceof PanelInterface) {
-                    throw new \InvalidArgumentException(sprintf('Panel service "%s" must be an instance of Admin\Base\Panel\PanelInterface, %s given', $service, get_class($panel)));
+                    throw new \InvalidArgumentException(sprintf('Panel service "%s" must be an instance of Perform\Base\Panel\PanelInterface, %s given', $service, get_class($panel)));
                 }
 
                 $panels[$side][] = $panel;

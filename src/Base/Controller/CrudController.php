@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Base\Controller;
+namespace Perform\Base\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -59,7 +59,7 @@ class CrudController extends Controller
         $repo = $this->getDoctrine()->getRepository($this->entity);
         $deleteForm = $this->createFormBuilder()->getForm();
         $deleteFormView = $deleteForm->createView();
-        $this->get('twig')->getExtension('form')->renderer->setTheme($deleteFormView, 'AdminBaseBundle::form_theme.html.twig');
+        $this->get('twig')->getExtension('form')->renderer->setTheme($deleteFormView, 'PerformBaseBundle::form_theme.html.twig');
 
         return [
             'fields' => $admin->getListFields(),
@@ -102,7 +102,7 @@ class CrudController extends Controller
         }
 
         $formView = $form->createView();
-        $this->get('twig')->getExtension('form')->renderer->setTheme($formView, 'AdminBaseBundle::form_theme.html.twig');
+        $this->get('twig')->getExtension('form')->renderer->setTheme($formView, 'PerformBaseBundle::form_theme.html.twig');
 
         return [
             'entity' => $entity,
@@ -133,7 +133,7 @@ class CrudController extends Controller
         }
 
         $formView = $form->createView();
-        $this->get('twig')->getExtension('form')->renderer->setTheme($formView, 'AdminBaseBundle::form_theme.html.twig');
+        $this->get('twig')->getExtension('form')->renderer->setTheme($formView, 'PerformBaseBundle::form_theme.html.twig');
 
         return [
             'entity' => $entity,

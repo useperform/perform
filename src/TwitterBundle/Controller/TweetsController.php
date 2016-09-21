@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\TwitterBundle\Controller;
+namespace Perform\TwitterBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;

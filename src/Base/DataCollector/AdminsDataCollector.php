@@ -1,11 +1,11 @@
 <?php
 
-namespace Admin\Base\DataCollector;
+namespace Perform\Base\DataCollector;
 
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Admin\Base\Admin\AdminRegistry;
+use Perform\Base\Admin\AdminRegistry;
 
 /**
  * AdminsDataCollector.

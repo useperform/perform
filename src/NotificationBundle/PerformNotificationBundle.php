@@ -1,12 +1,12 @@
 <?php
 
-namespace Admin\NotificationBundle;
+namespace Perform\NotificationBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Admin\NotificationBundle\DependencyInjection\Compiler\RegisterPublishersPass;
+use Perform\NotificationBundle\DependencyInjection\Compiler\RegisterPublishersPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class AdminNotificationBundle extends Bundle
+class PerformNotificationBundle extends Bundle
 {
     public function build(ContainerBuilder $container)
     {

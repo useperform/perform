@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\Base\Tests\Admin;
+namespace Perform\Base\Tests\Admin;
 
-use Admin\Base\Admin\AbstractAdmin;
+use Perform\Base\Admin\AbstractAdmin;
 
 /**
  * TestAdmin

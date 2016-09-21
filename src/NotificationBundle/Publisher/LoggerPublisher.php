@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\NotificationBundle\Publisher;
+namespace Perform\NotificationBundle\Publisher;
 
 use Psr\Log\LoggerInterface;
-use Admin\NotificationBundle\Notification;
+use Perform\NotificationBundle\Notification;
 
 class LoggerPublisher implements PublisherInterface
 {

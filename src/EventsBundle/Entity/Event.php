@@ -1,7 +1,7 @@
 <?php
 
-namespace Admin\EventsBundle\Entity;
-use Admin\MediaBundle\Entity\File;
+namespace Perform\EventsBundle\Entity;
+use Perform\MediaBundle\Entity\File;
 
 /**
  * Event

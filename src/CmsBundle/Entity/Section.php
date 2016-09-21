@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\CmsBundle\Entity;
+namespace Perform\CmsBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 

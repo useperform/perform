@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Base\Installer;
+namespace Perform\Base\Installer;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;

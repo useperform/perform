@@ -1,11 +1,11 @@
 <?php
 
-namespace Admin\ContactBundle\DataFixtures\ORM;
+namespace Perform\ContactBundle\DataFixtures\ORM;
 
 use Faker;
-use Admin\ContactBundle\Entity\Message;
+use Perform\ContactBundle\Entity\Message;
 use Doctrine\Common\Persistence\ObjectManager;
-use Admin\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
+use Perform\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
 
 /**
  * LoadMessageData.

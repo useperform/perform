@@ -1,16 +1,16 @@
 <?php
 
-namespace Admin\CmsBundle\DataFixtures\ORM;
+namespace Perform\CmsBundle\DataFixtures\ORM;
 
-use Admin\CmsBundle\Entity\Block;
-use Admin\CmsBundle\Entity\Version;
-use Admin\CmsBundle\Entity\Section;
+use Perform\CmsBundle\Entity\Block;
+use Perform\CmsBundle\Entity\Version;
+use Perform\CmsBundle\Entity\Section;
 use Doctrine\Common\Persistence\ObjectManager;
-use Admin\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
+use Perform\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Admin\CmsBundle\Annotation\Page;
-use Admin\Base\Util\BundleSearcher;
+use Perform\CmsBundle\Annotation\Page;
+use Perform\Base\Util\BundleSearcher;
 
 /**
  * LoadContentData.

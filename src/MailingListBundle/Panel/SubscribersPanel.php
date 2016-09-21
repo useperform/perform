@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\MailingListBundle\Panel;
+namespace Perform\MailingListBundle\Panel;
 
-use Admin\Base\Panel\PanelInterface;
+use Perform\Base\Panel\PanelInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -24,10 +24,10 @@ class SubscribersPanel implements PanelInterface
 
     public function render()
     {
-        $subscribers = $this->entityManager->getRepository('AdminMailingListBundle:Subscriber')
+        $subscribers = $this->entityManager->getRepository('PerformMailingListBundle:Subscriber')
                   ->findBy([], ['createdAt' => 'DESC'], 10);
 
-        return $this->templating->render('AdminMailingListBundle:panels:subscribers.html.twig', [
+        return $this->templating->render('PerformMailingListBundle:panels:subscribers.html.twig', [
             'subscribers' => $subscribers,
         ]);
     }

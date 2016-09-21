@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Base\Menu;
+namespace Perform\Base\Menu;
 
 use Knp\Menu\ItemInterface;
 

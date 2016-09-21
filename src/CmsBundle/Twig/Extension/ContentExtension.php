@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\CmsBundle\Twig\Extension;
+namespace Perform\CmsBundle\Twig\Extension;
 
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -59,7 +59,7 @@ class ContentExtension extends \Twig_Extension
     protected function getPublishedContent($page, $sectionName)
     {
         $published = $this->entityManager
-                   ->getRepository('AdminCmsBundle:PublishedSection')
+                   ->getRepository('PerformCmsBundle:PublishedSection')
                    ->findOneBy([
                        'page' => $page,
                        'name' => $sectionName,
@@ -74,7 +74,7 @@ class ContentExtension extends \Twig_Extension
 
     protected function createEditorSection($page, $sectionName)
     {
-        return $this->twig->render('AdminCmsBundle::section.html.twig', [
+        return $this->twig->render('PerformCmsBundle::section.html.twig', [
             'sectionName' => $sectionName,
             'page' => $page,
             //the block is shared and not editable if it is from another page

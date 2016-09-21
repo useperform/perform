@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\MailingListBundle\Form\Type;
+namespace Perform\MailingListBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -29,7 +29,7 @@ class SubscriberType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'Admin\MailingListBundle\Entity\Subscriber',
+            'data_class' => 'Perform\MailingListBundle\Entity\Subscriber',
         ]);
     }
 }

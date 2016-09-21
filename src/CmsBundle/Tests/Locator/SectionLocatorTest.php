@@ -1,11 +1,11 @@
 <?php
 
-namespace Admin\CmsBundle\Tests\Locator;
+namespace Perform\CmsBundle\Tests\Locator;
 
-use Admin\CmsBundle\Locator\SectionLocator;
-use Admin\CmsBundle\Entity\Version;
-use Admin\CmsBundle\Entity\Section;
-use Admin\CmsBundle\Entity\Block;
+use Perform\CmsBundle\Locator\SectionLocator;
+use Perform\CmsBundle\Entity\Version;
+use Perform\CmsBundle\Entity\Section;
+use Perform\CmsBundle\Entity\Block;
 
 /**
  * SectionLocatorTest
@@ -19,7 +19,7 @@ class SectionLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->repo = $this->getMockBuilder('Admin\CmsBundle\Repository\VersionRepository')
+        $this->repo = $this->getMockBuilder('Perform\CmsBundle\Repository\VersionRepository')
                     ->disableOriginalConstructor()
                     ->getMock();
         $this->locator = new SectionLocator($this->repo);

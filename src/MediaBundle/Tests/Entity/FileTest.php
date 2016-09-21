@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\MediaBundle\Tests\Entity;
+namespace Perform\MediaBundle\Tests\Entity;
 
-use Admin\MediaBundle\Entity\File;
+use Perform\MediaBundle\Entity\File;
 
 /**
  * FileTest

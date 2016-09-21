@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Base\Util;
+namespace Perform\Base\Util;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\Finder;
@@ -20,7 +20,7 @@ class BundleSearcher
     }
 
     /**
-     * @param string $namespace The sub-namespace, e.g. 'Entity' or 'Admin\Type'
+     * @param string $namespace The sub-namespace, e.g. 'Entity' or 'Perform\Type'
      */
     public function findClassesInNamespaceSegment($namespaceSegment)
     {
@@ -30,7 +30,7 @@ class BundleSearcher
     }
 
     /**
-     * @param string $namespace The sub-namespace, e.g. 'Entity' or 'Admin\Type'
+     * @param string $namespace The sub-namespace, e.g. 'Entity' or 'Perform\Type'
      * @param Closure $mapper
      * @param array $bundleNames An array of bundle names to use. If empty, use all bundles.
      */

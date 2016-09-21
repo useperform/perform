@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\MediaBundle\Twig\Extension;
+namespace Perform\MediaBundle\Twig\Extension;
 
-use Admin\MediaBundle\Entity\File;
-use Admin\MediaBundle\Plugin\PluginRegistry;
+use Perform\MediaBundle\Entity\File;
+use Perform\MediaBundle\Plugin\PluginRegistry;
 
 /**
  * FileExtension

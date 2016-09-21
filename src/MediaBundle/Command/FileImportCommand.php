@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\MediaBundle\Command;
+namespace Perform\MediaBundle\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

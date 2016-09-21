@@ -1,20 +1,20 @@
 <?php
 
-namespace Admin\Base;
+namespace Perform\Base;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Admin\Base\DependencyInjection\Compiler\RegisterAdminsPass;
-use Admin\Base\DependencyInjection\Compiler\ConfigureMenuPass;
-use Admin\Base\DependencyInjection\Compiler\ConfigureSettingsPass;
-use Admin\Base\DependencyInjection\Compiler\ExtendEntitiesPass;
+use Perform\Base\DependencyInjection\Compiler\RegisterAdminsPass;
+use Perform\Base\DependencyInjection\Compiler\ConfigureMenuPass;
+use Perform\Base\DependencyInjection\Compiler\ConfigureSettingsPass;
+use Perform\Base\DependencyInjection\Compiler\ExtendEntitiesPass;
 
 /**
- * AdminBaseBundle
+ * PerformBaseBundle
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class AdminBaseBundle extends Bundle
+class PerformBaseBundle extends Bundle
 {
     public function build(ContainerBuilder $container)
     {

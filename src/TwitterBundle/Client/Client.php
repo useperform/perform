@@ -1,10 +1,10 @@
 <?php
 
-namespace Admin\TwitterBundle\Client;
+namespace Perform\TwitterBundle\Client;
 
 use Carbon\Carbon;
 use Doctrine\Common\Cache\Cache;
-use Admin\TwitterBundle\Factory\FactoryInterface;
+use Perform\TwitterBundle\Factory\FactoryInterface;
 use Lyrixx\Twitter\Twitter;
 use Psr\Log\LoggerInterface;
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace Admin\MediaBundle\EventListener;
+namespace Perform\MediaBundle\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Admin\MediaBundle\Event\FileEvent;
-use Admin\MediaBundle\Plugin\PluginRegistry;
+use Perform\MediaBundle\Event\FileEvent;
+use Perform\MediaBundle\Plugin\PluginRegistry;
 
 /**
  * FilePluginListener

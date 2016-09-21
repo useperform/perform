@@ -1,10 +1,10 @@
 <?php
 
-namespace Admin\CmsBundle\Updater;
+namespace Perform\CmsBundle\Updater;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Admin\CmsBundle\Entity\Block;
-use Admin\CmsBundle\Entity\Version;
+use Perform\CmsBundle\Entity\Block;
+use Perform\CmsBundle\Entity\Version;
 
 /**
  * VersionUpdater

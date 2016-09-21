@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\Base\Tests\Entity;
+namespace Perform\Base\Tests\Entity;
 
-use Admin\Base\Entity\User;
+use Perform\Base\Entity\User;
 
 /**
  * UserTest

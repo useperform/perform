@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\Base\Admin;
+namespace Perform\Base\Admin;
 
-use Admin\Base\Exception\AdminNotFoundException;
+use Perform\Base\Exception\AdminNotFoundException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\CmsBundle\Locator;
+namespace Perform\CmsBundle\Locator;
 
-use Admin\CmsBundle\Repository\VersionRepository;
+use Perform\CmsBundle\Repository\VersionRepository;
 
 /**
  * SectionLocator

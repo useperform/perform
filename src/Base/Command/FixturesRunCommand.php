@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Base\Command;
+namespace Perform\Base\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -8,9 +8,9 @@ use Symfony\Component\Console\Input\InputOption;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Admin\Base\Util\BundleSearcher;
-use Admin\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
-use Admin\Base\DataFixtures\ORM\Purger;
+use Perform\Base\Util\BundleSearcher;
+use Perform\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
+use Perform\Base\DataFixtures\ORM\Purger;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 /**

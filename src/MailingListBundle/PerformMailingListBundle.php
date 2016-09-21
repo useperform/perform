@@ -1,14 +1,14 @@
 <?php
 
-namespace Admin\MailingListBundle;
+namespace Perform\MailingListBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * AdminMailingListBundle
+ * PerformMailingListBundle
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class AdminMailingListBundle extends Bundle
+class PerformMailingListBundle extends Bundle
 {
 }

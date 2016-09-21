@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\NotificationBundle\RecipientProvider;
+namespace Perform\NotificationBundle\RecipientProvider;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Admin\Base\Settings\SettingsManager;
+use Perform\Base\Settings\SettingsManager;
 
 /**
  * SettingsProvider finds users whose email addresses are set in a given
@@ -30,7 +30,7 @@ class SettingsProvider implements RecipientProviderInterface
 
         //fetch emails using the settings store
         $emails = (array) $this->settings->getValue($criteria['setting']);
-        $users = $this->entityManager->getRepository('AdminBaseBundle:User')
+        $users = $this->entityManager->getRepository('PerformBaseBundle:User')
             ->findByEmails($emails);
 
         //if some emails are missing, create them with default names

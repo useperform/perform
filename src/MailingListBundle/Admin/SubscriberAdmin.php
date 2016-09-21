@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\MailingListBundle\Admin;
+namespace Perform\MailingListBundle\Admin;
 
-use Admin\Base\Admin\AbstractAdmin;
+use Perform\Base\Admin\AbstractAdmin;
 
 /**
  * SubscriberAdmin

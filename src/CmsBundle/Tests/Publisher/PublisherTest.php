@@ -1,13 +1,13 @@
 <?php
 
-namespace Admin\CmsBundle\Tests\Publisher;
+namespace Perform\CmsBundle\Tests\Publisher;
 
-use Admin\CmsBundle\Publisher\Publisher;
-use Admin\CmsBundle\Entity\Version;
-use Admin\CmsBundle\Entity\Block;
-use Admin\CmsBundle\Entity\Section;
-use Admin\CmsBundle\Block\BlockTypeRegistry;
-use Admin\CmsBundle\Block\HtmlBlockType;
+use Perform\CmsBundle\Publisher\Publisher;
+use Perform\CmsBundle\Entity\Version;
+use Perform\CmsBundle\Entity\Block;
+use Perform\CmsBundle\Entity\Section;
+use Perform\CmsBundle\Block\BlockTypeRegistry;
+use Perform\CmsBundle\Block\HtmlBlockType;
 
 /**
  * PublisherTest.

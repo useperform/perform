@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\Base\Settings;
+namespace Perform\Base\Settings;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Admin\Base\Exception\SettingNotFoundException;
+use Perform\Base\Exception\SettingNotFoundException;
 
 /**
  * SettingsManager.
@@ -18,7 +18,7 @@ class SettingsManager
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
-        $this->repo = $entityManager->getRepository('AdminBaseBundle:Setting');
+        $this->repo = $entityManager->getRepository('PerformBaseBundle:Setting');
     }
 
     public function getSetting($key)

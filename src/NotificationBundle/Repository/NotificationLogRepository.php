@@ -1,10 +1,10 @@
 <?php
 
-namespace Admin\NotificationBundle\Repository;
+namespace Perform\NotificationBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Admin\NotificationBundle\Entity\NotificationLog;
-use Admin\NotificationBundle\RecipientInterface;
+use Perform\NotificationBundle\Entity\NotificationLog;
+use Perform\NotificationBundle\RecipientInterface;
 
 /**
  * NotificationLogRepository

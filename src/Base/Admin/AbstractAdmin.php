@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\Base\Admin;
+namespace Perform\Base\Admin;
 
 use Symfony\Component\Form\FormBuilderInterface;
-use Admin\Base\Form\Type\AdminType;
+use Perform\Base\Form\Type\AdminType;
 
 /**
  * AbstractAdmin
@@ -96,7 +96,7 @@ abstract class AbstractAdmin implements AdminInterface
 
     public function getControllerName()
     {
-        return 'Admin\Base\Controller\CrudController';
+        return 'Perform\Base\Controller\CrudController';
     }
 
     public function getActions()

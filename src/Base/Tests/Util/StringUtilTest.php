@@ -2,7 +2,7 @@
 
 namespace Base\Tests\Util;
 
-use Admin\Base\Util\StringUtil;
+use Perform\Base\Util\StringUtil;
 
 /**
  * StringUtilTest
