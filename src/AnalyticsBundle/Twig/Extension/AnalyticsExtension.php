@@ -10,10 +10,12 @@ use Perform\BaseBundle\Settings\SettingsManager;
 class AnalyticsExtension extends \Twig_Extension
 {
     protected $settings;
+    protected $vendors;
 
-    public function __construct(SettingsManager $settings)
+    public function __construct(SettingsManager $settings, array $vendors = [])
     {
         $this->settings = $settings;
+        $this->vendors = $vendors;
     }
 
     public function getFunctions()
@@ -24,6 +26,16 @@ class AnalyticsExtension extends \Twig_Extension
     }
 
     public function getTrackingCode()
+    {
+        $html = '';
+        if (in_array('google', $this->vendors)) {
+            $html .= $this->getGoogleAnalyticsCode();
+        }
+
+        return $html;
+    }
+
+    protected function getGoogleAnalyticsCode()
     {
         $script = <<<EOF
 <script>
