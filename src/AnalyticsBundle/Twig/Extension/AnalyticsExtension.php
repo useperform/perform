@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\AnalyticsBundle\Twig\Extension;
+namespace Perform\AnalyticsBundle\Twig\Extension;
 
-use Admin\Base\Settings\SettingsManager;
+use Perform\BaseBundle\Settings\SettingsManager;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -37,7 +37,7 @@ ga('send', 'pageview');
 </script>
 EOF;
 
-        return sprintf($script, $this->settings->getValue('admin_analytics_ga_key'));
+        return sprintf($script, $this->settings->getValue('perform_analytics_ga_key'));
     }
 
     public function getName()

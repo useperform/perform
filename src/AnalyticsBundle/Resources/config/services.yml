@@ -4,13 +4,13 @@ services:
         arguments:
             - "@templating"
 
-    admin_analytics.settings.analytics:
-        class: Admin\AnalyticsBundle\Settings\AnalyticsPanel
+    perform_analytics.settings.analytics:
+        class: Perform\AnalyticsBundle\Settings\AnalyticsPanel
         tags:
-            - { name: admin_base.settings_panel, alias: analytics }
+            - { name: perform_base.settings_panel, alias: analytics }
 
-    admin_analytics.twig.analytics:
-        class: Admin\AnalyticsBundle\Twig\Extension\AnalyticsExtension
-        arguments: ["@admin_base.settings_manager"]
+    perform_analytics.twig.analytics:
+        class: Perform\AnalyticsBundle\Twig\Extension\AnalyticsExtension
+        arguments: ["@perform_base.settings_manager"]
         tags:
             - {name: twig.extension}
