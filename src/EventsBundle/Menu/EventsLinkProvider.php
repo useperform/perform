@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\EventsBundle\Menu;
+namespace Perform\EventsBundle\Menu;
 
 use Knp\Menu\ItemInterface;
-use Admin\Base\Menu\LinkProviderInterface;
+use Perform\BaseBundle\Menu\LinkProviderInterface;
 
 /**
  * EventsLinkProvider.
@@ -15,7 +15,7 @@ class EventsLinkProvider implements LinkProviderInterface
     public function addLinks(ItemInterface $menu)
     {
         $menu->addChild('Events', [
-            'route' => 'admin_events_events_list',
+            'route' => 'perform_events_events_list',
         ])->setExtra('icon', 'calendar');
     }
 }

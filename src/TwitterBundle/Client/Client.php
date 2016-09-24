@@ -1,10 +1,10 @@
 <?php
 
-namespace Admin\TwitterBundle\Client;
+namespace Perform\TwitterBundle\Client;
 
 use Carbon\Carbon;
 use Doctrine\Common\Cache\Cache;
-use Admin\TwitterBundle\Factory\FactoryInterface;
+use Perform\TwitterBundle\Factory\FactoryInterface;
 use Lyrixx\Twitter\Twitter;
 use Psr\Log\LoggerInterface;
 
@@ -60,7 +60,7 @@ class Client
      */
     public function getUserTimeline($screenname, $count = 5)
     {
-        $cacheKey = 'admin_twitter.timeline.'.$screenname;
+        $cacheKey = 'perform_twitter.timeline.'.$screenname;
         $tweets = $this->cache->fetch($cacheKey);
         if (is_array($tweets)) {
             if ($this->logger) {

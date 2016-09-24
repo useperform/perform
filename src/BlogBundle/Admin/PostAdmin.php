@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\BlogBundle\Admin;
+namespace Perform\BlogBundle\Admin;
 
-use Admin\Base\Admin\AbstractAdmin;
+use Perform\BaseBundle\Admin\AbstractAdmin;
 
 /**
  * PostAdmin
@@ -44,5 +44,5 @@ class PostAdmin extends AbstractAdmin
             'type' => 'text',
         ],
     ];
-    protected $routePrefix = 'admin_blog_post_';
+    protected $routePrefix = 'perform_blog_post_';
 }

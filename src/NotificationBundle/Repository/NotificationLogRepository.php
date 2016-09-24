@@ -1,10 +1,10 @@
 <?php
 
-namespace Admin\NotificationBundle\Repository;
+namespace Perform\NotificationBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Admin\NotificationBundle\Entity\NotificationLog;
-use Admin\NotificationBundle\RecipientInterface;
+use Perform\NotificationBundle\Entity\NotificationLog;
+use Perform\NotificationBundle\RecipientInterface;
 
 /**
  * NotificationLogRepository
@@ -14,7 +14,7 @@ class NotificationLogRepository extends EntityRepository
     public function getUnreadCountByRecipient(RecipientInterface $recipient)
     {
         $dql = <<<EOQ
-SELECT COUNT(1) FROM AdminNotificationBundle:NotificationLog l
+SELECT COUNT(1) FROM PerformNotificationBundle:NotificationLog l
 WHERE l.recipientId = :recipientId
 AND l.status = :status
 EOQ;
@@ -29,7 +29,7 @@ EOQ;
     public function findUnreadByRecipient(RecipientInterface $recipient)
     {
         $dql = <<<EOQ
-SELECT l FROM AdminNotificationBundle:NotificationLog l
+SELECT l FROM PerformNotificationBundle:NotificationLog l
 WHERE l.recipientId = :recipientId
 AND l.status = :status
 ORDER BY l.createdAt DESC
@@ -45,7 +45,7 @@ EOQ;
     public function markAllReadByRecipient(RecipientInterface $recipient)
     {
         $dql = <<<EOQ
-UPDATE AdminNotificationBundle:NotificationLog l
+UPDATE PerformNotificationBundle:NotificationLog l
 SET l.status = :status
 WHERE l.recipientId = :recipientId
 EOQ;

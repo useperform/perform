@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\NotificationBundle\Entity;
+namespace Perform\NotificationBundle\Entity;
 
-use Admin\NotificationBundle\Notification;
-use Admin\NotificationBundle\RecipientInterface;
+use Perform\NotificationBundle\Notification;
+use Perform\NotificationBundle\RecipientInterface;
 
 /**
  * Used by the local publisher to publish notifications

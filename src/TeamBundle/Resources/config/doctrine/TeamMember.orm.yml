@@ -1,0 +1,44 @@
+Perform\TeamBundle\Entity\TeamMember:
+    type: entity
+    table: perform_team_team_member
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        name:
+            type: string
+        slug:
+            type: string
+            gedmo:
+                slug:
+                    separator: -
+                    fields:
+                        - name
+        role:
+            type: string
+        description:
+            type: text
+        sortOrder:
+            type: integer
+            nullable: true
+        createdAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: create
+        updatedAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: update
+    uniqueConstraints:
+        slug:
+            columns: [slug]
+    manyToOne:
+        image:
+            targetEntity: Perform\MediaBundle\Entity\File
+            joinColumn:
+                nullable: true

@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\MediaBundle\Entity;
+namespace Perform\MediaBundle\Entity;
 
-use Admin\Base\Entity\User;
+use Perform\BaseBundle\Entity\User;
 
 /**
  * File

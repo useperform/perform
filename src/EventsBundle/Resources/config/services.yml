@@ -1,16 +1,16 @@
 services:
-    admin_events.admin.event:
-        class: Admin\EventsBundle\Admin\EventAdmin
+    perform_events.admin.event:
+        class: Perform\EventsBundle\Admin\EventAdmin
         tags:
-            - { name: admin_base.admin, entity: "AdminEventsBundle:Event" }
+            - { name: perform_base.admin, entity: "PerformEventsBundle:Event" }
 
-    admin_events.menu_link.events:
-        class: Admin\EventsBundle\Menu\EventsLinkProvider
+    perform_events.menu_link.events:
+        class: Perform\EventsBundle\Menu\EventsLinkProvider
         tags:
-            - { name: admin_base.link_provider, alias: events }
+            - { name: perform_base.link_provider, alias: events }
 
-    admin_events.twig.events:
-        class: Admin\EventsBundle\Twig\Extension\EventsExtension
+    perform_events.twig.events:
+        class: Perform\EventsBundle\Twig\Extension\EventsExtension
         arguments:
             - "@doctrine.orm.entity_manager"
         tags:

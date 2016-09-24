@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\BlogBundle\Menu;
+namespace Perform\BlogBundle\Menu;
 
 use Knp\Menu\ItemInterface;
-use Admin\Base\Menu\LinkProviderInterface;
+use Perform\BaseBundle\Menu\LinkProviderInterface;
 
 /**
  * BlogLinkProvider.
@@ -15,7 +15,7 @@ class BlogLinkProvider implements LinkProviderInterface
     public function addLinks(ItemInterface $menu)
     {
         $menu->addChild('News', [
-            'route' => 'admin_blog_post_list',
+            'route' => 'perform_blog_post_list',
         ])->setExtra('icon', 'newspaper-o');
     }
 }

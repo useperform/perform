@@ -1,11 +1,11 @@
 <?php
 
-namespace Admin\BlogBundle\DataFixtures\ORM;
+namespace Perform\BlogBundle\DataFixtures\ORM;
 
 use Faker;
 use Doctrine\Common\Persistence\ObjectManager;
-use Admin\BlogBundle\Entity\Post;
-use Admin\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
+use Perform\BlogBundle\Entity\Post;
+use Perform\BaseBundle\DataFixtures\ORM\EntityDeclaringFixtureInterface;
 
 /**
  * LoadTeamMemberData.

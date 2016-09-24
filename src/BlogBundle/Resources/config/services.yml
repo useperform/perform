@@ -1,16 +1,16 @@
 services:
-    admin_blog.admin.post:
-        class: Admin\BlogBundle\Admin\PostAdmin
+    perform_blog.admin.post:
+        class: Perform\BlogBundle\Admin\PostAdmin
         tags:
-            - {name: admin_base.admin, entity: "AdminBlogBundle:Post"}
+            - {name: perform_base.admin, entity: "PerformBlogBundle:Post"}
 
-    admin_blog.menu_link.blog:
-        class: Admin\BlogBundle\Menu\BlogLinkProvider
+    perform_blog.menu_link.blog:
+        class: Perform\BlogBundle\Menu\BlogLinkProvider
         tags:
-            - { name: admin_base.link_provider, alias: blog }
+            - { name: perform_base.link_provider, alias: blog }
 
-    admin_blog.twig.blog:
-        class: Admin\BlogBundle\Twig\Extension\BlogExtension
+    perform_blog.twig.blog:
+        class: Perform\BlogBundle\Twig\Extension\BlogExtension
         arguments:
             - "@doctrine.orm.entity_manager"
         tags:

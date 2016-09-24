@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\MailingListBundle\Form\Handler;
+namespace Perform\MailingListBundle\Form\Handler;
 
 use Symfony\Component\HttpFoundation\Request;
 use Psr\Log\LoggerInterface;
@@ -33,7 +33,7 @@ class SubscriberFormHandler
         $subscriber->setEnabled(true);
 
         $existing = $this->entityManager
-                  ->getRepository('AdminMailingListBundle:Subscriber')
+                  ->getRepository('PerformMailingListBundle:Subscriber')
                   ->findOneBy(['email' => $subscriber->getEmail()]);
         if ($existing) {
             return self::RESULT_ALREADY_SUBSCRIBED;

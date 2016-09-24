@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\ContactBundle\Menu;
+namespace Perform\ContactBundle\Menu;
 
 use Knp\Menu\ItemInterface;
-use Admin\Base\Menu\LinkProviderInterface;
+use Perform\BaseBundle\Menu\LinkProviderInterface;
 
 /**
  * ContactLinkProvider.
@@ -15,7 +15,7 @@ class ContactLinkProvider implements LinkProviderInterface
     public function addLinks(ItemInterface $menu)
     {
         $menu->addChild('Contact Form', [
-            'route' => 'admin_contact_message_list',
+            'route' => 'perform_contact_message_list',
         ])->setExtra('icon', 'envelope');
     }
 }

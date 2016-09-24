@@ -1,14 +1,17 @@
 <?php
 
-namespace Admin\CmsBundle\Tests\EventListener;
+namespace Perform\CmsBundle\Tests\EventListener;
 
-use Admin\CmsBundle\EventListener\ToolbarListener;
+use Perform\CmsBundle\EventListener\ToolbarListener;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Perform\CmsBundle\Twig\Extension\ContentExtension;
+use Perform\CmsBundle\Block\BlockTypeRegistry;
 
 /**
  * ToolbarListenerTest.
@@ -18,13 +21,26 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
 {
     protected $twig;
+    protected $contentExtension;
     protected $listener;
     protected $kernel;
 
     public function setUp()
     {
         $this->twig = $this->getMock('\Twig_Environment');
-        $this->listener = new ToolbarListener($this->twig);
+        $this->contentExtension = $this->getMockBuilder('Perform\CmsBundle\Twig\Extension\ContentExtension')
+                                ->disableOriginalConstructor()
+                                ->getMock();
+        $repo = $this->getMockBuilder('Perform\CmsBundle\Repository\VersionRepository')
+              ->disableOriginalConstructor()
+              ->getMock();
+        $entityManager = $this->getMock('Doctrine\ORM\EntityManagerInterface');
+        $entityManager->expects($this->any())
+            ->method('getRepository')
+            ->will($this->returnValue($repo));
+        $registry = new BlockTypeRegistry($this->twig);
+
+        $this->listener = new ToolbarListener($this->twig, $this->contentExtension, $entityManager, $registry);
         $this->kernel = $this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface');
     }
 
@@ -33,12 +49,14 @@ class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Symfony\Component\EventDispatcher\EventSubscriberInterface', $this->listener);
         $this->assertSame(
             [
-                KernelEvents::RESPONSE => ['onKernelResponse', -128],
+                KernelEvents::REQUEST => ['onKernelRequest', -128],
+                KernelEvents::CONTROLLER => ['onKernelController', -128],
+                KernelEvents::RESPONSE => ['onKernelResponse', -99],
             ],
             $this->listener->getSubscribedEvents());
     }
 
-    protected function createEvent($content, $withSession = true)
+    protected function createRequest($withSession = true)
     {
         $request = new Request();
         if ($withSession) {
@@ -50,7 +68,12 @@ class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
             $request->setSession($session);
         }
 
+        return $request;
+    }
 
+    protected function createEvent($content, $withSession = true)
+    {
+        $request = $this->createRequest($withSession);
         $response = new Response();
         $response->setContent($content);
         $event = new FilterResponseEvent($this->kernel, $request, HttpKernelInterface::MASTER_REQUEST, $response);
@@ -58,12 +81,11 @@ class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
         return $event;
     }
 
-
     public function testToolbarIsAddedToWellFormedResponse()
     {
         $this->twig->expects($this->once())
             ->method('render')
-            ->with('AdminCmsBundle::toolbar.html.twig')
+            ->with('PerformCmsBundle::toolbar.html.twig')
             ->will($this->returnValue('<div>TOOLBAR</div>'));
 
         $event = $this->createEvent('<body><div>Hello</div></body>');
@@ -89,5 +111,24 @@ class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->listener->onKernelResponse($event);
         $this->assertSame('<body></body>', $event->getResponse()->getContent());
+    }
+
+    public function testContentExtensionPutIntoEditMode()
+    {
+        $event = new GetResponseEvent($this->kernel, $this->createRequest(), HttpKernelInterface::MASTER_REQUEST);
+        $this->contentExtension->expects($this->once())
+            ->method('setMode')
+            ->with(ContentExtension::MODE_EDIT);
+
+        $this->listener->onKernelRequest($event);
+    }
+
+    public function testContentExtensionNotPutIntoEditMode()
+    {
+        $event = new GetResponseEvent($this->kernel, $this->createRequest(false), HttpKernelInterface::MASTER_REQUEST);
+        $this->contentExtension->expects($this->never())
+            ->method('setMode');
+
+        $this->listener->onKernelRequest($event);
     }
 }

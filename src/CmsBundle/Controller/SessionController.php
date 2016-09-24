@@ -1,10 +1,10 @@
 <?php
 
-namespace Admin\CmsBundle\Controller;
+namespace Perform\CmsBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Admin\CmsBundle\EventListener\ToolbarListener;
+use Perform\CmsBundle\EventListener\ToolbarListener;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**

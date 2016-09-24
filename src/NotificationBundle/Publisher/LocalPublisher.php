@@ -1,10 +1,10 @@
 <?php
 
-namespace Admin\NotificationBundle\Publisher;
+namespace Perform\NotificationBundle\Publisher;
 
-use Admin\NotificationBundle\Entity\NotificationLog;
-use Admin\NotificationBundle\Notification;
-use Admin\NotificationBundle\RecipientInterface;
+use Perform\NotificationBundle\Entity\NotificationLog;
+use Perform\NotificationBundle\Notification;
+use Perform\NotificationBundle\RecipientInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Templating\EngineInterface;
 
@@ -30,7 +30,7 @@ class LocalPublisher implements PublisherInterface
         $pieces = explode(':', $type, 2);
         $template = count($pieces) === 2 ?
                   $pieces[0].':notifications:'.$pieces[1].'/local.html.twig' :
-                  "AdminNotificationBundle:$type:local.html.twig";
+                  "PerformNotificationBundle:$type:local.html.twig";
 
         foreach ($notification->getRecipients() as $recipient) {
             $log = new NotificationLog();

@@ -1,0 +1,3 @@
+user:
+    resource: "PerformBaseBundle:User"
+    type:     crud

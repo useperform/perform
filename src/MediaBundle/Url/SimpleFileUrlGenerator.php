@@ -1,7 +1,7 @@
 <?php
 
-namespace Admin\MediaBundle\Url;
-use Admin\MediaBundle\Entity\File;
+namespace Perform\MediaBundle\Url;
+use Perform\MediaBundle\Entity\File;
 
 /**
  * SimpleFileUrlGenerator

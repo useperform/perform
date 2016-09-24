@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\MediaBundle\Tests\Upload;
+namespace Perform\MediaBundle\Tests\Upload;
 
 use Temping\Temping;
-use Admin\MediaBundle\Upload\UploadHandler;
+use Perform\MediaBundle\Upload\UploadHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;

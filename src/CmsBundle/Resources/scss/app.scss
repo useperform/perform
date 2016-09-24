@@ -1,9 +1,69 @@
 .perform-cms {
   @import "../../../Base/Resources/scss/variables";
   @import "../../../Base/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/mixins";
+  @import "../../../Base/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/scaffolding";
   @import "../../../Base/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/buttons";
   @import "../../../Base/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/navs";
   @import "../../../Base/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/forms";
   @import "../../../Base/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/navbar";
+  @import "../../../Base/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/modals";
   @import "../../../Base/Resources/scss/toolbar";
+
+  nav, .block .controls, .block .editor {
+    /* copy of body tag in scaffolding, it can't be namespaced and musn't be
+    present in .block .content */
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    line-height: $line-height-base;
+    color: $text-color;
+    background-color: $body-bg;
+  }
+
+  .block {
+    position: relative;
+
+    &:hover {
+      border: 1px solid $brand-info;
+      margin: -1px;
+      cursor: move;
+
+      .controls {
+        display:block;
+      }
+    }
+
+    .controls {
+      top: 0;
+      right: 0;
+      position: absolute;
+      padding: 3px;
+      background-color: $gray;
+      display:none;
+      z-index: 1000;
+    }
+
+    .content {
+    }
+
+    .editor {
+      display:none;
+    }
+  }
+
+  .version-selector {
+    .active {
+      background-color: $navbar-default-bg;
+    }
+  }
+
+  #load-mask {
+    .modal-dialog {
+      margin-top: 200px;
+    }
+
+    .fa-spin {
+      font-size: 150px;
+      color: $brand-primary;
+    }
+  }
 }

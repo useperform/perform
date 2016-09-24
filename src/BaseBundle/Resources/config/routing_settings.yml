@@ -1,0 +1,3 @@
+settings:
+    resource: "@PerformBaseBundle/Controller/SettingsController.php"
+    type:     annotation

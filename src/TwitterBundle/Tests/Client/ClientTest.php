@@ -3,7 +3,7 @@
 namespace TwitterBundle\Tests\Client;
 
 use Doctrine\Common\Cache\ArrayCache;
-use Admin\TwitterBundle\Client\Client;
+use Perform\TwitterBundle\Client\Client;
 use Guzzle\Http\Message\Response;
 
 /**
@@ -20,7 +20,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->cache = new ArrayCache();
-        $this->factory = $this->getMock('Admin\TwitterBundle\Factory\FactoryInterface');
+        $this->factory = $this->getMock('Perform\TwitterBundle\Factory\FactoryInterface');
         $this->client = new Client($this->factory, $this->cache);
     }
 
@@ -96,7 +96,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $tweets = $this->client->getUserTimeline('test');
         $this->assertSame('hello', $tweets[0]['text']);
-        $this->assertSame($tweets, $this->cache->fetch('admin_twitter.timeline.test'));
+        $this->assertSame($tweets, $this->cache->fetch('perform_twitter.timeline.test'));
     }
 
     public function testCacheIsUsedToFetchTimeline()
@@ -106,7 +106,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             "id" => 733684023076237312,
             "text" => "hello",
         ]];
-        $this->cache->save('admin_twitter.timeline.test', $tweets);
+        $this->cache->save('perform_twitter.timeline.test', $tweets);
 
         $this->assertSame($tweets, $this->client->getUserTimeline('test'));
     }
@@ -118,13 +118,13 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             "id" => 733684023076237312,
             "text" => "hello from test1",
         ]];
-        $this->cache->save('admin_twitter.timeline.test1', $tweets1);
+        $this->cache->save('perform_twitter.timeline.test1', $tweets1);
         $tweets2 = [[
             "created_at" => "Fri May 20 25:42:26 +0000 2026",
             "id" => 733684023076237322,
             "text" => "hello from test2",
         ]];
-        $this->cache->save('admin_twitter.timeline.test2', $tweets2);
+        $this->cache->save('perform_twitter.timeline.test2', $tweets2);
 
         $this->assertSame($tweets1, $this->client->getUserTimeline('test1'));
         $this->assertSame($tweets2, $this->client->getUserTimeline('test2'));
@@ -146,7 +146,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $cache = $this->getMock('Doctrine\Common\Cache\Cache');
         $cache->expects($this->once())
             ->method('save')
-            ->with('admin_twitter.timeline.test', $this->callback(function($value) {
+            ->with('perform_twitter.timeline.test', $this->callback(function($value) {
                 return is_array($value);
             }), 500);
         $client = new Client($this->factory, $cache, 500);

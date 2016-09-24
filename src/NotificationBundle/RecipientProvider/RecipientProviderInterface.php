@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\NotificationBundle\RecipientProvider;
+namespace Perform\NotificationBundle\RecipientProvider;
 
 /**
  * RecipientProviderInterface

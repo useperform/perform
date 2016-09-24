@@ -1,7 +1,0 @@
-admin_base_login:
-    path: /login
-    defaults:
-        _controller: AdminBaseBundle:Security:login
-
-admin_base_logout:
-    path: /logout

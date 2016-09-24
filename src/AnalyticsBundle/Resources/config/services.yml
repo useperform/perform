@@ -1,6 +1,6 @@
 services:
-    admin_analytics.panel.hits:
-        class: Admin\AnalyticsBundle\Panel\HitsPanel
+    perform_analytics.panel.hits:
+        class: Perform\AnalyticsBundle\Panel\HitsPanel
         arguments:
             - "@templating"
 

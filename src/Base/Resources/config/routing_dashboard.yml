@@ -1,3 +1,0 @@
-dashboard:
-    resource: "@AdminBaseBundle/Controller/DashboardController.php"
-    type:     annotation

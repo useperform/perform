@@ -1,46 +1,46 @@
 services:
-    admin_notification.notifier:
-        class: Admin\NotificationBundle\Notifier
+    perform_notification.notifier:
+        class: Perform\NotificationBundle\Notifier
 
-    admin_notification.publisher.local:
-        class: Admin\NotificationBundle\Publisher\LocalPublisher
+    perform_notification.publisher.local:
+        class: Perform\NotificationBundle\Publisher\LocalPublisher
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@templating"
         tags:
-            - {name: admin_notification.publisher}
+            - {name: perform_notification.publisher}
 
-    admin_notification.publisher.logger:
-        class: Admin\NotificationBundle\Publisher\LoggerPublisher
+    perform_notification.publisher.logger:
+        class: Perform\NotificationBundle\Publisher\LoggerPublisher
         arguments:
             - "@logger"
         tags:
-            - {name: admin_notification.publisher}
+            - {name: perform_notification.publisher}
 
-    admin_notification.publisher.email:
-        class: Admin\NotificationBundle\Publisher\EmailPublisher
+    perform_notification.publisher.email:
+        class: Perform\NotificationBundle\Publisher\EmailPublisher
         arguments:
-            - "@admin_base.email.mailer"
+            - "@perform_base.email.mailer"
             - "@templating"
         tags:
-            - {name: admin_notification.publisher}
+            - {name: perform_notification.publisher}
 
-    admin_notification.repository.notification_log:
-        class: Admin\NotificationBundle\Repository\NotificationLogRepository
+    perform_notification.repository.notification_log:
+        class: Perform\NotificationBundle\Repository\NotificationLogRepository
         factory: ['@doctrine.orm.default_entity_manager', 'getRepository']
         arguments:
-          - AdminNotificationBundle:NotificationLog
+          - PerformNotificationBundle:NotificationLog
 
-    admin_notification.provider.current_user:
-        class: Admin\NotificationBundle\RecipientProvider\CurrentUserProvider
+    perform_notification.provider.current_user:
+        class: Perform\NotificationBundle\RecipientProvider\CurrentUserProvider
         arguments: ["@security.token_storage"]
 
-    admin_notification.provider.settings:
-        class: Admin\NotificationBundle\RecipientProvider\SettingsProvider
-        arguments: ["@doctrine.orm.entity_manager", "@admin_base.settings_manager"]
+    perform_notification.provider.settings:
+        class: Perform\NotificationBundle\RecipientProvider\SettingsProvider
+        arguments: ["@doctrine.orm.entity_manager", "@perform_base.settings_manager"]
 
-    admin_notification.twig.notification:
-        class: Admin\NotificationBundle\Twig\Extension\NotificationExtension
-        arguments: ['@admin_notification.provider.current_user', '@admin_notification.repository.notification_log']
+    perform_notification.twig.notification:
+        class: Perform\NotificationBundle\Twig\Extension\NotificationExtension
+        arguments: ['@perform_notification.provider.current_user', '@perform_notification.repository.notification_log']
         tags:
             - {name: twig.extension}

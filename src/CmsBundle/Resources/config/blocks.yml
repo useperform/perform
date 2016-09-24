@@ -1,0 +1,10 @@
+services:
+    perform_cms.block.html:
+        class: Perform\CmsBundle\Block\HtmlBlockType
+        tags:
+            - {name: perform_cms.block_type, type: html}
+
+    perform_cms.block.text:
+        class: Perform\CmsBundle\Block\TextBlockType
+        tags:
+            - {name: perform_cms.block_type, type: text}

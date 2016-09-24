@@ -1,0 +1,27 @@
+{% extends 'PerformBaseBundle::base.html.twig' %}
+
+{% block workspace %}
+  <h3><i class="fa fa-angle-right"></i> View</h3>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      Entity
+    </div>
+    <div class="panel-body">
+      <table class="table">
+        <tbody>
+          {% for field, options in fields %}
+            <tr>
+              <th>
+                {{crud_label(field, options)}}
+              </th>
+              <td>
+                {{crud_view_context(entity, field, options)}}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <a href="{{crud_route(entity, 'list')}}" class="btn btn-default">Back</a>
+    </div>
+  </div>
+{% endblock %}

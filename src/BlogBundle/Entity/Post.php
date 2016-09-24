@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\BlogBundle\Entity;
+namespace Perform\BlogBundle\Entity;
 
 /**
  * Post

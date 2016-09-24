@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\EventsBundle\Admin;
+namespace Perform\EventsBundle\Admin;
 
-use Admin\Base\Admin\AbstractAdmin;
+use Perform\BaseBundle\Admin\AbstractAdmin;
 
 /**
  * EventAdmin
@@ -55,5 +55,5 @@ class EventAdmin extends AbstractAdmin
             'human' => false
         ],
     ];
-    protected $routePrefix = 'admin_events_events_';
+    protected $routePrefix = 'perform_events_events_';
 }

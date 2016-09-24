@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\NotificationBundle\Tests;
+namespace Perform\NotificationBundle\Tests;
 
-use Admin\NotificationBundle\Notifier;
-use Admin\NotificationBundle\Notification;
+use Perform\NotificationBundle\Notifier;
+use Perform\NotificationBundle\Notification;
 
 /**
  * NotifierTest
@@ -16,7 +16,7 @@ class NotifierTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->notifier = new Notifier();
-        $this->publisher = $this->getMock('Admin\NotificationBundle\Publisher\PublisherInterface');
+        $this->publisher = $this->getMock('Perform\NotificationBundle\Publisher\PublisherInterface');
         $this->publisher->expects($this->any())
             ->method('getName')
             ->will($this->returnValue('testPublisher'));
@@ -26,7 +26,7 @@ class NotifierTest extends \PHPUnit_Framework_TestCase
 
     protected function newNotification()
     {
-        return new Notification($this->getMock('Admin\NotificationBundle\RecipientInterface'), 'test');
+        return new Notification($this->getMock('Perform\NotificationBundle\RecipientInterface'), 'test');
     }
 
     public function testSend()
@@ -51,7 +51,7 @@ class NotifierTest extends \PHPUnit_Framework_TestCase
     public function testDefaultPublishersCanBeOveridden()
     {
         $n = $this->newNotification();
-        $publisher = $this->getMock('Admin\NotificationBundle\Publisher\PublisherInterface');
+        $publisher = $this->getMock('Perform\NotificationBundle\Publisher\PublisherInterface');
         $publisher->expects($this->any())
             ->method('getName')
             ->will($this->returnValue('mySuperPublisher'));

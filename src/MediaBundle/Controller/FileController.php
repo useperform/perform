@@ -1,13 +1,13 @@
 <?php
 
-namespace Admin\MediaBundle\Controller;
+namespace Perform\MediaBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Admin\MediaBundle\Upload\UploadHandler;
+use Perform\MediaBundle\Upload\UploadHandler;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -23,7 +23,7 @@ class FileController extends Controller
      */
     public function listAction()
     {
-        $files = $this->getDoctrine()->getRepository('AdminMediaBundle:File')->findAll();
+        $files = $this->getDoctrine()->getRepository('PerformMediaBundle:File')->findAll();
 
         return [
             'files' => $files,
@@ -55,7 +55,7 @@ class FileController extends Controller
             $handler->process($request, $upload);
 
             //import all completed files (1 at most in this case)
-            $importer = $this->get('admin_media.importer.file');
+            $importer = $this->get('perform_media.importer.file');
             foreach ($handler->getCompletedFiles() as $name => $file) {
                 $importer->import($file->getPathname(), $name);
             }

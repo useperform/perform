@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\NotificationBundle\Tests;
+namespace Perform\NotificationBundle\Tests;
 
-use Admin\NotificationBundle\Notification;
+use Perform\NotificationBundle\Notification;
 
 /**
  * NotificationTest
@@ -11,7 +11,7 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
 {
     protected function mockRecipient()
     {
-        return $this->getMock('Admin\NotificationBundle\RecipientInterface');
+        return $this->getMock('Perform\NotificationBundle\RecipientInterface');
     }
 
     public function testGetters()

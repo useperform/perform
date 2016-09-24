@@ -1,65 +1,65 @@
 services:
-    admin_media.importer.file:
-        class: Admin\MediaBundle\Importer\FileImporter
+    perform_media.importer.file:
+        class: Perform\MediaBundle\Importer\FileImporter
         arguments:
             - "@oneup_flysystem.main_filesystem"
             - "@doctrine.orm.entity_manager"
             - "@event_dispatcher"
 
-    admin_media.plugin.registry:
-        class: Admin\MediaBundle\Plugin\PluginRegistry
+    perform_media.plugin.registry:
+        class: Perform\MediaBundle\Plugin\PluginRegistry
         arguments:
-            - "@admin_media.url.simple"
+            - "@perform_media.url.simple"
 
-    admin_media.listener.file_plugin:
-        class: Admin\MediaBundle\EventListener\FilePluginListener
-        arguments: ["@admin_media.plugin.registry"]
+    perform_media.listener.file_plugin:
+        class: Perform\MediaBundle\EventListener\FilePluginListener
+        arguments: ["@perform_media.plugin.registry"]
         tags:
             - {name: kernel.event_subscriber}
 
-    admin_media.twig.file:
-        class: Admin\MediaBundle\Twig\Extension\FileExtension
-        arguments: ["@admin_media.plugin.registry"]
+    perform_media.twig.file:
+        class: Perform\MediaBundle\Twig\Extension\FileExtension
+        arguments: ["@perform_media.plugin.registry"]
         tags:
             - {name: twig.extension}
 
-    admin_media.url.simple:
-        class: Admin\MediaBundle\Url\SimpleFileUrlGenerator
+    perform_media.url.simple:
+        class: Perform\MediaBundle\Url\SimpleFileUrlGenerator
         arguments: ["/uploads"]
 
-    admin_media.plugin.other:
-        class: Admin\MediaBundle\Plugin\OtherPlugin
+    perform_media.plugin.other:
+        class: Perform\MediaBundle\Plugin\OtherPlugin
         arguments:
             - "@oneup_flysystem.main_filesystem"
         tags:
-            - {name: admin_media.file_plugin, pluginName: other}
+            - {name: perform_media.file_plugin, pluginName: other}
 
-    admin_media.plugin.pdf:
-        class: Admin\MediaBundle\Plugin\PdfPlugin
+    perform_media.plugin.pdf:
+        class: Perform\MediaBundle\Plugin\PdfPlugin
         arguments:
             - "@oneup_flysystem.main_filesystem"
-            - "@admin_media.url.simple"
+            - "@perform_media.url.simple"
         tags:
-            - {name: admin_media.file_plugin, pluginName: pdf}
+            - {name: perform_media.file_plugin, pluginName: pdf}
 
-    admin_media.imagine:
+    perform_media.imagine:
         class: Imagine\Gd\Imagine
 
-    admin_media.plugin.image:
-        class: Admin\MediaBundle\Plugin\ImagePlugin
+    perform_media.plugin.image:
+        class: Perform\MediaBundle\Plugin\ImagePlugin
         arguments:
             - "@oneup_flysystem.main_filesystem"
-            - "@admin_media.url.simple"
-            - "@admin_media.imagine"
+            - "@perform_media.url.simple"
+            - "@perform_media.imagine"
         tags:
-            - {name: admin_media.file_plugin, pluginName: image}
+            - {name: perform_media.file_plugin, pluginName: image}
 
-    admin_media.menu_link.media:
-        class: Admin\MediaBundle\Menu\MediaLinkProvider
+    perform_media.menu_link.media:
+        class: Perform\MediaBundle\Menu\MediaLinkProvider
         tags:
-            - { name: admin_base.link_provider, alias: media }
+            - { name: perform_base.link_provider, alias: media }
 
-    admin_media.type.image:
-        class: Admin\MediaBundle\Type\ImageType
+    perform_media.type.image:
+        class: Perform\MediaBundle\Type\ImageType
         arguments:
-            - "@admin_media.plugin.registry"
+            - "@perform_media.plugin.registry"

@@ -1,11 +1,11 @@
 <?php
 
-namespace Admin\MediaBundle\Type;
+namespace Perform\MediaBundle\Type;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Admin\Base\Type\AbstractType;
-use Admin\MediaBundle\Plugin\PluginRegistry;
+use Perform\BaseBundle\Type\AbstractType;
+use Perform\MediaBundle\Plugin\PluginRegistry;
 
 /**
  * ImageType
@@ -25,7 +25,7 @@ class ImageType extends AbstractType
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
         $builder->add($field, EntityType::class, [
-            'class' => 'AdminMediaBundle:File',
+            'class' => 'PerformMediaBundle:File',
             'choice_label' => 'name',
             'placeholder' => 'None',
             'required' => false,

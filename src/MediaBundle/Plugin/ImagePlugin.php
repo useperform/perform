@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\MediaBundle\Plugin;
+namespace Perform\MediaBundle\Plugin;
 
-use Admin\MediaBundle\Entity\File;
-use Admin\MediaBundle\Url\FileUrlGeneratorInterface;
+use Perform\MediaBundle\Entity\File;
+use Perform\MediaBundle\Url\FileUrlGeneratorInterface;
 use League\Flysystem\FilesystemInterface;
 use Imagine\Image\ImagineInterface;
 

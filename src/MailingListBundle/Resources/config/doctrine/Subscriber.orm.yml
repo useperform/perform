@@ -1,6 +1,6 @@
-Admin\MailingListBundle\Entity\Subscriber:
+Perform\MailingListBundle\Entity\Subscriber:
     type: entity
-    table: admin_mailing_list_subscriber
+    table: perform_mailing_list_subscriber
     id:
         id:
             type: guid

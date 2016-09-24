@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\MediaBundle\Command;
+namespace Perform\MediaBundle\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -32,7 +32,7 @@ class FileImportCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $importer = $this->getContainer()->get('admin_media.importer.file');
+        $importer = $this->getContainer()->get('perform_media.importer.file');
         foreach ($this->getFiles($input->getArgument('path')) as $file) {
             $importer->import($file->getPathname());
             $output->writeln(sprintf('Imported <info>%s</info>', $file->getPathname()));

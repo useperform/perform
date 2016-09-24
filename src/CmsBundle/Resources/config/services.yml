@@ -1,12 +1,62 @@
+imports:
+    - { resource: blocks.yml }
+
 services:
-    admin_cms.listener.toolbar:
-        class: Admin\CmsBundle\EventListener\ToolbarListener
+    perform_cms.listener.toolbar:
+        class: Perform\CmsBundle\EventListener\ToolbarListener
         arguments:
             - "@twig"
+            - "@perform_cms.twig.content"
+            - "@doctrine.orm.entity_manager"
+            - "@perform_cms.block_type_registry"
         tags:
             - {name: kernel.event_subscriber}
 
-    admin_cms.menu_link.cms:
-        class: Admin\CmsBundle\Menu\CmsLinkProvider
+    perform_cms.menu_link.cms:
+        class: Perform\CmsBundle\Menu\CmsLinkProvider
         tags:
-            - { name: admin_base.link_provider, alias: cms }
+            - {name: perform_base.link_provider, alias: cms}
+
+    perform_cms.twig.content:
+        class: Perform\CmsBundle\Twig\Extension\ContentExtension
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@twig"
+        tags:
+            - {name: twig.extension}
+
+    perform_cms.warmer.gulp:
+        class: Perform\CmsBundle\CacheWarmer\GulpSourcesWarmer
+        arguments:
+            - "@perform_cms.block_type_registry"
+        tags:
+            - {name: kernel.cache_warmer}
+
+    perform_cms.publisher:
+        class: Perform\CmsBundle\Publisher\Publisher
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@perform_cms.block_type_registry"
+
+    perform_cms.repo.version:
+        class: Perform\CmsBundle\Repository\VersionRepository
+        factory:
+            - "@doctrine.orm.entity_manager"
+            - "getRepository"
+        arguments:
+            - "PerformCmsBundle:Version"
+
+    perform_cms.section_locator:
+        class: Perform\CmsBundle\Locator\SectionLocator
+        arguments:
+            - "@perform_cms.repo.version"
+
+    perform_cms.version_updater:
+        class: Perform\CmsBundle\Updater\VersionUpdater
+        arguments:
+            - "@doctrine.orm.entity_manager"
+
+    perform_cms.block_type_registry:
+        class: Perform\CmsBundle\Block\BlockTypeRegistry
+        arguments:
+            - "@twig"

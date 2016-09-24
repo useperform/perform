@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\MailingListBundle\Menu;
+namespace Perform\MailingListBundle\Menu;
 
 use Knp\Menu\ItemInterface;
-use Admin\Base\Menu\LinkProviderInterface;
+use Perform\BaseBundle\Menu\LinkProviderInterface;
 
 /**
  * MailingListLinkProvider.
@@ -15,7 +15,7 @@ class MailingListLinkProvider implements LinkProviderInterface
     public function addLinks(ItemInterface $menu)
     {
         $menu->addChild('Mailing List Subscribers', [
-            'route' => 'admin_mailing_list_subscriber_list',
+            'route' => 'perform_mailing_list_subscriber_list',
         ])->setExtra('icon', 'users');
     }
 }

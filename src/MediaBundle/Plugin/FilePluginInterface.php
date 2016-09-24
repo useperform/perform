@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\MediaBundle\Plugin;
+namespace Perform\MediaBundle\Plugin;
 
-use Admin\MediaBundle\Entity\File;
+use Perform\MediaBundle\Entity\File;
 
 /**
  * FilePluginInterface.

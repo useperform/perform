@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\NotificationBundle\Publisher;
+namespace Perform\NotificationBundle\Publisher;
 
-use Admin\NotificationBundle\Notification;
+use Perform\NotificationBundle\Notification;
 
 interface PublisherInterface
 {

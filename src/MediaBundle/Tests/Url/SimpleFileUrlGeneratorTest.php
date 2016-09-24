@@ -2,7 +2,7 @@
 
 namespace MediaBundle\Tests\Url;
 
-use Admin\MediaBundle\Url\SimpleFileUrlGenerator;
+use Perform\MediaBundle\Url\SimpleFileUrlGenerator;
 
 /**
  * SimpleFileUrlGeneratorTest

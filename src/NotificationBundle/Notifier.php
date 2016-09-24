@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\NotificationBundle;
+namespace Perform\NotificationBundle;
 
-use Admin\NotificationBundle\Publisher\PublisherInterface;
-use Admin\NotificationBundle\Notification;
+use Perform\NotificationBundle\Publisher\PublisherInterface;
+use Perform\NotificationBundle\Notification;
 
 class Notifier
 {

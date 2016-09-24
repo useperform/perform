@@ -1,9 +1,9 @@
 <?php
 
-namespace Admin\CmsBundle\Menu;
+namespace Perform\CmsBundle\Menu;
 
 use Knp\Menu\ItemInterface;
-use Admin\Base\Menu\LinkProviderInterface;
+use Perform\BaseBundle\Menu\LinkProviderInterface;
 
 /**
  * CmsLinkProvider.
@@ -15,7 +15,7 @@ class CmsLinkProvider implements LinkProviderInterface
     public function addLinks(ItemInterface $menu)
     {
         $menu->addChild('Page Editor', [
-            'route' => 'admin_cms_session_begin',
+            'route' => 'perform_cms_session_begin',
         ])->setExtra('icon', 'pencil');
     }
 }

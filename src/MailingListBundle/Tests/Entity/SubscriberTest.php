@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\MailingListBundle\Tests\Entity;
+namespace Perform\MailingListBundle\Tests\Entity;
 
-use Admin\MailingListBundle\Entity\Subscriber;
+use Perform\MailingListBundle\Entity\Subscriber;
 
 /**
  * SubscriberTest

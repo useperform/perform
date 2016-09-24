@@ -1,11 +1,11 @@
 <?php
 
-namespace Admin\EventsBundle\DataFixtures\ORM;
+namespace Perform\EventsBundle\DataFixtures\ORM;
 
 use Faker;
 use Doctrine\Common\Persistence\ObjectManager;
-use Admin\EventsBundle\Entity\Event;
-use Admin\Base\DataFixtures\ORM\EntityDeclaringFixtureInterface;
+use Perform\EventsBundle\Entity\Event;
+use Perform\BaseBundle\DataFixtures\ORM\EntityDeclaringFixtureInterface;
 
 /**
  * LoadEventData.

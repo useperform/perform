@@ -1,10 +1,10 @@
 <?php
 
-namespace Admin\MediaBundle\Plugin;
+namespace Perform\MediaBundle\Plugin;
 
-use Admin\MediaBundle\Entity\File;
-use Admin\MediaBundle\Exception\PluginNotFoundException;
-use Admin\MediaBundle\Url\FileUrlGeneratorInterface;
+use Perform\MediaBundle\Entity\File;
+use Perform\MediaBundle\Exception\PluginNotFoundException;
+use Perform\MediaBundle\Url\FileUrlGeneratorInterface;
 
 /**
  * PluginRegistry

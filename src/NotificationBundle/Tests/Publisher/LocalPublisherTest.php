@@ -2,8 +2,8 @@
 
 namespace NotificationBundle\Tests\Publisher;
 
-use Admin\NotificationBundle\Publisher\LocalPublisher;
-use Admin\NotificationBundle\Notification;
+use Perform\NotificationBundle\Publisher\LocalPublisher;
+use Perform\NotificationBundle\Notification;
 
 /**
  * LocalPublisherTest
@@ -25,14 +25,14 @@ class LocalPublisherTest extends \PHPUnit_Framework_TestCase
 
     protected function newNotification($type)
     {
-        return new Notification($this->getMock('Admin\NotificationBundle\RecipientInterface'), $type);
+        return new Notification($this->getMock('Perform\NotificationBundle\RecipientInterface'), $type);
     }
 
     public function testSend()
     {
         $this->templating->expects($this->once())
             ->method('render')
-            ->with('AdminNotificationBundle:test:local.html.twig');
+            ->with('PerformNotificationBundle:test:local.html.twig');
 
         $this->publisher->send($this->newNotification('test'));
     }
@@ -41,8 +41,8 @@ class LocalPublisherTest extends \PHPUnit_Framework_TestCase
     {
         $this->templating->expects($this->once())
             ->method('render')
-            ->with('AdminBaseBundle:notifications:crud_update/local.html.twig');
+            ->with('PerformBaseBundle:notifications:crud_update/local.html.twig');
 
-        $this->publisher->send($this->newNotification('AdminBaseBundle:crud_update'));
+        $this->publisher->send($this->newNotification('PerformBaseBundle:crud_update'));
     }
 }

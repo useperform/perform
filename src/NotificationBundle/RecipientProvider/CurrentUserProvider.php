@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\NotificationBundle\RecipientProvider;
+namespace Perform\NotificationBundle\RecipientProvider;
 
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 

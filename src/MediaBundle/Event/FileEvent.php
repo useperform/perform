@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\MediaBundle\Event;
+namespace Perform\MediaBundle\Event;
 
-use Admin\MediaBundle\Entity\File;
+use Perform\MediaBundle\Entity\File;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -13,13 +13,13 @@ use Symfony\Component\EventDispatcher\Event;
 class FileEvent extends Event
 {
     //called when adding a new file
-    const CREATE = 'admin_media.file.create';
+    const CREATE = 'perform_media.file.create';
 
     //called when a file needs processing
-    const PROCESS = 'admin_media.file.process';
+    const PROCESS = 'perform_media.file.process';
 
     //called when a file is deleted
-    const DELETE = 'admin_media.file.delete';
+    const DELETE = 'perform_media.file.delete';
 
     protected $file;
 

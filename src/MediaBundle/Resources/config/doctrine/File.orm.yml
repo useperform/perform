@@ -1,6 +1,6 @@
-Admin\MediaBundle\Entity\File:
+Perform\MediaBundle\Entity\File:
     type: entity
-    table: admin_media_file
+    table: perform_media_file
     id:
         id:
             type: guid
@@ -32,6 +32,6 @@ Admin\MediaBundle\Entity\File:
                     on: update
     manyToOne:
         owner:
-            targetEntity: Admin\Base\Entity\User
+            targetEntity: Perform\BaseBundle\Entity\User
             joinColumn:
                 nullable: true

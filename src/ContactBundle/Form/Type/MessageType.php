@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\ContactBundle\Form\Type;
+namespace Perform\ContactBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -30,7 +30,7 @@ class MessageType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'Admin\ContactBundle\Entity\Message',
+            'data_class' => 'Perform\ContactBundle\Entity\Message',
         ]);
     }
 }

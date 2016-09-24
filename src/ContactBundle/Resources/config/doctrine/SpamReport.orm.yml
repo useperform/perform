@@ -1,6 +1,6 @@
-Admin\ContactBundle\Entity\SpamReport:
+Perform\ContactBundle\Entity\SpamReport:
     type: entity
-    table: admin_contact_spam_report
+    table: perform_contact_spam_report
     id:
         id:
             type: guid
@@ -23,7 +23,7 @@ Admin\ContactBundle\Entity\SpamReport:
                     on: create
     manyToOne:
         message:
-            targetEntity: Admin\ContactBundle\Entity\Message
+            targetEntity: Perform\ContactBundle\Entity\Message
             joinColumn:
                 nullable: false
             

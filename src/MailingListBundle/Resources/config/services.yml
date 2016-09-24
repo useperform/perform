@@ -1,29 +1,29 @@
 services:
-    admin_mailing_list.admin.subscriber:
-        class: Admin\MailingListBundle\Admin\SubscriberAdmin
+    perform_mailing_list.admin.subscriber:
+        class: Perform\MailingListBundle\Admin\SubscriberAdmin
         tags:
-            - {name: admin_base.admin, entity: "AdminMailingListBundle:Subscriber"}
+            - {name: perform_base.admin, entity: "PerformMailingListBundle:Subscriber"}
 
-    admin_mailing_list.form.handler.subscriber:
-        class: Admin\MailingListBundle\Form\Handler\SubscriberFormHandler
+    perform_mailing_list.form.handler.subscriber:
+        class: Perform\MailingListBundle\Form\Handler\SubscriberFormHandler
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@logger"
 
-    admin_mailing_list.menu.mailing_list:
-        class: Admin\MailingListBundle\Menu\MailingListLinkProvider
+    perform_mailing_list.menu.mailing_list:
+        class: Perform\MailingListBundle\Menu\MailingListLinkProvider
         tags:
-            - { name: admin_base.link_provider, alias: mailing_list }
+            - { name: perform_base.link_provider, alias: mailing_list }
 
-    admin_mailing_list.twig.form:
-        class: Admin\MailingListBundle\Twig\Extension\FormExtension
+    perform_mailing_list.twig.form:
+        class: Perform\MailingListBundle\Twig\Extension\FormExtension
         arguments:
             - "@form.factory"
         tags:
             - {name: twig.extension}
 
-    admin_mailing_list.panel.subscribers:
-        class: Admin\MailingListBundle\Panel\SubscribersPanel
+    perform_mailing_list.panel.subscribers:
+        class: Perform\MailingListBundle\Panel\SubscribersPanel
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@templating"

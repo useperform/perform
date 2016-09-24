@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\MediaBundle\Command;
+namespace Perform\MediaBundle\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -31,8 +31,8 @@ class FileDeleteCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $container = $this->getContainer();
-        $importer = $container->get('admin_media.importer.file');
-        $file = $container->get('doctrine.orm.entity_manager')->getRepository('AdminMediaBundle:File')->find($input->getArgument('id'));
+        $importer = $container->get('perform_media.importer.file');
+        $file = $container->get('doctrine.orm.entity_manager')->getRepository('PerformMediaBundle:File')->find($input->getArgument('id'));
 
         if (!$file) {
             throw new \Exception('File not found.');

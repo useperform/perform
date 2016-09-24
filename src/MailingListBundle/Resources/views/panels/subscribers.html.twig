@@ -5,13 +5,13 @@
   <div class="panel-body">
     <div class="list-group">
       {% for subscriber in subscribers %}
-        <a href="{{path('admin_mailing_list_subscriber_view', {id: subscriber.id})}}" class="list-group-item">
+        <a href="{{path('perform_mailing_list_subscriber_view', {id: subscriber.id})}}" class="list-group-item">
           {{subscriber.fullname}}
         </a>
       {% else %}
         No subscribers
       {% endfor %}
     </div>
-    <a href="{{path('admin_mailing_list_subscriber_list')}}" class="btn btn-default btn-block">View All</a>
+    <a href="{{path('perform_mailing_list_subscriber_list')}}" class="btn btn-default btn-block">View All</a>
   </div>
 </div>

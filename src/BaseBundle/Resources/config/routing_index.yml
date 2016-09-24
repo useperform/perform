@@ -1,0 +1,3 @@
+dashboard:
+    resource: "@PerformBaseBundle/Controller/IndexController.php"
+    type:     annotation

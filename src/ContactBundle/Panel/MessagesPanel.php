@@ -1,11 +1,11 @@
 <?php
 
-namespace Admin\ContactBundle\Panel;
+namespace Perform\ContactBundle\Panel;
 
-use Admin\Base\Panel\PanelInterface;
+use Perform\BaseBundle\Panel\PanelInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use Admin\Base\Doctrine\EntityResolver;
+use Perform\BaseBundle\Doctrine\EntityResolver;
 
 /**
  * MessagesPanel
@@ -27,10 +27,10 @@ class MessagesPanel implements PanelInterface
 
     public function render()
     {
-        $messages = $this->entityManager->getRepository($this->resolver->resolve('AdminContactBundle:Message'))
+        $messages = $this->entityManager->getRepository($this->resolver->resolve('PerformContactBundle:Message'))
                   ->findBy([], ['createdAt' => 'DESC'], 10);
 
-        return $this->templating->render('AdminContactBundle:panels:messages.html.twig', [
+        return $this->templating->render('PerformContactBundle:panels:messages.html.twig', [
             'messages' => $messages,
         ]);
     }

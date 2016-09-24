@@ -1,6 +1,6 @@
-Admin\ContactBundle\Entity\Message:
+Perform\ContactBundle\Entity\Message:
     type: entity
-    table: admin_contact_message
+    table: perform_contact_message
     id:
         id:
             type: guid

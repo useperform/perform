@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\TwitterBundle\Tests\Factory;
+namespace Perform\TwitterBundle\Tests\Factory;
 
-use Admin\TwitterBundle\Factory\InMemoryFactory;
+use Perform\TwitterBundle\Factory\InMemoryFactory;
 
 /**
  * InMemoryFactoryTest

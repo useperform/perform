@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\ContactBundle\Admin;
+namespace Perform\ContactBundle\Admin;
 
-use Admin\Base\Admin\AbstractAdmin;
+use Perform\BaseBundle\Admin\AbstractAdmin;
 
 /**
  * MessageAdmin
@@ -27,7 +27,7 @@ class MessageAdmin extends AbstractAdmin
             'type' => 'datetime',
         ]
     ];
-    protected $routePrefix = 'admin_contact_message_';
+    protected $routePrefix = 'perform_contact_message_';
 
     public function getActions()
     {

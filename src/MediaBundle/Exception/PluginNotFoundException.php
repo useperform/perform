@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\MediaBundle\Exception;
+namespace Perform\MediaBundle\Exception;
 
 /**
  * PluginNotFoundException

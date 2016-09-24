@@ -1,0 +1,31 @@
+Perform\CmsBundle\Entity\Version:
+    type: entity
+    repositoryClass: Perform\CmsBundle\Repository\VersionRepository
+    table: perform_cms_version
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        title:
+            type: string
+        page:
+            type: string
+        published:
+            type: boolean
+        createdAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: create
+        updatedAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: update
+    oneToMany:
+        sections:
+            targetEntity: Section
+            mappedBy: version

@@ -1,3 +1,0 @@
-user:
-    resource: "AdminBaseBundle:User"
-    type:     crud

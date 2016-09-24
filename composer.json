@@ -1,6 +1,6 @@
 {
-    "name": "glynnforrest/admin-bundles",
-    "description": "Symfony admin bundles",
+    "name": "glynnforrest/perform-bundles",
+    "description": "Perform Symfony bundles",
     "license": "proprietary",
     "authors": [
         {
@@ -35,7 +35,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Admin\\": "src"
+            "Perform\\": "src"
         }
     }
 }
