@@ -10,7 +10,7 @@ use Perform\BaseBundle\Util\BundleSearcher;
 
 class InstallCommand extends ContainerAwareCommand
 {
-    protected $name = 'admin:base:install';
+    protected $name = 'perform:install';
     protected $description = 'Install required settings and configuration.';
 
     protected function configure()

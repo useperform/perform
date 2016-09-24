@@ -24,7 +24,7 @@ class FixturesRunCommand extends ContainerAwareCommand
 
     protected function configure()
     {
-        $this->setName('admin:base:fixtures_run')
+        $this->setName('perform:fixtures')
             ->setDescription('Run database fixtures')
             ->addOption(
                 'only-bundles',
