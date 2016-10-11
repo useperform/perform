@@ -22,9 +22,9 @@ class FileExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('fileListingType', [$this->registry, 'getListingType']),
-            new \Twig_SimpleFunction('fileUrl', [$this->registry, 'getUrl']),
-            new \Twig_SimpleFunction('filePreview', [$this->registry, 'getPreview'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('perform_file_listing_type', [$this->registry, 'getListingType']),
+            new \Twig_SimpleFunction('perform_file_url', [$this->registry, 'getUrl']),
+            new \Twig_SimpleFunction('perform_file_preview', [$this->registry, 'getPreview'], ['is_safe' => ['html']]),
         ];
     }
 
