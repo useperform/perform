@@ -23,7 +23,7 @@ class FormExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('subscriberForm', [$this, 'getForm']),
+            new \Twig_SimpleFunction('perform_subscriber_form', [$this, 'getForm']),
         ];
     }
 

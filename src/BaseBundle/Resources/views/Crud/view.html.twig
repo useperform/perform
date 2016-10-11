@@ -12,16 +12,16 @@
           {% for field, options in fields %}
             <tr>
               <th>
-                {{crud_label(field, options)}}
+                {{perform_crud_label(field, options)}}
               </th>
               <td>
-                {{crud_view_context(entity, field, options)}}
+                {{perform_crud_view_context(entity, field, options)}}
               </td>
             </tr>
           {% endfor %}
         </tbody>
       </table>
-      <a href="{{crud_route(entity, 'list')}}" class="btn btn-default">Back</a>
+      <a href="{{perform_crud_route(entity, 'list')}}" class="btn btn-default">Back</a>
     </div>
   </div>
 {% endblock %}

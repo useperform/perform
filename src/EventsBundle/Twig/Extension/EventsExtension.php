@@ -22,8 +22,8 @@ class EventsExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('upcomingEvents', [$this, 'getUpcoming']),
-            new \Twig_SimpleFunction('pastEvents', [$this, 'getPast']),
+            new \Twig_SimpleFunction('perform_upcoming_events', [$this, 'getUpcoming']),
+            new \Twig_SimpleFunction('perform_past_events', [$this, 'getPast']),
         ];
     }
 

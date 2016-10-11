@@ -22,7 +22,7 @@ class BlogExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('recentBlogPosts', [$this, 'getPosts']),
+            new \Twig_SimpleFunction('perform_recent_blog_posts', [$this, 'getPosts']),
         ];
     }
 

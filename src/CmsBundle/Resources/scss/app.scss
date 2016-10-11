@@ -1,13 +1,13 @@
 .perform-cms {
-  @import "../../../Base/Resources/scss/variables";
-  @import "../../../Base/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/mixins";
-  @import "../../../Base/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/scaffolding";
-  @import "../../../Base/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/buttons";
-  @import "../../../Base/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/navs";
-  @import "../../../Base/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/forms";
-  @import "../../../Base/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/navbar";
-  @import "../../../Base/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/modals";
-  @import "../../../Base/Resources/scss/toolbar";
+  @import "../../../BaseBundle/Resources/scss/variables";
+  @import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/mixins";
+  @import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/scaffolding";
+  @import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/buttons";
+  @import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/navs";
+  @import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/forms";
+  @import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/navbar";
+  @import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/modals";
+  @import "../../../BaseBundle/Resources/scss/toolbar";
 
   nav, .block .controls, .block .editor {
     /* copy of body tag in scaffolding, it can't be namespaced and musn't be

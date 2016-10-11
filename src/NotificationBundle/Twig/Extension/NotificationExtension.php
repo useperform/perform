@@ -28,7 +28,7 @@ class NotificationExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('unread_notification_count', [$this, 'getUnreadNotificationCount']),
+            new \Twig_SimpleFunction('perform_unread_notification_count', [$this, 'getUnreadNotificationCount']),
         ];
     }
 

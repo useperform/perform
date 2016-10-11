@@ -16,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
  */
 class FileImportCommand extends ContainerAwareCommand
 {
-    protected $name = 'admin:media:import';
+    protected $name = 'perform:media:import';
     protected $description = 'Add files to the media library.';
 
     protected function configure()

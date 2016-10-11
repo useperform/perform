@@ -14,7 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
  */
 class FileDeleteCommand extends ContainerAwareCommand
 {
-    protected $name = 'admin:media:delete';
+    protected $name = 'perform:media:delete';
     protected $description = 'Delete a file from the media library.';
 
     protected function configure()

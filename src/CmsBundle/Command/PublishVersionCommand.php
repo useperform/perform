@@ -15,7 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
  */
 class PublishVersionCommand extends ContainerAwareCommand
 {
-    protected $name = 'admin:cms:publish-version';
+    protected $name = 'perform:cms:publish-version';
     protected $description = 'Publish a version of a page.';
 
     protected function configure()

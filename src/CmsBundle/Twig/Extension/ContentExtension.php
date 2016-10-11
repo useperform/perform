@@ -38,7 +38,7 @@ class ContentExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('content', [$this, 'getContent'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('perform_content', [$this, 'getContent'], ['is_safe' => ['html']]),
         ];
     }
 

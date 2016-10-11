@@ -30,10 +30,10 @@ gulp.task('js', function (cb) {
 
 gulp.task('watch', function () {
   gulp.watch('Resources/scss/*.scss', ['sass']);
-  gulp.watch('../Base/Resources/scss/*.scss', ['sass']);
+  gulp.watch('../BaseBundle/Resources/scss/*.scss', ['sass']);
   gulp.watch('Resources/js/*.js', ['js']);
   gulp.watch('gulp-sources.js', ['js']);
 });
 
-gulp.task('build', ['sass']);
+gulp.task('build', ['sass', 'js']);
 gulp.task('default', ['sass', 'js', 'watch']);
