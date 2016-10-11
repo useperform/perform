@@ -19,6 +19,9 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->booleanNode('enabled')
+                    ->defaultFalse()
+                ->end()
                 ->arrayNode('vendors')
                     ->prototype('scalar')->end()
                 ->end()
