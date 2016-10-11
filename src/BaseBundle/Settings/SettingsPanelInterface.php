@@ -19,5 +19,7 @@ interface SettingsPanelInterface
 
     public function getTemplate();
 
+    public function getTemplateVars();
+
     public function isEnabled();
 }
