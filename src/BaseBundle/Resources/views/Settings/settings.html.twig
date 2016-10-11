@@ -6,10 +6,10 @@
     <div class="col-lg-2">
       <ul class="nav nav-pills nav-stacked">
         {% for name in registry.enabledPanels %}
-          {% set title %}{{ registry.getTemplate(name).renderBlock('title', {}) }}{% endset %}
+          {% set title %}{{registry.renderBlock(name, 'title')|raw}}{% endset %}
           <li role="presentation"{% if name == activePanel %} class="active"{% endif %}>
             <a href="{{path('perform_base_settings_settings', {panel: name})}}" aria-controls="{{name}}" role="tab">
-              {{title|raw}}
+              {{title}}
             </a>
           </li>
         {% endfor %}
@@ -17,17 +17,17 @@
     </div>
     <div class="col-lg-10">
       <div class="panel panel-default">
-        {% set panel_title %}{{ registry.getTemplate(activePanel).renderBlock('panel_title', {}) }}{% endset %}
+        {% set panel_title %}{{registry.renderBlock(activePanel, 'panel_title')|raw}}{% endset %}
         <div class="panel-heading">
-          <h3>{{panel_title|raw}}</h3>
+          <h3>{{panel_title}}</h3>
         </div>
 
         <div class="panel-body">
           <div class="tab-content">
             {{form_start(form)}}
-            {% set panel %}{{ registry.getTemplate(activePanel).renderBlock('panel', {app: app, form: form}) }}{% endset %}
+            {% set panel %}{{registry.renderBlock(activePanel, 'panel', {app: app, form: form})|raw}}{% endset %}
             {{form_errors(form)}}
-            {{panel|raw}}
+            {{panel}}
             <div class="row">
               <div class="col-md-6">
                 <button class="btn btn-primary">Save</button>

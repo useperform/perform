@@ -19,11 +19,15 @@ class SettingsPanelRegistry
     }
 
     /**
-     * @return Twig_TemplateInterface
+     * @return string
      */
-    public function getTemplate($name)
+    public function renderBlock($panelName, $blockName, array $vars = [])
     {
-        return $this->twig->loadTemplate($this->getPanel($name)->getTemplate());
+        $panel = $this->getPanel($panelName);
+        $template = $this->twig->loadTemplate($panel->getTemplate());
+        $vars = array_merge($vars, $panel->getTemplateVars());
+
+        return $template->renderBlock($blockName, $vars);
     }
 
     public function getPanel($name)

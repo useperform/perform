@@ -1,0 +1,29 @@
+{% block title %}
+  <i class="fa fa-user"></i>
+  Analytics
+{% endblock %}
+
+{% block panel_title %}
+  Analytics Settings
+{% endblock %}
+
+{% block panel %}
+  {# 2 for _token #}
+  {% if not enabled %}
+    <div class="alert alert-danger">
+      <i class="fa fa-warning"></i>
+      Analytics hasn't been enabled.
+      You can edit these settings, but tracking codes will not appear on the site until it is enabled.
+      Contact the site administrator.
+    </div>
+  {% elseif form|length < 2 %}
+    <div class="alert alert-warning">
+      <i class="fa fa-warning"></i>
+      Analytics is enabled, but no integrations have been configured.
+      Contact the site administrator.
+    </div>
+  {% endif %}
+  {% for row in form %}
+    {{form_row(row)}}
+  {% endfor %}
+{% endblock %}

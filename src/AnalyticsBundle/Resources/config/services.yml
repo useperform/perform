@@ -3,3 +3,14 @@ services:
         class: Perform\AnalyticsBundle\Panel\HitsPanel
         arguments:
             - "@templating"
+
+    perform_analytics.settings.analytics:
+        class: Perform\AnalyticsBundle\Settings\AnalyticsPanel
+        tags:
+            - { name: perform_base.settings_panel, alias: analytics }
+
+    perform_analytics.twig.analytics:
+        class: Perform\AnalyticsBundle\Twig\Extension\AnalyticsExtension
+        arguments: ["@perform_base.settings_manager"]
+        tags:
+            - {name: twig.extension}
