@@ -17,3 +17,4 @@ Perform\BaseBundle\Entity\User:
             type: string
         email:
             type: string
+            unique: true
