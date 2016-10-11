@@ -26,10 +26,10 @@ class CrudExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('crud_label', [$this, 'label']),
-            new \Twig_SimpleFunction('crud_route', [$this->urlGenerator, 'generate']),
-            new \Twig_SimpleFunction('crud_list_context', [$this, 'listContext']),
-            new \Twig_SimpleFunction('crud_view_context', [$this, 'viewContext']),
+            new \Twig_SimpleFunction('perform_crud_label', [$this, 'label']),
+            new \Twig_SimpleFunction('perform_crud_route', [$this->urlGenerator, 'generate']),
+            new \Twig_SimpleFunction('perform_crud_list_context', [$this, 'listContext']),
+            new \Twig_SimpleFunction('perform_crud_view_context', [$this, 'viewContext']),
         ];
     }
 
