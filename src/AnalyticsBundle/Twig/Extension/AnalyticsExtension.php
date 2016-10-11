@@ -21,7 +21,7 @@ class AnalyticsExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('analytics_tracking', [$this, 'getTrackingCode'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('perform_analytics', [$this, 'getTrackingCode'], ['is_safe' => ['html']]),
         ];
     }
 
