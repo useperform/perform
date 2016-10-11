@@ -15,10 +15,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  **/
 class AnalyticsPanel implements SettingsPanelInterface
 {
+    protected $enabled;
     protected $vendors;
 
-    public function __construct(array $vendors = [])
+    public function __construct($enabled, array $vendors = [])
     {
+        $this->enabled = (bool) $enabled;
         $this->vendors = $vendors;
     }
 
@@ -44,6 +46,13 @@ class AnalyticsPanel implements SettingsPanelInterface
     public function getTemplate()
     {
         return 'PerformAnalyticsBundle:Settings:analytics.html.twig';
+    }
+
+    public function getTemplateVars()
+    {
+        return [
+            'enabled' => $this->enabled,
+        ];
     }
 
     public function isEnabled()

@@ -9,7 +9,12 @@
 
 {% block panel %}
   {# 2 for _token #}
-  {% if form|length < 2 %}
+  {% if not enabled %}
+    <div class="alert alert-danger">
+      <i class="fa fa-warning"></i>
+      Analytics hasn't been enabled.
+    </div>
+  {% elseif form|length < 2 %}
     <div class="alert alert-warning">
       <i class="fa fa-warning"></i>
       Analytics hasn't been configured yet.
