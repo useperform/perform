@@ -53,6 +53,13 @@ class CrudController extends Controller
         return $entity;
     }
 
+    private function setFormTheme($formView)
+    {
+        $this->get('twig')
+            ->getExtension(FormExtension::class)
+            ->renderer->setTheme($formView, 'PerformBaseBundle::form_theme.html.twig');
+    }
+
     public function listAction(Request $request)
     {
         $this->initialize($request);
@@ -60,9 +67,7 @@ class CrudController extends Controller
         $repo = $this->getDoctrine()->getRepository($this->entity);
         $deleteForm = $this->createFormBuilder()->getForm();
         $deleteFormView = $deleteForm->createView();
-        $this->get('twig')
-            ->getExtension(FormExtension::class)
-            ->renderer->setTheme($deleteFormView, 'PerformBaseBundle::form_theme.html.twig');
+        $this->setFormTheme($deleteFormView);
 
         return [
             'fields' => $admin->getListFields(),
@@ -105,7 +110,7 @@ class CrudController extends Controller
         }
 
         $formView = $form->createView();
-        $this->get('twig')->getExtension('form')->renderer->setTheme($formView, 'PerformBaseBundle::form_theme.html.twig');
+        $this->setFormTheme($formView);
 
         return [
             'entity' => $entity,
@@ -136,7 +141,7 @@ class CrudController extends Controller
         }
 
         $formView = $form->createView();
-        $this->get('twig')->getExtension('form')->renderer->setTheme($formView, 'PerformBaseBundle::form_theme.html.twig');
+        $this->setFormTheme($formView);
 
         return [
             'entity' => $entity,
