@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Bridge\Twig\Extension\FormExtension;
 
 /**
  * CrudController
@@ -59,7 +60,9 @@ class CrudController extends Controller
         $repo = $this->getDoctrine()->getRepository($this->entity);
         $deleteForm = $this->createFormBuilder()->getForm();
         $deleteFormView = $deleteForm->createView();
-        $this->get('twig')->getExtension('form')->renderer->setTheme($deleteFormView, 'PerformBaseBundle::form_theme.html.twig');
+        $this->get('twig')
+            ->getExtension(FormExtension::class)
+            ->renderer->setTheme($deleteFormView, 'PerformBaseBundle::form_theme.html.twig');
 
         return [
             'fields' => $admin->getListFields(),
