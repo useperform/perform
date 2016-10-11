@@ -10,11 +10,13 @@ use Perform\BaseBundle\Settings\SettingsManager;
 class AnalyticsExtension extends \Twig_Extension
 {
     protected $settings;
+    protected $enabled;
     protected $vendors;
 
-    public function __construct(SettingsManager $settings, array $vendors = [])
+    public function __construct(SettingsManager $settings, $enabled, array $vendors = [])
     {
         $this->settings = $settings;
+        $this->enabled = (bool) $enabled;
         $this->vendors = $vendors;
     }
 
@@ -27,6 +29,10 @@ class AnalyticsExtension extends \Twig_Extension
 
     public function getTrackingCode()
     {
+        if (!$this->enabled) {
+            return sprintf('<!-- disabled: analytics for %s -->', implode(', ', $this->vendors));
+        }
+
         $html = '';
         if (in_array('google', $this->vendors)) {
             $html .= $this->getGoogleAnalyticsCode();
