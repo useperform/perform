@@ -8,6 +8,13 @@
 {% endblock %}
 
 {% block panel %}
+  {# 2 for _token #}
+  {% if form|length < 2 %}
+    <div class="alert alert-warning">
+      <i class="fa fa-warning"></i>
+      Analytics hasn't been configured yet.
+    </div>
+  {% endif %}
   {% for row in form %}
     {{form_row(row)}}
   {% endfor %}
