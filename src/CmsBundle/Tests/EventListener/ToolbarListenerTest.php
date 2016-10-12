@@ -83,14 +83,16 @@ class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testToolbarIsAddedToWellFormedResponse()
     {
-        $this->twig->expects($this->once())
+        $this->twig->expects($this->exactly(2))
             ->method('render')
-            ->with('PerformCmsBundle::toolbar.html.twig')
-            ->will($this->returnValue('<div>TOOLBAR</div>'));
+            ->withConsecutive(
+                $this->equalTo('PerformCmsBundle::stylesheets.html.twig'),
+                $this->equalTo('PerformCmsBundle::toolbar.html.twig'))
+            ->willReturnOnConsecutiveCalls('<link/>', '<div>TOOLBAR</div>');
 
-        $event = $this->createEvent('<body><div>Hello</div></body>');
+        $event = $this->createEvent('<head></head><body><div>Hello</div></body>');
         $this->listener->onKernelResponse($event);
-        $this->assertSame('<body><div>Hello</div><div>TOOLBAR</div></body>', $event->getResponse()->getContent());
+        $this->assertSame('<head><link/></head><body><div>Hello</div><div>TOOLBAR</div></body>', $event->getResponse()->getContent());
     }
 
     public function testToolbarIsNotAddedToUnformedResponse()

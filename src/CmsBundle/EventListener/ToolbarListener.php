@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Perform\CmsBundle\Annotation\Page;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Perform\CmsBundle\Block\BlockTypeRegistry;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * ToolbarListener.
@@ -79,6 +80,26 @@ class ToolbarListener implements EventSubscriberInterface
         }
 
         $response = $event->getResponse();
+        $this->injectCss($response);
+        $this->injectToolbar($response);
+    }
+
+    protected function injectCss(Response $response)
+    {
+        $content = $response->getContent();
+        $pos = stripos($content, '</head>');
+
+        if (false === $pos) {
+            return;
+        }
+
+        $html = $this->twig->render('PerformCmsBundle::stylesheets.html.twig', []);
+        $content = substr($content, 0, $pos).$html.substr($content, $pos);
+        $response->setContent($content);
+    }
+
+    protected function injectToolbar(Response $response)
+    {
         $content = $response->getContent();
         $pos = strripos($content, '</body>');
 
@@ -90,7 +111,7 @@ class ToolbarListener implements EventSubscriberInterface
         $versions = $this->page ? $repo->findByPage($this->page) : [];
         $current = $this->page ? $repo->findCurrentVersion($this->page) : null;
 
-        $toolbar = $this->twig->render(
+        $html = $this->twig->render(
             'PerformCmsBundle::toolbar.html.twig',
             [
                 'versions' => $versions,
@@ -98,7 +119,7 @@ class ToolbarListener implements EventSubscriberInterface
                 'registry' => $this->registry,
             ]
         );
-        $content = substr($content, 0, $pos).$toolbar.substr($content, $pos);
+        $content = substr($content, 0, $pos).$html.substr($content, $pos);
         $response->setContent($content);
     }
 
