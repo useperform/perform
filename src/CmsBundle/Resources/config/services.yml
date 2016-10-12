@@ -9,6 +9,8 @@ services:
             - "@perform_cms.twig.content"
             - "@doctrine.orm.entity_manager"
             - "@perform_cms.block_type_registry"
+        calls:
+            - [setExcludedUrlRegexes, ["%perform_cms.toolbar.excluded_urls%"]]
         tags:
             - {name: kernel.event_subscriber}
 

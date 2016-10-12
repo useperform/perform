@@ -11,6 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Perform\CmsBundle\Annotation\Page;
 use Perform\BaseBundle\Util\BundleSearcher;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
 /**
  * LoadContentData.
@@ -21,10 +22,12 @@ class LoadContentData implements EntityDeclaringFixtureInterface, ContainerAware
 {
     protected $container;
     protected $faker;
+    protected $blockTypes;
 
     public function load(ObjectManager $manager)
     {
         $this->faker = \Faker\Factory::create();
+        $this->loadBlockTypes();
         foreach ($this->locatePages() as $page => $sections) {
             $count = rand(2, 5);
             for ($i = 0; $i < $count; ++$i) {
@@ -38,6 +41,21 @@ class LoadContentData implements EntityDeclaringFixtureInterface, ContainerAware
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
+    }
+
+    protected function loadBlockTypes()
+    {
+        if (!$this->container) {
+            return;
+        }
+
+        $this->blockTypes = $this->container
+                          ->get('perform_cms.block_type_registry')
+                          ->getTypes();
+
+        if (empty($this->blockTypes)) {
+            throw new InvalidConfigurationException('At least one cms block type must be configured to run fixtures.');
+        }
     }
 
     protected function locatePages()
@@ -93,11 +111,19 @@ class LoadContentData implements EntityDeclaringFixtureInterface, ContainerAware
 
     protected function createBlock(Section $section, $sortOrder)
     {
+        $type = array_rand($this->blockTypes);
         $block = new Block();
-        $block->setType('html');
+        $block->setType($type);
         $block->setSection($section);
         $block->setSortOrder($sortOrder);
-        $block->setValue(['content' => '<p>'.$this->faker->sentence.'</p>']);
+
+        // the block types should be responsible for this in the future
+        switch ($type) {
+        case 'html':
+            $block->setValue(['content' => '<p>'.$this->faker->sentence.'</p>']);
+        case 'text':
+            $block->setValue(['content' => $this->faker->sentence]);
+        }
 
         return $block;
     }

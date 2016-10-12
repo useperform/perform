@@ -24,5 +24,6 @@ class PerformCmsExtension extends Extension
         $loader->load('services.yml');
 
         $container->setParameter('perform_cms.block_types', $config['block_types']);
+        $container->setParameter('perform_cms.toolbar.excluded_urls', $config['toolbar']['excluded_urls']);
     }
 }

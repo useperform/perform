@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Perform\CmsBundle\Annotation\Page;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Perform\CmsBundle\Block\BlockTypeRegistry;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * ToolbarListener.
@@ -28,6 +29,7 @@ class ToolbarListener implements EventSubscriberInterface
     protected $entityManager;
     protected $registry;
     protected $page;
+    protected $excludedUrlRegexes = [];
 
     public function __construct(\Twig_Environment $twig, ContentExtension $extension, EntityManagerInterface $entityManager, BlockTypeRegistry $registry)
     {
@@ -35,6 +37,11 @@ class ToolbarListener implements EventSubscriberInterface
         $this->extension = $extension;
         $this->entityManager = $entityManager;
         $this->registry = $registry;
+    }
+
+    public function setExcludedUrlRegexes(array $regexes)
+    {
+        $this->excludedUrlRegexes = $regexes;
     }
 
     protected function inEditMode(KernelEvent $event)
@@ -49,6 +56,12 @@ class ToolbarListener implements EventSubscriberInterface
         $session = $request->getSession();
         if (!$session || $session->get(self::SESSION_KEY) !== true) {
             return false;
+        }
+        $url = $request->getPathinfo();
+        foreach ($this->excludedUrlRegexes as $regex) {
+            if (preg_match('`'.$regex.'`', $url)) {
+                return;
+            }
         }
 
         return true;
@@ -79,6 +92,26 @@ class ToolbarListener implements EventSubscriberInterface
         }
 
         $response = $event->getResponse();
+        $this->injectCss($response);
+        $this->injectToolbar($response);
+    }
+
+    protected function injectCss(Response $response)
+    {
+        $content = $response->getContent();
+        $pos = stripos($content, '</head>');
+
+        if (false === $pos) {
+            return;
+        }
+
+        $html = $this->twig->render('PerformCmsBundle::stylesheets.html.twig', []);
+        $content = substr($content, 0, $pos).$html.substr($content, $pos);
+        $response->setContent($content);
+    }
+
+    protected function injectToolbar(Response $response)
+    {
         $content = $response->getContent();
         $pos = strripos($content, '</body>');
 
@@ -90,7 +123,7 @@ class ToolbarListener implements EventSubscriberInterface
         $versions = $this->page ? $repo->findByPage($this->page) : [];
         $current = $this->page ? $repo->findCurrentVersion($this->page) : null;
 
-        $toolbar = $this->twig->render(
+        $html = $this->twig->render(
             'PerformCmsBundle::toolbar.html.twig',
             [
                 'versions' => $versions,
@@ -98,7 +131,7 @@ class ToolbarListener implements EventSubscriberInterface
                 'registry' => $this->registry,
             ]
         );
-        $content = substr($content, 0, $pos).$toolbar.substr($content, $pos);
+        $content = substr($content, 0, $pos).$html.substr($content, $pos);
         $response->setContent($content);
     }
 

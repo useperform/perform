@@ -56,9 +56,9 @@ class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
             $this->listener->getSubscribedEvents());
     }
 
-    protected function createRequest($withSession = true)
+    protected function createRequest($withSession = true, $url = '/')
     {
-        $request = new Request();
+        $request = Request::create($url);
         if ($withSession) {
             $session = $this->getMock('Symfony\Component\HttpFoundation\Session\SessionInterface');
             $session->expects($this->any())
@@ -83,14 +83,16 @@ class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testToolbarIsAddedToWellFormedResponse()
     {
-        $this->twig->expects($this->once())
+        $this->twig->expects($this->exactly(2))
             ->method('render')
-            ->with('PerformCmsBundle::toolbar.html.twig')
-            ->will($this->returnValue('<div>TOOLBAR</div>'));
+            ->withConsecutive(
+                $this->equalTo('PerformCmsBundle::stylesheets.html.twig'),
+                $this->equalTo('PerformCmsBundle::toolbar.html.twig'))
+            ->willReturnOnConsecutiveCalls('<link/>', '<div>TOOLBAR</div>');
 
-        $event = $this->createEvent('<body><div>Hello</div></body>');
+        $event = $this->createEvent('<head></head><body><div>Hello</div></body>');
         $this->listener->onKernelResponse($event);
-        $this->assertSame('<body><div>Hello</div><div>TOOLBAR</div></body>', $event->getResponse()->getContent());
+        $this->assertSame('<head><link/></head><body><div>Hello</div><div>TOOLBAR</div></body>', $event->getResponse()->getContent());
     }
 
     public function testToolbarIsNotAddedToUnformedResponse()
@@ -126,6 +128,29 @@ class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
     public function testContentExtensionNotPutIntoEditMode()
     {
         $event = new GetResponseEvent($this->kernel, $this->createRequest(false), HttpKernelInterface::MASTER_REQUEST);
+        $this->contentExtension->expects($this->never())
+            ->method('setMode');
+
+        $this->listener->onKernelRequest($event);
+    }
+
+    public function excludedUrls()
+    {
+        return [
+            ['/admin', ['/admin']],
+            ['/admin/foo', ['^/admin']],
+            ['/_profiler/123456', ['^/(_(profiler|wdt)|css|images|js)/']],
+        ];
+    }
+
+    /**
+     * @dataProvider excludedUrls
+     */
+    public function testExcludedUrlsAreNotPutIntoEditMode($url, array $regexes)
+    {
+        $request = $this->createRequest(true, $url);
+        $event = new GetResponseEvent($this->kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $this->listener->setExcludedUrlRegexes($regexes);
         $this->contentExtension->expects($this->never())
             ->method('setMode');
 
