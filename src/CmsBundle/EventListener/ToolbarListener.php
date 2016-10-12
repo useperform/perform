@@ -29,6 +29,7 @@ class ToolbarListener implements EventSubscriberInterface
     protected $entityManager;
     protected $registry;
     protected $page;
+    protected $excludedUrlRegexes = [];
 
     public function __construct(\Twig_Environment $twig, ContentExtension $extension, EntityManagerInterface $entityManager, BlockTypeRegistry $registry)
     {
@@ -36,6 +37,11 @@ class ToolbarListener implements EventSubscriberInterface
         $this->extension = $extension;
         $this->entityManager = $entityManager;
         $this->registry = $registry;
+    }
+
+    public function setExcludedUrlRegexes(array $regexes)
+    {
+        $this->excludedUrlRegexes = $regexes;
     }
 
     protected function inEditMode(KernelEvent $event)
@@ -50,6 +56,12 @@ class ToolbarListener implements EventSubscriberInterface
         $session = $request->getSession();
         if (!$session || $session->get(self::SESSION_KEY) !== true) {
             return false;
+        }
+        $url = $request->getPathinfo();
+        foreach ($this->excludedUrlRegexes as $regex) {
+            if (preg_match('`'.$regex.'`', $url)) {
+                return;
+            }
         }
 
         return true;
