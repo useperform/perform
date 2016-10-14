@@ -91,6 +91,10 @@ abstract class AbstractAdmin implements AdminInterface
 
     public function getRoutePrefix()
     {
+        if (!$this->routePrefix) {
+            throw new \Exception('An admin route prefix must be configured.');
+        }
+
         return $this->routePrefix;
     }
 
