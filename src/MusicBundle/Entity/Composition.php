@@ -1,6 +1,7 @@
 <?php
 
 namespace Perform\MusicBundle\Entity;
+
 use Perform\MediaBundle\Entity\File;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -35,6 +36,11 @@ class Composition
      * @var int seconds
      */
     protected $duration;
+
+    /**
+     * @var string
+     */
+    protected $instruments;
 
     /**
      * @var string
@@ -147,6 +153,26 @@ class Composition
     public function getDuration()
     {
         return $this->duration;
+    }
+
+    /**
+     * @param string $instruments
+     *
+     * @return Composition
+     */
+    public function setInstruments($instruments)
+    {
+        $this->instruments = $instruments;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInstruments()
+    {
+        return $this->instruments;
     }
 
     /**

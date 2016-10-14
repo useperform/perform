@@ -21,6 +21,10 @@ Perform\MusicBundle\Entity\Composition:
             type: datetime
         duration:
             type: integer
+            nullable: true
+        instruments:
+            type: string
+            nullable: true
         description:
             type: text
         createdAt:
