@@ -1,6 +1,7 @@
 Perform\MusicBundle\Entity\Composition:
     type: entity
     table: perform_music_composition
+    repositoryClass: Perform\MusicBundle\Repository\CompositionRepository
     id:
         id:
             type: guid
