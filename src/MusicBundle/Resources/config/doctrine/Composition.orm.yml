@@ -1,0 +1,43 @@
+Perform\MusicBundle\Entity\Composition:
+    type: entity
+    table: perform_music_composition
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        title:
+            type: string
+        slug:
+            type: string
+            gedmo:
+                slug:
+                    separator: -
+                    fields:
+                        - title
+        publishDate:
+            type: datetime
+        duration:
+            type: integer
+        description:
+            type: text
+        createdAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: create
+        updatedAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: update
+    manyToMany:
+        files:
+            targetEntity: Perform\MediaBundle\Entity\File
+            joinTable:
+                name: perform_composition_file
+    uniqueConstraints:
+        slug:
+            columns: [slug]
