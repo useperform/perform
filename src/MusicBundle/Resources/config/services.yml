@@ -1,0 +1,5 @@
+services:
+    perform_music.admin.composition:
+        class: Perform\MusicBundle\Admin\CompositionAdmin
+        tags:
+            - {name: perform_base.admin, entity: "PerformMusicBundle:Composition"}
