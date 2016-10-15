@@ -2,6 +2,8 @@
 
 namespace Perform\BaseBundle\Admin;
 
+use Perform\BaseBundle\Type\TypeConfig;
+
 /**
  * UserAdmin
  *
@@ -9,21 +11,17 @@ namespace Perform\BaseBundle\Admin;
  **/
 class UserAdmin extends AbstractAdmin
 {
-    protected $listFields = [
-        'forename',
-        'surname',
-    ];
-    protected $viewFields = [
-        'forename',
-        'surname',
-    ];
-    protected $createFields = [
-        'forename',
-        'surname',
-    ];
-    protected $editFields = [
-        'forename',
-        'surname',
-    ];
     protected $routePrefix = 'perform_base_user_';
+
+    public function configureTypes(TypeConfig $config)
+    {
+        $config
+            ->add('forename', [
+                'type' => 'string',
+            ])
+            ->add('surname', [
+                'type' => 'string',
+            ])
+            ;
+    }
 }
