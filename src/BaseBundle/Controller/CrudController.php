@@ -8,6 +8,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bridge\Twig\Extension\FormExtension;
+use Perform\BaseBundle\Type\TypeConfig;
 
 /**
  * CrudController
@@ -30,6 +31,12 @@ class CrudController extends Controller
     {
         return $this->get('perform_base.admin.registry')
             ->getAdmin($this->entity);
+    }
+
+    protected function getTypeConfig()
+    {
+        return $this->get('perform_base.entity_type_config')
+            ->getEntityTypeConfig($this->entity);
     }
 
     protected function newEntity()
@@ -70,7 +77,7 @@ class CrudController extends Controller
         $this->setFormTheme($deleteFormView);
 
         return [
-            'fields' => $admin->getListFields(),
+            'fields' => $this->getTypeConfig()->getTypes(TypeConfig::CONTEXT_LIST),
             'routePrefix' => $admin->getRoutePrefix(),
             'entities' => $repo->findAll(),
             'deleteForm' => $deleteFormView,
@@ -82,7 +89,7 @@ class CrudController extends Controller
         $this->initialize($request);
 
         return [
-            'fields' => $this->getAdmin()->getViewFields(),
+            'fields' => $this->getTypeConfig()->getTypes(TypeConfig::CONTEXT_VIEW),
             'entity' => $this->findEntity($id),
         ];
     }
@@ -93,7 +100,7 @@ class CrudController extends Controller
         $builder = $this->createFormBuilder($entity = $this->newEntity());
         $admin = $this->getAdmin();
         $form = $this->createForm($admin->getFormType(), $entity, [
-            'admin' => $admin,
+            'typeConfig' => $this->getTypeConfig(),
             'typeRegistry' => $this->get('perform_base.type_registry'),
             'context' => 'create',
         ]);
@@ -124,7 +131,7 @@ class CrudController extends Controller
         $entity = $this->findEntity($id);
         $admin = $this->getAdmin();
         $form = $this->createForm($admin->getFormType(), $entity, [
-            'admin' => $admin,
+            'typeConfig' => $this->getTypeConfig(),
             'typeRegistry' => $this->get('perform_base.type_registry'),
             'context' => 'edit',
         ]);

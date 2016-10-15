@@ -3,6 +3,7 @@
 namespace Perform\EventsBundle\Admin;
 
 use Perform\BaseBundle\Admin\AbstractAdmin;
+use Perform\BaseBundle\Type\TypeConfig;
 
 /**
  * EventAdmin
@@ -11,49 +12,52 @@ use Perform\BaseBundle\Admin\AbstractAdmin;
  **/
 class EventAdmin extends AbstractAdmin
 {
-    protected $listFields = [
-        'title',
-        'startTime',
-    ];
-    protected $viewFields = [
-        'title',
-        'slug',
-        'startTime',
-        'location',
-        'image',
-        'description',
-    ];
-    protected $createFields = [
-        'title',
-        'slug',
-        'startTime',
-        'location',
-        'image',
-        'description',
-    ];
-    protected $editFields = [
-        'title',
-        'slug',
-        'startTime',
-        'location',
-        'image',
-        'description',
-    ];
-    protected $fieldOptions = [
-        'startTime' => [
-            'type' => 'datetime',
-        ],
-        'description' => [
-            'type' => 'text',
-        ],
-        'image' => [
-            'type' => 'image',
-        ],
-    ];
-    protected $listFieldOptions = [
-        'startTime' => [
-            'human' => false
-        ],
-    ];
     protected $routePrefix = 'perform_events_events_';
+
+    public function configureTypes(TypeConfig $config)
+    {
+        $config
+            ->add('title', [
+                'type' => 'string',
+            ])
+            ->add('slug', [
+                'type' => 'string',
+                'contexts' => [
+                    TypeConfig::CONTEXT_VIEW,
+                    TypeConfig::CONTEXT_CREATE,
+                    TypeConfig::CONTEXT_EDIT,
+                ],
+            ])
+            ->add('startTime', [
+                'type' => 'datetime',
+                'options' => [
+                    'human' => false,
+                ],
+            ])
+            ->add('location', [
+                'type' => 'string',
+                'contexts' => [
+                    TypeConfig::CONTEXT_VIEW,
+                    TypeConfig::CONTEXT_CREATE,
+                    TypeConfig::CONTEXT_EDIT,
+                ],
+            ])
+            ->add('image', [
+                'type' => 'image',
+                'contexts' => [
+                    TypeConfig::CONTEXT_VIEW,
+                    TypeConfig::CONTEXT_CREATE,
+                    TypeConfig::CONTEXT_EDIT,
+                ],
+            ])
+            ->add('description', [
+                'type' => 'text',
+                'contexts' => [
+                    TypeConfig::CONTEXT_VIEW,
+                    TypeConfig::CONTEXT_CREATE,
+                    TypeConfig::CONTEXT_EDIT,
+                ],
+            ])
+            ;
+    }
 }
