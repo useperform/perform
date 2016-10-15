@@ -26,10 +26,9 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('admins')
                     ->prototype('array')
-                        ->prototype('array')
-                            ->prototype('array')
-                                ->prototype('scalar')
-                                ->end()
+                        ->children()
+                            ->arrayNode('types')
+                                ->prototype('variable')->end()
                             ->end()
                         ->end()
                     ->end()
@@ -54,11 +53,35 @@ class Configuration implements ConfigurationInterface
             ->end();
 
         // how to configure admin options:
-        // admins:
-        //     AdminTeamBundle:TeamMember:
-        //         fieldOptions:
-        //             role:
-        //                 label: 'ROLE ID'
+        // perform_base:
+        //     admins:
+        //         PerformMusicBundle:Composition:
+        //             types:
+        //                 # change an option
+        //                 publishDate:
+        //                     options:
+        //                         dateFormat: 'Y'
+        //                     viewOptions:
+        //                         dateFormat: 'Y-m-d'
+        //                 # enable a field
+        //                 category:
+        //                     contexts:
+        //                         - list
+        //                         - view
+        //                         - create
+        //                         - edit
+        //                 # disable a field
+        //                 title:
+        //                     contexts: []
+        //                 # change a type
+        //                 slug:
+        //                     type: text
+        //                 # add a field (even though it will probably be an
+        //                 # extended entity anyway)
+        //                 createdAt:
+        //                     type: datetime
+        //                     contexts:
+        //                         - edit
 
         return $treeBuilder;
     }
