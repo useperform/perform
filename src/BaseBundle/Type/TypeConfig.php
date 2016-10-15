@@ -4,6 +4,7 @@ namespace Perform\BaseBundle\Type;
 
 use Perform\BaseBundle\Type\TypeRegistry;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Perform\BaseBundle\Util\StringUtil;
 
 /**
  * TypeConfig
@@ -61,6 +62,10 @@ class TypeConfig
             $options = isset($config[$mergeKey]) ?
                      array_merge($config['options'], $config[$mergeKey]) :
                      $config['options'];
+
+            if (!isset($options['label'])) {
+                $options['label'] = StringUtil::sensible($field);
+            }
 
             $types[$field] = [
                 'type' => $config['type'],

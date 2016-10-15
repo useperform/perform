@@ -60,6 +60,7 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
         $this->config->add('title', ['type' => 'string']);
         $type = $this->config->getTypes(TypeConfig::CONTEXT_LIST)['title'];
         $this->assertInternalType('array', $type['options']);
+        $this->assertInternalType('string', $type['options']['label']);
     }
 
 
@@ -72,7 +73,7 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
             ],
         ]);
 
-        $this->assertSame(['human' => true], $this->config->getTypes(TypeConfig::CONTEXT_VIEW)['date']['options']);
+        $this->assertSame(true, $this->config->getTypes(TypeConfig::CONTEXT_VIEW)['date']['options']['human']);
     }
 
     public function contextProvider()
@@ -101,8 +102,37 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $notContext = $context === TypeConfig::CONTEXT_VIEW ? TypeConfig::CONTEXT_LIST : TypeConfig::CONTEXT_VIEW;
-        $this->assertSame(['human' => true], $this->config->getTypes($notContext)['date']['options']);
+        $this->assertSame(true, $this->config->getTypes($notContext)['date']['options']['human']);
 
-        $this->assertSame(['human' => false], $this->config->getTypes($context)['date']['options']);
+        $this->assertSame(false, $this->config->getTypes($context)['date']['options']['human']);
+    }
+
+    public function testSensibleLabelIsGiven()
+    {
+        $this->config->add('superTitle', ['type' => 'string']);
+        $this->assertSame('Super title', $this->config->getTypes(TypeConfig::CONTEXT_LIST)['superTitle']['options']['label']);
+    }
+
+    public function testLabelCanBeOverridden()
+    {
+        $this->config->add('superTitle', [
+            'type' => 'string',
+            'options' => [
+                'label' => 'Title',
+            ],
+        ]);
+        $this->assertSame('Title', $this->config->getTypes(TypeConfig::CONTEXT_LIST)['superTitle']['options']['label']);
+    }
+
+    public function testLabelCanBeOverriddenPerContext()
+    {
+        $this->config->add('superTitle', [
+            'type' => 'string',
+            'listOptions' => [
+                'label' => 'Title',
+            ],
+        ]);
+        $this->assertSame('Title', $this->config->getTypes(TypeConfig::CONTEXT_LIST)['superTitle']['options']['label']);
+        $this->assertSame('Super title', $this->config->getTypes(TypeConfig::CONTEXT_EDIT)['superTitle']['options']['label']);
     }
 }
