@@ -24,6 +24,11 @@ class LoadCompositionData implements EntityDeclaringFixtureInterface
             'Clarinet Duo',
             'Solo Marimba with electronics',
         ];
+        $categories = [
+            'Solo',
+            'Chamber',
+            'Orchestral',
+        ];
 
         for ($i = 0; $i < 10; ++$i) {
             $c = new Composition();
@@ -39,6 +44,9 @@ class LoadCompositionData implements EntityDeclaringFixtureInterface
             }
             if (rand(0, 4)) {
                 $c->setInstruments($instruments[array_rand($instruments)]);
+            }
+            if (rand(0, 4)) {
+                $c->setCategory($categories[array_rand($categories)]);
             }
 
             $c->setDescription(implode("\n\n", $faker->paragraphs(3)));

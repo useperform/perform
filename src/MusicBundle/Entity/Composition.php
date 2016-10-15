@@ -45,6 +45,11 @@ class Composition
     /**
      * @var string
      */
+    protected $category;
+
+    /**
+     * @var string
+     */
     protected $description;
 
     /**
@@ -173,6 +178,26 @@ class Composition
     public function getInstruments()
     {
         return $this->instruments;
+    }
+
+    /**
+     * @param string $category
+     *
+     * @return Composition
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCategory()
+    {
+        return $this->category;
     }
 
     /**

@@ -26,6 +26,9 @@ Perform\MusicBundle\Entity\Composition:
         instruments:
             type: string
             nullable: true
+        category:
+            type: string
+            nullable: true
         description:
             type: text
         createdAt:
