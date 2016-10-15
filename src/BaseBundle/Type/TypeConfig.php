@@ -16,6 +16,12 @@ class TypeConfig
     const CONTEXT_VIEW = 'view';
     const CONTEXT_CREATE = 'create';
     const CONTEXT_EDIT = 'edit';
+    protected static $contextKeys = [
+        'list' => 'listOptions',
+        'view' => 'viewOptions',
+        'create' => 'createOptions',
+        'edit' => 'editOptions',
+    ];
 
     protected $resolver;
     protected $types = [];
@@ -23,6 +29,8 @@ class TypeConfig
     public function __construct()
     {
         $this->resolver = new OptionsResolver();
+        $optionKeys = ['options', 'listOptions', 'viewOptions', 'createOptions', 'editOptions'];
+
         $this->resolver
             ->setRequired(['type'])
             ->setDefaults([
@@ -31,20 +39,33 @@ class TypeConfig
                     static::CONTEXT_VIEW,
                     static::CONTEXT_CREATE,
                     static::CONTEXT_EDIT,
-                ]
+                ],
+                'options' => [],
             ])
-            ->setAllowedTypes('contexts', 'array');
+            ->setAllowedTypes('contexts', 'array')
+            ->setDefined($optionKeys);
+        foreach ($optionKeys as $key) {
+            $this->resolver->setAllowedTypes($key, 'array');
+        }
     }
 
     public function getTypes($context)
     {
         $types = [];
-        foreach ($this->types as $field => $options) {
-            if (!in_array($context, $options['contexts'])) {
+        foreach ($this->types as $field => $config) {
+            if (!in_array($context, $config['contexts'])) {
                 continue;
             }
 
-            $types[$field] = $options;
+            $mergeKey = static::$contextKeys[$context];
+            $options = isset($config[$mergeKey]) ?
+                     array_merge($config['options'], $config[$mergeKey]) :
+                     $config['options'];
+
+            $types[$field] = [
+                'type' => $config['type'],
+                'options' => $options,
+            ];
         }
 
         return $types;

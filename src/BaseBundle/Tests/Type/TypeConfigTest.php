@@ -54,4 +54,55 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(0, count($this->config->getTypes(TypeConfig::CONTEXT_CREATE)));
         $this->assertSame(0, count($this->config->getTypes(TypeConfig::CONTEXT_EDIT)));
     }
+
+    public function testThereAreDefaults()
+    {
+        $this->config->add('title', ['type' => 'string']);
+        $type = $this->config->getTypes(TypeConfig::CONTEXT_LIST)['title'];
+        $this->assertInternalType('array', $type['options']);
+    }
+
+
+    public function testSuppliedOptionsAreReturned()
+    {
+        $this->config->add('date', [
+            'type' => 'datetime',
+            'options' => [
+                'human' => true,
+            ],
+        ]);
+
+        $this->assertSame(['human' => true], $this->config->getTypes(TypeConfig::CONTEXT_VIEW)['date']['options']);
+    }
+
+    public function contextProvider()
+    {
+        return [
+            [TypeConfig::CONTEXT_LIST, 'listOptions'],
+            [TypeConfig::CONTEXT_VIEW, 'viewOptions'],
+            [TypeConfig::CONTEXT_CREATE, 'createOptions'],
+            [TypeConfig::CONTEXT_EDIT, 'editOptions'],
+        ];
+    }
+
+    /**
+     * @dataProvider contextProvider
+     */
+    public function testOptionsAreOverriddenPerContext($context, $key)
+    {
+        $this->config->add('date', [
+            'type' => 'datetime',
+            'options' => [
+                'human' => true,
+            ],
+            $key => [
+                'human' => false,
+            ],
+        ]);
+
+        $notContext = $context === TypeConfig::CONTEXT_VIEW ? TypeConfig::CONTEXT_LIST : TypeConfig::CONTEXT_VIEW;
+        $this->assertSame(['human' => true], $this->config->getTypes($notContext)['date']['options']);
+
+        $this->assertSame(['human' => false], $this->config->getTypes($context)['date']['options']);
+    }
 }
