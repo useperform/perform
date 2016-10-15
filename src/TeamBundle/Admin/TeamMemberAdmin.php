@@ -3,6 +3,7 @@
 namespace Perform\TeamBundle\Admin;
 
 use Perform\BaseBundle\Admin\AbstractAdmin;
+use Perform\BaseBundle\Type\TypeConfig;
 
 /**
  * TeamMemberAdmin
@@ -11,33 +12,33 @@ use Perform\BaseBundle\Admin\AbstractAdmin;
  **/
 class TeamMemberAdmin extends AbstractAdmin
 {
-    protected $listFields = [
-        'name',
-        'role',
-    ];
-    protected $viewFields = [
-        'name',
-        'role',
-    ];
-    protected $createFields = [
-        'name',
-        'role',
-        'image',
-        'description',
-    ];
-    protected $editFields = [
-        'name',
-        'role',
-        'image',
-        'description',
-    ];
-    protected $fieldOptions = [
-        'description' => [
-            'type' => 'text',
-        ],
-        'image' => [
-            'type' => 'image',
-        ],
-    ];
     protected $routePrefix = 'perform_team_team_';
+
+    public function configureTypes(TypeConfig $config)
+    {
+        $config
+            ->add('name', [
+                'type' => 'string',
+            ])
+            ->add('role', [
+                'type' => 'string',
+            ])
+            ->add('image', [
+                'type' => 'image',
+                'contexts' => [
+                    TypeConfig::CONTEXT_VIEW,
+                    TypeConfig::CONTEXT_CREATE,
+                    TypeConfig::CONTEXT_EDIT,
+                ],
+            ])
+            ->add('description', [
+                'type' => 'text',
+                'contexts' => [
+                    TypeConfig::CONTEXT_VIEW,
+                    TypeConfig::CONTEXT_CREATE,
+                    TypeConfig::CONTEXT_EDIT,
+                ],
+            ])
+            ;
+    }
 }
