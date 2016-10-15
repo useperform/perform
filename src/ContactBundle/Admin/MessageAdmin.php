@@ -3,6 +3,7 @@
 namespace Perform\ContactBundle\Admin;
 
 use Perform\BaseBundle\Admin\AbstractAdmin;
+use Perform\BaseBundle\Type\TypeConfig;
 
 /**
  * MessageAdmin
@@ -11,22 +12,6 @@ use Perform\BaseBundle\Admin\AbstractAdmin;
  **/
 class MessageAdmin extends AbstractAdmin
 {
-    protected $listFields = [
-        'name',
-        'email',
-        'createdAt',
-    ];
-    protected $viewFields = [
-        'name',
-        'email',
-        'createdAt',
-        'message',
-    ];
-    protected $fieldOptions = [
-        'createdAt' => [
-            'type' => 'datetime',
-        ]
-    ];
     protected $routePrefix = 'perform_contact_message_';
 
     public function getActions()
@@ -35,5 +20,41 @@ class MessageAdmin extends AbstractAdmin
             '/' => 'list',
             '/view/{id}' => 'view',
         ];
+    }
+
+    public function configureTypes(TypeConfig $config)
+    {
+        $config
+            ->add('name', [
+                'type' => 'string',
+                'contexts' => [
+                    TypeConfig::CONTEXT_LIST,
+                    TypeConfig::CONTEXT_VIEW,
+                ],
+            ])
+            ->add('email', [
+                'type' => 'string',
+                'contexts' => [
+                    TypeConfig::CONTEXT_LIST,
+                    TypeConfig::CONTEXT_VIEW,
+                ],
+            ])
+            ->add('createdAt', [
+                'type' => 'datetime',
+                'contexts' => [
+                    TypeConfig::CONTEXT_LIST,
+                    TypeConfig::CONTEXT_VIEW,
+                ],
+                'options' => [
+                    'label' => 'Sent at',
+                ],
+            ])
+            ->add('message', [
+                'type' => 'text',
+                'contexts' => [
+                    TypeConfig::CONTEXT_VIEW,
+                ],
+            ])
+            ;
     }
 }
