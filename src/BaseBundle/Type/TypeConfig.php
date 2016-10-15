@@ -78,6 +78,15 @@ class TypeConfig
 
     public function add($name, array $options)
     {
+        if (isset($this->types[$name])) {
+            //replace the entire array if contexts are given in the override
+            if (isset($options['contexts'])) {
+                unset($this->types[$name]['contexts']);
+            }
+
+            $options = array_replace_recursive($this->types[$name], $options);
+        }
+
         $this->types[$name] = $this->resolver->resolve($options);
 
         return $this;

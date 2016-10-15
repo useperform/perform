@@ -135,4 +135,50 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('Title', $this->config->getTypes(TypeConfig::CONTEXT_LIST)['superTitle']['options']['label']);
         $this->assertSame('Super title', $this->config->getTypes(TypeConfig::CONTEXT_EDIT)['superTitle']['options']['label']);
     }
+
+    public function testFieldsCanBeAddedMultipleTimes()
+    {
+        $this->config->add('title', [
+            'type' => 'string',
+            'options' => [
+                'stuff' => [
+                    'foo' => true,
+                    'bar' => true,
+                ]
+            ],
+        ]);
+        $this->config->add('title', [
+            'options' => [
+                'stuff' => [
+                    'bar' => false,
+                    'baz' => true,
+                ]
+            ],
+        ]);
+
+        $expected = [
+            'foo' => true,
+            'bar' => false,
+            'baz' => true,
+        ];
+        $actual = $this->config->getTypes(TypeConfig::CONTEXT_LIST)['title']['options']['stuff'];
+        $this->assertSame($expected, $actual);
+    }
+
+    /**
+     * @group foo
+     */
+    public function testContextIsAlwaysOverwritten()
+    {
+        $this->config->add('title', [
+            'type' => 'string',
+            'contexts' => [TypeConfig::CONTEXT_VIEW, TypeConfig::CONTEXT_LIST],
+        ]);
+        $this->config->add('title', [
+            'contexts' => [TypeConfig::CONTEXT_VIEW],
+        ]);
+
+        $this->assertSame(0, count($this->config->getTypes(TypeConfig::CONTEXT_LIST)));
+        $this->assertSame(1, count($this->config->getTypes(TypeConfig::CONTEXT_VIEW)));
+    }
 }
