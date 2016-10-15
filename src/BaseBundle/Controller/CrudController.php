@@ -35,11 +35,8 @@ class CrudController extends Controller
 
     protected function getTypeConfig()
     {
-        $config = new TypeConfig();
-        $this->getAdmin()->configureTypes($config);
-        //override from config here
-
-        return $config;
+        return $this->get('perform_base.entity_type_config')
+            ->getEntityTypeConfig($this->entity);
     }
 
     protected function newEntity()
