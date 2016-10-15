@@ -3,6 +3,7 @@
 namespace Perform\BlogBundle\Admin;
 
 use Perform\BaseBundle\Admin\AbstractAdmin;
+use Perform\BaseBundle\Type\TypeConfig;
 
 /**
  * PostAdmin
@@ -11,38 +12,33 @@ use Perform\BaseBundle\Admin\AbstractAdmin;
  **/
 class PostAdmin extends AbstractAdmin
 {
-    protected $listFields = [
-        'title',
-        'enabled',
-    ];
-    protected $viewFields = [
-        'title',
-        'publishDate',
-        'enabled',
-        'content',
-    ];
-    protected $createFields = [
-        'title',
-        'publishDate',
-        'enabled',
-        'content',
-    ];
-    protected $editFields = [
-        'title',
-        'publishDate',
-        'enabled',
-        'content',
-    ];
-    protected $fieldOptions = [
-        'enabled' => [
-            'type' => 'boolean',
-        ],
-        'publishDate' => [
-            'type' => 'date',
-        ],
-        'content' => [
-            'type' => 'text',
-        ],
-    ];
     protected $routePrefix = 'perform_blog_post_';
+
+    public function configureTypes(TypeConfig $config)
+    {
+        $config
+            ->add('title', [
+                'type' => 'string',
+            ])
+            ->add('publishDate', [
+                'type' => 'date',
+                'contexts' => [
+                    TypeConfig::CONTEXT_VIEW,
+                    TypeConfig::CONTEXT_CREATE,
+                    TypeConfig::CONTEXT_EDIT,
+                ],
+            ])
+            ->add('enabled', [
+                'type' => 'boolean',
+            ])
+            ->add('content', [
+                'type' => 'text',
+                'contexts' => [
+                    TypeConfig::CONTEXT_VIEW,
+                    TypeConfig::CONTEXT_CREATE,
+                    TypeConfig::CONTEXT_EDIT,
+                ],
+            ])
+            ;
+    }
 }
