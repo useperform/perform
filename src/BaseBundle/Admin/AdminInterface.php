@@ -2,6 +2,8 @@
 
 namespace Perform\BaseBundle\Admin;
 
+use Perform\BaseBundle\Type\TypeConfig;
+
 /**
  * AdminInterface.
  *
@@ -9,25 +11,7 @@ namespace Perform\BaseBundle\Admin;
  **/
 interface AdminInterface
 {
-    /**
-     * @return array
-     */
-    public function getListFields();
-
-    /**
-     * @return array
-     */
-    public function getViewFields();
-
-    /**
-     * @return array
-     */
-    public function getCreateFields();
-
-    /**
-     * @return array
-     */
-    public function getEditFields();
+    public function configureTypes(TypeConfig $config);
 
     /**
      * @return string

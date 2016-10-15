@@ -26,7 +26,6 @@ class CrudExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('perform_crud_label', [$this, 'label']),
             new \Twig_SimpleFunction('perform_crud_route', [$this->urlGenerator, 'generate']),
             new \Twig_SimpleFunction('perform_crud_list_context', [$this, 'listContext']),
             new \Twig_SimpleFunction('perform_crud_view_context', [$this, 'viewContext']),
@@ -40,32 +39,14 @@ class CrudExtension extends \Twig_Extension
         ];
     }
 
-    /**
-     * Get the configured label for a field from supplied options, or
-     * create a sensible label if not configured.
-     *
-     * @param string $field
-     * @param array  $options
-     *
-     * @return string
-     */
-    public function label($field, array $options)
+    public function listContext($entity, $field, array $config)
     {
-        if (isset($options['label'])) {
-            return $options['label'];
-        }
-
-        return StringUtil::sensible($field);
+        return $this->typeRegistry->getType($config['type'])->listContext($entity, $field, $config['options']);
     }
 
-    public function listContext($entity, $field, array $options)
+    public function viewContext($entity, $field, array $config)
     {
-        return $this->typeRegistry->getType($options['type'])->listContext($entity, $field, $options);
-    }
-
-    public function viewContext($entity, $field, array $options)
-    {
-        return $this->typeRegistry->getType($options['type'])->viewContext($entity, $field, $options);
+        return $this->typeRegistry->getType($config['type'])->viewContext($entity, $field, $config['options']);
     }
 
     public function humanDate(\DateTime $date = null)

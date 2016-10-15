@@ -3,6 +3,7 @@
 namespace Perform\MailingListBundle\Admin;
 
 use Perform\BaseBundle\Admin\AbstractAdmin;
+use Perform\BaseBundle\Type\TypeConfig;
 
 /**
  * SubscriberAdmin
@@ -11,32 +12,46 @@ use Perform\BaseBundle\Admin\AbstractAdmin;
  **/
 class SubscriberAdmin extends AbstractAdmin
 {
-    protected $listFields = [
-        'fullname',
-        'email',
-        'createdAt',
-    ];
-    protected $viewFields = [
-        'forename',
-        'surname',
-        'email',
-        'createdAt',
-    ];
-    protected $createFields = [
-        'forename',
-        'surname',
-        'email',
-    ];
-    protected $editFields = [
-        'forename',
-        'surname',
-        'email',
-    ];
-    protected $fieldOptions = [
-        'createdAt' => [
-            'type' => 'datetime',
-            'label' => 'Sign-up date',
-        ],
-    ];
     protected $routePrefix = 'perform_mailing_list_subscriber_';
+
+    public function configureTypes(TypeConfig $config)
+    {
+        $config
+            ->add('forename', [
+                'type' => 'string',
+                'contexts' => [
+                    TypeConfig::CONTEXT_VIEW,
+                    TypeConfig::CONTEXT_CREATE,
+                    TypeConfig::CONTEXT_EDIT,
+                ]
+            ])
+            ->add('surname', [
+                'type' => 'string',
+                'contexts' => [
+                    TypeConfig::CONTEXT_VIEW,
+                    TypeConfig::CONTEXT_CREATE,
+                    TypeConfig::CONTEXT_EDIT,
+                ]
+            ])
+            ->add('fullname', [
+                'type' => 'string',
+                'contexts' => [
+                    TypeConfig::CONTEXT_LIST,
+                ]
+            ])
+            ->add('email', [
+                'type' => 'string',
+            ])
+            ->add('createdAt', [
+                'type' => 'datetime',
+                'contexts' => [
+                    TypeConfig::CONTEXT_LIST,
+                    TypeConfig::CONTEXT_VIEW,
+                ],
+                'options' => [
+                    'label' => 'Sign-up date',
+                ],
+            ])
+            ;
+    }
 }

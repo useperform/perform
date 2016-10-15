@@ -4,9 +4,9 @@ namespace Perform\BaseBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Perform\BaseBundle\Admin\AdminInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Perform\BaseBundle\Type\TypeRegistry;
+use Perform\BaseBundle\Type\TypeConfig;
 
 /**
  * AdminType
@@ -17,23 +17,22 @@ class AdminType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $admin = $options['admin'];
         $typeRegistry = $options['typeRegistry'];
-        $fields = $options['context'] === 'create' ? $admin->getCreateFields() : $admin->getEditFields();
-        $method = $options['context'] === 'create' ? 'createContext' : 'editContext';
+        $fields = $options['typeConfig']->getTypes($options['context']);
+        $method = $options['context'] === TypeConfig::CONTEXT_CREATE ? 'createContext' : 'editContext';
 
-        foreach ($fields as $field => $options) {
-            $type = $typeRegistry->getType($options['type'], $options);
-            $type->$method($builder, $field, $options);
+        foreach ($fields as $field => $config) {
+            $type = $typeRegistry->getType($config['type']);
+            $type->$method($builder, $field, $config['options']);
         }
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setRequired(['context', 'admin', 'typeRegistry']);
-        $resolver->setAllowedValues('context', ['create', 'edit']);
-        $resolver->setAllowedValues('admin', function($admin) {
-            return $admin instanceof AdminInterface;
+        $resolver->setRequired(['context', 'typeConfig', 'typeRegistry']);
+        $resolver->setAllowedValues('context', [TypeConfig::CONTEXT_CREATE, TypeConfig::CONTEXT_EDIT]);
+        $resolver->setAllowedValues('typeConfig', function($admin) {
+            return $admin instanceof TypeConfig;
         });
         $resolver->setAllowedValues('typeRegistry', function($typeRegistry) {
             return $typeRegistry instanceof TypeRegistry;

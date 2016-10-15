@@ -3,6 +3,10 @@ services:
         class: Perform\BaseBundle\Admin\AdminRegistry
         arguments: ['@service_container']
 
+    perform_base.entity_type_config:
+        class: Perform\BaseBundle\Type\EntityTypeConfig
+        arguments: ['@perform_base.admin.registry', '%perform_base.admins%']
+
     perform_base.doctrine.entity_resolver:
         class: Perform\BaseBundle\Doctrine\EntityResolver
         arguments: ['%perform_base.extended_entity_aliases%', '%perform_base.extended_entities%']

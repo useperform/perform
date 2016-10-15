@@ -13,7 +13,6 @@ class RegisterAdminsPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         $definition = $container->getDefinition('perform_base.admin.registry');
-        $adminConfiguration = $container->getParameter('perform_base.admins');
         $entityAliases = $container->getParameter('perform_base.entity_aliases');
         $extendedAliases = $container->getParameter('perform_base.extended_entity_aliases');
         $admins = [];
@@ -25,10 +24,6 @@ class RegisterAdminsPass implements CompilerPassInterface
             $entityAlias = $tag[0]['entity'];
             if (!isset($entityAliases[$entityAlias])) {
                 throw new \InvalidArgumentException(sprintf('The service "%s" references an unknown entity "%s".', $service, $entityAlias));
-            }
-            if (isset($adminConfiguration[$entityAlias])) {
-                $adminDefinition = $container->getDefinition($service);
-                $adminDefinition->addMethodCall('configure', [$adminConfiguration[$entityAlias]]);
             }
 
             $admins[$entityAlias] = $service;

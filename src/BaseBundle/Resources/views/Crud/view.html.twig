@@ -9,13 +9,13 @@
     <div class="panel-body">
       <table class="table">
         <tbody>
-          {% for field, options in fields %}
+          {% for field, config in fields %}
             <tr>
               <th>
-                {{perform_crud_label(field, options)}}
+                {{config.options.label}}
               </th>
               <td>
-                {{perform_crud_view_context(entity, field, options)}}
+                {{perform_crud_view_context(entity, field, config)}}
               </td>
             </tr>
           {% endfor %}
