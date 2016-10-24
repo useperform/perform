@@ -2,6 +2,8 @@
 
 namespace Perform\BlogBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Tag
  *
@@ -18,6 +20,11 @@ class Tag
      * @var string
      */
     protected $name;
+
+    /**
+     * @var Collection
+     */
+    protected $posts;
 
     /**
      * @return uuid
@@ -45,5 +52,13 @@ class Tag
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getPosts()
+    {
+        return $this->posts;
     }
 }

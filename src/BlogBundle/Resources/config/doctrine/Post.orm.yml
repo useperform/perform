@@ -40,6 +40,7 @@ Perform\BlogBundle\Entity\Post:
             joinTable:
                 name: perform_blog_post_tags
             cascade: [persist]
+            inversedBy: posts
     uniqueConstraints:
         slug:
             columns: [slug]

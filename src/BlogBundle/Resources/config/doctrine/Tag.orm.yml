@@ -10,6 +10,10 @@ Perform\BlogBundle\Entity\Tag:
     fields:
         name:
             type: string
+    manyToMany:
+        posts:
+            targetEntity: Post
+            mappedBy: tags
     uniqueConstraints:
         name:
             columns: [name]
