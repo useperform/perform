@@ -34,6 +34,12 @@ Perform\BlogBundle\Entity\Post:
             gedmo:
                 timestampable:
                     on: update
+    manyToMany:
+        tags:
+            targetEntity: Tag
+            joinTable:
+                name: perform_blog_post_tags
+            cascade: [persist]
     uniqueConstraints:
         slug:
             columns: [slug]

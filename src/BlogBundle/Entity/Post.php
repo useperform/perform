@@ -1,6 +1,7 @@
 <?php
 
 namespace Perform\BlogBundle\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Post
@@ -48,6 +49,16 @@ class Post
      * @var \DateTime
      */
     protected $updatedAt;
+
+    /**
+     * @var Collection
+     */
+    protected $tags;
+
+    public function __construct()
+    {
+        $this->tags = new ArrayCollection();
+    }
 
     /**
      * @return uuid
@@ -195,5 +206,29 @@ class Post
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @param Tag $tag
+     *
+     * @return Post
+     */
+    public function addTag(Tag $tag)
+    {
+        if ($this->tags->contains($tag)) {
+            return $this;
+        }
+
+        $this->tags[] = $tag;
+
+        return $this;
     }
 }
