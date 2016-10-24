@@ -1,5 +1,6 @@
 Perform\BlogBundle\Entity\Tag:
     type: entity
+    repositoryClass: Perform\BlogBundle\Repository\TagRepository
     table: perform_blog_tags
     id:
         id:
