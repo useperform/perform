@@ -1,0 +1,10 @@
+services:
+    perform_music.admin.composition:
+        class: Perform\MusicBundle\Admin\CompositionAdmin
+        tags:
+            - {name: perform_base.admin, entity: "PerformMusicBundle:Composition"}
+
+    perform_music.menu_link.composition:
+        class: Perform\MusicBundle\Menu\CompositionLinkProvider
+        tags:
+            - { name: perform_base.link_provider, alias: compositions }
