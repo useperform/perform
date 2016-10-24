@@ -25,4 +25,19 @@ class PostRepository extends EntityRepository
         return $qb->getQuery()
             ->getResult();
     }
+
+    public function findByTags(array $tags = [])
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.enabled = TRUE')
+            ->join('p.tags', 't')
+            ->where('t IN (:tags)')
+            ->andWhere('p.publishDate < :now')
+            ->orderBy('p.publishDate', 'DESC')
+            ->setParameter('tags', $tags)
+            ->setParameter('now', new \DateTime());
+
+        return $qb->getQuery()
+            ->getResult();
+    }
 }
