@@ -6,6 +6,7 @@ use Perform\BaseBundle\Routing\CrudUrlGenerator;
 use Perform\BaseBundle\Util\StringUtil;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Carbon\Carbon;
+use Perform\BaseBundle\Type\TypeConfig;
 
 /**
  * CrudExtension.
@@ -27,8 +28,8 @@ class CrudExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFunction('perform_crud_route', [$this->urlGenerator, 'generate']),
-            new \Twig_SimpleFunction('perform_crud_list_context', [$this, 'listContext']),
-            new \Twig_SimpleFunction('perform_crud_view_context', [$this, 'viewContext']),
+            new \Twig_SimpleFunction('perform_crud_list_context', [$this, 'listContext'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('perform_crud_view_context', [$this, 'viewContext'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -41,12 +42,28 @@ class CrudExtension extends \Twig_Extension
 
     public function listContext($entity, $field, array $config)
     {
-        return $this->typeRegistry->getType($config['type'])->listContext($entity, $field, $config['options']);
+        $type = $this->typeRegistry->getType($config['type']);
+        $value = $type->listContext($entity, $field, $config['options']);
+
+        if (in_array(TypeConfig::CONTEXT_LIST, $type->getHtmlContexts())) {
+            return $value;
+        }
+
+        //check how twig does this
+        return htmlspecialchars($value);
     }
 
     public function viewContext($entity, $field, array $config)
     {
-        return $this->typeRegistry->getType($config['type'])->viewContext($entity, $field, $config['options']);
+        $type = $this->typeRegistry->getType($config['type']);
+        $value = $type->viewContext($entity, $field, $config['options']);
+
+        if (in_array(TypeConfig::CONTEXT_VIEW, $type->getHtmlContexts())) {
+            return $value;
+        }
+
+        //check how twig does this
+        return htmlspecialchars($value);
     }
 
     public function humanDate(\DateTime $date = null)
