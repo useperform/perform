@@ -18,4 +18,9 @@ interface TypeInterface
     public function createContext(FormBuilderInterface $builder, $field, array $options = []);
 
     public function editContext(FormBuilderInterface $builder, $field, array $options = []);
+
+    /**
+     * @return array An array of TypeConfig::CONTEXT_* constants
+     */
+    public function getHtmlContexts();
 }
