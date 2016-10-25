@@ -6,6 +6,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Perform\BaseBundle\Type\AbstractType;
 use Perform\MediaBundle\Plugin\PluginRegistry;
+use Perform\BaseBundle\Type\TypeConfig;
 
 /**
  * ImageType
@@ -40,6 +41,14 @@ class ImageType extends AbstractType
             return 'None';
         }
 
-        return $this->registry->getPreview($file);
+        return $this->registry->getPreview($file, ['size' => 'small']);
+    }
+
+    public function getHtmlContexts()
+    {
+        return [
+            TypeConfig::CONTEXT_LIST,
+            TypeConfig::CONTEXT_VIEW,
+        ];
     }
 }
