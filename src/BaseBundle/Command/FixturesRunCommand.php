@@ -178,7 +178,7 @@ class FixturesRunCommand extends ContainerAwareCommand
                 $name .= 'bundle';
             }
 
-            return $name;
+            return str_replace('_', '', $name);
         }, $bundleNames);
     }
 
