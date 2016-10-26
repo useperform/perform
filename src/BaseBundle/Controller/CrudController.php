@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Perform\BaseBundle\Type\TypeConfig;
+use Pagerfanta\Pagerfanta;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
 
 /**
  * CrudController
@@ -71,16 +73,24 @@ class CrudController extends Controller
     {
         $this->initialize($request);
         $admin = $this->getAdmin();
-        $repo = $this->getDoctrine()->getRepository($this->entity);
         $deleteForm = $this->createFormBuilder()->getForm();
         $deleteFormView = $deleteForm->createView();
         $this->setFormTheme($deleteFormView);
+        $qb = $this->getDoctrine()
+            ->getManager()
+            ->createQueryBuilder()
+            ->select('e')
+            ->from($this->entity, 'e');
+        $paginator = new Pagerfanta(new DoctrineORMAdapter($qb));
+        $paginator->setMaxPerPage(10);
+        $paginator->setCurrentPage($request->query->get('page', 1));
 
         return [
             'fields' => $this->getTypeConfig()->getTypes(TypeConfig::CONTEXT_LIST),
             'routePrefix' => $admin->getRoutePrefix(),
-            'entities' => $repo->findAll(),
+            'paginator' => $paginator,
             'deleteForm' => $deleteFormView,
+            'entityClass' => $this->entity,
         ];
     }
 

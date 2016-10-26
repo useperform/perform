@@ -16,7 +16,7 @@
               {% endfor %}
             </thead>
             <tbody>
-              {% for entity in entities %}
+              {% for entity in paginator.currentPageResults %}
                 <tr>
                   {% for field, config in fields %}
                     <th>{{perform_crud_list_context(entity, field, config)}}</th>
@@ -34,6 +34,9 @@
           </table>
         </div>
       </div>
+      {% block paginator %}
+        {% include 'PerformBaseBundle:Crud:paginator.html.twig' %}
+      {% endblock %}
     </div>
   </div>
 {% endblock %}
