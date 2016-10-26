@@ -14,7 +14,7 @@ class TeamLinkProvider implements LinkProviderInterface
 {
     public function addLinks(ItemInterface $menu)
     {
-        $menu->addChild('Members', [
+        $menu->addChild('team', [
             'route' => 'perform_team_team_list',
         ])->setExtra('icon', 'users');
     }
