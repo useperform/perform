@@ -88,7 +88,8 @@ class ImagePlugin implements FilePluginInterface
         $box = $image->getSize()->widen(200);
 
         $thumbFilename = 'thumbs/'.$file->getFilename();
-        $this->storage->write($thumbFilename, $image->resize($box)->get($this->getSaveFormat($file->getMimeType())));
+        $thumbData = $image->resize($box)->get($this->getSaveFormat($file->getMimeType()));
+        $this->storage->write($thumbFilename, $thumbData);
 
         $file->setTypeOptions([
             'thumbnails' => [
@@ -99,12 +100,12 @@ class ImagePlugin implements FilePluginInterface
 
     protected function getSaveFormat($mime_type)
     {
-        $type = explode('/', $mime_type)[1];
-        if (in_array($type, ['gif', 'png', 'wbmp', 'xbm'])) {
-            return $type;
+        $pieces = explode('/', $mime_type);
+        $availableTypes = ['gif', 'png', 'wbmp', 'xbm'];
+        if (isset($pieces[1]) && in_array($pieces[1], $availableTypes)) {
+            return $pieces[1];
         }
 
-        // if all else fails, go with jpeg
         return 'jpeg';
     }
 }
