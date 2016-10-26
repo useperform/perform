@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Perform\MediaBundle\Upload\UploadHandler;
 use Symfony\Component\HttpFoundation\Request;
+use Perform\MediaBundle\Entity\File;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 /**
  * FileController
@@ -27,6 +29,7 @@ class FileController extends Controller
 
         return [
             'files' => $files,
+            'deleteForm' => $this->createFormBuilder()->getForm()->createView(),
         ];
     }
 
@@ -86,6 +89,24 @@ class FileController extends Controller
             $this->get('logger')->error($e->getMessage(), $context);
 
             return new JsonResponse(['message' => $msg], 500);
+        }
+    }
+
+    /**
+     * @Route("/delete/{id}")
+     * @Method("POST")
+     */
+    public function deleteAction(Request $request, File $file)
+    {
+        $form = $this->createFormBuilder()->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $this->get('perform_media.importer.file')
+                ->delete($file);
+            $this->addFlash('success', 'File deleted.');
+
+            return $this->redirectToRoute('perform_media_file_list');
         }
     }
 }

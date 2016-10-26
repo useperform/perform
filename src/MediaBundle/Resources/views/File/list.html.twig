@@ -12,6 +12,7 @@
               <th>Name</th>
               <th>Type</th>
               <th>Preview</th>
+              <th></th>
             </thead>
             <tbody>
               {% for file in files %}
@@ -25,6 +26,9 @@
                   <td>
                     {{perform_file_preview(file, {size: 'small'})}}
                   </td>
+                  <td>
+                    <a href="#" data-action="{{path('perform_media_file_delete', {id: file.id})}}" data-toggle="modal" data-target="#modal-delete">Delete</a>
+                  </td>
                 </tr>
               {% endfor %}
             </tbody>
@@ -33,4 +37,8 @@
       </div>
     </div>
   </div>
+{% endblock %}
+
+{% block extras %}
+  {% include 'PerformBaseBundle:Crud:modal/delete.html.twig' %}
 {% endblock %}
