@@ -7,6 +7,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * FileImportCommand.
@@ -26,24 +27,35 @@ class FileImportCommand extends ContainerAwareCommand
                  'paths',
                  InputArgument::IS_ARRAY,
                  'The paths to files or directories'
-             );
+             )
+            ->addOption(
+                'ext',
+                '',
+                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
+                'Only the given extensions'
+            )
+            ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $importer = $this->getContainer()->get('perform_media.importer.file');
-        foreach ($this->getFiles($input->getArgument('paths')) as $path) {
+        foreach ($this->getFiles($input->getArgument('paths'), $input->getOption('ext')) as $path) {
             $importer->import($path);
             $output->writeln(sprintf('Imported <info>%s</info>', $path));
         }
     }
 
-    protected function getFiles(array $paths)
+    protected function getFiles(array $paths, array $extensions)
     {
         $files = [];
         $finder = new Finder();
         $found = [];
         $dirs = 0;
+
+        foreach ($extensions as $extension) {
+            $finder->name('*.'.$extension);
+        }
 
         foreach ($paths as $path) {
             if (is_file($path)) {
