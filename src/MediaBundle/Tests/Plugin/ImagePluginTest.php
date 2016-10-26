@@ -61,4 +61,14 @@ class ImagePluginTest extends \PHPUnit_Framework_TestCase
         $file->setFilename('foo.jpg');
         $this->plugin->onProcess($file);
     }
+
+    public function testOnDeleteRemovesThumbnail()
+    {
+        $file = new File();
+        $file->setFilename('foo.jpg');
+        $this->storage->expects($this->once())
+            ->method('delete')
+            ->with('thumbs/foo.jpg');
+        $this->plugin->onDelete($file);
+    }
 }

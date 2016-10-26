@@ -6,6 +6,7 @@ use Perform\MediaBundle\Entity\File;
 use Perform\MediaBundle\Url\FileUrlGeneratorInterface;
 use League\Flysystem\FilesystemInterface;
 use Imagine\Image\ImagineInterface;
+use League\Flysystem\FileNotFoundException;
 
 /**
  * ImagePlugin.
@@ -74,6 +75,10 @@ class ImagePlugin implements FilePluginInterface
 
     public function onDelete(File $file)
     {
+        try {
+            $this->storage->delete('thumbs/'.$file->getFilename());
+        } catch (FileNotFoundException $e) {
+        }
     }
 
     /**
