@@ -56,6 +56,7 @@ class LoadPostData implements EntityDeclaringFixtureInterface
     {
         return [
             Post::class,
+            Tag::class,
         ];
     }
 }
