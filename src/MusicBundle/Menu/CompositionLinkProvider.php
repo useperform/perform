@@ -14,7 +14,7 @@ class CompositionLinkProvider implements LinkProviderInterface
 {
     public function addLinks(ItemInterface $menu)
     {
-        $menu->addChild('Works', [
+        $menu->addChild('compositions', [
             'route' => 'perform_music_composition_list',
         ])->setExtra('icon', 'music');
     }
