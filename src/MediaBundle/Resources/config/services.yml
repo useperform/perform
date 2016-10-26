@@ -54,6 +54,13 @@ services:
         tags:
             - {name: perform_media.file_plugin, pluginName: image}
 
+    perform_media.plugin.audio:
+        class: Perform\MediaBundle\Plugin\AudioPlugin
+        arguments:
+            - "@oneup_flysystem.main_filesystem"
+        tags:
+            - {name: perform_media.file_plugin, pluginName: audio}
+
     perform_media.menu_link.media:
         class: Perform\MediaBundle\Menu\MediaLinkProvider
         tags:
