@@ -1,0 +1,9 @@
+"test@example.com":
+    forename: Test
+    surname: User
+    password: some_bcrypt_hash
+
+"test@example.co.uk":
+    forename: Test2
+    surname: User2
+    password: some_other_bcrypt_hash

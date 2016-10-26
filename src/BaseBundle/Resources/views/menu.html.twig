@@ -9,5 +9,5 @@
   {% if item.extras.icon is defined %}
     <i class="fa fa-{{item.extras.icon}}"></i>
   {% endif %}
-  {{ parent() }}
+  {{('menu.'~item.label)|trans({}, 'PerformBaseBundle')}}
 {% endblock %}

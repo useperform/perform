@@ -14,7 +14,7 @@ class CmsLinkProvider implements LinkProviderInterface
 {
     public function addLinks(ItemInterface $menu)
     {
-        $menu->addChild('Page Editor', [
+        $menu->addChild('cms', [
             'route' => 'perform_cms_session_begin',
         ])->setExtra('icon', 'pencil');
     }

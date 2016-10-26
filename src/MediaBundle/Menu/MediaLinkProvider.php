@@ -14,13 +14,13 @@ class MediaLinkProvider implements LinkProviderInterface
 {
     public function addLinks(ItemInterface $menu)
     {
-        $media = $menu->addChild('Media', [
+        $media = $menu->addChild('media.main', [
             'uri' => '#'
         ])->setExtra('icon', 'briefcase');
-        $media->addChild('List', [
+        $media->addChild('media.list', [
             'route' => 'perform_media_file_list'
         ]);
-        $media->addChild('Import', [
+        $media->addChild('media.add', [
             'route' => 'perform_media_file_upload'
         ]);
     }

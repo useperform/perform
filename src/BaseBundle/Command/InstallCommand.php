@@ -7,6 +7,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Perform\BaseBundle\Util\BundleSearcher;
+use Symfony\Component\Console\Input\InputOption;
 
 class InstallCommand extends ContainerAwareCommand
 {
@@ -17,18 +18,24 @@ class InstallCommand extends ContainerAwareCommand
     {
         $this->setName($this->name)
             ->setDescription($this->description)
+            ->addOption(
+                'only',
+                'o',
+                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
+                'Only run the given installers'
+            )
             ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        foreach ($this->getInstallers() as $installer) {
+        foreach ($this->getInstallers($input) as $installer) {
             $output->writeln(sprintf('Running <info>%s</info>', get_class($installer)));
             $installer->install($this->getContainer(), new ConsoleLogger($output));
         }
     }
 
-    protected function getInstallers()
+    protected function getInstallers(InputInterface $input)
     {
         $searcher = new BundleSearcher($this->getContainer());
         $classes = $searcher->findClassesInNamespaceSegment('Installer');
@@ -40,6 +47,21 @@ class InstallCommand extends ContainerAwareCommand
                 continue;
             }
             $installers[] = $r->newInstance();
+        }
+
+        $only = $input->getOption('only');
+        if (!empty($only)) {
+            $installers = array_filter($installers, function($installer) use ($only) {
+                $class = get_class($installer);
+                $pieces = explode('\\', $class);
+                $end = strtolower(end($pieces));
+                foreach ($only as $item) {
+                    if ($item === $class || strtolower($item) === $end || strtolower($item).'installer' === $end) {
+                        return true;
+                    }
+                }
+                return false;
+            });
         }
 
         return $installers;
