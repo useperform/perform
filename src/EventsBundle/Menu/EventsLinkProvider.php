@@ -14,7 +14,7 @@ class EventsLinkProvider implements LinkProviderInterface
 {
     public function addLinks(ItemInterface $menu)
     {
-        $menu->addChild('Events', [
+        $menu->addChild('events', [
             'route' => 'perform_events_events_list',
         ])->setExtra('icon', 'calendar');
     }
