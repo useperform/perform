@@ -41,6 +41,20 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('/admin/users', $this->generator->generate($user, 'list'));
     }
 
+    public function testGenerateListWithString()
+    {
+        $this->adminRegistry->expects($this->any())
+            ->method('getAdmin')
+            ->with('PerformBaseBundle:User')
+            ->will($this->returnValue(new UserAdmin()));
+        $this->urlGenerator->expects($this->any())
+            ->method('generate')
+            ->with('perform_base_user_list')
+            ->will($this->returnValue('/admin/users'));
+
+        $this->assertSame('/admin/users', $this->generator->generate('PerformBaseBundle:User', 'list'));
+    }
+
     public function testGenerateView()
     {
         $user = $this->getMock('Perform\BaseBundle\Entity\User');

@@ -24,15 +24,18 @@ class CrudUrlGenerator
     /**
      * Get the url to a crud action for an entity.
      *
-     * @param mixed $entity
+     * @param string|object $entity
      * @param string $action
      *
      * @return string
      */
-    public function generate($entity, $action)
+    public function generate($entity, $action, array $params = [])
     {
-        $params = $action === 'list' ? [] : ['id' => $entity->getId()];
-        $prefix = rtrim($this->adminRegistry->getAdminForEntity($entity)->getRoutePrefix(), '_');
+        $params = $action === 'list' ? $params : array_merge($params, ['id' => $entity->getId()]);
+        $admin = is_string($entity) ?
+               $this->adminRegistry->getAdmin($entity) :
+               $this->adminRegistry->getAdminForEntity($entity);
+        $prefix = rtrim($admin->getRoutePrefix(), '_');
 
         return $this->urlGenerator->generate($prefix.'_'.$action, $params);
     }
