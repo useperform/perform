@@ -15,7 +15,7 @@ class PlaylistLinkProvider implements LinkProviderInterface
     public function addLinks(ItemInterface $menu)
     {
         $menu->addChild('playlists', [
-            'route' => 'perform_media_player_playlist_list',
+            'route' => 'perform_mediaplayer_playlist_list',
         ])->setExtra('icon', 'headphones');
     }
 }
