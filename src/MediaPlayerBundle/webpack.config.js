@@ -2,12 +2,13 @@ var path = require('path');
 
 var config = {
   context: path.join(__dirname, 'Resources/js/'),
-  entry: [
-    './main.js',
-  ],
+  entry: {
+    'player': './player.js',
+    'client': './client.js'
+  },
   output: {
     path: path.join(__dirname, 'Resources/public'),
-    filename: 'app.js',
+    filename: "[name].js"
   },
   module: {
     loaders: [
