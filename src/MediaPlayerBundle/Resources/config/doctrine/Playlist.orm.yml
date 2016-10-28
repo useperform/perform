@@ -10,3 +10,7 @@ Perform\MediaPlayerBundle\Entity\Playlist:
     fields:
         title:
             type: string
+    oneToMany:
+        items:
+            targetEntity: PlaylistItem
+            mappedBy: playlist

@@ -2,6 +2,8 @@
 
 namespace Perform\MediaPlayerBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Playlist
  *
@@ -19,6 +21,19 @@ class Playlist
      */
     protected $title;
 
+    /**
+     * @var Collection
+     */
+    protected $items;
+
+    public function __construct()
+    {
+        $this->items = new ArrayCollection();
+    }
+
+    /**
+     * @return uuid
+     */
     public function getId()
     {
         return $this->id;
@@ -42,5 +57,25 @@ class Playlist
     public function getTitle()
     {
         return $this->title;
+    }
+
+    /**
+     * @param PlaylistItem $item
+     *
+     * @return Playlist
+     */
+    public function addItem(PlaylistItem $item)
+    {
+        $this->items[] = $item;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getItems()
+    {
+        return $this->items;
     }
 }
