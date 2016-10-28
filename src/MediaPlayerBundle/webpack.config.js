@@ -14,7 +14,14 @@ var config = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loaders: ['babel'],
+        loader: 'babel',
+        query: {
+          presets: [
+            'es2015'
+            //for webpack 2 tree shaking
+            // ['es2015', {modules: false}]
+          ],
+        }
       },
     ],
   },
