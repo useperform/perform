@@ -1,0 +1,10 @@
+services:
+    perform_media_player.admin.playlist:
+        class: Perform\MediaPlayerBundle\Admin\PlaylistAdmin
+        tags:
+            - {name: perform_base.admin, entity: "PerformMediaPlayerBundle:Playlist"}
+
+    perform_media_player.menu_link.playlist:
+        class: Perform\MediaPlayerBundle\Menu\PlaylistLinkProvider
+        tags:
+            - { name: perform_base.link_provider, alias: playlists }
