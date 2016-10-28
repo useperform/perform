@@ -1,0 +1,12 @@
+Perform\MediaPlayerBundle\Entity\Playlist:
+    type: entity
+    table: perform_media_player_playlist
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        title:
+            type: string
