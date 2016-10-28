@@ -1,3 +1,5 @@
-import { onEvent } from './local-storage';
+import { queueItem, onQueue } from './local-storage';
 
-window.addEventListener('storage', onEvent, false);
+onQueue(event => {
+  console.log(`playing item ${event.newValue}`);
+})
