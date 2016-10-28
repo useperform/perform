@@ -3,9 +3,14 @@ import React from 'react';
 class Item extends React.Component {
   render() {
     return (
-      <ul>
-        <li>Playing item {this.props.item}</li>
-      </ul>
+      <div>
+        <h2>{this.props.json.playlist.title}</h2>
+        <ul>
+        {this.props.json.items.map(item => {
+            return <li>{item.url}</li>
+        })}
+        </ul>
+      </div>
     );
   }
 }
