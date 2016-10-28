@@ -12,13 +12,16 @@ use Perform\BaseBundle\Type\TypeConfig;
  **/
 class PlaylistAdmin extends AbstractAdmin
 {
-    protected $routePrefix = 'perform_media_player_playlist_';
+    protected $routePrefix = 'perform_mediaplayer_playlist_';
 
     public function configureTypes(TypeConfig $config)
     {
         $config
             ->add('title', [
                 'type' => 'string',
+            ])
+            ->add('items', [
+                'type' => 'collection',
             ])
             ;
     }
