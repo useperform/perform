@@ -12,14 +12,15 @@ var config = {
   module: {
     loaders: [
       {
-        test: /\.js$/,
+        test: /\.jsx?$/,
         exclude: /node_modules/,
         loader: 'babel',
         query: {
           presets: [
-            'es2015'
+            'es2015',
             //for webpack 2 tree shaking
             // ['es2015', {modules: false}]
+            'react'
           ],
         }
       },
@@ -30,10 +31,11 @@ var config = {
       path.join(__dirname, 'node_modules'),
     ],
   },
-  // resolve: {
-  //   root: [
-  //     path.join(__dirname, 'node_modules'),
-  //   ],
-  // },
+  resolve: {
+    extensions: ['', '.js', '.jsx'],
+    root: [
+      path.join(__dirname, 'node_modules'),
+    ],
+  },
 };
 module.exports = config;
