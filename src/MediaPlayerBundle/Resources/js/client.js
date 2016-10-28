@@ -1,5 +1,7 @@
 import { queueItem } from './local-storage';
 
-setInterval(() => {
-  queueItem(Date.now());
-}, 3000);
+window.performMediaPlayer = {
+  playPlaylist(id) {
+    queueItem(id);
+  }
+};
