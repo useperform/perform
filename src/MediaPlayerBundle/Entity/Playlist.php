@@ -67,6 +67,7 @@ class Playlist
     public function addItem(PlaylistItem $item)
     {
         $this->items[] = $item;
+        $item->setPlaylist($this);
 
         return $this;
     }
