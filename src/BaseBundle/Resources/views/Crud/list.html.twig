@@ -12,7 +12,25 @@
           <table class="table">
             <thead>
               {% for field, config in fields %}
-                <th>{{config.options.label}}</th>
+                <th>
+                  {% if orderBy.field is same as(field) %}
+                    {% if orderBy.direction == 'ASC' %}
+                      <a href="{{perform_crud_route(entityClass, 'list', {sort: field, direction: 'desc'})}}">
+                        {{config.options.label}}
+                      </a>
+                      <i class="fa fa-sort-asc"></i>
+                    {% elseif orderBy.direction == 'DESC' %}
+                      <a href="{{perform_crud_route(entityClass, 'list')}}">
+                        {{config.options.label}}
+                      </a>
+                      <i class="fa fa-sort-desc"></i>
+                    {% endif %}
+                  {% else %}
+                    <a href="{{perform_crud_route(entityClass, 'list', {sort: field, direction: 'asc'})}}">
+                      {{config.options.label}}
+                    </a>
+                  {% endif %}
+                </th>
               {% endfor %}
             </thead>
             <tbody>

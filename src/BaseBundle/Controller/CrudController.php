@@ -81,12 +81,23 @@ class CrudController extends Controller
             ->createQueryBuilder()
             ->select('e')
             ->from($this->entity, 'e');
+        $direction = strtoupper($request->query->get('direction', 'asc'));
+        if ($direction !== 'DESC') {
+            $direction = 'ASC';
+        }
+        if ($orderField = $request->query->get('sort', null)) {
+            $qb->orderBy('e.'.$orderField, $direction);
+        }
         $paginator = new Pagerfanta(new DoctrineORMAdapter($qb));
         $paginator->setMaxPerPage(10);
         $paginator->setCurrentPage($request->query->get('page', 1));
 
         return [
             'fields' => $this->getTypeConfig()->getTypes(TypeConfig::CONTEXT_LIST),
+            'orderBy' => [
+                'field' => $orderField,
+                'direction' => $direction,
+            ],
             'routePrefix' => $admin->getRoutePrefix(),
             'paginator' => $paginator,
             'deleteForm' => $deleteFormView,
