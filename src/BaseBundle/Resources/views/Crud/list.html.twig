@@ -13,7 +13,9 @@
             <thead>
               {% for field, config in fields %}
                 <th>
-                  {% if orderBy.field is same as(field) %}
+                  {% if not config.options.sort %}
+                    {{config.options.label}}
+                  {% elseif orderBy.field is same as(field) %}
                     {% if orderBy.direction == 'ASC' %}
                       <a href="{{perform_crud_route(entityClass, 'list', {sort: field, direction: 'desc'})}}">
                         {{config.options.label}}
