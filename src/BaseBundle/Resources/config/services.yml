@@ -98,6 +98,7 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@perform_base.admin.registry"
+            - "@perform_base.entity_type_config"
 
     perform_base.settings_importer:
         class: Perform\BaseBundle\Settings\SettingsImporter
