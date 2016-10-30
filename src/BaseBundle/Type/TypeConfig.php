@@ -41,6 +41,7 @@ class TypeConfig
                     static::CONTEXT_CREATE,
                     static::CONTEXT_EDIT,
                 ],
+                'sort' => true,
                 'options' => [],
             ])
             ->setAllowedTypes('contexts', 'array')
@@ -66,6 +67,7 @@ class TypeConfig
             if (!isset($options['label'])) {
                 $options['label'] = StringUtil::sensible($field);
             }
+            $options['sort'] = $config['sort'];
 
             $types[$field] = [
                 'type' => $config['type'],

@@ -61,8 +61,8 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
         $type = $this->config->getTypes(TypeConfig::CONTEXT_LIST)['title'];
         $this->assertInternalType('array', $type['options']);
         $this->assertInternalType('string', $type['options']['label']);
+        $this->assertTrue($type['options']['sort']);
     }
-
 
     public function testSuppliedOptionsAreReturned()
     {
@@ -165,9 +165,6 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $actual);
     }
 
-    /**
-     * @group foo
-     */
     public function testContextIsAlwaysOverwritten()
     {
         $this->config->add('title', [
@@ -180,5 +177,14 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(0, count($this->config->getTypes(TypeConfig::CONTEXT_LIST)));
         $this->assertSame(1, count($this->config->getTypes(TypeConfig::CONTEXT_VIEW)));
+    }
+
+    public function testSortCanBeDisabled()
+    {
+        $this->config->add('enabled', [
+            'type' => 'boolean',
+            'sort' => false,
+        ]);
+        $this->assertFalse($this->config->getTypes(TypeConfig::CONTEXT_LIST)['enabled']['options']['sort']);
     }
 }
