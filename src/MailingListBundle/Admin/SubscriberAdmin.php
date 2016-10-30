@@ -37,7 +37,8 @@ class SubscriberAdmin extends AbstractAdmin
                 'type' => 'string',
                 'contexts' => [
                     TypeConfig::CONTEXT_LIST,
-                ]
+                ],
+                'sort' => false,
             ])
             ->add('email', [
                 'type' => 'string',
