@@ -9,16 +9,18 @@ onQueue(event => {
 });
 
 const showItem = function(item) {
+  const nowPlaying = document.getElementsByClassName('now-playing')[0];
+
   fetch(`/player/playlist/${item}`)
     .then(response => {
       return response.json()
     }).then(json => {
       ReactDOM.render(
           <Item json={json} />,
-        document.getElementById('app')
+        nowPlaying
       );
     }).catch(e => {
-      document.getElementById('app').innerHTML = '<p>No playlist</p>';
+      nowPlaying.innerHTML = '<p>No playlist</p>';
     });
 };
 

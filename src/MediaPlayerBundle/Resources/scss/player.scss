@@ -1,3 +1,11 @@
+@import "../../../BaseBundle/Resources/scss/variables";
+@import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/mixins";
+@import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/scaffolding";
+@import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/buttons";
+@import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/navs";
+@import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/forms";
+@import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/navbar";
+
 body {
-  background-color: #e3e3e3;
+  background-color: #121212;
 }
