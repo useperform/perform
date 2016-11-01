@@ -7,7 +7,7 @@ var config = {
     'client': './client.js'
   },
   output: {
-    path: path.join(__dirname, 'Resources/public'),
+    path: path.join(__dirname, 'Resources/public/js'),
     filename: "[name].js"
   },
   module: {
