@@ -93,6 +93,13 @@ services:
         class: Perform\BaseBundle\Importer\UserImporter
         arguments: ["@doctrine.orm.entity_manager"]
 
+    perform_base.selector.entity:
+        class: Perform\BaseBundle\Selector\EntitySelector
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@perform_base.admin.registry"
+            - "@perform_base.entity_type_config"
+
     perform_base.settings_importer:
         class: Perform\BaseBundle\Settings\SettingsImporter
         arguments: ["@doctrine.orm.entity_manager"]

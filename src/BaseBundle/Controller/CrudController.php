@@ -76,17 +76,12 @@ class CrudController extends Controller
         $deleteForm = $this->createFormBuilder()->getForm();
         $deleteFormView = $deleteForm->createView();
         $this->setFormTheme($deleteFormView);
-        $qb = $this->getDoctrine()
-            ->getManager()
-            ->createQueryBuilder()
-            ->select('e')
-            ->from($this->entity, 'e');
-        $paginator = new Pagerfanta(new DoctrineORMAdapter($qb));
-        $paginator->setMaxPerPage(10);
-        $paginator->setCurrentPage($request->query->get('page', 1));
+        $selector = $this->get('perform_base.selector.entity');
+        list($paginator, $orderBy) = $selector->listContext($request, $this->entity);
 
         return [
             'fields' => $this->getTypeConfig()->getTypes(TypeConfig::CONTEXT_LIST),
+            'orderBy' => $orderBy,
             'routePrefix' => $admin->getRoutePrefix(),
             'paginator' => $paginator,
             'deleteForm' => $deleteFormView,
