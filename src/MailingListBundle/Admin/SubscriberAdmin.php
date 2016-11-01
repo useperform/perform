@@ -38,7 +38,10 @@ class SubscriberAdmin extends AbstractAdmin
                 'contexts' => [
                     TypeConfig::CONTEXT_LIST,
                 ],
-                'sort' => false,
+                'sort' => function($qb, $direction) {
+                    return $qb->orderBy('e.forename', $direction)
+                        ->addOrderBy('e.surname', $direction);
+                },
             ])
             ->add('email', [
                 'type' => 'string',
