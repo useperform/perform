@@ -12,7 +12,7 @@ use Doctrine\ORM\QueryBuilder;
 use Perform\BaseBundle\Type\TypeConfig;
 
 /**
- * EntitySelector
+ * EntitySelector.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
@@ -40,7 +40,10 @@ class EntitySelector
         if ($direction !== 'DESC') {
             $direction = 'ASC';
         }
-        $this->maybeOrderBy($qb, $entityName, $orderField, $direction);
+        $qb = $this->maybeOrderBy($qb, $entityName, $orderField, $direction);
+        if (!$qb instanceof QueryBuilder) {
+            throw new \UnexpectedValueException(sprintf('The sort function for %s->%s must return an instance of Doctrine\ORM\QueryBuilder.', $entityName, $orderField));
+        }
 
         //pass the builder into the admin for potential filtering, or even
         //creating a new builder entirely
@@ -57,15 +60,28 @@ class EntitySelector
         return [$paginator, $orderBy];
     }
 
+    /**
+     * @return QueryBuilder
+     */
     protected function maybeOrderBy(QueryBuilder $qb, $entityName, $orderField, $direction)
     {
         if (!$orderField) {
-            return;
+            return $qb;
         }
 
         $typeConfig = $this->typeConfig->getEntityTypeConfig($entityName)->getTypes(TypeConfig::CONTEXT_LIST);
-        if (isset($typeConfig[$orderField]['options']['sort']) && $typeConfig[$orderField]['options']['sort'] === true) {
-            $qb->orderBy('e.'.$orderField, $direction);
+        if (!isset($typeConfig[$orderField]['options']['sort'])) {
+            return $qb;
         }
+        $sort = $typeConfig[$orderField]['options']['sort'];
+
+        if ($sort === true) {
+            return $qb->orderBy('e.'.$orderField, $direction);
+        }
+        if (is_callable($sort)) {
+            return $sort($qb, $direction);
+        }
+
+        return $qb;
     }
 }

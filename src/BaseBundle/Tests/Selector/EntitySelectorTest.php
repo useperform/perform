@@ -90,7 +90,8 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->qb->expects($this->once())
             ->method('orderBy')
-            ->with('e.title', 'DESC');
+            ->with('e.title', 'DESC')
+            ->will($this->returnSelf());
 
         $this->selector->listContext($request, 'Bundle:SomeEntity');
     }
@@ -111,6 +112,80 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
         $this->qb->expects($this->never())
             ->method('orderBy');
 
+        $this->selector->listContext($request, 'Bundle:SomeEntity');
+    }
+
+    public function testListContextWithCustomSorting()
+    {
+        $request = new Request;
+        $request->query->set('sort', 'fullname');
+        $request->query->set('direction', 'DESC');
+
+        $this->expectQueryBuilder('Bundle:SomeEntity');
+        $this->expectTypeConfig('Bundle:SomeEntity', [
+            'fullname' => [
+                'type' => 'string',
+                'sort' => function($qb, $direction) {
+                    return $qb->orderBy('e.forename', $direction)
+                        ->addOrderBy('e.surname', $direction);
+                },
+            ]
+        ]);
+        $this->qb->expects($this->once())
+            ->method('orderBy')
+            ->with('e.forename', 'DESC')
+            ->will($this->returnSelf());
+        $this->qb->expects($this->once())
+            ->method('addOrderBy')
+            ->with('e.surname', 'DESC')
+            ->will($this->returnSelf());
+
+        $this->selector->listContext($request, 'Bundle:SomeEntity');
+    }
+
+    public function testListContextWithCustomSortQueryBuilder()
+    {
+        $request = new Request;
+        $request->query->set('sort', 'fullname');
+        $request->query->set('direction', 'DESC');
+
+        $differentQb = $this->getMockBuilder('Doctrine\ORM\QueryBuilder')
+                     ->disableOriginalConstructor()
+                     ->getMock();
+        $this->expectQueryBuilder('Bundle:SomeEntity');
+        $this->expectTypeConfig('Bundle:SomeEntity', [
+            'fullname' => [
+                'type' => 'string',
+                'sort' => function($qb, $direction) use ($differentQb) {
+                    return $differentQb;
+                },
+            ]
+        ]);
+
+        $differentQb->expects($this->once())
+            ->method('getQuery');
+        $this->selector->listContext($request, 'Bundle:SomeEntity');
+    }
+
+    public function testInvalidSortFunctionThrowsException()
+    {
+        $request = new Request;
+        $request->query->set('sort', 'fullname');
+        $request->query->set('direction', 'DESC');
+
+        $differentQb = $this->getMockBuilder('Doctrine\ORM\QueryBuilder')
+                     ->disableOriginalConstructor()
+                     ->getMock();
+        $this->expectQueryBuilder('Bundle:SomeEntity');
+        $this->expectTypeConfig('Bundle:SomeEntity', [
+            'fullname' => [
+                'type' => 'string',
+                'sort' => function($qb, $direction) use ($differentQb) {
+                },
+            ]
+        ]);
+
+        $this->setExpectedException('\UnexpectedValueException');
         $this->selector->listContext($request, 'Bundle:SomeEntity');
     }
 }
