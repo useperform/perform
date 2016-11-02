@@ -43,6 +43,9 @@ class PublishVersionCommand extends ContainerAwareCommand
         $helper = $this->getHelper('question');
         if (!$page) {
             $pages = $repo->getPageNames();
+            if (empty($pages)) {
+                throw new \Exception('No pages found.');
+            }
 
             $question = new ChoiceQuestion('Select page', $pages);
             $page = $helper->ask($input, $output, $question);
@@ -51,6 +54,9 @@ class PublishVersionCommand extends ContainerAwareCommand
         $title = $input->getArgument('version');
         if (!$title) {
             $titles = $repo->getTitlesForPage($page);
+            if (empty($titles)) {
+                throw new \Exception(sprintf('No versions found for page "%s".', $page));
+            }
 
             //change to autocomplete if number of versions is above 15 or so.
             $question = new ChoiceQuestion('Select version', $titles);
