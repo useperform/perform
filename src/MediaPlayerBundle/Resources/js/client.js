@@ -1,6 +1,6 @@
-import { sendCommand, openPlayer } from './lib';
+import { commands, openPlayer } from './lib';
 
 window.performMediaPlayer = {
-  sendCommand,
+  commands,
   openPlayer
 };

@@ -3,10 +3,24 @@ import ReactDOM from 'react-dom';
 import { onCommand } from './lib';
 import { Item } from './components/Item';
 import 'whatwg-fetch';
+import Audio from 'react-howler';
 
 onCommand('play', data => {
-  startPlaylist(data.playlist_id);
+  play(data.url);
 });
+
+const play = function(url) {
+  const nowPlaying = document.getElementsByClassName('now-playing')[0];
+  console.log(url);
+
+  ReactDOM.render(
+    <div>
+      <p>{url}</p>
+      <Audio src={url} playing={true} />
+    </div>,
+    nowPlaying
+  );
+};
 
 const startPlaylist = function(playlist_id) {
   const nowPlaying = document.getElementsByClassName('now-playing')[0];

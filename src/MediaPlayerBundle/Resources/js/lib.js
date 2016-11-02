@@ -23,13 +23,19 @@ const sendCommand = function(command, data) {
   window.localStorage.setItem(storageKey, JSON.stringify(message));
 }
 
-const openPlayer = function(url) {
-  const windowFeatures = 'toolbar=no, location=no, status=no, menubar=no, scrollbars=no, resizable=no, width=400, height=700';
-  window.open(url, 'targetWindow', windowFeatures);
-}
+const commands = {
+  openPlayer(url) {
+    const windowFeatures = 'toolbar=no, location=no, status=no, menubar=no, scrollbars=no, resizable=no, width=400, height=700';
+    window.open(url, 'targetWindow', windowFeatures);
+  },
+
+  play(url) {
+    sendCommand('play', {url});
+  }
+};
+
 
 export {
   onCommand,
-  sendCommand,
-  openPlayer,
+  commands,
 }
