@@ -1,7 +1,6 @@
-import { queueItem } from './local-storage';
+import { sendCommand, openPlayer } from './lib';
 
 window.performMediaPlayer = {
-  playPlaylist(id) {
-    queueItem(id);
-  }
+  sendCommand,
+  openPlayer
 };

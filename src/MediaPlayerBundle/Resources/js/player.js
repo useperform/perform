@@ -1,17 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { queueItem, onQueue } from './local-storage';
-import { Item } from './Item';
+import { onCommand } from './lib';
+import { Item } from './components/Item';
 import 'whatwg-fetch';
 
-onQueue(event => {
-  showItem(event.newValue);
+onCommand('play', data => {
+  startPlaylist(data.playlist_id);
 });
 
-const showItem = function(item) {
+const startPlaylist = function(playlist_id) {
   const nowPlaying = document.getElementsByClassName('now-playing')[0];
 
-  fetch(`/player/playlist/${item}`)
+  fetch(`/player/playlist/${playlist_id}`)
     .then(response => {
       return response.json()
     }).then(json => {
@@ -24,4 +24,4 @@ const showItem = function(item) {
     });
 };
 
-document.addEventListener('DOMContentLoaded', () => showItem('initial'));
+document.addEventListener('DOMContentLoaded', () => startPlaylist('initial'));
