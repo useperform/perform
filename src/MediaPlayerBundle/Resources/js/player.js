@@ -1,29 +1,11 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { onCommand } from './lib';
-import { Item } from './components/Item';
 import 'whatwg-fetch';
-import Audio from 'react-howler';
-
-onCommand('play', data => {
-  play(data.url);
-});
-
-const play = function(url) {
-  const nowPlaying = document.getElementsByClassName('now-playing')[0];
-  console.log(url);
-
-  ReactDOM.render(
-    <div>
-      <p>{url}</p>
-      <Audio src={url} playing={true} />
-    </div>,
-    nowPlaying
-  );
-};
+import Player from './components/Player';
+import ReactDOM from 'react-dom';
+import React from 'react';
+import { Item } from './components/Item';
 
 const startPlaylist = function(playlist_id) {
-  const nowPlaying = document.getElementsByClassName('now-playing')[0];
+  const nowPlaying = document.getElementById('now-playing');
 
   fetch(`/player/playlist/${playlist_id}`)
     .then(response => {
@@ -38,4 +20,11 @@ const startPlaylist = function(playlist_id) {
     });
 };
 
-document.addEventListener('DOMContentLoaded', () => startPlaylist('initial'));
+document.addEventListener('DOMContentLoaded', () => {
+  const player = document.getElementById('player');
+
+  ReactDOM.render(
+      <Player />,
+    player
+  );
+});
