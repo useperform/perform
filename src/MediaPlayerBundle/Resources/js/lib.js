@@ -29,6 +29,10 @@ const commands = {
     window.open(url, 'targetWindow', windowFeatures);
   },
 
+  startPlaylist(id) {
+    sendCommand('startPlaylist', {id})
+  },
+
   play(url) {
     sendCommand('play', {url});
   },

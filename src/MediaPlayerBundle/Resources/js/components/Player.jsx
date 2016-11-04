@@ -9,17 +9,39 @@ class Player extends React.Component {
     super(props, context);
     this.state = {
       playing: false,
-      currentAudio: 'some-url',
+      tracks: [],
+      trackIndex: 0,
+      playlist: null,
     }
 
-    onCommand('play', data => {
-      const url = data.url ? data.url : this.state.currentAudio;
-      this.setState({currentAudio: url, playing: true});
-    });
+    this.registerStorageEvents();
+  }
 
-    onCommand('stop', data => {
-      this.setState({playing: false});
-    });
+  startPlaylist(playlistId) {
+    fetch(`/player/playlist/${playlistId}`)
+      .then(response => {
+        return response.json();
+      }).then(json => {
+        this.setState({
+          playlist: json.playlist,
+          tracks: json.items,
+        });
+        this.play(0);
+      }).catch(e => {
+        this.setState({playing: false, error: true});
+      });
+  }
+
+  play(index) {
+    if (this.state.tracks.length < 1) {
+      return;
+    }
+    const track = this.state.tracks[index];
+    this.setState({trackIndex: index, playing: true});
+  }
+
+  stop() {
+    this.setState({playing: false});
   }
 
   clickPlay() {
@@ -27,17 +49,32 @@ class Player extends React.Component {
   }
 
   render() {
+    let audio = null;
+    let trackName = 'No track';
+
+    if (this.state.tracks.length > 0) {
+      const track = this.state.tracks[this.state.trackIndex];
+      audio = <Audio src={`/uploads/${track.url}`} playing={this.state.playing} />;
+      trackName = track.name;
+    }
+
     return (
       <div>
-        <NowPlaying title={this.state.currentAudio} />
+        <NowPlaying title={trackName} />
         <div id="progress">
         </div>
-        <Audio src={this.state.currentAudio} playing={this.state.playing} />
+        {audio}
         <Controls playing={this.state.playing} clickPlay={this.clickPlay.bind(this)}/>
         <div id="playlist">
         </div>
       </div>
     );
+  }
+
+  registerStorageEvents() {
+    onCommand('play', data => this.play(data.url));
+    onCommand('stop', data => this.stop());
+    onCommand('startPlaylist', data => this.startPlaylist(data.id));
   }
 }
 
