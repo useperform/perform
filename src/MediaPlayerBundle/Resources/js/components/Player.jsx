@@ -1,5 +1,6 @@
 import React from 'react';
 import Controls from './Controls';
+import NowPlaying from './NowPlaying';
 import Audio from 'react-howler';
 import { commands, onCommand } from '../lib';
 
@@ -12,21 +13,23 @@ class Player extends React.Component {
     }
 
     onCommand('play', data => {
-      console.log('playing');
-      console.log(data);
-      this.setState({currentAudio: data.url, playing: true});
+      const url = data.url ? data.url : this.state.currentAudio;
+      this.setState({currentAudio: url, playing: true});
+    });
+
+    onCommand('stop', data => {
+      this.setState({playing: false});
     });
   }
 
   clickPlay() {
-    this.setState({playing : !this.state.playing});
+    this.setState({playing: !this.state.playing});
   }
 
   render() {
     return (
       <div>
-        <div id="now-playing">
-        </div>
+        <NowPlaying title={this.state.currentAudio} />
         <div id="progress">
         </div>
         <Audio src={this.state.currentAudio} playing={this.state.playing} />

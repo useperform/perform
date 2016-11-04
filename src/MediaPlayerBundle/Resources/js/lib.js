@@ -31,6 +31,10 @@ const commands = {
 
   play(url) {
     sendCommand('play', {url});
+  },
+
+  stop() {
+    sendCommand('stop');
   }
 };
 
