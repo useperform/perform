@@ -36,6 +36,9 @@ class Player extends React.Component {
     if (this.state.tracks.length < 1) {
       return;
     }
+    if (!index) {
+      index = this.state.trackIndex;
+    }
     const track = this.state.tracks[index];
     this.setState({trackIndex: index, playing: true});
   }
