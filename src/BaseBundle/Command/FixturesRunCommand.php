@@ -49,12 +49,6 @@ class FixturesRunCommand extends ContainerAwareCommand
         $doctrine = $this->getContainer()->get('doctrine');
         $em = $doctrine->getManager();
 
-        if ($input->isInteractive() && !$input->getOption('append')) {
-            if (!$this->askConfirmation($input, $output, '<question>Some database tables will be emptied. Are you sure y/n ?</question>', false)) {
-                return;
-            }
-        }
-
         $this->excludedEntities = array_keys(
             $this->getContainer()->getParameter('perform_base.extended_entities'));
 
@@ -63,6 +57,12 @@ class FixturesRunCommand extends ContainerAwareCommand
             $output->writeln('No fixtures found.');
             return;
         }
+        if ($input->isInteractive() && !$input->getOption('append')) {
+            if (!$this->askConfirmation($input, $output, '<question>Some database tables will be emptied. Are you sure y/n ?</question>', false)) {
+                return;
+            }
+        }
+
         $purger = new Purger($em, $this->getDeclaredClasses($input, $fixtures));
         $executor = new ORMExecutor($em, $purger);
         $executor->setLogger(function ($message) use ($output) {
@@ -89,10 +89,13 @@ class FixturesRunCommand extends ContainerAwareCommand
             $fixture = $r->newInstance();
             $usedExcludedEntities = array_intersect($fixture->getEntityClasses(), $this->excludedEntities);
             if (count($usedExcludedEntities) > 0) {
-                $output->writeln(sprintf(
-                    'Skipping <info>%s</info> because <info>%s</info> has been extended',
-                    get_class($fixture),
-                    $usedExcludedEntities[0]));
+                if ($output->isVerbose()) {
+                    $output->writeln(sprintf(
+                        'Skipping <info>%s</info> because <info>%s</info> has been extended',
+                        get_class($fixture),
+                        $usedExcludedEntities[0]));
+                }
+
 
                 return false;
             }
