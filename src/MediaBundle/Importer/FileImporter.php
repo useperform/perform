@@ -94,8 +94,8 @@ class FileImporter
                 $file->setOwner($owner);
             }
 
-            $this->storage->writeStream($file->getFilename(), fopen($pathname, 'r'));
             $this->dispatcher->dispatch(FileEvent::CREATE, new FileEvent($file));
+            $this->storage->writeStream($file->getFilename(), fopen($pathname, 'r'));
             $this->dispatcher->dispatch(FileEvent::PROCESS, new FileEvent($file));
             $this->entityManager->persist($file);
             $this->entityManager->flush();
