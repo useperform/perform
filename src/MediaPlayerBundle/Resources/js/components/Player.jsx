@@ -27,6 +27,7 @@ class Player extends React.Component {
         this.setState({
           playlist: json.playlist,
           tracks: json.items,
+          trackIndex: 0,
         });
         this.play(0);
       }).catch(e => {
@@ -53,7 +54,7 @@ class Player extends React.Component {
     this.setState({playing: !this.state.playing});
   }
 
-  clickItem(index) {
+  setTrackIndex(index) {
     this.setState({trackIndex: index, playing: true});
   }
 
@@ -73,8 +74,8 @@ class Player extends React.Component {
         <div id="progress">
         </div>
         {audio}
-        <Controls playing={this.state.playing} clickPlay={this.clickPlay.bind(this)} />
-        <Playlist tracks={this.state.tracks} trackIndex={this.state.trackIndex} clickItem={this.clickItem.bind(this)} />
+        <Controls playing={this.state.playing} tracks={this.state.tracks} trackIndex={this.state.trackIndex} clickPlay={this.clickPlay.bind(this)} setTrackIndex={this.setTrackIndex.bind(this)} />
+        <Playlist tracks={this.state.tracks} trackIndex={this.state.trackIndex} setTrackIndex={this.setTrackIndex.bind(this)} />
       </div>
     );
   }
