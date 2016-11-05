@@ -1,8 +1,10 @@
 import React from 'react';
 import Controls from './Controls';
 import NowPlaying from './NowPlaying';
+import Playlist from './Playlist';
 import Audio from 'react-howler';
 import { commands, onCommand } from '../lib';
+import 'whatwg-fetch';
 
 class Player extends React.Component {
   constructor(props, context) {
@@ -67,9 +69,8 @@ class Player extends React.Component {
         <div id="progress">
         </div>
         {audio}
-        <Controls playing={this.state.playing} clickPlay={this.clickPlay.bind(this)}/>
-        <div id="playlist">
-        </div>
+        <Controls playing={this.state.playing} clickPlay={this.clickPlay.bind(this)} />
+        <Playlist tracks={this.state.tracks} />
       </div>
     );
   }
