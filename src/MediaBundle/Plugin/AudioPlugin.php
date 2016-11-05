@@ -46,6 +46,7 @@ class AudioPlugin implements FilePluginInterface
             return;
         }
 
+        $file->setFilename(pathinfo($file->getFilename(), PATHINFO_FILENAME).'.mp3');
         $file->setType($this->type);
     }
 
