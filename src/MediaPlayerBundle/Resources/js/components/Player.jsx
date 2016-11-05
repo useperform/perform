@@ -53,6 +53,10 @@ class Player extends React.Component {
     this.setState({playing: !this.state.playing});
   }
 
+  clickItem(index) {
+    this.setState({trackIndex: index, playing: true});
+  }
+
   render() {
     let audio = null;
     let trackName = 'No track';
@@ -70,7 +74,7 @@ class Player extends React.Component {
         </div>
         {audio}
         <Controls playing={this.state.playing} clickPlay={this.clickPlay.bind(this)} />
-        <Playlist tracks={this.state.tracks} />
+        <Playlist tracks={this.state.tracks} clickItem={this.clickItem.bind(this)} />
       </div>
     );
   }

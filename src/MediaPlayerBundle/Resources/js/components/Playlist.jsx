@@ -4,13 +4,13 @@ import PlaylistItem from './PlaylistItem';
 class Playlist extends React.Component {
   render() {
     const items = this.props.tracks.map((track, i) => {
-      return <PlaylistItem key={i} track={track} />
+      return <PlaylistItem key={i} index={i} track={track} onClick={this.props.clickItem}/>
     });
 
     return (
-      <div>
+      <ul className="playlist">
         {items}
-      </div>
+      </ul>
     );
   }
 }
