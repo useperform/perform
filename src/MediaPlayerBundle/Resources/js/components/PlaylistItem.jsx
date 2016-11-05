@@ -10,7 +10,7 @@ class PlaylistItem extends React.Component {
   render() {
     return (
       <li>
-        <a href={this.props.track.url} onClick={this.click.bind(this)}>{this.props.track.name}</a>
+        <a href={this.props.track.url} className={this.props.active ? 'active' : ''} onClick={this.click.bind(this)}>{this.props.track.name}</a>
       </li>
     );
   }

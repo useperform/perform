@@ -74,7 +74,7 @@ class Player extends React.Component {
         </div>
         {audio}
         <Controls playing={this.state.playing} clickPlay={this.clickPlay.bind(this)} />
-        <Playlist tracks={this.state.tracks} clickItem={this.clickItem.bind(this)} />
+        <Playlist tracks={this.state.tracks} trackIndex={this.state.trackIndex} clickItem={this.clickItem.bind(this)} />
       </div>
     );
   }

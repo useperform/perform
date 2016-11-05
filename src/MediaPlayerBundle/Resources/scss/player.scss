@@ -8,4 +8,19 @@
 
 .playlist {
   list-style-type: none;
+
+  li {
+    a {
+      padding: 10px;
+      display: inline-block;
+      &:hover, &:visited {
+        background-color: $gray-lighter;
+        text-decoration: none;
+      }
+    }
+
+    .active, .active:hover {
+      background-color: lighten($brand-primary, 20%);
+    }
+  }
 }
