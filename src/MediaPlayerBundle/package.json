@@ -11,7 +11,7 @@
     "react-dom": "^15.3.2",
     "react-howler": "^3.2.0",
     "webpack": "^1.13.3",
-    "webpack-stream": "^3.2.0",
+    "webpack-stream": "github:jeroennoten/webpack-stream#patch-1",
     "whatwg-fetch": "^1.0.0"
   }
 }

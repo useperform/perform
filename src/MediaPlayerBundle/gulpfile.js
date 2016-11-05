@@ -27,7 +27,6 @@ gulp.task('webpack-watch', function() {
 
     return gulp.src('src/entry.js')
         .pipe(webpack(config))
-        .on('error', handleError)
         .pipe(gulp.dest('Resources/public/js'));
 })
 
