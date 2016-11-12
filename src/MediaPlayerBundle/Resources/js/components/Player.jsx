@@ -12,6 +12,7 @@ class Player extends React.Component {
     super(props, context);
     this.state = {
       playing: false,
+      loading: false,
       tracks: [],
       trackIndex: 0,
       seek: 0,
@@ -21,11 +22,12 @@ class Player extends React.Component {
     this.registerStorageEvents();
   }
 
-  onPlay() {
+  onPlayerStart() {
+    this.setState({loading: false});
     this.tickId = setInterval(this.tick.bind(this), 500);
   }
 
-  onStop() {
+  onPlayerPause() {
     clearInterval(this.tickId);
   }
 
@@ -49,23 +51,37 @@ class Player extends React.Component {
     if (this.state.tracks.length < 1) {
       return;
     }
-    if (!index) {
+    if (typeof index === 'undefined') {
       index = this.state.trackIndex;
     }
     const track = this.state.tracks[index];
-    this.setState({trackIndex: index, playing: true});
+    this.setState({trackIndex: index, playing: true, loading: true});
   }
 
-  stop() {
+  seekPlayer(position) {
+    if (typeof this.player.seek === 'function') {
+      this.player.seek(position);
+    }
+  }
+
+  pause() {
     this.setState({playing: false});
   }
 
+  stop() {
+    this.seekPlayer(0);
+    this.setState({playing: false, seek: 0});
+  }
+
   clickPlay() {
-    this.setState({playing: !this.state.playing});
+    this.state.playing ? this.pause() : this.play()
   }
 
   setTrackIndex(index) {
-    this.setState({trackIndex: index, playing: true});
+    this.setState({playing: false, seek: 0}, () => {
+      this.seekPlayer(0);
+      this.play(index);
+    });
   }
 
   tick() {
@@ -73,9 +89,11 @@ class Player extends React.Component {
       return;
     }
 
-    const seek = this.player ? this.player.seek() : 0;
+    const seek = typeof this.player.seek === 'function'
+            ? this.player.seek().toFixed(0)
+            : 0;
     this.setState({
-      seek: seek.toFixed(0)
+      seek: seek
     });
   }
 
@@ -88,15 +106,15 @@ class Player extends React.Component {
       audio = <Audio
       src={`/uploads/${track.url}`}
       playing={this.state.playing}
-      onPlay={this.onPlay.bind(this)}
-      onPause={this.onStop.bind(this)}
+      onPlay={this.onPlayerStart.bind(this)}
+      onPause={this.onPlayerPause.bind(this)}
       ref={(ref) => this.player = ref} />;
       trackName = track.name;
     }
 
     return (
       <div>
-        <NowPlaying title={trackName} />
+        <NowPlaying title={trackName} loading={this.state.loading} />
         <ProgressBar seek={this.state.seek} />
         {audio}
         <Controls playing={this.state.playing} tracks={this.state.tracks} trackIndex={this.state.trackIndex} clickPlay={this.clickPlay.bind(this)} setTrackIndex={this.setTrackIndex.bind(this)} />
