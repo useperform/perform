@@ -91,7 +91,11 @@ class Player extends React.Component {
   }
 
   clickPlay() {
-    this.state.playing ? this.pause() : this.play()
+    this.state.playing ? this.pause() : this.play();
+  }
+
+  clickStop() {
+    this.stop();
   }
 
   setTrackIndex(index) {
@@ -136,7 +140,13 @@ class Player extends React.Component {
         <NowPlaying title={trackName} loading={this.state.loading} />
         <ProgressBar seek={this.state.seek} />
         {audio}
-        <Controls playing={this.state.playing} tracks={this.state.tracks} trackIndex={this.state.trackIndex} clickPlay={this.clickPlay.bind(this)} setTrackIndex={this.setTrackIndex.bind(this)} />
+        <Controls
+      playing={this.state.playing}
+      tracks={this.state.tracks}
+      trackIndex={this.state.trackIndex}
+      clickPlay={this.clickPlay.bind(this)}
+      clickStop={this.clickStop.bind(this)}
+      setTrackIndex={this.setTrackIndex.bind(this)} />
         <Playlist tracks={this.state.tracks} trackIndex={this.state.trackIndex} setTrackIndex={this.setTrackIndex.bind(this)} />
       </div>
     );
