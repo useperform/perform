@@ -31,6 +31,23 @@ class Player extends React.Component {
     clearInterval(this.tickId);
   }
 
+  startDefaultPlaylist() {
+    console.log('starting');
+    fetch('/player/playlist')
+      .then(response => {
+        return response.json();
+      }).then(json => {
+        this.setState({
+          playlist: json.playlist,
+          tracks: json.items,
+          trackIndex: 0,
+        });
+        this.play(0);
+      }).catch(e => {
+        this.setState({playing: false, error: true});
+      });
+  }
+
   startPlaylist(playlistId) {
     fetch(`/player/playlist/${playlistId}`)
       .then(response => {
@@ -79,6 +96,8 @@ class Player extends React.Component {
 
   setTrackIndex(index) {
     this.setState({playing: false, seek: 0}, () => {
+      //howler does something weird with its sources, seek throws a
+      //single error on the first track change
       this.seekPlayer(0);
       this.play(index);
     });
@@ -89,7 +108,7 @@ class Player extends React.Component {
       return;
     }
 
-    const seek = typeof this.player.seek === 'function'
+    const seek = typeof this.player.seek() === 'number'
             ? this.player.seek().toFixed(0)
             : 0;
     this.setState({
@@ -127,6 +146,7 @@ class Player extends React.Component {
     onCommand('play', data => this.play(data.url));
     onCommand('stop', data => this.stop());
     onCommand('startPlaylist', data => this.startPlaylist(data.id));
+    onCommand('startDefaultPlaylist', data => this.startDefaultPlaylist());
   }
 }
 

@@ -45,4 +45,16 @@ class PlayerController extends Controller
 
         return new JsonResponse($data);
     }
+
+    /**
+     * @Route("/playlist")
+     */
+    public function defaultPlaylistAction()
+    {
+        $playlist = $this->getDoctrine()
+                  ->getRepository('PerformMediaPlayerBundle:Playlist')
+                  ->findOneBy([]);
+
+        return $this->playlistAction($playlist);
+    }
 }
