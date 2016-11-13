@@ -16,6 +16,7 @@ class Player extends React.Component {
       tracks: [],
       trackIndex: 0,
       seek: 0,
+      duration: 0,
       playlist: null,
     }
 
@@ -23,7 +24,7 @@ class Player extends React.Component {
   }
 
   onPlayerStart() {
-    this.setState({loading: false});
+    this.setState({loading: false, duration: this.player.duration()});
     this.tickId = setInterval(this.tick.bind(this), 500);
   }
 
@@ -32,7 +33,6 @@ class Player extends React.Component {
   }
 
   startDefaultPlaylist() {
-    console.log('starting');
     fetch('/player/playlist')
       .then(response => {
         return response.json();
@@ -138,7 +138,7 @@ class Player extends React.Component {
     return (
       <div>
         <NowPlaying title={trackName} loading={this.state.loading} />
-        <ProgressBar seek={this.state.seek} />
+        <ProgressBar seek={this.state.seek} duration={this.state.duration} clickSeek={this.seekPlayer.bind(this)}/>
         {audio}
         <Controls
       playing={this.state.playing}

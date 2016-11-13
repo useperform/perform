@@ -25,3 +25,21 @@
     }
   }
 }
+
+.progress-ticker {
+  position: absolute;
+  height: 20px;
+  width: 2px;
+  background-color: $gray-darker;
+  span {
+    position: relative;
+    bottom: 20px;
+    color: #eee;
+    background-color: $gray-darker;
+    padding: 5px;
+  }
+}
+
+.progress-bar {
+  transition: width 0.2s ease;
+}
