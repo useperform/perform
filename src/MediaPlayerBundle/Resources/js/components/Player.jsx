@@ -153,8 +153,10 @@ class Player extends React.Component {
   }
 
   registerStorageEvents() {
-    onCommand('play', data => this.play(data.url));
+    onCommand('play', data => this.play(data.index));
+    onCommand('pause', data => this.pause());
     onCommand('stop', data => this.stop());
+    onCommand('seek', data => this.seekPlayer(data.seconds));
     onCommand('startPlaylist', data => this.startPlaylist(data.id));
     onCommand('startDefaultPlaylist', data => this.startDefaultPlaylist());
   }

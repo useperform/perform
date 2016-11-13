@@ -37,12 +37,20 @@ const commands = {
     sendCommand('startPlaylist', {id});
   },
 
-  play(url) {
-    sendCommand('play', {url});
+  play(index) {
+    sendCommand('play', {index});
+  },
+
+  pause() {
+    sendCommand('pause');
   },
 
   stop() {
     sendCommand('stop');
+  },
+
+  seek(seconds) {
+    sendCommand('seek', {seconds});
   }
 };
 
