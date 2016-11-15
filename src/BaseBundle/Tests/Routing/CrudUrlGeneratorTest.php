@@ -5,6 +5,7 @@ namespace Perform\BaseBundle\Tests\Routing;
 use Perform\BaseBundle\Routing\CrudUrlGenerator;
 use Perform\BaseBundle\Entity\User;
 use Perform\BaseBundle\Admin\UserAdmin;
+use Perform\BaseBundle\Admin\AdminInterface;
 
 /**
  * CrudUrlGeneratorTest.
@@ -107,5 +108,30 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('/admin/users/delete/1'));
 
         $this->assertSame('/admin/users/delete/1', $this->generator->generate($user, 'delete'));
+    }
+
+    public function testRouteExists()
+    {
+        $admin = $this->getMock(AdminInterface::class);
+        $admin->expects($this->any())
+            ->method('getActions')
+            ->will($this->returnValue([
+                '/' => 'list',
+                '/view/{id}' => 'view',
+                '/create' => 'create',
+                '/edit/{id}' => 'edit',
+            ]));
+
+        $this->adminRegistry->expects($this->any())
+            ->method('getAdmin')
+            ->will($this->returnValue($admin));
+        $this->adminRegistry->expects($this->any())
+            ->method('getAdminForEntity')
+            ->will($this->returnValue($admin));
+
+        $this->assertTrue($this->generator->routeExists('TestBundle:Something', 'create'));
+        $this->assertTrue($this->generator->routeExists(new User(), 'create'));
+        $this->assertFalse($this->generator->routeExists('TestBundle:Something', 'delete'));
+        $this->assertFalse($this->generator->routeExists(new User(), 'delete'));
     }
 }

@@ -39,4 +39,21 @@ class CrudUrlGenerator
 
         return $this->urlGenerator->generate($prefix.'_'.$action, $params);
     }
+
+    /**
+     * Check if a crud action exists for an entity.
+     *
+     * @param string|object $entity
+     * @param string $action
+     *
+     * @return string
+     */
+    public function routeExists($entity, $action)
+    {
+        $admin = is_string($entity) ?
+               $this->adminRegistry->getAdmin($entity) :
+               $this->adminRegistry->getAdminForEntity($entity);
+
+        return in_array($action, $admin->getActions());
+    }
 }
