@@ -11,6 +11,7 @@
         <div class="panel-body">
           <table class="table">
             <thead>
+              <th></th>
               {% for field, config in fields %}
                 <th>
                   {% if not config.options.sort %}
@@ -35,11 +36,12 @@
                 </th>
               {% endfor %}
             </thead>
-            <tbody>
+            <tbody class="table-crud">
               {% for entity in paginator.currentPageResults %}
                 <tr>
+                  <td><input type="checkbox" class="selector" data-id="{{entity.id}}"/></td>
                   {% for field, config in fields %}
-                    <th>{{perform_crud_list_context(entity, field, config)}}</th>
+                    <td>{{perform_crud_list_context(entity, field, config)}}</td>
                   {% endfor %}
                   {% block entityActions %}
                     <td>

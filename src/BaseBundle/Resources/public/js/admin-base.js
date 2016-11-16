@@ -61,4 +61,9 @@ $(function() {
   });
 
   $('.tooltips').tooltip();
+
+  $('.table-crud tr').dblclick(function() {
+    var checkbox = $(this).find('.selector');
+    checkbox.prop('checked', !checkbox.prop('checked'));
+  })
 });
