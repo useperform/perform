@@ -7,6 +7,7 @@ use Perform\BaseBundle\Util\StringUtil;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Carbon\Carbon;
 use Perform\BaseBundle\Type\TypeConfig;
+use Perform\BaseBundle\Admin\AdminRegistry;
 
 /**
  * CrudExtension.
@@ -17,11 +18,13 @@ class CrudExtension extends \Twig_Extension
 {
     protected $urlGenerator;
     protected $typeRegistry;
+    protected $adminRegistry;
 
-    public function __construct(CrudUrlGenerator $urlGenerator, TypeRegistry $typeRegistry)
+    public function __construct(CrudUrlGenerator $urlGenerator, TypeRegistry $typeRegistry, AdminRegistry $adminRegistry)
     {
         $this->urlGenerator = $urlGenerator;
         $this->typeRegistry = $typeRegistry;
+        $this->adminRegistry = $adminRegistry;
     }
 
     public function getFunctions()
@@ -31,6 +34,7 @@ class CrudExtension extends \Twig_Extension
             new \Twig_SimpleFunction('perform_crud_route_exists', [$this->urlGenerator, 'routeExists']),
             new \Twig_SimpleFunction('perform_crud_list_context', [$this, 'listContext'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('perform_crud_view_context', [$this, 'viewContext'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('perform_crud_entity_name', [$this, 'entityName']),
         ];
     }
 
@@ -73,6 +77,11 @@ class CrudExtension extends \Twig_Extension
             return '';
         }
         return Carbon::instance($date)->diffForHumans();
+    }
+
+    public function entityName($entity)
+    {
+        return $this->adminRegistry->getAdminForEntity($entity)->getNameForEntity($entity);
     }
 
     public function getName()
