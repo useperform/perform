@@ -5,6 +5,8 @@ namespace Perform\BaseBundle\Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Doctrine\Common\Collections\Collection;
 use Perform\BaseBundle\Exception\InvalidTypeException;
+use Perform\BaseBundle\Form\Type\AdminType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType as CollectionFormType;
 
 /**
  * CollectionType.
@@ -15,6 +17,24 @@ class CollectionType extends AbstractType
 {
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
+        $builder->add($field, CollectionFormType::class, [
+            'entry_type' => AdminType::class,
+            'entry_options' => [
+                'entity' => $options['entity'],
+                'context' => TypeConfig::CONTEXT_CREATE,
+            ]
+        ]);
+    }
+
+    public function editContext(FormBuilderInterface $builder, $field, array $options = [])
+    {
+        $builder->add($field, CollectionFormType::class, [
+            'entry_type' => AdminType::class,
+            'entry_options' => [
+                'entity' => $options['entity'],
+                'context' => TypeConfig::CONTEXT_EDIT,
+            ]
+        ]);
     }
 
     public function viewContext($entity, $field, array $options = [])
