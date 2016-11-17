@@ -7,6 +7,12 @@ services:
         class: Perform\BaseBundle\Type\EntityTypeConfig
         arguments: ['@perform_base.admin.registry', '%perform_base.admins%']
 
+    perform_base.form.type.admin:
+        class: Perform\BaseBundle\Form\Type\AdminType
+        arguments: ['@perform_base.admin.registry', '@perform_base.type_registry', '@perform_base.entity_type_config']
+        tags:
+            - {name: form.type}
+
     perform_base.doctrine.entity_resolver:
         class: Perform\BaseBundle\Doctrine\EntityResolver
         arguments: ['%perform_base.extended_entity_aliases%', '%perform_base.extended_entities%']

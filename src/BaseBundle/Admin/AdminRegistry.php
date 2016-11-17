@@ -39,6 +39,7 @@ class AdminRegistry
 
         $this->admins[$entity] = $service;
         $this->admins[$entityClass] = $service;
+        $this->aliases[$entity] = $entityClass;
     }
 
     /**
@@ -61,6 +62,17 @@ class AdminRegistry
     public function getAdminForEntity($entity)
     {
         return $this->getAdmin(get_class($entity));
+    }
+
+    /**
+     * Get the fully qualified classname of an entity.
+     * @param sting $alias
+     *
+     * @return string
+     */
+    public function resolveEntityAlias($alias)
+    {
+        return isset($this->aliases[$alias]) ? $this->aliases[$alias] : $alias;
     }
 
     /**
