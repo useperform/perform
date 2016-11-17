@@ -32,4 +32,11 @@ interface AdminInterface
      * @return array
      */
     public function getActions();
+
+    /**
+     * Get a readable name for an entity.
+     *
+     * @return string
+     */
+    public function getNameForEntity($entity);
 }
