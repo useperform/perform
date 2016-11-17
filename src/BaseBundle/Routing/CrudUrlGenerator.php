@@ -31,12 +31,29 @@ class CrudUrlGenerator
      */
     public function generate($entity, $action, array $params = [])
     {
-        $params = $action === 'list' ? $params : array_merge($params, ['id' => $entity->getId()]);
+        $params = in_array($action, ['list', 'create']) ? $params : array_merge($params, ['id' => $entity->getId()]);
         $admin = is_string($entity) ?
                $this->adminRegistry->getAdmin($entity) :
                $this->adminRegistry->getAdminForEntity($entity);
         $prefix = rtrim($admin->getRoutePrefix(), '_');
 
         return $this->urlGenerator->generate($prefix.'_'.$action, $params);
+    }
+
+    /**
+     * Check if a crud action exists for an entity.
+     *
+     * @param string|object $entity
+     * @param string $action
+     *
+     * @return string
+     */
+    public function routeExists($entity, $action)
+    {
+        $admin = is_string($entity) ?
+               $this->adminRegistry->getAdmin($entity) :
+               $this->adminRegistry->getAdminForEntity($entity);
+
+        return in_array($action, $admin->getActions());
     }
 }

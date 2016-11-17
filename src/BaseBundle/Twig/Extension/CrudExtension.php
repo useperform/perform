@@ -28,6 +28,7 @@ class CrudExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFunction('perform_crud_route', [$this->urlGenerator, 'generate']),
+            new \Twig_SimpleFunction('perform_crud_route_exists', [$this->urlGenerator, 'routeExists']),
             new \Twig_SimpleFunction('perform_crud_list_context', [$this, 'listContext'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('perform_crud_view_context', [$this, 'viewContext'], ['is_safe' => ['html']]),
         ];

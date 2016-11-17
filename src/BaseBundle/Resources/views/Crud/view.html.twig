@@ -22,6 +22,9 @@
         </tbody>
       </table>
       <a href="{{perform_crud_route(entity, 'list')}}" class="btn btn-default">Back</a>
+      {% if perform_crud_route_exists(entity, 'edit') %}
+        <a href="{{perform_crud_route(entity, 'edit')}}" class="btn btn-primary">Edit</a>
+      {% endif %}
     </div>
   </div>
 {% endblock %}
