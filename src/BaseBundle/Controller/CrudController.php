@@ -105,8 +105,7 @@ class CrudController extends Controller
         $builder = $this->createFormBuilder($entity = $this->newEntity());
         $admin = $this->getAdmin();
         $form = $this->createForm($admin->getFormType(), $entity, [
-            'typeConfig' => $this->getTypeConfig(),
-            'typeRegistry' => $this->get('perform_base.type_registry'),
+            'entity' => $this->entity,
             'context' => 'create',
         ]);
 
@@ -136,8 +135,7 @@ class CrudController extends Controller
         $entity = $this->findEntity($id);
         $admin = $this->getAdmin();
         $form = $this->createForm($admin->getFormType(), $entity, [
-            'typeConfig' => $this->getTypeConfig(),
-            'typeRegistry' => $this->get('perform_base.type_registry'),
+            'entity' => $this->entity,
             'context' => 'edit',
         ]);
 
