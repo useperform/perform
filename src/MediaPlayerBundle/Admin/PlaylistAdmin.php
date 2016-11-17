@@ -26,6 +26,7 @@ class PlaylistAdmin extends AbstractAdmin
                 'options' => [
                     'label' => 'Tracks',
                     'itemLabel' => 'track',
+                    'entity' => 'PerformMediaPlayerBundle:PlaylistItem',
                 ]
             ])
             ;

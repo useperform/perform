@@ -4,6 +4,11 @@ services:
         tags:
             - {name: perform_base.admin, entity: "PerformMediaPlayerBundle:Playlist"}
 
+    perform_media_player.admin.playlist_item:
+        class: Perform\MediaPlayerBundle\Admin\PlaylistItemAdmin
+        tags:
+            - {name: perform_base.admin, entity: "PerformMediaPlayerBundle:PlaylistItem"}
+
     perform_media_player.menu_link.playlist:
         class: Perform\MediaPlayerBundle\Menu\PlaylistLinkProvider
         tags:
