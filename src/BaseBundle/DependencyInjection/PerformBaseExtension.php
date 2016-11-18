@@ -50,7 +50,7 @@ class PerformBaseExtension extends Extension
         $definition->addMethodCall('addType', ['datetime', 'Perform\BaseBundle\Type\DateTimeType']);
         $definition->addMethodCall('addType', ['boolean', 'Perform\BaseBundle\Type\BooleanType']);
         $definition->addMethodCall('addType', ['integer', 'Perform\BaseBundle\Type\IntegerType']);
-        $definition->addMethodCall('addType', ['collection', 'Perform\BaseBundle\Type\CollectionType']);
+        $definition->addMethodCall('addTypeService', ['collection', 'perform_base.type.collection']);
 
         // pull from other bundles in a compiler pass
         $definition->addMethodCall('addTypeService', ['image', 'perform_media.type.image']);

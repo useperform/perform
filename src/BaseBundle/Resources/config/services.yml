@@ -122,3 +122,8 @@ services:
         class: Perform\BaseBundle\Settings\AccountPanel
         tags:
             - { name: perform_base.settings_panel, alias: account }
+
+    perform_base.type.collection:
+        class: Perform\BaseBundle\Type\CollectionType
+        arguments:
+            - "@perform_base.admin.registry"

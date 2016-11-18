@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Perform\BaseBundle\Exception\InvalidTypeException;
 use Perform\BaseBundle\Form\Type\AdminType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType as CollectionFormType;
+use Perform\BaseBundle\Admin\AdminRegistry;
 
 /**
  * CollectionType.
@@ -15,6 +16,14 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType as CollectionFormT
  **/
 class CollectionType extends AbstractType
 {
+    protected $adminRegistry;
+
+    public function __construct(AdminRegistry $adminRegistry)
+    {
+        parent::__construct();
+        $this->adminRegistry = $adminRegistry;
+    }
+
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
         $builder->add($field, CollectionFormType::class, [
@@ -42,12 +51,17 @@ class CollectionType extends AbstractType
         $collection = $this->accessor->getValue($entity, $field);
         $this->ensureCollection($collection);
 
-        $text = '';
-        foreach ($collection as $entity) {
-            $text .= $entity->getId();
+        if ($collection->count() < 1) {
+            return;
         }
 
-        return $text;
+        $text = '<ul>';
+        $admin = $this->adminRegistry->getAdminForEntity($collection[0]);
+        foreach ($collection as $item) {
+            $text .= sprintf('<li>%s</li>', $admin->getNameForEntity($item));
+        }
+
+        return $text.'</ul>';
     }
 
     public function listContext($entity, $field, array $options = [])
@@ -70,5 +84,12 @@ class CollectionType extends AbstractType
         if (!$value instanceof Collection) {
             throw new InvalidTypeException(sprintf('The entity field "%s" passed to %s must be an instance of %s', $field, __CLASS__, Collection::class));
         }
+    }
+
+    public function getHtmlContexts()
+    {
+        return [
+            TypeConfig::CONTEXT_VIEW,
+        ];
     }
 }
