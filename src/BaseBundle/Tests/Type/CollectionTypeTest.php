@@ -5,6 +5,7 @@ namespace Perform\BaseBundle\Tests\Type;
 use Perform\BaseBundle\Entity\User;
 use Perform\BaseBundle\Type\CollectionType;
 use Doctrine\Common\Collections\ArrayCollection;
+use Perform\BaseBundle\Admin\AdminRegistry;
 
 /**
  * CollectionTypeTest
@@ -17,7 +18,10 @@ class CollectionTypeTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->type = new CollectionType();
+        $registry = $this->getMockBuilder(AdminRegistry::class)
+                  ->disableOriginalConstructor()
+                  ->getMock();
+        $this->type = new CollectionType($registry);
     }
 
     public function testListContextDefaultItemLabel()
