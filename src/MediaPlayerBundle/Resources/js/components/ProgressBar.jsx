@@ -34,8 +34,8 @@ class ProgressBar extends React.Component {
         aria-valuemax="100"
         style={{width: `${progress}%`}}>
           </div>
-        {this.formatSeconds(this.props.seek)} / {this.formatSeconds(this.props.duration)}
         </div>
+        {this.formatSeconds(this.props.seek)} / {this.formatSeconds(this.props.duration)}
       </div>
     );
   }
