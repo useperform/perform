@@ -20,4 +20,9 @@ class PlaylistItemAdmin extends AbstractAdmin
             ])
             ;
     }
+
+    public function getNameForEntity($entity)
+    {
+        return $entity->getFile()->getName();
+    }
 }
