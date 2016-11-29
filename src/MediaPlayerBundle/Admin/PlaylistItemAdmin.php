@@ -18,6 +18,9 @@ class PlaylistItemAdmin extends AbstractAdmin
             ->add('file', [
                 'type' => 'image',
             ])
+            ->add('title', [
+                'type' => 'string',
+            ])
             ;
     }
 

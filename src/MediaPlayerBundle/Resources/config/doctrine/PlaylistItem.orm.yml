@@ -10,6 +10,8 @@ Perform\MediaPlayerBundle\Entity\PlaylistItem:
     fields:
         sortOrder:
             type: integer
+        title:
+            type: string
     manyToOne:
         playlist:
             targetEntity: Playlist

@@ -22,6 +22,11 @@ class PlaylistItem
     protected $sortOrder;
 
     /**
+     * @var string
+     */
+    protected $title;
+
+    /**
      * @var Playlist
      */
     protected $playlist;
@@ -94,5 +99,25 @@ class PlaylistItem
     public function getFile()
     {
         return $this->file;
+    }
+
+    /**
+     * @param string $title
+     *
+     * @return PlaylistItem
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
     }
 }

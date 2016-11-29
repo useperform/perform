@@ -29,6 +29,7 @@ class LoadPlaylistData implements EntityDeclaringFixtureInterface
             for ($j = 0; $j < $items; $j++) {
                 $item = new PlaylistItem();
                 $item->setFile($audio[array_rand($audio)]);
+                $item->setTitle($item->getFile()->getName());
                 $item->setSortOrder($j);
                 $playlist->addItem($item);
             }
