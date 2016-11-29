@@ -1,0 +1,28 @@
+{% extends 'PerformBaseBundle:Crud:edit.html.twig' %}
+
+{% block workspace %}
+  <h3><i class="fa fa-angle-right"></i> Edit playlist</h3>
+  {{form_start(form)}}
+  <div class="col-md-4">
+    <h4>Details</h4>
+    {{form_row(form.title)}}
+    <a href="{{perform_crud_route(entity, 'list')}}" class="btn btn-default" tabindex="-1">Cancel</a>
+    <button type="submit" class="btn btn-primary">Save</button>
+  </div>
+  <div class="col-md-8">
+    <h4>Tracks</h4>
+    {% for item in form.items %}
+      <div class="collection-row">
+        {{form_widget(item)}}
+        <a class="btn btn-danger remove" href="#">
+          <i class="fa fa-trash-o"></i>
+        </a>
+      </div>
+    {% endfor %}
+    {{form_end(form)}}
+  </div>
+{% endblock %}
+
+{% block js %}
+  <script type="text/javascript" src="{{asset('/bundles/performmediaplayer/js/admin.js')}}"></script>
+{% endblock %}
