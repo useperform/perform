@@ -38,7 +38,7 @@ class PlayerController extends Controller
         ];
         foreach ($playlist->getItems() as $item) {
             $data['items'][] = [
-                'name' => $item->getFile()->getName(),
+                'name' => $item->getTitle(),
                 'url' => $item->getFile()->getFileName(),
             ];
         }
