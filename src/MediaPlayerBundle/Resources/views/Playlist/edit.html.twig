@@ -11,18 +11,31 @@
   </div>
   <div class="col-md-8">
     <h4>Tracks</h4>
-    {% for item in form.items %}
-      <div class="collection-row">
-        {{form_widget(item)}}
-        <a class="btn btn-danger remove" href="#">
-          <i class="fa fa-trash-o"></i>
-        </a>
-      </div>
-    {% endfor %}
+    <a class="btn btn-primary add-track" href="#">
+      <i class="fa fa-plus"></i>
+    </a>
+    <div class="collection-rows">
+      {% for item in form.items %}
+        <div class="collection-row">
+          {{form_widget(item)}}
+          <a class="btn btn-danger remove" href="#">
+            <i class="fa fa-trash-o"></i>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
     {{form_end(form)}}
   </div>
 {% endblock %}
 
 {% block js %}
   <script type="text/javascript" src="{{asset('/bundles/performmediaplayer/js/admin.js')}}"></script>
+  <script type="text/template" id="template-track">
+    <div class="collection-row">
+      {{form_widget(form.items.vars.prototype)}}
+      <a class="btn btn-danger remove" href="#">
+        <i class="fa fa-trash-o"></i>
+      </a>
+    </div>
+  </script>
 {% endblock %}
