@@ -14,4 +14,4 @@ Perform\MediaPlayerBundle\Entity\Playlist:
         items:
             targetEntity: PlaylistItem
             mappedBy: playlist
-            cascade: [persist]
+            cascade: [persist, remove]
