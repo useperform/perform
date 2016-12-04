@@ -47,6 +47,7 @@ class CollectionType extends AbstractType
                 'entity' => $options['entity'],
                 'context' => $context,
             ],
+            'allow_add' => true,
             'allow_delete' => true,
             'by_reference' => false,
         ]);
@@ -57,12 +58,24 @@ class CollectionType extends AbstractType
             $originalCollection[] = $item;
         }
 
-        $builder->addEventListener(FormEvents::POST_SUBMIT, function($event) use ($field, $originalCollection) {
+        $sortColumn = isset($options['sortable']) && $options['sortable'] !== false
+                    ? $options['sortable']
+                    : false;
+
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function($event) use ($field, $originalCollection, $sortColumn) {
             $entity = $event->getData();
             $collection = $this->accessor->getValue($entity, $field);
             foreach ($originalCollection as $item) {
                 if (!$collection->contains($item)) {
                     $this->entityManager->remove($item);
+                }
+            }
+
+            if ($sortColumn) {
+                $i = 0;
+                foreach ($collection as $item) {
+                    $this->accessor->setValue($item, $sortColumn, $i);
+                    $i++;
                 }
             }
         });
