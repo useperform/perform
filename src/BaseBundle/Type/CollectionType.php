@@ -8,6 +8,9 @@ use Perform\BaseBundle\Exception\InvalidTypeException;
 use Perform\BaseBundle\Form\Type\AdminType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType as CollectionFormType;
 use Perform\BaseBundle\Admin\AdminRegistry;
+use Symfony\Component\Form\FormEvents;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * CollectionType.
@@ -17,33 +20,52 @@ use Perform\BaseBundle\Admin\AdminRegistry;
 class CollectionType extends AbstractType
 {
     protected $adminRegistry;
+    protected $entityManager;
 
-    public function __construct(AdminRegistry $adminRegistry)
+    public function __construct(AdminRegistry $adminRegistry, EntityManagerInterface $entityManager)
     {
         parent::__construct();
         $this->adminRegistry = $adminRegistry;
+        $this->entityManager = $entityManager;
     }
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
-        $builder->add($field, CollectionFormType::class, [
-            'entry_type' => AdminType::class,
-            'entry_options' => [
-                'entity' => $options['entity'],
-                'context' => TypeConfig::CONTEXT_CREATE,
-            ]
-        ]);
+        return $this->addFormField($builder, $field, $options, TypeConfig::CONTEXT_CREATE);
     }
 
     public function editContext(FormBuilderInterface $builder, $field, array $options = [])
+    {
+        return $this->addFormField($builder, $field, $options, TypeConfig::CONTEXT_EDIT);
+    }
+
+    protected function addFormField(FormBuilderInterface $builder, $field, array $options, $context)
     {
         $builder->add($field, CollectionFormType::class, [
             'entry_type' => AdminType::class,
             'entry_options' => [
                 'entity' => $options['entity'],
-                'context' => TypeConfig::CONTEXT_EDIT,
-            ]
+                'context' => $context,
+            ],
+            'allow_delete' => true,
+            'by_reference' => false,
         ]);
+
+        $entity = $builder->getData();
+        $originalCollection = new ArrayCollection();
+        foreach ($this->accessor->getValue($entity, $field) as $item) {
+            $originalCollection[] = $item;
+        }
+
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function($event) use ($field, $originalCollection) {
+            $entity = $event->getData();
+            $collection = $this->accessor->getValue($entity, $field);
+            foreach ($originalCollection as $item) {
+                if (!$collection->contains($item)) {
+                    $this->entityManager->remove($item);
+                }
+            }
+        });
     }
 
     public function viewContext($entity, $field, array $options = [])

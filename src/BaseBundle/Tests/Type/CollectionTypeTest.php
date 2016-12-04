@@ -6,6 +6,7 @@ use Perform\BaseBundle\Entity\User;
 use Perform\BaseBundle\Type\CollectionType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Perform\BaseBundle\Admin\AdminRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * CollectionTypeTest
@@ -21,7 +22,8 @@ class CollectionTypeTest extends \PHPUnit_Framework_TestCase
         $registry = $this->getMockBuilder(AdminRegistry::class)
                   ->disableOriginalConstructor()
                   ->getMock();
-        $this->type = new CollectionType($registry);
+        $entityManager = $this->getMock(EntityManagerInterface::class);
+        $this->type = new CollectionType($registry, $entityManager);
     }
 
     public function testListContextDefaultItemLabel()

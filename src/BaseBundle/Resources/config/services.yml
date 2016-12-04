@@ -127,3 +127,4 @@ services:
         class: Perform\BaseBundle\Type\CollectionType
         arguments:
             - "@perform_base.admin.registry"
+            - "@doctrine.orm.entity_manager"
