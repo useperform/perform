@@ -73,6 +73,18 @@ class Playlist
     }
 
     /**
+     * @param PlaylistItem $item
+     *
+     * @return Playlist
+     */
+    public function removeItem(PlaylistItem $item)
+    {
+        $this->items->removeElement($item);
+
+        return $this;
+    }
+
+    /**
      * @return Collection
      */
     public function getItems()
