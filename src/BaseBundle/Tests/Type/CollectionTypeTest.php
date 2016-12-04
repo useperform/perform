@@ -29,6 +29,9 @@ class CollectionTypeTest extends \PHPUnit_Framework_TestCase
     public function testListContextDefaultItemLabel()
     {
         $entity = new \stdClass();
+        $entity->items = new ArrayCollection();
+        $this->assertSame('0 items', $this->type->listContext($entity, 'items'));
+
         $entity->items = new ArrayCollection([1]);
         $this->assertSame('1 item', $this->type->listContext($entity, 'items'));
 
@@ -39,6 +42,9 @@ class CollectionTypeTest extends \PHPUnit_Framework_TestCase
     public function testListContextWithItemLabel()
     {
         $entity = new \stdClass();
+        $entity->items = new ArrayCollection();
+        $this->assertSame('0 things', $this->type->listContext($entity, 'items', ['itemLabel' => 'thing']));
+
         $entity->items = new ArrayCollection([1]);
         $this->assertSame('1 thing', $this->type->listContext($entity, 'items', ['itemLabel' => 'thing']));
 
@@ -49,6 +55,9 @@ class CollectionTypeTest extends \PHPUnit_Framework_TestCase
     public function testListContextWithItemLabelPlural()
     {
         $entity = new \stdClass();
+        $entity->items = new ArrayCollection();
+        $this->assertSame('0 things (a lot)', $this->type->listContext($entity, 'items', ['itemLabel' => ['thing', 'things (a lot)']]));
+
         $entity->items = new ArrayCollection([1]);
         $this->assertSame('1 thing', $this->type->listContext($entity, 'items', ['itemLabel' => ['thing', 'things (a lot)']]));
 

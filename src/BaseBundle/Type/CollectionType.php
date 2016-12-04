@@ -94,7 +94,7 @@ class CollectionType extends AbstractType
         $itemLabel = isset($options['itemLabel']) ? (array) $options['itemLabel'] : ['item'];
         $label = $itemLabel[0];
         $count = count($collection);
-        if ($count > 1) {
+        if ($count !== 1) {
             $label = isset($itemLabel[1]) ? $itemLabel[1] : $label.'s';
         }
 
