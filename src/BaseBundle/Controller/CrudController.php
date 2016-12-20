@@ -62,6 +62,17 @@ class CrudController extends Controller
         return $entity;
     }
 
+    protected function findDefaultEntity()
+    {
+        $repo = $this->getDoctrine()->getRepository($this->entity);
+        $result = $repo->findBy([], [], 1);
+        if (!isset($result[0])) {
+            throw new NotFoundHttpException();
+        }
+
+        return $result[0];
+    }
+
     private function setFormTheme($formView)
     {
         $this->get('twig')
@@ -96,6 +107,16 @@ class CrudController extends Controller
         return [
             'fields' => $this->getTypeConfig()->getTypes(TypeConfig::CONTEXT_VIEW),
             'entity' => $this->findEntity($id),
+        ];
+    }
+
+    public function viewDefaultAction(Request $request)
+    {
+        $this->initialize($request);
+
+        return [
+            'fields' => $this->getTypeConfig()->getTypes(TypeConfig::CONTEXT_VIEW),
+            'entity' => $this->findDefaultEntity(),
         ];
     }
 
