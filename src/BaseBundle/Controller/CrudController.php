@@ -114,10 +114,7 @@ class CrudController extends Controller
     {
         $this->initialize($request);
 
-        return [
-            'fields' => $this->getTypeConfig()->getTypes(TypeConfig::CONTEXT_VIEW),
-            'entity' => $this->findDefaultEntity(),
-        ];
+        return $this->viewAction($request, $this->findDefaultEntity()->getId());
     }
 
     public function createAction(Request $request)
@@ -168,7 +165,12 @@ class CrudController extends Controller
             $manager->flush();
             $this->addFlash('success', 'Item updated successfully.');
 
-            return $this->redirect($this->get('perform_base.routing.crud_url')->generate($entity, 'list'));
+            $urlGenerator = $this->get('perform_base.routing.crud_url');
+            $url = $urlGenerator->routeExists($entity, 'viewDefault') ?
+                 $urlGenerator->generate($entity, 'viewDefault') :
+                 $urlGenerator->generate($entity, 'list');
+
+            return $this->redirect($url);
         }
 
         $formView = $form->createView();
@@ -178,6 +180,13 @@ class CrudController extends Controller
             'entity' => $entity,
             'form' => $formView,
         ];
+    }
+
+    public function editDefaultAction(Request $request)
+    {
+        $this->initialize($request);
+
+        return $this->editAction($request, $this->findDefaultEntity()->getId());
     }
 
     public function deleteAction(Request $request, $id)
