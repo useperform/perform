@@ -88,6 +88,25 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('/admin/users/view/1', $this->generator->generate($user, 'view'));
     }
 
+    public function testGenerateViewDefault()
+    {
+        $user = $this->getMock('Perform\BaseBundle\Entity\User');
+        $user->expects($this->any())
+            ->method('getId')
+            ->will($this->returnValue(1));
+        $this->adminRegistry->expects($this->any())
+            ->method('getAdminForEntity')
+            ->with($user)
+            ->will($this->returnValue(new UserAdmin()));
+        $this->urlGenerator->expects($this->any())
+            ->method('generate')
+            ->with('perform_base_user_view_default')
+            ->will($this->returnValue('/admin/users'));
+
+        $this->assertSame('/admin/users', $this->generator->generate($user, 'viewDefault'));
+        $this->assertSame('/admin/users', $this->generator->generate($user, 'view_default'));
+    }
+
     public function testGenerateEdit()
     {
         $user = $this->getMock('Perform\BaseBundle\Entity\User');
@@ -104,6 +123,24 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('/admin/users/edit/1'));
 
         $this->assertSame('/admin/users/edit/1', $this->generator->generate($user, 'edit'));
+    }
+
+    public function testGenerateEditDefault()
+    {
+        $user = $this->getMock('Perform\BaseBundle\Entity\User');
+        $user->expects($this->never())
+            ->method('getId');
+        $this->adminRegistry->expects($this->any())
+            ->method('getAdminForEntity')
+            ->with($user)
+            ->will($this->returnValue(new UserAdmin()));
+        $this->urlGenerator->expects($this->any())
+            ->method('generate')
+            ->with('perform_base_user_edit_default')
+            ->will($this->returnValue('/admin/users/edit'));
+
+        $this->assertSame('/admin/users/edit', $this->generator->generate($user, 'editDefault'));
+        $this->assertSame('/admin/users/edit', $this->generator->generate($user, 'edit_default'));
     }
 
     public function testGenerateDelete()
