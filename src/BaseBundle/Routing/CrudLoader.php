@@ -7,6 +7,7 @@ use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
 use Perform\BaseBundle\Admin\AdminRegistry;
 use Symfony\Component\Config\Resource\FileResource;
+use Perform\BaseBundle\Admin\AdminInterface;
 
 /**
  * CrudLoader creates crud routes dynamically for an entity admin.
@@ -39,7 +40,7 @@ class CrudLoader extends Loader
                 '_controller' => $class.'::'.$action.'Action',
                 '_entity' => $entity,
             ]);
-            $collection->add($admin->getRoutePrefix().$action, $route);
+            $collection->add($this->createRouteName($admin, $action), $route);
         }
         $adminRefl = new \ReflectionClass($admin);
         $filename = $adminRefl->getFileName();
@@ -50,6 +51,11 @@ class CrudLoader extends Loader
         }
 
         return $collection;
+    }
+
+    protected function createRouteName(AdminInterface $admin, $action)
+    {
+        return $admin->getRoutePrefix().strtolower(preg_replace('/([A-Z])/', '_\1', $action));
     }
 
     public function supports($resource, $type = null)
