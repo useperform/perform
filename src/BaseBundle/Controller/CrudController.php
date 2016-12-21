@@ -62,6 +62,17 @@ class CrudController extends Controller
         return $entity;
     }
 
+    protected function findDefaultEntity()
+    {
+        $repo = $this->getDoctrine()->getRepository($this->entity);
+        $result = $repo->findBy([], [], 1);
+        if (!isset($result[0])) {
+            throw new NotFoundHttpException();
+        }
+
+        return $result[0];
+    }
+
     private function setFormTheme($formView)
     {
         $this->get('twig')
@@ -97,6 +108,13 @@ class CrudController extends Controller
             'fields' => $this->getTypeConfig()->getTypes(TypeConfig::CONTEXT_VIEW),
             'entity' => $this->findEntity($id),
         ];
+    }
+
+    public function viewDefaultAction(Request $request)
+    {
+        $this->initialize($request);
+
+        return $this->viewAction($request, $this->findDefaultEntity()->getId());
     }
 
     public function createAction(Request $request)
@@ -147,7 +165,12 @@ class CrudController extends Controller
             $manager->flush();
             $this->addFlash('success', 'Item updated successfully.');
 
-            return $this->redirect($this->get('perform_base.routing.crud_url')->generate($entity, 'list'));
+            $urlGenerator = $this->get('perform_base.routing.crud_url');
+            $url = $urlGenerator->routeExists($entity, 'viewDefault') ?
+                 $urlGenerator->generate($entity, 'viewDefault') :
+                 $urlGenerator->generate($entity, 'list');
+
+            return $this->redirect($url);
         }
 
         $formView = $form->createView();
@@ -157,6 +180,13 @@ class CrudController extends Controller
             'entity' => $entity,
             'form' => $formView,
         ];
+    }
+
+    public function editDefaultAction(Request $request)
+    {
+        $this->initialize($request);
+
+        return $this->editAction($request, $this->findDefaultEntity()->getId());
     }
 
     public function deleteAction(Request $request, $id)

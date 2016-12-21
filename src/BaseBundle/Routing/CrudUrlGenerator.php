@@ -4,6 +4,7 @@ namespace Perform\BaseBundle\Routing;
 
 use Perform\BaseBundle\Admin\AdminRegistry;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Perform\BaseBundle\Admin\AdminInterface;
 
 /**
  * CrudUrlGenerator
@@ -31,13 +32,14 @@ class CrudUrlGenerator
      */
     public function generate($entity, $action, array $params = [])
     {
-        $params = in_array($action, ['list', 'create']) ? $params : array_merge($params, ['id' => $entity->getId()]);
+        $params = in_array($action, ['view', 'edit', 'delete']) ?
+                array_merge($params, ['id' => $entity->getId()]) :
+                $params;
         $admin = is_string($entity) ?
                $this->adminRegistry->getAdmin($entity) :
                $this->adminRegistry->getAdminForEntity($entity);
-        $prefix = rtrim($admin->getRoutePrefix(), '_');
 
-        return $this->urlGenerator->generate($prefix.'_'.$action, $params);
+        return $this->urlGenerator->generate($this->createRouteName($admin, $action), $params);
     }
 
     /**
@@ -55,5 +57,28 @@ class CrudUrlGenerator
                $this->adminRegistry->getAdminForEntity($entity);
 
         return in_array($action, $admin->getActions());
+    }
+
+    protected function createRouteName(AdminInterface $admin, $action)
+    {
+        return $admin->getRoutePrefix().strtolower(preg_replace('/([A-Z])/', '_\1', $action));
+    }
+
+    public function getDefaultEntityRoute($entity)
+    {
+        $admin = is_string($entity) ?
+               $this->adminRegistry->getAdmin($entity) :
+               $this->adminRegistry->getAdminForEntity($entity);
+
+        $actions = $admin->getActions();
+
+        if (in_array('list', $actions)) {
+            return $admin->getRoutePrefix().'list';
+        }
+        if (in_array('viewDefault', $actions)) {
+            return $admin->getRoutePrefix().'view_default';
+        }
+
+        throw new \Exception(sprintf('Unable to find the default route for %s', is_string($entity) ? $entity : get_class($entity)));
     }
 }
