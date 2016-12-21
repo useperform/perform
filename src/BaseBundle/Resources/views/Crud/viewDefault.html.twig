@@ -1,0 +1,7 @@
+{% extends 'PerformBaseBundle:Crud:view.html.twig' %}
+
+{% block actions %}
+  {% if perform_crud_route_exists(entity, 'editDefault') %}
+    <a href="{{perform_crud_route(entity, 'editDefault')}}" class="btn btn-primary">Edit</a>
+  {% endif %}
+{% endblock %}

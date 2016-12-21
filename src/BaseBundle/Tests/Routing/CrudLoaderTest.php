@@ -3,6 +3,7 @@
 namespace Perform\BaseBundle\Tests\Routing;
 
 use Perform\BaseBundle\Routing\CrudLoader;
+use Symfony\Component\Routing\Route;
 
 /**
  * CrudLoaderTest
@@ -71,5 +72,35 @@ class CrudLoaderTest extends \PHPUnit_Framework_TestCase
             );
             $this->assertStringStartsWith($routePrefix, $name);
         }
+    }
+
+    public function testRouteNamesGetSlugified()
+    {
+        $controller = 'Perform\BaseBundle\Controller\CrudController';
+        $routePrefix = 'some_foo_';
+        $routes = [
+            '/' => 'viewDefault',
+            '/edit' => 'editDefault',
+        ];
+        $this->expectAdmin($controller, $routePrefix, $routes);
+
+        $collection = $this->loader->load('SomeBundle:Foo');
+        $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
+
+        $this->assertSame(['some_foo_view_default', 'some_foo_edit_default'], array_keys($collection->all()));
+
+        $route = $collection->get('some_foo_view_default');
+        $this->assertInstanceOf(Route::class, $route);
+        $this->assertSame(
+            $controller.'::'.'viewDefaultAction',
+            $route->getDefault('_controller')
+        );
+
+        $route = $collection->get('some_foo_edit_default');
+        $this->assertInstanceOf(Route::class, $route);
+        $this->assertSame(
+            $controller.'::'.'editDefaultAction',
+            $route->getDefault('_controller')
+        );
     }
 }
