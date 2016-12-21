@@ -185,4 +185,73 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->generator->routeExists('TestBundle:Something', 'delete'));
         $this->assertFalse($this->generator->routeExists(new User(), 'delete'));
     }
+
+    public function testGetDefaultEntityRouteList()
+    {
+        $admin = $this->getMock(AdminInterface::class);
+        $admin->expects($this->any())
+            ->method('getActions')
+            ->will($this->returnValue([
+                '/' => 'list',
+            ]));
+        $admin->expects($this->any())
+            ->method('getRoutePrefix')
+            ->will($this->returnValue('some_prefix_'));
+
+        $this->adminRegistry->expects($this->any())
+            ->method('getAdmin')
+            ->will($this->returnValue($admin));
+        $this->adminRegistry->expects($this->any())
+            ->method('getAdminForEntity')
+            ->will($this->returnValue($admin));
+
+        $this->assertSame('some_prefix_list', $this->generator->getDefaultEntityRoute('TestBundle:Something'));
+        $this->assertSame('some_prefix_list', $this->generator->getDefaultEntityRoute(new User()));
+    }
+
+    public function testGetDefaultEntityRouteViewDefault()
+    {
+        $admin = $this->getMock(AdminInterface::class);
+        $admin->expects($this->any())
+            ->method('getActions')
+            ->will($this->returnValue([
+                '/' => 'viewDefault',
+            ]));
+        $admin->expects($this->any())
+            ->method('getRoutePrefix')
+            ->will($this->returnValue('some_prefix_'));
+
+        $this->adminRegistry->expects($this->any())
+            ->method('getAdmin')
+            ->will($this->returnValue($admin));
+        $this->adminRegistry->expects($this->any())
+            ->method('getAdminForEntity')
+            ->will($this->returnValue($admin));
+
+        $this->assertSame('some_prefix_view_default', $this->generator->getDefaultEntityRoute('TestBundle:Something'));
+        $this->assertSame('some_prefix_view_default', $this->generator->getDefaultEntityRoute(new User()));
+    }
+
+    public function testGetDefaultEntityRouteThrowsExceptionForUnknown()
+    {
+        $admin = $this->getMock(AdminInterface::class);
+        $admin->expects($this->any())
+            ->method('getActions')
+            ->will($this->returnValue([
+                '/{id}' => 'view',
+            ]));
+        $admin->expects($this->any())
+            ->method('getRoutePrefix')
+            ->will($this->returnValue('some_prefix_'));
+
+        $this->adminRegistry->expects($this->any())
+            ->method('getAdmin')
+            ->will($this->returnValue($admin));
+        $this->adminRegistry->expects($this->any())
+            ->method('getAdminForEntity')
+            ->will($this->returnValue($admin));
+
+        $this->setExpectedException(\Exception::class);
+        $this->assertSame('some_prefix_view_default', $this->generator->getDefaultEntityRoute('TestBundle:Something'));
+    }
 }
