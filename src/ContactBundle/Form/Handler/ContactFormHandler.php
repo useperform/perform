@@ -7,10 +7,10 @@ use Perform\ContactBundle\SpamChecker\SpamCheckerInterface;
 use Psr\Log\LoggerInterface;
 use Perform\NotificationBundle\Notifier;
 use Symfony\Component\Form\FormInterface;
-use Doctrine\Common\Persistence\ObjectManager;
 use Perform\ContactBundle\Entity\Message;
 use Perform\NotificationBundle\RecipientProvider\RecipientProviderInterface;
 use Perform\NotificationBundle\Notification;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * ContactFormHandler.
@@ -28,7 +28,7 @@ class ContactFormHandler
     protected $logger;
     protected $spamCheckers = [];
 
-    public function __construct(ObjectManager $entityManager, Notifier $notifier, RecipientProviderInterface $recipientProvider, LoggerInterface $logger = null)
+    public function __construct(EntityManagerInterface $entityManager, Notifier $notifier, RecipientProviderInterface $recipientProvider, LoggerInterface $logger = null)
     {
         $this->entityManager = $entityManager;
         $this->notifier = $notifier;
