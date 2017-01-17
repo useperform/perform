@@ -9,11 +9,11 @@ use Perform\MediaBundle\Plugin\PluginRegistry;
 use Perform\BaseBundle\Type\TypeConfig;
 
 /**
- * ImageType
+ * MediaType
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ImageType extends AbstractType
+class MediaType extends AbstractType
 {
     protected $registry;
 

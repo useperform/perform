@@ -52,7 +52,7 @@ class PerformBaseExtension extends Extension
         $definition->addMethodCall('addType', ['integer', 'Perform\BaseBundle\Type\IntegerType']);
 
         // pull from other bundles in a compiler pass
-        $definition->addMethodCall('addTypeService', ['image', 'perform_media.type.image']);
+        $definition->addMethodCall('addTypeService', ['media', 'perform_media.type.media']);
     }
 
     protected function configureMailer(array $config, ContainerBuilder $container)
