@@ -9,6 +9,13 @@ services:
         tags:
             - { name: perform_base.link_provider, alias: contact }
 
+    perform_contact.form.type.honeypot:
+        class: Perform\ContactBundle\Form\Type\HoneypotType
+        arguments:
+            - "@event_dispatcher"
+        tags:
+            - { name: form.type }
+
     perform_contact.form.handler.contact:
         class: Perform\ContactBundle\Form\Handler\ContactFormHandler
         arguments:
