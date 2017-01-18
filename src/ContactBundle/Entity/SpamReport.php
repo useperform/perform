@@ -2,6 +2,8 @@
 
 namespace Perform\ContactBundle\Entity;
 
+use Symfony\Component\HttpFoundation\Request;
+
 class SpamReport
 {
     /**
@@ -33,6 +35,16 @@ class SpamReport
      * @var Message
      */
     protected $message;
+
+    public static function createFromRequest(Request $request)
+    {
+        $report = new static();
+        $ip = $request->getClientIp();
+        $report->setIp($ip ?: 'Unknown');
+        $report->setUserAgent($request->headers->get('User-Agent', 'Unknown'));
+
+        return $report;
+    }
 
     /**
      * @return uuid
