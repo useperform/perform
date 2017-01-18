@@ -52,12 +52,12 @@ class ContactFormHandler
         }
         $message = $form->getData();
         $message->setStatus(Message::STATUS_UNREAD);
+        $this->entityManager->persist($message);
 
         foreach ($this->spamCheckers as $checker) {
             $checker->check($message, $form, $request);
         }
 
-        $this->entityManager->persist($message);
         $this->entityManager->flush();
 
         if ($message->getStatus() === Message::STATUS_SPAM) {
