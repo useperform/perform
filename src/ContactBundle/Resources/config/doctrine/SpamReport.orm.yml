@@ -8,13 +8,11 @@ Perform\ContactBundle\Entity\SpamReport:
             generator:
                 strategy: UUID
     fields:
-        report:
-            type: text
+        type:
+            type: string
         ip:
             type: string
         userAgent:
-            type: string
-        lang:
             type: string
         createdAt:
             type: datetime

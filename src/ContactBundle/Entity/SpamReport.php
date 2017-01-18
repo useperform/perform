@@ -12,7 +12,7 @@ class SpamReport
     /**
      * @var string
      */
-    protected $report;
+    protected $type;
 
     /**
      * @var string
@@ -23,11 +23,6 @@ class SpamReport
      * @var string
      */
     protected $userAgent;
-
-    /**
-     * @var string
-     */
-    protected $lang;
 
     /**
      * @var \DateTime
@@ -48,13 +43,13 @@ class SpamReport
     }
 
     /**
-     * @param string $report
+     * @param string $type
      *
-     * @return SpamReport
+     * @return SpamType
      */
-    public function setReport($report)
+    public function setType($type)
     {
-        $this->report = $report;
+        $this->type = $type;
 
         return $this;
     }
@@ -62,9 +57,9 @@ class SpamReport
     /**
      * @return string
      */
-    public function getReport()
+    public function getType()
     {
-        return $this->report;
+        return $this->type;
     }
 
     /**
@@ -105,26 +100,6 @@ class SpamReport
     public function getUserAgent()
     {
         return $this->userAgent;
-    }
-
-    /**
-     * @param string $lang
-     *
-     * @return SpamReport
-     */
-    public function setLang($lang)
-    {
-        $this->lang = $lang;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLang()
-    {
-        return $this->lang;
     }
 
     /**
