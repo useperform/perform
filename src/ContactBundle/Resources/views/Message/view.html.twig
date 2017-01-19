@@ -1,0 +1,31 @@
+{% extends 'PerformBaseBundle:Crud:view.html.twig' %}
+
+{% block panel_start %}
+  <p>
+    <small class="text-muted">
+      <i class="fa fa-envelope"></i>
+      {% if entity.isSpam() %}
+        {{entity.email}}
+      {% else %}
+        <a href="mailto:{{entity.email}}">
+          {{entity.email}}
+        </a>
+      {% endif %}
+    </small>
+  </p>
+
+  <p>
+    <small class="text-muted">
+      <i class="fa fa-clock-o"></i> {{entity.createdAt | date('g:ia, D jS M Y')}}
+    </small>
+  </p>
+
+  {% if entity.isSpam() %}
+    <div class="alert alert-danger">
+      <h4><i class="fa fa-warning"></i> This message was identified as spam.</h4>
+      {% for report in [] %}
+        {% include 'PerformContactBundle:SpamReport:'~report.type~'.html.twig' with {report: report}%}
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}
