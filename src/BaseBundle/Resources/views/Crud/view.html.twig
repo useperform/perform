@@ -4,7 +4,9 @@
   <h3><i class="fa fa-angle-right"></i> View</h3>
   <div class="panel panel-default">
     <div class="panel-heading">
-      {{perform_crud_entity_name(entity)}}
+      {% block panel_heading %}
+        {{perform_crud_entity_name(entity)}}
+      {% endblock %}
     </div>
     <div class="panel-body">
       {% block panel_start %}
