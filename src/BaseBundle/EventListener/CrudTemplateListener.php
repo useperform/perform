@@ -43,12 +43,16 @@ class CrudTemplateListener
         }
 
         $entity = $request->attributes->get('_entity');
+
+        //remove Action
         $segment = substr($controller[1], 0, -6);
+
+        //try a template in the entity bundle first, e.g.
+        //PerformContactBundle:Message:view.html.twig
         $template = $entity.':'.$segment.'.html.twig';
         $templating = $this->container->get('templating');
 
         if (!$templating->exists($template)) {
-            //remove Action
             $template = 'PerformBaseBundle:Crud:'.$segment.'.html.twig';
         }
 
