@@ -175,4 +175,12 @@ class Message
     {
         return $this->status;
     }
+
+    /**
+     * @return bool
+     */
+    public function isSpam()
+    {
+        return $this->status === static::STATUS_SPAM;
+    }
 }
