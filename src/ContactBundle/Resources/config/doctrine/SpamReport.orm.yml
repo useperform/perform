@@ -22,6 +22,7 @@ Perform\ContactBundle\Entity\SpamReport:
     manyToOne:
         message:
             targetEntity: Perform\ContactBundle\Entity\Message
+            inversedBy: spamReports
             joinColumn:
                 nullable: false
             

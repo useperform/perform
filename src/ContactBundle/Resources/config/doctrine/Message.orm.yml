@@ -26,3 +26,7 @@ Perform\ContactBundle\Entity\Message:
             gedmo:
                 timestampable:
                     on: update
+    oneToMany:
+        spamReports:
+            targetEntity: Perform\ContactBundle\Entity\SpamReport
+            mappedBy: message
