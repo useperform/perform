@@ -39,6 +39,24 @@ class SimplifiedYamlDriver extends BaseDriver
         foreach ($this->extendedEntities as $parent => $child) {
             if (isset($config[$parent])) {
                 $config[$parent]['type'] = 'mappedSuperclass';
+
+                //can't have relations on a mappedSuperclass, they will be picked up by the child
+                unset($config[$parent]['oneToMany']);
+                unset($config[$parent]['manyToMany']);
+            }
+
+            if (isset($config[$child])) {
+                //move relations from the parent down to the child
+                $parentConfig = Yaml::parse(file_get_contents($this->locator->findMappingFile($parent)))[$parent];
+                foreach (['oneToMany', 'manyToMany'] as $relationType) {
+                    if (!isset($parentConfig[$relationType])) {
+                        continue;
+                    }
+                    $config[$child][$relationType] = isset($config[$child][$relationType]) ?
+                                                   array_merge($parentConfig[$relationType], $config[$child][$relationType]) :
+                                                   $parentConfig[$relationType];
+
+                }
             }
         }
 
