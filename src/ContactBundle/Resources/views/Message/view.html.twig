@@ -30,7 +30,7 @@
       {% if entity.isSpam() %}
         <div class="alert alert-danger">
           <h4><i class="fa fa-warning"></i> This message was identified as spam.</h4>
-          {% for report in [] %}
+          {% for report in entity.spamReports %}
             {% include 'PerformContactBundle:SpamReport:'~report.type~'.html.twig' with {report: report}%}
           {% endfor %}
         </div>
