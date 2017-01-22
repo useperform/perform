@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Perform\BaseBundle\Type\EntityTypeConfig;
 use Doctrine\ORM\QueryBuilder;
 use Perform\BaseBundle\Type\TypeConfig;
+use Perform\BaseBundle\Filter\FilterConfig;
 
 /**
  * EntitySelector.
@@ -35,6 +36,7 @@ class EntitySelector
             ->select('e')
             ->from($entityName, 'e');
 
+        //potentially add sorting, using custom functions from TypeConfig
         $orderField = $request->query->get('sort', null);
         $direction = strtoupper($request->query->get('direction', 'asc'));
         if ($direction !== 'DESC') {
@@ -45,8 +47,14 @@ class EntitySelector
             throw new \UnexpectedValueException(sprintf('The sort function for %s->%s must return an instance of Doctrine\ORM\QueryBuilder.', $entityName, $orderField));
         }
 
-        //pass the builder into the admin for potential filtering, or even
-        //creating a new builder entirely
+        //potentially add filtering, using FilterConfig from the
+        //admin, or even returning a new builder entirely
+        $filterName = $request->query->get('filter', null);
+
+        $qb = $this->maybeFilter($qb, $entityName, $filterName);
+        if (!$qb instanceof QueryBuilder) {
+            throw new \UnexpectedValueException(sprintf('The filter function "%s" for %s must return an instance of Doctrine\ORM\QueryBuilder.', $filterName, $entityName));
+        }
 
         $paginator = new Pagerfanta(new DoctrineORMAdapter($qb));
         $paginator->setMaxPerPage(10);
@@ -83,5 +91,24 @@ class EntitySelector
         }
 
         return $qb;
+    }
+
+    /**
+     * @return QueryBuilder
+     */
+    protected function maybeFilter(QueryBuilder $qb, $entityName, $filterName)
+    {
+        if (!$filterName) {
+            return $qb;
+        }
+
+        $config = new FilterConfig();
+        $this->registry->getAdmin($entityName)->configureFilters($config);
+        $filter = $config->getFilter($filterName);
+        if (!$filter) {
+            return $qb;
+        }
+
+        return $filter['query']($qb);
     }
 }
