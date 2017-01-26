@@ -64,7 +64,7 @@ class CrudExtension extends \Twig_Extension
 
     public function entityName($entity)
     {
-        return $this->adminRegistry->getAdminForEntity($entity)->getNameForEntity($entity);
+        return $this->adminRegistry->getAdmin($entity)->getNameForEntity($entity);
     }
 
     public function getName()

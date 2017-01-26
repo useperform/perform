@@ -31,7 +31,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $user = new User();
         $this->adminRegistry->expects($this->any())
-            ->method('getAdminForEntity')
+            ->method('getAdmin')
             ->with($user)
             ->will($this->returnValue(new UserAdmin()));
         $this->urlGenerator->expects($this->any())
@@ -77,7 +77,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->method('getId')
             ->will($this->returnValue(1));
         $this->adminRegistry->expects($this->any())
-            ->method('getAdminForEntity')
+            ->method('getAdmin')
             ->with($user)
             ->will($this->returnValue(new UserAdmin()));
         $this->urlGenerator->expects($this->any())
@@ -95,7 +95,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->method('getId')
             ->will($this->returnValue(1));
         $this->adminRegistry->expects($this->any())
-            ->method('getAdminForEntity')
+            ->method('getAdmin')
             ->with($user)
             ->will($this->returnValue(new UserAdmin()));
         $this->urlGenerator->expects($this->any())
@@ -114,7 +114,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->method('getId')
             ->will($this->returnValue(1));
         $this->adminRegistry->expects($this->any())
-            ->method('getAdminForEntity')
+            ->method('getAdmin')
             ->with($user)
             ->will($this->returnValue(new UserAdmin()));
         $this->urlGenerator->expects($this->any())
@@ -131,7 +131,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $user->expects($this->never())
             ->method('getId');
         $this->adminRegistry->expects($this->any())
-            ->method('getAdminForEntity')
+            ->method('getAdmin')
             ->with($user)
             ->will($this->returnValue(new UserAdmin()));
         $this->urlGenerator->expects($this->any())
@@ -150,7 +150,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->method('getId')
             ->will($this->returnValue(1));
         $this->adminRegistry->expects($this->any())
-            ->method('getAdminForEntity')
+            ->method('getAdmin')
             ->with($user)
             ->will($this->returnValue(new UserAdmin()));
         $this->urlGenerator->expects($this->any())
@@ -176,9 +176,6 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->adminRegistry->expects($this->any())
             ->method('getAdmin')
             ->will($this->returnValue($admin));
-        $this->adminRegistry->expects($this->any())
-            ->method('getAdminForEntity')
-            ->will($this->returnValue($admin));
 
         $this->assertTrue($this->generator->routeExists('TestBundle:Something', 'create'));
         $this->assertTrue($this->generator->routeExists(new User(), 'create'));
@@ -201,9 +198,6 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->adminRegistry->expects($this->any())
             ->method('getAdmin')
             ->will($this->returnValue($admin));
-        $this->adminRegistry->expects($this->any())
-            ->method('getAdminForEntity')
-            ->will($this->returnValue($admin));
 
         $this->assertSame('some_prefix_list', $this->generator->getDefaultEntityRoute('TestBundle:Something'));
         $this->assertSame('some_prefix_list', $this->generator->getDefaultEntityRoute(new User()));
@@ -224,9 +218,6 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->adminRegistry->expects($this->any())
             ->method('getAdmin')
             ->will($this->returnValue($admin));
-        $this->adminRegistry->expects($this->any())
-            ->method('getAdminForEntity')
-            ->will($this->returnValue($admin));
 
         $this->assertSame('some_prefix_view_default', $this->generator->getDefaultEntityRoute('TestBundle:Something'));
         $this->assertSame('some_prefix_view_default', $this->generator->getDefaultEntityRoute(new User()));
@@ -246,9 +237,6 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
 
         $this->adminRegistry->expects($this->any())
             ->method('getAdmin')
-            ->will($this->returnValue($admin));
-        $this->adminRegistry->expects($this->any())
-            ->method('getAdminForEntity')
             ->will($this->returnValue($admin));
 
         $this->setExpectedException(\Exception::class);
