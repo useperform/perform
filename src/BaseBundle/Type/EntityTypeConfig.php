@@ -4,6 +4,7 @@ namespace Perform\BaseBundle\Type;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Perform\BaseBundle\Admin\AdminRegistry;
+use Perform\BaseBundle\Filter\FilterConfig;
 
 /**
  * EntityTypeConfig enables overriding admin type configuration, e.g. from
@@ -31,5 +32,13 @@ class EntityTypeConfig
         }
 
         return $typeConfig;
+    }
+
+    public function getEntityFilterConfig($entityName)
+    {
+        $config = new FilterConfig();
+        $this->registry->getAdmin($entityName)->configureFilters($config);
+
+        return $config;
     }
 }
