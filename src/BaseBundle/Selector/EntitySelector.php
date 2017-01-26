@@ -102,8 +102,7 @@ class EntitySelector
             return $qb;
         }
 
-        $config = new FilterConfig();
-        $this->registry->getAdmin($entityName)->configureFilters($config);
+        $config = $this->typeConfig->getEntityFilterConfig($entityName);
         $filter = $config->getFilter($filterName);
         if (!$filter) {
             return $qb;
