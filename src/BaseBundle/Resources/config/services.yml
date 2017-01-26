@@ -64,6 +64,11 @@ services:
         tags:
             - {name: twig.extension}
 
+    perform_base.twig.util:
+        class: Perform\BaseBundle\Twig\Extension\UtilExtension
+        tags:
+            - {name: twig.extension}
+
     perform_base.menu_builder:
         class: Perform\BaseBundle\Menu\MenuBuilder
         arguments: ["@knp_menu.factory"]
