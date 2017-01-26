@@ -14,7 +14,7 @@ class UtilExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('human_date', [$this, 'humanDate']),
+            new \Twig_SimpleFilter('perform_human_date', [$this, 'humanDate']),
         ];
     }
 
