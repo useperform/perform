@@ -49,19 +49,15 @@ class AdminRegistry
      */
     public function getAdmin($entity)
     {
+        if (!is_string($entity)) {
+            $entity = get_class($entity);
+        }
+
         if (isset($this->admins[$entity])) {
             return $this->container->get($this->admins[$entity]);
         }
 
         throw new AdminNotFoundException(sprintf('Admin not found for entity "%s"', $entity));
-    }
-
-    /**
-     * Get the Admin instance for managing an entity.
-     */
-    public function getAdminForEntity($entity)
-    {
-        return $this->getAdmin(get_class($entity));
     }
 
     /**
