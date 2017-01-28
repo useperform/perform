@@ -60,13 +60,14 @@ class AdminRegistryTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($admin, $this->registry->getAdmin(new User()));
     }
 
-    public function testResolveEntityAlias()
+    public function testResolveEntity()
     {
         $alias = 'PerformBaseBundle:User';
         $classname = 'Perform\BaseBundle\Entity\User';
         $this->registry->addAdmin($alias, $classname, 'admin.service');
 
-        $this->assertSame($classname, $this->registry->resolveEntityAlias($alias));
-        $this->assertSame($classname, $this->registry->resolveEntityAlias($classname));
+        $this->assertSame($classname, $this->registry->resolveEntity($alias));
+        $this->assertSame($classname, $this->registry->resolveEntity($classname));
+        $this->assertSame($classname, $this->registry->resolveEntity(new User()));
     }
 }

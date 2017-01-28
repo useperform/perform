@@ -37,7 +37,6 @@ class AdminRegistry
             throw new \InvalidArgumentException('An admin service must be registered with the entity alias, e.g. PerformBaseBundle:User.');
         }
 
-        $this->admins[$entity] = $service;
         $this->admins[$entityClass] = $service;
         $this->aliases[$entity] = $entityClass;
     }
@@ -49,26 +48,28 @@ class AdminRegistry
      */
     public function getAdmin($entity)
     {
+        $class = $this->resolveEntity($entity);
+        if (isset($this->admins[$class])) {
+            return $this->container->get($this->admins[$class]);
+        }
+
+        throw new AdminNotFoundException(sprintf('Admin not found for entity "%s"', $class));
+    }
+
+    /**
+     * Get the fully qualified classname of an entity alias or object.
+     *
+     * @param string|object $entity
+     *
+     * @return string
+     */
+    public function resolveEntity($entity)
+    {
         if (!is_string($entity)) {
             $entity = get_class($entity);
         }
 
-        if (isset($this->admins[$entity])) {
-            return $this->container->get($this->admins[$entity]);
-        }
-
-        throw new AdminNotFoundException(sprintf('Admin not found for entity "%s"', $entity));
-    }
-
-    /**
-     * Get the fully qualified classname of an entity.
-     * @param sting $alias
-     *
-     * @return string
-     */
-    public function resolveEntityAlias($alias)
-    {
-        return isset($this->aliases[$alias]) ? $this->aliases[$alias] : $alias;
+        return isset($this->aliases[$entity]) ? $this->aliases[$entity] : $entity;
     }
 
     /**
