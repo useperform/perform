@@ -34,10 +34,7 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
         $this->registry = $this->getMockBuilder('Perform\BaseBundle\Admin\AdminRegistry')
                         ->disableOriginalConstructor()
                         ->getMock();
-        $this->typeConfig = $this->getMockBuilder('Perform\BaseBundle\Type\EntityTypeConfig')
-                          ->disableOriginalConstructor()
-                          ->getMock();
-        $this->selector = new EntitySelector($this->entityManager, $this->registry, $this->typeConfig);
+        $this->selector = new EntitySelector($this->entityManager, $this->registry);
     }
 
     protected function expectQueryBuilder($entityName)
@@ -59,8 +56,8 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
             $typeConfig->add($field, $config);
         }
 
-        $this->typeConfig->expects($this->once())
-            ->method('getEntityTypeConfig')
+        $this->registry->expects($this->once())
+            ->method('getTypeConfig')
             ->with($entityName)
             ->will($this->returnValue($typeConfig));
     }

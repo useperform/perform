@@ -9,7 +9,7 @@ services:
 
     perform_base.form.type.admin:
         class: Perform\BaseBundle\Form\Type\AdminType
-        arguments: ['@perform_base.admin.registry', '@perform_base.type_registry', '@perform_base.entity_type_config']
+        arguments: ['@perform_base.admin.registry', '@perform_base.type_registry']
         tags:
             - {name: form.type}
 
@@ -116,7 +116,6 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@perform_base.admin.registry"
-            - "@perform_base.entity_type_config"
 
     perform_base.settings_importer:
         class: Perform\BaseBundle\Settings\SettingsImporter

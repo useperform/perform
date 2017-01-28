@@ -20,18 +20,16 @@ class AdminType extends AbstractType
 {
     protected $adminRegistry;
     protected $typeRegistry;
-    protected $entityTypeConfig;
 
-    public function __construct(AdminRegistry $adminRegistry, TypeRegistry $typeRegistry, EntityTypeConfig $entityTypeConfig)
+    public function __construct(AdminRegistry $adminRegistry, TypeRegistry $typeRegistry)
     {
         $this->adminRegistry = $adminRegistry;
         $this->typeRegistry = $typeRegistry;
-        $this->entityTypeConfig = $entityTypeConfig;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $typeConfig = $this->entityTypeConfig->getEntityTypeConfig($options['entity']);
+        $typeConfig = $this->adminRegistry->getTypeConfig($options['entity']);
         $fields = $typeConfig->getTypes($options['context']);
         $method = $options['context'] === TypeConfig::CONTEXT_CREATE ? 'createContext' : 'editContext';
 

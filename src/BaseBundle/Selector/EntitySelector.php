@@ -20,14 +20,12 @@ use Perform\BaseBundle\Filter\FilterConfig;
 class EntitySelector
 {
     protected $entityManager;
-    protected $typeConfig;
     protected $registry;
 
-    public function __construct(EntityManagerInterface $entityManager, AdminRegistry $registry, EntityTypeConfig $typeConfig)
+    public function __construct(EntityManagerInterface $entityManager, AdminRegistry $registry)
     {
         $this->entityManager = $entityManager;
         $this->registry = $registry;
-        $this->typeConfig = $typeConfig;
     }
 
     public function listContext(Request $request, $entityName)
@@ -77,7 +75,7 @@ class EntitySelector
             return $qb;
         }
 
-        $typeConfig = $this->typeConfig->getEntityTypeConfig($entityName)->getTypes(TypeConfig::CONTEXT_LIST);
+        $typeConfig = $this->registry->getTypeConfig($entityName)->getTypes(TypeConfig::CONTEXT_LIST);
         if (!isset($typeConfig[$orderField]['options']['sort'])) {
             return $qb;
         }
@@ -102,7 +100,7 @@ class EntitySelector
             return $qb;
         }
 
-        $config = $this->typeConfig->getEntityFilterConfig($entityName);
+        $config = $this->registry->getFilterConfig($entityName);
         $filter = $config->getFilter($filterName);
         if (!$filter) {
             return $qb;
