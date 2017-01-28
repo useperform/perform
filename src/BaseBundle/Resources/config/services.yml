@@ -3,10 +3,6 @@ services:
         class: Perform\BaseBundle\Admin\AdminRegistry
         arguments: ['@service_container', '%perform_base.admins%']
 
-    perform_base.entity_type_config:
-        class: Perform\BaseBundle\Type\EntityTypeConfig
-        arguments: ['@perform_base.admin.registry', '%perform_base.admins%']
-
     perform_base.form.type.admin:
         class: Perform\BaseBundle\Form\Type\AdminType
         arguments: ['@perform_base.admin.registry', '@perform_base.type_registry']
