@@ -1,7 +1,7 @@
 services:
     perform_base.admin.registry:
         class: Perform\BaseBundle\Admin\AdminRegistry
-        arguments: ['@service_container']
+        arguments: ['@service_container', '%perform_base.admins%']
 
     perform_base.entity_type_config:
         class: Perform\BaseBundle\Type\EntityTypeConfig

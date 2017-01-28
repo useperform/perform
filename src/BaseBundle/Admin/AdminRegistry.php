@@ -4,6 +4,7 @@ namespace Perform\BaseBundle\Admin;
 
 use Perform\BaseBundle\Exception\AdminNotFoundException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Perform\BaseBundle\Type\TypeConfig;
 
 /**
  * AdminRegistry.
@@ -15,10 +16,13 @@ class AdminRegistry
     protected $container;
     protected $admins = [];
     protected $aliases = [];
+    protected $typeConfigs = [];
+    protected $override = [];
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, array $override = [])
     {
         $this->container = $container;
+        $this->override = $override;
     }
 
     /**
@@ -39,6 +43,10 @@ class AdminRegistry
 
         $this->admins[$entityClass] = $service;
         $this->aliases[$entity] = $entityClass;
+        if (isset($this->override[$entity])) {
+            $this->override[$entityClass] = $this->override[$entity];
+            unset($this->override[$entity]);
+        }
     }
 
     /**
@@ -78,5 +86,31 @@ class AdminRegistry
     public function getAdmins()
     {
         return $this->admins;
+    }
+
+    /**
+     * Get the TypeConfig for an entity. The type config may include
+     * overrides from application configuration.
+     *
+     * @param string|object $entity
+     *
+     * @return TypeConfig
+     */
+    public function getTypeConfig($entity)
+    {
+        $class = $this->resolveEntity($entity);
+        if (!isset($this->typeConfigs[$class])) {
+            $typeConfig = new TypeConfig();
+            $this->getAdmin($class)->configureTypes($typeConfig);
+
+            if (isset($this->override[$class]['types'])) {
+                foreach ($this->override[$class]['types'] as $field => $config) {
+                    $typeConfig->add($field, $config);
+                }
+            }
+            $this->typeConfigs[$class] = $typeConfig;
+        }
+
+        return $this->typeConfigs[$class];
     }
 }
