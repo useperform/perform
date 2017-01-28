@@ -5,6 +5,7 @@ namespace Perform\BaseBundle\Admin;
 use Perform\BaseBundle\Exception\AdminNotFoundException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Perform\BaseBundle\Type\TypeConfig;
+use Perform\BaseBundle\Filter\FilterConfig;
 
 /**
  * AdminRegistry.
@@ -112,5 +113,24 @@ class AdminRegistry
         }
 
         return $this->typeConfigs[$class];
+    }
+
+    /**
+     * Get the FilterConfig for an entity. The filter config may include
+     * overrides from application configuration.
+     *
+     * @param string|object $entity
+     *
+     * @return FilterConfig
+     */
+    public function getFilterConfig($entity)
+    {
+        $class = $this->resolveEntity($entity);
+        if (!isset($this->filterConfigs[$class])) {
+            $this->filterConfigs[$class] = new FilterConfig();
+            $this->getAdmin($class)->configureFilters($this->filterConfigs[$class]);
+        }
+
+        return $this->filterConfigs[$class];
     }
 }

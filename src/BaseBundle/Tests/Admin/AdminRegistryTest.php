@@ -5,6 +5,7 @@ namespace Perform\BaseBundle\Tests\Admin;
 use Perform\BaseBundle\Admin\AdminRegistry;
 use Perform\BaseBundle\Entity\User;
 use Perform\BaseBundle\Type\TypeConfig;
+use Perform\BaseBundle\Filter\FilterConfig;
 
 /**
  * AdminRegistryTest.
@@ -146,5 +147,32 @@ class AdminRegistryTest extends \PHPUnit_Framework_TestCase
 
         $config = $registry->getTypeConfig(User::class);
         $this->assertArrayHasKey('slug', $config->getTypes(TypeConfig::CONTEXT_LIST));
+    }
+
+    public function testGetFilterConfig()
+    {
+        $admin = $this->getMock('Perform\BaseBundle\Admin\AdminInterface');
+        $alias = 'PerformBaseBundle:User';
+        $classname = 'Perform\BaseBundle\Entity\User';
+        $this->registry->addAdmin($alias, $classname, 'admin.service');
+        $this->container->expects($this->any())
+            ->method('get')
+            ->with('admin.service')
+            ->will($this->returnValue($admin));
+        $admin->expects($this->once())
+            ->method('configureFilters')
+            ->with($this->callback(function($config) {
+                    return $config instanceof FilterConfig;
+            }));
+
+        $aliasConfig = $this->registry->getFilterConfig($alias);
+        $classConfig = $this->registry->getFilterConfig($classname);
+        $objectConfig = $this->registry->getFilterConfig(new User());
+
+        $this->assertInstanceOf(FilterConfig::class, $aliasConfig);
+        //check the same object is always returned
+        $this->assertSame($aliasConfig, $classConfig);
+        $this->assertSame($aliasConfig, $objectConfig);
+        $this->assertSame($aliasConfig, $this->registry->getFilterConfig($alias));
     }
 }
