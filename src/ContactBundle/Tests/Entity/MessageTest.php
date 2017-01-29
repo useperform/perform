@@ -15,7 +15,9 @@ class MessageTest extends \PHPUnit_Framework_TestCase
     {
         $m = new Message();
         $this->assertFalse($m->isSpam());
-        $m->setStatus(Message::STATUS_UNREAD);
+        $m->setStatus(Message::STATUS_NEW);
+        $this->assertFalse($m->isSpam());
+        $m->setStatus(Message::STATUS_ARCHIVE);
         $this->assertFalse($m->isSpam());
         $m->setStatus(Message::STATUS_SPAM);
         $this->assertTrue($m->isSpam());

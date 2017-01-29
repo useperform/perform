@@ -11,9 +11,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  **/
 class Message
 {
-    const STATUS_UNREAD = 0;
-    const STATUS_READ = 1;
-    const STATUS_SPAM = 3;
+    const STATUS_NEW = 0;
+    const STATUS_ARCHIVE = 1;
+    const STATUS_SPAM = 2;
 
     /**
      * @var uuid

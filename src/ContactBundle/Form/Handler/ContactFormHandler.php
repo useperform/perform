@@ -51,7 +51,7 @@ class ContactFormHandler
             return false;
         }
         $message = $form->getData();
-        $message->setStatus(Message::STATUS_UNREAD);
+        $message->setStatus(Message::STATUS_NEW);
         $this->entityManager->persist($message);
 
         foreach ($this->spamCheckers as $checker) {
@@ -60,7 +60,7 @@ class ContactFormHandler
 
         $this->entityManager->flush();
 
-        if ($message->getStatus() === Message::STATUS_SPAM) {
+        if ($message->isSpam()) {
             //don't notify on spam
             return static::RESULT_SPAM;
         }
