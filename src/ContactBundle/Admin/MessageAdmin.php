@@ -4,6 +4,8 @@ namespace Perform\ContactBundle\Admin;
 
 use Perform\BaseBundle\Admin\AbstractAdmin;
 use Perform\BaseBundle\Type\TypeConfig;
+use Perform\BaseBundle\Filter\FilterConfig;
+use Perform\ContactBundle\Entity\Message;
 
 /**
  * MessageAdmin
@@ -56,5 +58,27 @@ class MessageAdmin extends AbstractAdmin
                 ],
             ])
             ;
+    }
+
+    public function configureFilters(FilterConfig $config)
+    {
+        $config->add('inbox', [
+            'query' => function($qb) {
+                return $qb->where('e.status = :status')
+                    ->setParameter('status', Message::STATUS_NEW);
+            },
+        ]);
+        $config->add('archive', [
+            'query' => function($qb) {
+                return $qb->where('e.status = :status')
+                    ->setParameter('status', Message::STATUS_ARCHIVE);
+            },
+        ]);
+        $config->add('spam', [
+            'query' => function($qb) {
+                return $qb->where('e.status = :status')
+                    ->setParameter('status', Message::STATUS_SPAM);
+            },
+        ]);
     }
 }
