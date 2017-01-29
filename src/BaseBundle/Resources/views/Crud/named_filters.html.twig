@@ -1,0 +1,9 @@
+<ul class="nav">
+  {% for filter, config in filters %}
+    <li>
+      <a href="{{perform_crud_route(entityClass, 'list', {filter: filter})}}">
+        {{config.label}}
+      </a>
+    </li>
+  {% endfor %}
+</ul>

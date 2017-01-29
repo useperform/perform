@@ -6,16 +6,7 @@
     <div class="col-lg-2">
       <div class="panel panel-default">
         <div class="panel-body">
-          <ul class="nav">
-            {% for filter, config in filters %}
-              <li>
-                <a href="{{perform_crud_route(entityClass, 'list', {filter: filter})}}">
-                  {{filter}}
-                  {#{config.label}#}
-                </a>
-              </li>
-            {% endfor %}
-          </ul>
+          {% include 'PerformBaseBundle:Crud:named_filters.html.twig' %}
         </div>
       </div>
     </div>
