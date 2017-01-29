@@ -3,6 +3,7 @@
 namespace Perform\BaseBundle\Filter;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Perform\BaseBundle\Util\StringUtil;
 
 /**
  * FilterConfig.
@@ -19,7 +20,10 @@ class FilterConfig
         $this->resolver = new OptionsResolver();
         $this->resolver
             ->setRequired(['query'])
-            ->setAllowedTypes('query', 'callable');
+            ->setAllowedTypes('query', 'callable')
+            ->setDefined('label')
+            ->setAllowedTypes('label', 'string')
+            ;
     }
 
     public function getFilter($name)
@@ -34,6 +38,9 @@ class FilterConfig
 
     public function add($name, array $options)
     {
+        if (!isset($options['label'])) {
+            $options['label'] = StringUtil::sensible($name);
+        }
         $this->filters[$name] = $this->resolver->resolve($options);
 
         return $this;

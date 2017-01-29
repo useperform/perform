@@ -52,7 +52,22 @@ class FilterConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('query', $filter);
     }
 
-    // public function testCountingCanBeDisabled()
+    public function testSensibleLabelIsGiven()
+    {
+        $this->config->add('superTitle', ['query' => function() {}]);
+        $this->assertSame('Super title', $this->config->getFilter('superTitle')['label']);
+    }
+
+    public function testLabelCanBeOverridden()
+    {
+        $this->config->add('superTitle', [
+            'query' => function() {},
+            'label' => 'Title',
+        ]);
+        $this->assertSame('Title', $this->config->getFilter('superTitle')['label']);
+    }
+
+    // public function testCountingCanBeEnabled()
     // {
     //     $this->config->add('enabled', [
     //         'query' => function($qb) {
