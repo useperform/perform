@@ -70,7 +70,12 @@ class EntitySelector
 
     protected function assignFilterCounts($entityName)
     {
-        foreach ($this->registry->getFilterConfig($entityName)->getFilters() as $filterName => $filter) {
+        $filterConfig = $this->registry->getFilterConfig($entityName);
+        if (!$filterConfig) {
+            return;
+        }
+
+        foreach ($filterConfig->getFilters() as $filterName => $filter) {
             $config = $filter->getConfig();
             if (!$config['count']) {
                 continue;

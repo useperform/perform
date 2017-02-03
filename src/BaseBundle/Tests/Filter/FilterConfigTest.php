@@ -32,7 +32,7 @@ class FilterConfigTest extends \PHPUnit_Framework_TestCase
             },
         ]));
         $filters = $this->config->getFilters();
-        $this->assertArrayHasKey('query', $filters['test']);
+        $this->assertArrayHasKey('query', $filters['test']->getConfig());
     }
 
     public function testQueryMustBeSupplied()
@@ -48,14 +48,14 @@ class FilterConfigTest extends \PHPUnit_Framework_TestCase
                 return $qb;
             },
         ]));
-        $filter = $this->config->getFilter('test');
+        $filter = $this->config->getFilter('test')->getConfig();
         $this->assertArrayHasKey('query', $filter);
     }
 
     public function testSensibleLabelIsGiven()
     {
         $this->config->add('superTitle', ['query' => function() {}]);
-        $this->assertSame('Super title', $this->config->getFilter('superTitle')['label']);
+        $this->assertSame('Super title', $this->config->getFilter('superTitle')->getConfig()['label']);
     }
 
     public function testLabelCanBeOverridden()
@@ -64,7 +64,7 @@ class FilterConfigTest extends \PHPUnit_Framework_TestCase
             'query' => function() {},
             'label' => 'Title',
         ]);
-        $this->assertSame('Title', $this->config->getFilter('superTitle')['label']);
+        $this->assertSame('Title', $this->config->getFilter('superTitle')->getConfig()['label']);
     }
 
     // public function testCountingCanBeEnabled()
