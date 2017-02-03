@@ -14,6 +14,7 @@ class FilterConfig
 {
     protected $resolver;
     protected $filters = [];
+    protected $defaultFilter;
 
     public function __construct()
     {
@@ -55,7 +56,7 @@ class FilterConfig
      */
     public function setDefault($filter)
     {
-        $this->filter = $filter;
+        $this->defaultFilter = $filter;
 
         return $this;
     }
@@ -65,6 +66,6 @@ class FilterConfig
      */
     public function getDefault()
     {
-        return $this->filter;
+        return $this->defaultFilter;
     }
 }
