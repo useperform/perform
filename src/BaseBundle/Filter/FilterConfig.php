@@ -23,6 +23,8 @@ class FilterConfig
             ->setAllowedTypes('query', 'callable')
             ->setDefined('label')
             ->setAllowedTypes('label', 'string')
+            ->setDefault('count', false)
+            ->setAllowedTypes('count', 'boolean')
             ;
     }
 
