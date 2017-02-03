@@ -81,5 +81,6 @@ class MessageAdmin extends AbstractAdmin
                     ->setParameter('status', Message::STATUS_SPAM);
             },
         ]);
+        $config->setDefault('inbox');
     }
 }
