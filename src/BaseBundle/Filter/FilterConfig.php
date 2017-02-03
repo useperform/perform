@@ -41,7 +41,7 @@ class FilterConfig
         if (!isset($options['label'])) {
             $options['label'] = StringUtil::sensible($name);
         }
-        $this->filters[$name] = $this->resolver->resolve($options);
+        $this->filters[$name] = new Filter($this->resolver->resolve($options));
 
         return $this;
     }

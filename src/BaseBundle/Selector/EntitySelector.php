@@ -100,12 +100,14 @@ class EntitySelector
             return $qb;
         }
 
-        $config = $this->registry->getFilterConfig($entityName);
-        $filter = $config->getFilter($filterName);
+        $filter = $this->registry->getFilterConfig($entityName)->getFilter($filterName);
         if (!$filter) {
             return $qb;
         }
 
-        return $filter['query']($qb);
+        $config = $filter->getConfig();
+        $filteredQuery = $config['query']($qb);
+
+        return $filteredQuery;
     }
 }
