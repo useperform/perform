@@ -49,7 +49,7 @@ class EntitySelector
         //admin, or even returning a new builder entirely
         $filterName = $request->query->get('filter', null);
 
-        $qb = $this->maybeFilter($qb, $entityName, $filterName);
+        $qb = $this->maybeFilter($qb, $entityName, $filterName, true);
         if (!$qb instanceof QueryBuilder) {
             throw new \UnexpectedValueException(sprintf('The filter function "%s" for %s must return an instance of Doctrine\ORM\QueryBuilder.', $filterName, $entityName));
         }
@@ -117,7 +117,7 @@ class EntitySelector
     /**
      * @return QueryBuilder
      */
-    protected function maybeFilter(QueryBuilder $qb, $entityName, $filterName)
+    protected function maybeFilter(QueryBuilder $qb, $entityName, $filterName, $active = false)
     {
         if (!$filterName) {
             return $qb;
@@ -126,6 +126,10 @@ class EntitySelector
         $filter = $this->registry->getFilterConfig($entityName)->getFilter($filterName);
         if (!$filter) {
             return $qb;
+        }
+
+        if ($active) {
+            $filter->setActive(true);
         }
 
         $config = $filter->getConfig();

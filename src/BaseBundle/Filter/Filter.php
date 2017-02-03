@@ -11,6 +11,7 @@ class Filter
 {
     protected $config;
     protected $count;
+    protected $active;
 
     public function __construct(array $config)
     {
@@ -44,5 +45,21 @@ class Filter
     public function hasCount()
     {
         return null !== $this->count;
+    }
+
+    /**
+     * @param bool $active
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->active;
     }
 }
