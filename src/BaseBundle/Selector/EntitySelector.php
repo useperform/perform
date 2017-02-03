@@ -47,7 +47,7 @@ class EntitySelector
 
         //potentially add filtering, using FilterConfig from the
         //admin, or even returning a new builder entirely
-        $filterName = $request->query->get('filter', null);
+        $filterName = $request->query->get('filter', $this->registry->getFilterConfig($entityName)->getDefault());
 
         $qb = $this->maybeFilter($qb, $entityName, $filterName, true);
         if (!$qb instanceof QueryBuilder) {

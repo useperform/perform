@@ -47,4 +47,24 @@ class FilterConfig
 
         return $this;
     }
+
+    /**
+     * @param string $filter
+     *
+     * @return FilterConfig
+     */
+    public function setDefault($filter)
+    {
+        $this->filter = $filter;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefault()
+    {
+        return $this->filter;
+    }
 }
