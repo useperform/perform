@@ -54,6 +54,8 @@ class EntitySelector
             throw new \UnexpectedValueException(sprintf('The filter function "%s" for %s must return an instance of Doctrine\ORM\QueryBuilder.', $filterName, $entityName));
         }
 
+        $this->assignFilterCounts($entityName);
+
         $paginator = new Pagerfanta(new DoctrineORMAdapter($qb));
         $paginator->setMaxPerPage(10);
         $paginator->setCurrentPage($request->query->get('page', 1));
@@ -64,6 +66,22 @@ class EntitySelector
         ];
 
         return [$paginator, $orderBy];
+    }
+
+    protected function assignFilterCounts($entityName)
+    {
+        foreach ($this->registry->getFilterConfig($entityName)->getFilters() as $filterName => $filter) {
+            $config = $filter->getConfig();
+            if (!$config['count']) {
+                continue;
+            }
+            $qb = $this->entityManager->createQueryBuilder()
+                ->select('COUNT(1)')
+                ->from($entityName, 'e');
+            $this->maybeFilter($qb, $entityName, $filterName);
+            $count = $qb->getQuery()->getSingleScalarResult();
+            $filter->setCount($count);
+        }
     }
 
     /**
