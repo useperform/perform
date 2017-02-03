@@ -1,10 +1,12 @@
-<ul class="nav">
+<ul class="nav nav-pills nav-stacked">
   {% for filterName, filter in filters %}
-    <li>
+    <li{% if filter.isActive() %} class="active"{% endif %}>
       <a href="{{perform_crud_route(entityClass, 'list', {filter: filterName})}}">
         {{filter.config.label}}
         {% if filter.hasCount() %}
-          {{filter.count}}
+          <span class="badge pull-right">
+            {{filter.count}}
+          </span>
         {% endif %}
       </a>
     </li>
