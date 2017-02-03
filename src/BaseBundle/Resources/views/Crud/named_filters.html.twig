@@ -1,8 +1,11 @@
 <ul class="nav">
-  {% for filter, config in filters %}
+  {% for filterName, filter in filters %}
     <li>
-      <a href="{{perform_crud_route(entityClass, 'list', {filter: filter})}}">
-        {{config.label}}
+      <a href="{{perform_crud_route(entityClass, 'list', {filter: filterName})}}">
+        {{filter.config.label}}
+        {% if filter.hasCount() %}
+          {{filter.count}}
+        {% endif %}
       </a>
     </li>
   {% endfor %}
