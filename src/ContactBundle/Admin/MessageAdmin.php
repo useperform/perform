@@ -67,6 +67,7 @@ class MessageAdmin extends AbstractAdmin
                 return $qb->where('e.status = :status')
                     ->setParameter('status', Message::STATUS_NEW);
             },
+            'count' => true,
         ]);
         $config->add('archive', [
             'query' => function($qb) {
