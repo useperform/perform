@@ -6,6 +6,7 @@ use Perform\BaseBundle\Selector\EntitySelector;
 use Symfony\Component\HttpFoundation\Request;
 use Pagerfanta\Pagerfanta;
 use Perform\BaseBundle\Type\TypeConfig;
+use Perform\BaseBundle\Filter\FilterConfig;
 
 /**
  * EntitySelectorTest
@@ -34,6 +35,10 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
         $this->registry = $this->getMockBuilder('Perform\BaseBundle\Admin\AdminRegistry')
                         ->disableOriginalConstructor()
                         ->getMock();
+        $this->registry->expects($this->any())
+            ->method('getFilterConfig')
+            ->will($this->returnValue(new FilterConfig([])));
+
         $this->selector = new EntitySelector($this->entityManager, $this->registry);
     }
 
