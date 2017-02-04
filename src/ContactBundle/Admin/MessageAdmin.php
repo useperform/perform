@@ -57,6 +57,7 @@ class MessageAdmin extends AbstractAdmin
                     TypeConfig::CONTEXT_VIEW,
                 ],
             ])
+            ->setDefaultSort('createdAt', 'DESC')
             ;
     }
 
