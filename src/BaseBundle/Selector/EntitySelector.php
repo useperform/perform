@@ -35,8 +35,9 @@ class EntitySelector
             ->from($entityName, 'e');
 
         //potentially add sorting, using custom functions from TypeConfig
-        $orderField = $request->query->get('sort', null);
-        $direction = strtoupper($request->query->get('direction', 'asc'));
+        $defaultSort = $this->registry->getTypeConfig($entityName)->getDefaultSort();
+        $orderField = $request->query->get('sort', $defaultSort[0]);
+        $direction = strtoupper($request->query->get('direction', $defaultSort[1]));
         if ($direction !== 'DESC') {
             $direction = 'ASC';
         }

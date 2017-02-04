@@ -19,7 +19,6 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
     protected $registry;
     protected $selector;
     protected $qb;
-    protected $typeConfig;
 
     public function setUp()
     {
@@ -61,7 +60,7 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
             $typeConfig->add($field, $config);
         }
 
-        $this->registry->expects($this->once())
+        $this->registry->expects($this->any())
             ->method('getTypeConfig')
             ->with($entityName)
             ->will($this->returnValue($typeConfig));
@@ -70,6 +69,7 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
     public function testDefaultListContext()
     {
         $this->expectQueryBuilder('Bundle:SomeEntity');
+        $this->expectTypeConfig('Bundle:SomeEntity', []);
         $result = $this->selector->listContext(new Request, 'Bundle:SomeEntity');
 
         $this->assertInternalType('array', $result);
