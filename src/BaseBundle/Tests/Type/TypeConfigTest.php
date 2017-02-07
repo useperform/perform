@@ -4,6 +4,8 @@ namespace Perform\BaseBundle\Tests\Type;
 
 use Perform\BaseBundle\Type\TypeConfig;
 use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
+use Perform\BaseBundle\Type\TypeRegistry;
+use Perform\BaseBundle\Type\StringType;
 
 /**
  * TypeConfigTest.
@@ -16,7 +18,13 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->config = new TypeConfig();
+        $this->typeRegistry = $this->getMockBuilder(TypeRegistry::class)
+                            ->disableOriginalConstructor()
+                            ->getMock();
+        $this->config = new TypeConfig($this->typeRegistry);
+        $this->typeRegistry->expects($this->any())
+            ->method('getType')
+            ->will($this->returnValue(new StringType()));
     }
 
     public function testGetNoTypes()

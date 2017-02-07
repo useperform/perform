@@ -30,7 +30,13 @@ class TypeConfig
     protected $fields = [];
     protected $defaultSort;
 
-    public function __construct()
+    public function __construct(TypeRegistry $registry)
+    {
+        $this->registry = $registry;
+        $this->configureOptionsResolver();
+    }
+
+    protected function configureOptionsResolver()
     {
         $this->resolver = new OptionsResolver();
         $this->resolver
@@ -98,8 +104,7 @@ class TypeConfig
                 throw new MissingOptionsException('TypeConfig#add() requires "type" to be set.');
             }
 
-            $initialConfig = [];
-            // $initialConfig = $this->registry->getType($config['type'])->getDefaultConfig();
+            $initialConfig = $this->registry->getType($config['type'])->getDefaultConfig();
         }
 
         //replace the entire contexts array in the existing config if
