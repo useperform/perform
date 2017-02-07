@@ -35,9 +35,7 @@ class CrudUrlGenerator
         $params = in_array($action, ['view', 'edit', 'delete']) ?
                 array_merge($params, ['id' => $entity->getId()]) :
                 $params;
-        $admin = is_string($entity) ?
-               $this->adminRegistry->getAdmin($entity) :
-               $this->adminRegistry->getAdminForEntity($entity);
+        $admin = $this->adminRegistry->getAdmin($entity);
 
         return $this->urlGenerator->generate($this->createRouteName($admin, $action), $params);
     }
@@ -52,9 +50,7 @@ class CrudUrlGenerator
      */
     public function routeExists($entity, $action)
     {
-        $admin = is_string($entity) ?
-               $this->adminRegistry->getAdmin($entity) :
-               $this->adminRegistry->getAdminForEntity($entity);
+        $admin = $this->adminRegistry->getAdmin($entity);
 
         return in_array($action, $admin->getActions());
     }
@@ -66,9 +62,7 @@ class CrudUrlGenerator
 
     public function getDefaultEntityRoute($entity)
     {
-        $admin = is_string($entity) ?
-               $this->adminRegistry->getAdmin($entity) :
-               $this->adminRegistry->getAdminForEntity($entity);
+        $admin = $this->adminRegistry->getAdmin($entity);
 
         $actions = $admin->getActions();
 

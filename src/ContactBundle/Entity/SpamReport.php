@@ -2,6 +2,8 @@
 
 namespace Perform\ContactBundle\Entity;
 
+use Symfony\Component\HttpFoundation\Request;
+
 class SpamReport
 {
     /**
@@ -12,7 +14,7 @@ class SpamReport
     /**
      * @var string
      */
-    protected $report;
+    protected $type;
 
     /**
      * @var string
@@ -25,11 +27,6 @@ class SpamReport
     protected $userAgent;
 
     /**
-     * @var string
-     */
-    protected $lang;
-
-    /**
      * @var \DateTime
      */
     protected $createdAt;
@@ -38,6 +35,16 @@ class SpamReport
      * @var Message
      */
     protected $message;
+
+    public static function createFromRequest(Request $request)
+    {
+        $report = new static();
+        $ip = $request->getClientIp();
+        $report->setIp($ip ?: 'Unknown');
+        $report->setUserAgent($request->headers->get('User-Agent', 'Unknown'));
+
+        return $report;
+    }
 
     /**
      * @return uuid
@@ -48,13 +55,13 @@ class SpamReport
     }
 
     /**
-     * @param string $report
+     * @param string $type
      *
-     * @return SpamReport
+     * @return SpamType
      */
-    public function setReport($report)
+    public function setType($type)
     {
-        $this->report = $report;
+        $this->type = $type;
 
         return $this;
     }
@@ -62,9 +69,9 @@ class SpamReport
     /**
      * @return string
      */
-    public function getReport()
+    public function getType()
     {
-        return $this->report;
+        return $this->type;
     }
 
     /**
@@ -105,26 +112,6 @@ class SpamReport
     public function getUserAgent()
     {
         return $this->userAgent;
-    }
-
-    /**
-     * @param string $lang
-     *
-     * @return SpamReport
-     */
-    public function setLang($lang)
-    {
-        $this->lang = $lang;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLang()
-    {
-        return $this->lang;
     }
 
     /**

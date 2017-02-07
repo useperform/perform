@@ -1,0 +1,50 @@
+<table class="table">
+  <thead>
+    {% set query = app.request.query.all() %}
+    {% for field, config in fields %}
+      <th>
+        {% if not config.options.sort %}
+          {{config.options.label}}
+        {% elseif orderBy.field is same as(field) %}
+          {% if orderBy.direction == 'ASC' %}
+            <a href="{{perform_crud_route(entityClass, 'list', query|merge({sort: field, direction: 'desc'}))}}">
+              {{config.options.label}}
+            </a>
+            <i class="fa fa-sort-asc"></i>
+          {% elseif orderBy.direction == 'DESC' %}
+            <a href="{{perform_crud_route(entityClass, 'list', query|merge({sort: null, direction: 'n'}))}}">
+              {{config.options.label}}
+            </a>
+            <i class="fa fa-sort-desc"></i>
+          {% endif %}
+        {% else %}
+          <a href="{{perform_crud_route(entityClass, 'list', query|merge({sort: field, direction: 'asc'}))}}">
+            {{config.options.label}}
+          </a>
+        {% endif %}
+      </th>
+    {% endfor %}
+  </thead>
+  <tbody>
+    {% for entity in paginator.currentPageResults %}
+      <tr>
+        {% for field, config in fields %}
+          <th>{{perform_crud_list_context(entity, field, config)}}</th>
+        {% endfor %}
+        {% block entityActions %}
+          <td>
+            {% if perform_crud_route_exists(entity, 'view') %}
+              <a href="{{perform_crud_route(entity, 'view')}}">View</a>
+            {% endif %}
+            {% if perform_crud_route_exists(entity, 'edit') %}
+              <a href="{{perform_crud_route(entity, 'edit')}}">Edit</a>
+            {% endif %}
+            {% if perform_crud_route_exists(entity, 'delete') %}
+              <a href="#" data-action="{{perform_crud_route(entity, 'delete')}}" data-toggle="modal" data-target="#modal-delete">Delete</a>
+            {% endif %}
+          </td>
+        {% endblock %}
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

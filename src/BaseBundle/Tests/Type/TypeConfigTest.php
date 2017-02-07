@@ -187,4 +187,17 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->assertFalse($this->config->getTypes(TypeConfig::CONTEXT_LIST)['enabled']['options']['sort']);
     }
+
+    public function testDefaultSort()
+    {
+        $this->assertSame([null, 'ASC'], $this->config->getDefaultSort());
+        $this->assertSame($this->config, $this->config->setDefaultSort('title', 'DESC'));
+        $this->assertSame(['title', 'DESC'], $this->config->getDefaultSort());
+    }
+
+    public function testDefaultSortWithIllegalDirection()
+    {
+        $this->setExpectedException('\InvalidArgumentException');
+        $this->config->setDefaultSort('title', 'foo');
+    }
 }

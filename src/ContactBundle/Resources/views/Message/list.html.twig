@@ -1,0 +1,25 @@
+{% extends 'PerformBaseBundle:Crud:list.html.twig' %}
+
+{% block workspace %}
+  <h3><i class="fa fa-angle-right"></i> Contact Form Messages</h3>
+  <div class="row mt">
+    <div class="col-lg-2">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          {% include 'PerformBaseBundle:Crud:named_filters.html.twig' %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-10">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          {% include 'PerformBaseBundle:Crud:table.html.twig' %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% block paginator %}
+    {% include 'PerformBaseBundle:Crud:paginator.html.twig' %}
+  {% endblock %}
+{% endblock %}

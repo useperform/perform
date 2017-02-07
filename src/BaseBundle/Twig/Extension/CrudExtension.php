@@ -3,9 +3,7 @@
 namespace Perform\BaseBundle\Twig\Extension;
 
 use Perform\BaseBundle\Routing\CrudUrlGenerator;
-use Perform\BaseBundle\Util\StringUtil;
 use Perform\BaseBundle\Type\TypeRegistry;
-use Carbon\Carbon;
 use Perform\BaseBundle\Type\TypeConfig;
 use Perform\BaseBundle\Admin\AdminRegistry;
 
@@ -38,13 +36,6 @@ class CrudExtension extends \Twig_Extension
         ];
     }
 
-    public function getFilters()
-    {
-        return [
-            new \Twig_SimpleFilter('human_date', [$this, 'humanDate']),
-        ];
-    }
-
     public function listContext($entity, $field, array $config)
     {
         $type = $this->typeRegistry->getType($config['type']);
@@ -71,17 +62,9 @@ class CrudExtension extends \Twig_Extension
         return htmlspecialchars($value);
     }
 
-    public function humanDate(\DateTime $date = null)
-    {
-        if (!$date) {
-            return '';
-        }
-        return Carbon::instance($date)->diffForHumans();
-    }
-
     public function entityName($entity)
     {
-        return $this->adminRegistry->getAdminForEntity($entity)->getNameForEntity($entity);
+        return $this->adminRegistry->getAdmin($entity)->getNameForEntity($entity);
     }
 
     public function getName()

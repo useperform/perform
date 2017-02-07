@@ -9,6 +9,21 @@ services:
         tags:
             - { name: perform_base.link_provider, alias: contact }
 
+    perform_contact.form.type.honeypot:
+        class: Perform\ContactBundle\Form\Type\HoneypotType
+        arguments:
+            - "@event_dispatcher"
+        tags:
+            - { name: form.type }
+
+    perform_contact.spam_checker.honeypot:
+        class: Perform\ContactBundle\SpamChecker\HoneypotChecker
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@logger"
+        tags:
+            - { name: kernel.event_listener, event: perform_honeypot_caught, method: onHoneypotCaught }
+
     perform_contact.form.handler.contact:
         class: Perform\ContactBundle\Form\Handler\ContactFormHandler
         arguments:
@@ -16,6 +31,8 @@ services:
             - "@perform_notification.notifier"
             - "@perform_notification.provider.settings"
             - "@logger"
+        calls:
+            - [addSpamChecker, ['@perform_contact.spam_checker.honeypot']]
 
     perform_contact.panel.messages:
         class: Perform\ContactBundle\Panel\MessagesPanel

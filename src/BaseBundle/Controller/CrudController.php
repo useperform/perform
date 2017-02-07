@@ -11,6 +11,7 @@ use Symfony\Bridge\Twig\Extension\FormExtension;
 use Perform\BaseBundle\Type\TypeConfig;
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Perform\BaseBundle\Filter\FilterConfig;
 
 /**
  * CrudController
@@ -37,8 +38,14 @@ class CrudController extends Controller
 
     protected function getTypeConfig()
     {
-        return $this->get('perform_base.entity_type_config')
-            ->getEntityTypeConfig($this->entity);
+        return $this->get('perform_base.admin.registry')
+            ->getTypeConfig($this->entity);
+    }
+
+    protected function getFilterConfig()
+    {
+        return $this->get('perform_base.admin.registry')
+            ->getFilterConfig($this->entity);
     }
 
     protected function newEntity()
@@ -92,6 +99,7 @@ class CrudController extends Controller
 
         return [
             'fields' => $this->getTypeConfig()->getTypes(TypeConfig::CONTEXT_LIST),
+            'filters' => $this->getFilterConfig()->getFilters(),
             'orderBy' => $orderBy,
             'routePrefix' => $admin->getRoutePrefix(),
             'paginator' => $paginator,
