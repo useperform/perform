@@ -6,6 +6,7 @@ use Perform\BaseBundle\Selector\EntitySelector;
 use Symfony\Component\HttpFoundation\Request;
 use Pagerfanta\Pagerfanta;
 use Perform\BaseBundle\Type\TypeConfig;
+use Perform\BaseBundle\Filter\FilterConfig;
 
 /**
  * EntitySelectorTest
@@ -18,7 +19,6 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
     protected $registry;
     protected $selector;
     protected $qb;
-    protected $typeConfig;
 
     public function setUp()
     {
@@ -34,10 +34,11 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
         $this->registry = $this->getMockBuilder('Perform\BaseBundle\Admin\AdminRegistry')
                         ->disableOriginalConstructor()
                         ->getMock();
-        $this->typeConfig = $this->getMockBuilder('Perform\BaseBundle\Type\EntityTypeConfig')
-                          ->disableOriginalConstructor()
-                          ->getMock();
-        $this->selector = new EntitySelector($this->entityManager, $this->registry, $this->typeConfig);
+        $this->registry->expects($this->any())
+            ->method('getFilterConfig')
+            ->will($this->returnValue(new FilterConfig([])));
+
+        $this->selector = new EntitySelector($this->entityManager, $this->registry);
     }
 
     protected function expectQueryBuilder($entityName)
@@ -59,8 +60,8 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
             $typeConfig->add($field, $config);
         }
 
-        $this->typeConfig->expects($this->once())
-            ->method('getEntityTypeConfig')
+        $this->registry->expects($this->any())
+            ->method('getTypeConfig')
             ->with($entityName)
             ->will($this->returnValue($typeConfig));
     }
@@ -68,6 +69,7 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
     public function testDefaultListContext()
     {
         $this->expectQueryBuilder('Bundle:SomeEntity');
+        $this->expectTypeConfig('Bundle:SomeEntity', []);
         $result = $this->selector->listContext(new Request, 'Bundle:SomeEntity');
 
         $this->assertInternalType('array', $result);

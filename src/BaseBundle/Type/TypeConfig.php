@@ -26,6 +26,7 @@ class TypeConfig
 
     protected $resolver;
     protected $types = [];
+    protected $defaultSort;
 
     public function __construct()
     {
@@ -92,5 +93,35 @@ class TypeConfig
         $this->types[$name] = $this->resolver->resolve($options);
 
         return $this;
+    }
+
+    /**
+     * @param string $name
+     * @param string $direction
+     *
+     * @return TypeConfig
+     */
+    public function setDefaultSort($name, $direction)
+    {
+        $direction = strtoupper($direction);
+        if ($direction !== 'ASC' && $direction !== 'DESC') {
+            throw new \InvalidArgumentException('Default sort direction must be "ASC" or "DESC"');
+        }
+
+        $this->defaultSort = [$name, $direction];
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDefaultSort()
+    {
+        if (!$this->defaultSort) {
+            $this->defaultSort = [null, 'ASC'];
+        }
+
+        return $this->defaultSort;
     }
 }

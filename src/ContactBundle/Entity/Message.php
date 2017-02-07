@@ -2,6 +2,8 @@
 
 namespace Perform\ContactBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Message
  *
@@ -9,9 +11,9 @@ namespace Perform\ContactBundle\Entity;
  **/
 class Message
 {
-    const STATUS_UNREAD = 0;
-    const STATUS_READ = 1;
-    const STATUS_SPAM = 3;
+    const STATUS_NEW = 0;
+    const STATUS_ARCHIVE = 1;
+    const STATUS_SPAM = 2;
 
     /**
      * @var uuid
@@ -47,6 +49,13 @@ class Message
      * @var int
      */
     protected $status;
+
+    protected $spamReports;
+
+    public function __construct()
+    {
+        $this->spamReports = new ArrayCollection();
+    }
 
     /**
      * @var uuid
@@ -174,5 +183,33 @@ class Message
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSpam()
+    {
+        return $this->status === static::STATUS_SPAM;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getSpamReports()
+    {
+        return $this->spamReports;
+    }
+
+    /**
+     * @param SpamReport $spamReport
+     *
+     * @return Message
+     */
+    public function addSpamReport(SpamReport $spamReport)
+    {
+        $this->spamReports[] = $spamReport;
+
+        return $this;
     }
 }

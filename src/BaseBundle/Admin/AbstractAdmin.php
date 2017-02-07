@@ -4,6 +4,7 @@ namespace Perform\BaseBundle\Admin;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Perform\BaseBundle\Form\Type\AdminType;
+use Perform\BaseBundle\Filter\FilterConfig;
 
 /**
  * AbstractAdmin
@@ -49,5 +50,9 @@ abstract class AbstractAdmin implements AdminInterface
         $pieces = explode('\\', get_class($entity));
         $class = end($pieces);
         return sprintf('%s %s', $class, $entity->getId());
+    }
+
+    public function configureFilters(FilterConfig $config)
+    {
     }
 }

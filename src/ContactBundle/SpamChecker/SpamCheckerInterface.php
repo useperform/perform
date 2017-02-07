@@ -17,15 +17,15 @@ interface SpamCheckerInterface
      * Check if a message is spam, adding the STATUS_SPAM flag to the
      * message.
      *
-     * A form and request may not be supplied if the spam checking is
-     * being applied to old messages.
-     *
      * A checker may record a spam hit using a logger, database table,
      * etc.
      *
-     * @param Message            $message
-     * @param FormInterface|null $form
-     * @param Request|null       $request
+     * If the doctrine entity manager is used to persist new entities,
+     * there is no need to call flush().
+     *
+     * @param Message       $message
+     * @param FormInterface $form
+     * @param Request       $request
      */
-    public function check(Message $message, Form $form = null, Request $request = null);
+    public function check(Message $message, FormInterface $form, Request $request);
 }
