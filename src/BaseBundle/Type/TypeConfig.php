@@ -19,6 +19,13 @@ class TypeConfig
     const CONTEXT_CREATE = 'create';
     const CONTEXT_EDIT = 'edit';
 
+    protected static $optionKeys = [
+        'listOptions',
+        'viewOptions',
+        'createOptions',
+        'editOptions'
+    ];
+
     protected $resolver;
     protected $fields = [];
     protected $defaultSort;
@@ -26,8 +33,6 @@ class TypeConfig
     public function __construct()
     {
         $this->resolver = new OptionsResolver();
-        $optionKeys = ['options', 'listOptions', 'viewOptions', 'createOptions', 'editOptions'];
-
         $this->resolver
             ->setRequired(['type'])
             ->setDefaults([
@@ -38,11 +43,10 @@ class TypeConfig
                     static::CONTEXT_EDIT,
                 ],
                 'sort' => true,
-                'options' => [],
             ])
             ->setAllowedTypes('contexts', 'array')
-            ->setDefined($optionKeys);
-        foreach ($optionKeys as $key) {
+            ->setDefined(static::$optionKeys);
+        foreach (static::$optionKeys as $key) {
             $this->resolver->setAllowedTypes($key, 'array');
         }
     }
@@ -55,20 +59,7 @@ class TypeConfig
                 continue;
             }
 
-            $mergeKey = $context.'Options';
-            $options = isset($config[$mergeKey]) ?
-                     array_merge($config['options'], $config[$mergeKey]) :
-                     $config['options'];
-
-            if (!isset($options['label'])) {
-                $options['label'] = StringUtil::sensible($field);
-            }
-            $options['sort'] = $config['sort'];
-
-            $types[$field] = [
-                'type' => $config['type'],
-                'options' => $options,
-            ];
+            $types[$field] = $this->fields[$field];
         }
 
         return $types;
@@ -82,6 +73,24 @@ class TypeConfig
      */
     public function add($name, array $config)
     {
+        //prepare the config
+        if (!isset($config['options'])) {
+            $config['options'] = [];
+        }
+        if (!isset($config['options']['label'])) {
+            $config['options']['label'] = StringUtil::sensible($name);
+        }
+
+        //construct the option arrays for each context, then remove
+        //'options' itself
+        foreach (static::$optionKeys as $key) {
+            $config[$key] = isset($config[$key]) ?
+                          array_merge($config['options'], $config[$key]) :
+                          $config['options'];
+        }
+        unset($config['options']);
+
+        // existing config is either an existing config, or the default for the type
         if (isset($this->fields[$name])) {
             $initialConfig =  $this->fields[$name];
         } else {
@@ -93,11 +102,13 @@ class TypeConfig
             // $initialConfig = $this->registry->getType($config['type'])->getDefaultConfig();
         }
 
-        //replace the entire contexts array if they are given in the override
+        //replace the entire contexts array in the existing config if
+        //they are given
         if (isset($config['contexts'])) {
             unset($initialConfig['contexts']);
         }
 
+        //merge with the existing config
         $config = array_replace_recursive($initialConfig, $config);
 
         $this->fields[$name] = $this->resolver->resolve($config);
