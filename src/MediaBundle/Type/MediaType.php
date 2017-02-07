@@ -29,6 +29,7 @@ class MediaType extends AbstractType
         $types = (array) (isset($options['types']) ? $options['types'] : $this->registry->getPluginNames());
 
         $builder->add($field, EntityType::class, [
+            'label' => $options['label'],
             'class' => 'PerformMediaBundle:File',
             'choice_label' => 'name',
             'placeholder' => 'None',
@@ -57,6 +58,13 @@ class MediaType extends AbstractType
         return [
             TypeConfig::CONTEXT_LIST,
             TypeConfig::CONTEXT_VIEW,
+        ];
+    }
+
+    public function getDefaultConfig()
+    {
+        return [
+            'sort' => false,
         ];
     }
 }
