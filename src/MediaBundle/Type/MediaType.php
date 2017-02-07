@@ -7,6 +7,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Perform\BaseBundle\Type\AbstractType;
 use Perform\MediaBundle\Plugin\PluginRegistry;
 use Perform\BaseBundle\Type\TypeConfig;
+use Perform\MediaBundle\Entity\File;
 
 /**
  * MediaType
@@ -25,11 +26,18 @@ class MediaType extends AbstractType
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
+        $types = (array) (isset($options['types']) ? $options['types'] : $this->registry->getPluginNames());
+
         $builder->add($field, EntityType::class, [
             'class' => 'PerformMediaBundle:File',
             'choice_label' => 'name',
             'placeholder' => 'None',
             'required' => false,
+            'query_builder' => function($repo) use ($types) {
+                return $repo->createQueryBuilder('f')
+                    ->where('f.type IN (:types)')
+                    ->setParameter('types', $types);
+            }
         ]);
     }
 
@@ -37,7 +45,7 @@ class MediaType extends AbstractType
     {
         $file = $this->accessor->getValue($entity, $field);
 
-        if (!$file) {
+        if (!$file instanceof File) {
             return 'None';
         }
 
