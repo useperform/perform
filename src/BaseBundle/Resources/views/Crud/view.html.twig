@@ -16,7 +16,7 @@
           {% for field, config in fields %}
             <tr>
               <th>
-                {{config.options.label}}
+                {{config.viewOptions.label}}
               </th>
               <td>
                 {{perform_crud_view_context(entity, field, config)}}

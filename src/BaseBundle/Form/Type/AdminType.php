@@ -29,13 +29,14 @@ class AdminType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $context = $options['context'];
         $typeConfig = $this->adminRegistry->getTypeConfig($options['entity']);
-        $fields = $typeConfig->getTypes($options['context']);
-        $method = $options['context'] === TypeConfig::CONTEXT_CREATE ? 'createContext' : 'editContext';
+        $fields = $typeConfig->getTypes($context);
+        $method = $context === TypeConfig::CONTEXT_CREATE ? 'createContext' : 'editContext';
 
         foreach ($fields as $field => $config) {
             $type = $this->typeRegistry->getType($config['type']);
-            $type->$method($builder, $field, $config['options']);
+            $type->$method($builder, $field, $config[$context.'Options']);
         }
     }
 

@@ -3,23 +3,23 @@
     {% set query = app.request.query.all() %}
     {% for field, config in fields %}
       <th>
-        {% if not config.options.sort %}
-          {{config.options.label}}
+        {% if not config.sort %}
+          {{config.listOptions.label}}
         {% elseif orderBy.field is same as(field) %}
           {% if orderBy.direction == 'ASC' %}
             <a href="{{perform_crud_route(entityClass, 'list', query|merge({sort: field, direction: 'desc'}))}}">
-              {{config.options.label}}
+              {{config.listOptions.label}}
             </a>
             <i class="fa fa-sort-asc"></i>
           {% elseif orderBy.direction == 'DESC' %}
             <a href="{{perform_crud_route(entityClass, 'list', query|merge({sort: null, direction: 'n'}))}}">
-              {{config.options.label}}
+              {{config.listOptions.label}}
             </a>
             <i class="fa fa-sort-desc"></i>
           {% endif %}
         {% else %}
           <a href="{{perform_crud_route(entityClass, 'list', query|merge({sort: field, direction: 'asc'}))}}">
-            {{config.options.label}}
+            {{config.listOptions.label}}
           </a>
         {% endif %}
       </th>
