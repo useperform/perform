@@ -12,7 +12,7 @@
             </a>
             <i class="fa fa-sort-asc"></i>
           {% elseif orderBy.direction == 'DESC' %}
-            <a href="{{perform_crud_route(entityClass, 'list', query|merge({sort: null, direction: null}))}}">
+            <a href="{{perform_crud_route(entityClass, 'list', query|merge({sort: null, direction: 'n'}))}}">
               {{config.options.label}}
             </a>
             <i class="fa fa-sort-desc"></i>

@@ -38,8 +38,12 @@ class EntitySelector
         $defaultSort = $this->registry->getTypeConfig($entityName)->getDefaultSort();
         $orderField = $request->query->get('sort', $defaultSort[0]);
         $direction = strtoupper($request->query->get('direction', $defaultSort[1]));
-        if ($direction !== 'DESC') {
+        if ($direction !== 'DESC' && $direction !== 'N') {
             $direction = 'ASC';
+        }
+        //direction can be set to 'N' to override default sorting
+        if ($direction === 'N') {
+            $orderField = null;
         }
         $qb = $this->maybeOrderBy($qb, $entityName, $orderField, $direction);
         if (!$qb instanceof QueryBuilder) {
