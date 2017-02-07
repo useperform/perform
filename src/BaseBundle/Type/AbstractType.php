@@ -38,4 +38,9 @@ abstract class AbstractType implements TypeInterface
     {
         return [];
     }
+
+    public function getDefaultConfig()
+    {
+        return [];
+    }
 }
