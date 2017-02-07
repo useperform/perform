@@ -43,12 +43,15 @@ class EventAdmin extends AbstractAdmin
                 ],
             ])
             ->add('image', [
-                'type' => 'image',
+                'type' => 'media',
                 'contexts' => [
                     TypeConfig::CONTEXT_VIEW,
                     TypeConfig::CONTEXT_CREATE,
                     TypeConfig::CONTEXT_EDIT,
                 ],
+                'options' => [
+                    'types' => 'image',
+                ]
             ])
             ->add('description', [
                 'type' => 'text',
