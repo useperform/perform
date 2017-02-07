@@ -115,6 +115,7 @@ services:
 
     perform_base.asset_strategy:
         class: Symfony\Component\Asset\VersionStrategy\StaticVersionStrategy
+        public: false
         arguments:
             - "%perform_base.auto_asset_version%"
 
