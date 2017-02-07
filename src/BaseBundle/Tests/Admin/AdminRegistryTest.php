@@ -6,6 +6,8 @@ use Perform\BaseBundle\Admin\AdminRegistry;
 use Perform\BaseBundle\Entity\User;
 use Perform\BaseBundle\Type\TypeConfig;
 use Perform\BaseBundle\Filter\FilterConfig;
+use Perform\BaseBundle\Type\TypeRegistry;
+use Perform\BaseBundle\Type\StringType;
 
 /**
  * AdminRegistryTest.
@@ -20,7 +22,20 @@ class AdminRegistryTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
-        $this->registry = new AdminRegistry($this->container);
+        $this->registry = new AdminRegistry($this->container, $this->stubTypeRegistry());
+    }
+
+    protected function stubTypeRegistry()
+    {
+
+        $typeRegistry = $this->getMockBuilder(TypeRegistry::class)
+                      ->disableOriginalConstructor()
+                      ->getMock();
+        $typeRegistry->expects($this->any())
+            ->method('getType')
+            ->will($this->returnValue(new StringType()));
+
+        return $typeRegistry;
     }
 
     public function testAddAndGetAdmin()
@@ -113,7 +128,7 @@ class AdminRegistryTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         ];
-        $registry = new AdminRegistry($this->container, $override);
+        $registry = new AdminRegistry($this->container, $this->stubTypeRegistry(), $override);
 
         $admin = $this->getMock('Perform\BaseBundle\Admin\AdminInterface');
         $registry->addAdmin('PerformBaseBundle:User', 'Perform\BaseBundle\Entity\User', 'admin.service');
@@ -136,7 +151,7 @@ class AdminRegistryTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         ];
-        $registry = new AdminRegistry($this->container, $override);
+        $registry = new AdminRegistry($this->container, $this->stubTypeRegistry(), $override);
 
         $admin = $this->getMock('Perform\BaseBundle\Admin\AdminInterface');
         $registry->addAdmin('PerformBaseBundle:User', 'Perform\BaseBundle\Entity\User', 'admin.service');

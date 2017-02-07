@@ -6,6 +6,7 @@ use Perform\BaseBundle\Exception\AdminNotFoundException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Perform\BaseBundle\Type\TypeConfig;
 use Perform\BaseBundle\Filter\FilterConfig;
+use Perform\BaseBundle\Type\TypeRegistry;
 
 /**
  * AdminRegistry.
@@ -15,14 +16,16 @@ use Perform\BaseBundle\Filter\FilterConfig;
 class AdminRegistry
 {
     protected $container;
+    protected $typeRegistry;
     protected $admins = [];
     protected $aliases = [];
     protected $typeConfigs = [];
     protected $override = [];
 
-    public function __construct(ContainerInterface $container, array $override = [])
+    public function __construct(ContainerInterface $container, TypeRegistry $typeRegistry, array $override = [])
     {
         $this->container = $container;
+        $this->typeRegistry = $typeRegistry;
         $this->override = $override;
     }
 
@@ -101,7 +104,7 @@ class AdminRegistry
     {
         $class = $this->resolveEntity($entity);
         if (!isset($this->typeConfigs[$class])) {
-            $typeConfig = new TypeConfig();
+            $typeConfig = new TypeConfig($this->typeRegistry);
             $this->getAdmin($class)->configureTypes($typeConfig);
 
             if (isset($this->override[$class]['types'])) {
