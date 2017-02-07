@@ -113,6 +113,11 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@perform_base.admin.registry"
 
+    perform_base.asset_strategy:
+        class: Symfony\Component\Asset\VersionStrategy\StaticVersionStrategy
+        arguments:
+            - "%perform_base.auto_asset_version%"
+
     perform_base.settings_importer:
         class: Perform\BaseBundle\Settings\SettingsImporter
         arguments: ["@doctrine.orm.entity_manager"]
