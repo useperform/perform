@@ -45,7 +45,7 @@ class AdminType extends AbstractType
         $resolver->setRequired(['context', 'entity']);
         $resolver->setAllowedValues('context', [TypeConfig::CONTEXT_CREATE, TypeConfig::CONTEXT_EDIT]);
         $resolver->setDefault('data_class', function(Options $options) {
-            return $this->adminRegistry->resolveEntityAlias($options['entity']);
+            return $this->adminRegistry->resolveEntity($options['entity']);
         });
     }
 }

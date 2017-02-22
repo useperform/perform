@@ -91,7 +91,7 @@ class CollectionType extends AbstractType
         }
 
         $text = '<ul>';
-        $admin = $this->adminRegistry->getAdminForEntity($collection[0]);
+        $admin = $this->adminRegistry->getAdmin($collection[0]);
         foreach ($collection as $item) {
             $text .= sprintf('<li>%s</li>', $admin->getNameForEntity($item));
         }
