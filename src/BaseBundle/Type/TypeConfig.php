@@ -5,6 +5,7 @@ namespace Perform\BaseBundle\Type;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Perform\BaseBundle\Util\StringUtil;
+use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 
 /**
  * TypeConfig
@@ -17,22 +18,27 @@ class TypeConfig
     const CONTEXT_VIEW = 'view';
     const CONTEXT_CREATE = 'create';
     const CONTEXT_EDIT = 'edit';
-    protected static $contextKeys = [
-        'list' => 'listOptions',
-        'view' => 'viewOptions',
-        'create' => 'createOptions',
-        'edit' => 'editOptions',
+
+    protected static $optionKeys = [
+        'listOptions',
+        'viewOptions',
+        'createOptions',
+        'editOptions'
     ];
 
     protected $resolver;
-    protected $types = [];
+    protected $fields = [];
     protected $defaultSort;
 
-    public function __construct()
+    public function __construct(TypeRegistry $registry)
+    {
+        $this->registry = $registry;
+        $this->configureOptionsResolver();
+    }
+
+    protected function configureOptionsResolver()
     {
         $this->resolver = new OptionsResolver();
-        $optionKeys = ['options', 'listOptions', 'viewOptions', 'createOptions', 'editOptions'];
-
         $this->resolver
             ->setRequired(['type'])
             ->setDefaults([
@@ -43,11 +49,10 @@ class TypeConfig
                     static::CONTEXT_EDIT,
                 ],
                 'sort' => true,
-                'options' => [],
             ])
             ->setAllowedTypes('contexts', 'array')
-            ->setDefined($optionKeys);
-        foreach ($optionKeys as $key) {
+            ->setDefined(static::$optionKeys);
+        foreach (static::$optionKeys as $key) {
             $this->resolver->setAllowedTypes($key, 'array');
         }
     }
@@ -55,42 +60,63 @@ class TypeConfig
     public function getTypes($context)
     {
         $types = [];
-        foreach ($this->types as $field => $config) {
+        foreach ($this->fields as $field => $config) {
             if (!in_array($context, $config['contexts'])) {
                 continue;
             }
 
-            $mergeKey = static::$contextKeys[$context];
-            $options = isset($config[$mergeKey]) ?
-                     array_merge($config['options'], $config[$mergeKey]) :
-                     $config['options'];
-
-            if (!isset($options['label'])) {
-                $options['label'] = StringUtil::sensible($field);
-            }
-            $options['sort'] = $config['sort'];
-
-            $types[$field] = [
-                'type' => $config['type'],
-                'options' => $options,
-            ];
+            $types[$field] = $this->fields[$field];
         }
 
         return $types;
     }
 
-    public function add($name, array $options)
+    /**
+     * Add or amend a field.
+     * If the field is already registered, the config will be merged.
+     * If the field is not registered, the config will be merged with
+     * the default config for that type.
+     */
+    public function add($name, array $config)
     {
-        if (isset($this->types[$name])) {
-            //replace the entire array if contexts are given in the override
-            if (isset($options['contexts'])) {
-                unset($this->types[$name]['contexts']);
-            }
-
-            $options = array_replace_recursive($this->types[$name], $options);
+        //prepare the config
+        if (!isset($config['options'])) {
+            $config['options'] = [];
+        }
+        if (!isset($config['options']['label'])) {
+            $config['options']['label'] = StringUtil::sensible($name);
         }
 
-        $this->types[$name] = $this->resolver->resolve($options);
+        //construct the option arrays for each context, then remove
+        //'options' itself
+        foreach (static::$optionKeys as $key) {
+            $config[$key] = isset($config[$key]) ?
+                          array_merge($config['options'], $config[$key]) :
+                          $config['options'];
+        }
+        unset($config['options']);
+
+        // existing config is either an existing config, or the default for the type
+        if (isset($this->fields[$name])) {
+            $initialConfig =  $this->fields[$name];
+        } else {
+            if (!isset($config['type'])) {
+                throw new MissingOptionsException('TypeConfig#add() requires "type" to be set.');
+            }
+
+            $initialConfig = $this->registry->getType($config['type'])->getDefaultConfig();
+        }
+
+        //replace the entire contexts array in the existing config if
+        //they are given
+        if (isset($config['contexts'])) {
+            unset($initialConfig['contexts']);
+        }
+
+        //merge with the existing config
+        $config = array_replace_recursive($initialConfig, $config);
+
+        $this->fields[$name] = $this->resolver->resolve($config);
 
         return $this;
     }

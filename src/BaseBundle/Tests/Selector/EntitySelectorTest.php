@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Pagerfanta\Pagerfanta;
 use Perform\BaseBundle\Type\TypeConfig;
 use Perform\BaseBundle\Filter\FilterConfig;
+use Perform\BaseBundle\Type\TypeRegistry;
+use Perform\BaseBundle\Type\StringType;
 
 /**
  * EntitySelectorTest
@@ -55,7 +57,13 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
 
     protected function expectTypeConfig($entityName, array $config)
     {
-        $typeConfig = new TypeConfig();
+        $typeRegistry = $this->getMockBuilder(TypeRegistry::class)
+                            ->disableOriginalConstructor()
+                            ->getMock();
+        $typeRegistry->expects($this->any())
+            ->method('getType')
+            ->will($this->returnValue(new StringType()));
+        $typeConfig = new TypeConfig($typeRegistry);
         foreach ($config as $field => $config) {
             $typeConfig->add($field, $config);
         }

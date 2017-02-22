@@ -104,10 +104,10 @@ class EntitySelector
         }
 
         $typeConfig = $this->registry->getTypeConfig($entityName)->getTypes(TypeConfig::CONTEXT_LIST);
-        if (!isset($typeConfig[$orderField]['options']['sort'])) {
+        if (!isset($typeConfig[$orderField]['sort'])) {
             return $qb;
         }
-        $sort = $typeConfig[$orderField]['options']['sort'];
+        $sort = $typeConfig[$orderField]['sort'];
 
         if ($sort === true) {
             return $qb->orderBy('e.'.$orderField, $direction);

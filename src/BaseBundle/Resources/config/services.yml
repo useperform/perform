@@ -1,7 +1,7 @@
 services:
     perform_base.admin.registry:
         class: Perform\BaseBundle\Admin\AdminRegistry
-        arguments: ['@service_container', '%perform_base.admins%']
+        arguments: ['@service_container', '@perform_base.type_registry', '%perform_base.admins%']
 
     perform_base.form.type.admin:
         class: Perform\BaseBundle\Form\Type\AdminType
@@ -112,6 +112,12 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@perform_base.admin.registry"
+
+    perform_base.asset_strategy:
+        class: Symfony\Component\Asset\VersionStrategy\StaticVersionStrategy
+        public: false
+        arguments:
+            - "%perform_base.auto_asset_version%"
 
     perform_base.settings_importer:
         class: Perform\BaseBundle\Settings\SettingsImporter

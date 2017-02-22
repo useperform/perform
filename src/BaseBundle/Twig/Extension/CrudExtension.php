@@ -39,7 +39,7 @@ class CrudExtension extends \Twig_Extension
     public function listContext($entity, $field, array $config)
     {
         $type = $this->typeRegistry->getType($config['type']);
-        $value = $type->listContext($entity, $field, $config['options']);
+        $value = $type->listContext($entity, $field, $config['listOptions']);
 
         if (in_array(TypeConfig::CONTEXT_LIST, $type->getHtmlContexts())) {
             return $value;
@@ -52,7 +52,7 @@ class CrudExtension extends \Twig_Extension
     public function viewContext($entity, $field, array $config)
     {
         $type = $this->typeRegistry->getType($config['type']);
-        $value = $type->viewContext($entity, $field, $config['options']);
+        $value = $type->viewContext($entity, $field, $config['viewOptions']);
 
         if (in_array(TypeConfig::CONTEXT_VIEW, $type->getHtmlContexts())) {
             return $value;
