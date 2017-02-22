@@ -36,6 +36,20 @@ class LoadContentData implements EntityDeclaringFixtureInterface, ContainerAware
         }
 
         $manager->flush();
+
+        if (!$this->container) {
+            return;
+        }
+        $publisher = $this->container->get('perform_cms.publisher');
+
+        //publish the first version of each page
+        $firstVersions = $manager->createQuery(
+            'SELECT v FROM PerformCmsBundle:Version v GROUP BY v.page'
+        )->getResult();
+
+        foreach ($firstVersions as $version) {
+            $publisher->publishVersion($version);
+        }
     }
 
     public function setContainer(ContainerInterface $container = null)
@@ -93,29 +107,27 @@ class LoadContentData implements EntityDeclaringFixtureInterface, ContainerAware
         $version = new Version();
         $version->setTitle('Version number '.$number);
         $version->setPage($page);
-        $manager->persist($version);
 
         foreach ($sections as $sectionName) {
             $section = new Section();
             $section->setName($sectionName);
-            $section->setVersion($version);
+            $version->addSection($section);
             $manager->persist($section);
 
             $count = rand(2, 5);
             for ($k = 0; $k < $count; ++$k) {
-                $block = $this->createBlock($section, $k);
+                $block = $this->createBlock($section);
                 $manager->persist($block);
             }
         }
+        $manager->persist($version);
     }
 
-    protected function createBlock(Section $section, $sortOrder)
+    protected function createBlock(Section $section)
     {
         $type = array_rand($this->blockTypes);
         $block = new Block();
         $block->setType($type);
-        $block->setSection($section);
-        $block->setSortOrder($sortOrder);
 
         // the block types should be responsible for this in the future
         switch ($type) {
@@ -124,6 +136,8 @@ class LoadContentData implements EntityDeclaringFixtureInterface, ContainerAware
         case 'text':
             $block->setValue(['content' => $this->faker->sentence]);
         }
+
+        $section->addBlock($block);
 
         return $block;
     }
