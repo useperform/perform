@@ -16,7 +16,10 @@ class PlaylistItemAdmin extends AbstractAdmin
     {
         $config
             ->add('file', [
-                'type' => 'image',
+                'type' => 'media',
+                'options' => [
+                    'types' => 'audio',
+                ],
             ])
             ->add('title', [
                 'type' => 'string',
