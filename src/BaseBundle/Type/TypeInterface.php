@@ -28,4 +28,9 @@ interface TypeInterface
      * @return array The default config array passed to TypeConfig#add().
      */
     public function getDefaultConfig();
+
+    /**
+     * @return string The name of template to render this field type.
+     */
+    public function getTemplate();
 }

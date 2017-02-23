@@ -39,6 +39,11 @@ abstract class AbstractType implements TypeInterface
         return [];
     }
 
+    public function getTemplate()
+    {
+        return 'PerformBaseBundle:types:simple.html.twig';
+    }
+
     public function getDefaultConfig()
     {
         return [];
