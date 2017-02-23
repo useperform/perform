@@ -1,17 +1,19 @@
 $(function () {
   var bindButtons = function(selector) {
-    $(selector).on('click', '.remove', function(e) {
+    $(selector).on('click', '.remove-item', function(e) {
       e.preventDefault();
       $(this).parent().remove();
     });
   }
 
-  $('.add-track').click(function(e) {
-    const index = $('.collection-row').length;
-    const html = $('#template-track').html();
-    const template = _.template(html.replace(/__name__/g, index));
-    $('.collection-rows').append(template());
+  $('.collection .add-item').click(function(e) {
     e.preventDefault();
+    var parent = $(this).parent();
+    var index = parent.find('.collection-row').length;
+    var field = parent.data('field');
+    var html = $('#template-collection-'+field).html();
+    var template = _.template(html.replace(/__name__/g, index));
+    $('#collection-'+field).append(template());
     bindButtons('.collection-row');
   });
 
