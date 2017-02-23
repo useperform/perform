@@ -5,37 +5,17 @@
   {{form_start(form)}}
   <div class="col-md-4">
     <h4>Details</h4>
-    {{form_row(form.title)}}
+    {{perform_crud_edit_context(entity, 'title', fields.title, form)}}
     <a href="{{perform_crud_route(entity, 'list')}}" class="btn btn-default" tabindex="-1">Cancel</a>
     <button type="submit" class="btn btn-primary">Save</button>
   </div>
   <div class="col-md-8">
     <h4>Tracks</h4>
-    <a class="btn btn-primary add-track" href="#">
-      <i class="fa fa-plus"></i>
-    </a>
-    <div class="collection-rows">
-      {% for item in form.items %}
-        <div class="collection-row">
-          {{form_widget(item)}}
-          <a class="btn btn-danger remove" href="#">
-            <i class="fa fa-trash-o"></i>
-          </a>
-        </div>
-      {% endfor %}
-    </div>
-    {{form_end(form)}}
+    {{perform_crud_edit_context(entity, 'items', fields.items, form)}}
   </div>
+  {{form_end(form)}}
 {% endblock %}
 
 {% block js %}
   <script type="text/javascript" src="{{asset('/bundles/performbase/js/types/collection.js')}}"></script>
-  <script type="text/template" id="template-track">
-    <div class="collection-row">
-      {{form_widget(form.items.vars.prototype)}}
-      <a class="btn btn-danger remove" href="#">
-        <i class="fa fa-trash-o"></i>
-      </a>
-    </div>
-  </script>
 {% endblock %}
