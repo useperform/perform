@@ -6,6 +6,7 @@ use Perform\BaseBundle\Type\TypeConfig;
 use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Perform\BaseBundle\Type\StringType;
+use Perform\BaseBundle\Type\TypeInterface;
 
 /**
  * TypeConfigTest.
@@ -213,5 +214,35 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\InvalidArgumentException');
         $this->config->setDefaultSort('title', 'foo');
+    }
+
+    public function testDefaultConfigFromATypeIsNormalised()
+    {
+        $registry = $this->getMockBuilder(TypeRegistry::class)
+                            ->disableOriginalConstructor()
+                            ->getMock();
+        $config = new TypeConfig($registry);
+        $type = $this->getMock(TypeInterface::class);
+        $registry->expects($this->any())
+            ->method('getType')
+            ->will($this->returnValue($type));
+        //contains options key, which should be normalised to the different contexts
+        $defaultConfig = [
+            'sort' => false,
+            'options' => [
+                'some_type_option' => 'foo'
+            ],
+            'listOptions' => [
+                'some_type_option' => 'bar'
+            ],
+        ];
+        $type->expects($this->any())
+            ->method('getDefaultConfig')
+            ->will($this->returnValue($defaultConfig));
+        $config->add('title', ['type' => 'foo']);
+
+        $resolved = $config->getTypes(TypeConfig::CONTEXT_LIST)['title'];
+        $this->assertSame('foo', $resolved['viewOptions']['some_type_option']);
+        $this->assertSame('bar', $resolved['listOptions']['some_type_option']);
     }
 }

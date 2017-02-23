@@ -79,46 +79,53 @@ class TypeConfig
      */
     public function add($name, array $config)
     {
-        //prepare the config
-        if (!isset($config['options'])) {
-            $config['options'] = [];
-        }
         if (!isset($config['options']['label'])) {
             $config['options']['label'] = StringUtil::sensible($name);
         }
 
-        //construct the option arrays for each context, then remove
-        //'options' itself
+        $this->normaliseOptions($config);
+
+        // use the default for the type if there is no existing config
+        if (!isset($this->fields[$name])) {
+            if (!isset($config['type'])) {
+                throw new MissingOptionsException('TypeConfig#add() requires "type" to be set.');
+            }
+
+            $this->fields[$name] = $this->registry->getType($config['type'])->getDefaultConfig();
+            $this->normaliseOptions($this->fields[$name]);
+        }
+
+        $existingConfig = $this->fields[$name];
+
+        //replace the entire contexts array in the existing config if
+        //they are given
+        if (isset($config['contexts'])) {
+            unset($existingConfig['contexts']);
+        }
+
+        //merge with the existing config
+        $config = array_replace_recursive($existingConfig, $config);
+
+        $this->fields[$name] = $this->resolver->resolve($config);
+
+        return $this;
+    }
+
+    /**
+     * Ensure the options for each context are set, and remove
+     * 'options' itself.
+     */
+    protected function normaliseOptions(&$config)
+    {
+        if (!isset($config['options'])) {
+            $config['options'] = [];
+        }
         foreach (static::$optionKeys as $key) {
             $config[$key] = isset($config[$key]) ?
                           array_merge($config['options'], $config[$key]) :
                           $config['options'];
         }
         unset($config['options']);
-
-        // existing config is either an existing config, or the default for the type
-        if (isset($this->fields[$name])) {
-            $initialConfig =  $this->fields[$name];
-        } else {
-            if (!isset($config['type'])) {
-                throw new MissingOptionsException('TypeConfig#add() requires "type" to be set.');
-            }
-
-            $initialConfig = $this->registry->getType($config['type'])->getDefaultConfig();
-        }
-
-        //replace the entire contexts array in the existing config if
-        //they are given
-        if (isset($config['contexts'])) {
-            unset($initialConfig['contexts']);
-        }
-
-        //merge with the existing config
-        $config = array_replace_recursive($initialConfig, $config);
-
-        $this->fields[$name] = $this->resolver->resolve($config);
-
-        return $this;
     }
 
     /**
