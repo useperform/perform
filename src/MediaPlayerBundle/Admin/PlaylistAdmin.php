@@ -27,7 +27,7 @@ class PlaylistAdmin extends AbstractAdmin
                     'label' => 'Tracks',
                     'itemLabel' => 'track',
                     'entity' => 'PerformMediaPlayerBundle:PlaylistItem',
-                    'sortable' => 'sortOrder',
+                    'sortField' => 'sortOrder',
                 ]
             ])
             ;
