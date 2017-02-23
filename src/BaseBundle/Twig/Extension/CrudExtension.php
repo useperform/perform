@@ -30,36 +30,30 @@ class CrudExtension extends \Twig_Extension
         return [
             new \Twig_SimpleFunction('perform_crud_route', [$this->urlGenerator, 'generate']),
             new \Twig_SimpleFunction('perform_crud_route_exists', [$this->urlGenerator, 'routeExists']),
-            new \Twig_SimpleFunction('perform_crud_list_context', [$this, 'listContext'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFunction('perform_crud_view_context', [$this, 'viewContext'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('perform_crud_list_context', [$this, 'listContext'], ['is_safe' => ['html'], 'needs_environment' => true]),
+            new \Twig_SimpleFunction('perform_crud_view_context', [$this, 'viewContext'], ['is_safe' => ['html'], 'needs_environment' => true]),
             new \Twig_SimpleFunction('perform_crud_entity_name', [$this, 'entityName']),
         ];
     }
 
-    public function listContext($entity, $field, array $config)
+    public function listContext(\Twig_Environment $twig, $entity, $field, array $config)
     {
         $type = $this->typeRegistry->getType($config['type']);
         $value = $type->listContext($entity, $field, $config['listOptions']);
+        $vars = is_array($value) ? $value : ['value' => $value];
+        $template = $type->getTemplate();
 
-        if (in_array(TypeConfig::CONTEXT_LIST, $type->getHtmlContexts())) {
-            return $value;
-        }
-
-        //check how twig does this
-        return htmlspecialchars($value);
+        return $twig->loadTemplate($template)->renderBlock('list', $vars);
     }
 
-    public function viewContext($entity, $field, array $config)
+    public function viewContext(\Twig_Environment $twig, $entity, $field, array $config)
     {
         $type = $this->typeRegistry->getType($config['type']);
         $value = $type->viewContext($entity, $field, $config['viewOptions']);
+        $vars = is_array($value) ? $value : ['value' => $value];
+        $template = $type->getTemplate();
 
-        if (in_array(TypeConfig::CONTEXT_VIEW, $type->getHtmlContexts())) {
-            return $value;
-        }
-
-        //check how twig does this
-        return htmlspecialchars($value);
+        return $twig->loadTemplate($template)->renderBlock('view', $vars);
     }
 
     public function entityName($entity)
