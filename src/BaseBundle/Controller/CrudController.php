@@ -152,6 +152,7 @@ class CrudController extends Controller
         return [
             'entity' => $entity,
             'form' => $formView,
+            'fields' => $this->getTypeConfig()->getTypes(TypeConfig::CONTEXT_CREATE),
         ];
     }
 
