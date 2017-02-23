@@ -53,14 +53,6 @@ class MediaType extends AbstractType
         return $this->registry->getPreview($file, ['size' => 'small']);
     }
 
-    public function getHtmlContexts()
-    {
-        return [
-            TypeConfig::CONTEXT_LIST,
-            TypeConfig::CONTEXT_VIEW,
-        ];
-    }
-
     public function getDefaultConfig()
     {
         return [

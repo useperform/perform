@@ -34,11 +34,6 @@ abstract class AbstractType implements TypeInterface
         return $this->createContext($builder, $field, $options);
     }
 
-    public function getHtmlContexts()
-    {
-        return [];
-    }
-
     public function getTemplate()
     {
         return 'PerformBaseBundle:types:simple.html.twig';

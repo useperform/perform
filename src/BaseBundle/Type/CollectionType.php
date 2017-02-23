@@ -120,11 +120,4 @@ class CollectionType extends AbstractType
             throw new InvalidTypeException(sprintf('The entity field "%s" passed to %s must be an instance of %s', $field, __CLASS__, Collection::class));
         }
     }
-
-    public function getHtmlContexts()
-    {
-        return [
-            TypeConfig::CONTEXT_VIEW,
-        ];
-    }
 }

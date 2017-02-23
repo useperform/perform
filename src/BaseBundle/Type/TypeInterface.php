@@ -20,11 +20,6 @@ interface TypeInterface
     public function editContext(FormBuilderInterface $builder, $field, array $options = []);
 
     /**
-     * @return array An array of TypeConfig::CONTEXT_* constants
-     */
-    public function getHtmlContexts();
-
-    /**
      * @return array The default config array passed to TypeConfig#add().
      */
     public function getDefaultConfig();
