@@ -58,11 +58,9 @@ class CollectionType extends AbstractType
             $originalCollection[] = $item;
         }
 
-        $sortColumn = isset($options['sortable']) && $options['sortable'] !== false
-                    ? $options['sortable']
-                    : false;
+        $sortField = $options['sortField'] !== false ? $options['sortField'] : false;
 
-        $builder->addEventListener(FormEvents::POST_SUBMIT, function($event) use ($field, $originalCollection, $sortColumn) {
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function($event) use ($field, $originalCollection, $sortField) {
             $entity = $event->getData();
             $collection = $this->accessor->getValue($entity, $field);
             foreach ($originalCollection as $item) {
@@ -71,14 +69,23 @@ class CollectionType extends AbstractType
                 }
             }
 
-            if ($sortColumn) {
+            if ($sortField) {
                 $i = 0;
                 foreach ($collection as $item) {
-                    $this->accessor->setValue($item, $sortColumn, $i);
+                    $this->accessor->setValue($item, $sortField, $i);
                     $i++;
                 }
             }
         });
+    }
+
+    public function getDefaultConfig()
+    {
+        return [
+            'options' => [
+                'sortField' => false,
+            ]
+        ];
     }
 
     public function viewContext($entity, $field, array $options = [])
