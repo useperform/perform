@@ -53,12 +53,9 @@ class MediaType extends AbstractType
         return $this->registry->getPreview($file, ['size' => 'small']);
     }
 
-    public function getHtmlContexts()
+    public function getTemplate()
     {
-        return [
-            TypeConfig::CONTEXT_LIST,
-            TypeConfig::CONTEXT_VIEW,
-        ];
+        return 'PerformMediaBundle:types:media.html.twig';
     }
 
     public function getDefaultConfig()

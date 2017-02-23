@@ -18,17 +18,8 @@ class TextType extends AbstractType
         $builder->add($field, TextareaType::class);
     }
 
-    public function listContext($entity, $field, array $options = [])
+    public function getTemplate()
     {
-        //escape the content, then run it through nl2br
-        return nl2br(htmlspecialchars($this->accessor->getValue($entity, $field)));
-    }
-
-    public function getHtmlContexts()
-    {
-        return [
-            TypeConfig::CONTEXT_LIST,
-            TypeConfig::CONTEXT_VIEW,
-        ];
+        return 'PerformBaseBundle:types:text.html.twig';
     }
 }
