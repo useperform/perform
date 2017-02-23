@@ -93,17 +93,15 @@ class CollectionType extends AbstractType
         $collection = $this->accessor->getValue($entity, $field);
         $this->ensureCollection($collection);
 
-        if ($collection->count() < 1) {
-            return;
+        $admin = null;
+        if (isset($collection[0])) {
+            $admin = $this->adminRegistry->getAdmin($collection[0]);
         }
 
-        $text = '<ul>';
-        $admin = $this->adminRegistry->getAdmin($collection[0]);
-        foreach ($collection as $item) {
-            $text .= sprintf('<li>%s</li>', $admin->getNameForEntity($item));
-        }
-
-        return $text.'</ul>';
+        return [
+            'collection' => $collection,
+            'admin' => $admin,
+        ];
     }
 
     public function listContext($entity, $field, array $options = [])
@@ -128,10 +126,8 @@ class CollectionType extends AbstractType
         }
     }
 
-    public function getHtmlContexts()
+    public function getTemplate()
     {
-        return [
-            TypeConfig::CONTEXT_VIEW,
-        ];
+        return 'PerformBaseBundle:types:collection.html.twig';
     }
 }

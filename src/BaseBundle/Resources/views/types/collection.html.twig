@@ -1,0 +1,13 @@
+{% extends 'PerformBaseBundle:types:simple.html.twig' %}
+
+{% block view %}
+  {% if admin is not null %}
+    <ul>
+      {% for item in collection %}
+        <li>
+          {{admin.getNameForEntity(item)}}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock %}

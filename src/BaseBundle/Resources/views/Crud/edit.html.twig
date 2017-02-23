@@ -5,8 +5,8 @@
   <div class="panel panel-default">
     <div class="panel-body">
       {{form_start(form)}}
-      {% for row in form.children %}
-        {{form_row(row)}}
+      {% for field, config in fields %}
+        {{perform_crud_edit_context(entity, field, config, form)}}
       {% endfor %}
       {% block actions %}
         <a href="{{perform_crud_route(entity, 'list')}}" class="btn btn-default" tabindex="-1">Cancel</a>
