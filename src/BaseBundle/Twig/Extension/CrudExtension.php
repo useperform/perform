@@ -6,6 +6,7 @@ use Perform\BaseBundle\Routing\CrudUrlGenerator;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Perform\BaseBundle\Type\TypeConfig;
 use Perform\BaseBundle\Admin\AdminRegistry;
+use Symfony\Component\Form\FormView;
 
 /**
  * CrudExtension.
@@ -32,6 +33,7 @@ class CrudExtension extends \Twig_Extension
             new \Twig_SimpleFunction('perform_crud_route_exists', [$this->urlGenerator, 'routeExists']),
             new \Twig_SimpleFunction('perform_crud_list_context', [$this, 'listContext'], ['is_safe' => ['html'], 'needs_environment' => true]),
             new \Twig_SimpleFunction('perform_crud_view_context', [$this, 'viewContext'], ['is_safe' => ['html'], 'needs_environment' => true]),
+            new \Twig_SimpleFunction('perform_crud_edit_context', [$this, 'editContext'], ['is_safe' => ['html'], 'needs_environment' => true]),
             new \Twig_SimpleFunction('perform_crud_entity_name', [$this, 'entityName']),
         ];
     }
@@ -54,6 +56,18 @@ class CrudExtension extends \Twig_Extension
         $template = $type->getTemplate();
 
         return $twig->loadTemplate($template)->renderBlock('view', $vars);
+    }
+
+    public function editContext(\Twig_Environment $twig, $entity, $field, array $config, FormView $form)
+    {
+        $type = $this->typeRegistry->getType($config['type']);
+        $template = $type->getTemplate();
+        $vars = [
+            'row' => $form[$field],
+            'entity' => $entity,
+        ];
+
+        return $twig->loadTemplate($template)->renderBlock('edit', $vars);
     }
 
     public function entityName($entity)

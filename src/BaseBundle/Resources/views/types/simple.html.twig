@@ -1,15 +1,15 @@
-{% block view %}
-  {{block('list')}}
-{% endblock %}
-
 {% block list %}
   {{value}}
 {% endblock %}
 
-{% block create %}
+{% block view %}
+  {{block('list')}}
+{% endblock %}
 
+{% block create %}
+  {{form_row(row)}}
 {% endblock %}
 
 {% block edit %}
-
+  {{block('create')}}
 {% endblock %}
