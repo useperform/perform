@@ -7,9 +7,10 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Perform\BaseBundle\Type\TypeConfig;
-use Perform\BaseBundle\Type\EntityTypeConfig;
 use Symfony\Component\OptionsResolver\Options;
 use Perform\BaseBundle\Admin\AdminRegistry;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * AdminType.
@@ -30,8 +31,7 @@ class AdminType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $context = $options['context'];
-        $typeConfig = $this->adminRegistry->getTypeConfig($options['entity']);
-        $fields = $typeConfig->getTypes($context);
+        $fields = $this->getTypes($options['entity'], $context);
         $method = $context === TypeConfig::CONTEXT_CREATE ? 'createContext' : 'editContext';
 
         foreach ($fields as $field => $config) {
@@ -40,11 +40,23 @@ class AdminType extends AbstractType
         }
     }
 
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        $view->vars['fields'] = $this->getTypes($options['entity'], $options['context']);
+    }
+
+    protected function getTypes($entity, $context)
+    {
+        $typeConfig = $this->adminRegistry->getTypeConfig($entity);
+
+        return $typeConfig->getTypes($context);
+    }
+
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setRequired(['context', 'entity']);
         $resolver->setAllowedValues('context', [TypeConfig::CONTEXT_CREATE, TypeConfig::CONTEXT_EDIT]);
-        $resolver->setDefault('data_class', function(Options $options) {
+        $resolver->setDefault('data_class', function (Options $options) {
             return $this->adminRegistry->resolveEntity($options['entity']);
         });
     }

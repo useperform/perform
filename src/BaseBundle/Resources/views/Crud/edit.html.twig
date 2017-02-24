@@ -5,7 +5,7 @@
   <div class="panel panel-default">
     <div class="panel-body">
       {{form_start(form)}}
-      {% for field, config in fields %}
+      {% for field, config in form.vars.fields %}
         {{perform_crud_edit_context(entity, field, config, form)}}
       {% endfor %}
       {% block actions %}
