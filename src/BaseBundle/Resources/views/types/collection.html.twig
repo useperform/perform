@@ -18,9 +18,11 @@
       <i class="fa fa-plus"></i>
     </a>
     <div class="collection-rows" id="collection-{{field}}">
-      {% for item in row %}
+      {% for childForm in form[field] %}
         <div class="collection-row">
-          {{form_widget(item)}}
+          {% for childField, childConfig in childForm.vars.fields %}
+            {{perform_crud_edit_context(entity, childField, childConfig, childForm)}}
+          {% endfor %}
           <a class="btn btn-danger remove-item" href="#">
             <i class="fa fa-trash-o"></i>
           </a>
@@ -31,7 +33,8 @@
 
   <script type="text/template" id="template-collection-{{field}}">
      <div class="collection-row">
-      {{form_widget(row.vars.prototype)}}
+      {# need to change how the prototype is created #}
+      {{form_widget(form[field].vars.prototype)}}
       <a class="btn btn-danger remove-item" href="#">
         <i class="fa fa-trash-o"></i>
       </a>
