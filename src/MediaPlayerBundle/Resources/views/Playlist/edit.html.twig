@@ -5,13 +5,13 @@
   {{form_start(form)}}
   <div class="col-md-4">
     <h4>Details</h4>
-    {{perform_crud_edit_context(entity, 'title', fields.title, form)}}
+    {{perform_crud_edit_context(entity, 'title', form.vars.fields.title, form)}}
     <a href="{{perform_crud_route(entity, 'list')}}" class="btn btn-default" tabindex="-1">Cancel</a>
     <button type="submit" class="btn btn-primary">Save</button>
   </div>
   <div class="col-md-8">
     <h4>Tracks</h4>
-    {{perform_crud_edit_context(entity, 'items', fields.items, form)}}
+    {{perform_crud_edit_context(entity, 'items', form.vars.fields.items, form)}}
   </div>
   {{form_end(form)}}
 {% endblock %}
