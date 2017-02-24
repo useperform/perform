@@ -65,7 +65,7 @@ class CrudExtension extends \Twig_Extension
         $template = $type->getTemplate();
         $vars = [
             'field' => $field,
-            'row' => $form[$field],
+            'form' => $form,
             'entity' => $entity,
         ];
 
@@ -78,7 +78,7 @@ class CrudExtension extends \Twig_Extension
         $template = $type->getTemplate();
         $vars = [
             'field' => $field,
-            'row' => $form[$field],
+            'form' => $form,
             'entity' => $entity,
         ];
 
