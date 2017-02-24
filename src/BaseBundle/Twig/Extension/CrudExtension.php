@@ -67,6 +67,7 @@ class CrudExtension extends \Twig_Extension
             'field' => $field,
             'form' => $form,
             'entity' => $entity,
+            'context' => TypeConfig::CONTEXT_CREATE,
         ];
 
         return $twig->loadTemplate($template)->renderBlock('create', $vars);
@@ -80,6 +81,7 @@ class CrudExtension extends \Twig_Extension
             'field' => $field,
             'form' => $form,
             'entity' => $entity,
+            'context' => TypeConfig::CONTEXT_EDIT,
         ];
 
         return $twig->loadTemplate($template)->renderBlock('edit', $vars);

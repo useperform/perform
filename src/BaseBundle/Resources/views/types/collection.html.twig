@@ -21,7 +21,11 @@
       {% for childForm in form[field] %}
         <div class="collection-row">
           {% for childField, childConfig in childForm.vars.fields %}
-            {{perform_crud_edit_context(entity, childField, childConfig, childForm)}}
+            {% if context == 'create' %}
+              {{perform_crud_create_context(entity, childField, childConfig, childForm)}}
+            {% else %}
+              {{perform_crud_edit_context(entity, childField, childConfig, childForm)}}
+            {% endif %}
           {% endfor %}
           <a class="btn btn-danger remove-item" href="#">
             <i class="fa fa-trash-o"></i>
