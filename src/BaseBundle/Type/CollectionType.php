@@ -77,6 +77,10 @@ class CollectionType extends AbstractType
                 }
             }
         });
+
+        return [
+            'sortField' => $options['sortField'],
+        ];
     }
 
     public function getDefaultConfig()
