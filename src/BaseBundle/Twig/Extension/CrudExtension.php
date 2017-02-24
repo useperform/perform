@@ -63,11 +63,14 @@ class CrudExtension extends \Twig_Extension
     {
         $type = $this->typeRegistry->getType($config['type']);
         $template = $type->getTemplate();
+        //type vars are anything returned from the createContext() method call
+        $typeVars = isset($form->vars['type_vars'][$field]) ? $form->vars['type_vars'][$field] : [];
         $vars = [
             'field' => $field,
             'form' => $form,
             'entity' => $entity,
             'context' => TypeConfig::CONTEXT_CREATE,
+            'type_vars' => $typeVars,
         ];
 
         return $twig->loadTemplate($template)->renderBlock('create', $vars);
@@ -77,11 +80,14 @@ class CrudExtension extends \Twig_Extension
     {
         $type = $this->typeRegistry->getType($config['type']);
         $template = $type->getTemplate();
+        //type vars are anything returned from the editContext() method call
+        $typeVars = isset($form->vars['type_vars'][$field]) ? $form->vars['type_vars'][$field] : [];
         $vars = [
             'field' => $field,
             'form' => $form,
             'entity' => $entity,
             'context' => TypeConfig::CONTEXT_EDIT,
+            'type_vars' => $typeVars,
         ];
 
         return $twig->loadTemplate($template)->renderBlock('edit', $vars);

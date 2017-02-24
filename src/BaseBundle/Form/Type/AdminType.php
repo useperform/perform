@@ -33,15 +33,20 @@ class AdminType extends AbstractType
         $context = $options['context'];
         $fields = $this->getTypes($options['entity'], $context);
         $method = $context === TypeConfig::CONTEXT_CREATE ? 'createContext' : 'editContext';
+        $templateVars = [];
 
         foreach ($fields as $field => $config) {
             $type = $this->typeRegistry->getType($config['type']);
-            $type->$method($builder, $field, $config[$context.'Options']);
+            //record returned vars to push to the template later
+            $templateVars[$field] = (array) $type->$method($builder, $field, $config[$context.'Options']);
         }
+
+        $builder->setAttribute('type_vars', $templateVars);
     }
 
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
+        $view->vars['type_vars'] = $form->getConfig()->getAttribute('type_vars');
         $view->vars['fields'] = $this->getTypes($options['entity'], $options['context']);
     }
 
