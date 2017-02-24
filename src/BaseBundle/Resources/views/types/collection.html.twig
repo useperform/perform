@@ -37,8 +37,14 @@
 
   <script type="text/template" id="template-collection-{{field}}">
      <div class="collection-row">
-      {# need to change how the prototype is created #}
-      {{form_widget(form[field].vars.prototype)}}
+        {% set childForm = form[field].vars.prototype %}
+        {% for childField, childConfig in childForm.vars.fields %}
+        {% if context == 'create' %}
+            {{perform_crud_create_context(entity, childField, childConfig, childForm)}}
+        {% else %}
+            {{perform_crud_edit_context(entity, childField, childConfig, childForm)}}
+        {% endif %}
+        {% endfor %}
       <a class="btn btn-danger remove-item" href="#">
         <i class="fa fa-trash-o"></i>
       </a>
