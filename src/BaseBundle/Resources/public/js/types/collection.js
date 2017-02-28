@@ -2,7 +2,7 @@ $(function () {
   var bindButtons = function(selector) {
     $(selector).on('click', '.remove-item', function(e) {
       e.preventDefault();
-      $(this).parent().remove();
+      $(this).parent().parent().remove();
     });
   }
 
