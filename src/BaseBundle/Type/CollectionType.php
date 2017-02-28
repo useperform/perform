@@ -11,6 +11,7 @@ use Perform\BaseBundle\Admin\AdminRegistry;
 use Symfony\Component\Form\FormEvents;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Perform\BaseBundle\Asset\AssetContainer;
 
 /**
  * CollectionType.
@@ -21,12 +22,14 @@ class CollectionType extends AbstractType
 {
     protected $adminRegistry;
     protected $entityManager;
+    protected $assets;
 
-    public function __construct(AdminRegistry $adminRegistry, EntityManagerInterface $entityManager)
+    public function __construct(AdminRegistry $adminRegistry, EntityManagerInterface $entityManager, AssetContainer $assets)
     {
         parent::__construct();
         $this->adminRegistry = $adminRegistry;
         $this->entityManager = $entityManager;
+        $this->assets = $assets;
     }
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
@@ -41,6 +44,8 @@ class CollectionType extends AbstractType
 
     protected function addFormField(FormBuilderInterface $builder, $field, array $options, $context)
     {
+        $this->assets->addJs('/bundles/performbase/js/types/collection.js');
+
         $builder->add($field, CollectionFormType::class, [
             'entry_type' => AdminType::class,
             'entry_options' => [
