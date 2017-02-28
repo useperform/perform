@@ -28,6 +28,9 @@ services:
                 template: 'PerformBaseBundle:data_collector:admins.html.twig'
                 id: 'perform_base.admins'
 
+    perform_base.asset_container:
+        class: Perform\BaseBundle\Asset\AssetContainer
+
     perform_base.routing.crud:
         class: Perform\BaseBundle\Routing\CrudLoader
         public: false
@@ -62,6 +65,12 @@ services:
 
     perform_base.twig.util:
         class: Perform\BaseBundle\Twig\Extension\UtilExtension
+        tags:
+            - {name: twig.extension}
+
+    perform_base.twig.asset:
+        class: Perform\BaseBundle\Twig\Extension\AssetExtension
+        arguments: ["@perform_base.asset_container"]
         tags:
             - {name: twig.extension}
 
@@ -141,3 +150,4 @@ services:
         arguments:
             - "@perform_base.admin.registry"
             - "@doctrine.orm.entity_manager"
+            - "@perform_base.asset_container"
