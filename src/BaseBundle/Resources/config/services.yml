@@ -68,6 +68,12 @@ services:
         tags:
             - {name: twig.extension}
 
+    perform_base.twig.asset:
+        class: Perform\BaseBundle\Twig\Extension\AssetExtension
+        arguments: ["@perform_base.asset_container"]
+        tags:
+            - {name: twig.extension}
+
     perform_base.menu_builder:
         class: Perform\BaseBundle\Menu\MenuBuilder
         arguments: ["@knp_menu.factory"]
