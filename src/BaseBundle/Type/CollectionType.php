@@ -58,22 +58,12 @@ class CollectionType extends AbstractType
             $originalCollection[] = $item;
         }
 
-        $sortField = $options['sortField'] !== false ? $options['sortField'] : false;
-
-        $builder->addEventListener(FormEvents::POST_SUBMIT, function($event) use ($field, $originalCollection, $sortField) {
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function($event) use ($field, $originalCollection) {
             $entity = $event->getData();
             $collection = $this->accessor->getValue($entity, $field);
             foreach ($originalCollection as $item) {
                 if (!$collection->contains($item)) {
                     $this->entityManager->remove($item);
-                }
-            }
-
-            if ($sortField) {
-                $i = 0;
-                foreach ($collection as $item) {
-                    $this->accessor->setValue($item, $sortField, $i);
-                    $i++;
                 }
             }
         });
