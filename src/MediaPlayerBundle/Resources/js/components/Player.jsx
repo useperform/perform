@@ -32,6 +32,14 @@ class Player extends React.Component {
     clearInterval(this.tickId);
   }
 
+  onPlayerEnd() {
+    if (this.state.trackIndex + 1 === this.state.tracks.length) {
+      this.stop();
+    } else {
+      this.setTrackIndex(this.state.trackIndex + 1);
+    }
+  }
+
   startDefaultPlaylist() {
     fetch('/player/playlist')
       .then(response => {
@@ -131,6 +139,7 @@ class Player extends React.Component {
       playing={this.state.playing}
       onPlay={this.onPlayerStart.bind(this)}
       onPause={this.onPlayerPause.bind(this)}
+      onEnd={this.onPlayerEnd.bind(this)}
       ref={(ref) => this.player = ref} />;
       trackName = track.name;
     }
