@@ -15,3 +15,4 @@ Perform\MediaPlayerBundle\Entity\Playlist:
             targetEntity: PlaylistItem
             mappedBy: playlist
             cascade: [persist, remove]
+            orderBy: {sortOrder: 'ASC'}

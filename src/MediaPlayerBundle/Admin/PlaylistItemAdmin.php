@@ -24,6 +24,9 @@ class PlaylistItemAdmin extends AbstractAdmin
             ->add('title', [
                 'type' => 'string',
             ])
+            ->add('sortOrder', [
+                'type' => 'hidden',
+            ])
             ;
     }
 
