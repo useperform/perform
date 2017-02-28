@@ -69,7 +69,7 @@ class ProgressBar extends React.Component {
       return (new Array(3).join('0') + string).slice(-2);
     }
 
-    return `${zeroPad(Math.floor(s / 60))}:${zeroPad(s % 60)}`;
+    return `${zeroPad(Math.floor(s / 60))}:${zeroPad(Math.floor(s % 60))}`;
   }
 }
 
