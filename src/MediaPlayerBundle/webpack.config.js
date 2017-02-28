@@ -5,6 +5,7 @@ var config = {
   entry: {
     'player': './player.js',
     'client': './client.js',
+    'admin': './admin.js',
   },
   output: {
     path: path.join(__dirname, 'Resources/public/js'),

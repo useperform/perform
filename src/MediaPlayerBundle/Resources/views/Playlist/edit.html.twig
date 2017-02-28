@@ -25,3 +25,8 @@
   <a href="{{perform_crud_route(entity, 'list')}}" class="btn btn-default" tabindex="-1">Cancel</a>
   {{form_end(form)}}
 {% endblock %}
+
+{% block js %}
+  {{parent()}}
+  <script type="text/javascript" src="{{asset('/bundles/performmediaplayer/js/admin.js')}}"></script>
+{% endblock %}
