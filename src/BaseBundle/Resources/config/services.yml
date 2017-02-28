@@ -28,6 +28,9 @@ services:
                 template: 'PerformBaseBundle:data_collector:admins.html.twig'
                 id: 'perform_base.admins'
 
+    perform_base.asset_container:
+        class: Perform\BaseBundle\Asset\AssetContainer
+
     perform_base.routing.crud:
         class: Perform\BaseBundle\Routing\CrudLoader
         public: false
