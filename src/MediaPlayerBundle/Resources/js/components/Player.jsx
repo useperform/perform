@@ -16,6 +16,7 @@ class Player extends React.Component {
       tracks: [],
       trackIndex: 0,
       seek: 0,
+      volume: 0.5,
       duration: 0,
       playlist: null,
     }
@@ -115,6 +116,10 @@ class Player extends React.Component {
     });
   }
 
+  setVolume(volume) {
+    this.setState({volume: parseFloat(volume)})
+  }
+
   tick() {
     if (!this.state || !this.state.playing) {
       return;
@@ -134,14 +139,16 @@ class Player extends React.Component {
 
     if (this.state.tracks.length > 0) {
       const track = this.state.tracks[this.state.trackIndex];
+      trackName = track.name;
+
       audio = <Audio
       src={`/uploads/${track.url}`}
       playing={this.state.playing}
+      volume={this.state.volume}
       onPlay={this.onPlayerStart.bind(this)}
       onPause={this.onPlayerPause.bind(this)}
       onEnd={this.onPlayerEnd.bind(this)}
       ref={(ref) => this.player = ref} />;
-      trackName = track.name;
     }
 
     return (
@@ -153,9 +160,12 @@ class Player extends React.Component {
       playing={this.state.playing}
       tracks={this.state.tracks}
       trackIndex={this.state.trackIndex}
+      volume={this.state.volume}
       clickPlay={this.clickPlay.bind(this)}
       clickStop={this.clickStop.bind(this)}
-      setTrackIndex={this.setTrackIndex.bind(this)} />
+      setTrackIndex={this.setTrackIndex.bind(this)}
+      setVolume={this.setVolume.bind(this)} />
+
         <Playlist tracks={this.state.tracks} trackIndex={this.state.trackIndex} setTrackIndex={this.setTrackIndex.bind(this)} />
       </div>
     );

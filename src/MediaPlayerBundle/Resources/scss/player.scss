@@ -6,6 +6,7 @@
 @import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/forms";
 @import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/navbar";
 @import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/progress-bars";
+@import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/grid";
 
 .playlist {
   list-style-type: none;
@@ -42,4 +43,12 @@
 
 .progress-bar {
   transition: width 0.2s ease;
+}
+
+input.volume {
+  writing-mode: bt-lr; /* IE */
+  -webkit-appearance: slider-vertical; /* WebKit */
+  width: 8px;
+  height: 100px;
+  padding: 0 5px;
 }
