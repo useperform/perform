@@ -39,21 +39,26 @@ class PageLocator
 
         foreach ($controllers as $class) {
             $r = new \ReflectionClass($class);
+            $this->maybeAddAnnotation($this->reader->getClassAnnotation($r, Page::class), $pages);
             foreach ($r->getMethods() as $method) {
-                $annotation = $this->reader->getMethodAnnotation($method, Page::class);
-                if (!$annotation) {
-                    continue;
-                }
-
-                $page = $annotation->getPage();
-                if (!isset($pages[$page])) {
-                    $pages[$page] = [];
-                }
-
-                $pages[$page] = array_merge($pages[$page], $annotation->getSections());
+                $this->maybeAddAnnotation($this->reader->getMethodAnnotation($method, Page::class), $pages);
             }
         }
 
         return $pages;
+    }
+
+    protected function maybeAddAnnotation($annotation = null, array &$pages)
+    {
+        if (!$annotation) {
+            return;
+        }
+
+        $page = $annotation->getPage();
+        if (!isset($pages[$page])) {
+            $pages[$page] = [];
+        }
+
+        $pages[$page] = array_merge($pages[$page], $annotation->getSections());
     }
 }
