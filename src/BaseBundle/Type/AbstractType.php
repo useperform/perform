@@ -26,7 +26,7 @@ abstract class AbstractType implements TypeInterface
 
     public function viewContext($entity, $field, array $options = [])
     {
-        return $this->listContext($entity, $field);
+        return $this->listContext($entity, $field, $options);
     }
 
     public function editContext(FormBuilderInterface $builder, $field, array $options = [])
