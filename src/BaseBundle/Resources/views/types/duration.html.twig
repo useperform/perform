@@ -7,10 +7,9 @@
 {% block create %}
   <div class="form-group">
     {{form_label(form[field])}}
-    <div class="col-md-7">
+    <div class="col-md-10">
       {{form_widget(form[field])}}
-    </div>
-    <div class="col-md-3">
+      <p class="help-block">e.g. 2m 3s, 1h30m, 3d 40m 2h 30s</p>
     </div>
     {{form_errors(form[field])}}
   </div>
