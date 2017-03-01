@@ -151,3 +151,8 @@ services:
             - "@perform_base.admin.registry"
             - "@doctrine.orm.entity_manager"
             - "@perform_base.asset_container"
+
+    perform_base.bundle_searcher:
+        class: Perform\BaseBundle\Util\BundleSearcher
+        arguments:
+            - "@service_container"
