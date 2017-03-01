@@ -28,7 +28,8 @@ class LoadContentData implements EntityDeclaringFixtureInterface, ContainerAware
     {
         $this->faker = \Faker\Factory::create();
         $this->loadBlockTypes();
-        foreach ($this->locatePages() as $page => $sections) {
+        $locator = $this->container->get('perform_cms.page_locator');
+        foreach ($locator->getPageNames() as $page => $sections) {
             $count = rand(2, 5);
             for ($i = 0; $i < $count; ++$i) {
                 $this->createVersion($manager, $page, $i, $sections);
@@ -70,36 +71,6 @@ class LoadContentData implements EntityDeclaringFixtureInterface, ContainerAware
         if (empty($this->blockTypes)) {
             throw new InvalidConfigurationException('At least one cms block type must be configured to run fixtures.');
         }
-    }
-
-    protected function locatePages()
-    {
-        if (!$this->container) {
-            return [];
-        }
-        $searcher = new BundleSearcher($this->container);
-        $controllers = $searcher->findClassesInNamespaceSegment('Controller');
-        $reader = $this->container->get('annotation_reader');
-        $pages = [];
-
-        foreach ($controllers as $class) {
-            $r = new \ReflectionClass($class);
-            foreach ($r->getMethods() as $method) {
-                $annotation = $reader->getMethodAnnotation($method, Page::class);
-                if (!$annotation) {
-                    continue;
-                }
-
-                $page = $annotation->getPage();
-                if (!isset($pages[$page])) {
-                    $pages[$page] = [];
-                }
-
-                $pages[$page] = array_merge($pages[$page], $annotation->getSections());
-            }
-        }
-
-        return $pages;
     }
 
     protected function createVersion(ObjectManager $manager, $page, $number, array $sections)
