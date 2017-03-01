@@ -13,6 +13,7 @@ class DurationUtil
      * Transform seconds into a human readable string.
      *
      * @param int $duration
+     *
      * @return string
      */
     public static function toHuman($duration)
@@ -21,6 +22,32 @@ class DurationUtil
         foreach (static::getPieces($duration) as $label => $amount) {
             if ($amount !== 0) {
                 $result .= $amount.$label.' ';
+            }
+        }
+
+        return trim($result);
+    }
+
+    /**
+     * Transform seconds into a verbose human readable string.
+     *
+     * @param int $duration
+     *
+     * @return string
+     */
+    public static function toVerbose($duration)
+    {
+        $labels = [
+            'd' => ['day', 'days'],
+            'h' => ['hour', 'hours'],
+            'm' => ['minute', 'minutes'],
+            's' => ['second', 'seconds'],
+        ];
+
+        $result = '';
+        foreach (static::getPieces($duration) as $label => $amount) {
+            if ($amount !== 0) {
+                $result .= sprintf('%d %s ', $amount, ($amount === 1 ? $labels[$label][0] : $labels[$label][1]));
             }
         }
 
@@ -55,7 +82,7 @@ class DurationUtil
 
     protected static function pad($int)
     {
-        return substr('00' . (string) $int, -2);
+        return substr('00'.(string) $int, -2);
     }
 
     protected static function getPieces($duration)

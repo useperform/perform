@@ -82,4 +82,35 @@ class DurationUtilTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertSame($expected, DurationUtil::toDigital($value));
     }
+
+    public function toVerboseProvider()
+    {
+        return [
+            [30, '30 seconds'],
+            [60, '1 minute'],
+            [120, '2 minutes'],
+            [100, '1 minute 40 seconds'],
+            [3600, '1 hour'],
+            [10800, '3 hours'],
+            [10000, '2 hours 46 minutes 40 seconds'],
+            [7240, '2 hours 40 seconds'],
+            [10920, '3 hours 2 minutes'],
+            [86400, '1 day'],
+            [86410, '1 day 10 seconds'],
+            [23872348, '276 days 7 hours 12 minutes 28 seconds'],
+            [864010, '10 days 10 seconds'],
+            [1728120, '20 days 2 minutes'],
+            [1728189, '20 days 3 minutes 9 seconds'],
+            [1731600, '20 days 1 hour'],
+            [1731601, '20 days 1 hour 1 second'],
+        ];
+    }
+
+    /**
+     * @dataProvider toVerboseProvider
+     */
+    public function testToVerbose($value, $expected)
+    {
+        $this->assertSame($expected, DurationUtil::toVerbose($value));
+    }
 }
