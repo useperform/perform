@@ -41,4 +41,14 @@ class DurationUtilTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertSame($expected, DurationUtil::toHuman($value));
     }
+
+    /**
+     * @dataProvider toHumanProvider
+     */
+    public function testToDuration($expected, $value)
+    {
+        $this->assertSame($expected, DurationUtil::toDuration($value));
+        //and without spaces
+        $this->assertSame($expected, DurationUtil::toDuration(str_replace(' ', '', $value)));
+    }
 }
