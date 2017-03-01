@@ -29,6 +29,7 @@ class ToolbarListener implements EventSubscriberInterface
     protected $entityManager;
     protected $registry;
     protected $page;
+    protected $sections = [];
     protected $excludedUrlRegexes = [];
 
     public function __construct(\Twig_Environment $twig, ContentExtension $extension, EntityManagerInterface $entityManager, BlockTypeRegistry $registry)
@@ -83,6 +84,7 @@ class ToolbarListener implements EventSubscriberInterface
             return;
         }
         $this->extension->setPage($this->page = $annotation->getPage());
+        $this->sections = $annotation->getSections();
     }
 
     public function onKernelResponse(FilterResponseEvent $event)
@@ -119,9 +121,11 @@ class ToolbarListener implements EventSubscriberInterface
             return;
         }
 
+        $pageAvailable = $this->page && !empty($this->sections);
+
         $repo = $this->entityManager->getRepository('PerformCmsBundle:Version');
-        $versions = $this->page ? $repo->findByPage($this->page) : [];
-        $current = $this->page ? $repo->findCurrentVersion($this->page) : null;
+        $versions = $pageAvailable ? $repo->findByPage($this->page) : [];
+        $current = $pageAvailable ? $repo->findCurrentVersion($this->page) : null;
 
         $html = $this->twig->render(
             'PerformCmsBundle::toolbar.html.twig',
