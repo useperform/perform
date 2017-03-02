@@ -245,4 +245,35 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('foo', $resolved['viewOptions']['some_type_option']);
         $this->assertSame('bar', $resolved['listOptions']['some_type_option']);
     }
+
+    public function testGetAllTypes()
+    {
+        $this->config->add('one', [
+            'type' => 'string',
+            'contexts' => [],
+        ]);
+        $this->config->add('two', [
+            'type' => 'string',
+            'contexts' => [TypeConfig::CONTEXT_LIST],
+        ]);
+
+        $all = $this->config->getAllTypes();
+        $this->assertSame(['one', 'two'], array_keys($all));
+    }
+
+    public function testGetAddedConfigs()
+    {
+        $first = [
+            'type' => 'string',
+            'contexts' => [],
+        ];
+        $this->config->add('one', $first);
+        $second = [
+            'type' => 'string',
+            'contexts' => [],
+        ];
+        $this->config->add('one', $second);
+
+        $this->assertSame(['one' => [$first, $second]], $this->config->getAddedConfigs());
+    }
 }
