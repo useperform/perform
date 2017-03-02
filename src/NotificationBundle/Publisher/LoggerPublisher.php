@@ -16,7 +16,7 @@ class LoggerPublisher implements PublisherInterface
 
     public function send(Notification $notification)
     {
-        $this->logger->debug(sprintf('New notification of type "%s"', $notification->getType()), [
+        $this->logger->info(sprintf('New notification of type "%s"', $notification->getType()), [
             'recipients' => $notification->getRecipients()
         ]);
     }
