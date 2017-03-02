@@ -26,11 +26,6 @@ class AdminsDataCollector extends DataCollector
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
         $admins = $this->registry->getAdmins();
-        foreach ($admins as $entity => $class) {
-            if (strpos($entity, '\\') !== false) {
-                unset($admins[$entity]);
-            }
-        }
 
         ksort($admins);
         $this->data = [
