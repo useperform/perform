@@ -92,7 +92,10 @@ class TypeConfig
     {
         $this->addedConfigs[$name][] = $config;
 
-        if (!isset($config['options']['label'])) {
+        //make sure a label exists
+        //only do this the first time to prevent nuking a custom label
+        //with an override that doesn't have a label
+        if (!isset($config['options']['label']) && !isset($this->fields[$name])) {
             $config['options']['label'] = StringUtil::sensible($name);
         }
 

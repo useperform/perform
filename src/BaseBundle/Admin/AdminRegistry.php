@@ -47,6 +47,9 @@ class AdminRegistry
 
         $this->admins[$entityClass] = $service;
         $this->aliases[$entity] = $entityClass;
+
+        //an override may be indexed with the entity alias or entity class
+        //if both are supplied, alias wins
         if (isset($this->override[$entity])) {
             $this->override[$entityClass] = $this->override[$entity];
             unset($this->override[$entity]);
