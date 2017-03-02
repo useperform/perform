@@ -30,7 +30,9 @@ class PostAdmin extends AbstractAdmin
             ])
             ->add('enabled', [
                 'type' => 'boolean',
-                'sort' => false,
+                'options' => [
+                    'label' => 'Published',
+                ],
             ])
             ->add('content', [
                 'type' => 'text',
