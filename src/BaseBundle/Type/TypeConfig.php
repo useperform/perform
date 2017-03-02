@@ -28,6 +28,7 @@ class TypeConfig
 
     protected $resolver;
     protected $fields = [];
+    protected $addedConfigs = [];
     protected $defaultSort;
 
     public function __construct(TypeRegistry $registry)
@@ -71,6 +72,16 @@ class TypeConfig
         return $types;
     }
 
+    public function getAllTypes()
+    {
+        return $this->fields;
+    }
+
+    public function getAddedConfigs()
+    {
+        return $this->addedConfigs;
+    }
+
     /**
      * Add or amend a field.
      * If the field is already registered, the config will be merged.
@@ -79,6 +90,8 @@ class TypeConfig
      */
     public function add($name, array $config)
     {
+        $this->addedConfigs[$name][] = $config;
+
         if (!isset($config['options']['label'])) {
             $config['options']['label'] = StringUtil::sensible($name);
         }
