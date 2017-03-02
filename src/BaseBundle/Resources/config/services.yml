@@ -63,6 +63,11 @@ services:
         tags:
             - {name: twig.extension}
 
+    perform_base.twig.action:
+        class: Perform\BaseBundle\Twig\Extension\ActionExtension
+        tags:
+            - {name: twig.extension}
+
     perform_base.twig.util:
         class: Perform\BaseBundle\Twig\Extension\UtilExtension
         tags:
