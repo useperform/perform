@@ -161,3 +161,9 @@ services:
         class: Perform\BaseBundle\Util\BundleSearcher
         arguments:
             - "@service_container"
+
+    perform_base.action_registry:
+        class: Perform\BaseBundle\Action\ActionRegistry
+        arguments:
+            - "@service_container"
+            - []
