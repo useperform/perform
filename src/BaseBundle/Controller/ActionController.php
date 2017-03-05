@@ -6,6 +6,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Perform\BaseBundle\Annotation\Ajax;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 /**
  * ActionController.
@@ -15,15 +17,26 @@ use Symfony\Component\HttpFoundation\Request;
 class ActionController extends Controller
 {
     /**
-     * @Route
+     * @Route("/{action}")
+     * @Method("POST")
      * @Ajax
      */
-    public function indexAction(Request $request)
+    public function indexAction($action, Request $request)
     {
-        $this->addFlash('success', 'Action succeeded.');
+        $entity = $request->request->get('entity');
+        $response = $this->get('perform_base.action_runner')
+                  ->run($action, $entity, $request->request->all());
 
-        return [
-            'redirect' => $this->generateUrl('perform_contact_message_list'),
+        $json = [
+            'message' => $response->getMessage(),
         ];
+
+        if ($response->getRoute()) {
+            $json['redirect'] = $this->generateUrl($response->getRoute(), $response->getRouteParams());
+            $this->addFlash('success', $response->getMessage());
+
+        }
+
+        return $json;
     }
 }

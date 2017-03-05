@@ -45,3 +45,10 @@ services:
         class: Perform\ContactBundle\Settings\ContactFormPanel
         tags:
             - { name: perform_base.settings_panel, alias: contact_form }
+
+    perform_contact.action.archive:
+        class: Perform\ContactBundle\Action\ArchiveAction
+        arguments:
+            - "@doctrine.orm.entity_manager"
+        tags:
+            - { name: perform_base.action, alias: perform_contact_archive }

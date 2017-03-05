@@ -2,6 +2,8 @@
 
 namespace Perform\BaseBundle\Twig\Extension;
 
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
 /**
  * ActionExtension.
  *
@@ -9,6 +11,13 @@ namespace Perform\BaseBundle\Twig\Extension;
  **/
 class ActionExtension extends \Twig_Extension
 {
+    protected $urlGenerator;
+
+    public function __construct(UrlGeneratorInterface $urlGenerator)
+    {
+        $this->urlGenerator = $urlGenerator;
+    }
+
     public function getFunctions()
     {
         return [
@@ -24,6 +33,7 @@ class ActionExtension extends \Twig_Extension
         ]);
         $attr['class'] = 'action-button' .
                        (isset($attr['class']) ? ' '.trim($attr['class']) : '');
+        $attr['href'] = $this->urlGenerator->generate('perform_base_action_index', ['action' => $actionName]);
 
         return $twig->render('PerformBaseBundle:Action:button.html.twig', [
             'action' => $action,
