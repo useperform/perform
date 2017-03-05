@@ -13,4 +13,9 @@ interface ActionInterface
      * @return ActionResponse
      */
     public function run($entity, array $options);
+
+    /**
+     * @return string
+     */
+    public function getTargetEntity();
 }
