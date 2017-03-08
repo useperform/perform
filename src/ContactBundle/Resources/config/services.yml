@@ -45,3 +45,24 @@ services:
         class: Perform\ContactBundle\Settings\ContactFormPanel
         tags:
             - { name: perform_base.settings_panel, alias: contact_form }
+
+    perform_contact.action.archive:
+        class: Perform\ContactBundle\Action\ArchiveAction
+        arguments:
+            - "@doctrine.orm.entity_manager"
+        tags:
+            - { name: perform_base.action, alias: perform_contact_archive, entity: 'PerformContactBundle:Message' }
+
+    perform_contact.action.new:
+        class: Perform\ContactBundle\Action\NewAction
+        arguments:
+            - "@doctrine.orm.entity_manager"
+        tags:
+            - { name: perform_base.action, alias: perform_contact_new, entity: 'PerformContactBundle:Message' }
+
+    perform_contact.action.spam:
+        class: Perform\ContactBundle\Action\SpamAction
+        arguments:
+            - "@doctrine.orm.entity_manager"
+        tags:
+            - { name: perform_base.action, alias: perform_contact_spam, entity: 'PerformContactBundle:Message' }
