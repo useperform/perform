@@ -15,6 +15,11 @@ interface ActionInterface
     public function run($entity, array $options);
 
     /**
+     * @return bool
+     */
+    public function isGranted($entity);
+
+    /**
      * @return string
      */
     public function getTargetEntity();

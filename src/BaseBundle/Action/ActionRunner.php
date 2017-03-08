@@ -3,6 +3,7 @@
 namespace Perform\BaseBundle\Action;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * ActionRunner.
@@ -17,14 +18,18 @@ class ActionRunner
         $this->registry = $registry;
     }
 
-    public function run($action, $entity, array $options)
+    public function run($actionName, $entity, array $options)
     {
-        $action = $this->registry->getAction($action);
+        $action = $this->registry->getAction($actionName);
 
         //select entity or entities
         //account for extended entities too
         $entity = $this->entityManager->getRepository($action->getTargetEntity())
                 ->find($entity);
+
+        if (!$action->isGranted($entity)) {
+            throw new AccessDeniedException(sprintf('Action "%s" is not allowed to run on this entity.', $actionName));
+        }
 
         return $action->run($entity, $options);
     }
