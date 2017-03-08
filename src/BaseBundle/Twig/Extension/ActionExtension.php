@@ -26,6 +26,7 @@ class ActionExtension extends \Twig_Extension
         return [
             new \Twig_SimpleFunction('perform_action_button', [$this, 'actionButton'], ['is_safe' => ['html'], 'needs_environment' => true]),
             new \Twig_SimpleFunction('perform_action_is_granted', [$this, 'isActionGranted']),
+            new \Twig_SimpleFunction('perform_action_for_entity', [$this->registry, 'getActionsForEntity']),
         ];
     }
 
