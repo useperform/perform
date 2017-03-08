@@ -40,4 +40,27 @@ class ActionRegistryTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(ActionNotFoundException::class);
         $this->registry->getAction('bar_action');
     }
+
+    public function testGetActionsForEntityClass()
+    {
+        $this->assertSame([], $this->registry->getActionsForEntityClass('Foo'));
+
+        $this->registry->addAction('foo_action', 'Foo', 'foo_service');
+        $this->registry->addAction('bar_action', 'Foo', 'bar_service');
+        $fooAction = $this->getMock(ActionInterface::class);
+        $barAction = $this->getMock(ActionInterface::class);
+        $this->container->expects($this->exactly(2))
+            ->method('get')
+            ->withConsecutive(
+                [$this->equalTo('foo_service')],
+                [$this->equalTo('bar_service')]
+            )
+            ->will($this->onConsecutiveCalls($fooAction, $barAction));
+
+        $expected = [
+            'foo_action' => $fooAction,
+            'bar_action' => $barAction,
+        ];
+        $this->assertSame($expected, $this->registry->getActionsForEntityClass('Foo'));
+    }
 }
