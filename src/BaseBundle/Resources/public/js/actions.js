@@ -19,7 +19,16 @@ $(function () {
         button.attr('disabled', false);
       },
       error: function (data) {
-        app.func.showError('An error occurred.');
+        var error;
+        switch (data.status) {
+        case 403:
+          error = 'This action is not allowed.';
+          break;
+        default:
+          error = 'An error occurred.'
+          break;
+        }
+        app.func.showError(error);
         button.attr('disabled', false);
       }
     });

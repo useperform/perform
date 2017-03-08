@@ -67,6 +67,7 @@ services:
         class: Perform\BaseBundle\Twig\Extension\ActionExtension
         arguments:
             - "@router"
+            - "@perform_base.action_registry"
         tags:
             - {name: twig.extension}
 

@@ -3,6 +3,7 @@
 namespace Perform\BaseBundle\Twig\Extension;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Perform\BaseBundle\Action\ActionRegistry;
 
 /**
  * ActionExtension.
@@ -12,16 +13,19 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class ActionExtension extends \Twig_Extension
 {
     protected $urlGenerator;
+    protected $registry;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    public function __construct(UrlGeneratorInterface $urlGenerator, ActionRegistry $registry)
     {
         $this->urlGenerator = $urlGenerator;
+        $this->registry = $registry;
     }
 
     public function getFunctions()
     {
         return [
             new \Twig_SimpleFunction('perform_action_button', [$this, 'actionButton'], ['is_safe' => ['html'], 'needs_environment' => true]),
+            new \Twig_SimpleFunction('perform_action_is_granted', [$this, 'isActionGranted']),
         ];
     }
 
@@ -40,6 +44,11 @@ class ActionExtension extends \Twig_Extension
             'attr' => $attr,
             'label' => $label,
         ]);
+    }
+
+    public function isActionGranted($name, $entity)
+    {
+        return $this->registry->getAction($name)->isGranted($entity);
     }
 
     public function getName()
