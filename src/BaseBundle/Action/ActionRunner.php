@@ -18,14 +18,13 @@ class ActionRunner
         $this->registry = $registry;
     }
 
-    public function run($actionName, $entity, array $options)
+    public function run($actionName, $entityId, array $options)
     {
-        $action = $this->registry->getAction($actionName);
+        $entityClass = $this->registry->getTargetEntity($actionName);
+        $entity = $this->entityManager->getRepository($entityClass)
+                ->find($entityId);
 
-        //select entity or entities
-        //account for extended entities too
-        $entity = $this->entityManager->getRepository($action->getTargetEntity())
-                ->find($entity);
+        $action = $this->registry->getAction($actionName);
 
         if (!$action->isGranted($entity)) {
             throw new AccessDeniedException(sprintf('Action "%s" is not allowed to run on this entity.', $actionName));

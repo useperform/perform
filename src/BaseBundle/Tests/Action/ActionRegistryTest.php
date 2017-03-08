@@ -20,11 +20,12 @@ class ActionRegistryTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->container = $this->getMock(ContainerInterface::class);
-        $this->registry = new ActionRegistry($this->container, ['foo_action' => 'foo_service']);
+        $this->registry = new ActionRegistry($this->container);
     }
 
     public function testGetAction()
     {
+        $this->registry->addAction('foo_action', 'Foo', 'foo_service');
         $action = $this->getMock(ActionInterface::class);
         $this->container->expects($this->any())
             ->method('get')

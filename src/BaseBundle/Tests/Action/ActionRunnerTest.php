@@ -29,7 +29,7 @@ class ActionRunnerTest extends \PHPUnit_Framework_TestCase
         $this->em = $this->getMock(EntityManagerInterface::class);
         $this->em->expects($this->any())
             ->method('getRepository')
-            ->with('FooBundle:Foo')
+            ->with('FooBundle\\Foo')
             ->will($this->returnValue($this->repo));
         $this->action = $this->getMock(ActionInterface::class);
         $this->registry = $this->getMockBuilder(ActionRegistry::class)
@@ -42,9 +42,10 @@ class ActionRunnerTest extends \PHPUnit_Framework_TestCase
     public function testRun()
     {
         $actionName = 'foo_action';
-        $this->action->expects($this->any())
+        $this->registry->expects($this->any())
             ->method('getTargetEntity')
-            ->will($this->returnValue('FooBundle:Foo'));
+            ->with('foo_action')
+            ->will($this->returnValue('FooBundle\\Foo'));
         $this->registry->expects($this->any())
             ->method('getAction')
             ->with('foo_action')
@@ -70,9 +71,10 @@ class ActionRunnerTest extends \PHPUnit_Framework_TestCase
     public function testRunNotGranted()
     {
         $actionName = 'foo_action';
-        $this->action->expects($this->any())
+        $this->registry->expects($this->any())
             ->method('getTargetEntity')
-            ->will($this->returnValue('FooBundle:Foo'));
+            ->with('foo_action')
+            ->will($this->returnValue('FooBundle\\Foo'));
         $this->registry->expects($this->any())
             ->method('getAction')
             ->with('foo_action')

@@ -18,9 +18,4 @@ interface ActionInterface
      * @return bool
      */
     public function isGranted($entity);
-
-    /**
-     * @return string
-     */
-    public function getTargetEntity();
 }
