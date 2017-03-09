@@ -34,14 +34,17 @@
         {% block entityActions %}
           <td>
             {% if perform_crud_route_exists(entity, 'view') %}
-              <a href="{{perform_crud_route(entity, 'view')}}">View</a>
+              <a href="{{perform_crud_route(entity, 'view')}}" class="btn btn-xs btn-primary">View</a>
             {% endif %}
             {% if perform_crud_route_exists(entity, 'edit') %}
-              <a href="{{perform_crud_route(entity, 'edit')}}">Edit</a>
+              <a href="{{perform_crud_route(entity, 'edit')}}" class="btn btn-xs btn-warning">Edit</a>
             {% endif %}
             {% if perform_crud_route_exists(entity, 'delete') %}
-              <a href="#" data-action="{{perform_crud_route(entity, 'delete')}}" data-toggle="modal" data-target="#modal-delete">Delete</a>
+              <a href="#" data-action="{{perform_crud_route(entity, 'delete')}}" data-toggle="modal" data-target="#modal-delete" class="btn btn-xs btn-danger">Delete</a>
             {% endif %}
+            {% for name, action in perform_action_for_entity(entity) %}
+              {{perform_action_button(name, action.getLabel(entity), entity, {class: "btn btn-xs btn-default"})}}
+            {% endfor %}
           </td>
         {% endblock %}
       </tr>

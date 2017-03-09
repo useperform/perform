@@ -1,7 +1,20 @@
 {% extends 'PerformBaseBundle:Crud:list.html.twig' %}
 
 {% block workspace %}
-  <h3><i class="fa fa-angle-right"></i> Contact Form Messages</h3>
+  {% set currentFilter = null %}
+  {% for filter in filters %}
+    {% if filter.isActive() %}
+      {% set currentFilter = filter %}
+    {% endif %}
+  {% endfor %}
+
+
+  <h3><i class="fa fa-angle-right"></i>
+    {% if currentFilter is not null %}
+      {{currentFilter.config.label}} -
+    {% endif %}
+    Contact Form Messages
+  </h3>
   <div class="row mt">
     <div class="col-lg-2">
       <div class="panel panel-default">

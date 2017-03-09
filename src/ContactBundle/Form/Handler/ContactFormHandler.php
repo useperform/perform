@@ -70,6 +70,7 @@ class ContactFormHandler
         ]);
         $notification = new Notification($recipients, 'PerformContactBundle:new_message', [
             'subject' => 'New contact form message from '.$message->getName(),
+            'replyTo' => [$message->getEmail() => $message->getName()],
             'message' => $message,
         ]);
         $this->notifier->send($notification, ['email', 'logger']);

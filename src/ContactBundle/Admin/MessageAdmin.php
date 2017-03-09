@@ -63,7 +63,7 @@ class MessageAdmin extends AbstractAdmin
 
     public function configureFilters(FilterConfig $config)
     {
-        $config->add('inbox', [
+        $config->add('new', [
             'query' => function($qb) {
                 return $qb->where('e.status = :status')
                     ->setParameter('status', Message::STATUS_NEW);
@@ -82,6 +82,6 @@ class MessageAdmin extends AbstractAdmin
                     ->setParameter('status', Message::STATUS_SPAM);
             },
         ]);
-        $config->setDefault('inbox');
+        $config->setDefault('new');
     }
 }
