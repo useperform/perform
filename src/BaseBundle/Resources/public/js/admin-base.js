@@ -62,8 +62,10 @@ $(function() {
 
   $('.tooltips').tooltip();
 
-  $('.table-crud tr').dblclick(function() {
-    var checkbox = $(this).find('.selector');
+  $('.table-crud tr td').click(function() {
+    var checkbox = $(this).parent().find('.selector');
     checkbox.prop('checked', !checkbox.prop('checked'));
-  })
+  }).children().click(function(e) {
+    e.stopPropagation();
+  });
 });
