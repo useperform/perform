@@ -1,0 +1,54 @@
+@import "../../../BaseBundle/Resources/scss/variables";
+@import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/mixins";
+@import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/scaffolding";
+@import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/buttons";
+@import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/navs";
+@import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/forms";
+@import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/navbar";
+@import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/progress-bars";
+@import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/grid";
+
+.playlist {
+  list-style-type: none;
+
+  li {
+    a {
+      padding: 10px;
+      display: inline-block;
+      &:hover, &:visited {
+        background-color: $gray-lighter;
+        text-decoration: none;
+      }
+    }
+
+    .active, .active:hover {
+      background-color: lighten($brand-primary, 20%);
+    }
+  }
+}
+
+.progress-ticker {
+  position: absolute;
+  height: 20px;
+  width: 2px;
+  background-color: $gray-darker;
+  span {
+    position: relative;
+    bottom: 20px;
+    color: #eee;
+    background-color: $gray-darker;
+    padding: 5px;
+  }
+}
+
+.progress-bar {
+  transition: width 0.2s ease;
+}
+
+input.volume {
+  writing-mode: bt-lr; /* IE */
+  -webkit-appearance: slider-vertical; /* WebKit */
+  width: 8px;
+  height: 100px;
+  padding: 0 5px;
+}

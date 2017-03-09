@@ -20,7 +20,12 @@ interface TypeInterface
     public function editContext(FormBuilderInterface $builder, $field, array $options = []);
 
     /**
-     * @return array An array of TypeConfig::CONTEXT_* constants
+     * @return array The default config array passed to TypeConfig#add().
      */
-    public function getHtmlContexts();
+    public function getDefaultConfig();
+
+    /**
+     * @return string The name of template to render this field type.
+     */
+    public function getTemplate();
 }

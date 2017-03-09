@@ -1,10 +1,38 @@
 {% extends 'PerformBaseBundle:Crud:list.html.twig' %}
 
-{% block actions %}
-{% endblock %}
+{% block workspace %}
+  {% set currentFilter = null %}
+  {% for filter in filters %}
+    {% if filter.isActive() %}
+      {% set currentFilter = filter %}
+    {% endif %}
+  {% endfor %}
 
-{% block entityActions %}
-  <td>
-    <a href="{{perform_crud_route(entity, 'view')}}">View</a>
-  </td>
+
+  <h3><i class="fa fa-angle-right"></i>
+    {% if currentFilter is not null %}
+      {{currentFilter.config.label}} -
+    {% endif %}
+    Contact Form Messages
+  </h3>
+  <div class="row mt">
+    <div class="col-lg-2">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          {% include 'PerformBaseBundle:Crud:named_filters.html.twig' %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-10">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          {% include 'PerformBaseBundle:Crud:table.html.twig' %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% block paginator %}
+    {% include 'PerformBaseBundle:Crud:paginator.html.twig' %}
+  {% endblock %}
 {% endblock %}

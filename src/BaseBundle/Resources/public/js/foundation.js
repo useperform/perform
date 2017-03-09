@@ -6,7 +6,7 @@ $(function() {
     vars: {},
     func: {
       fancyForm: function(form) {
-        // form.find('.select2').select2();
+        form.find('.select2').select2();
         form.find('.datepicker').each(function() {
           $(this).datetimepicker({
             format: $(this).data('format'),

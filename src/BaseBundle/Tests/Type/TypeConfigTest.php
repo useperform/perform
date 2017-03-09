@@ -4,6 +4,9 @@ namespace Perform\BaseBundle\Tests\Type;
 
 use Perform\BaseBundle\Type\TypeConfig;
 use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
+use Perform\BaseBundle\Type\TypeRegistry;
+use Perform\BaseBundle\Type\StringType;
+use Perform\BaseBundle\Type\TypeInterface;
 
 /**
  * TypeConfigTest.
@@ -16,7 +19,13 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->config = new TypeConfig();
+        $this->typeRegistry = $this->getMockBuilder(TypeRegistry::class)
+                            ->disableOriginalConstructor()
+                            ->getMock();
+        $this->config = new TypeConfig($this->typeRegistry);
+        $this->typeRegistry->expects($this->any())
+            ->method('getType')
+            ->will($this->returnValue(new StringType()));
     }
 
     public function testGetNoTypes()
@@ -59,9 +68,9 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
     {
         $this->config->add('title', ['type' => 'string']);
         $type = $this->config->getTypes(TypeConfig::CONTEXT_LIST)['title'];
-        $this->assertInternalType('array', $type['options']);
-        $this->assertInternalType('string', $type['options']['label']);
-        $this->assertTrue($type['options']['sort']);
+        $this->assertInternalType('array', $type['listOptions']);
+        $this->assertInternalType('string', $type['listOptions']['label']);
+        $this->assertTrue($type['sort']);
     }
 
     public function testSuppliedOptionsAreReturned()
@@ -73,7 +82,7 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
             ],
         ]);
 
-        $this->assertSame(true, $this->config->getTypes(TypeConfig::CONTEXT_VIEW)['date']['options']['human']);
+        $this->assertSame(true, $this->config->getTypes(TypeConfig::CONTEXT_VIEW)['date']['viewOptions']['human']);
     }
 
     public function contextProvider()
@@ -101,16 +110,22 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
             ],
         ]);
 
-        $notContext = $context === TypeConfig::CONTEXT_VIEW ? TypeConfig::CONTEXT_LIST : TypeConfig::CONTEXT_VIEW;
-        $this->assertSame(true, $this->config->getTypes($notContext)['date']['options']['human']);
+        if ($context === TypeConfig::CONTEXT_VIEW) {
+            $notContext = TypeConfig::CONTEXT_LIST;
+            $notContextKey = 'listOptions';
+        } else {
+            $notContext = TypeConfig::CONTEXT_VIEW;
+            $notContextKey = 'viewOptions';
+        }
+        $this->assertSame(true, $this->config->getTypes($notContext)['date'][$notContextKey]['human']);
 
-        $this->assertSame(false, $this->config->getTypes($context)['date']['options']['human']);
+        $this->assertSame(false, $this->config->getTypes($context)['date'][$key]['human']);
     }
 
     public function testSensibleLabelIsGiven()
     {
         $this->config->add('superTitle', ['type' => 'string']);
-        $this->assertSame('Super title', $this->config->getTypes(TypeConfig::CONTEXT_LIST)['superTitle']['options']['label']);
+        $this->assertSame('Super title', $this->config->getTypes(TypeConfig::CONTEXT_LIST)['superTitle']['listOptions']['label']);
     }
 
     public function testLabelCanBeOverridden()
@@ -121,7 +136,7 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
                 'label' => 'Title',
             ],
         ]);
-        $this->assertSame('Title', $this->config->getTypes(TypeConfig::CONTEXT_LIST)['superTitle']['options']['label']);
+        $this->assertSame('Title', $this->config->getTypes(TypeConfig::CONTEXT_LIST)['superTitle']['listOptions']['label']);
     }
 
     public function testLabelCanBeOverriddenPerContext()
@@ -132,8 +147,45 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
                 'label' => 'Title',
             ],
         ]);
-        $this->assertSame('Title', $this->config->getTypes(TypeConfig::CONTEXT_LIST)['superTitle']['options']['label']);
-        $this->assertSame('Super title', $this->config->getTypes(TypeConfig::CONTEXT_EDIT)['superTitle']['options']['label']);
+        $this->assertSame('Title', $this->config->getTypes(TypeConfig::CONTEXT_LIST)['superTitle']['listOptions']['label']);
+        $this->assertSame('Super title', $this->config->getTypes(TypeConfig::CONTEXT_EDIT)['superTitle']['editOptions']['label']);
+    }
+
+    public function testOverriddenLabelIsNotChanged()
+    {
+        $this->config->add('title', [
+            'type' => 'string',
+            'options' => [
+                'label' => 'Some label',
+            ],
+        ]);
+        $this->config->add('title', [
+            'options' => [
+                'other_option' => 'foo',
+            ],
+        ]);
+
+        $this->assertSame('Some label', $this->config->getTypes(TypeConfig::CONTEXT_LIST)['title']['listOptions']['label']);
+        $this->assertSame('foo', $this->config->getTypes(TypeConfig::CONTEXT_LIST)['title']['listOptions']['other_option']);
+    }
+
+    public function testOverriddenLabelCanBeChanged()
+    {
+        $this->config->add('title', [
+            'type' => 'string',
+            'options' => [
+                'label' => 'Some label',
+            ],
+        ]);
+        $this->config->add('title', [
+            'options' => [
+                'label' => 'Custom label again',
+                'other_option' => 'foo',
+            ],
+        ]);
+
+        $this->assertSame('Custom label again', $this->config->getTypes(TypeConfig::CONTEXT_LIST)['title']['listOptions']['label']);
+        $this->assertSame('foo', $this->config->getTypes(TypeConfig::CONTEXT_LIST)['title']['listOptions']['other_option']);
     }
 
     public function testFieldsCanBeAddedMultipleTimes()
@@ -144,7 +196,7 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
                 'stuff' => [
                     'foo' => true,
                     'bar' => true,
-                ]
+                ],
             ],
         ]);
         $this->config->add('title', [
@@ -152,7 +204,7 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
                 'stuff' => [
                     'bar' => false,
                     'baz' => true,
-                ]
+                ],
             ],
         ]);
 
@@ -161,7 +213,7 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
             'bar' => false,
             'baz' => true,
         ];
-        $actual = $this->config->getTypes(TypeConfig::CONTEXT_LIST)['title']['options']['stuff'];
+        $actual = $this->config->getTypes(TypeConfig::CONTEXT_LIST)['title']['listOptions']['stuff'];
         $this->assertSame($expected, $actual);
     }
 
@@ -185,6 +237,80 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
             'type' => 'boolean',
             'sort' => false,
         ]);
-        $this->assertFalse($this->config->getTypes(TypeConfig::CONTEXT_LIST)['enabled']['options']['sort']);
+        $this->assertFalse($this->config->getTypes(TypeConfig::CONTEXT_LIST)['enabled']['sort']);
+    }
+
+    public function testDefaultSort()
+    {
+        $this->assertSame([null, 'ASC'], $this->config->getDefaultSort());
+        $this->assertSame($this->config, $this->config->setDefaultSort('title', 'DESC'));
+        $this->assertSame(['title', 'DESC'], $this->config->getDefaultSort());
+    }
+
+    public function testDefaultSortWithIllegalDirection()
+    {
+        $this->setExpectedException('\InvalidArgumentException');
+        $this->config->setDefaultSort('title', 'foo');
+    }
+
+    public function testDefaultConfigFromATypeIsNormalised()
+    {
+        $registry = $this->getMockBuilder(TypeRegistry::class)
+                            ->disableOriginalConstructor()
+                            ->getMock();
+        $config = new TypeConfig($registry);
+        $type = $this->getMock(TypeInterface::class);
+        $registry->expects($this->any())
+            ->method('getType')
+            ->will($this->returnValue($type));
+        //contains options key, which should be normalised to the different contexts
+        $defaultConfig = [
+            'sort' => false,
+            'options' => [
+                'some_type_option' => 'foo',
+            ],
+            'listOptions' => [
+                'some_type_option' => 'bar',
+            ],
+        ];
+        $type->expects($this->any())
+            ->method('getDefaultConfig')
+            ->will($this->returnValue($defaultConfig));
+        $config->add('title', ['type' => 'foo']);
+
+        $resolved = $config->getTypes(TypeConfig::CONTEXT_LIST)['title'];
+        $this->assertSame('foo', $resolved['viewOptions']['some_type_option']);
+        $this->assertSame('bar', $resolved['listOptions']['some_type_option']);
+    }
+
+    public function testGetAllTypes()
+    {
+        $this->config->add('one', [
+            'type' => 'string',
+            'contexts' => [],
+        ]);
+        $this->config->add('two', [
+            'type' => 'string',
+            'contexts' => [TypeConfig::CONTEXT_LIST],
+        ]);
+
+        $all = $this->config->getAllTypes();
+        $this->assertSame(['one', 'two'], array_keys($all));
+    }
+
+    public function testGetAddedConfigs()
+    {
+        $first = [
+            'type' => 'string',
+            'contexts' => [],
+        ];
+        $this->config->add('one', $first);
+        $second = [
+            'type' => 'string',
+            'contexts' => [],
+        ];
+        $this->config->add('one', $second);
+
+        $this->assertSame(['one' => [$first, $second]], $this->config->getAddedConfigs());
     }
 }

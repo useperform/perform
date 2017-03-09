@@ -31,7 +31,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $user = new User();
         $this->adminRegistry->expects($this->any())
-            ->method('getAdminForEntity')
+            ->method('getAdmin')
             ->with($user)
             ->will($this->returnValue(new UserAdmin()));
         $this->urlGenerator->expects($this->any())
@@ -56,6 +56,20 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('/admin/users', $this->generator->generate('PerformBaseBundle:User', 'list'));
     }
 
+    public function testGenerateCreateWithString()
+    {
+        $this->adminRegistry->expects($this->any())
+            ->method('getAdmin')
+            ->with('PerformBaseBundle:User')
+            ->will($this->returnValue(new UserAdmin()));
+        $this->urlGenerator->expects($this->any())
+            ->method('generate')
+            ->with('perform_base_user_create')
+            ->will($this->returnValue('/admin/users/create'));
+
+        $this->assertSame('/admin/users/create', $this->generator->generate('PerformBaseBundle:User', 'create'));
+    }
+
     public function testGenerateView()
     {
         $user = $this->getMock('Perform\BaseBundle\Entity\User');
@@ -63,7 +77,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->method('getId')
             ->will($this->returnValue(1));
         $this->adminRegistry->expects($this->any())
-            ->method('getAdminForEntity')
+            ->method('getAdmin')
             ->with($user)
             ->will($this->returnValue(new UserAdmin()));
         $this->urlGenerator->expects($this->any())
@@ -74,6 +88,25 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('/admin/users/view/1', $this->generator->generate($user, 'view'));
     }
 
+    public function testGenerateViewDefault()
+    {
+        $user = $this->getMock('Perform\BaseBundle\Entity\User');
+        $user->expects($this->any())
+            ->method('getId')
+            ->will($this->returnValue(1));
+        $this->adminRegistry->expects($this->any())
+            ->method('getAdmin')
+            ->with($user)
+            ->will($this->returnValue(new UserAdmin()));
+        $this->urlGenerator->expects($this->any())
+            ->method('generate')
+            ->with('perform_base_user_view_default')
+            ->will($this->returnValue('/admin/users'));
+
+        $this->assertSame('/admin/users', $this->generator->generate($user, 'viewDefault'));
+        $this->assertSame('/admin/users', $this->generator->generate($user, 'view_default'));
+    }
+
     public function testGenerateEdit()
     {
         $user = $this->getMock('Perform\BaseBundle\Entity\User');
@@ -81,7 +114,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->method('getId')
             ->will($this->returnValue(1));
         $this->adminRegistry->expects($this->any())
-            ->method('getAdminForEntity')
+            ->method('getAdmin')
             ->with($user)
             ->will($this->returnValue(new UserAdmin()));
         $this->urlGenerator->expects($this->any())
@@ -92,6 +125,24 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('/admin/users/edit/1', $this->generator->generate($user, 'edit'));
     }
 
+    public function testGenerateEditDefault()
+    {
+        $user = $this->getMock('Perform\BaseBundle\Entity\User');
+        $user->expects($this->never())
+            ->method('getId');
+        $this->adminRegistry->expects($this->any())
+            ->method('getAdmin')
+            ->with($user)
+            ->will($this->returnValue(new UserAdmin()));
+        $this->urlGenerator->expects($this->any())
+            ->method('generate')
+            ->with('perform_base_user_edit_default')
+            ->will($this->returnValue('/admin/users/edit'));
+
+        $this->assertSame('/admin/users/edit', $this->generator->generate($user, 'editDefault'));
+        $this->assertSame('/admin/users/edit', $this->generator->generate($user, 'edit_default'));
+    }
+
     public function testGenerateDelete()
     {
         $user = $this->getMock('Perform\BaseBundle\Entity\User');
@@ -99,7 +150,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->method('getId')
             ->will($this->returnValue(1));
         $this->adminRegistry->expects($this->any())
-            ->method('getAdminForEntity')
+            ->method('getAdmin')
             ->with($user)
             ->will($this->returnValue(new UserAdmin()));
         $this->urlGenerator->expects($this->any())
@@ -125,13 +176,70 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->adminRegistry->expects($this->any())
             ->method('getAdmin')
             ->will($this->returnValue($admin));
-        $this->adminRegistry->expects($this->any())
-            ->method('getAdminForEntity')
-            ->will($this->returnValue($admin));
 
         $this->assertTrue($this->generator->routeExists('TestBundle:Something', 'create'));
         $this->assertTrue($this->generator->routeExists(new User(), 'create'));
         $this->assertFalse($this->generator->routeExists('TestBundle:Something', 'delete'));
         $this->assertFalse($this->generator->routeExists(new User(), 'delete'));
+    }
+
+    public function testGetDefaultEntityRouteList()
+    {
+        $admin = $this->getMock(AdminInterface::class);
+        $admin->expects($this->any())
+            ->method('getActions')
+            ->will($this->returnValue([
+                '/' => 'list',
+            ]));
+        $admin->expects($this->any())
+            ->method('getRoutePrefix')
+            ->will($this->returnValue('some_prefix_'));
+
+        $this->adminRegistry->expects($this->any())
+            ->method('getAdmin')
+            ->will($this->returnValue($admin));
+
+        $this->assertSame('some_prefix_list', $this->generator->getDefaultEntityRoute('TestBundle:Something'));
+        $this->assertSame('some_prefix_list', $this->generator->getDefaultEntityRoute(new User()));
+    }
+
+    public function testGetDefaultEntityRouteViewDefault()
+    {
+        $admin = $this->getMock(AdminInterface::class);
+        $admin->expects($this->any())
+            ->method('getActions')
+            ->will($this->returnValue([
+                '/' => 'viewDefault',
+            ]));
+        $admin->expects($this->any())
+            ->method('getRoutePrefix')
+            ->will($this->returnValue('some_prefix_'));
+
+        $this->adminRegistry->expects($this->any())
+            ->method('getAdmin')
+            ->will($this->returnValue($admin));
+
+        $this->assertSame('some_prefix_view_default', $this->generator->getDefaultEntityRoute('TestBundle:Something'));
+        $this->assertSame('some_prefix_view_default', $this->generator->getDefaultEntityRoute(new User()));
+    }
+
+    public function testGetDefaultEntityRouteThrowsExceptionForUnknown()
+    {
+        $admin = $this->getMock(AdminInterface::class);
+        $admin->expects($this->any())
+            ->method('getActions')
+            ->will($this->returnValue([
+                '/{id}' => 'view',
+            ]));
+        $admin->expects($this->any())
+            ->method('getRoutePrefix')
+            ->will($this->returnValue('some_prefix_'));
+
+        $this->adminRegistry->expects($this->any())
+            ->method('getAdmin')
+            ->will($this->returnValue($admin));
+
+        $this->setExpectedException(\Exception::class);
+        $this->assertSame('some_prefix_view_default', $this->generator->getDefaultEntityRoute('TestBundle:Something'));
     }
 }

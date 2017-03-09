@@ -23,14 +23,19 @@ class MessageType extends AbstractType
                 'attr' => [
                     'rows' => 12,
                 ],
-            ])
-            ;
+            ]);
+
+        $honeypotField = isset($options['honeypot_field']) ? $options['honeypot_field'] : 'rating';
+        $builder->add($honeypotField, HoneypotType::class, [
+            'prevent_submission' => false,
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => 'Perform\ContactBundle\Entity\Message',
+            'honeypot_field' => 'rating',
         ]);
     }
 }

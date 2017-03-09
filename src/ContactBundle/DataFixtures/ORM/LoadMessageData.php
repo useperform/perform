@@ -18,8 +18,8 @@ class LoadMessageData implements EntityDeclaringFixtureInterface
     {
         $faker = Faker\Factory::create();
         $statuses = [
-            Message::STATUS_READ,
-            Message::STATUS_UNREAD,
+            Message::STATUS_NEW,
+            Message::STATUS_ARCHIVE,
             Message::STATUS_SPAM,
         ];
         for ($i = 0; $i < 50; ++$i) {

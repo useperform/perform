@@ -4,15 +4,19 @@
   <h3><i class="fa fa-angle-right"></i> View</h3>
   <div class="panel panel-default">
     <div class="panel-heading">
-      Entity
+      {% block panel_heading %}
+        {{perform_crud_entity_name(entity)}}
+      {% endblock %}
     </div>
     <div class="panel-body">
+      {% block panel_start %}
+      {% endblock %}
       <table class="table">
         <tbody>
           {% for field, config in fields %}
             <tr>
               <th>
-                {{config.options.label}}
+                {{config.viewOptions.label}}
               </th>
               <td>
                 {{perform_crud_view_context(entity, field, config)}}
@@ -21,10 +25,15 @@
           {% endfor %}
         </tbody>
       </table>
-      <a href="{{perform_crud_route(entity, 'list')}}" class="btn btn-default">Back</a>
-      {% if perform_crud_route_exists(entity, 'edit') %}
-        <a href="{{perform_crud_route(entity, 'edit')}}" class="btn btn-primary">Edit</a>
-      {% endif %}
+      {% block actions %}
+        <a href="{{perform_crud_route(entity, 'list')}}" class="btn btn-default">Back</a>
+        {% if perform_crud_route_exists(entity, 'edit') %}
+          <a href="{{perform_crud_route(entity, 'edit')}}" class="btn btn-primary">Edit</a>
+        {% endif %}
+        {% for name, action in perform_action_for_entity(entity) %}
+          {{perform_action_button(name, action.getLabel(entity), entity, {class: "btn btn-default"})}}
+        {% endfor %}
+      {% endblock %}
     </div>
   </div>
 {% endblock %}

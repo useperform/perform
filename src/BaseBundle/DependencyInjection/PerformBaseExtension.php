@@ -34,6 +34,7 @@ class PerformBaseExtension extends Extension
         $container->setParameter('perform_base.panels.left', $config['panels']['left']);
         $container->setParameter('perform_base.panels.right', $config['panels']['right']);
         $container->setParameter('perform_base.menu_order', isset($config['menu']['order']) ? $config['menu']['order'] : []);
+        $container->setParameter('perform_base.auto_asset_version', uniqid());
         $this->configureTypeRegistry($container);
         $this->configureMailer($config, $container);
         $this->findExtendedEntities($container);
@@ -50,9 +51,12 @@ class PerformBaseExtension extends Extension
         $definition->addMethodCall('addType', ['datetime', 'Perform\BaseBundle\Type\DateTimeType']);
         $definition->addMethodCall('addType', ['boolean', 'Perform\BaseBundle\Type\BooleanType']);
         $definition->addMethodCall('addType', ['integer', 'Perform\BaseBundle\Type\IntegerType']);
+        $definition->addMethodCall('addType', ['hidden', 'Perform\BaseBundle\Type\HiddenType']);
+        $definition->addMethodCall('addType', ['duration', 'Perform\BaseBundle\Type\DurationType']);
+        $definition->addMethodCall('addTypeService', ['collection', 'perform_base.type.collection']);
 
         // pull from other bundles in a compiler pass
-        $definition->addMethodCall('addTypeService', ['image', 'perform_media.type.image']);
+        $definition->addMethodCall('addTypeService', ['media', 'perform_media.type.media']);
     }
 
     protected function configureMailer(array $config, ContainerBuilder $container)

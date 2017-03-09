@@ -7,13 +7,14 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Perform\BaseBundle\Type\AbstractType;
 use Perform\MediaBundle\Plugin\PluginRegistry;
 use Perform\BaseBundle\Type\TypeConfig;
+use Perform\MediaBundle\Entity\File;
 
 /**
- * ImageType
+ * MediaType
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ImageType extends AbstractType
+class MediaType extends AbstractType
 {
     protected $registry;
 
@@ -25,11 +26,19 @@ class ImageType extends AbstractType
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
+        $types = (array) (isset($options['types']) ? $options['types'] : $this->registry->getPluginNames());
+
         $builder->add($field, EntityType::class, [
+            'label' => $options['label'],
             'class' => 'PerformMediaBundle:File',
             'choice_label' => 'name',
             'placeholder' => 'None',
             'required' => false,
+            'query_builder' => function($repo) use ($types) {
+                return $repo->createQueryBuilder('f')
+                    ->where('f.type IN (:types)')
+                    ->setParameter('types', $types);
+            }
         ]);
     }
 
@@ -37,18 +46,22 @@ class ImageType extends AbstractType
     {
         $file = $this->accessor->getValue($entity, $field);
 
-        if (!$file) {
+        if (!$file instanceof File) {
             return 'None';
         }
 
         return $this->registry->getPreview($file, ['size' => 'small']);
     }
 
-    public function getHtmlContexts()
+    public function getTemplate()
+    {
+        return 'PerformMediaBundle:types:media.html.twig';
+    }
+
+    public function getDefaultConfig()
     {
         return [
-            TypeConfig::CONTEXT_LIST,
-            TypeConfig::CONTEXT_VIEW,
+            'sort' => false,
         ];
     }
 }

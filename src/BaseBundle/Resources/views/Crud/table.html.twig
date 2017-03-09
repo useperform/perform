@@ -1,0 +1,55 @@
+<table class="table">
+  <thead>
+    <th></th>
+    {% set query = app.request.query.all() %}
+    {% for field, config in fields %}
+      <th>
+        {% if not config.sort %}
+          {{config.listOptions.label}}
+        {% elseif orderBy.field is same as(field) %}
+          {% if orderBy.direction == 'ASC' %}
+            <a href="{{perform_crud_route(entityClass, 'list', query|merge({sort: field, direction: 'desc'}))}}">
+              {{config.listOptions.label}}
+            </a>
+            <i class="fa fa-sort-asc"></i>
+          {% elseif orderBy.direction == 'DESC' %}
+            <a href="{{perform_crud_route(entityClass, 'list', query|merge({sort: null, direction: 'n'}))}}">
+              {{config.listOptions.label}}
+            </a>
+            <i class="fa fa-sort-desc"></i>
+          {% endif %}
+        {% else %}
+          <a href="{{perform_crud_route(entityClass, 'list', query|merge({sort: field, direction: 'asc'}))}}">
+            {{config.listOptions.label}}
+          </a>
+        {% endif %}
+      </th>
+    {% endfor %}
+  </thead>
+  <tbody class="table-crud">
+    {% for entity in paginator.currentPageResults %}
+      <tr>
+        <td><input type="checkbox" class="selector" data-id="{{entity.id}}"/></td>
+        {% for field, config in fields %}
+          <td>{{perform_crud_list_context(entity, field, config)}}</td>
+        {% endfor %}
+        {% block entityActions %}
+          <td>
+            {% if perform_crud_route_exists(entity, 'view') %}
+              <a href="{{perform_crud_route(entity, 'view')}}" class="btn btn-xs btn-primary">View</a>
+            {% endif %}
+            {% if perform_crud_route_exists(entity, 'edit') %}
+              <a href="{{perform_crud_route(entity, 'edit')}}" class="btn btn-xs btn-warning">Edit</a>
+            {% endif %}
+            {% if perform_crud_route_exists(entity, 'delete') %}
+              <a href="#" data-action="{{perform_crud_route(entity, 'delete')}}" data-toggle="modal" data-target="#modal-delete" class="btn btn-xs btn-danger">Delete</a>
+            {% endif %}
+            {% for name, action in perform_action_for_entity(entity) %}
+              {{perform_action_button(name, action.getLabel(entity), entity, {class: "btn btn-xs btn-default"})}}
+            {% endfor %}
+          </td>
+        {% endblock %}
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

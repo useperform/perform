@@ -3,6 +3,7 @@
 namespace Perform\BaseBundle\Admin;
 
 use Perform\BaseBundle\Type\TypeConfig;
+use Perform\BaseBundle\Filter\FilterConfig;
 
 /**
  * AdminInterface.
@@ -12,6 +13,8 @@ use Perform\BaseBundle\Type\TypeConfig;
 interface AdminInterface
 {
     public function configureTypes(TypeConfig $config);
+
+    public function configureFilters(FilterConfig $config);
 
     /**
      * @return string
@@ -32,4 +35,11 @@ interface AdminInterface
      * @return array
      */
     public function getActions();
+
+    /**
+     * Get a readable name for an entity.
+     *
+     * @return string
+     */
+    public function getNameForEntity($entity);
 }

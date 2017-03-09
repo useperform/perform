@@ -1,11 +1,13 @@
 services:
     perform_base.admin.registry:
         class: Perform\BaseBundle\Admin\AdminRegistry
-        arguments: ['@service_container']
+        arguments: ['@service_container', '@perform_base.type_registry', '%perform_base.admins%']
 
-    perform_base.entity_type_config:
-        class: Perform\BaseBundle\Type\EntityTypeConfig
-        arguments: ['@perform_base.admin.registry', '%perform_base.admins%']
+    perform_base.form.type.admin:
+        class: Perform\BaseBundle\Form\Type\AdminType
+        arguments: ['@perform_base.admin.registry', '@perform_base.type_registry']
+        tags:
+            - {name: form.type}
 
     perform_base.doctrine.entity_resolver:
         class: Perform\BaseBundle\Doctrine\EntityResolver
@@ -25,6 +27,9 @@ services:
                 name: data_collector
                 template: 'PerformBaseBundle:data_collector:admins.html.twig'
                 id: 'perform_base.admins'
+
+    perform_base.asset_container:
+        class: Perform\BaseBundle\Asset\AssetContainer
 
     perform_base.routing.crud:
         class: Perform\BaseBundle\Routing\CrudLoader
@@ -54,7 +59,26 @@ services:
 
     perform_base.twig.crud:
         class: Perform\BaseBundle\Twig\Extension\CrudExtension
-        arguments: ['@perform_base.routing.crud_url', '@perform_base.type_registry']
+        arguments: ['@perform_base.routing.crud_url', '@perform_base.type_registry', '@perform_base.admin.registry']
+        tags:
+            - {name: twig.extension}
+
+    perform_base.twig.action:
+        class: Perform\BaseBundle\Twig\Extension\ActionExtension
+        arguments:
+            - "@router"
+            - "@perform_base.action_registry"
+        tags:
+            - {name: twig.extension}
+
+    perform_base.twig.util:
+        class: Perform\BaseBundle\Twig\Extension\UtilExtension
+        tags:
+            - {name: twig.extension}
+
+    perform_base.twig.asset:
+        class: Perform\BaseBundle\Twig\Extension\AssetExtension
+        arguments: ["@perform_base.asset_container"]
         tags:
             - {name: twig.extension}
 
@@ -63,6 +87,13 @@ services:
         arguments: ["@knp_menu.factory"]
         tags:
             - { name: knp_menu.menu_builder, method: createMainMenu, alias: main }
+
+    perform_base.menu_extension:
+        class: Perform\BaseBundle\Menu\Extension\EntityExtension
+        arguments: ['@perform_base.routing.crud_url']
+        tags:
+            # higher priority than routing extension at 0
+            - { name: knp_menu.factory_extension, priority: 1}
 
     perform_base.menu_link.dashboard:
         class: Perform\BaseBundle\Menu\DashboardLinkProvider
@@ -98,7 +129,12 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@perform_base.admin.registry"
-            - "@perform_base.entity_type_config"
+
+    perform_base.asset_strategy:
+        class: Symfony\Component\Asset\VersionStrategy\StaticVersionStrategy
+        public: false
+        arguments:
+            - "%perform_base.auto_asset_version%"
 
     perform_base.settings_importer:
         class: Perform\BaseBundle\Settings\SettingsImporter
@@ -116,3 +152,27 @@ services:
         class: Perform\BaseBundle\Settings\AccountPanel
         tags:
             - { name: perform_base.settings_panel, alias: account }
+
+    perform_base.type.collection:
+        class: Perform\BaseBundle\Type\CollectionType
+        arguments:
+            - "@perform_base.admin.registry"
+            - "@doctrine.orm.entity_manager"
+            - "@perform_base.asset_container"
+
+    perform_base.bundle_searcher:
+        class: Perform\BaseBundle\Util\BundleSearcher
+        arguments:
+            - "@service_container"
+
+    perform_base.action_registry:
+        class: Perform\BaseBundle\Action\ActionRegistry
+        arguments:
+            - "@service_container"
+            - []
+
+    perform_base.action_runner:
+        class: Perform\BaseBundle\Action\ActionRunner
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@perform_base.action_registry"

@@ -26,7 +26,7 @@ abstract class AbstractType implements TypeInterface
 
     public function viewContext($entity, $field, array $options = [])
     {
-        return $this->listContext($entity, $field);
+        return $this->listContext($entity, $field, $options);
     }
 
     public function editContext(FormBuilderInterface $builder, $field, array $options = [])
@@ -34,7 +34,12 @@ abstract class AbstractType implements TypeInterface
         return $this->createContext($builder, $field, $options);
     }
 
-    public function getHtmlContexts()
+    public function getTemplate()
+    {
+        return 'PerformBaseBundle:types:simple.html.twig';
+    }
+
+    public function getDefaultConfig()
     {
         return [];
     }

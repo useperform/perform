@@ -1,0 +1,24 @@
+Perform\MediaPlayerBundle\Entity\PlaylistItem:
+    type: entity
+    table: perform_media_player_playlist_item
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        sortOrder:
+            type: integer
+        title:
+            type: string
+    manyToOne:
+        playlist:
+            targetEntity: Playlist
+            inversedBy: items
+            joinColumn:
+                nullable: false
+        file:
+            targetEntity: Perform\MediaBundle\Entity\File
+            joinColumn:
+                nullable: false

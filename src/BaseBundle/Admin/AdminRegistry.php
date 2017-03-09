@@ -4,6 +4,9 @@ namespace Perform\BaseBundle\Admin;
 
 use Perform\BaseBundle\Exception\AdminNotFoundException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Perform\BaseBundle\Type\TypeConfig;
+use Perform\BaseBundle\Filter\FilterConfig;
+use Perform\BaseBundle\Type\TypeRegistry;
 
 /**
  * AdminRegistry.
@@ -13,12 +16,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class AdminRegistry
 {
     protected $container;
+    protected $typeRegistry;
     protected $admins = [];
     protected $aliases = [];
+    protected $typeConfigs = [];
+    protected $override = [];
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, TypeRegistry $typeRegistry, array $override = [])
     {
         $this->container = $container;
+        $this->typeRegistry = $typeRegistry;
+        $this->override = $override;
     }
 
     /**
@@ -37,8 +45,15 @@ class AdminRegistry
             throw new \InvalidArgumentException('An admin service must be registered with the entity alias, e.g. PerformBaseBundle:User.');
         }
 
-        $this->admins[$entity] = $service;
         $this->admins[$entityClass] = $service;
+        $this->aliases[$entity] = $entityClass;
+
+        //an override may be indexed with the entity alias or entity class
+        //if both are supplied, alias wins
+        if (isset($this->override[$entity])) {
+            $this->override[$entityClass] = $this->override[$entity];
+            unset($this->override[$entity]);
+        }
     }
 
     /**
@@ -48,19 +63,28 @@ class AdminRegistry
      */
     public function getAdmin($entity)
     {
-        if (isset($this->admins[$entity])) {
-            return $this->container->get($this->admins[$entity]);
+        $class = $this->resolveEntity($entity);
+        if (isset($this->admins[$class])) {
+            return $this->container->get($this->admins[$class]);
         }
 
-        throw new AdminNotFoundException(sprintf('Admin not found for entity "%s"', $entity));
+        throw new AdminNotFoundException(sprintf('Admin not found for entity "%s"', $class));
     }
 
     /**
-     * Get the Admin instance for managing an entity.
+     * Get the fully qualified classname of an entity alias or object.
+     *
+     * @param string|object $entity
+     *
+     * @return string
      */
-    public function getAdminForEntity($entity)
+    public function resolveEntity($entity)
     {
-        return $this->getAdmin(get_class($entity));
+        if (!is_string($entity)) {
+            $entity = get_class($entity);
+        }
+
+        return isset($this->aliases[$entity]) ? $this->aliases[$entity] : $entity;
     }
 
     /**
@@ -69,5 +93,50 @@ class AdminRegistry
     public function getAdmins()
     {
         return $this->admins;
+    }
+
+    /**
+     * Get the TypeConfig for an entity. The type config may include
+     * overrides from application configuration.
+     *
+     * @param string|object $entity
+     *
+     * @return TypeConfig
+     */
+    public function getTypeConfig($entity)
+    {
+        $class = $this->resolveEntity($entity);
+        if (!isset($this->typeConfigs[$class])) {
+            $typeConfig = new TypeConfig($this->typeRegistry);
+            $this->getAdmin($class)->configureTypes($typeConfig);
+
+            if (isset($this->override[$class]['types'])) {
+                foreach ($this->override[$class]['types'] as $field => $config) {
+                    $typeConfig->add($field, $config);
+                }
+            }
+            $this->typeConfigs[$class] = $typeConfig;
+        }
+
+        return $this->typeConfigs[$class];
+    }
+
+    /**
+     * Get the FilterConfig for an entity. The filter config may include
+     * overrides from application configuration.
+     *
+     * @param string|object $entity
+     *
+     * @return FilterConfig
+     */
+    public function getFilterConfig($entity)
+    {
+        $class = $this->resolveEntity($entity);
+        if (!isset($this->filterConfigs[$class])) {
+            $this->filterConfigs[$class] = new FilterConfig();
+            $this->getAdmin($class)->configureFilters($this->filterConfigs[$class]);
+        }
+
+        return $this->filterConfigs[$class];
     }
 }

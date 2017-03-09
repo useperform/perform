@@ -35,13 +35,13 @@ class CompositionAdmin extends AbstractAdmin
                 ]
             ])
 
-            //optional fields
+            //optional fields, contexts are disabled by default
             ->add('category', [
                 'type' => 'string',
                 'contexts' => []
             ])
             ->add('duration', [
-                'type' => 'integer', // duration type?
+                'type' => 'duration',
                 'contexts' => []
             ])
             ->add('instruments', [

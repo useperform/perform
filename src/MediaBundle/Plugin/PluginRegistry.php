@@ -45,6 +45,11 @@ class PluginRegistry
         return $this->plugins;
     }
 
+    public function getPluginNames()
+    {
+        return array_keys($this->plugins);
+    }
+
     public function onFileCreate(File $file)
     {
         foreach ($this->plugins as $plugin) {

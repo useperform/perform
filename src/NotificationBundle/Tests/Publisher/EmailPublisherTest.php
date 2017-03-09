@@ -40,18 +40,28 @@ class EmailPublisherTest extends \PHPUnit_Framework_TestCase
 
     public function testSend()
     {
+        $message = new \Swift_Message();
         $this->mailer->expects($this->once())
-            ->method('send')
-            ->with('test@example.com', 'Test subject', 'PerformNotificationBundle:test:email.html.twig');
+            ->method('createMessage')
+            ->with('test@example.com', 'Test subject', 'PerformNotificationBundle:test:email.html.twig')
+            ->will($this->returnValue($message));
+        $this->mailer->expects($this->once())
+            ->method('sendMessage')
+            ->with($message);
 
         $this->publisher->send($this->newNotification('test'));
     }
 
     public function testSendWithNamespacing()
     {
+        $message = new \Swift_Message();
         $this->mailer->expects($this->once())
-            ->method('send')
-            ->with('test@example.com', 'Test subject', 'PerformBaseBundle:notifications:crud_update/email.html.twig');
+            ->method('createMessage')
+            ->with('test@example.com', 'Test subject', 'PerformBaseBundle:notifications:crud_update/email.html.twig')
+            ->will($this->returnValue($message));
+        $this->mailer->expects($this->once())
+            ->method('sendMessage')
+            ->with($message);
 
         $this->publisher->send($this->newNotification('PerformBaseBundle:crud_update'));
     }

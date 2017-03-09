@@ -26,11 +26,6 @@ class AdminsDataCollector extends DataCollector
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
         $admins = $this->registry->getAdmins();
-        foreach ($admins as $entity => $class) {
-            if (strpos($entity, '\\') !== false) {
-                unset($admins[$entity]);
-            }
-        }
 
         ksort($admins);
         $this->data = [
@@ -40,7 +35,20 @@ class AdminsDataCollector extends DataCollector
         if ($request->attributes->has('_entity')) {
             $this->data['activeEntity'] = $request->attributes->get('_entity');
             $this->data['activeAdmin'] = get_class($this->registry->getAdmin($this->data['activeEntity']));
+            $this->data['typeConfig'] = $this->registry->getTypeConfig($this->data['activeEntity'])->getAllTypes();
+            $this->sanitize($this->data['typeConfig']);
+            $this->data['addedConfigs'] = $this->registry->getTypeConfig($this->data['activeEntity'])->getAddedConfigs();
+            $this->sanitize($this->data['addedConfigs']);
         }
+    }
+
+    protected function sanitize(&$array)
+    {
+        array_walk_recursive($array, function(&$value) {
+            if ($value instanceof \Closure) {
+                $value = '(function)';
+            }
+        });
     }
 
     public function getAdmins()
@@ -56,6 +64,16 @@ class AdminsDataCollector extends DataCollector
     public function getActiveAdmin()
     {
         return isset($this->data['activeAdmin']) ? $this->data['activeAdmin'] : null;
+    }
+
+    public function getTypeConfig()
+    {
+        return isset($this->data['typeConfig']) ? $this->data['typeConfig'] : [];
+    }
+
+    public function getAddedConfigs()
+    {
+        return isset($this->data['addedConfigs']) ? $this->data['addedConfigs'] : [];
     }
 
     public function getExtendedEntities()
