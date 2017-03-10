@@ -20,11 +20,13 @@ class SpamAction
         $this->entityManager = $entityManager;
     }
 
-    public function run($message, array $options)
+    public function run($messages, array $options)
     {
-        $message->setStatus(Message::STATUS_SPAM);
+        foreach ($messages as $message) {
+            $message->setStatus(Message::STATUS_SPAM);
+            $this->entityManager->persist($message);
+        }
 
-        $this->entityManager->persist($message);
         $this->entityManager->flush();
 
         $response = new ActionResponse('Message moved to spam.');

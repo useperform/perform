@@ -20,11 +20,13 @@ class NewAction
         $this->entityManager = $entityManager;
     }
 
-    public function run($message, array $options)
+    public function run($messages, array $options)
     {
-        $message->setStatus(Message::STATUS_NEW);
+        foreach ($messages as $message) {
+            $message->setStatus(Message::STATUS_NEW);
+            $this->entityManager->persist($message);
+        }
 
-        $this->entityManager->persist($message);
         $this->entityManager->flush();
 
         $response = new ActionResponse('Message marked as new.');
