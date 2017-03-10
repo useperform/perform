@@ -12,7 +12,7 @@ interface ActionInterface
     /**
      * @return ActionResponse
      */
-    public function run($entity, array $options);
+    public function run(array $entities, array $options);
 
     /**
      * @return bool

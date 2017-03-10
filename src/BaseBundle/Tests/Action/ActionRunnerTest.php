@@ -62,10 +62,10 @@ class ActionRunnerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(true));
         $this->action->expects($this->once())
             ->method('run')
-            ->with($entity, [])
+            ->with([$entity], [])
             ->will($this->returnValue($response));
 
-        $this->assertSame($response, $this->runner->run($actionName, 'some-id', []));
+        $this->assertSame($response, $this->runner->run($actionName, ['some-id'], []));
     }
 
     public function testRunNotGranted()
@@ -88,6 +88,6 @@ class ActionRunnerTest extends \PHPUnit_Framework_TestCase
             ->method('run');
         $this->setExpectedException(AccessDeniedException::class);
 
-        $this->runner->run($actionName, 'some-id', []);
+        $this->runner->run($actionName, ['some-id'], []);
     }
 }
