@@ -32,6 +32,9 @@
       </div>
     </div>
   </div>
+  {% block batchActions %}
+    {% include 'PerformBaseBundle:Crud:batchActions.html.twig' %}
+  {% endblock %}
   {% block paginator %}
     {% include 'PerformBaseBundle:Crud:paginator.html.twig' %}
   {% endblock %}
