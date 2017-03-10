@@ -13,14 +13,16 @@ class EntityResolverTest extends \PHPUnit_Framework_TestCase
 {
     public function testResolve()
     {
-        $extendedAliases = [
-            'PerformBaseBundle:Foo' => 'TestBundle:Foo',
+        $aliases = [
+            'PerformBaseBundle:Foo' => 'Perform\BaseBundle\Entity\Foo',
+            'TestBundle:Foo' => 'Perform\BaseBundle\Entity\Foo',
         ];
         $extended = [
             'Perform\BaseBundle\Entity\Foo' => 'TestBundle\Entity\Foo',
         ];
-        $resolver = new EntityResolver($extendedAliases, $extended);
-        $this->assertSame('TestBundle:Foo', $resolver->resolve('PerformBaseBundle:Foo'));
+        $resolver = new EntityResolver($aliases, $extended);
+        $this->assertSame('TestBundle\Entity\Foo', $resolver->resolve('TestBundle:Foo'));
+        $this->assertSame('TestBundle\Entity\Foo', $resolver->resolve('PerformBaseBundle:Foo'));
         $this->assertSame('TestBundle\Entity\Foo', $resolver->resolve('Perform\BaseBundle\Entity\Foo'));
     }
 

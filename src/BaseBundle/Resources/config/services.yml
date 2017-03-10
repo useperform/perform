@@ -11,7 +11,7 @@ services:
 
     perform_base.doctrine.entity_resolver:
         class: Perform\BaseBundle\Doctrine\EntityResolver
-        arguments: ['%perform_base.extended_entity_aliases%', '%perform_base.extended_entities%']
+        arguments: ['%perform_base.entity_aliases%', '%perform_base.extended_entities%']
 
     perform_base.admin.user:
         class: Perform\BaseBundle\Admin\UserAdmin

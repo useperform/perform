@@ -10,15 +10,21 @@ namespace Perform\BaseBundle\Doctrine;
  **/
 class EntityResolver
 {
+    protected $aliases;
     protected $extended;
 
-    public function __construct(array $extendedAliases = [], array $extendedEntities = [])
+    public function __construct(array $aliases = [], array $extendedEntities = [])
     {
-        $this->extended = array_merge($extendedAliases, $extendedEntities);
+        $this->aliases = $aliases;
+        $this->extended = $extendedEntities;
     }
 
     public function resolve($entity)
     {
+        if (isset($this->aliases[$entity])) {
+            $entity = $this->aliases[$entity];
+        }
+
         return isset($this->extended[$entity]) ? $this->extended[$entity] : $entity;
     }
 }
