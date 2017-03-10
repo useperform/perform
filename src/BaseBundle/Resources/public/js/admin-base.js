@@ -62,10 +62,10 @@ $(function() {
 
   $('.tooltips').tooltip();
 
-  $('.table-crud tr td').click(function() {
-    var checkbox = $(this).parent().find('.selector');
-    checkbox.prop('checked', !checkbox.prop('checked'));
-  }).children().click(function(e) {
-    e.stopPropagation();
+  $('.table-crud tr td').click(function(e) {
+    if (e.target === this) {
+      var checkbox = $(this).parent().find('.selector');
+      checkbox.prop('checked', !checkbox.prop('checked'));
+    }
   });
 });
