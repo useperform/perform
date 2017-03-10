@@ -27,6 +27,7 @@ class ActionExtension extends \Twig_Extension
             new \Twig_SimpleFunction('perform_action_button', [$this, 'actionButton'], ['is_safe' => ['html'], 'needs_environment' => true]),
             new \Twig_SimpleFunction('perform_action_is_granted', [$this, 'isActionGranted']),
             new \Twig_SimpleFunction('perform_action_for_entity', [$this->registry, 'getActionsForEntity']),
+            new \Twig_SimpleFunction('perform_actions_for_class', [$this->registry, 'getActionsForEntityClass']),
         ];
     }
 
@@ -34,7 +35,7 @@ class ActionExtension extends \Twig_Extension
     {
         $action = json_encode([
             'action' => $actionName,
-            'entity' => $entity->getId(),
+            'id' => $entity->getId(),
         ]);
         $attr['class'] = 'action-button' .
                        (isset($attr['class']) ? ' '.trim($attr['class']) : '');

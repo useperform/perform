@@ -1,14 +1,12 @@
 $(function () {
-  $('.action-button').click(function(e) {
-    e.preventDefault();
-    var button = $(this);
-    var action = $(this).data('action');
-
+  var runAction = function(href, ids, button) {
     button.attr('disabled', true);
     $.ajax({
-      url: $(this).attr('href'),
+      url: href,
       type: 'post',
-      data: action,
+      data: {
+        ids: ids
+      },
       success: function (data) {
         if (data.redirect) {
           return window.location.href = data.redirect;
@@ -32,5 +30,19 @@ $(function () {
         button.attr('disabled', false);
       }
     });
+  };
+
+  $('.action-button').click(function(e) {
+    e.preventDefault();
+    runAction($(this).attr('href'), [$(this).data('action').id], $(this));
+  });
+
+  $('.batch-action-button').click(function(e) {
+    e.preventDefault();
+    var ids = $('.table-crud input[type=checkbox].selector:checked').map(function() {
+      return $(this).data('id');
+    }).toArray();
+    var href = $(this).parent().find('option:selected').val();
+    runAction(href, ids, $(this));
   });
 });

@@ -1,0 +1,12 @@
+<div class="row">
+  <div class="col-sm-12">
+    <p>With selected (0)
+      <select class="form-control">
+        {% for name, action in perform_actions_for_class(entityClass) %}
+          <option value="{{path('perform_base_action_index', {action: name})}}">{{name}}</option>
+        {% endfor %}
+      </select>
+      <a href="#" class="btn btn-primary batch-action-button">OK</a>
+    </p>
+  </div>
+</div>
