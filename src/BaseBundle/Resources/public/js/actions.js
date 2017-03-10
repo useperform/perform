@@ -39,7 +39,7 @@ $(function () {
 
   $('.batch-action-button').click(function(e) {
     e.preventDefault();
-    var ids = $('.table-crud input[type=checkbox].selector:checked').map(function() {
+    var ids = $('.table-crud tbody input[type=checkbox].selector:checked').map(function() {
       return $(this).data('id');
     }).toArray();
     var href = $(this).parent().find('option:selected').val();

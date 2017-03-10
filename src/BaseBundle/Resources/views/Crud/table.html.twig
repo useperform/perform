@@ -1,6 +1,8 @@
-<table class="table">
+<table class="table table-crud">
   <thead>
-    <th></th>
+    <th>
+      <input type="checkbox" class="batch-selector"/>
+    </th>
     {% set query = app.request.query.all() %}
     {% for field, config in fields %}
       <th>
@@ -26,7 +28,7 @@
       </th>
     {% endfor %}
   </thead>
-  <tbody class="table-crud">
+  <tbody>
     {% for entity in paginator.currentPageResults %}
       <tr>
         <td><input type="checkbox" class="selector" data-id="{{entity.id}}"/></td>
