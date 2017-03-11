@@ -5,13 +5,14 @@ namespace Perform\ContactBundle\Action;
 use Doctrine\ORM\EntityManager;
 use Perform\ContactBundle\Entity\Message;
 use Perform\BaseBundle\Action\ActionResponse;
+use Perform\BaseBundle\Action\ActionInterface;
 
 /**
  * ArchiveAction
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ArchiveAction
+class ArchiveAction implements ActionInterface
 {
     protected $entityManager;
 
