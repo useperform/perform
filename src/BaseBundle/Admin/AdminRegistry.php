@@ -7,6 +7,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Perform\BaseBundle\Type\TypeConfig;
 use Perform\BaseBundle\Filter\FilterConfig;
 use Perform\BaseBundle\Type\TypeRegistry;
+use Perform\BaseBundle\Action\ActionRegistry;
+use Perform\BaseBundle\Action\ActionConfig;
 
 /**
  * AdminRegistry.
@@ -17,15 +19,19 @@ class AdminRegistry
 {
     protected $container;
     protected $typeRegistry;
+    protected $actionRegistry;
     protected $admins = [];
     protected $aliases = [];
-    protected $typeConfigs = [];
     protected $override = [];
+    protected $typeConfigs = [];
+    protected $filterConfigs = [];
+    protected $actionConfigs = [];
 
-    public function __construct(ContainerInterface $container, TypeRegistry $typeRegistry, array $override = [])
+    public function __construct(ContainerInterface $container, TypeRegistry $typeRegistry, ActionRegistry $actionRegistry, array $override = [])
     {
         $this->container = $container;
         $this->typeRegistry = $typeRegistry;
+        $this->actionRegistry = $actionRegistry;
         $this->override = $override;
     }
 
@@ -138,5 +144,24 @@ class AdminRegistry
         }
 
         return $this->filterConfigs[$class];
+    }
+
+    /**
+     * Get the ActionConfig for an entity. The action config may include
+     * overrides from application configuration.
+     *
+     * @param string|object $entity
+     *
+     * @return ActionConfig
+     */
+    public function getActionConfig($entity)
+    {
+        $class = $this->resolveEntity($entity);
+        if (!isset($this->actionConfigs[$class])) {
+            $this->actionConfigs[$class] = new ActionConfig($this->actionRegistry);
+            $this->getAdmin($class)->configureActions($this->actionConfigs[$class]);
+        }
+
+        return $this->actionConfigs[$class];
     }
 }

@@ -8,6 +8,7 @@ use Perform\BaseBundle\Type\TypeConfig;
 use Perform\BaseBundle\Filter\FilterConfig;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Perform\BaseBundle\Type\StringType;
+use Perform\BaseBundle\Action\ActionRegistry;
 
 /**
  * AdminRegistryTest.
@@ -17,12 +18,16 @@ use Perform\BaseBundle\Type\StringType;
 class AdminRegistryTest extends \PHPUnit_Framework_TestCase
 {
     protected $container;
+    protected $actionRegistry;
     protected $registry;
 
     public function setUp()
     {
         $this->container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
-        $this->registry = new AdminRegistry($this->container, $this->stubTypeRegistry());
+        $this->actionRegistry = $this->getMockBuilder(ActionRegistry::class)
+                      ->disableOriginalConstructor()
+                      ->getMock();
+        $this->registry = new AdminRegistry($this->container, $this->stubTypeRegistry(), $this->actionRegistry);
     }
 
     protected function stubTypeRegistry()
@@ -128,7 +133,7 @@ class AdminRegistryTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         ];
-        $registry = new AdminRegistry($this->container, $this->stubTypeRegistry(), $override);
+        $registry = new AdminRegistry($this->container, $this->stubTypeRegistry(), $this->actionRegistry, $override);
 
         $admin = $this->getMock('Perform\BaseBundle\Admin\AdminInterface');
         $registry->addAdmin('PerformBaseBundle:User', 'Perform\BaseBundle\Entity\User', 'admin.service');
@@ -151,7 +156,7 @@ class AdminRegistryTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         ];
-        $registry = new AdminRegistry($this->container, $this->stubTypeRegistry(), $override);
+        $registry = new AdminRegistry($this->container, $this->stubTypeRegistry(), $this->actionRegistry, $override);
 
         $admin = $this->getMock('Perform\BaseBundle\Admin\AdminInterface');
         $registry->addAdmin('PerformBaseBundle:User', 'Perform\BaseBundle\Entity\User', 'admin.service');

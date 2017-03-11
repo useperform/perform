@@ -9,6 +9,7 @@ use Perform\BaseBundle\DataCollector\AdminsDataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Perform\BaseBundle\Admin\AdminInterface;
+use Perform\BaseBundle\Action\ActionRegistry;
 
 /**
  * AdminsDataCollectorTest.
@@ -21,7 +22,10 @@ class AdminsDataCollectorTest extends \PHPUnit_Framework_TestCase
     {
         $this->container = $this->getMock(ContainerInterface::class);
         $this->typeRegistry = new TypeRegistry($this->container);
-        $this->registry = new AdminRegistry($this->container, $this->typeRegistry);
+        $actionRegistry = $this->getMockBuilder(ActionRegistry::class)
+                      ->disableOriginalConstructor()
+                      ->getMock();
+        $this->registry = new AdminRegistry($this->container, $this->typeRegistry, $actionRegistry);
         $this->collector = new AdminsDataCollector($this->registry, []);
     }
 
