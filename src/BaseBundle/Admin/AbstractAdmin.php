@@ -5,6 +5,7 @@ namespace Perform\BaseBundle\Admin;
 use Symfony\Component\Form\FormBuilderInterface;
 use Perform\BaseBundle\Form\Type\AdminType;
 use Perform\BaseBundle\Filter\FilterConfig;
+use Perform\BaseBundle\Action\ActionConfig;
 
 /**
  * AbstractAdmin
@@ -53,6 +54,10 @@ abstract class AbstractAdmin implements AdminInterface
     }
 
     public function configureFilters(FilterConfig $config)
+    {
+    }
+
+    public function configureActions(ActionConfig $config)
     {
     }
 }

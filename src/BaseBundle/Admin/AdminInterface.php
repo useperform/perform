@@ -4,6 +4,7 @@ namespace Perform\BaseBundle\Admin;
 
 use Perform\BaseBundle\Type\TypeConfig;
 use Perform\BaseBundle\Filter\FilterConfig;
+use Perform\BaseBundle\Action\ActionConfig;
 
 /**
  * AdminInterface.
@@ -15,6 +16,8 @@ interface AdminInterface
     public function configureTypes(TypeConfig $config);
 
     public function configureFilters(FilterConfig $config);
+
+    public function configureActions(ActionConfig $config);
 
     /**
      * @return string
