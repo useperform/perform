@@ -63,6 +63,14 @@ services:
         tags:
             - {name: twig.extension}
 
+    perform_base.twig.action:
+        class: Perform\BaseBundle\Twig\Extension\ActionExtension
+        arguments:
+            - "@router"
+            - "@perform_base.action_registry"
+        tags:
+            - {name: twig.extension}
+
     perform_base.twig.util:
         class: Perform\BaseBundle\Twig\Extension\UtilExtension
         tags:
@@ -151,3 +159,20 @@ services:
             - "@perform_base.admin.registry"
             - "@doctrine.orm.entity_manager"
             - "@perform_base.asset_container"
+
+    perform_base.bundle_searcher:
+        class: Perform\BaseBundle\Util\BundleSearcher
+        arguments:
+            - "@service_container"
+
+    perform_base.action_registry:
+        class: Perform\BaseBundle\Action\ActionRegistry
+        arguments:
+            - "@service_container"
+            - []
+
+    perform_base.action_runner:
+        class: Perform\BaseBundle\Action\ActionRunner
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@perform_base.action_registry"

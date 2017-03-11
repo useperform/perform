@@ -6,6 +6,7 @@ use Perform\BaseBundle\Panel\PanelInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\BaseBundle\Doctrine\EntityResolver;
+use Perform\ContactBundle\Entity\Message;
 
 /**
  * MessagesPanel
@@ -28,7 +29,7 @@ class MessagesPanel implements PanelInterface
     public function render()
     {
         $messages = $this->entityManager->getRepository($this->resolver->resolve('PerformContactBundle:Message'))
-                  ->findBy([], ['createdAt' => 'DESC'], 10);
+                  ->findBy(['status' => Message::STATUS_NEW], ['createdAt' => 'DESC'], 10);
 
         return $this->templating->render('PerformContactBundle:panels:messages.html.twig', [
             'messages' => $messages,

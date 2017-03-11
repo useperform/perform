@@ -151,6 +151,43 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('Super title', $this->config->getTypes(TypeConfig::CONTEXT_EDIT)['superTitle']['editOptions']['label']);
     }
 
+    public function testOverriddenLabelIsNotChanged()
+    {
+        $this->config->add('title', [
+            'type' => 'string',
+            'options' => [
+                'label' => 'Some label',
+            ],
+        ]);
+        $this->config->add('title', [
+            'options' => [
+                'other_option' => 'foo',
+            ],
+        ]);
+
+        $this->assertSame('Some label', $this->config->getTypes(TypeConfig::CONTEXT_LIST)['title']['listOptions']['label']);
+        $this->assertSame('foo', $this->config->getTypes(TypeConfig::CONTEXT_LIST)['title']['listOptions']['other_option']);
+    }
+
+    public function testOverriddenLabelCanBeChanged()
+    {
+        $this->config->add('title', [
+            'type' => 'string',
+            'options' => [
+                'label' => 'Some label',
+            ],
+        ]);
+        $this->config->add('title', [
+            'options' => [
+                'label' => 'Custom label again',
+                'other_option' => 'foo',
+            ],
+        ]);
+
+        $this->assertSame('Custom label again', $this->config->getTypes(TypeConfig::CONTEXT_LIST)['title']['listOptions']['label']);
+        $this->assertSame('foo', $this->config->getTypes(TypeConfig::CONTEXT_LIST)['title']['listOptions']['other_option']);
+    }
+
     public function testFieldsCanBeAddedMultipleTimes()
     {
         $this->config->add('title', [
@@ -159,7 +196,7 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
                 'stuff' => [
                     'foo' => true,
                     'bar' => true,
-                ]
+                ],
             ],
         ]);
         $this->config->add('title', [
@@ -167,7 +204,7 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
                 'stuff' => [
                     'bar' => false,
                     'baz' => true,
-                ]
+                ],
             ],
         ]);
 
@@ -230,10 +267,10 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
         $defaultConfig = [
             'sort' => false,
             'options' => [
-                'some_type_option' => 'foo'
+                'some_type_option' => 'foo',
             ],
             'listOptions' => [
-                'some_type_option' => 'bar'
+                'some_type_option' => 'bar',
             ],
         ];
         $type->expects($this->any())
@@ -244,5 +281,36 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
         $resolved = $config->getTypes(TypeConfig::CONTEXT_LIST)['title'];
         $this->assertSame('foo', $resolved['viewOptions']['some_type_option']);
         $this->assertSame('bar', $resolved['listOptions']['some_type_option']);
+    }
+
+    public function testGetAllTypes()
+    {
+        $this->config->add('one', [
+            'type' => 'string',
+            'contexts' => [],
+        ]);
+        $this->config->add('two', [
+            'type' => 'string',
+            'contexts' => [TypeConfig::CONTEXT_LIST],
+        ]);
+
+        $all = $this->config->getAllTypes();
+        $this->assertSame(['one', 'two'], array_keys($all));
+    }
+
+    public function testGetAddedConfigs()
+    {
+        $first = [
+            'type' => 'string',
+            'contexts' => [],
+        ];
+        $this->config->add('one', $first);
+        $second = [
+            'type' => 'string',
+            'contexts' => [],
+        ];
+        $this->config->add('one', $second);
+
+        $this->assertSame(['one' => [$first, $second]], $this->config->getAddedConfigs());
     }
 }

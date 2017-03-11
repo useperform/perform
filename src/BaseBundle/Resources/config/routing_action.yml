@@ -1,0 +1,3 @@
+action:
+    resource: "@PerformBaseBundle/Controller/ActionController.php"
+    type:     annotation

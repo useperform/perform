@@ -53,6 +53,12 @@ services:
         arguments:
             - "@perform_cms.repo.version"
 
+    perform_cms.page_locator:
+        class: Perform\CmsBundle\Locator\PageLocator
+        arguments:
+            - "@perform_base.bundle_searcher"
+            - "@annotation_reader"
+
     perform_cms.version_updater:
         class: Perform\CmsBundle\Updater\VersionUpdater
         arguments:

@@ -1,0 +1,16 @@
+{% extends 'PerformBaseBundle:types:simple.html.twig' %}
+
+{% block list %}
+  {{value}}
+{% endblock %}
+
+{% block create %}
+  <div class="form-group">
+    {{form_label(form[field])}}
+    <div class="col-md-10">
+      {{form_widget(form[field])}}
+      <p class="help-block">e.g. 2m 3s, 1h30m, 3d 40m 2h 30s</p>
+    </div>
+    {{form_errors(form[field])}}
+  </div>
+{% endblock %}

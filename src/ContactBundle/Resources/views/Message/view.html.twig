@@ -40,5 +40,10 @@
         {{entity.message | nl2br}}
       </div>
 
-      <a href="{{perform_crud_route(entity, 'list')}}" class="btn btn-default">Back</a>
+      <a href="{{perform_crud_route(entity, 'list')}}" class="back-button btn btn-default">
+        Back
+      </a>
+      {% for name, action in perform_action_for_entity(entity) %}
+        {{perform_action_button(name, action.getLabel(entity), entity, {class: "btn btn-default"})}}
+      {% endfor %}
 {% endblock %}

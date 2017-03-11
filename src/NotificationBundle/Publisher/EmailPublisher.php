@@ -43,12 +43,17 @@ class EmailPublisher implements PublisherInterface
                 'currentRecipient' => $recipient,
             ]);
 
-            $this->mailer->send(
+            $message = $this->mailer->createMessage(
                 $recipient->getEmail(),
                 $context['subject'],
                 $template,
                 $context
             );
+            if (isset($context['replyTo'])) {
+                $message->setReplyTo((array) $context['replyTo']);
+            }
+
+            $this->mailer->sendMessage($message);
         }
     }
 
