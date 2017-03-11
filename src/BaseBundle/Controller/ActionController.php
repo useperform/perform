@@ -24,7 +24,7 @@ class ActionController extends Controller
     public function indexAction($action, Request $request)
     {
         $response = $this->get('perform_base.action_runner')
-                  ->run($action, $request->request->get('ids', []), $request->request->all());
+                  ->run($action, $request->request->get('entityClass'), $request->request->get('ids', []), $request->request->all());
 
         $json = [
             'message' => $response->getMessage(),

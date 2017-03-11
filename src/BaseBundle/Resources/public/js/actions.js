@@ -1,11 +1,12 @@
 $(function () {
-  var runAction = function(href, ids, button) {
+  var runAction = function(href, entityClass, ids, button) {
     button.attr('disabled', true);
     $.ajax({
       url: href,
       type: 'post',
       data: {
-        ids: ids
+        entityClass: entityClass,
+        ids: ids,
       },
       success: function (data) {
         if (data.redirect) {
@@ -34,7 +35,7 @@ $(function () {
 
   $('.action-button').click(function(e) {
     e.preventDefault();
-    runAction($(this).attr('href'), [$(this).data('action').id], $(this));
+    runAction($(this).attr('href'), $(this).data('action').entityClass, [$(this).data('action').id], $(this));
   });
 
   $('.batch-action-button').click(function(e) {
@@ -43,6 +44,7 @@ $(function () {
       return $(this).data('id');
     }).toArray();
     var href = $(this).parent().find('option:selected').val();
-    runAction(href, ids, $(this));
+    var entityClass = $(this).parent().children('select').data('entity');
+    runAction(href, entityClass, ids, $(this));
   });
 });

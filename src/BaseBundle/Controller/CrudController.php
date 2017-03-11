@@ -48,6 +48,12 @@ class CrudController extends Controller
             ->getFilterConfig($this->entity);
     }
 
+    protected function getActionConfig()
+    {
+        return $this->get('perform_base.admin.registry')
+            ->getActionConfig($this->entity);
+    }
+
     protected function newEntity()
     {
         $className = $this->getDoctrine()
@@ -100,6 +106,7 @@ class CrudController extends Controller
         return [
             'fields' => $this->getTypeConfig()->getTypes(TypeConfig::CONTEXT_LIST),
             'filters' => $this->getFilterConfig()->getFilters(),
+            'actions' => $this->getActionConfig()->all(),
             'orderBy' => $orderBy,
             'routePrefix' => $admin->getRoutePrefix(),
             'paginator' => $paginator,

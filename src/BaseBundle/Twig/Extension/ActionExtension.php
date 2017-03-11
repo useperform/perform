@@ -4,6 +4,7 @@ namespace Perform\BaseBundle\Twig\Extension;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Perform\BaseBundle\Action\ActionRegistry;
+use Perform\BaseBundle\Action\ConfiguredAction;
 
 /**
  * ActionExtension.
@@ -31,20 +32,19 @@ class ActionExtension extends \Twig_Extension
         ];
     }
 
-    public function actionButton(\Twig_Environment $twig, $actionName, $label, $entity, array $attr = [])
+    public function actionButton(\Twig_Environment $twig, ConfiguredAction $action, $entity, array $attr = [])
     {
-        $action = json_encode([
-            'action' => $actionName,
+        $attr['data-action'] = json_encode([
+            'entityClass' => get_class($entity),
             'id' => $entity->getId(),
         ]);
         $attr['class'] = 'action-button' .
                        (isset($attr['class']) ? ' '.trim($attr['class']) : '');
-        $attr['href'] = $this->urlGenerator->generate('perform_base_action_index', ['action' => $actionName]);
+        $attr['href'] = $this->urlGenerator->generate('perform_base_action_index', ['action' => $action->getName()]);
 
         return $twig->render('PerformBaseBundle:Action:button.html.twig', [
-            'action' => $action,
+            'label' => $action->getLabel($entity),
             'attr' => $attr,
-            'label' => $label,
         ]);
     }
 
