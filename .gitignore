@@ -7,4 +7,4 @@ src/*/Resources/public/css
 src/CmsBundle/Resources/public/js
 /src/CmsBundle/gulp-sources.js
 src/MediaPlayerBundle/Resources/public
-docs/build
+docs/_build
