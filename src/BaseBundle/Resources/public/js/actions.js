@@ -23,6 +23,9 @@ $(function () {
         case 403:
           error = 'This action is not allowed.';
           break;
+        case 404:
+          error = 'One or more items were not found.';
+          break;
         default:
           error = 'An error occurred.'
           break;

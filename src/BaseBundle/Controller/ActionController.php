@@ -8,6 +8,7 @@ use Perform\BaseBundle\Annotation\Ajax;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Doctrine\ORM\EntityNotFoundException;
 
 /**
  * ActionController.
@@ -23,8 +24,16 @@ class ActionController extends Controller
      */
     public function indexAction($action, Request $request)
     {
-        $response = $this->get('perform_base.action_runner')
-                  ->run($action, $request->request->get('entityClass'), $request->request->get('ids', []), $request->request->all());
+        try {
+            $response = $this->get('perform_base.action_runner')
+                      ->run($action, $request->request->get('entityClass'), $request->request->get('ids', []), $request->request->all());
+
+        } catch (EntityNotFoundException $e) {
+            return [
+                'code' => 404,
+                'message' => $e->getMessage(),
+            ];
+        }
 
         $json = [
             'message' => $response->getMessage(),
