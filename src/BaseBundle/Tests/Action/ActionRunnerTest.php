@@ -4,14 +4,15 @@ namespace Perform\BaseBundle\Tests\Action;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\BaseBundle\Action\ActionRunner;
-use Perform\BaseBundle\Action\ActionInterface;
 use Doctrine\Common\Persistence\ObjectRepository;
-use Perform\BaseBundle\Action\ActionRegistry;
 use Perform\BaseBundle\Action\ActionResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Perform\BaseBundle\Admin\AdminRegistry;
+use Perform\BaseBundle\Action\ActionConfig;
+use Perform\BaseBundle\Action\ConfiguredAction;
 
 /**
- * ActionRunnerTest
+ * ActionRunnerTest.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
@@ -22,6 +23,7 @@ class ActionRunnerTest extends \PHPUnit_Framework_TestCase
     protected $action;
     protected $registry;
     protected $runner;
+    protected $config;
 
     public function setUp()
     {
@@ -31,8 +33,13 @@ class ActionRunnerTest extends \PHPUnit_Framework_TestCase
             ->method('getRepository')
             ->with('FooBundle\\Foo')
             ->will($this->returnValue($this->repo));
-        $this->action = $this->getMock(ActionInterface::class);
-        $this->registry = $this->getMockBuilder(ActionRegistry::class)
+        $this->action = $this->getMockBuilder(ConfiguredAction::class)
+                        ->disableOriginalConstructor()
+                        ->getMock();
+        $this->config = $this->getMockBuilder(ActionConfig::class)
+                        ->disableOriginalConstructor()
+                        ->getMock();
+        $this->registry = $this->getMockBuilder(AdminRegistry::class)
                         ->disableOriginalConstructor()
                         ->getMock();
 
@@ -43,7 +50,11 @@ class ActionRunnerTest extends \PHPUnit_Framework_TestCase
     {
         $actionName = 'foo_action';
         $this->registry->expects($this->any())
-            ->method('getAction')
+            ->method('getActionConfig')
+            ->with('FooBundle\\Foo')
+            ->will($this->returnValue($this->config));
+        $this->config->expects($this->any())
+            ->method('get')
             ->with('foo_action')
             ->will($this->returnValue($this->action));
         $entity = new \stdClass();
@@ -58,7 +69,7 @@ class ActionRunnerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(true));
         $this->action->expects($this->once())
             ->method('run')
-            ->with([$entity], [])
+            ->with([$entity])
             ->will($this->returnValue($response));
 
         $this->assertSame($response, $this->runner->run($actionName, 'FooBundle\\Foo', ['some-id'], []));
@@ -68,7 +79,11 @@ class ActionRunnerTest extends \PHPUnit_Framework_TestCase
     {
         $actionName = 'foo_action';
         $this->registry->expects($this->any())
-            ->method('getAction')
+            ->method('getActionConfig')
+            ->with('FooBundle\\Foo')
+            ->will($this->returnValue($this->config));
+        $this->config->expects($this->any())
+            ->method('get')
             ->with('foo_action')
             ->will($this->returnValue($this->action));
         $entity = new \stdClass();

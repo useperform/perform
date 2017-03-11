@@ -31,4 +31,17 @@ class ConfiguredAction
     {
         return call_user_func($this->batchLabel);
     }
+
+    public function isGranted($entity)
+    {
+        //also check with any custom code passed in
+        return $this->action->isGranted($entity);
+    }
+
+    public function run($entities)
+    {
+        //any other configured options passed into this class
+        $options = [];
+        return $this->action->run($entities, $options);
+    }
 }

@@ -55,6 +55,11 @@ class ActionConfig
         return $this;
     }
 
+    public function get($name)
+    {
+        return isset($this->actions[$name]) ? $this->actions[$name] : null;
+    }
+
     public function all()
     {
         return $this->actions;

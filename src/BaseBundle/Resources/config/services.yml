@@ -179,4 +179,4 @@ services:
         class: Perform\BaseBundle\Action\ActionRunner
         arguments:
             - "@doctrine.orm.entity_manager"
-            - "@perform_base.action_registry"
+            - "@perform_base.admin.registry"
