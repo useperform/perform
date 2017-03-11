@@ -22,22 +22,7 @@ class ConfigureActionsPass implements CompilerPassInterface
                 if (!isset($item['alias'])) {
                     throw new \InvalidArgumentException(sprintf('The service "%s" tagged with "perform_base.action" must set the "alias" option in the tag.', $service));
                 }
-                $alias = $item['alias'];
-
-                if (!isset($item['entity'])) {
-                    throw new \InvalidArgumentException(sprintf('The service "%s" tagged with "perform_base.action" must set the "entity" option in the tag.', $service));
-                }
-                $entity = trim($item['entity'], '\\');
-
-                if (isset($aliases[$entity])) {
-                    $entity = $aliases[$entity];
-                }
-
-                if (isset($extendedEntities[$entity])) {
-                    $entity = $extendedEntities[$entity];
-                }
-
-                $definition->addMethodCall('addAction', [$alias, $entity, $service]);
+                $definition->addMethodCall('addAction', [$item['alias'], $service]);
             }
         }
     }
