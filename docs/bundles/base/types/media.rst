@@ -11,6 +11,7 @@ plugin.
 
 .. code-block:: php
 
+   <?php
     $config->add('image', [
         'type' => 'media',
         'options' => [
