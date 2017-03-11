@@ -8,5 +8,6 @@ Contents:
    :glob:
 
    quickstart
+   core/index
    tutorials/index
    bundles/index
