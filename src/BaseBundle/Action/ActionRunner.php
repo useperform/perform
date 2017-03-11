@@ -18,9 +18,8 @@ class ActionRunner
         $this->registry = $registry;
     }
 
-    public function run($actionName, array $entityIds, array $options)
+    public function run($actionName, $entityClass, array $entityIds, array $options)
     {
-        $entityClass = $this->registry->getTargetEntity($actionName);
         $entities = [];
         foreach ($entityIds as $id) {
             $entities[] = $this->entityManager->getRepository($entityClass)

@@ -43,10 +43,6 @@ class ActionRunnerTest extends \PHPUnit_Framework_TestCase
     {
         $actionName = 'foo_action';
         $this->registry->expects($this->any())
-            ->method('getTargetEntity')
-            ->with('foo_action')
-            ->will($this->returnValue('FooBundle\\Foo'));
-        $this->registry->expects($this->any())
             ->method('getAction')
             ->with('foo_action')
             ->will($this->returnValue($this->action));
@@ -65,16 +61,12 @@ class ActionRunnerTest extends \PHPUnit_Framework_TestCase
             ->with([$entity], [])
             ->will($this->returnValue($response));
 
-        $this->assertSame($response, $this->runner->run($actionName, ['some-id'], []));
+        $this->assertSame($response, $this->runner->run($actionName, 'FooBundle\\Foo', ['some-id'], []));
     }
 
     public function testRunNotGranted()
     {
         $actionName = 'foo_action';
-        $this->registry->expects($this->any())
-            ->method('getTargetEntity')
-            ->with('foo_action')
-            ->will($this->returnValue('FooBundle\\Foo'));
         $this->registry->expects($this->any())
             ->method('getAction')
             ->with('foo_action')
@@ -88,6 +80,6 @@ class ActionRunnerTest extends \PHPUnit_Framework_TestCase
             ->method('run');
         $this->setExpectedException(AccessDeniedException::class);
 
-        $this->runner->run($actionName, ['some-id'], []);
+        $this->runner->run($actionName, 'FooBundle\\Foo', ['some-id'], []);
     }
 }
