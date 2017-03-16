@@ -9,12 +9,23 @@ $(function () {
         ids: ids,
       },
       success: function (data) {
+        if (!data.redirectType) {
+          return console.error('Invalid action response, redirectType is required.');
+        }
+        if (data.redirectType === 'none') {
+          app.func.showSuccess(data.message);
+        }
+        //url or route redirect
         if (data.redirect) {
           return window.location.href = data.redirect;
         }
-        if (data.message) {
-          app.func.showSuccess(data.message);
+        if (data.redirectType === 'previous') {
+          return window.location.href = document.referrer;
         }
+        if (data.redirectType === 'current') {
+          return window.location.reload();
+        }
+
         button.attr('disabled', false);
       },
       error: function (data) {
