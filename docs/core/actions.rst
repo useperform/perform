@@ -4,7 +4,7 @@ Actions
 On top of viewing, creating, editing, and deleting entities, you may
 want to define operations that act on entities in some way.
 
-For example, an action may:
+For example, an action might:
 
 - archive a message
 - trigger a report
@@ -35,7 +35,7 @@ tagged with ``perform_base.action``.
 
 ``ActionInterface#run()`` should return an instance of
 ``Perform\BaseBundle\Action\ActionResponse`` or throw an exception.
-This method must accept an array of 0, 1, or many
+This method must accept an array of 1 or many
 entities, so make sure your action accounts for this.
 
 Here is a basic action that simply logs the entities as JSON:
@@ -79,7 +79,7 @@ Define it as a service, and give it the ``perform_base.action`` tag.
 Use the action
 --------------
 
-The action is now available in admin classes:
+The action is now available to use in admin classes with the ``configureActions`` method:
 
 .. code-block:: php
 
@@ -101,7 +101,7 @@ Choosing where to redirect
 
 You might want to redirect somewhere after running an action.
 
-``ActionResponse`` can have one of the following redirects attached:
+``ActionResponse`` can have one of the following redirect 'types' attached:
 
 * ``ActionResponse::REDIRECT_NONE`` - don't redirect anywhere (the default)
 * ``ActionResponse::REDIRECT_URL`` - redirect to a given url
