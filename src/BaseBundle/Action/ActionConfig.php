@@ -30,11 +30,17 @@ class ActionConfig
 
     public function add($name, array $options = [])
     {
-        foreach (['label', 'batchLabel'] as $key) {
-            if (!isset($options[$key])) {
-                $options[$key] = StringUtil::sensible($name);
-            }
+        $action = $this->registry->getAction($name);
+        $options = array_replace_recursive($action->getDefaultConfig(), $options);
+
+        if (!isset($options['label'])) {
+            $options['label'] = StringUtil::sensible($name);
         }
+        if (!isset($options['batchLabel'])) {
+            $options['batchLabel'] = is_string($options['label']) ?
+                                   $options['label'] : StringUtil::sensible($name);
+        }
+
         $options = $this->resolver->resolve($options);
 
         if (!$options['label'] instanceof \Closure) {
@@ -50,7 +56,7 @@ class ActionConfig
             };
         }
 
-        $this->actions[$name] = new ConfiguredAction($name, $this->registry->getAction($name), $options['label'], $options['batchLabel']);
+        $this->actions[$name] = new ConfiguredAction($name, $action, $options['label'], $options['batchLabel']);
 
         return $this;
     }

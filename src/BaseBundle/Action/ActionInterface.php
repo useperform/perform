@@ -20,7 +20,7 @@ interface ActionInterface
     public function isGranted($entity);
 
     /**
-     * @return string
+     * @return array
      */
-    public function getLabel($entity);
+    public function getDefaultConfig();
 }

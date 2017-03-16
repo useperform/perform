@@ -24,10 +24,15 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testAddNoLabels()
     {
+        $action = $this->getMock(ActionInterface::class);
+        $action->expects($this->any())
+            ->method('getDefaultConfig')
+            ->will($this->returnValue([]));
         $this->registry->expects($this->any())
             ->method('getAction')
             ->with('foo')
-            ->will($this->returnValue($this->getMock(ActionInterface::class)));
+            ->will($this->returnValue($action));
+
         $this->config->add('foo');
 
         $ca = $this->config->all()['foo'];
@@ -39,10 +44,14 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testAddWithStringLabels()
     {
+        $action = $this->getMock(ActionInterface::class);
+        $action->expects($this->any())
+            ->method('getDefaultConfig')
+            ->will($this->returnValue([]));
         $this->registry->expects($this->any())
             ->method('getAction')
             ->with('foo')
-            ->will($this->returnValue($this->getMock(ActionInterface::class)));
+            ->will($this->returnValue($action));
         $this->config->add('foo', [
             'label' => 'Foo label',
             'batchLabel' => 'Foo batch label',
