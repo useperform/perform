@@ -1,5 +1,8 @@
 $(function () {
   var runAction = function(href, entityClass, ids, button) {
+    if (ids.length < 1) {
+      return;
+    }
     button.attr('disabled', true);
     $.ajax({
       url: href,
