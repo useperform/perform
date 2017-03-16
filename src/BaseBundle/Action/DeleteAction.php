@@ -37,7 +37,10 @@ class DeleteAction implements ActionInterface
         return true;
     }
 
-    public function getLabel($message)
+    public function getDefaultConfig()
     {
+        return [
+            'label' => 'Delete',
+        ];
     }
 }
