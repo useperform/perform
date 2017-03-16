@@ -9,7 +9,15 @@ namespace Perform\BaseBundle\Action;
  **/
 class ActionResponse
 {
+    const REDIRECT_NONE = 'none';
+    const REDIRECT_URL = 'url';
+    const REDIRECT_ROUTE = 'route';
+    const REDIRECT_PREVIOUS = 'previous';
+    const REDIRECT_CURRENT = 'current';
+
+    protected $redirect = 'none';
     protected $message;
+    protected $url;
     protected $route;
     protected $routeParams = [];
 
@@ -24,6 +32,36 @@ class ActionResponse
     }
 
     /**
+     * @param string $redirect
+     *
+     * @return ActionResponse
+     */
+    public function setRedirect($redirect, array $options = [])
+    {
+        $this->redirect = $redirect;
+
+        if ($redirect === static::REDIRECT_URL) {
+            if (!isset($options['url'])) {
+                throw new \InvalidArgumentException('REDIRECT_URL must have the "url" option supplied.');
+            }
+            $this->url = $options['url'];
+        }
+
+        if ($redirect === static::REDIRECT_ROUTE) {
+            if (!isset($options['route'])) {
+                throw new \InvalidArgumentException('REDIRECT_ROUTE must have the "route" option supplied.');
+            }
+
+            $this->route = $options['route'];
+            $this->routeParams = isset($options['params']) ? (array) $options['params'] : [];
+        }
+
+        return $this;
+    }
+
+    /**
+     * Shortcut for calling setRedirect with REDIRECT_ROUTE.
+     *
      * @param string $route
      * @param array  $params
      *
@@ -31,10 +69,35 @@ class ActionResponse
      */
     public function setRedirectRoute($route, array $params = [])
     {
-        $this->route = $route;
-        $this->routeParams = $params;
+        return $this->setRedirect(static::REDIRECT_ROUTE, ['route' => $route, 'params' => $params]);
+    }
 
-        return $this;
+    /**
+     * Shortcut for calling setRedirect with REDIRECT_URL.
+     *
+     * @param string $url
+     *
+     * @return ActionResponse
+     */
+    public function setRedirectUrl($url)
+    {
+        return $this->setRedirect(static::REDIRECT_URL, ['url' => $url]);
+    }
+
+    /**
+     * @return string
+     */
+    public function getRedirect()
+    {
+        return $this->redirect;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
     }
 
     /**

@@ -39,4 +39,11 @@ class ActionResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('some_route', $r->getRoute());
         $this->assertSame(['param' => 'foo'], $r->getRouteParams());
     }
+
+    public function testGetUrl()
+    {
+        $r = new ActionResponse('Message');
+        $r->setRedirectUrl('https://example.com');
+        $this->assertSame('https://example.com', $r->getUrl());
+    }
 }
