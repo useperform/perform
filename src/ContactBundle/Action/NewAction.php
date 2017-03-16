@@ -41,12 +41,17 @@ class NewAction implements ActionInterface
         return $message->getStatus() !== Message::STATUS_NEW;
     }
 
-    public function getLabel($message)
+    public function getDefaultConfig()
     {
-        if ($message->getStatus() === Message::STATUS_SPAM) {
-            return 'Not spam';
-        }
+        return [
+            'label' => function($message) {
+                if ($message->getStatus() === Message::STATUS_SPAM) {
+                    return 'Not spam';
+                }
 
-        return 'Mark as new';
+                return 'Mark as new';
+            },
+            'batchLabel' => 'Mark as new',
+        ];
     }
 }

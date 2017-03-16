@@ -41,8 +41,10 @@ class SpamAction implements ActionInterface
         return $message->getStatus() !== Message::STATUS_SPAM;
     }
 
-    public function getLabel($message)
+    public function getDefaultConfig()
     {
-        return 'Flag as spam';
+        return [
+            'label' => 'Flag as spam',
+        ];
     }
 }

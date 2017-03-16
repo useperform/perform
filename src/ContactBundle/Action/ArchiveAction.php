@@ -41,8 +41,10 @@ class ArchiveAction implements ActionInterface
         return $message->getStatus() === Message::STATUS_NEW;
     }
 
-    public function getLabel($message)
+    public function getDefaultConfig()
     {
-        return 'Archive';
+        return [
+            'label' => 'Archive',
+        ];
     }
 }
