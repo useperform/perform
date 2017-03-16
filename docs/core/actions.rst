@@ -2,10 +2,32 @@ Actions
 =======
 
 On top of viewing, creating, editing, and deleting entities, you may
-want to define operations that change entities in some way.
+want to define operations that act on entities in some way.
 
-Actions are a way of doing this without having to create a new
-controller and route for every action.
+For example, an action may:
+
+- archive a message
+- trigger a report
+- email the selected entities to an administrator
+
+.. note::
+
+    Deleting entities is actually a built-in action. See ``Perform\BaseBundle\Action\DeleteAction``.
+
+Actions are a way of doing these operations without having to create new
+controllers, routes, and frontend code every time.
+
+When configured, links to these actions are automatically displayed
+next to entities.
+Clicking these links will run the action and display a success
+message, either on the current page or after redirecting to another
+page, depending on the response from the action.
+
+An action can also require confirmation before executing, and can be
+configured to only run after passing various conditions.
+
+Create an action
+----------------
 
 All actions must implement
 ``Perform\BaseBundle\Action\ActionInterface``, and define services
@@ -13,12 +35,8 @@ tagged with ``perform_base.action``.
 
 ``ActionInterface#run()`` should return an instance of
 ``Perform\BaseBundle\Action\ActionResponse`` or throw an exception.
-
 This method must accept an array of 0, 1, or many
 entities, so make sure your action accounts for this.
-
-Create an action
-----------------
 
 Here is a basic action that simply logs the entities as JSON:
 
@@ -69,13 +87,58 @@ The action is now available in admin classes:
 
     public function configureActions(ActionConfig $config)
     {
+        // also use the default actions
+        parent::configureActions($config);
+
+        // add the custom action
         $config->add('app_log_json');
     }
 
 This action will now appear next to each entity and in the batch actions dropdown.
 
+Choosing where to redirect
+--------------------------
+
+You might want to redirect somewhere after running an action.
+
+``ActionResponse`` can have one of the following redirects attached:
+
+* ``ActionResponse::REDIRECT_NONE`` - don't redirect anywhere (the default)
+* ``ActionResponse::REDIRECT_URL`` - redirect to a given url
+* ``ActionResponse::REDIRECT_ROUTE`` - redirect to a named route
+* ``ActionResponse::REDIRECT_PREVIOUS`` - redirect to the previous page
+* ``ActionResponse::REDIRECT_CURRENT`` - reload the current page
+
+Set this redirect by calling ``setRedirect()`` on the response before returning it:
+
+.. code-block:: php
+
+   <?php
+
+   $response = new ActionResponse('Success');
+   //redirect to the previous page
+   $response->setRedirect(ActionResponse::REDIRECT_PREVIOUS);
+
+   //url requires the url option
+   $response->setRedirect(ActionResponse::REDIRECT_URL, ['url' => 'https://example.com']);
+
+   //route requires the route and params
+   $response->setRedirect(ActionResponse::REDIRECT_URL, ['route' => 'admin_foo_list']);
+   $response->setRedirect(ActionResponse::REDIRECT_URL, ['route' => 'admin_foo_view', 'params' => ['id' => 1]]);
+
+.. note::
+
+    ``REDIRECT_URL`` requires the ``url`` option, and ``REDIRECT_ROUTE`` requires the ``route`` and ``params`` options.
+
+
+Requiring confirmation
+----------------------
+
 Customising lables
 ------------------
 
-Restricting action usage
--------------------------
+Restricting usage
+-----------------
+
+Running actions in the cli
+--------------------------
