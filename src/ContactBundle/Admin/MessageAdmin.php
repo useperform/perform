@@ -5,6 +5,7 @@ namespace Perform\ContactBundle\Admin;
 use Perform\BaseBundle\Admin\AbstractAdmin;
 use Perform\BaseBundle\Type\TypeConfig;
 use Perform\BaseBundle\Filter\FilterConfig;
+use Perform\BaseBundle\Action\ActionConfig;
 use Perform\ContactBundle\Entity\Message;
 
 /**
@@ -83,5 +84,12 @@ class MessageAdmin extends AbstractAdmin
             },
         ]);
         $config->setDefault('new');
+    }
+
+    public function configureActions(ActionConfig $config)
+    {
+        $config->add('perform_contact_archive');
+        $config->add('perform_contact_spam');
+        $config->add('perform_contact_new');
     }
 }
