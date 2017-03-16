@@ -62,7 +62,7 @@ class UserImporter
             ->setRequired('password');
         $definition = $resolver->resolve($definition);
 
-        $user = new User($key);
+        $user = new User();
         $user->setEmail($email)
             ->setForename($definition['forename'])
             ->setSurname($definition['surname'])
