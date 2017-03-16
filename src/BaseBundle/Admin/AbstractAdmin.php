@@ -59,5 +59,6 @@ abstract class AbstractAdmin implements AdminInterface
 
     public function configureActions(ActionConfig $config)
     {
+        $config->add('perform_base_delete');
     }
 }
