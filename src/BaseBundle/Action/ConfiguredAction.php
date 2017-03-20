@@ -49,6 +49,11 @@ class ConfiguredAction
         return (bool) $this->options['confirmationRequired']();
     }
 
+    public function getConfirmationMessage($entity)
+    {
+        return $this->options['confirmationMessage']($entity, $this->getLabel($entity));
+    }
+
     public function run($entities)
     {
         //any other configured options passed into this class

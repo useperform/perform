@@ -51,4 +51,18 @@ class ConfiguredActionTest extends \PHPUnit_Framework_TestCase
         $ca = new ConfiguredAction('foo', $this->action, $options);
         $this->assertTrue($ca->isConfirmationRequired());
     }
+
+    public function testGetConfirmationMessage()
+    {
+        $options = [
+            'label' => function($entity) { return 'Remove'; },
+            'confirmationMessage' => function($entity, $label) {
+                return sprintf('%s %s?', $label, $entity->id);
+            },
+        ];
+        $ca = new ConfiguredAction('foo', $this->action, $options);
+        $entity = new \stdClass();
+        $entity->id = 1;
+        $this->assertSame('Remove 1?', $ca->getConfirmationMessage($entity));
+    }
 }

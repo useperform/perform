@@ -27,7 +27,11 @@ class ActionConfig
             ->setAllowedTypes('batchLabel', ['string', 'Closure'])
             ->setDefaults([
                 'confirmationRequired' => false,
+                'confirmationMessage' => function($entity, $label) {
+                    return sprintf('Are you sure you want to %s this item?', strtolower($label));
+                },
             ])
+            ->setAllowedTypes('confirmationMessage', ['string', 'Closure'])
             ->setAllowedTypes('confirmationRequired', ['bool', 'Closure'])
             ;
     }
@@ -47,14 +51,14 @@ class ActionConfig
 
         $options = $this->resolver->resolve($options);
 
-        if (!$options['label'] instanceof \Closure) {
-            $label = $options['label'];
-            $options['label'] = function ($entity) use ($label) {
-                return $label;
-            };
-        }
+        $maybeClosures = [
+            'label',
+            'batchLabel',
+            'confirmationRequired',
+            'confirmationMessage',
+        ];
 
-        foreach (['batchLabel', 'confirmationRequired'] as $key) {
+        foreach ($maybeClosures as $key) {
             if (!$options[$key] instanceof \Closure) {
                 $value = $options[$key];
                 $options[$key] = function () use ($value) {
