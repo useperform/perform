@@ -34,16 +34,20 @@ class ActionExtension extends \Twig_Extension
 
     public function actionButton(\Twig_Environment $twig, ConfiguredAction $action, $entity, array $attr = [])
     {
+        $label = $action->getLabel($entity);
+
         $attr['data-action'] = json_encode([
             'entityClass' => get_class($entity),
             'id' => $entity->getId(),
+            'label' => $label,
+            'message' => $action->getConfirmationMessage($entity),
         ]);
-        $attr['class'] = 'action-button' .
-                       (isset($attr['class']) ? ' '.trim($attr['class']) : '');
+        $actionClass = $action->isConfirmationRequired() ? 'action-confirm' : 'action-button';
+        $attr['class'] = isset($attr['class']) ? $actionClass.' '.trim($attr['class']) : $actionClass;
         $attr['href'] = $this->urlGenerator->generate('perform_base_action_index', ['action' => $action->getName()]);
 
         return $twig->render('PerformBaseBundle:Action:button.html.twig', [
-            'label' => $action->getLabel($entity),
+            'label' => $label,
             'attr' => $attr,
         ]);
     }

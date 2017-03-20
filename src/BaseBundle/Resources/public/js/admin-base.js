@@ -51,11 +51,6 @@ $(function() {
     }
   });
 
-  $('#modal-delete').on('show.bs.modal', function (e) {
-    var link = $(e.relatedTarget);
-    $(this).find('form').attr('action', link.data('action'));
-  });
-
   $('.wrapper form').each(function() {
     window.app.func.fancyForm($(this));
   });

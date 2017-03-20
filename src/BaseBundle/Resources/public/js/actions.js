@@ -13,10 +13,12 @@ $(function () {
       },
       success: function (data) {
         if (!data.redirectType) {
-          return console.error('Invalid action response, redirectType is required.');
+          console.error('Invalid action response, redirectType is required.');
+          return button.attr('disabled', false);
         }
         if (data.redirectType === 'none') {
           app.func.showSuccess(data.message);
+          $('#modal-action-confirm').modal('hide');
         }
         //url or route redirect
         if (data.redirect) {
@@ -44,6 +46,7 @@ $(function () {
           error = 'An error occurred.'
           break;
         }
+        $('#modal-action-confirm').modal('hide');
         app.func.showError(error);
         button.attr('disabled', false);
       }
@@ -63,5 +66,22 @@ $(function () {
     var href = $(this).parent().find('option:selected').val();
     var entityClass = $(this).parent().children('select').data('entity');
     runAction(href, entityClass, ids, $(this));
+  });
+
+  $('.action-confirm').click(function (e) {
+    e.preventDefault();
+    var modal = $('#modal-action-confirm');
+    var href = $(this).attr('href');
+    var action = $(this).data('action');
+    var label = action['label'];
+    var message = action['message'];
+
+    modal.find('.modal-title').text(label);
+    modal.find('.modal-body .message').text(message);
+    modal.find('.action-button')
+      .text(label)
+      .data('action', action)
+      .attr('href', href);
+    modal.modal('show');
   });
 });
