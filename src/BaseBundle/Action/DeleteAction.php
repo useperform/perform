@@ -41,6 +41,7 @@ class DeleteAction implements ActionInterface
     {
         return [
             'label' => 'Delete',
+            'confirmationRequired' => true,
         ];
     }
 }
