@@ -3,18 +3,24 @@
 namespace Perform\BaseBundle\Action;
 
 /**
- * ConfiguredAction
+ * Represents an action configured with options from admin classes.
+ *
+ * This class shouldn't need to be constructed manually; get one from
+ * ActionConfig instead.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class ConfiguredAction
 {
-    public function __construct($name, ActionInterface $action, \Closure $label, \Closure $batchLabel)
+    protected $name;
+    protected $action;
+    protected $options;
+
+    public function __construct($name, ActionInterface $action, array $options)
     {
         $this->name = $name;
         $this->action = $action;
-        $this->label = $label;
-        $this->batchLabel = $batchLabel;
+        $this->options = $options;
     }
 
     public function getName()
@@ -24,18 +30,23 @@ class ConfiguredAction
 
     public function getLabel($entity)
     {
-        return call_user_func($this->label, $entity);
+        return call_user_func($this->options['label'], $entity);
     }
 
     public function getBatchLabel()
     {
-        return call_user_func($this->batchLabel);
+        return call_user_func($this->options['batchLabel']);
     }
 
     public function isGranted($entity)
     {
         //also check with any custom code passed in
         return $this->action->isGranted($entity);
+    }
+
+    public function isConfirmationRequired()
+    {
+        return (bool) $this->options['confirmationRequired']();
     }
 
     public function run($entities)

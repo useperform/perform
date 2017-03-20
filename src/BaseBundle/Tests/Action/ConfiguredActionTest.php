@@ -19,13 +19,16 @@ class ConfiguredActionTest extends \PHPUnit_Framework_TestCase
 
     public function testGetName()
     {
-        $ca = new ConfiguredAction('foo', $this->action, function() {}, function() {});
+        $ca = new ConfiguredAction('foo', $this->action, []);
         $this->assertSame('foo', $ca->getName());
     }
 
     public function testGetLabel()
     {
-        $ca = new ConfiguredAction('foo', $this->action, function($entity) { return $entity->id; }, function() {});
+        $options = [
+            'label' => function($entity) { return $entity->id; },
+        ];
+        $ca = new ConfiguredAction('foo', $this->action, $options);
         $entity = new \stdClass();
         $entity->id = 1;
         $this->assertSame(1, $ca->getLabel($entity));
@@ -33,7 +36,19 @@ class ConfiguredActionTest extends \PHPUnit_Framework_TestCase
 
     public function testGetBatchLabel()
     {
-        $ca = new ConfiguredAction('foo', $this->action, function() {}, function() { return 'batch';});
+        $options = [
+            'batchLabel' => function() { return 'batch'; },
+        ];
+        $ca = new ConfiguredAction('foo', $this->action, $options);
         $this->assertSame('batch', $ca->getBatchLabel());
+    }
+
+    public function testIsConfirmationRequired()
+    {
+        $options = [
+            'confirmationRequired' => function() { return true; },
+        ];
+        $ca = new ConfiguredAction('foo', $this->action, $options);
+        $this->assertTrue($ca->isConfirmationRequired());
     }
 }

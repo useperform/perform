@@ -25,6 +25,10 @@ class ActionConfig
             ->setAllowedTypes('label', ['string', 'Closure'])
             ->setDefined('batchLabel')
             ->setAllowedTypes('batchLabel', ['string', 'Closure'])
+            ->setDefaults([
+                'confirmationRequired' => false,
+            ])
+            ->setAllowedTypes('confirmationRequired', ['bool', 'Closure'])
             ;
     }
 
@@ -49,14 +53,17 @@ class ActionConfig
                 return $label;
             };
         }
-        if (!$options['batchLabel'] instanceof \Closure) {
-            $label = $options['batchLabel'];
-            $options['batchLabel'] = function () use ($label) {
-                return $label;
-            };
+
+        foreach (['batchLabel', 'confirmationRequired'] as $key) {
+            if (!$options[$key] instanceof \Closure) {
+                $value = $options[$key];
+                $options[$key] = function () use ($value) {
+                    return $value;
+                };
+            }
         }
 
-        $this->actions[$name] = new ConfiguredAction($name, $action, $options['label'], $options['batchLabel']);
+        $this->actions[$name] = new ConfiguredAction($name, $action, $options);
 
         return $this;
     }
