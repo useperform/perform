@@ -70,7 +70,10 @@ $(function () {
     modal.find('.action-button')
       .text(label)
       .data('action', action)
-      .attr('href', href);
+      .attr('href', href)
+      .removeClass('btn-default btn-primary btn-info btn-warning btn-danger')
+      .addClass(action.buttonStyle);
+
     modal.modal('show');
   };
 

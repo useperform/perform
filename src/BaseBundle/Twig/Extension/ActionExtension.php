@@ -43,6 +43,7 @@ class ActionExtension extends \Twig_Extension
             'label' => $label,
             'message' => $action->getConfirmationMessage($entity),
             'confirm' => $action->isConfirmationRequired(),
+            'buttonStyle' => $action->getButtonStyle(),
         ]);
         $attr['class'] = sprintf('%s %s%s',
                                  'action-button',
