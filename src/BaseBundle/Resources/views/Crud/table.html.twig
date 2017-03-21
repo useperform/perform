@@ -44,7 +44,7 @@
               <a href="{{perform_crud_route(entity, 'edit')}}" class="btn btn-xs btn-warning">Edit</a>
             {% endif %}
             {% for action in actions %}
-              {{perform_action_button(action, entity, {class: "btn btn-xs btn-default"})}}
+              {{perform_action_button(action, entity, {class: "btn btn-xs"})}}
             {% endfor %}
           </td>
         {% endblock %}

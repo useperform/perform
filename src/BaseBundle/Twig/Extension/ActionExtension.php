@@ -44,7 +44,10 @@ class ActionExtension extends \Twig_Extension
             'message' => $action->getConfirmationMessage($entity),
             'confirm' => $action->isConfirmationRequired(),
         ]);
-        $attr['class'] = isset($attr['class']) ? 'action-button '.trim($attr['class']) : 'action-button';
+        $attr['class'] = sprintf('%s %s%s',
+                                 'action-button',
+                                 $action->getButtonStyle(),
+                                 isset($attr['class']) ? ' '.trim($attr['class']) : '');
         $attr['href'] = $this->urlGenerator->generate('perform_base_action_index', ['action' => $action->getName()]);
 
         return $twig->render('PerformBaseBundle:Action:button.html.twig', [
