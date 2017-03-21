@@ -42,7 +42,6 @@ abstract class AbstractAdmin implements AdminInterface
             '/view/{id}' => 'view',
             '/create' => 'create',
             '/edit/{id}' => 'edit',
-            '/delete/{id}' => 'delete',
         ];
     }
 

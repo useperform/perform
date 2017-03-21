@@ -43,9 +43,6 @@
             {% if perform_crud_route_exists(entity, 'edit') %}
               <a href="{{perform_crud_route(entity, 'edit')}}" class="btn btn-xs btn-warning">Edit</a>
             {% endif %}
-            {% if perform_crud_route_exists(entity, 'delete') %}
-              <a href="#" data-action="{{perform_crud_route(entity, 'delete')}}" data-toggle="modal" data-target="#modal-delete" class="btn btn-xs btn-danger">Delete</a>
-            {% endif %}
             {% for action in actions %}
               {{perform_action_button(action, entity, {class: "btn btn-xs btn-default"})}}
             {% endfor %}

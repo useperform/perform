@@ -143,24 +143,6 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('/admin/users/edit', $this->generator->generate($user, 'edit_default'));
     }
 
-    public function testGenerateDelete()
-    {
-        $user = $this->getMock('Perform\BaseBundle\Entity\User');
-        $user->expects($this->any())
-            ->method('getId')
-            ->will($this->returnValue(1));
-        $this->adminRegistry->expects($this->any())
-            ->method('getAdmin')
-            ->with($user)
-            ->will($this->returnValue(new UserAdmin()));
-        $this->urlGenerator->expects($this->any())
-            ->method('generate')
-            ->with('perform_base_user_delete', ['id' => 1])
-            ->will($this->returnValue('/admin/users/delete/1'));
-
-        $this->assertSame('/admin/users/delete/1', $this->generator->generate($user, 'delete'));
-    }
-
     public function testRouteExists()
     {
         $admin = $this->getMock(AdminInterface::class);
@@ -179,8 +161,8 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($this->generator->routeExists('TestBundle:Something', 'create'));
         $this->assertTrue($this->generator->routeExists(new User(), 'create'));
-        $this->assertFalse($this->generator->routeExists('TestBundle:Something', 'delete'));
-        $this->assertFalse($this->generator->routeExists(new User(), 'delete'));
+        $this->assertFalse($this->generator->routeExists('TestBundle:Something', 'modify'));
+        $this->assertFalse($this->generator->routeExists(new User(), 'modify'));
     }
 
     public function testGetDefaultEntityRouteList()

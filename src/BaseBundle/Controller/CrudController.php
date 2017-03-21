@@ -97,9 +97,6 @@ class CrudController extends Controller
     {
         $this->initialize($request);
         $admin = $this->getAdmin();
-        $deleteForm = $this->createFormBuilder()->getForm();
-        $deleteFormView = $deleteForm->createView();
-        $this->setFormTheme($deleteFormView);
         $selector = $this->get('perform_base.selector.entity');
         list($paginator, $orderBy) = $selector->listContext($request, $this->entity);
 
@@ -110,7 +107,6 @@ class CrudController extends Controller
             'orderBy' => $orderBy,
             'routePrefix' => $admin->getRoutePrefix(),
             'paginator' => $paginator,
-            'deleteForm' => $deleteFormView,
             'entityClass' => $this->entity,
         ];
     }
@@ -202,26 +198,5 @@ class CrudController extends Controller
         $this->initialize($request);
 
         return $this->editAction($request, $this->findDefaultEntity()->getId());
-    }
-
-    public function deleteAction(Request $request, $id)
-    {
-        $this->initialize($request);
-        if ($request->getMethod() !== 'POST') {
-            throw new NotFoundHttpException();
-        }
-        $entity = $this->findEntity($id);
-
-        $form = $this->createFormBuilder()->getForm();
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $manager = $this->getDoctrine()->getEntityManager();
-            $manager->remove($entity);
-            $manager->flush();
-            $this->addFlash('success', 'Item removed successfully.');
-
-            return $this->redirect($this->get('perform_base.routing.crud_url')->generate($entity, 'list'));
-        }
     }
 }

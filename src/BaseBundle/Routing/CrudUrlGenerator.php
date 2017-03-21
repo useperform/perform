@@ -32,7 +32,7 @@ class CrudUrlGenerator
      */
     public function generate($entity, $action, array $params = [])
     {
-        $params = in_array($action, ['view', 'edit', 'delete']) ?
+        $params = in_array($action, ['view', 'edit']) ?
                 array_merge($params, ['id' => $entity->getId()]) :
                 $params;
         $admin = $this->adminRegistry->getAdmin($entity);

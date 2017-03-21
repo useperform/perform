@@ -57,7 +57,6 @@ class CrudLoaderTest extends \PHPUnit_Framework_TestCase
             '/view/{id}' => 'view',
             '/create' => 'create',
             '/edit/{id}' => 'edit',
-            '/delete/{id}' => 'delete',
         ];
         $this->expectAdmin($controller, $routePrefix, $routes);
 
