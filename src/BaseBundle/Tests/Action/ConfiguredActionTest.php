@@ -65,4 +65,12 @@ class ConfiguredActionTest extends \PHPUnit_Framework_TestCase
         $entity->id = 1;
         $this->assertSame('Remove 1?', $ca->getConfirmationMessage($entity));
     }
+
+    public function testGetButtonStyle()
+    {
+        $ca = new ConfiguredAction('foo', $this->action, [
+            'buttonStyle' => 'btn-danger'
+        ]);
+        $this->assertSame('btn-danger', $ca->getButtonStyle());
+    }
 }

@@ -54,6 +54,11 @@ class ConfiguredAction
         return $this->options['confirmationMessage']($entity, $this->getLabel($entity));
     }
 
+    public function getButtonStyle()
+    {
+        return $this->options['buttonStyle'];
+    }
+
     public function run($entities)
     {
         //any other configured options passed into this class

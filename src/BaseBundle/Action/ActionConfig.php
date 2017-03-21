@@ -30,9 +30,11 @@ class ActionConfig
                 'confirmationMessage' => function($entity, $label) {
                     return sprintf('Are you sure you want to %s this item?', strtolower($label));
                 },
+                'buttonStyle' => 'btn-default',
             ])
             ->setAllowedTypes('confirmationMessage', ['string', 'Closure'])
             ->setAllowedTypes('confirmationRequired', ['bool', 'Closure'])
+            ->setAllowedTypes('buttonStyle', 'string')
             ;
     }
 
