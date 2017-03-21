@@ -1,5 +1,8 @@
 $(function () {
   var runAction = function(href, entityClass, ids, button) {
+    if (!href) {
+      return console.error('Missing action href');
+    }
     if (ids.length < 1) {
       return;
     }
@@ -53,28 +56,14 @@ $(function () {
     });
   };
 
-  $('.action-button').click(function(e) {
-    e.preventDefault();
-    runAction($(this).attr('href'), $(this).data('action').entityClass, [$(this).data('action').id], $(this));
-  });
-
-  $('.batch-action-button').click(function(e) {
-    e.preventDefault();
-    var ids = $('.table-crud tbody input[type=checkbox].selector:checked').map(function() {
-      return $(this).data('id');
-    }).toArray();
-    var href = $(this).parent().find('option:selected').val();
-    var entityClass = $(this).parent().children('select').data('entity');
-    runAction(href, entityClass, ids, $(this));
-  });
-
-  $('.action-confirm').click(function (e) {
-    e.preventDefault();
+  var confirmAction = function(href, action) {
     var modal = $('#modal-action-confirm');
-    var href = $(this).attr('href');
-    var action = $(this).data('action');
+    //clone the action object before modification to stop any funny business
+    var action = JSON.parse(JSON.stringify(action));
     var label = action['label'];
     var message = action['message'];
+    //get the action to run when clicking on .action-button in the modal
+    action['confirm'] = false;
 
     modal.find('.modal-title').text(label);
     modal.find('.modal-body .message').text(message);
@@ -83,5 +72,32 @@ $(function () {
       .data('action', action)
       .attr('href', href);
     modal.modal('show');
+  };
+
+  $('.action-button').click(function(e) {
+    e.preventDefault();
+    var action = $(this).data('action');
+    var href = $(this).attr('href');
+    if (action.confirm) {
+      return confirmAction(href, action);
+    }
+    runAction($(this).attr('href'), action.entityClass, action.ids, $(this));
+  });
+
+  $('.batch-action-button').click(function(e) {
+    e.preventDefault();
+    var selected = $(this).parents('.batch-actions').find('option:selected');
+    var action = selected.data('action');
+    action.ids = $('.table-crud tbody input[type=checkbox].selector:checked').map(function() {
+      return $(this).data('id');
+    }).toArray();
+    if (action.ids.length < 1) {
+      return;
+    }
+    var href = selected.val();
+    if (action.confirm) {
+      return confirmAction(href, action);
+    }
+    runAction(href, action.entityClass, action.ids, $(this));
   });
 });
