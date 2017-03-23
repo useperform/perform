@@ -63,4 +63,36 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('Foo label', $ca->getLabel(new \stdClass()));
         $this->assertSame('Foo batch label', $ca->getBatchLabel());
     }
+
+    public function testForEntity()
+    {
+        $entity = new \stdClass();
+        $one = $this->getMock(ActionInterface::class);
+        $one->expects($this->any())
+            ->method('getDefaultConfig')
+            ->will($this->returnValue([]));
+        $one->expects($this->any())
+            ->method('isGranted')
+            ->with($entity)
+            ->will($this->returnValue(true));
+        $two = $this->getMock(ActionInterface::class);
+        $two->expects($this->any())
+            ->method('getDefaultConfig')
+            ->will($this->returnValue([]));
+        $two->expects($this->any())
+            ->method('isGranted')
+            ->with($entity)
+            ->will($this->returnValue(false));
+        $this->registry->expects($this->any())
+            ->method('getAction')
+            ->withConsecutive(['foo'], ['bar'])
+            ->will($this->onConsecutiveCalls($one, $two));
+        $this->config
+            ->add('foo')
+            ->add('bar');
+
+        $allowed = $this->config->forEntity($entity);
+        $this->assertSame(1, count($allowed));
+        $this->assertInstanceOf(ConfiguredAction::class, $allowed[0]);
+    }
 }

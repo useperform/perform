@@ -83,4 +83,19 @@ class ActionConfig
     {
         return $this->actions;
     }
+
+    /**
+     * @param object $entity
+     */
+    public function forEntity($entity)
+    {
+        $allowed = [];
+        foreach ($this->actions as $action) {
+            if ($action->isGranted($entity)) {
+                $allowed[] = $action;
+            }
+        }
+
+        return $allowed;
+    }
 }
