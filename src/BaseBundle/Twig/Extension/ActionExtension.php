@@ -5,6 +5,7 @@ namespace Perform\BaseBundle\Twig\Extension;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Perform\BaseBundle\Action\ActionRegistry;
 use Perform\BaseBundle\Action\ConfiguredAction;
+use Perform\BaseBundle\Admin\AdminRegistry;
 
 /**
  * ActionExtension.
@@ -15,11 +16,13 @@ class ActionExtension extends \Twig_Extension
 {
     protected $urlGenerator;
     protected $registry;
+    protected $adminRegistry;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator, ActionRegistry $registry)
+    public function __construct(UrlGeneratorInterface $urlGenerator, ActionRegistry $registry, AdminRegistry $adminRegistry)
     {
         $this->urlGenerator = $urlGenerator;
         $this->registry = $registry;
+        $this->adminRegistry = $adminRegistry;
     }
 
     public function getFunctions()
@@ -27,9 +30,7 @@ class ActionExtension extends \Twig_Extension
         return [
             new \Twig_SimpleFunction('perform_action_button', [$this, 'actionButton'], ['is_safe' => ['html'], 'needs_environment' => true]),
             new \Twig_SimpleFunction('perform_action_option', [$this, 'actionOption'], ['is_safe' => ['html'], 'needs_environment' => true]),
-            new \Twig_SimpleFunction('perform_action_is_granted', [$this, 'isActionGranted']),
-            new \Twig_SimpleFunction('perform_action_for_entity', [$this->registry, 'getActionsForEntity']),
-            new \Twig_SimpleFunction('perform_actions_for_class', [$this->registry, 'getActionsForEntityClass']),
+            new \Twig_SimpleFunction('perform_actions_for_entity', [$this, 'actionsForEntity']),
         ];
     }
 
@@ -46,7 +47,7 @@ class ActionExtension extends \Twig_Extension
             'buttonStyle' => $action->getButtonStyle(),
         ]);
         $attr['class'] = sprintf('%s %s%s',
-                                 'action-button',
+                                 'action-button btn',
                                  $action->getButtonStyle(),
                                  isset($attr['class']) ? ' '.trim($attr['class']) : '');
         $attr['href'] = $this->urlGenerator->generate('perform_base_action_index', ['action' => $action->getName()]);
@@ -76,9 +77,9 @@ class ActionExtension extends \Twig_Extension
         ]);
     }
 
-    public function isActionGranted($name, $entity)
+    public function actionsForEntity($entity)
     {
-        return $this->registry->getAction($name)->isGranted($entity);
+        return $this->adminRegistry->getActionConfig($entity)->forEntity($entity);
     }
 
     public function getName()

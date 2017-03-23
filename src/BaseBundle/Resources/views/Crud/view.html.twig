@@ -28,10 +28,10 @@
       {% block actions %}
         <a href="{{perform_crud_route(entity, 'list')}}" class="btn btn-default">Back</a>
         {% if perform_crud_route_exists(entity, 'edit') %}
-          <a href="{{perform_crud_route(entity, 'edit')}}" class="btn btn-primary">Edit</a>
+          <a href="{{perform_crud_route(entity, 'edit')}}" class="btn btn-warning">Edit</a>
         {% endif %}
-        {% for name, action in perform_action_for_entity(entity) %}
-          {{perform_action_button(name, action.getLabel(entity), entity, {class: "btn btn-default"})}}
+        {% for action in perform_actions_for_entity(entity) %}
+          {{perform_action_button(action, entity)}}
         {% endfor %}
       {% endblock %}
     </div>

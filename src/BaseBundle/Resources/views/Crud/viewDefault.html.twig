@@ -4,7 +4,7 @@
   {% if perform_crud_route_exists(entity, 'editDefault') %}
     <a href="{{perform_crud_route(entity, 'editDefault')}}" class="btn btn-primary">Edit</a>
   {% endif %}
-  {% for name, action in perform_action_for_entity(entity) %}
-    {{perform_action_button(name, action.getLabel(entity), entity, {class: "btn btn-default"})}}
+  {% for action in perform_action_for_entity(entity) %}
+    {{perform_action_button(action, entity)}}
   {% endfor %}
 {% endblock %}
