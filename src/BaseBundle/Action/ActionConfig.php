@@ -76,7 +76,11 @@ class ActionConfig
 
     public function get($name)
     {
-        return isset($this->actions[$name]) ? $this->actions[$name] : null;
+        if(!isset($this->actions[$name])) {
+            throw new ActionNotFoundException(sprintf('Action "%s" has not been registered with this ActionConfig.', $name));
+        }
+
+        return $this->actions[$name];
     }
 
     public function all()
