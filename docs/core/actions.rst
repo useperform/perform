@@ -64,6 +64,11 @@ Here is a basic action that simply logs the entities as JSON:
             return $response;
         }
 
+        public function isGranted()
+        {
+            return true;
+        }
+
         public function getDefaultConfig()
         {
             return [
@@ -179,11 +184,76 @@ Like all other options, this can be overridden when adding the action in an enti
         ]);
     }
 
-Customising lables
+Customising labels
 ------------------
+
+The values of the ``label`` and ``batchLabel`` options will be used to label
+action buttons and the value in the batch actions dropdown.
+
+.. code-block:: php
+
+   <?php
+
+    class DeleteAction implements ActionInterface
+    {
+        //...
+
+        public function getDefaultConfig()
+        {
+            return [
+                'label' => 'Delete',
+                'batchLabel' => 'Delete these things',
+            ];
+        }
+    }
+
+``label`` will default to something reasonable if not defined.
+``batchLabel`` will default to ``label`` if not defined.
+
+Labels can also be overridden when adding the action in an entity admin:
+
+.. code-block:: php
+
+   <?php
+
+    public function configureActions(ActionConfig $config)
+    {
+        $config->add('delete', [
+            'label' => 'Destroy',
+            'batchLabel' => 'Destroy these things',
+        ]);
+    }
+
+Both options can also be a function, allowing for dynamic labels.
+The ``label`` function will be passed the entity in question.
+
+.. code-block:: php
+
+   <?php
+
+    public function configureActions(ActionConfig $config)
+    {
+        $config->add('delete', [
+            'label' => function($entity) {
+                return sprintf('Remove %s', $entity->getId());
+            },
+        ]);
+    }
 
 Restricting usage
 -----------------
+
+Use ``isGranted`` when an action needs to only be available on certain conditions:
+
+.. code-block:: php
+
+   <?php
+
+   public function isGranted($entity)
+   {
+        // only allow this action on non-archived entities
+        return !$entity->isArchived();
+   }
 
 Running actions in the cli
 --------------------------
