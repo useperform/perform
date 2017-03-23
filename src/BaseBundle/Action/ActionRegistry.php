@@ -32,4 +32,14 @@ class ActionRegistry
 
         return $this->container->get($this->actions[$name]);
     }
+
+    public function getAll()
+    {
+        $actions = [];
+        foreach ($this->actions as $name => $action) {
+            $actions[$name] = $this->getAction($name);
+        }
+
+        return $actions;
+    }
 }
