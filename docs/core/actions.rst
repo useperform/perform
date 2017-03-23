@@ -187,3 +187,23 @@ Restricting usage
 
 Running actions in the cli
 --------------------------
+
+Any registered action can also be executed in the command line with ``perform:action:run``.
+It requires the action name, the entity class, and the id of the entity.
+
+.. code-block:: sh
+
+   $ ./bin/console perform:action:run perform_base_delete PerformBlogBundle:Post 88089473-0953-11e7-bb3f-080027ba0e69
+
+   Item deleted.
+
+
+Multiple ids can also be specified, separated with a space.
+
+.. code-block:: sh
+
+   $ ./bin/console perform:action:run perform_base_delete PerformBlogBundle:Post 88089473-0953-11e7-bb3f-080027ba0e69 8809ccda-0953-11e7-bb3f-080027ba0e69 880aee0f-0953-11e7-bb3f-080027ba0e69
+
+   3 items deleted.
+
+Finally, ``perform:action:list`` will show all available actions.
