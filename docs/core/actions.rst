@@ -63,6 +63,13 @@ Here is a basic action that simply logs the entities as JSON:
 
             return $response;
         }
+
+        public function getDefaultConfig()
+        {
+            return [
+                'label' => 'Write to log',
+            ];
+        }
     }
 
 Define it as a service, and give it the ``perform_base.action`` tag.
@@ -133,6 +140,44 @@ Set this redirect by calling ``setRedirect()`` on the response before returning 
 
 Requiring confirmation
 ----------------------
+
+If your action is potentially destructive (e.g. deleting data), you
+might want to require confirmation to prevent accidental data loss.
+
+Setting the ``confirmationRequired`` option to ``true`` will require
+the action to be confirmed before proceeding.
+
+.. code-block:: php
+
+   <?php
+
+    class DeleteAction implements ActionInterface
+    {
+        //...
+
+        public function getDefaultConfig()
+        {
+            return [
+                'confirmationRequired' => true,
+            ];
+        }
+    }
+
+A confirmation modal window will now appear when selecting this action.
+
+Like all other options, this can be overridden when adding the action in an entity admin:
+
+.. code-block:: php
+
+   <?php
+
+    public function configureActions(ActionConfig $config)
+    {
+        // no confirmation required for deletes in the wild west
+        $config->add('delete', [
+            'confirmationRequired' => false
+        ]);
+    }
 
 Customising lables
 ------------------
