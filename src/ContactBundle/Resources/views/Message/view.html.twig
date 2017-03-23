@@ -43,7 +43,7 @@
       <a href="{{perform_crud_route(entity, 'list')}}" class="back-button btn btn-default">
         Back
       </a>
-      {% for name, action in perform_action_for_entity(entity) %}
-        {{perform_action_button(name, action.getLabel(entity), entity, {class: "btn btn-default"})}}
+      {% for action in perform_actions_for_entity(entity) %}
+        {{perform_action_button(action, entity)}}
       {% endfor %}
 {% endblock %}
