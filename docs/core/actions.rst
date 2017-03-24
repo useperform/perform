@@ -230,7 +230,9 @@ Labels can also be overridden when adding the action in an entity admin:
     }
 
 Both options can also be a function, allowing for dynamic labels.
-The ``label`` function will be passed the entity in question.
+They are passed the current instance of
+``Perform\BaseBundle\Admin\AdminRequest``, and the ``label`` function
+will be passed the entity in question.
 
 .. code-block:: php
 
@@ -239,7 +241,7 @@ The ``label`` function will be passed the entity in question.
     public function configureActions(ActionConfig $config)
     {
         $config->add('delete', [
-            'label' => function($entity) {
+            'label' => function($request, $entity) {
                 return sprintf('Remove %s', $entity->getId());
             },
         ]);
