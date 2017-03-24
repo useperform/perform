@@ -76,6 +76,7 @@ class ActionExtension extends \Twig_Extension
             //need to change the message depending on the number of entities - ajax?
             'message' => 'Are you sure you want to do this?',
             'confirm' => $action->isConfirmationRequired(),
+            'buttonStyle' => $action->getButtonStyle(),
         ]);
         $attr['value'] = $this->urlGenerator->generate('perform_base_action_index', ['action' => $action->getName()]);
         return $twig->render('PerformBaseBundle:Action:option.html.twig', [
