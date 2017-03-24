@@ -4,13 +4,12 @@ namespace Perform\BaseBundle\Selector;
 
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Symfony\Component\HttpFoundation\Request;
 use Perform\BaseBundle\Admin\AdminRegistry;
 use Doctrine\ORM\EntityManagerInterface;
-use Perform\BaseBundle\Type\EntityTypeConfig;
 use Doctrine\ORM\QueryBuilder;
 use Perform\BaseBundle\Type\TypeConfig;
 use Perform\BaseBundle\Filter\FilterConfig;
+use Perform\BaseBundle\Admin\AdminRequest;
 
 /**
  * EntitySelector.
@@ -28,7 +27,7 @@ class EntitySelector
         $this->registry = $registry;
     }
 
-    public function listContext(Request $request, $entityName)
+    public function listContext(AdminRequest $request, $entityName)
     {
         $qb = $this->entityManager->createQueryBuilder()
             ->select('e')
@@ -36,11 +35,9 @@ class EntitySelector
 
         //potentially add sorting, using custom functions from TypeConfig
         $defaultSort = $this->registry->getTypeConfig($entityName)->getDefaultSort();
-        $orderField = $request->query->get('sort', $defaultSort[0]);
-        $direction = strtoupper($request->query->get('direction', $defaultSort[1]));
-        if ($direction !== 'DESC' && $direction !== 'N') {
-            $direction = 'ASC';
-        }
+        $orderField = $request->getSortField($defaultSort[0]);
+        $direction = $request->getSortDirection($defaultSort[1]);
+
         //direction can be set to 'N' to override default sorting
         if ($direction === 'N') {
             $orderField = null;
@@ -52,7 +49,7 @@ class EntitySelector
 
         //potentially add filtering, using FilterConfig from the
         //admin, or even returning a new builder entirely
-        $filterName = $request->query->get('filter', $this->registry->getFilterConfig($entityName)->getDefault());
+        $filterName = $request->getFilter($this->registry->getFilterConfig($entityName)->getDefault());
 
         $qb = $this->maybeFilter($qb, $entityName, $filterName, true);
         if (!$qb instanceof QueryBuilder) {
@@ -63,7 +60,7 @@ class EntitySelector
 
         $paginator = new Pagerfanta(new DoctrineORMAdapter($qb));
         $paginator->setMaxPerPage(10);
-        $paginator->setCurrentPage($request->query->get('page', 1));
+        $paginator->setCurrentPage($request->getPage());
 
         $orderBy = [
             'field' => $orderField,
