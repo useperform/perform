@@ -2,6 +2,8 @@
 
 namespace Perform\BaseBundle\Action;
 
+use Perform\BaseBundle\Admin\AdminRequest;
+
 /**
  * Represents an action configured with options from admin classes.
  *
@@ -42,6 +44,11 @@ class ConfiguredAction
     {
         //also check with any custom code passed in
         return $this->action->isGranted($entity);
+    }
+
+    public function isAvailable(AdminRequest $request)
+    {
+        return $this->action->isAvailable($request);
     }
 
     public function isConfirmationRequired()

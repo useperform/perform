@@ -4,6 +4,7 @@ namespace Perform\BaseBundle\Action;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Perform\BaseBundle\Util\StringUtil;
+use Perform\BaseBundle\Admin\AdminRequest;
 
 /**
  * ActionConfig.
@@ -27,7 +28,7 @@ class ActionConfig
             ->setAllowedTypes('batchLabel', ['string', 'Closure'])
             ->setDefaults([
                 'confirmationRequired' => false,
-                'confirmationMessage' => function($entity, $label) {
+                'confirmationMessage' => function ($entity, $label) {
                     return sprintf('Are you sure you want to %s this item?', strtolower($label));
                 },
                 'buttonStyle' => 'btn-default',
@@ -76,7 +77,7 @@ class ActionConfig
 
     public function get($name)
     {
-        if(!isset($this->actions[$name])) {
+        if (!isset($this->actions[$name])) {
             throw new ActionNotFoundException(sprintf('Action "%s" has not been registered with this ActionConfig.', $name));
         }
 
@@ -96,6 +97,21 @@ class ActionConfig
         $allowed = [];
         foreach ($this->actions as $action) {
             if ($action->isGranted($entity)) {
+                $allowed[] = $action;
+            }
+        }
+
+        return $allowed;
+    }
+
+    /**
+     * @param AdminRequest $request
+     */
+    public function forRequest(AdminRequest $request)
+    {
+        $allowed = [];
+        foreach ($this->actions as $action) {
+            if ($action->isAvailable($request)) {
                 $allowed[] = $action;
             }
         }
