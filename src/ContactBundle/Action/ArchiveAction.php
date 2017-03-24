@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Perform\ContactBundle\Entity\Message;
 use Perform\BaseBundle\Action\ActionResponse;
 use Perform\BaseBundle\Action\ActionInterface;
+use Perform\BaseBundle\Admin\AdminRequest;
 
 /**
  * ArchiveAction
@@ -39,6 +40,11 @@ class ArchiveAction implements ActionInterface
     public function isGranted($message)
     {
         return $message->getStatus() === Message::STATUS_NEW;
+    }
+
+    public function isAvailable(AdminRequest $request)
+    {
+        return $request->getFilter('new') === 'new';
     }
 
     public function getDefaultConfig()
