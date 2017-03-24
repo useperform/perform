@@ -50,7 +50,7 @@ class AdminRequestTest extends \PHPUnit_Framework_TestCase
 
     public function testGetPage()
     {
-        $req = $this->newRequest(['page' => 2]);
+        $req = $this->newRequest(['page' => "2"]);
         $this->assertSame(2, $req->getPage());
     }
 

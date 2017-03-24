@@ -37,7 +37,7 @@ class AdminRequest
 
     public function getPage()
     {
-        return $this->request->query->get('page', 1);
+        return (int) $this->request->query->get('page', 1);
     }
 
     public function getSortField($default = null)
