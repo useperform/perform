@@ -69,6 +69,11 @@ Here is a basic action that simply logs the entities as JSON:
             return true;
         }
 
+        public function isAvailable()
+        {
+            return true;
+        }
+
         public function getDefaultConfig()
         {
             return [
@@ -243,7 +248,7 @@ The ``label`` function will be passed the entity in question.
 Restricting usage
 -----------------
 
-Use ``isGranted`` when an action needs to only be available on certain conditions:
+Use ``isGranted`` to restrict an action to certain conditions:
 
 .. code-block:: php
 
@@ -254,6 +259,26 @@ Use ``isGranted`` when an action needs to only be available on certain condition
         // only allow this action on non-archived entities
         return !$entity->isArchived();
    }
+
+Use ``isAvailable`` to restrict when to display a batch action option.
+
+.. code-block:: php
+
+   <?php
+
+   public function isAvailable(AdminRequest $request)
+   {
+        // don't show the batch action when viewing the 'archived' filter
+        return $request->getFilter() !== 'archived';
+
+        // something wacky - only show the batch action on the 2nd page
+        return $request->getPage() === 2;
+   }
+
+.. note::
+   ``isAvailable`` should not be used to enforce action permissions.
+   It is only called when displaying a batch action option, not when
+   actually running an action.
 
 Running actions in the cli
 --------------------------
