@@ -12,6 +12,7 @@ use Perform\BaseBundle\Type\TypeConfig;
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Perform\BaseBundle\Filter\FilterConfig;
+use Perform\BaseBundle\Admin\AdminRequest;
 
 /**
  * CrudController
@@ -22,9 +23,9 @@ class CrudController extends Controller
 {
     protected $entity;
 
-    protected function initialize(Request $request)
+    protected function initialize(AdminRequest $request)
     {
-        $this->entity = $this->get('perform_base.doctrine.entity_resolver')->resolve($request->attributes->get('_entity'));
+        $this->entity = $this->get('perform_base.doctrine.entity_resolver')->resolve($request->getEntity());
     }
 
     /**
@@ -95,13 +96,14 @@ class CrudController extends Controller
 
     public function listAction(Request $request)
     {
+        $request = new AdminRequest($request, TypeConfig::CONTEXT_LIST);
         $this->initialize($request);
         $admin = $this->getAdmin();
         $selector = $this->get('perform_base.selector.entity');
         list($paginator, $orderBy) = $selector->listContext($request, $this->entity);
 
         return [
-            'fields' => $this->getTypeConfig()->getTypes(TypeConfig::CONTEXT_LIST),
+            'fields' => $this->getTypeConfig()->getTypes($request->getContext()),
             'filters' => $this->getFilterConfig()->getFilters(),
             'actions' => $this->getActionConfig()->all(),
             'orderBy' => $orderBy,
@@ -113,32 +115,34 @@ class CrudController extends Controller
 
     public function viewAction(Request $request, $id)
     {
+        $request = new AdminRequest($request, TypeConfig::CONTEXT_VIEW);
         $this->initialize($request);
 
         return [
-            'fields' => $this->getTypeConfig()->getTypes(TypeConfig::CONTEXT_VIEW),
+            'fields' => $this->getTypeConfig()->getTypes($request->getContext()),
             'entity' => $this->findEntity($id),
         ];
     }
 
     public function viewDefaultAction(Request $request)
     {
-        $this->initialize($request);
+        $this->initialize(new AdminRequest($request, TypeConfig::CONTEXT_VIEW));
 
         return $this->viewAction($request, $this->findDefaultEntity()->getId());
     }
 
     public function createAction(Request $request)
     {
+        $request = new AdminRequest($request, TypeConfig::CONTEXT_CREATE);
         $this->initialize($request);
         $builder = $this->createFormBuilder($entity = $this->newEntity());
         $admin = $this->getAdmin();
         $form = $this->createForm($admin->getFormType(), $entity, [
             'entity' => $this->entity,
-            'context' => 'create',
+            'context' => $request->getContext(),
         ]);
 
-        $form->handleRequest($request);
+        $form->handleRequest($request->getRequest());
 
         if ($form->isValid()) {
             $manager = $this->getDoctrine()->getEntityManager();
@@ -160,15 +164,16 @@ class CrudController extends Controller
 
     public function editAction(Request $request, $id)
     {
+        $request = new AdminRequest($request, TypeConfig::CONTEXT_EDIT);
         $this->initialize($request);
         $entity = $this->findEntity($id);
         $admin = $this->getAdmin();
         $form = $this->createForm($admin->getFormType(), $entity, [
             'entity' => $this->entity,
-            'context' => 'edit',
+            'context' => $request->getContext(),
         ]);
 
-        $form->handleRequest($request);
+        $form->handleRequest($request->getRequest());
 
         if ($form->isValid()) {
             $manager = $this->getDoctrine()->getEntityManager();
@@ -195,7 +200,7 @@ class CrudController extends Controller
 
     public function editDefaultAction(Request $request)
     {
-        $this->initialize($request);
+        $this->initialize(new AdminRequest($request, TypeConfig::CONTEXT_EDIT));
 
         return $this->editAction($request, $this->findDefaultEntity()->getId());
     }
