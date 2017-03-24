@@ -2,6 +2,8 @@
 
 namespace Perform\BaseBundle\Action;
 
+use Perform\BaseBundle\Admin\AdminRequest;
+
 /**
  * ActionInterface
  *
@@ -18,6 +20,11 @@ interface ActionInterface
      * @return bool
      */
     public function isGranted($entity);
+
+    /**
+     * @return bool
+     */
+    public function isAvailable(AdminRequest $request);
 
     /**
      * @return array

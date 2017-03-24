@@ -3,6 +3,7 @@
 namespace Perform\BaseBundle\Action;
 
 use Doctrine\ORM\EntityManager;
+use Perform\BaseBundle\Admin\AdminRequest;
 
 /**
  * DeleteAction.
@@ -33,6 +34,11 @@ class DeleteAction implements ActionInterface
     }
 
     public function isGranted($message)
+    {
+        return true;
+    }
+
+    public function isAvailable(AdminRequest $request)
     {
         return true;
     }
