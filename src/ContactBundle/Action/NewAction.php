@@ -31,7 +31,7 @@ class NewAction implements ActionInterface
 
         $this->entityManager->flush();
 
-        $response = new ActionResponse('Message marked as new.');
+        $response = new ActionResponse(sprintf('%s marked as new.', count($messages) === 1 ? 'Message' : count($messages).' messages'));
         $response->setRedirectRoute('perform_contact_message_list');
 
         return $response;
@@ -50,14 +50,20 @@ class NewAction implements ActionInterface
     public function getDefaultConfig()
     {
         return [
-            'label' => function($message) {
+            'label' => function($request, $message) {
                 if ($message->getStatus() === Message::STATUS_SPAM) {
                     return 'Not spam';
                 }
 
                 return 'Mark as new';
             },
-            'batchLabel' => 'Mark as new',
+            'batchLabel' => function($request) {
+                if ($request->getFilter('new') === 'spam') {
+                    return 'Not spam';
+                }
+
+                return 'Mark as new';
+            },
         ];
     }
 }

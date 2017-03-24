@@ -31,7 +31,7 @@ class ArchiveAction implements ActionInterface
 
         $this->entityManager->flush();
 
-        $response = new ActionResponse('Message archived.');
+        $response = new ActionResponse(sprintf('%s archived.', count($messages) === 1 ? 'Message' : count($messages).' messages'));
         $response->setRedirectRoute('perform_contact_message_list');
 
         return $response;

@@ -31,7 +31,7 @@ class SpamAction implements ActionInterface
 
         $this->entityManager->flush();
 
-        $response = new ActionResponse('Message moved to spam.');
+        $response = new ActionResponse(sprintf('%s moved to spam.', count($messages) === 1 ? 'Message' : count($messages).' messages'));
         $response->setRedirectRoute('perform_contact_message_list');
 
         return $response;
