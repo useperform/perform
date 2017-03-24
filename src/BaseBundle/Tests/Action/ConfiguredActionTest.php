@@ -4,6 +4,7 @@ namespace Perform\BaseBundle\Tests\Action;
 
 use Perform\BaseBundle\Action\ActionInterface;
 use Perform\BaseBundle\Action\ConfiguredAction;
+use Perform\BaseBundle\Admin\AdminRequest;
 
 /**
  * ConfiguredActionTest
@@ -17,6 +18,13 @@ class ConfiguredActionTest extends \PHPUnit_Framework_TestCase
         $this->action = $this->getMock(ActionInterface::class);
     }
 
+    protected function stubRequest()
+    {
+        return $this->getMockBuilder(AdminRequest::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+    }
+
     public function testGetName()
     {
         $ca = new ConfiguredAction('foo', $this->action, []);
@@ -26,12 +34,12 @@ class ConfiguredActionTest extends \PHPUnit_Framework_TestCase
     public function testGetLabel()
     {
         $options = [
-            'label' => function($entity) { return $entity->id; },
+            'label' => function($request, $entity) { return $entity->id; },
         ];
         $ca = new ConfiguredAction('foo', $this->action, $options);
         $entity = new \stdClass();
         $entity->id = 1;
-        $this->assertSame(1, $ca->getLabel($entity));
+        $this->assertSame(1, $ca->getLabel($this->stubRequest(), $entity));
     }
 
     public function testGetBatchLabel()
@@ -40,7 +48,7 @@ class ConfiguredActionTest extends \PHPUnit_Framework_TestCase
             'batchLabel' => function() { return 'batch'; },
         ];
         $ca = new ConfiguredAction('foo', $this->action, $options);
-        $this->assertSame('batch', $ca->getBatchLabel());
+        $this->assertSame('batch', $ca->getBatchLabel($this->stubRequest()));
     }
 
     public function testIsConfirmationRequired()
@@ -55,7 +63,7 @@ class ConfiguredActionTest extends \PHPUnit_Framework_TestCase
     public function testGetConfirmationMessage()
     {
         $options = [
-            'label' => function($entity) { return 'Remove'; },
+            'label' => function() { return 'Remove'; },
             'confirmationMessage' => function($entity, $label) {
                 return sprintf('%s %s?', $label, $entity->id);
             },
@@ -63,7 +71,7 @@ class ConfiguredActionTest extends \PHPUnit_Framework_TestCase
         $ca = new ConfiguredAction('foo', $this->action, $options);
         $entity = new \stdClass();
         $entity->id = 1;
-        $this->assertSame('Remove 1?', $ca->getConfirmationMessage($entity));
+        $this->assertSame('Remove 1?', $ca->getConfirmationMessage($this->stubRequest(), $entity));
     }
 
     public function testGetButtonStyle()

@@ -6,6 +6,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Perform\BaseBundle\Action\ActionRegistry;
 use Perform\BaseBundle\Action\ConfiguredAction;
 use Perform\BaseBundle\Admin\AdminRegistry;
+use Perform\BaseBundle\Admin\AdminRequest;
 
 /**
  * ActionExtension.
@@ -17,6 +18,7 @@ class ActionExtension extends \Twig_Extension
     protected $urlGenerator;
     protected $registry;
     protected $adminRegistry;
+    protected $request;
 
     public function __construct(UrlGeneratorInterface $urlGenerator, ActionRegistry $registry, AdminRegistry $adminRegistry)
     {
@@ -34,15 +36,20 @@ class ActionExtension extends \Twig_Extension
         ];
     }
 
+    public function setAdminRequest(AdminRequest $request)
+    {
+        $this->request = $request;
+    }
+
     public function actionButton(\Twig_Environment $twig, ConfiguredAction $action, $entity, array $attr = [])
     {
-        $label = $action->getLabel($entity);
+        $label = $action->getLabel($this->request, $entity);
 
         $attr['data-action'] = json_encode([
             'entityClass' => get_class($entity),
             'ids' => [$entity->getId()],
             'label' => $label,
-            'message' => $action->getConfirmationMessage($entity),
+            'message' => $action->getConfirmationMessage($this->request, $entity),
             'confirm' => $action->isConfirmationRequired(),
             'buttonStyle' => $action->getButtonStyle(),
         ]);
@@ -60,7 +67,7 @@ class ActionExtension extends \Twig_Extension
 
     public function actionOption(\Twig_Environment $twig, ConfiguredAction $action, $entityClass)
     {
-        $label = $action->getBatchLabel();
+        $label = $action->getBatchLabel($this->request);
 
         $attr = [];
         $attr['data-action'] = json_encode([

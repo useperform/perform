@@ -30,14 +30,14 @@ class ConfiguredAction
         return $this->name;
     }
 
-    public function getLabel($entity)
+    public function getLabel(AdminRequest $request, $entity)
     {
-        return call_user_func($this->options['label'], $entity);
+        return call_user_func($this->options['label'], $request, $entity);
     }
 
-    public function getBatchLabel()
+    public function getBatchLabel(AdminRequest $request)
     {
-        return call_user_func($this->options['batchLabel']);
+        return call_user_func($this->options['batchLabel'], $request);
     }
 
     public function isGranted($entity)
@@ -56,9 +56,9 @@ class ConfiguredAction
         return (bool) $this->options['confirmationRequired']();
     }
 
-    public function getConfirmationMessage($entity)
+    public function getConfirmationMessage(AdminRequest $request, $entity)
     {
-        return $this->options['confirmationMessage']($entity, $this->getLabel($entity));
+        return $this->options['confirmationMessage']($entity, $this->getLabel($request, $entity));
     }
 
     public function getButtonStyle()

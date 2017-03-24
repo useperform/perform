@@ -13,6 +13,7 @@ use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Perform\BaseBundle\Filter\FilterConfig;
 use Perform\BaseBundle\Admin\AdminRequest;
+use Perform\BaseBundle\Twig\Extension\ActionExtension;
 
 /**
  * CrudController
@@ -26,6 +27,9 @@ class CrudController extends Controller
     protected function initialize(AdminRequest $request)
     {
         $this->entity = $this->get('perform_base.doctrine.entity_resolver')->resolve($request->getEntity());
+        $this->get('twig')
+            ->getExtension(ActionExtension::class)
+            ->setAdminRequest($request);
     }
 
     /**

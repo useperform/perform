@@ -6,6 +6,7 @@ use Perform\BaseBundle\Action\ActionRegistry;
 use Perform\BaseBundle\Action\ActionConfig;
 use Perform\BaseBundle\Action\ConfiguredAction;
 use Perform\BaseBundle\Action\ActionInterface;
+use Perform\BaseBundle\Admin\AdminRequest;
 
 /**
  * ActionConfigTest.
@@ -20,6 +21,13 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
                         ->disableOriginalConstructor()
                         ->getMock();
         $this->config = new ActionConfig($this->registry);
+    }
+
+    protected function stubRequest()
+    {
+        return $this->getMockBuilder(AdminRequest::class)
+            ->disableOriginalConstructor()
+            ->getMock();
     }
 
     public function testAddNoLabels()
@@ -38,8 +46,8 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
         $ca = $this->config->all()['foo'];
         $this->assertInstanceOf(ConfiguredAction::class, $ca);
         $this->assertSame('foo', $ca->getName());
-        $this->assertSame('Foo', $ca->getLabel(new \stdClass()));
-        $this->assertSame('Foo', $ca->getBatchLabel());
+        $this->assertSame('Foo', $ca->getLabel($this->stubRequest(), new \stdClass()));
+        $this->assertSame('Foo', $ca->getBatchLabel($this->stubRequest()));
     }
 
     public function testAddWithStringLabels()
@@ -60,8 +68,8 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
         $ca = $this->config->all()['foo'];
         $this->assertInstanceOf(ConfiguredAction::class, $ca);
         $this->assertSame('foo', $ca->getName());
-        $this->assertSame('Foo label', $ca->getLabel(new \stdClass()));
-        $this->assertSame('Foo batch label', $ca->getBatchLabel());
+        $this->assertSame('Foo label', $ca->getLabel($this->stubRequest(), new \stdClass()));
+        $this->assertSame('Foo batch label', $ca->getBatchLabel($this->stubRequest()));
     }
 
     public function testForEntity()
