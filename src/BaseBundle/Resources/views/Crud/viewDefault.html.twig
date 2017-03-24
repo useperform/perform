@@ -2,9 +2,9 @@
 
 {% block actions %}
   {% if perform_crud_route_exists(entity, 'editDefault') %}
-    <a href="{{perform_crud_route(entity, 'editDefault')}}" class="btn btn-primary">Edit</a>
+    <a href="{{perform_crud_route(entity, 'editDefault')}}" class="btn btn-warning">Edit</a>
   {% endif %}
-  {% for action in perform_action_for_entity(entity) %}
+  {% for action in perform_actions_for_entity(entity) %}
     {{perform_action_button(action, entity)}}
   {% endfor %}
 {% endblock %}
