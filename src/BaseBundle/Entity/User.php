@@ -43,6 +43,11 @@ class User implements UserInterface, RecipientInterface
     protected $email;
 
     /**
+     * @var array
+     */
+    protected $roles = ['ROLE_USER'];
+
+    /**
      * @return uuid
      */
     public function getId()
@@ -180,12 +185,30 @@ class User implements UserInterface, RecipientInterface
     }
 
     /**
+     * @param array
+     */
+    public function setRoles(array $roles)
+    {
+        $this->roles = $roles;
+    }
+
+    /**
+     * @param string $role
+     */
+    public function addRole($role)
+    {
+        if (!in_array($role, $this->roles)) {
+            $this->roles[] = $role;
+        }
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getRoles()
     {
-        return [
-            'ROLE_USER',
-        ];
+        return $this->roles;
     }
 }
