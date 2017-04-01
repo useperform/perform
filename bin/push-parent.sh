@@ -11,4 +11,4 @@ then
     git remote add pkg $SERVER/perform-bundles.git
 fi
 
-git push pkg master
+git push pkg master:refs/heads/master
