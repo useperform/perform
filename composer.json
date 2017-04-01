@@ -35,6 +35,9 @@
         "phpunit/phpunit": "^4.8",
         "glynnforrest/temping": "^0.5.0"
     },
+    "replace": {
+        "perform/base-bundle": "self.version"
+    },
     "autoload": {
         "psr-4": {
             "Perform\\": "src"

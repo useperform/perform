@@ -36,6 +36,14 @@ class ComposerConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame([$namespace => ''], $this->getBundleConfig()['autoload']['psr-4']);
     }
 
+    public function testReplaceIsDefinedInParentConfig()
+    {
+        $parentConfig = $this->getParentConfig();
+        $name = 'perform/base-bundle';
+        $this->assertArrayHasKey($name, $parentConfig['replace'], sprintf('Parent composer.json does not replace bundle "%s"', $name));
+        $this->assertSame('self.version', $parentConfig['replace'][$name], 'Parent composer.json must use self.version when replacing bundles');
+    }
+
     public function testRequireVersionsMatch()
     {
         $bundleConfig = $this->getBundleConfig();
