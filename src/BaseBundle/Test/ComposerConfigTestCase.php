@@ -63,7 +63,12 @@ abstract class ComposerConfigTestCase extends \PHPUnit_Framework_TestCase
         $bundleDeps = isset($bundleConfig['require']) ? $bundleConfig['require'] : [];
         $parentDeps = $parentConfig['require'];
 
+        //check that every dependency is in the parent config, except for other perform bundles
         foreach ($bundleDeps as $dep => $version) {
+            if (substr($dep, 0, 8) === 'perform/') {
+                continue;
+            }
+
             $this->assertArrayHasKey($dep, $parentDeps, sprintf('Parent composer.json does not contain dependency "%s"', $dep));
             $this->assertSame($parentDeps[$dep], $version, sprintf('Required version of "%s" does not match parent composer.json', $dep));
         }
