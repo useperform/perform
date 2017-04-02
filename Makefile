@@ -12,6 +12,7 @@ test_publish:
 push_packages:
 	./bin/push-parent.sh
 	./bin/subsplit.sh BaseBundle base-bundle
+	./bin/subsplit.sh NotificationBundle notification-bundle
 
 clean_bundles:
 	rm -rf src/*/vendor
