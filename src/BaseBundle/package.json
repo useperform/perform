@@ -1,8 +1,8 @@
 {
   "name": "PerformBaseBundle",
   "dependencies": {
-    "grunt": "^0.4.5",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-sass": "^1.1.0"
+    "gulp": "^3.9.1",
+    "gulp-sass": "^2.2.0",
+    "pump": "^1.0.1"
   }
 }
