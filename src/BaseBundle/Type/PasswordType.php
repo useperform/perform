@@ -14,12 +14,22 @@ class PasswordType extends AbstractType
 {
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
-        $builder->add($field, PasswordFormType::class);
+        $builder->add($field, PasswordFormType::class, [
+            'label' => $options['label'],
+        ]);
+    }
+
+    public function editContext(FormBuilderInterface $builder, $field, array $options = [])
+    {
+        $builder->add($field, PasswordFormType::class, [
+            'label' => $options['label'],
+            'required' => false,
+        ]);
     }
 
     public function listContext($entity, $field, array $options = [])
     {
-        return '[hidden]';
+        return '*******';
     }
 
 }
