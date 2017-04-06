@@ -160,6 +160,10 @@ class User implements UserInterface, RecipientInterface
     {
         $this->plainPassword = $plainPassword;
 
+        //reset the stored password hash so an update will occur
+        //(plain password is not mapped by doctrine)
+        $this->password = null;
+
         return $this;
     }
 
