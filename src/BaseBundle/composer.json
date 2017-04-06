@@ -1,6 +1,6 @@
 {
-    "name": "perform/perform-bundles",
-    "description": "Perform Symfony bundles",
+    "name": "perform/base-bundle",
+    "description": "Perform base bundle",
     "license": "proprietary",
     "authors": [
         {
@@ -18,30 +18,19 @@
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/data-fixtures": "^1.2",
         "stof/doctrine-extensions-bundle": "^1.2",
-        "doctrine/doctrine-migrations-bundle": "^1.2",
-        "oneup/flysystem-bundle": "^1.3",
-        "dflydev/apache-mime-types": "^1.0",
         "knplabs/knp-menu-bundle": "^2.1",
         "nesbot/carbon": "^1.21",
         "symfony/swiftmailer-bundle": "^2.3",
         "twig/twig": "^1.24",
         "fzaninotto/faker": "^1.5",
-        "lyrixx/twitter-sdk": "^1.1",
-        "imagine/imagine": "^0.6.3",
         "pagerfanta/pagerfanta": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.8",
-        "glynnforrest/temping": "^0.5.0"
-    },
-    "replace": {
-        "perform/base-bundle": "self.version",
-        "perform/media-bundle": "self.version",
-        "perform/notification-bundle": "self.version"
+        "phpunit/phpunit": "^4.8"
     },
     "autoload": {
         "psr-4": {
-            "Perform\\": "src"
+            "Perform\\BaseBundle\\": ""
         }
     }
 }
