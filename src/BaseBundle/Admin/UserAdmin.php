@@ -22,6 +22,22 @@ class UserAdmin extends AbstractAdmin
             ->add('surname', [
                 'type' => 'string',
             ])
+            ->add('email', [
+                'type' => 'email',
+                'listOptions' => [
+                    'link' => false,
+                ]
+            ])
+            ->add('plainPassword', [
+                'type' => 'password',
+                'options' => [
+                    'label' => 'Password',
+                ],
+                'contexts' => [
+                    TypeConfig::CONTEXT_CREATE,
+                    TypeConfig::CONTEXT_EDIT,
+                ]
+            ])
             ;
     }
 }
