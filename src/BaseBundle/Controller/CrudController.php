@@ -149,7 +149,7 @@ class CrudController extends Controller
         $form->handleRequest($request->getRequest());
 
         if ($form->isValid()) {
-            $manager = $this->getDoctrine()->getEntityManager();
+            $manager = $this->getDoctrine()->getManager();
             $manager->persist($entity);
             $manager->flush();
             $this->addFlash('success', 'Item created successfully.');
@@ -180,7 +180,7 @@ class CrudController extends Controller
         $form->handleRequest($request->getRequest());
 
         if ($form->isValid()) {
-            $manager = $this->getDoctrine()->getEntityManager();
+            $manager = $this->getDoctrine()->getManager();
             $manager->persist($entity);
             $manager->flush();
             $this->addFlash('success', 'Item updated successfully.');
