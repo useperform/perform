@@ -22,6 +22,7 @@ class LoadUserData implements EntityDeclaringFixtureInterface
         $user->setSurname('Forrest');
         $user->setEmail('me@glynnforrest.com');
         $user->setPlainPassword('glynn');
+        $user->addRole('ROLE_ADMIN');
         $manager->persist($user);
 
         for ($i = 0; $i < 20; $i++) {

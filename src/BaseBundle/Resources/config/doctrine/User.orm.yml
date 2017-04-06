@@ -18,3 +18,5 @@ Perform\BaseBundle\Entity\User:
         email:
             type: string
             unique: true
+        roles:
+            type: array
