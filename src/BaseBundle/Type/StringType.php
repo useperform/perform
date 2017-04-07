@@ -3,7 +3,7 @@
 namespace Perform\BaseBundle\Type;
 
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextType as FormType;
 
 /**
  * StringType
@@ -14,6 +14,6 @@ class StringType extends AbstractType
 {
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
-        $builder->add($field, TextType::class);
+        $builder->add($field, FormType::class);
     }
 }

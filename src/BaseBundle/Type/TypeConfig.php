@@ -2,13 +2,12 @@
 
 namespace Perform\BaseBundle\Type;
 
-use Perform\BaseBundle\Type\TypeRegistry;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Perform\BaseBundle\Util\StringUtil;
 use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 
 /**
- * TypeConfig
+ * TypeConfig.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
@@ -23,7 +22,7 @@ class TypeConfig
         'listOptions',
         'viewOptions',
         'createOptions',
-        'editOptions'
+        'editOptions',
     ];
 
     protected $resolver;
@@ -87,6 +86,9 @@ class TypeConfig
      * If the field is already registered, the config will be merged.
      * If the field is not registered, the config will be merged with
      * the default config for that type.
+     *
+     * @param string $name   The name of the field
+     * @param array  $config Configuration for this field
      */
     public function add($name, array $config)
     {
