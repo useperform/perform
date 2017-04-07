@@ -1,8 +1,8 @@
 Welcome to Perform's developer guide!
 =====================================
 
-Perform is a collection tools to help you build high-quality websites
-and applications efficiently.
+Perform is a collection of tools to help you build high-quality
+websites and applications efficiently.
 
 It's designed to be a middle ground between CMS systems that lack flexibility and completely bespoke systems that take too long to code.
 

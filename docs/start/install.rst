@@ -2,7 +2,7 @@ Installing perform
 ==================
 
 All perform code is stored in private git repositories.
-To get the code, you need to add your ssh key to your account, and
+To get the code, you need to add your ssh key to your account and
 tell composer how to access these repos.
 
 Make sure your computer meets the :doc:`requirements <requirements>` before proceeding.
@@ -55,14 +55,14 @@ Get the cli tool
 
 You can now install the perform command line tool with composer:
 
-.. code-block: bash
+.. code-block:: bash
 
-   composer global require perform/cli
+   composer global require perform/cli dev-master
 
 Make sure the composer bin directory is on your ``$PATH``.
 For example, if using bash, you could add the following to your ``.bashrc``:
 
-.. code-block: bash
+.. code-block:: bash
 
    PATH+=:~/.composer/vendor/bin
 
@@ -71,15 +71,16 @@ Then run ``perform`` to check the cli is installed.
 Create a new project
 --------------------
 
-Create a new directory, and run ``perform init`` inside it.
+Create a new directory, and inside it run ``perform init``.
 
-The perform cli will ask various questions about your new project,
-then scaffold an entire symfony application pre-configured with
+The cli tool will ask various questions about your new project,
+then scaffold an entire Symfony application pre-configured with
 Perform, ready to go.
 
-Adding to an existing symfony project
+Adding to an existing Symfony project
 -------------------------------------
 
-Add the required bundles to ``composer.json``, then add the bundles to your project's ``AppKernel``.
+Add the required bundles to ``composer.json``, run ``composer update``
+then add the bundles to your project's ``AppKernel``.
 
 You may also want to add some of the bundles routing files.
