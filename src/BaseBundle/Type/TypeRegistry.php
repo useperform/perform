@@ -39,20 +39,27 @@ class TypeRegistry
             return $this->container->get($this->services[$name]);
         }
 
-        if (isset($this->classes[$name])) {
-            $classname = $this->classes[$name];
-            if (!isset($this->instances[$name])) {
-                $this->instances[$name] = new $classname();
-            }
-
-            return $this->instances[$name];
+        if (!isset($this->classes[$name])) {
+            throw new TypeNotFoundException(sprintf('Entity field type not found: "%s"', $name));
         }
 
-        throw new TypeNotFoundException(sprintf('Entity field type not found: "%s"', $name));
+        $classname = $this->classes[$name];
+        if (!isset($this->instances[$name])) {
+            $this->instances[$name] = new $classname();
+        }
+
+        return $this->instances[$name];
     }
 
-    public function getAvailableTypes()
+    public function getAll()
     {
-        return array_keys(array_merge($this->classes, $this->services));
+        $types = [];
+        $keys = array_keys(array_merge($this->classes, $this->services));
+
+        foreach ($keys as $key) {
+            $types[$key] = $this->getType($key);
+        }
+
+        return $types;
     }
 }
