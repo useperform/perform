@@ -44,7 +44,7 @@ class SubscriberAdmin extends AbstractAdmin
                 },
             ])
             ->add('email', [
-                'type' => 'string',
+                'type' => 'email',
             ])
             ->add('createdAt', [
                 'type' => 'datetime',
