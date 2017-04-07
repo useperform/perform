@@ -8,16 +8,16 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\Table;
 
 /**
- * ActionListCommand.
+ * DebugActionsCommand.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ActionListCommand extends ContainerAwareCommand
+class DebugActionsCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('perform:action:list')
-            ->setDescription('List available actions')
+        $this->setName('perform:debug:actions')
+            ->setDescription('Show available actions.')
             ;
     }
 
