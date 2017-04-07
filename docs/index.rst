@@ -23,6 +23,7 @@ Contents
    :maxdepth: 2
 
    start/index
+   tutorial/index
    core/index
    more/index
    bundles/index
