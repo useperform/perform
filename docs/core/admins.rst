@@ -66,6 +66,17 @@ Define a new route resource in ``app/config/routing_yml``:
 
 Be sure to include a ``prefix`` for the routes.
 
+Some routes have been created with the route prefix we defined in the admin:
+
+.. code-block:: bash
+
+   $ ./bin/console debug:router | grep bike
+
+     myapp_admin_bike_list            ANY      ANY      ANY    /admin/bikes/
+     myapp_admin_bike_view            ANY      ANY      ANY    /admin/bikes/view/{id}
+     myapp_admin_bike_create          ANY      ANY      ANY    /admin/bikes/create
+     myapp_admin_bike_edit            ANY      ANY      ANY    /admin/bikes/edit/{id}
+
 Now visit ``/admin/bikes`` in your browser. A complete CRUD interface is now available!
 
 Contexts
@@ -73,34 +84,45 @@ Contexts
 
 The four letters of CRUD are mapped to 4 different 'contexts':
 
-* The `list` context, when displaying a list of entities (read in CRUD)
-* The `view` context, when inspecting a single entity (read in CRUD)
-* The `create` context, when creating a new entity (create in CRUD)
-* The `edit` context, when editing a single entity (update in CRUD)
+* The `list` context for displaying a list of entities (read in CRUD)
+* The `view` context for inspecting a single entity (read in CRUD)
+* The `create` context for creating a new entity (create in CRUD)
+* The `edit` context for editing a single entity (update in CRUD)
 
 What about `delete`? See :doc:`actions`.
 
-You can change how types are configured depending on context.
+.. note::
 
-For example, here we tell the ``datetime`` type to show a human friendly date diff (e.g. `2 hours ago`) in the `list` context, but the full date in the `view` context:
+   You'll learn more about contexts, and how to customise admins for each one, in :doc:`types`, :doc:`filters`, and :doc:`actions`.
+
+Customising routing
+-------------------
+
+The `crud` loader uses the output of ``AdminInterface#getActions()`` to determine how to create routes.
+
+``AbstractAdmin`` defines some sensible defaults, but you can implement this method in an admin to override them.
+It should return an array, where the keys are the url fragments, and the values are the context - `view`, `list`, `create`, or `edit`.
 
 .. code-block:: php
 
-    <?php
+   <?php
 
-    public function configureTypes(TypeConfig $config)
-    {
-        $config->add('createdAt', [
-                'type' => 'datetime',
-                'viewOptions' => [
-                    'human' => false,
-                ],
-                'listOptions' => [
-                    'human' => true,
-                ],
-            ]);
-    }
+   public function getActions()
+   {
+       return [
+           '/' => 'list',
+           '/inspect/{id}' => 'view',
+           '/create' => 'create',
+       ];
+   }
 
+.. code-block:: bash
+
+   $ ./bin/console debug:router | grep bike
+
+     myapp_admin_bike_list            ANY      ANY      ANY    /admin/bikes/
+     myapp_admin_bike_view            ANY      ANY      ANY    /admin/bikes/inspect/{id}
+     myapp_admin_bike_create          ANY      ANY      ANY    /admin/bikes/create
 
 Debug bar
 ---------
