@@ -3,7 +3,7 @@ Admins
 
 A common requirement in web applications is 'CRUD' operations on your entities, i.e. `create`, `read`, `update`, and `delete`.
 
-Perform introduces the concept of `admins`, a class which configures how to manage entities.
+Perform introduces the concept of `admins`, classes that configure how to manage entities.
 
 Creating an admin
 -----------------
@@ -34,7 +34,6 @@ An example admin class could be:
                 ->add('wheelCount', ['type' => 'integer'])
                 ;
         }
-
     }
 
 .. note::
@@ -82,7 +81,7 @@ Now visit ``/admin/bikes`` in your browser. A complete CRUD interface is now ava
 Contexts
 --------
 
-The four letters of CRUD are mapped to 4 different 'contexts':
+The four letters of CRUD are mapped to different 'contexts':
 
 * The `list` context for displaying a list of entities (read in CRUD)
 * The `view` context for inspecting a single entity (read in CRUD)
