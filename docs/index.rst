@@ -21,9 +21,9 @@ Contents
 
 .. toctree::
    :maxdepth: 2
-   :glob:
 
    start/index
    core/index
-   tutorials/index
+   more/index
    bundles/index
+   reference/index

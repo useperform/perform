@@ -3,6 +3,6 @@ Bundles
 
 .. toctree::
    :maxdepth: 1
+   :glob:
 
-   base/index
-   media/index
+   ./*/index
