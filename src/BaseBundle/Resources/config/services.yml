@@ -78,6 +78,8 @@ services:
 
     perform_base.twig.util:
         class: Perform\BaseBundle\Twig\Extension\UtilExtension
+        arguments:
+            - "@router"
         tags:
             - {name: twig.extension}
 

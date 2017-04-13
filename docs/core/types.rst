@@ -17,7 +17,7 @@ Available types
 
 Many types are supplied in the PerformBaseBundle, but other bundles provide types too.
 
-Run the ``perform:debug:types` command to list the available types:
+Run the ``perform:debug:types`` command to list the available types:
 
 .. code-block:: bash
 
