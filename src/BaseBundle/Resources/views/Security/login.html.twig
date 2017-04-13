@@ -28,6 +28,11 @@
                 </div>
                 <div class="form-group">
                   <label for="password" class="control-label">Password</label>
+                  {% if perform_route_exists('perform_base_password_forgot') %}
+                    <a href="{{path('perform_base_password_forgot')}}" class="pull-right" tabindex="-1">
+                      Forgotten your password?
+                    </a>
+                  {% endif %}
                   <input type="password" class="form-control" id="password" name="_password" />
                 </div>
                 <button type="submit" class="btn btn-primary">Login</button>
