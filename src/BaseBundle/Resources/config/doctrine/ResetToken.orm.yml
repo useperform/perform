@@ -12,6 +12,11 @@ Perform\BaseBundle\Entity\ResetToken:
             type: string
         expiresAt:
             type: datetime
+        createdAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: create
     manyToOne:
         user:
             targetEntity: User

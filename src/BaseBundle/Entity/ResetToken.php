@@ -30,6 +30,11 @@ class ResetToken
     protected $expiresAt;
 
     /**
+     * @var \DateTime
+     */
+    protected $createdAt;
+
+    /**
      * @return uuid
      */
     public function getId()
@@ -95,5 +100,13 @@ class ResetToken
     public function getExpiresAt()
     {
         return $this->expiresAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
     }
 }
