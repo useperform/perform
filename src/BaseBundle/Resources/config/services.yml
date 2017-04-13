@@ -172,6 +172,12 @@ services:
         arguments:
             - "@service_container"
 
+    perform_base.reset_token_manager:
+        class: Perform\BaseBundle\Security\ResetTokenManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@perform_notification.notifier"
+
     perform_base.action_registry:
         class: Perform\BaseBundle\Action\ActionRegistry
         arguments:
