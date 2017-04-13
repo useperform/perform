@@ -43,6 +43,7 @@ class PasswordController extends Controller
 
             return [
                 'form' => $form->createView(),
+                'user' => $user,
             ];
         } catch (ResetTokenException $e) {
             return [
