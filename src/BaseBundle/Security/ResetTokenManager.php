@@ -89,4 +89,14 @@ class ResetTokenManager
         ]);
         $this->notifier->send($notification, ['email', 'logger']);
     }
+
+    /**
+     * @return int
+     */
+    public function removeStaleTokens(\DateTime $before)
+    {
+        return $this->em->createQuery('DELETE FROM PerformBaseBundle:ResetToken t WHERE t.expiresAt < :before')
+            ->setParameter('before', $before)
+            ->execute();
+    }
 }
