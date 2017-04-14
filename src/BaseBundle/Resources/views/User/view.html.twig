@@ -1,0 +1,27 @@
+{% extends 'PerformBaseBundle:Crud:view.html.twig' %}
+
+{% block workspace %}
+  {{parent()}}
+  {% if tokens|length > 0 %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Password reset tokens
+      </div>
+      <div class="panel-body">
+        <table class="table">
+          <tbody>
+            {% for token in tokens %}
+              <tr>
+                <td>
+                  <a href="{{url('perform_base_password_reset', {id: token.id, secret: token.secret})}}">
+                    {{url('perform_base_password_reset', {id: token.id, secret: token.secret})}}
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

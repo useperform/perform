@@ -4,6 +4,7 @@ namespace Perform\BaseBundle\Admin;
 
 use Perform\BaseBundle\Type\TypeConfig;
 use Perform\BaseBundle\Action\ActionConfig;
+use Perform\BaseBundle\Controller\UserController;
 
 /**
  * UserAdmin
@@ -46,5 +47,10 @@ class UserAdmin extends AbstractAdmin
     {
         parent::configureActions($config);
         $config->add('perform_base_create_reset_token');
+    }
+
+    public function getControllerName()
+    {
+        return UserController::class;
     }
 }
