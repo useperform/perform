@@ -38,6 +38,9 @@ class PerformBaseExtension extends Extension
         $this->configureTypeRegistry($container);
         $this->configureMailer($config, $container);
         $this->findExtendedEntities($container);
+
+        $tokenManager = $container->getDefinition('perform_base.reset_token_manager');
+        $tokenManager->addArgument($config['security']['reset_token_expiry']);
     }
 
     protected function configureTypeRegistry(ContainerBuilder $container)

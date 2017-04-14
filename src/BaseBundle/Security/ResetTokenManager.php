@@ -19,7 +19,7 @@ class ResetTokenManager
     protected $notifier;
     protected $expirySeconds;
 
-    public function __construct(EntityManagerInterface $em, Notifier $notifier, $expirySeconds = 1800)
+    public function __construct(EntityManagerInterface $em, Notifier $notifier, $expirySeconds)
     {
         $this->em = $em;
         $this->expirySeconds = $expirySeconds;

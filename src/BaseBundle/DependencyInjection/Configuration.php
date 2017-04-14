@@ -50,6 +50,15 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('security')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->integerNode('reset_token_expiry')
+                            ->info('Number of seconds after generation.')
+                            ->defaultValue(1800)
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
 
         // how to configure admin options:

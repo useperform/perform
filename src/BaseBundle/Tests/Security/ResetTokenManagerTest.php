@@ -30,7 +30,7 @@ class ResetTokenManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->notifier = $this->getMock(Notifier::class);
 
-        $this->manager = new ResetTokenManager($this->em, $this->notifier);
+        $this->manager = new ResetTokenManager($this->em, $this->notifier, 1800);
     }
 
     public function testCreateToken()
