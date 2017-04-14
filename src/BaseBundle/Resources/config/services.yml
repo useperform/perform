@@ -1,3 +1,6 @@
+imports:
+    - { resource: services_actions.yml }
+
 services:
     perform_base.admin.registry:
         class: Perform\BaseBundle\Admin\AdminRegistry
@@ -177,22 +180,3 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@perform_notification.notifier"
-
-    perform_base.action_registry:
-        class: Perform\BaseBundle\Action\ActionRegistry
-        arguments:
-            - "@service_container"
-            - []
-
-    perform_base.action_runner:
-        class: Perform\BaseBundle\Action\ActionRunner
-        arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@perform_base.admin.registry"
-
-    perform_base.action.delete:
-        class: Perform\BaseBundle\Action\DeleteAction
-        arguments:
-            - "@doctrine.orm.entity_manager"
-        tags:
-            - { name: perform_base.action, alias: perform_base_delete }

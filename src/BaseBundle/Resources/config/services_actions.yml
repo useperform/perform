@@ -1,0 +1,26 @@
+services:
+    perform_base.action_registry:
+        class: Perform\BaseBundle\Action\ActionRegistry
+        arguments:
+            - "@service_container"
+            - []
+
+    perform_base.action_runner:
+        class: Perform\BaseBundle\Action\ActionRunner
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@perform_base.admin.registry"
+
+    perform_base.action.delete:
+        class: Perform\BaseBundle\Action\DeleteAction
+        arguments:
+            - "@doctrine.orm.entity_manager"
+        tags:
+            - { name: perform_base.action, alias: perform_base_delete }
+
+    perform_base.action.create_reset_token:
+        class: Perform\BaseBundle\Action\CreateResetTokenAction
+        arguments:
+            - "@perform_base.reset_token_manager"
+        tags:
+            - { name: perform_base.action, alias: perform_base_create_reset_token }
