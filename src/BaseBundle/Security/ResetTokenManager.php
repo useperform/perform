@@ -17,10 +17,12 @@ class ResetTokenManager
 {
     protected $em;
     protected $notifier;
+    protected $expirySeconds;
 
-    public function __construct(EntityManagerInterface $em, Notifier $notifier)
+    public function __construct(EntityManagerInterface $em, Notifier $notifier, $expirySeconds = 1800)
     {
         $this->em = $em;
+        $this->expirySeconds = $expirySeconds;
         $this->notifier = $notifier;
     }
 
@@ -28,7 +30,7 @@ class ResetTokenManager
     {
         $token = new ResetToken();
         $token->setUser($user);
-        $token->setExpiresAt(new \DateTime('+5 days'));
+        $token->setExpiresAt(new \DateTime(sprintf('+%s seconds', $this->expirySeconds)));
         $token->setSecret(bin2hex(random_bytes(64)));
 
         return $token;
