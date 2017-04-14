@@ -3,7 +3,7 @@ Admins
 
 A common requirement in web applications is 'CRUD' operations on your entities, i.e. `create`, `read`, `update`, and `delete`.
 
-Perform introduces the concept of `admins`, classes that configure how to manage entities.
+Perform introduces the concept of `admins`, classes that configure CRUD operations for different entities.
 
 Creating an admin
 -----------------
@@ -54,7 +54,7 @@ Routing
 
 Perform provides a ``crud`` route loader, which will create routes for an entity admin.
 
-Define a new route resource in ``app/config/routing_yml``:
+Define a new route resource in ``app/config/routing.yml``:
 
 .. code-block:: yaml
 

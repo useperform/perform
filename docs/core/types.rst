@@ -1,7 +1,7 @@
 Types
 =====
 
-In Perform admins, `types` map entity properties to the four contexts - `list`, `view`, `create`, and `edit`.
+`Types` map entity properties to the four CRUD `contexts` - `list`, `view`, `create`, and `edit`.
 
 Similar to Doctrine mappings or Symfony form types, their behaviour changes depending on the underlying data.
 
@@ -45,8 +45,8 @@ The field name can be anything accessible by Symfony's `property access componen
 Configuration should be an array with the following properties:
 
 * ``type`` - `string`, **required**. The type name.
-* ``contexts`` - `array`. List of contexts using this type.
-* ``sort`` - `boolean` or `Closure`, default true. Whether to allow sorting by this field. Pass a closure for custom sorting by this field.
+* ``contexts`` - `array`. A list of contexts using this type. Each item should be one of ``TypeConfig::CONTEXT_LIST``, ``TypeConfig::CONTEXT_VIEW``, ``TypeConfig::CONTEXT_CREATE``, or ``TypeConfig::CONTEXT_EDIT``. Defaults to all contexts.
+* ``sort`` - `boolean` or `Closure`. Whether to allow sorting by this field. Pass a closure for custom sorting by this field. Defaults to true.
 * ``options`` - `array`. Options to pass to the type. Different types require different options.
 * ``listOptions``, ``viewOptions``, ``createOptions``, ``editOptions`` - `array`. Options specific to a certain context.
 
@@ -97,7 +97,7 @@ For example, consider displaying a virtual ``fullname`` property in a list conte
    //...
        public function getFullname()
        {
-           return $this->forname . ' ' . $this->surname;
+           return $this->forename . ' ' . $this->surname;
        }
    }
 
