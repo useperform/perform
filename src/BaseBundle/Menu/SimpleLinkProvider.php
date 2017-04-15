@@ -18,6 +18,10 @@ class SimpleLinkProvider implements LinkProviderInterface
 
     public function __construct($alias, $entity = null, $route = null, $icon = null)
     {
+        if (!$entity && !$route) {
+            throw new \InvalidArgumentException('A simple menu requires either a route or an entity.');
+        }
+
         $this->alias = $alias;
         $this->entity = $entity;
         $this->route = $route;

@@ -88,4 +88,11 @@ class SimpleLinkProviderTest extends \PHPUnit_Framework_TestCase
             ->with('foo', ['entity' => 'FooBundle:Entity']);
         $provider->addLinks($menu);
     }
+
+    public function testRouteOrEntityIsRequired()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->create('foo');
+    }
+
 }
