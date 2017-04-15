@@ -21,6 +21,7 @@ class AssetsInstaller implements InstallerInterface
             $logger->info('Running '.$file);
 
             $process = new Process(sprintf('(cd %s && %s)', dirname($file), $file));
+            $process->setTimeout(300);
             $process->mustRun(function ($type, $buffer) use ($logger) {
                 if (Process::ERR === $type) {
                     $logger->warning($buffer);
