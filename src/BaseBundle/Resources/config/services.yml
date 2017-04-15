@@ -111,7 +111,12 @@ services:
             - { name: perform_base.link_provider, alias: dashboard }
 
     perform_base.menu_link.users:
-        class: Perform\BaseBundle\Menu\UsersLinkProvider
+        class: Perform\BaseBundle\Menu\SimpleLinkProvider
+        arguments:
+            - 'users'
+            - 'PerformBaseBundle:User'
+            - null
+            - 'users'
         tags:
             - { name: perform_base.link_provider, alias: users }
 

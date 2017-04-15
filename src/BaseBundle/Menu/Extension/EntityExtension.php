@@ -18,7 +18,7 @@ class EntityExtension implements ExtensionInterface
         $this->urlGenerator = $urlGenerator;
     }
 
-    public function buildOptions(array $options = array())
+    public function buildOptions(array $options = [])
     {
         if (isset($options['entity'])) {
             $options['route'] = $this->urlGenerator->getDefaultEntityRoute($options['entity']);

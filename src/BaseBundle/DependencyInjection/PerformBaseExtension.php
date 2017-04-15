@@ -38,6 +38,7 @@ class PerformBaseExtension extends Extension
         $this->configureTypeRegistry($container);
         $this->configureMailer($config, $container);
         $this->findExtendedEntities($container);
+        $this->createSimpleMenus($container, $config['menu']['simple']);
 
         $tokenManager = $container->getDefinition('perform_base.reset_token_manager');
         $tokenManager->addArgument($config['security']['reset_token_expiry']);
@@ -127,5 +128,14 @@ class PerformBaseExtension extends Extension
         $container->setParameter('perform_base.extended_entities', $extendedEntities);
         $container->setParameter('perform_base.entity_aliases', $entityAliases);
         $container->setParameter('perform_base.extended_entity_aliases', $extendedAliases);
+    }
+
+    protected function createSimpleMenus(ContainerBuilder $container, array $config)
+    {
+        foreach ($config as $alias => $options) {
+            $definition = $container->register('perform_base.menu.simple.'.$alias, 'Perform\BaseBundle\Menu\SimpleLinkProvider');
+            $definition->setArguments([$alias, $options['entity'], $options['route'], $options['icon']]);
+            $definition->addTag('perform_base.link_provider', ['alias' => $alias]);
+        }
     }
 }
