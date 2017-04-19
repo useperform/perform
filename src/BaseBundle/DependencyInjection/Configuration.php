@@ -44,6 +44,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->arrayNode('menu')
+                    ->addDefaultsIfNotSet()
                     ->children()
                         ->arrayNode('simple')
                             ->useAttributeAsKey('alias')

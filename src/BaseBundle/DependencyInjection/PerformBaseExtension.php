@@ -33,7 +33,7 @@ class PerformBaseExtension extends Extension
         $container->setParameter('perform_base.admins', $config['admins']);
         $container->setParameter('perform_base.panels.left', $config['panels']['left']);
         $container->setParameter('perform_base.panels.right', $config['panels']['right']);
-        $container->setParameter('perform_base.menu_order', isset($config['menu']['order']) ? $config['menu']['order'] : []);
+        $container->setParameter('perform_base.menu_order', $config['menu']['order']);
         $container->setParameter('perform_base.auto_asset_version', uniqid());
         $this->configureTypeRegistry($container);
         $this->configureMailer($config, $container);
