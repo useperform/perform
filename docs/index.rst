@@ -25,6 +25,7 @@ Contents
    start/index
    tutorial/index
    core/index
-   more/index
    bundles/index
+   more/index
+   tools/index
    reference/index
