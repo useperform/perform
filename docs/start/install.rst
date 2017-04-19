@@ -10,7 +10,7 @@ Make sure your computer meets the :doc:`requirements <requirements>` before proc
 Add your ssh key
 ----------------
 
-Login in to your Perform account `here </account>`_.
+Login to your Perform account `here </account>`_.
 This page will show your licenses and ssh keys.
 Click the 'Add key' button to add a new public key, either from a file
 on your computer or by pasting the contents into the box directly.

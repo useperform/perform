@@ -11,7 +11,7 @@ Setting up logins
 Logging in
 ----------
 
-After setting up security, you can now login in to the admin area (default location is ``/admin``).
+After setting up security, you can now login to the admin area (default location is ``/admin``).
 
 Managing users
 --------------
