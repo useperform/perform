@@ -1,0 +1,6 @@
+services:
+    perform_dev.file_creator:
+        class: Perform\DevBundle\File\FileCreator
+        arguments:
+            - "@filesystem"
+            - "@twig"
