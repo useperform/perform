@@ -1,0 +1,29 @@
+<?php
+
+namespace {{namespace}};
+
+use Perform\BaseBundle\Admin\AbstractAdmin;
+use Perform\BaseBundle\Type\TypeConfig;
+use Perform\BaseBundle\Filter\FilterConfig;
+use Perform\BaseBundle\Action\ActionConfig;
+
+/**
+ * {{classname}}
+ **/
+class {{classname}} extends AbstractAdmin
+{
+    protected $routePrefix = '';
+
+    public function configureTypes(TypeConfig $config)
+    {
+    }
+
+    public function configureFilters(FilterConfig $config)
+    {
+    }
+
+    public function configureActions(ActionConfig $config)
+    {
+        parent::configureActions($config);
+    }
+}
