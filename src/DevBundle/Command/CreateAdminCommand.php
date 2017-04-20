@@ -66,15 +66,7 @@ class CreateAdminCommand extends CreateCommand
         }
 
         $bundleName = $entities[$entity][0];
-        $bundle = $this->get('kernel')->getBundle($bundleName);
-        $adminClass = sprintf('%s\\Admin\\%sAdmin', $bundle->getNamespace(), $entities[$entity][1]);
-        $adminFile = $bundle->getPath().'/Admin/'.$entities[$entity][1].'Admin.php';
-        $classBasename = basename(str_replace('\\', '/', $adminClass));
-        $vars = [
-            'classname' => $classBasename,
-            'namespace' => $bundle->getNamespace().'\\Admin',
-        ];
-
-        $this->createFile($input, $output, $adminFile, 'Admin.php.twig', $vars);
+        $relativeClass = sprintf('Admin\\%sAdmin', $entities[$entity][1]);
+        $this->createBundleClass($input, $output, $bundleName, $relativeClass, 'Admin.php.twig');
     }
 }
