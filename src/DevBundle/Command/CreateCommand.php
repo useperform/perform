@@ -53,4 +53,12 @@ abstract class CreateCommand extends ContainerAwareCommand
             $output->writeln($msg);
         }
     }
+
+    protected function createBundleClass(InputInterface $input, OutputInterface $output, $bundleName, $relativeClass, $template, array $vars = [])
+    {
+        $bundle = $this->get('kernel')->getBundle($bundleName);
+        list($file, $vars) = $this->get('perform_dev.file_creator')->resolveBundleClass($bundle, $relativeClass, $vars);
+
+        return $this->createFile($input, $output, $file, $template, $vars);
+    }
 }

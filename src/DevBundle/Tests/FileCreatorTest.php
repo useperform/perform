@@ -5,6 +5,7 @@ namespace Perform\DevBundle\Tests;
 use Symfony\Component\Filesystem\Filesystem;
 use Perform\DevBundle\File\FileCreator;
 use Perform\DevBundle\Exception\FileException;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
  * FileCreatorTest
@@ -59,5 +60,36 @@ class FileCreatorTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(FileException::class);
 
         $this->creator->create('/path/to/file.txt', 'template.twig');
+    }
+
+    public function resolveBundleProvider()
+    {
+        return [
+            ['Service\\SomeService'],
+            ['\\Service\\SomeService'],
+            ['Service\\SomeService\\'],
+            ['\\Service\\SomeService\\'],
+        ];
+    }
+
+    /**
+     * @dataProvider resolveBundleProvider
+     */
+    public function testResolveBundleClass($relativeClass)
+    {
+        $bundle = $this->getMock(BundleInterface::class);
+        $bundle->expects($this->any())
+            ->method('getPath')
+            ->will($this->returnValue('/bundle/root'));
+        $bundle->expects($this->any())
+            ->method('getNamespace')
+            ->will($this->returnValue('Foo\\BarBundle'));
+
+        $expected = ['/bundle/root/Service/SomeService.php', [
+            'foo' => 'bar',
+            'classname' => 'SomeService',
+            'namespace' => 'Foo\\BarBundle\\Service',
+        ]];
+        $this->assertSame($expected, $this->creator->resolveBundleClass($bundle, $relativeClass, ['foo' => 'bar']));
     }
 }
