@@ -1,0 +1,21 @@
+{
+    "name": "perform/dev-bundle",
+    "description": "Perform development tools.",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Glynn Forrest",
+            "email": "me@glynnforrest.com"
+        }
+    ],
+    "require": {
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Perform\\DevBundle\\": ""
+        }
+    }
+}
