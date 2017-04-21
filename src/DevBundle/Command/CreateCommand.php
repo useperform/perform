@@ -36,6 +36,7 @@ abstract class CreateCommand extends ContainerAwareCommand
         try {
             $creator->create($file, $template, $vars);
             $output->writeln($msg);
+            return true;
         } catch (FileException $e) {
             if ($input->getOption('skip-existing')) {
                 return;
@@ -51,6 +52,7 @@ abstract class CreateCommand extends ContainerAwareCommand
 
             $creator->forceCreate($file, $template, $vars);
             $output->writeln($msg);
+            return true;
         }
     }
 
