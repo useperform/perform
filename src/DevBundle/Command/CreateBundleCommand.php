@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Input\InputOption;
+use Perform\DevBundle\File\KernelModifier;
 
 /**
  * CreateBundleCommand.
@@ -55,11 +56,12 @@ EOF
         ];
 
         $this->createFile($input, $output, $file, 'Bundle.php.twig', $vars);
+        $this->addToKernel($input, $output, sprintf('%s\\%s', $namespace, $bundleName));
     }
 
     protected function getNamespace(InputInterface $input, OutputInterface $output)
     {
-        if ($input->hasOption('app-bundle')) {
+        if ($input->getOption('app-bundle')) {
             if ($input->getArgument('namespace')) {
                 $output->writeln('<error>Warning</error> --app-bundle option passed. Ignoring supplied bundle namespace.');
             }
@@ -74,5 +76,15 @@ EOF
         }
 
         return trim(str_replace('/', '\\', $namespace), '\\');
+    }
+
+    protected function addToKernel(InputInterface $input, OutputInterface $output, $bundleClass)
+    {
+        $k = new KernelModifier($this->getContainer()->get('kernel'));
+        try {
+            $k->addBundle($bundleClass);
+        } catch (\Exception $e) {
+            $output->writeln('Unable to add "%s" to your AppKernel. Please add it manually.');
+        }
     }
 }
