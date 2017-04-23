@@ -12,6 +12,7 @@ test_publish:
 push_packages:
 	./bin/push-parent.sh
 	./bin/subsplit.sh BaseBundle base-bundle
+	./bin/subsplit.sh ContactBundle contact-bundle
 	./bin/subsplit.sh DevBundle dev-bundle
 	./bin/subsplit.sh NotificationBundle notification-bundle
 

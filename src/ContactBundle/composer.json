@@ -1,0 +1,19 @@
+{
+    "name": "perform/contact-bundle",
+    "description": "Handle contact form submissions, notify users, and detect spam",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Glynn Forrest",
+            "email": "me@glynnforrest.com"
+        }
+    ],
+    "require": {
+        "perform/notification-bundle": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "Perform\\ContactBundle\\": ""
+        }
+    }
+}

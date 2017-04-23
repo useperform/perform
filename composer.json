@@ -36,6 +36,7 @@
     },
     "replace": {
         "perform/base-bundle": "self.version",
+        "perform/contact-bundle": "self.version",
         "perform/dev-bundle": "self.version",
         "perform/media-bundle": "self.version",
         "perform/notification-bundle": "self.version"
