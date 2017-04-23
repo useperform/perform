@@ -84,7 +84,7 @@ EOF
         try {
             $k->addBundle($bundleClass);
         } catch (\Exception $e) {
-            $output->writeln('Unable to add "%s" to your AppKernel. Please add it manually.');
+            $output->writeln(sprintf('Unable to add "%s" to your AppKernel. Please add it manually.', $bundleClass));
         }
     }
 }
