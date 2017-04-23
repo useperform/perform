@@ -66,6 +66,7 @@ abstract class ComposerConfigTestCase extends \PHPUnit_Framework_TestCase
         //check that every dependency is in the parent config, except for other perform bundles
         foreach ($bundleDeps as $dep => $version) {
             if (substr($dep, 0, 8) === 'perform/') {
+                $this->assertSame('self.version', $version, 'Version of another perform bundle dependency must be "self.version"');
                 continue;
             }
 
