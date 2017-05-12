@@ -10,6 +10,7 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Input\InputArgument;
 use Perform\DevBundle\File\KernelModifier;
 use Symfony\Component\Process\Process;
+use Perform\DevBundle\File\RoutingModifier;
 
 /**
  * AddBundleCommand.
@@ -42,17 +43,12 @@ class AddBundleCommand extends ContainerAwareCommand
             return;
         }
 
-        $packageList = '';
         $bundleClasses = [];
         foreach ($bundles as $bundle) {
-            $packageList .= ' '.static::$bundles[$bundle][0];
             $bundleClasses = array_merge($bundleClasses, static::$bundles[$bundle][1]);
         }
 
-        $cmd = sprintf('composer require %s dev-master', $packageList);
-        $proc = new Process($cmd);
-        $proc->setTty(true);
-        $this->getHelper('process')->mustRun($output, $proc);
+        $this->addComposerPackages($output, $bundles);
 
         $k = new KernelModifier($this->getContainer()->get('kernel'));
         try {
@@ -60,17 +56,71 @@ class AddBundleCommand extends ContainerAwareCommand
                 $k->addBundle($class);
             }
         } catch (\Exception $e) {
-            $output->writeln((string) $e);
-            $output->writeln(sprintf('Unable to add "%s" to your AppKernel. Please add it manually.', $choices[$bundle][1]));
+            $output->writeln($e->getMessage());
         }
 
-        //add default config of the bundles to config.yml
+        $r = new RoutingModifier($this->getContainer()->get('kernel')->getRootDir().'/config/routing.yml');
+        try {
+            foreach ($bundles as $bundle) {
+                $r->addConfig(RoutingModifier::CONFIGS[$bundle]);
+                if ($output->isVerbose()) {
+                    $output->writeln(sprintf('Adding %s routes to routing.yml', $bundle));
+                }
+            }
+        } catch (\Exception $e) {
+            $output->writeln($e->getMessage());
+        }
+
+        $output->writeln(sprintf('Added <info>%s</info>.', implode($bundles, '</info>, <info>')));
+    }
+
+    protected function addComposerPackages(OutputInterface $output, array $bundles)
+    {
+        if (empty($bundles)) {
+            return;
+        }
+
+        $proc = new Process('composer show --name-only');
+        $existingPackages = array_map(function ($bundle) {
+            return trim($bundle);
+        }, explode(PHP_EOL, $this->getHelper('process')->mustRun($output, $proc)->getOutput()));
+
+        $packageList = '';
+        foreach ($bundles as $bundle) {
+            $package = static::$bundles[$bundle][0];
+            if (in_array($package, $existingPackages)) {
+                if ($output->isVeryVerbose()) {
+                    $output->writeln(sprintf('Package %s is already installed', $package));
+                }
+
+                continue;
+            }
+            if ($output->isVerbose()) {
+                $output->writeln(sprintf('Adding %s to composer.json', $package));
+            }
+
+            $packageList .= ' '.$package;
+        }
+
+        if (trim($packageList) === '') {
+            return;
+        }
+
+        $proc = new Process(sprintf('composer require %s dev-master', $packageList));
+        $proc->setTty(true);
+        $this->getHelper('process')->mustRun($output, $proc);
     }
 
     protected function getBundles(InputInterface $input, OutputInterface $output)
     {
         $bundles = $input->getArgument('bundles');
         $choices = $this->getUnusedBundles();
+
+        if (empty($choices)) {
+            $output->writeln('No unused Perform bundles found.');
+
+            return [];
+        }
 
         if (empty($bundles)) {
             if (!$input->isInteractive()) {
