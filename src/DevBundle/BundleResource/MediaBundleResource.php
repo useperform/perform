@@ -39,4 +39,16 @@ perform_media:
     prefix: /admin/media
 ';
     }
+
+    public function getConfig()
+    {
+        return '
+perform_media:
+    plugins:
+        - image
+        - pdf
+        - audio
+        - other
+';
+    }
 }

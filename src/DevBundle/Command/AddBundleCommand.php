@@ -37,6 +37,7 @@ class AddBundleCommand extends ContainerAwareCommand
         $this->addComposerPackages($output, $bundles);
         $this->addBundleClasses($output, $bundles);
         $this->addRoutes($output, $bundles);
+        $this->addConfigs($output, $bundles);
 
         foreach ($bundles as $bundle) {
             $output->writeln(sprintf('Added <info>%s</info>.', $bundle->getBundleName()));
@@ -68,6 +69,29 @@ class AddBundleCommand extends ContainerAwareCommand
                 $r->addConfig($resource->getRoutes());
                 if ($output->isVerbose()) {
                     $output->writeln(sprintf('Adding %s routes to routing.yml', $resource->getBundleName()));
+                }
+            }
+        } catch (\Exception $e) {
+            $output->writeln($e->getMessage());
+        }
+    }
+
+    protected function addConfigs(OutputInterface $output, array $bundles)
+    {
+        $r = new RoutingModifier($this->getContainer()->get('kernel')->getRootDir().'/config/config.yml');
+        try {
+            foreach ($bundles as $resource) {
+                $config = $resource->getConfig();
+                if (!$config) {
+                    continue;
+                }
+
+                //only check for the first line of the config entry, e.g. perform_contact:
+                $firstLine = trim(explode(PHP_EOL, trim($config))[0]);
+                $checkPattern = sprintf('/^%s/m', $firstLine);
+                $r->addConfig($config, $checkPattern);
+                if ($output->isVerbose()) {
+                    $output->writeln(sprintf('Adding default %s config to config.yml', $resource->getBundleName()));
                 }
             }
         } catch (\Exception $e) {

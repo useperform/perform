@@ -39,4 +39,8 @@ perform_contact:
     prefix: /admin/contact
 ';
     }
+
+    public function getConfig()
+    {
+    }
 }

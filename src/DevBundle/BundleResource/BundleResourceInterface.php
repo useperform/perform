@@ -18,4 +18,6 @@ interface BundleResourceInterface
     public function getComposerPackage();
 
     public function getRoutes();
+
+    public function getConfig();
 }
