@@ -35,26 +35,23 @@ class AddBundleCommand extends ContainerAwareCommand
         }
 
         $this->addComposerPackages($output, $bundles);
-        $this->addBundleClasses($output, $bundles);
-        $this->addRoutes($output, $bundles);
-        $this->addConfigs($output, $bundles);
+
+        $resolved = $this->getContainer()->get('perform_dev.resource_registry')->resolveResources(array_keys($bundles));
+        $this->addBundleClasses($output, $resolved);
+        $this->addRoutes($output, $resolved);
+        $this->addConfigs($output, $resolved);
 
         foreach ($bundles as $bundle) {
             $output->writeln(sprintf('Added <info>%s</info>.', $bundle->getBundleName()));
         }
     }
 
-    protected function addBundleClasses(OutputInterface $output, array $bundles)
+    protected function addBundleClasses(OutputInterface $output, array $resources)
     {
-        $bundleClasses = [];
-        foreach ($bundles as $bundle) {
-            $bundleClasses = array_merge($bundleClasses, [$bundle->getBundleClass()], $bundle->getRequiredBundleClasses());
-        }
-
         $k = new KernelModifier($this->getContainer()->get('kernel'));
         try {
-            foreach ($bundleClasses as $class) {
-                $k->addBundle($class);
+            foreach ($resources as $resource) {
+                $k->addBundle($resource->getBundleClass());
             }
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
@@ -66,7 +63,12 @@ class AddBundleCommand extends ContainerAwareCommand
         $r = new YamlModifier($this->getContainer()->get('kernel')->getRootDir().'/config/routing.yml');
         try {
             foreach ($bundles as $resource) {
-                $r->addConfig($resource->getRoutes());
+                $routes = $resource->getRoutes();
+                if (!$routes) {
+                    continue;
+                }
+
+                $r->addConfig($routes);
                 if ($output->isVerbose()) {
                     $output->writeln(sprintf('Adding %s routes to routing.yml', $resource->getBundleName()));
                 }
@@ -134,7 +136,6 @@ class AddBundleCommand extends ContainerAwareCommand
 
     protected function getBundles(InputInterface $input, OutputInterface $output)
     {
-        $bundleNames = $input->getArgument('bundles');
         $unusedBundles = $this->getUnusedBundles();
 
         if (empty($unusedBundles)) {
@@ -143,7 +144,8 @@ class AddBundleCommand extends ContainerAwareCommand
             return [];
         }
 
-        if (empty($bundles)) {
+        $bundleNames = $input->getArgument('bundles');
+        if (empty($bundleNames)) {
             if (!$input->isInteractive()) {
                 return [];
             }
