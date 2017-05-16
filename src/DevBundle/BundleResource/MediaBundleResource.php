@@ -9,7 +9,7 @@ use Perform\MediaBundle\PerformMediaBundle;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class MediaBundleResource implements BundleResourceInterface
+class MediaBundleResource implements ParentResourceInterface
 {
     public function getBundleName()
     {

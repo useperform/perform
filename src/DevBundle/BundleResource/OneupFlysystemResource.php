@@ -10,7 +10,7 @@ use Oneup\FlysystemBundle\OneupFlysystemBundle;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class OneupFlysystemResource implements BundleResourceInterface
+class OneupFlysystemResource implements ResourceInterface
 {
     public function getBundleName()
     {
@@ -20,26 +20,6 @@ class OneupFlysystemResource implements BundleResourceInterface
     public function getBundleClass()
     {
         return OneupFlysystemBundle::class;
-    }
-
-    public function getRequiredBundles()
-    {
-        return [];
-    }
-
-    public function getOptionalResources()
-    {
-        return [];
-    }
-
-    public function getComposerPackage()
-    {
-        return 'oneup/flysystem-bundle';
-    }
-
-    public function getOptionalComposerPackages()
-    {
-        return [];
     }
 
     public function getRoutes()

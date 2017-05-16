@@ -12,7 +12,7 @@ class BundleResourceRegistry
     protected $resources = [];
     protected $parents = [];
 
-    public function addResource(BundleResourceInterface $resource)
+    public function addResource(ResourceInterface $resource)
     {
         $this->resources[$resource->getBundleName()] = $resource;
     }
@@ -22,7 +22,7 @@ class BundleResourceRegistry
         return $this->resources;
     }
 
-    public function addParentResource(BundleResourceInterface $resource)
+    public function addParentResource(ParentResourceInterface $resource)
     {
         $this->addResource($resource);
         $this->parents[$resource->getBundleName()] = $resource;
@@ -36,7 +36,7 @@ class BundleResourceRegistry
     /**
      * Get all the required resources for the given bundle names, dependencies first.
      *
-     * @return BundleResourceInterface[]
+     * @return ResourceInterface[]
      */
     public function resolveResources(array $bundleNames)
     {
@@ -51,11 +51,13 @@ class BundleResourceRegistry
 
             $resource = $this->resources[$bundle];
 
-            //depth first search of dependencies
-            foreach ($this->resolveResources($resource->getRequiredBundles()) as $dep) {
-                if (!in_array(spl_object_hash($dep), $used)) {
-                    $resolved[] = $dep;
-                    $used[] = spl_object_hash($dep);
+            //depth first search of dependencies if it is a parent resource
+            if ($resource instanceof ParentResourceInterface) {
+                foreach ($this->resolveResources($resource->getRequiredBundles()) as $dep) {
+                    if (!in_array(spl_object_hash($dep), $used)) {
+                        $resolved[] = $dep;
+                        $used[] = spl_object_hash($dep);
+                    }
                 }
             }
 

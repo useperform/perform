@@ -9,7 +9,7 @@ use Perform\ContactBundle\PerformContactBundle;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ContactBundleResource implements BundleResourceInterface
+class ContactBundleResource implements ParentResourceInterface
 {
     public function getBundleName()
     {

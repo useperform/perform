@@ -3,7 +3,8 @@
 namespace Perform\DevBundle\Tests\BundleResource;
 
 use Perform\DevBundle\BundleResource\BundleResourceRegistry;
-use Perform\DevBundle\BundleResource\BundleResourceInterface;
+use Perform\DevBundle\BundleResource\ResourceInterface;
+use Perform\DevBundle\BundleResource\ParentResourceInterface;
 
 /**
  * BundleResourceRegistryTest.
@@ -17,9 +18,19 @@ class BundleResourceRegistryTest extends \PHPUnit_Framework_TestCase
         $this->reg = new BundleResourceRegistry();
     }
 
-    protected function resource($bundleName, array $requiredBundles = [])
+    protected function resource($bundleName)
     {
-        $r = $this->getMock(BundleResourceInterface::class);
+        $r = $this->getMock(ResourceInterface::class);
+        $r->expects($this->any())
+            ->method('getBundleName')
+            ->will($this->returnValue($bundleName));
+
+        return $r;
+    }
+
+    protected function parentResource($bundleName, array $requiredBundles = [])
+    {
+        $r = $this->getMock(ParentResourceInterface::class);
         $r->expects($this->any())
             ->method('getBundleName')
             ->will($this->returnValue($bundleName));
@@ -42,16 +53,16 @@ class BundleResourceRegistryTest extends \PHPUnit_Framework_TestCase
     public function testParentResources()
     {
         $this->reg->addResource($a = $this->resource('FooBundle'));
-        $this->reg->addParentResource($b = $this->resource('BarBundle'));
+        $this->reg->addParentResource($b = $this->parentResource('BarBundle'));
 
         $this->assertSame(['BarBundle' => $b], $this->reg->getParentResources());
     }
 
     public function testResolveResources()
     {
-        $this->reg->addResource($a = $this->resource('ABundle', ['BBundle', 'CBundle']));
-        $this->reg->addResource($b = $this->resource('BBundle', ['DBundle']));
-        $this->reg->addResource($c = $this->resource('CBundle', ['DBundle']));
+        $this->reg->addParentResource($a = $this->parentResource('ABundle', ['BBundle', 'CBundle']));
+        $this->reg->addParentResource($b = $this->parentResource('BBundle', ['DBundle']));
+        $this->reg->addParentResource($c = $this->parentResource('CBundle', ['DBundle']));
         $this->reg->addResource($d = $this->resource('DBundle'));
 
         $this->assertSame([$d, $b, $c, $a], $this->reg->resolveResources(['ABundle']));

@@ -3,19 +3,16 @@
 namespace Perform\DevBundle\BundleResource;
 
 /**
- * BundleResourceInterface.
+ * ResourceInterface defines the bundle class, routes, and config to
+ * use when it is added to an application.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-interface BundleResourceInterface
+interface ResourceInterface
 {
     public function getBundleName();
 
     public function getBundleClass();
-
-    public function getRequiredBundles();
-
-    public function getComposerPackage();
 
     public function getRoutes();
 
