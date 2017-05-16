@@ -4,3 +4,6 @@ services:
         arguments:
             - "@filesystem"
             - "@twig"
+
+    perform_dev.resource_registry:
+        class: Perform\DevBundle\BundleResource\BundleResourceRegistry
