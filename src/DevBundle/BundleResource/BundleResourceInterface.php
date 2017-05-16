@@ -13,7 +13,7 @@ interface BundleResourceInterface
 
     public function getBundleClass();
 
-    public function getRequiredBundleClasses();
+    public function getRequiredBundles();
 
     public function getComposerPackage();
 
