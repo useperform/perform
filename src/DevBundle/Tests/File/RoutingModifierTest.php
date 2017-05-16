@@ -3,6 +3,8 @@
 namespace Perform\DevBundle\Tests\File;
 
 use Perform\DevBundle\File\RoutingModifier;
+use Perform\DevBundle\BundleResource\ContactBundleResource;
+use Perform\DevBundle\BundleResource\MediaBundleResource;
 
 /**
  * RoutingModifierTest.
@@ -31,19 +33,19 @@ class RoutingModifierTest extends \PHPUnit_Framework_TestCase
     public function testAddYaml()
     {
         $this->modifier = new RoutingModifier($this->testFile);
-        $this->modifier->addConfig(RoutingModifier::CONFIGS['PerformMediaBundle']);
-        $this->modifier->addConfig(RoutingModifier::CONFIGS['PerformContactBundle']);
+        $this->modifier->addConfig((new MediaBundleResource)->getRoutes());
+        $this->modifier->addConfig((new ContactBundleResource)->getRoutes());
         $this->assertFileEquals($this->modifiedFile, $this->testFile);
     }
 
     public function testBundleIsNotAddedMoreThanOnce()
     {
         $this->modifier = new RoutingModifier($this->testFile);
-        $this->modifier->addConfig(RoutingModifier::CONFIGS['PerformMediaBundle']);
-        $this->modifier->addConfig(RoutingModifier::CONFIGS['PerformContactBundle']);
+        $this->modifier->addConfig((new MediaBundleResource)->getRoutes());
+        $this->modifier->addConfig((new ContactBundleResource)->getRoutes());
 
-        $this->modifier->addConfig(RoutingModifier::CONFIGS['PerformMediaBundle']);
-        $this->modifier->addConfig(RoutingModifier::CONFIGS['PerformContactBundle']);
+        $this->modifier->addConfig((new MediaBundleResource)->getRoutes());
+        $this->modifier->addConfig((new ContactBundleResource)->getRoutes());
         $this->assertFileEquals($this->modifiedFile, $this->testFile);
     }
 }

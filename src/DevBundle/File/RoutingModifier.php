@@ -13,19 +13,6 @@ class RoutingModifier
 {
     protected $configFile;
 
-    const CONFIGS = [
-        'PerformContactBundle' => '
-perform_contact:
-    resource: "@PerformContactBundle/Resources/config/routing.yml"
-    prefix: /admin/contact
-',
-        'PerformMediaBundle' => '
-perform_media:
-    resource: "@PerformMediaBundle/Resources/config/routing.yml"
-    prefix: /admin/media
-',
-    ];
-
     public function __construct($configFile)
     {
         $this->configFile = $configFile;
