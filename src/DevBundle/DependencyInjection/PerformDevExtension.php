@@ -8,6 +8,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Perform\DevBundle\BundleResource\ContactBundleResource;
+use Perform\DevBundle\BundleResource\MediaBundleResource;
 
 /**
  * PerformDevExtension.
@@ -23,5 +24,6 @@ class PerformDevExtension extends Extension
 
         $registry = $container->getDefinition('perform_dev.resource_registry');
         $registry->addMethodCall('addResource', [new Definition(ContactBundleResource::class)]);
+        $registry->addMethodCall('addResource', [new Definition(MediaBundleResource::class)]);
     }
 }
