@@ -21,7 +21,7 @@ class ContactBundleResource implements BundleResourceInterface
         return PerformContactBundle::class;
     }
 
-    public function getRequiredBundleClasses()
+    public function getRequiredBundles()
     {
         return [];
     }

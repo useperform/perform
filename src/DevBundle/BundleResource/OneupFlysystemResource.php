@@ -3,29 +3,28 @@
 namespace Perform\DevBundle\BundleResource;
 
 use Perform\MediaBundle\PerformMediaBundle;
+use Oneup\FlysystemBundle\OneupFlysystemBundle;
 
 /**
- * MediaBundleResource
+ * OneupFlysystemResource
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class MediaBundleResource implements BundleResourceInterface
+class OneupFlysystemResource implements BundleResourceInterface
 {
     public function getBundleName()
     {
-        return 'PerformMediaBundle';
+        return 'OneupFlysystemBundle';
     }
 
     public function getBundleClass()
     {
-        return PerformMediaBundle::class;
+        return OneupFlysystemBundle::class;
     }
 
     public function getRequiredBundles()
     {
-        return [
-            'OneupFlysystemBundle',
-        ];
+        return [];
     }
 
     public function getOptionalResources()
@@ -35,34 +34,29 @@ class MediaBundleResource implements BundleResourceInterface
 
     public function getComposerPackage()
     {
-        return 'perform/media-bundle';
+        return 'oneup/flysystem-bundle';
     }
 
     public function getOptionalComposerPackages()
     {
-        return [
-            'imagine/imagine' => 'To use the image plugin',
-        ];
+        return [];
     }
 
     public function getRoutes()
     {
-        return '
-perform_media:
-    resource: "@PerformMediaBundle/Resources/config/routing.yml"
-    prefix: /admin/media
-';
     }
 
     public function getConfig(array $includedResources = [], array $includedComposerPackages = [])
     {
         return '
-perform_media:
-    plugins:
-        - image
-        - pdf
-        - audio
-        - other
+oneup_flysystem:
+    adapters:
+        main:
+            local:
+                directory: "%kernel.root_dir%/../web/uploads"
+    filesystems:
+        main:
+            adapter: main
 ';
     }
 }
