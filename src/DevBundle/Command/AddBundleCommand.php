@@ -171,7 +171,7 @@ class AddBundleCommand extends ContainerAwareCommand
 
     protected function getUnusedBundles()
     {
-        $possibleBundles = $this->getContainer()->get('perform_dev.resource_registry')->all();
+        $possibleBundles = $this->getContainer()->get('perform_dev.resource_registry')->getParentResources();
         $loadedBundles = array_keys($this->getContainer()->get('kernel')->getBundles());
 
         $unusedBundles = [];
