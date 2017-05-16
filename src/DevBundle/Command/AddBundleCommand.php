@@ -10,7 +10,7 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Input\InputArgument;
 use Perform\DevBundle\File\KernelModifier;
 use Symfony\Component\Process\Process;
-use Perform\DevBundle\File\RoutingModifier;
+use Perform\DevBundle\File\YamlModifier;
 
 /**
  * AddBundleCommand.
@@ -63,7 +63,7 @@ class AddBundleCommand extends ContainerAwareCommand
 
     protected function addRoutes(OutputInterface $output, array $bundles)
     {
-        $r = new RoutingModifier($this->getContainer()->get('kernel')->getRootDir().'/config/routing.yml');
+        $r = new YamlModifier($this->getContainer()->get('kernel')->getRootDir().'/config/routing.yml');
         try {
             foreach ($bundles as $resource) {
                 $r->addConfig($resource->getRoutes());
@@ -78,7 +78,7 @@ class AddBundleCommand extends ContainerAwareCommand
 
     protected function addConfigs(OutputInterface $output, array $bundles)
     {
-        $r = new RoutingModifier($this->getContainer()->get('kernel')->getRootDir().'/config/config.yml');
+        $r = new YamlModifier($this->getContainer()->get('kernel')->getRootDir().'/config/config.yml');
         try {
             foreach ($bundles as $resource) {
                 $config = $resource->getConfig();

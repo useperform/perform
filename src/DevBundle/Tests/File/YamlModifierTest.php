@@ -2,16 +2,16 @@
 
 namespace Perform\DevBundle\Tests\File;
 
-use Perform\DevBundle\File\RoutingModifier;
+use Perform\DevBundle\File\YamlModifier;
 use Perform\DevBundle\BundleResource\ContactBundleResource;
 use Perform\DevBundle\BundleResource\MediaBundleResource;
 
 /**
- * RoutingModifierTest.
+ * YamlModifierTest.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class RoutingModifierTest extends \PHPUnit_Framework_TestCase
+class YamlModifierTest extends \PHPUnit_Framework_TestCase
 {
     protected $baseFile;
     protected $testFile;
@@ -32,7 +32,7 @@ class RoutingModifierTest extends \PHPUnit_Framework_TestCase
 
     public function testAddYaml()
     {
-        $this->modifier = new RoutingModifier($this->testFile);
+        $this->modifier = new YamlModifier($this->testFile);
         $this->modifier->addConfig((new MediaBundleResource)->getRoutes());
         $this->modifier->addConfig((new ContactBundleResource)->getRoutes());
         $this->assertFileEquals($this->modifiedFile, $this->testFile);
@@ -40,7 +40,7 @@ class RoutingModifierTest extends \PHPUnit_Framework_TestCase
 
     public function testBundleIsNotAddedMoreThanOnce()
     {
-        $this->modifier = new RoutingModifier($this->testFile);
+        $this->modifier = new YamlModifier($this->testFile);
         $this->modifier->addConfig((new MediaBundleResource)->getRoutes());
         $this->modifier->addConfig((new ContactBundleResource)->getRoutes());
 
@@ -51,7 +51,7 @@ class RoutingModifierTest extends \PHPUnit_Framework_TestCase
 
     public function testCustomCheckPattern()
     {
-        $this->modifier = new RoutingModifier($this->testFile);
+        $this->modifier = new YamlModifier($this->testFile);
 
         $this->modifier->addConfig((new ContactBundleResource)->getRoutes(), '/^perform_base_dashboard:/m');
         $this->assertFileEquals($this->baseFile, $this->testFile);

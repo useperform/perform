@@ -5,11 +5,11 @@ namespace Perform\DevBundle\File;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * RoutingModifier.
+ * YamlModifier.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class RoutingModifier
+class YamlModifier
 {
     protected $configFile;
 
