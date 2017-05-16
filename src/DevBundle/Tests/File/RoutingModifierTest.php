@@ -48,4 +48,12 @@ class RoutingModifierTest extends \PHPUnit_Framework_TestCase
         $this->modifier->addConfig((new ContactBundleResource)->getRoutes());
         $this->assertFileEquals($this->modifiedFile, $this->testFile);
     }
+
+    public function testCustomCheckPattern()
+    {
+        $this->modifier = new RoutingModifier($this->testFile);
+
+        $this->modifier->addConfig((new ContactBundleResource)->getRoutes(), '/^perform_base_dashboard:/m');
+        $this->assertFileEquals($this->baseFile, $this->testFile);
+    }
 }

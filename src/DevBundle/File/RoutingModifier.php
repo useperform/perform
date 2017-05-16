@@ -19,9 +19,15 @@ class RoutingModifier
         $this->fs = new Filesystem();
     }
 
-    public function addConfig($yaml)
+    public function addConfig($yaml, $checkPattern = null)
     {
         $contents = file_get_contents($this->configFile);
+
+        if ($checkPattern && preg_match($checkPattern, $contents)) {
+            //matches check pattern, so quit
+            return;
+        }
+
         if (strpos($contents, trim($yaml))) {
             //already added
             return;
