@@ -19,15 +19,6 @@ use Perform\DevBundle\File\RoutingModifier;
  **/
 class AddBundleCommand extends ContainerAwareCommand
 {
-    protected static $bundles = [
-        'PerformNotificationBundle' => ['perform/notification-bundle', [
-            'Perform\\NotificationBundle\\PerformNotificationBundle',
-        ]],
-        'PerformContactBundle' => ['perform/contact-bundle', [
-            'Perform\\ContactBundle\\PerformContactBundle',
-        ]],
-    ];
-
     protected function configure()
     {
         $this->setName('perform-dev:add-bundle')
@@ -43,12 +34,21 @@ class AddBundleCommand extends ContainerAwareCommand
             return;
         }
 
+        $this->addComposerPackages($output, $bundles);
+        $this->addBundleClasses($output, $bundles);
+        $this->addRoutes($output, $bundles);
+
+        foreach ($bundles as $bundle) {
+            $output->writeln(sprintf('Added <info>%s</info>.', $bundle->getBundleName()));
+        }
+    }
+
+    protected function addBundleClasses(OutputInterface $output, array $bundles)
+    {
         $bundleClasses = [];
         foreach ($bundles as $bundle) {
-            $bundleClasses = array_merge($bundleClasses, static::$bundles[$bundle][1]);
+            $bundleClasses = array_merge($bundleClasses, [$bundle->getBundleClass()], $bundle->getRequiredBundleClasses());
         }
-
-        $this->addComposerPackages($output, $bundles);
 
         $k = new KernelModifier($this->getContainer()->get('kernel'));
         try {
@@ -58,28 +58,25 @@ class AddBundleCommand extends ContainerAwareCommand
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
         }
+    }
 
+    protected function addRoutes(OutputInterface $output, array $bundles)
+    {
         $r = new RoutingModifier($this->getContainer()->get('kernel')->getRootDir().'/config/routing.yml');
         try {
-            foreach ($bundles as $bundle) {
-                $r->addConfig(RoutingModifier::CONFIGS[$bundle]);
+            foreach ($bundles as $resource) {
+                $r->addConfig($resource->getRoutes());
                 if ($output->isVerbose()) {
-                    $output->writeln(sprintf('Adding %s routes to routing.yml', $bundle));
+                    $output->writeln(sprintf('Adding %s routes to routing.yml', $resource->getBundleName()));
                 }
             }
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
         }
-
-        $output->writeln(sprintf('Added <info>%s</info>.', implode($bundles, '</info>, <info>')));
     }
 
     protected function addComposerPackages(OutputInterface $output, array $bundles)
     {
-        if (empty($bundles)) {
-            return;
-        }
-
         $proc = new Process('composer show --name-only');
         $existingPackages = array_map(function ($bundle) {
             return trim($bundle);
@@ -87,7 +84,7 @@ class AddBundleCommand extends ContainerAwareCommand
 
         $packageList = '';
         foreach ($bundles as $bundle) {
-            $package = static::$bundles[$bundle][0];
+            $package = $bundle->getComposerPackage();
             if (in_array($package, $existingPackages)) {
                 if ($output->isVeryVerbose()) {
                     $output->writeln(sprintf('Package %s is already installed', $package));
@@ -113,10 +110,10 @@ class AddBundleCommand extends ContainerAwareCommand
 
     protected function getBundles(InputInterface $input, OutputInterface $output)
     {
-        $bundles = $input->getArgument('bundles');
-        $choices = $this->getUnusedBundles();
+        $bundleNames = $input->getArgument('bundles');
+        $unusedBundles = $this->getUnusedBundles();
 
-        if (empty($choices)) {
+        if (empty($unusedBundles)) {
             $output->writeln('No unused Perform bundles found.');
 
             return [];
@@ -132,26 +129,36 @@ class AddBundleCommand extends ContainerAwareCommand
                 '',
                 'Multiple choices are allowed, separate them with a comma, e.g. 0,2,3.',
             ]);
-            $question = new ChoiceQuestion('', array_keys($choices), null);
+            $question = new ChoiceQuestion('', array_keys($unusedBundles), null);
             $question->setMultiselect(true);
-            $bundles = $this->getHelper('question')->ask($input, $output, $question);
+            $bundleNames = $this->getHelper('question')->ask($input, $output, $question);
         }
 
-        $unknown = array_diff($bundles, array_keys($choices));
+        $unknown = array_diff($bundleNames, array_keys($unusedBundles));
         if (!empty($unknown)) {
             $msg = sprintf('Unknown %s "%s"', count($unknown) === 1 ? 'bundle' : 'bundles', implode($unknown, '", "'));
             throw new \Exception($msg);
         }
+
+        $bundles = array_intersect_key($unusedBundles, array_flip($bundleNames));
 
         return $bundles;
     }
 
     protected function getUnusedBundles()
     {
+        $possibleBundles = $this->getContainer()->get('perform_dev.resource_registry')->all();
         $loadedBundles = array_keys($this->getContainer()->get('kernel')->getBundles());
 
-        return array_filter(static::$bundles, function ($name) use ($loadedBundles) {
-            return !in_array($name, $loadedBundles);
-        }, ARRAY_FILTER_USE_KEY);
+        $unusedBundles = [];
+        foreach ($possibleBundles as $resource) {
+            if (in_array($resource->getBundleName(), $loadedBundles)) {
+                continue;
+            }
+
+            $unusedBundles[$resource->getBundleName()] = $resource;
+        }
+
+        return $unusedBundles;
     }
 }
