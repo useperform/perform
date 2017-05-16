@@ -29,20 +29,22 @@ class AddBundleCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $bundles = $this->getBundles($input, $output);
-        if (empty($bundles)) {
+        $parents = $this->getParentResources($input, $output);
+        if (empty($parents)) {
             return;
         }
 
-        $this->addComposerPackages($output, $bundles);
+        $this->addComposerPackages($output, $parents);
 
-        $resolved = $this->getContainer()->get('perform_dev.resource_registry')->resolveResources(array_keys($bundles));
+        $resolved = $this->getContainer()->get('perform_dev.resource_registry')
+                  ->resolveResources(array_keys($parents));
+
         $this->addBundleClasses($output, $resolved);
         $this->addRoutes($output, $resolved);
         $this->addConfigs($output, $resolved);
 
-        foreach ($bundles as $bundle) {
-            $output->writeln(sprintf('Added <info>%s</info>.', $bundle->getBundleName()));
+        foreach ($parents as $resource) {
+            $output->writeln(sprintf('Added <info>%s</info>.', $resource->getBundleName()));
         }
     }
 
@@ -58,11 +60,11 @@ class AddBundleCommand extends ContainerAwareCommand
         }
     }
 
-    protected function addRoutes(OutputInterface $output, array $bundles)
+    protected function addRoutes(OutputInterface $output, array $resources)
     {
         $r = new YamlModifier($this->getContainer()->get('kernel')->getRootDir().'/config/routing.yml');
         try {
-            foreach ($bundles as $resource) {
+            foreach ($resources as $resource) {
                 $routes = $resource->getRoutes();
                 if (!$routes) {
                     continue;
@@ -78,11 +80,11 @@ class AddBundleCommand extends ContainerAwareCommand
         }
     }
 
-    protected function addConfigs(OutputInterface $output, array $bundles)
+    protected function addConfigs(OutputInterface $output, array $resources)
     {
         $r = new YamlModifier($this->getContainer()->get('kernel')->getRootDir().'/config/config.yml');
         try {
-            foreach ($bundles as $resource) {
+            foreach ($resources as $resource) {
                 $config = $resource->getConfig();
                 if (!$config) {
                     continue;
@@ -101,16 +103,20 @@ class AddBundleCommand extends ContainerAwareCommand
         }
     }
 
-    protected function addComposerPackages(OutputInterface $output, array $bundles)
+    /**
+     * @param OutputInterface           $output
+     * @param ParentResourceInterface[] $resources
+     */
+    protected function addComposerPackages(OutputInterface $output, array $resources)
     {
         $proc = new Process('composer show --name-only');
-        $existingPackages = array_map(function ($bundle) {
-            return trim($bundle);
+        $existingPackages = array_map(function ($pkg) {
+            return trim($pkg);
         }, explode(PHP_EOL, $this->getHelper('process')->mustRun($output, $proc)->getOutput()));
 
         $packageList = '';
-        foreach ($bundles as $bundle) {
-            $package = $bundle->getComposerPackage();
+        foreach ($resources as $resource) {
+            $package = $resource->getComposerPackage();
             if (in_array($package, $existingPackages)) {
                 if ($output->isVeryVerbose()) {
                     $output->writeln(sprintf('Package %s is already installed', $package));
@@ -134,11 +140,11 @@ class AddBundleCommand extends ContainerAwareCommand
         $this->getHelper('process')->mustRun($output, $proc);
     }
 
-    protected function getBundles(InputInterface $input, OutputInterface $output)
+    protected function getParentResources(InputInterface $input, OutputInterface $output)
     {
-        $unusedBundles = $this->getUnusedBundles();
+        $unused = $this->getUnusedParentResources();
 
-        if (empty($unusedBundles)) {
+        if (empty($unused)) {
             $output->writeln('No unused Perform bundles found.');
 
             return [];
@@ -155,25 +161,24 @@ class AddBundleCommand extends ContainerAwareCommand
                 '',
                 'Multiple choices are allowed, separate them with a comma, e.g. 0,2,3.',
             ]);
-            $question = new ChoiceQuestion('', array_keys($unusedBundles), null);
+            $question = new ChoiceQuestion('', array_keys($unused), null);
             $question->setMultiselect(true);
             $bundleNames = $this->getHelper('question')->ask($input, $output, $question);
         }
 
-        $unknown = array_diff($bundleNames, array_keys($unusedBundles));
+        $unknown = array_diff($bundleNames, array_keys($unused));
         if (!empty($unknown)) {
             $msg = sprintf('Unknown %s "%s"', count($unknown) === 1 ? 'bundle' : 'bundles', implode($unknown, '", "'));
             throw new \Exception($msg);
         }
 
-        $bundles = array_intersect_key($unusedBundles, array_flip($bundleNames));
-
-        return $bundles;
+        return array_intersect_key($unused, array_flip($bundleNames));
     }
 
-    protected function getUnusedBundles()
+    protected function getUnusedParentResources()
     {
-        $possibleBundles = $this->getContainer()->get('perform_dev.resource_registry')->getParentResources();
+        $possibleBundles = $this->getContainer()->get('perform_dev.resource_registry')
+                         ->getParentResources();
         $loadedBundles = array_keys($this->getContainer()->get('kernel')->getBundles());
 
         $unusedBundles = [];
