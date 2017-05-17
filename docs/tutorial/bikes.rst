@@ -11,7 +11,7 @@ Run the ``perform-dev:create:entity`` command to generate a new doctrine entity:
 
 .. code-block:: bash
 
-   ./bin/console perform-dev:create:entity
+   ./bin/console perform-dev:create:entity AppBundle:Bike
 
 The command will prompt you for field names and their types.
 Declare two fields with the following database types:
@@ -20,6 +20,12 @@ Declare two fields with the following database types:
 * ``description`` - `text`
 
 When prompted, declare a manyToOne doctrine relationship to ``PerformMediaBundle:File``, which we'll use to show a picture of each bike.
+
+Now update the database schema to create a new table for the entity:
+
+.. code-block:: bash
+
+   ./bin/console doctrine:schema:update --force --dump-sql
 
 Create an admin
 ---------------
@@ -44,7 +50,7 @@ Add to ``app/config/routing.yml``:
 
 .. code-block:: yaml
 
-    type_test:
+    bike_admin:
         resource: "AppBundle:Bike"
         type: crud
         prefix: /admin/bikes

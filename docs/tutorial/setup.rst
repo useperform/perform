@@ -44,9 +44,9 @@ There are many options, but for the sake of this tutorial we will use PHP's buil
 Configure parameters
 --------------------
 
-Configure doctrine to connect to your database in ``app/parameters.yml``.
+Configure doctrine to connect to your database in ``app/config/parameters.yml``.
 
-Since we're using sqlite in this tutorial, we can ignore that and simply update ``app/config.yml``:
+Since we're using sqlite in this tutorial, we can ignore that and simply update ``app/config/config.yml``:
 
 .. code-block:: yaml
 
