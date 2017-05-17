@@ -34,7 +34,7 @@ class AddBundleCommand extends ContainerAwareCommand
             return;
         }
 
-        $this->addComposerPackages($output, $parents);
+        $this->addComposerPackages($input, $output, $parents);
 
         $resolved = $this->getContainer()->get('perform_dev.resource_registry')
                   ->resolveResources(array_keys($parents));
@@ -104,10 +104,11 @@ class AddBundleCommand extends ContainerAwareCommand
     }
 
     /**
+     * @param InputInterface           $input
      * @param OutputInterface           $output
      * @param ParentResourceInterface[] $resources
      */
-    protected function addComposerPackages(OutputInterface $output, array $resources)
+    protected function addComposerPackages(InputInterface $input, OutputInterface $output, array $resources)
     {
         $proc = new Process('composer show --name-only');
         $existingPackages = array_map(function ($pkg) {
@@ -115,7 +116,19 @@ class AddBundleCommand extends ContainerAwareCommand
         }, explode(PHP_EOL, $this->getHelper('process')->mustRun($output, $proc)->getOutput()));
 
         $packageList = '';
+        $optionalPackages = [];
         foreach ($resources as $resource) {
+            foreach ($resource->getOptionalComposerPackages() as $package => $message) {
+                if (in_array($package, $existingPackages)) {
+                    continue;
+                }
+
+                if (!isset($optionalPackages[$package])) {
+                    $optionalPackages[$package] = [];
+                }
+                $optionalPackages[$package][] = sprintf('<comment>(%s)</comment> %s', $resource->getBundleName(), $message);
+            }
+
             $package = $resource->getComposerPackage();
             if (in_array($package, $existingPackages)) {
                 if ($output->isVeryVerbose()) {
@@ -131,13 +144,73 @@ class AddBundleCommand extends ContainerAwareCommand
             $packageList .= ' '.$package;
         }
 
+        $extraPackages = $this->addOptionalComposerPackages($input, $output, $optionalPackages);
+
         if (trim($packageList) === '') {
+            if (!empty($extraPackages)) {
+                $proc = new Process('composer update');
+                $proc->setTty(true);
+                $this->getHelper('process')->mustRun($output, $proc);
+            }
+
             return;
         }
 
         $proc = new Process(sprintf('composer require %s dev-master', $packageList));
         $proc->setTty(true);
         $this->getHelper('process')->mustRun($output, $proc);
+    }
+
+    protected function addOptionalComposerPackages(InputInterface $input, OutputInterface $output, array $optionalPackages)
+    {
+        if (empty($optionalPackages)) {
+            return;
+        }
+
+        $messages = [
+            '',
+            'Use any suggested composer packages?',
+            '',
+        ];
+        foreach ($optionalPackages as $pkg => $reasons) {
+            $messages[] = sprintf('<info>%s</info>', $pkg);
+            foreach ($reasons as $reason) {
+                $messages[] = '    '.$reason;
+            }
+        }
+
+        $messages[] = '';
+        $messages[] = 'Multiple choices are allowed, separate them with a comma, e.g. 0,2,3.';
+        $messages[] = '';
+        $messages[] = '(Or leave blank to skip)';
+        $messages[] = '';
+
+        $question = new ChoiceQuestion($messages, array_keys($optionalPackages));
+        $question->setMultiselect(true);
+
+        //accept an empty string to make the choice question skippable
+        $defaultValidator = $question->getValidator();
+        $validator = function ($selected) use ($defaultValidator) {
+            if (trim($selected) === '') {
+                return [];
+            }
+
+            return $defaultValidator($selected);
+        };
+
+        $question->setValidator($validator);
+        $chosen = $this->getHelper('question')->ask($input, $output, $question);
+
+        if (empty($chosen)) {
+            return [];
+        }
+        $packageList = implode(' ', $chosen);
+
+        $proc = new Process(sprintf('composer require %s --no-update', $packageList));
+        $proc->setTty(true);
+        $this->getHelper('process')->mustRun($output, $proc);
+
+        return $chosen;
     }
 
     protected function getParentResources(InputInterface $input, OutputInterface $output)
