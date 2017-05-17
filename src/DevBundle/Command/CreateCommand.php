@@ -28,14 +28,15 @@ abstract class CreateCommand extends ContainerAwareCommand
         return $this->getContainer()->get($service);
     }
 
-    protected function createFile(InputInterface $input, OutputInterface $output, $file, $template, array $vars = [])
+    protected function dumpFile(InputInterface $input, OutputInterface $output, $file, $contents)
     {
         $creator = $this->get('perform_dev.file_creator');
         $msg = sprintf('Created <info>%s</info>', $file);
 
         try {
-            $creator->create($file, $template, $vars);
+            $creator->create($file, $contents);
             $output->writeln($msg);
+
             return true;
         } catch (FileException $e) {
             if ($input->getOption('skip-existing')) {
@@ -50,10 +51,18 @@ abstract class CreateCommand extends ContainerAwareCommand
                 }
             }
 
-            $creator->forceCreate($file, $template, $vars);
+            $creator->forceCreate($file, $contents);
             $output->writeln($msg);
+
             return true;
         }
+    }
+
+    protected function createFile(InputInterface $input, OutputInterface $output, $file, $template, array $vars = [])
+    {
+        $contents = $this->get('perform_dev.file_creator')->render($template, $vars);
+
+        return $this->dumpFile($input, $output, $file, $contents);
     }
 
     protected function createBundleClass(InputInterface $input, OutputInterface $output, $bundleName, $relativeClass, $template, array $vars = [])

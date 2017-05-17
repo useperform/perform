@@ -27,28 +27,20 @@ class FileCreatorTest extends \PHPUnit_Framework_TestCase
 
     public function testForceCreate()
     {
-        $this->twig->expects($this->once())
-            ->method('render')
-            ->with('PerformDevBundle:skeletons:template.twig')
-            ->will($this->returnValue('rendered'));
         $this->fs->expects($this->once())
             ->method('dumpFile')
-            ->with('/path/to/file.txt', 'rendered');
+            ->with('/path/to/file.txt', 'contents');
 
-        $this->creator->create('/path/to/file.txt', 'template.twig');
+        $this->creator->forceCreate('/path/to/file.txt', 'contents');
     }
 
     public function testCreate()
     {
-        $this->twig->expects($this->once())
-            ->method('render')
-            ->with('PerformDevBundle:skeletons:template.twig')
-            ->will($this->returnValue('rendered'));
         $this->fs->expects($this->once())
             ->method('dumpFile')
-            ->with('/path/to/file.txt', 'rendered');
+            ->with('/path/to/file.txt', 'contents');
 
-        $this->creator->create('/path/to/file.txt', 'template.twig');
+        $this->creator->create('/path/to/file.txt', 'contents');
     }
 
     public function testCreateThrowsExceptionWhenFileExists()
@@ -59,7 +51,17 @@ class FileCreatorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(true));
         $this->setExpectedException(FileException::class);
 
-        $this->creator->create('/path/to/file.txt', 'template.twig');
+        $this->creator->create('/path/to/file.txt', 'contents');
+    }
+
+    public function testRender()
+    {
+        $this->twig->expects($this->once())
+            ->method('render')
+            ->with('PerformDevBundle:skeletons:template.twig', ['foo' => 'bar'])
+            ->will($this->returnValue('rendered'));
+
+        $this->assertSame('rendered', $this->creator->render('template.twig', ['foo' => 'bar']));
     }
 
     public function resolveBundleProvider()

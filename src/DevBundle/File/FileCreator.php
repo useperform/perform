@@ -22,18 +22,23 @@ class FileCreator
         $this->twig = $twig;
     }
 
-    public function create($file, $template, array $vars = [])
+    public function create($file, $contents)
     {
         if ($this->fs->exists($file)) {
             throw new FileException($file.' exists.');
         }
 
-        return $this->forceCreate($file, $template, $vars);
+        return $this->forceCreate($file, $contents);
     }
 
-    public function forceCreate($file, $template, array $vars = [])
+    public function forceCreate($file, $contents)
     {
-        return $this->fs->dumpFile($file, $this->twig->render('PerformDevBundle:skeletons:'.$template, $vars));
+        return $this->fs->dumpFile($file, $contents);
+    }
+
+    public function render($template, array $vars = [])
+    {
+        return $this->twig->render('PerformDevBundle:skeletons:'.$template, $vars);
     }
 
     public function resolveBundleClass(BundleInterface $bundle, $relativeClass, array $vars = [])
