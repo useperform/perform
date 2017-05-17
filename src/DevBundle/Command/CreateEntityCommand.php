@@ -63,6 +63,9 @@ class CreateEntityCommand extends CreateCommand
             'fieldName' => 'id',
             'type' => 'guid',
             'id' => true,
+            'generator' => [
+                'strategy' => 'UUID',
+            ],
         ]);
 
         return $meta;
