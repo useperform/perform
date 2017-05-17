@@ -9,6 +9,7 @@ use Perform\BaseBundle\DependencyInjection\Compiler\ConfigureMenuPass;
 use Perform\BaseBundle\DependencyInjection\Compiler\ConfigureSettingsPass;
 use Perform\BaseBundle\DependencyInjection\Compiler\ExtendEntitiesPass;
 use Perform\BaseBundle\DependencyInjection\Compiler\ConfigureActionsPass;
+use Perform\BaseBundle\DependencyInjection\Compiler\ConfigureTypesPass;
 
 /**
  * PerformBaseBundle
@@ -24,6 +25,7 @@ class PerformBaseBundle extends Bundle
         $container->addCompilerPass(new ConfigureMenuPass());
         $container->addCompilerPass(new ConfigureSettingsPass());
         $container->addCompilerPass(new ConfigureActionsPass());
+        $container->addCompilerPass(new ConfigureTypesPass());
         $container->addCompilerPass(new ExtendEntitiesPass());
     }
 }

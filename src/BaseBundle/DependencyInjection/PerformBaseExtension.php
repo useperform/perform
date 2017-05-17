@@ -59,9 +59,6 @@ class PerformBaseExtension extends Extension
         $definition->addMethodCall('addType', ['duration', 'Perform\BaseBundle\Type\DurationType']);
         $definition->addMethodCall('addType', ['email', 'Perform\BaseBundle\Type\EmailType']);
         $definition->addMethodCall('addTypeService', ['collection', 'perform_base.type.collection']);
-
-        // pull from other bundles in a compiler pass
-        $definition->addMethodCall('addTypeService', ['media', 'perform_media.type.media']);
     }
 
     protected function configureMailer(array $config, ContainerBuilder $container)
