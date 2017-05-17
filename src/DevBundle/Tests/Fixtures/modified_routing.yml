@@ -1,0 +1,34 @@
+perform_base_login:
+    resource: "@PerformBaseBundle/Resources/config/routing_security.yml"
+    prefix: /admin
+
+perform_base_passwords:
+    resource: "@PerformBaseBundle/Resources/config/routing_password.yml"
+
+perform_base_index:
+    resource: "@PerformBaseBundle/Resources/config/routing_index.yml"
+    prefix: /admin
+
+perform_base_dashboard:
+    resource: "@PerformBaseBundle/Resources/config/routing_dashboard.yml"
+    prefix: /admin/dashboard
+
+perform_base_settings:
+    resource: "@PerformBaseBundle/Resources/config/routing_settings.yml"
+    prefix: /admin/settings
+
+perform_base_user:
+    resource: "@PerformBaseBundle/Resources/config/routing_user.yml"
+    prefix: /admin/users
+
+perform_base_action:
+    resource: "@PerformBaseBundle/Resources/config/routing_action.yml"
+    prefix: /admin/_action
+
+perform_media:
+    resource: "@PerformMediaBundle/Resources/config/routing.yml"
+    prefix: /admin/media
+
+perform_contact:
+    resource: "@PerformContactBundle/Resources/config/routing.yml"
+    prefix: /admin/contact

@@ -30,7 +30,7 @@ class KernelModifier
         $method = $ref->getMethod('registerBundles');
 
         //search for the end of the first array in registerBundles
-        //assume this method hasn't been modified too much from project-base, bail out otherwise
+        //assume this method hasn't been modified too much from project-foundation, bail out otherwise
         //this isn't lisp!
         $methodLines = array_slice($lines, $method->getStartLine(), $method->getEndLine());
         foreach ($methodLines as $number => $line) {
@@ -42,7 +42,7 @@ class KernelModifier
             break;
         }
         if (!isset($spliceLine)) {
-            throw new \Exception('Unable to add bundle to kernel.');
+            throw new \Exception(sprintf('Unable to add "%s" to the AppKernel. Please add it manually.', $bundleClass));
         }
 
         $bundleLine = sprintf("            new %s(),\n", $bundleClass);
