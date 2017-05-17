@@ -141,7 +141,7 @@ class AddBundleCommand extends ContainerAwareCommand
                 $output->writeln(sprintf('Adding %s to composer.json', $package));
             }
 
-            $packageList .= ' '.$package;
+            $packageList .= sprintf(' %s dev-master', $package);
         }
 
         $extraPackages = $this->addOptionalComposerPackages($input, $output, $optionalPackages);
@@ -156,7 +156,7 @@ class AddBundleCommand extends ContainerAwareCommand
             return;
         }
 
-        $proc = new Process(sprintf('composer require %s dev-master', $packageList));
+        $proc = new Process(sprintf('composer require %s', $packageList));
         $proc->setTty(true);
         $this->getHelper('process')->mustRun($output, $proc);
     }
