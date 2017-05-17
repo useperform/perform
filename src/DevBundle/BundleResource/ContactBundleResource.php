@@ -21,16 +21,6 @@ class ContactBundleResource implements ParentResourceInterface
         return PerformContactBundle::class;
     }
 
-    public function getRequiredBundles()
-    {
-        return [];
-    }
-
-    public function getComposerPackage()
-    {
-        return 'perform/contact-bundle';
-    }
-
     public function getRoutes()
     {
         return '
@@ -42,5 +32,25 @@ perform_contact:
 
     public function getConfig()
     {
+    }
+
+    public function getRequiredBundles()
+    {
+        return [];
+    }
+
+    public function getOptionalBundles()
+    {
+        return [];
+    }
+
+    public function getComposerPackage()
+    {
+        return 'perform/contact-bundle';
+    }
+
+    public function getOptionalComposerPackages()
+    {
+        return [];
     }
 }

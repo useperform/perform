@@ -21,30 +21,6 @@ class MediaBundleResource implements ParentResourceInterface
         return PerformMediaBundle::class;
     }
 
-    public function getRequiredBundles()
-    {
-        return [
-            'OneupFlysystemBundle',
-        ];
-    }
-
-    public function getOptionalResources()
-    {
-        return [];
-    }
-
-    public function getComposerPackage()
-    {
-        return 'perform/media-bundle';
-    }
-
-    public function getOptionalComposerPackages()
-    {
-        return [
-            'imagine/imagine' => 'To use the image plugin',
-        ];
-    }
-
     public function getRoutes()
     {
         return '
@@ -64,5 +40,29 @@ perform_media:
         - audio
         - other
 ';
+    }
+
+    public function getRequiredBundles()
+    {
+        return [
+            'OneupFlysystemBundle',
+        ];
+    }
+
+    public function getOptionalBundles()
+    {
+        return [];
+    }
+
+    public function getComposerPackage()
+    {
+        return 'perform/media-bundle';
+    }
+
+    public function getOptionalComposerPackages()
+    {
+        return [
+            'imagine/imagine' => 'To use the image plugin',
+        ];
     }
 }
