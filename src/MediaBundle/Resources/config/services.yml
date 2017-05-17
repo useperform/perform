@@ -70,3 +70,5 @@ services:
         class: Perform\MediaBundle\Type\MediaType
         arguments:
             - "@perform_media.plugin.registry"
+        tags:
+            - { name: perform_base.type, alias: media }
