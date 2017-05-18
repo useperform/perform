@@ -6,6 +6,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
+use Perform\DevBundle\File\YamlModifier;
+use Symfony\Component\Finder\Finder;
 
 /**
  * CreateAdminCommand.
@@ -23,6 +27,17 @@ class CreateAdminCommand extends CreateCommand
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
+    {
+        list($bundleName, $entityName) = $this->getEntity($input, $output);
+        $relativeClass = sprintf('Admin\\%sAdmin', $entityName);
+
+        $this->createBundleClass($input, $output, $bundleName, $relativeClass, 'Admin.php.twig');
+
+        $bundle = $this->getContainer()->get('kernel')->getBundle($bundleName);
+        $this->addService($output, $bundle, $entityName, $bundle->getNamespace().'\\'.$relativeClass);
+    }
+
+    protected function getEntity(InputInterface $input, OutputInterface $output)
     {
         $entity = $input->getArgument('entity');
         $em = $this->get('doctrine.orm.entity_manager');
@@ -65,8 +80,59 @@ class CreateAdminCommand extends CreateCommand
             throw new \Exception(sprintf('Unknown entity "%s"', $entity));
         }
 
-        $bundleName = $entities[$entity][0];
-        $relativeClass = sprintf('Admin\\%sAdmin', $entities[$entity][1]);
-        $this->createBundleClass($input, $output, $bundleName, $relativeClass, 'Admin.php.twig');
+        return $entities[$entity];
+    }
+
+    protected function addService(OutputInterface $output, BundleInterface $bundle, $entityName, $adminClass)
+    {
+        $basename = preg_replace('/Bundle$/', '', $bundle->getName());
+        $service = sprintf('%s.admin.%s', Container::underscore($basename), Container::underscore($entityName));
+        $entity = $bundle->getName().':'.$entityName;
+
+        $yaml = $this->buildServiceYaml($service, $adminClass, $entity);
+        $file = $this->getServiceFile($bundle);
+
+        if (!$file) {
+            $output->writeln([
+                '',
+                '<error>Warning</error> Unable to find a file to insert a service definition.',
+                '',
+                'Add the following to your services file:',
+                '',
+                $yaml,
+            ]);
+
+            return;
+        }
+
+        $c = new YamlModifier($file->getPathname());
+        //only check for the service, e.g. app.admin.item:
+        $checkPattern = sprintf('/ +%s:/m', $service);
+        $c->addConfig($yaml, $checkPattern);
+
+        $output->writeln(sprintf('Added service definition <info>%s</info> to <info>%s</info>', $service, $file));
+    }
+
+    protected function buildServiceYaml($service, $adminClass, $entity)
+    {
+        $tmpl = '
+    %s:
+        class: %s
+        tags:
+            - {name: perform_base.admin, entity: "%s"}
+';
+
+        return sprintf($tmpl, $service, $adminClass, $entity);
+    }
+
+    protected function getServiceFile(BundleInterface $bundle)
+    {
+        return Finder::create()
+            ->files()
+            ->in($bundle->getPath().'/Resources/config')
+            ->in($this->getContainer()->get('kernel')->getRootDir())
+            ->name('services.yml')
+            ->getIterator()
+            ->current();
     }
 }

@@ -19,6 +19,16 @@ class YamlModifier
         $this->fs = new Filesystem();
     }
 
+    /**
+     * Add yaml to the file.
+     * Yaml will not be added if it is already detected in the file.
+     *
+     * If a $checkPattern regex is supplied, search the file for this
+     * regex instead of the yaml.
+     *
+     * @param string $yaml
+     * @param string $checkPattern A regular expression
+     */
     public function addConfig($yaml, $checkPattern = null)
     {
         $contents = file_get_contents($this->configFile);
@@ -28,7 +38,7 @@ class YamlModifier
             return;
         }
 
-        if (strpos($contents, trim($yaml))) {
+        if (!$checkPattern && strpos($contents, trim($yaml))) {
             //already added
             return;
         }
