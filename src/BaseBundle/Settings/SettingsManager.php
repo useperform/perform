@@ -25,7 +25,8 @@ class SettingsManager
     {
         $setting = $this->repo->findOneBy(['key' => $key]);
         if (!$setting) {
-            throw new SettingNotFoundException(sprintf('Setting "%s" not found.', $key));
+            $msg = sprintf('Setting "%s" not found. You may need to run the console command "perform:install --only settings" to install settings definitions, or create a new definition for "%s".', $key, $key);
+            throw new SettingNotFoundException($msg);
         }
 
         return $setting;
