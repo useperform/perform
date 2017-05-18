@@ -8,27 +8,29 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\Table;
 
 /**
- * DebugTypesCommand.
+ * DebugAdminsCommand.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class DebugTypesCommand extends ContainerAwareCommand
+class DebugAdminsCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('perform:debug:types')
-            ->setDescription('Show available content types.')
+        $this->setName('perform:debug:admins')
+            ->setDescription('Show available content admins.')
             ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $types = $this->getContainer()->get('perform_base.type_registry')->getAll();
+        $registry = $this->getContainer()->get('perform_base.admin.registry');
+        $admins = $registry->getAdmins();
 
         $table = new Table($output);
-        $table->setHeaders(['Type', 'Class']);
-        foreach ($types as $name => $type) {
-            $table->addRow([$name, get_class($type)]);
+        $table->setHeaders(['Entity', 'Admin service', 'Admin class']);
+        foreach ($admins as $entity => $service) {
+            $admin = $registry->getAdmin($entity);
+            $table->addRow([$entity, $service, get_class($admin)]);
         }
 
         $table->render();
