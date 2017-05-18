@@ -6,3 +6,4 @@ Further Reading
 
    ./entity-collections
    ./working-with-dates
+   ./settings
