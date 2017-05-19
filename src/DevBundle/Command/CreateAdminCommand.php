@@ -31,7 +31,8 @@ class CreateAdminCommand extends CreateCommand
         list($bundleName, $entityName) = $this->getEntity($input, $output);
         $relativeClass = sprintf('Admin\\%sAdmin', $entityName);
 
-        $this->createBundleClass($input, $output, $bundleName, $relativeClass, 'Admin.php.twig');
+        $vars = $this->getTwigVars($input, $output, $bundleName, $entityName);
+        $this->createBundleClass($input, $output, $bundleName, $relativeClass, 'Admin.php.twig', $vars);
 
         $bundle = $this->getContainer()->get('kernel')->getBundle($bundleName);
         $this->addService($output, $bundle, $entityName, $bundle->getNamespace().'\\'.$relativeClass);
@@ -69,7 +70,7 @@ class CreateAdminCommand extends CreateCommand
         }
 
         if (!$entity) {
-            $question = new Question('Entity name: (e.g. AppBundle:Item) ', array_keys($choices));
+            $question = new Question('Entity name: (e.g. AppBundle:Item) ');
             $question->setAutocompleterValues(array_keys($choices));
             $entity = $this->getHelper('question')->ask($input, $output, $question);
         }
@@ -81,6 +82,18 @@ class CreateAdminCommand extends CreateCommand
         }
 
         return $entities[$entity];
+    }
+
+    protected function getTwigVars(InputInterface $input, OutputInterface $output, $bundleName, $entityName)
+    {
+        $basename = preg_replace('/Bundle$/', '', $bundleName);
+        $default = sprintf('%s_admin_%s_', Container::underscore($basename), Container::underscore($entityName));
+        $question = new Question(sprintf('Route prefix (%s): ', $default), $default);
+        $routePrefix = $this->getHelper('question')->ask($input, $output, $question);
+
+        return [
+            'routePrefix' => $routePrefix,
+        ];
     }
 
     protected function addService(OutputInterface $output, BundleInterface $bundle, $entityName, $adminClass)
