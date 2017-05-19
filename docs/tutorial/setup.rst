@@ -13,15 +13,22 @@ Create a new directory and then run ``perform init`` inside it:
 
 The cli will ask you some questions during setup:
 
-* Composer project info - the name and description of your application to go in composer.json.
-  We'll use the name ``tutorial/hipster-bikes``, but feel free to pick any name.
-* Incenteev parameters - Perform tries to be as lean as possible out of the box, so will remove ``incenteev/composer-parameter-handler`` if you don't require it.
-  Choosing 'no' means you'll have to manage ``app/parameters.yml`` by hand.
-  We'll choose ``no``.
-* Additional bundles - the other Perform bundles to include in this application.
-  Pick the ``PerformMediaBundle`` and ``PerformContactBundle``.
-* Creating a new bundle - we need to create a bundle for our application code.
-  Choose the ``AppBundle`` option, which simplifies things slightly.
+**Composer project info**: the name and description of your application to go in composer.json.
+We'll use the name ``tutorial/hipster-bikes``, but feel free to pick any name.
+
+**Incenteev parameters**: Perform tries to be as lean as possible out of the box, so will remove ``incenteev/composer-parameter-handler`` if you don't require it.
+Answering no means you'll have to manage ``app/parameters.yml`` by hand.
+
+**Additional bundles**: any additional Perform bundles to include in this application.
+Pick the ``PerformMediaBundle`` and ``PerformContactBundle`` from the options.
+
+**Optional composer packages**: the bundles we added can suggest optional composer packages for richer functionality.
+Pick ``imagine/imagine`` so we can use images in the media library.
+
+**Creating a new bundle**: we need to create a bundle for our application code.
+Choose the ``AppBundle`` option, which simplifies things slightly.
+
+.. image:: ./cli_questions.png
 
 .. note::
 
