@@ -53,7 +53,7 @@ Configure parameters
 
 Configure doctrine to connect to your database in ``app/config/parameters.yml``.
 
-Since we're using sqlite in this tutorial, we can ignore that and simply update ``app/config/config.yml``:
+Since we're using sqlite in this tutorial, we can ignore that and simply update doctrine configuration in ``app/config/config.yml``:
 
 .. code-block:: yaml
 

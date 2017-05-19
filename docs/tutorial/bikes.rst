@@ -36,11 +36,54 @@ Run the ``perform-dev:create:admin`` command to create an admin class for the Bi
 
    ./bin/console perform-dev:create:admin AppBundle:Bike
 
-The generator is smart enough to guess the types of the different fields based on the database schema, so you can simply hit ``<enter>`` for each field to accept the defaults.
+The command will ask for a route prefix, which is used to name the generated routes for this entity.
+We'll just accept the default, ``app_admin_bikes_``.
 
-The generator will also prompt for a route prefix, which you can either supply or accept the default (``app_admin_bikes_``).
+This will create ``src/AppBundle/Admin/BikeAdmin.php`` and add a service to ``app/config/services.yml``.
 
-As well as creating ``src/AppBundle/Admin/BikeAdmin.php``, the generator has also added a service to ``app/config/services.yml``.
+Define type config
+------------------
+
+Open up the newly generated ``BikeAdmin`` class, containing a few empty methods:
+
+.. code-block:: php
+
+   <?php
+
+    public function configureTypes(TypeConfig $config)
+    {
+    }
+
+    public function configureFilters(FilterConfig $config)
+    {
+    }
+
+    public function configureActions(ActionConfig $config)
+    {
+        parent::configureActions($config);
+    }
+
+For now, we'll only deal with the ``configureTypes`` method.
+Add the following code:
+
+.. code-block:: php
+
+   <?php
+
+    public function configureTypes(TypeConfig $config)
+    {
+        $config->add('model', [
+            'type' => 'string',
+        ])->add('description', [
+            'type' => 'text',
+        ]);
+    }
+
+This tells the admin to manage the ``model`` and ``description`` properties of ``Bike``.
+
+.. note::
+
+   For an in-depth look at what admin classes can do, see the :doc:`admins documentation <../core/admins>`.
 
 Create routes
 -------------
@@ -74,7 +117,7 @@ Open our new admin
 
 Visit the administration area again. You'll notice a new menu link.
 
-Following this link will reveal an empty list of our newly created bike entities.
+Following this link will reveal an empty list of bike entities.
 You can create, edit, delete, as well as view the existing bikes.
 The table listing can be sorted by different columns, and bikes can be deleted in batch.
 
