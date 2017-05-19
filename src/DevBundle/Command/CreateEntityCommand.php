@@ -91,6 +91,7 @@ class CreateEntityCommand extends CreateCommand
         $q = new Question('Field name (leave empty to finish): ');
         while ($fieldName = $helper->ask($input, $output, $q)) {
             $meta->mapField($this->newField($input, $output, $meta, $fieldName, $types));
+            $output->writeln('');
         }
     }
 
