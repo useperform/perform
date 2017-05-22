@@ -3,13 +3,13 @@ Setup
 
 We'll use the Perform cli to scaffold an application for us.
 
-Create a new directory and then run ``perform init`` inside it:
+Create a new directory and start a new project by running the ``perform new`` command:
 
 .. code-block:: bash
 
-   mkdir hipster-bikes
-   cd !$
-   perform init
+   perform new hipster-bikes
+
+This will create a the directory ``hipster-bikes`` and create a brand new Perform application inside.
 
 The cli will ask you some questions during setup:
 
@@ -18,6 +18,7 @@ We'll use the name ``tutorial/hipster-bikes``, but feel free to pick any name.
 
 **Incenteev parameters**: Perform tries to be as lean as possible out of the box, so will remove ``incenteev/composer-parameter-handler`` if you don't require it.
 Answering no means you'll have to manage ``app/parameters.yml`` by hand.
+We'll choose **no** for this tutorial.
 
 **Additional bundles**: any additional Perform bundles to include in this application.
 Pick the ``PerformMediaBundle`` and ``PerformContactBundle`` from the options.
@@ -32,7 +33,7 @@ Choose the ``AppBundle`` option, which simplifies things slightly.
 
 .. note::
 
-   ``perform init`` simply wraps ``composer create-project`` and commands from the PerformDevBundle in a single, easy to use command.
+   ``perform new`` simply wraps ``composer create-project`` and commands from the PerformDevBundle in a single, easy to use command.
 
 Configure a web server
 ----------------------
