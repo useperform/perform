@@ -11,6 +11,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Perform\DevBundle\File\KernelModifier;
 use Symfony\Component\Process\Process;
 use Perform\DevBundle\File\YamlModifier;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\ArrayInput;
 
 /**
  * AddBundleCommand.
@@ -24,6 +26,7 @@ class AddBundleCommand extends ContainerAwareCommand
         $this->setName('perform-dev:add-bundle')
             ->setDescription('Add and configure one or many perform bundles.')
             ->addArgument('bundles', InputArgument::IS_ARRAY, 'The bundles to add')
+            ->addOption('no-install', '', InputOption::VALUE_NONE, "Don't run perform:install after adding the bundles");
             ;
     }
 
@@ -42,6 +45,12 @@ class AddBundleCommand extends ContainerAwareCommand
         $this->addBundleClasses($output, $resolved);
         $this->addRoutes($output, $resolved);
         $this->addConfigs($output, $resolved);
+
+        if (!$input->getOption('no-install')) {
+            $this->install($output);
+        }
+
+        $this->runComposerScripts($output);
 
         foreach ($parents as $resource) {
             $output->writeln(sprintf('Added <info>%s</info>.', $resource->getBundleName()));
@@ -148,7 +157,7 @@ class AddBundleCommand extends ContainerAwareCommand
 
         if (trim($packageList) === '') {
             if (!empty($extraPackages)) {
-                $proc = new Process('composer update');
+                $proc = new Process('composer update --no-scripts');
                 $proc->setTty(true);
                 $this->getHelper('process')->mustRun($output, $proc);
             }
@@ -156,7 +165,7 @@ class AddBundleCommand extends ContainerAwareCommand
             return;
         }
 
-        $proc = new Process(sprintf('composer require %s', $packageList));
+        $proc = new Process(sprintf('composer require %s --no-scripts', $packageList));
         $proc->setTty(true);
         $this->getHelper('process')->mustRun($output, $proc);
     }
@@ -264,5 +273,20 @@ class AddBundleCommand extends ContainerAwareCommand
         }
 
         return $unusedBundles;
+    }
+
+    protected function install(OutputInterface $output)
+    {
+        $output->writeln(['Running perform:install...', '']);
+
+        $cmd = $this->getApplication()->find('perform:install');
+        $cmd->run(new ArrayInput([]), $output);
+    }
+
+    protected function runComposerScripts(OutputInterface $output)
+    {
+        $proc = new Process('composer run-script post-update-cmd');
+        $proc->setTty(true);
+        $this->getHelper('process')->mustRun($output, $proc);
     }
 }
