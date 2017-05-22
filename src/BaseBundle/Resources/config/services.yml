@@ -178,7 +178,7 @@ services:
     perform_base.bundle_searcher:
         class: Perform\BaseBundle\Util\BundleSearcher
         arguments:
-            - "@service_container"
+            - "@kernel"
 
     perform_base.reset_token_manager:
         class: Perform\BaseBundle\Security\ResetTokenManager

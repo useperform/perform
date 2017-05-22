@@ -2,104 +2,114 @@
 
 namespace Perform\BaseBundle\Util;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
- * BundleSearcher.
+ * Find classes and resources in bundles.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class BundleSearcher
 {
-    protected $container;
+    protected $kernel;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(KernelInterface $kernel)
     {
-        $this->container = $container;
+        $this->kernel = $kernel;
     }
 
     /**
-     * @param string $namespace The sub-namespace, e.g. 'Entity' or 'Perform\Type'
-     */
-    public function findClassesInNamespaceSegment($namespaceSegment)
-    {
-        return $this->findItemsInNamespaceSegment($namespaceSegment, function ($class) {
-            return $class;
-        });
-    }
-
-    /**
-     * @param string $namespace The sub-namespace, e.g. 'Entity' or 'Perform\Type'
-     * @param Closure $mapper
-     * @param array $bundleNames An array of bundle names to use. If empty, use all bundles.
-     */
-    public function findItemsInNamespaceSegment($namespaceSegment, \Closure $mapper, array $bundleNames = [])
-    {
-        $namespaceSegment = trim($namespaceSegment, '/\\');
-        $items = [];
-
-        foreach ($this->resolveBundles($bundleNames) as $bundleName => $bundleClass) {
-            $reflection = new \ReflectionClass($bundleClass);
-            $dirname = dirname($reflection->getFileName());
-            $namespace = $reflection->getNamespaceName().'\\'.$namespaceSegment.'\\';
-
-            if (!is_dir($dir = $dirname.'/'.str_replace('\\', '/', $namespaceSegment))) {
-                continue;
-            }
-            foreach (Finder::create()->files()->in($dir)->name('*.php') as $file) {
-                $class = $namespace.$file->getBasename('.php');
-                if (!class_exists($class)) {
-                    continue;
-                }
-
-                $item = $mapper($class, $file->getBasename('.php'), $bundleName, $bundleClass);
-                if ($item !== false) {
-                    $items[$class] = $item;
-                }
-            }
-        }
-
-        return $items;
-    }
-
-    /**
-     * @param string $path The path within Resources/, e.g. 'config/settings.yml'
+     * Get the named bundle instances.
      *
-     * @return \SplFileObject[]
+     * @param array $bundleNames
+     *
+     * @return BundleInterface[]
      */
-    public function findResourcesAtPath($path)
+    public function getBundles(array $bundleNames)
     {
-        $files = [];
-        $path = trim($path, '/');
-        $bundles = $this->container->getParameter('kernel.bundles');
-
-        foreach ($bundles as $bundleName => $bundleClass) {
-            $reflection = new \ReflectionClass($bundleClass);
-            $bundleDir = dirname($reflection->getFileName());
-
-            if (!is_dir($dir = $bundleDir.'/Resources/'.dirname($path))) {
-                continue;
-            }
-            foreach (Finder::create()->files()->in($dir)->name(basename($path)) as $file) {
-                $files[] = $file->getPathname();
-            }
-        }
-
-        return $files;
-    }
-
-    protected function resolveBundles(array $bundleNames)
-    {
-        $bundles = $this->container->getParameter('kernel.bundles');
+        $bundles = $this->kernel->getBundles();
         if (empty($bundleNames)) {
             return $bundles;
         }
+
         return array_filter(
             $bundles,
             function ($bundleName) use ($bundleNames) {
                 return in_array($bundleName, $bundleNames);
             },
             ARRAY_FILTER_USE_KEY);
+    }
+
+    /**
+     * Get an array of classes in a namespace segment. The keys and
+     * values will be the classname.
+     *
+     * If a mapper function is supplied, the result of the mapper
+     * function will be used as the value instead of the classname.
+     *
+     * If the mapper function returns false, skip that classname entirely from the array.
+     *
+     * @param string       $namespaceSegment The sub-namespace within a bundle, e.g. 'Entity' or 'Form\Type'
+     * @param Closure|null $mapper           An optional mapper function taking the classname, classBasename, and bundle instance
+     * @param array        $bundleNames      An array of bundle names to use. If empty, use all bundles
+     */
+    public function findClassesWithNamespaceSegment($namespaceSegment, \Closure $mapper = null, array $bundleNames = [])
+    {
+        $namespaceSegment = trim($namespaceSegment, '/\\');
+        $classes = [];
+
+        foreach ($this->getBundles($bundleNames) as $bundle) {
+            $dirname = $bundle->getPath();
+            $namespace = $bundle->getNamespace().'\\'.$namespaceSegment.'\\';
+
+            if (!is_dir($dir = $dirname.'/'.str_replace('\\', '/', $namespaceSegment))) {
+                continue;
+            }
+            foreach (Finder::create()->files()->in($dir)->name('*.php') as $file) {
+                $classBasename = $file->getBasename('.php');
+                $class = $namespace.$classBasename;
+                if (!class_exists($class)) {
+                    continue;
+                }
+
+                if (!$mapper) {
+                    $classes[$class] = $class;
+                    continue;
+                }
+
+                $result = $mapper($class, $classBasename, $bundle);
+                if ($result !== false) {
+                    $classes[$class] = $result;
+                }
+            }
+        }
+
+        return $classes;
+    }
+
+    /**
+     * @param string $path        The path within Resources/, e.g. 'config/settings.yml'
+     * @param array  $bundleNames An array of bundle names to use. If empty, use all bundles.
+     *
+     * @return Finder
+     */
+    public function findResourcesAtPath($path, array $bundleNames = [])
+    {
+        $bundles = $this->getBundles($bundleNames);
+        $path = trim($path, '/');
+
+        $finder = Finder::create()
+                ->files()
+                ->name(basename($path));
+
+        foreach ($bundles as $bundle) {
+            $dir = $bundle->getPath().'/Resources/'.dirname($path);
+            if (is_dir($dir)) {
+                $finder->in($dir);
+            }
+        }
+
+        return $finder;
     }
 }
