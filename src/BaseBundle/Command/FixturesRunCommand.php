@@ -8,7 +8,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Perform\BaseBundle\Util\BundleSearcher;
 use Perform\BaseBundle\DataFixtures\ORM\EntityDeclaringFixtureInterface;
 use Perform\BaseBundle\DataFixtures\ORM\Purger;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -55,6 +54,7 @@ class FixturesRunCommand extends ContainerAwareCommand
         $fixtures = $this->getFixtures($this->getInputBundles($input), $output);
         if (empty($fixtures)) {
             $output->writeln('No fixtures found.');
+
             return;
         }
         if ($input->isInteractive() && !$input->getOption('append')) {
@@ -96,7 +96,6 @@ class FixturesRunCommand extends ContainerAwareCommand
                         $usedExcludedEntities[0]));
                 }
 
-
                 return false;
             }
 
@@ -107,10 +106,8 @@ class FixturesRunCommand extends ContainerAwareCommand
             return $fixture;
         };
 
-        $searcher = new BundleSearcher($this->getContainer());
-        $fixtures = $searcher->findItemsInNamespaceSegment('DataFixtures\\ORM', $mapper, $bundleNames);
-
-        return $fixtures;
+        return $this->getContainer()->get('perform_base.bundle_searcher')
+            ->findClassesWithNamespaceSegment('DataFixtures\\ORM', $mapper, $bundleNames);
     }
 
     /**
@@ -152,10 +149,10 @@ class FixturesRunCommand extends ContainerAwareCommand
                         return true;
                     }
                 }
+
                 return false;
             });
-
-        } else if ($input->getOption('exclude-bundles')) {
+        } elseif ($input->getOption('exclude-bundles')) {
             $excluded = $this->normaliseBundleNames($input->getOption('exclude-bundles'));
 
             $bundles = array_filter($bundles, function ($bundle) use ($excluded) {
@@ -164,6 +161,7 @@ class FixturesRunCommand extends ContainerAwareCommand
                         return false;
                     }
                 }
+
                 return true;
             });
         }
@@ -175,7 +173,7 @@ class FixturesRunCommand extends ContainerAwareCommand
 
     protected function normaliseBundleNames(array $bundleNames)
     {
-        return array_map(function($name) {
+        return array_map(function ($name) {
             $name = strtolower($name);
             if (substr($name, -6) !== 'bundle') {
                 $name .= 'bundle';

@@ -6,7 +6,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Perform\BaseBundle\Util\BundleSearcher;
 use Symfony\Component\Console\Input\InputOption;
 
 class InstallCommand extends ContainerAwareCommand
@@ -37,8 +36,8 @@ class InstallCommand extends ContainerAwareCommand
 
     protected function getInstallers(InputInterface $input)
     {
-        $searcher = new BundleSearcher($this->getContainer());
-        $classes = $searcher->findClassesInNamespaceSegment('Installer');
+        $classes = $this->getContainer()->get('perform_base.bundle_searcher')
+                 ->findClassesWithNamespaceSegment('Installer');
         $installers = [];
 
         foreach ($classes as $class) {
@@ -51,7 +50,7 @@ class InstallCommand extends ContainerAwareCommand
 
         $only = $input->getOption('only');
         if (!empty($only)) {
-            $installers = array_filter($installers, function($installer) use ($only) {
+            $installers = array_filter($installers, function ($installer) use ($only) {
                 $class = get_class($installer);
                 $pieces = explode('\\', $class);
                 $end = strtolower(end($pieces));
@@ -60,6 +59,7 @@ class InstallCommand extends ContainerAwareCommand
                         return true;
                     }
                 }
+
                 return false;
             });
         }

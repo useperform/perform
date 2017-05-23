@@ -4,7 +4,6 @@ namespace Perform\BaseBundle\Installer;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Perform\BaseBundle\Util\BundleSearcher;
 use Symfony\Component\Process\Process;
 
 /**
@@ -16,7 +15,7 @@ class AssetsInstaller implements InstallerInterface
 {
     public function install(ContainerInterface $container, LoggerInterface $logger)
     {
-        $searcher = new BundleSearcher($container);
+        $searcher = $container->get('perform_base.bundle_searcher');
         foreach ($searcher->findResourcesAtPath('../install_assets.sh') as $file) {
             $logger->info('Running '.$file);
 
