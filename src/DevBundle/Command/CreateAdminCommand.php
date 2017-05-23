@@ -10,20 +10,22 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Perform\DevBundle\File\YamlModifier;
 use Symfony\Component\Finder\Finder;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Perform\DevBundle\File\FileCreator;
 
 /**
  * CreateAdminCommand.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class CreateAdminCommand extends CreateCommand
+class CreateAdminCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
         $this->setName('perform-dev:create:admin')
             ->setDescription('Create a new admin class for an entity.')
             ->addArgument('entity', InputArgument::OPTIONAL, 'The entity name');
-        parent::configure();
+        FileCreator::addInputOptions($this);
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
@@ -32,9 +34,11 @@ class CreateAdminCommand extends CreateCommand
         $relativeClass = sprintf('Admin\\%sAdmin', $entityName);
 
         $vars = $this->getTwigVars($input, $output, $bundleName, $entityName);
-        $this->createBundleClass($input, $output, $bundleName, $relativeClass, 'Admin.php.twig', $vars);
 
+        $creator = $this->get('perform_dev.file_creator');
         $bundle = $this->getContainer()->get('kernel')->getBundle($bundleName);
+        $creator->createBundleClass($bundle, $relativeClass, 'Admin.php.twig', $vars);
+
         $this->addService($output, $bundle, $entityName, $bundle->getNamespace().'\\'.$relativeClass);
     }
 
