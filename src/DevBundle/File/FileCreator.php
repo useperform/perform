@@ -9,6 +9,8 @@ use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * FileCreator.
@@ -104,5 +106,11 @@ class FileCreator
         $vars['namespace'] = $namespace;
 
         return [$file, $vars];
+    }
+
+    public static function addInputOptions(Command $command)
+    {
+        $command->addOption(static::OPTION_SKIP_EXISTING, 's', InputOption::VALUE_NONE, 'Don\'t prompt to overwrite files that already exist.')
+            ->addOption(static::OPTION_FORCE, 'f', InputOption::VALUE_NONE, 'Always overwrite existing files.');
     }
 }

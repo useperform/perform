@@ -5,7 +5,7 @@ namespace Perform\DevBundle\Command;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputOption;
+use Perform\DevBundle\File\FileCreator;
 
 /**
  * CreateCommand.
@@ -16,9 +16,7 @@ abstract class CreateCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this
-            ->addOption('skip-existing', 's', InputOption::VALUE_NONE, 'Don\'t prompt to overwrite files that already exist.')
-            ->addOption('force', 'f', InputOption::VALUE_NONE, 'Always overwrite existing files.');
+        FileCreator::addInputOptions($this);
     }
 
     protected function get($service)
