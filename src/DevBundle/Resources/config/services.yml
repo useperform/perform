@@ -7,3 +7,6 @@ services:
 
     perform_dev.resource_registry:
         class: Perform\DevBundle\BundleResource\BundleResourceRegistry
+
+    perform_dev.frontend_registry:
+        class: Perform\DevBundle\Frontend\FrontendRegistry
