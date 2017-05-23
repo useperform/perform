@@ -51,19 +51,19 @@ class CreateAdminCommand extends ContainerAwareCommand
             return $meta->getName();
         }, $em->getMetadataFactory()->getAllMetadata());
 
-        $mapper = function ($class, $classBasename, $bundleName, $bundleClass) use ($mappings) {
+        $mapper = function ($class, $classBasename, $bundle) use ($mappings) {
             if (!in_array($class, $mappings)) {
                 // not a doctrine entity
                 return false;
             }
 
             return [
-                $bundleName, $classBasename,
+                $bundle->getName(), $classBasename,
             ];
         };
         //mapper function results indexed by class
         $entities = $this->get('perform_base.bundle_searcher')
-                  ->findItemsInNamespaceSegment('Entity', $mapper);
+                  ->findClassesWithNamespaceSegment('Entity', $mapper);
 
         //add index by alias, and create autocomplete choices with aliases only
         $choices = [];
