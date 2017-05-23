@@ -111,6 +111,6 @@ class FileCreator
     public static function addInputOptions(Command $command)
     {
         $command->addOption(static::OPTION_SKIP_EXISTING, 's', InputOption::VALUE_NONE, 'Don\'t prompt to overwrite files that already exist.')
-            ->addOption(static::OPTION_FORCE, 'f', InputOption::VALUE_NONE, 'Always overwrite existing files.');
+            ->addOption(static::OPTION_FORCE, '', InputOption::VALUE_NONE, 'Always overwrite existing files.');
     }
 }
