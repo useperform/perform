@@ -12,3 +12,8 @@ services:
 
     perform_dev.frontend_registry:
         class: Perform\DevBundle\Frontend\FrontendRegistry
+
+    perform_dev.frontend.twbs3:
+        class: Perform\DevBundle\Frontend\Bootstrap3Frontend
+        tags:
+            - {name: perform_dev.frontend}
