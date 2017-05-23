@@ -4,6 +4,8 @@ services:
         arguments:
             - "@filesystem"
             - "@twig"
+        tags:
+            - {name: kernel.event_listener, method: onConsoleCommand, event: console.command}
 
     perform_dev.resource_registry:
         class: Perform\DevBundle\BundleResource\BundleResourceRegistry
