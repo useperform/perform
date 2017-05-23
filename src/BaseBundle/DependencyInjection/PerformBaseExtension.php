@@ -11,7 +11,6 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Config\Resource\DirectoryResource;
 use Doctrine\Common\Persistence\Mapping\MappingException;
-use Perform\BaseBundle\Util\BundleSearcher;
 
 /**
  * PerformBaseExtension.
@@ -87,26 +86,10 @@ class PerformBaseExtension extends Extension
 
     protected function findExtendedEntities(ContainerBuilder $container)
     {
-        $mapper = function($class, $classBasename, $bundleName, $bundleClass) use ($container) {
-            $refl = new \ReflectionClass($class);
-            $parent = $refl->getParentClass() ? $refl->getParentClass()->getName() : false;
-            //skip if parent is abstract
-
-            $file = $refl->getFileName();
-            $container->addResource(new FileResource($file));
-            $container->addResource(new DirectoryResource(dirname($file)));
-
-            return [
-                $bundleName.':'.$classBasename,
-                $parent
-            ];
-        };
-        $searcher = new BundleSearcher($container);
-        $entities = $searcher->findItemsInNamespaceSegment('Entity', $mapper);
-
         $extendedEntities = [];
         $entityAliases = [];
         $extendedAliases = [];
+        $entities = $this->findEntities($container);
         foreach ($entities as $class => $item) {
             $alias = $item[0];
             $entityAliases[$alias] = $class;
@@ -125,6 +108,40 @@ class PerformBaseExtension extends Extension
         $container->setParameter('perform_base.extended_entities', $extendedEntities);
         $container->setParameter('perform_base.entity_aliases', $entityAliases);
         $container->setParameter('perform_base.extended_entity_aliases', $extendedAliases);
+    }
+
+    protected function findEntities(ContainerBuilder $container)
+    {
+        // can't use BundleSearcher here because kernel service isn't available
+        $bundles = $container->getParameter('kernel.bundles');
+        $entities = [];
+
+        foreach ($bundles as $bundleClass) {
+            $reflection = new \ReflectionClass($bundleClass);
+            $bundleName = basename($reflection->getFileName(), '.php');
+            $dir = dirname($reflection->getFileName()).'/Entity';
+            if (!is_dir($dir)) {
+                continue;
+            }
+
+            $finder = Finder::create()->files()->name('*.php')->in($dir);
+            foreach ($finder as $file) {
+                $entityClass = str_replace('/', '\\', $reflection->getNamespaceName().'\\Entity\\'.basename($file->getBasename('.php')));
+                $refl = new \ReflectionClass($entityClass);
+                $parent = $refl->getParentClass() ? $refl->getParentClass()->getName() : false;
+
+                $filename = $refl->getFileName();
+                $container->addResource(new FileResource($filename));
+                $container->addResource(new DirectoryResource($dir));
+
+                $entities[$entityClass] = [
+                    $bundleName.':'.$file->getBasename('.php'),
+                    $parent,
+                ];
+            }
+        }
+
+        return $entities;
     }
 
     protected function createSimpleMenus(ContainerBuilder $container, array $config)
