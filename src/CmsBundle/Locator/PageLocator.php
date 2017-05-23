@@ -34,7 +34,7 @@ class PageLocator
      */
     public function getPageNames()
     {
-        $controllers = $this->searcher->findClassesInNamespaceSegment('Controller');
+        $controllers = $this->searcher->findClassesWithNamespaceSegment('Controller');
         $pages = [];
 
         foreach ($controllers as $class) {
