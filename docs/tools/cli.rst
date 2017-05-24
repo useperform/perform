@@ -30,4 +30,4 @@ You can get detailed help for a single command by using either the ``help`` subc
 Creating a new application
 --------------------------
 
-Run ``perform init`` in an empty directory to create a new application.
+Run ``perform new <directory>`` to create a new application in the given directory.

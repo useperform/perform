@@ -6,3 +6,4 @@ Getting Started
 
    ./requirements
    ./install
+   ./usage

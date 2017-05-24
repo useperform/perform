@@ -67,20 +67,3 @@ For example, if using bash, you could add the following to your ``.bashrc``:
    PATH+=:~/.composer/vendor/bin
 
 Then run ``perform`` to check the cli is installed.
-
-Create a new project
---------------------
-
-Create a new directory, and inside it run ``perform init``.
-
-The cli tool will ask various questions about your new project,
-then scaffold an entire Symfony application pre-configured with
-Perform, ready to go.
-
-Adding to an existing Symfony project
--------------------------------------
-
-Add the required bundles to ``composer.json``, run ``composer update``
-then add the bundles to your project's ``AppKernel``.
-
-You may also want to add some of the bundles routing files.
