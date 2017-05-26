@@ -57,6 +57,7 @@ class PerformBaseExtension extends Extension
         $definition->addMethodCall('addType', ['hidden', 'Perform\BaseBundle\Type\HiddenType']);
         $definition->addMethodCall('addType', ['duration', 'Perform\BaseBundle\Type\DurationType']);
         $definition->addMethodCall('addType', ['email', 'Perform\BaseBundle\Type\EmailType']);
+        $definition->addMethodCall('addTypeService', ['entity', 'perform_base.type.entity']);
         $definition->addMethodCall('addTypeService', ['collection', 'perform_base.type.collection']);
     }
 

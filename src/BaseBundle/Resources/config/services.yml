@@ -168,6 +168,11 @@ services:
         tags:
             - { name: perform_base.settings_panel, alias: account }
 
+    perform_base.type.entity:
+        class: Perform\BaseBundle\Type\EntityType
+        arguments:
+            - "@doctrine.orm.entity_manager"
+
     perform_base.type.collection:
         class: Perform\BaseBundle\Type\CollectionType
         arguments:
