@@ -3,6 +3,7 @@
 namespace Perform\BaseBundle\Type;
 
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * TypeInterface
@@ -23,6 +24,16 @@ interface TypeInterface
      * @return array The default config array passed to TypeConfig#add().
      */
     public function getDefaultConfig();
+
+
+    /**
+     * Define the options this type can accept.
+     *
+     * The option 'label' will already be defined.
+     *
+     * @param OptionsResolver $resolver
+     */
+    public function configureOptions(OptionsResolver $resolver);
 
     /**
      * @return string The name of template to render this field type.
