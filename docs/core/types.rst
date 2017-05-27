@@ -78,6 +78,8 @@ Use the ``contexts`` option to restrict a type to certain contexts:
         ]);
     }
 
+.. _type_sorting:
+
 Sorting
 -------
 
