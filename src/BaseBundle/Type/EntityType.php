@@ -45,6 +45,10 @@ class EntityType extends AbstractType
         $relatedEntity = $this->accessor->getValue($entity, $field);
         $this->ensureEntity($field, $relatedEntity);
 
+        if (!$relatedEntity) {
+            return '';
+        }
+
         return $this->accessor->getValue($relatedEntity, $options['display_field']);
     }
 
