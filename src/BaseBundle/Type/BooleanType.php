@@ -4,6 +4,7 @@ namespace Perform\BaseBundle\Type;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * BooleanType.
@@ -14,14 +15,14 @@ class BooleanType extends AbstractType
 {
     public function listContext($entity, $field, array $options = [])
     {
-        $labels = $this->getLabels($options);
+        $labels = $options['valueLabels'];
 
         return $this->accessor->getValue($entity, $field) ? $labels[0] : $labels[1];
     }
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
-        $labels = $this->getLabels($options);
+        $labels = $options['valueLabels'];
         $builder->add($field, ChoiceType::class, [
             'label' => $options['label'],
             'choices' => [
@@ -32,22 +33,11 @@ class BooleanType extends AbstractType
         ]);
     }
 
-    protected function getLabels(array $options)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $labels = $options['valueLabels'];
-        if (count($labels) !== 2) {
-            throw new \InvalidArgumentException(sprintf('%s expects the "valueLabels" option to be an array with 2 values.', __CLASS__));
-        }
-
-        return $labels;
-    }
-
-    public function getDefaultConfig()
-    {
-        return [
-            'options' => [
-                'valueLabels' => ['Yes', 'No'],
-            ],
-        ];
+        $resolver->setDefaults([
+            'valueLabels' => ['Yes', 'No'],
+        ]);
+        $resolver->setAllowedTypes('valueLabels', 'array');
     }
 }
