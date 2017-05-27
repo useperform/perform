@@ -1,14 +1,16 @@
 Perform Cli
 ===========
 
-The Perform Cli is a collection of helpers to speed up development.
+The Perform Cli is a commandline tool to speed up developing Perform applications.
 
 It can:
 
 * Create new applications
-* Create new application components, like bundles, admins, and views
+* Manage the vagrant box
+* Check licenses
+* Configure ssh keys
 
-This tool is optional, but can greatly increase your productivity when used effectively.
+This tool is optional, but can greatly increase your productivity.
 
 Discovering commands
 --------------------
