@@ -6,6 +6,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Perform\BaseBundle\Exception\InvalidTypeException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType as EntityFormType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * EntityType.
@@ -31,13 +32,12 @@ class EntityType extends AbstractType
         ]);
     }
 
-    public function getDefaultConfig()
+    public function configureOptions(OptionsResolver $resolver)
     {
-        return [
-            'options' => [
-                'display_field' => 'id',
-            ],
-        ];
+        $resolver->setDefault('display_field', 'id');
+        $resolver->setAllowedTypes('display_field', 'string');
+        $resolver->setRequired('class');
+        $resolver->setAllowedTypes('class', 'string');
     }
 
     public function listContext($entity, $field, array $options = [])
