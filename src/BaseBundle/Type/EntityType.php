@@ -40,6 +40,13 @@ class EntityType extends AbstractType
         $resolver->setAllowedTypes('class', 'string');
     }
 
+    public function getDefaultConfig()
+    {
+        return [
+            'sort' => false,
+        ];
+    }
+
     public function listContext($entity, $field, array $options = [])
     {
         $relatedEntity = $this->accessor->getValue($entity, $field);
