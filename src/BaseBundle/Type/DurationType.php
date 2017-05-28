@@ -5,6 +5,7 @@ namespace Perform\BaseBundle\Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Perform\BaseBundle\Form\Type\DurationType as FormType;
 use Perform\BaseBundle\Util\DurationUtil;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * DurationType.
@@ -42,6 +43,13 @@ class DurationType extends AbstractType
     public function getTemplate()
     {
         return 'PerformBaseBundle:types:duration.html.twig';
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setDefaults(['format' => 0])
+            ->setAllowedTypes('format', 'integer');
     }
 
     public function getDefaultConfig()
