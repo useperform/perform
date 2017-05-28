@@ -7,6 +7,7 @@ use Symfony\Component\DependencyInjection\Container;
 use Perform\BaseBundle\Type\TypeInterface;
 use Perform\BaseBundle\Type\StringType;
 use Perform\BaseBundle\Exception\TypeNotFoundException;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * TypeRegistryTest.
@@ -64,5 +65,21 @@ class TypeRegistryTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($type, $types['service']);
         $this->assertInstanceOf(StringType::class, $types['class']);
         $this->assertSame(2, count($types));
+    }
+
+    public function testGetOptionsResolver()
+    {
+        $type = $this->getMock(TypeInterface::class);
+        $this->container->set('type_service', $type);
+        $this->registry->addTypeService('test', 'type_service');
+
+        $type->expects($this->once())
+            ->method('configureOptions');
+
+        $resolver = $this->registry->getOptionsResolver('test');
+        $this->assertInstanceOf(OptionsResolver::class, $resolver);
+
+        //ensure the resolver is reused
+        $this->assertSame($resolver, $this->registry->getOptionsResolver('test'));
     }
 }

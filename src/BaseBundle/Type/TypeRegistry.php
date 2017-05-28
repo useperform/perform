@@ -4,6 +4,7 @@ namespace Perform\BaseBundle\Type;
 
 use Perform\BaseBundle\Exception\TypeNotFoundException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * TypeRegistry.
@@ -16,6 +17,7 @@ class TypeRegistry
     protected $classes = [];
     protected $instances = [];
     protected $services = [];
+    protected $resolvers = [];
 
     public function __construct(ContainerInterface $container)
     {
@@ -49,6 +51,25 @@ class TypeRegistry
         }
 
         return $this->instances[$name];
+    }
+
+    /**
+     * Get a configured OptionsResolver for a given type.
+     *
+     * @return OptionsResolver
+     */
+    public function getOptionsResolver($name)
+    {
+        if (!isset($this->resolvers[$name])) {
+            $resolver = new OptionsResolver();
+            $resolver->setRequired('label');
+            $resolver->setAllowedTypes('label', 'string');
+
+            $this->getType($name)->configureOptions($resolver);
+            $this->resolvers[$name] = $resolver;
+        }
+
+        return $this->resolvers[$name];
     }
 
     public function getAll()
