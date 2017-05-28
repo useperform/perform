@@ -4,7 +4,8 @@ namespace Perform\BaseBundle\Type;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Perform\BaseBundle\Util\StringUtil;
-use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
+use Symfony\Component\OptionsResolver\Exception\ExceptionInterface;
+use Perform\BaseBundle\Exception\InvalidTypeException;
 
 /**
  * TypeConfig.
@@ -106,7 +107,7 @@ class TypeConfig
         // use the default for the type if there is no existing config
         if (!isset($this->fields[$name])) {
             if (!isset($config['type'])) {
-                throw new MissingOptionsException('TypeConfig#add() requires "type" to be set.');
+                throw new InvalidTypeException('TypeConfig#add() requires "type" to be set.');
             }
 
             $this->fields[$name] = $this->registry->getType($config['type'])->getDefaultConfig();
@@ -124,7 +125,11 @@ class TypeConfig
         //merge with the existing config
         $config = array_replace_recursive($existingConfig, $config);
 
-        $this->fields[$name] = $this->resolver->resolve($config);
+        //resolve the top level options
+        $resolved = $this->resolver->resolve($config);
+
+        //resolve the options for each context using the resolver from the type
+        $this->fields[$name] = $this->resolveContextOptions($name, $resolved);
 
         return $this;
     }
@@ -144,6 +149,21 @@ class TypeConfig
                           $config['options'];
         }
         unset($config['options']);
+    }
+
+    protected function resolveContextOptions($name, array $config)
+    {
+        $resolver = $this->registry->getOptionsResolver($config['type']);
+        foreach (static::$optionKeys as $key) {
+            try {
+                $config[$key] = $resolver->resolve($config[$key]);
+            } catch (ExceptionInterface $e) {
+                $msg = sprintf('"%s" for the field "%s" of type "%s" are invalid: %s', $key, $name, $config['type'], $e->getMessage());
+                throw new InvalidTypeException($msg, 1, $e);
+            }
+        }
+
+        return $config;
     }
 
     /**
