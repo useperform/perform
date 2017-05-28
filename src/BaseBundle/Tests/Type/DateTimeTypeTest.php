@@ -42,7 +42,7 @@ class DateTimeTypeTest extends \PHPUnit_Framework_TestCase
         ]);
         $options = $this->config->getTypes(TypeConfig::CONTEXT_VIEW)['date']['viewOptions'];
 
-        $expected = $obj->date->format('h:ia d/m/Y');
+        $expected = $obj->date->format('g:ia d/m/Y');
         $this->assertSame($expected, $this->registry->getType('datetime')->viewContext($obj, 'date', $options));
     }
 }
