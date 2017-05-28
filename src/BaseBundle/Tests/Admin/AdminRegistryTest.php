@@ -27,20 +27,9 @@ class AdminRegistryTest extends \PHPUnit_Framework_TestCase
         $this->actionRegistry = $this->getMockBuilder(ActionRegistry::class)
                       ->disableOriginalConstructor()
                       ->getMock();
-        $this->registry = new AdminRegistry($this->container, $this->stubTypeRegistry(), $this->actionRegistry);
-    }
-
-    protected function stubTypeRegistry()
-    {
-
-        $typeRegistry = $this->getMockBuilder(TypeRegistry::class)
-                      ->disableOriginalConstructor()
-                      ->getMock();
-        $typeRegistry->expects($this->any())
-            ->method('getType')
-            ->will($this->returnValue(new StringType()));
-
-        return $typeRegistry;
+        $this->typeRegistry = new TypeRegistry($this->container);
+        $this->typeRegistry->addType('string', new StringType());
+        $this->registry = new AdminRegistry($this->container, $this->typeRegistry, $this->actionRegistry);
     }
 
     public function testAddAndGetAdmin()
@@ -133,7 +122,7 @@ class AdminRegistryTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         ];
-        $registry = new AdminRegistry($this->container, $this->stubTypeRegistry(), $this->actionRegistry, $override);
+        $registry = new AdminRegistry($this->container, $this->typeRegistry, $this->actionRegistry, $override);
 
         $admin = $this->getMock('Perform\BaseBundle\Admin\AdminInterface');
         $registry->addAdmin('PerformBaseBundle:User', 'Perform\BaseBundle\Entity\User', 'admin.service');
@@ -156,7 +145,7 @@ class AdminRegistryTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         ];
-        $registry = new AdminRegistry($this->container, $this->stubTypeRegistry(), $this->actionRegistry, $override);
+        $registry = new AdminRegistry($this->container, $this->typeRegistry, $this->actionRegistry, $override);
 
         $admin = $this->getMock('Perform\BaseBundle\Admin\AdminInterface');
         $registry->addAdmin('PerformBaseBundle:User', 'Perform\BaseBundle\Entity\User', 'admin.service');

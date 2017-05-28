@@ -33,7 +33,7 @@ Available options
 +-------------+-------+-----------+
 
 Note that sorting will not work out of the box.
-You'll need to either disable it or define a :ref:`custom sort function <type_sorting>`.
+You'll need to define a :ref:`custom sort function <type_sorting>` if you want to sort by this field.
 
 Example
 -------
