@@ -12,10 +12,15 @@ use Perform\BaseBundle\Form\Type\DatePickerType;
  **/
 class DateType extends DateTimeType
 {
-    protected $defaultOptions = [
-        'format' => 'd/m/Y',
-        'human' => false,
-    ];
+    public function getDefaultConfig()
+    {
+        return [
+            'options' => [
+                'format' => 'd/m/Y',
+                'human' => false,
+            ],
+        ];
+    }
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
