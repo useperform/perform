@@ -125,17 +125,17 @@ class DocGenerator
                 // defaults from the resolver
 
                 if (isset($defaultConfig[$key.'Options'][$option])) {
-                    $defaults[$option][$key] = var_export($defaultConfig[$key.'Options'][$option], true);
+                    $defaults[$option][$key] = $this->formatVar($defaultConfig[$key.'Options'][$option]);
                     continue;
                 }
 
                 if (isset($defaultConfig['options'][$option])) {
-                    $defaults[$option][$key] = var_export($defaultConfig['options'][$option], true);
+                    $defaults[$option][$key] = $this->formatVar($defaultConfig['options'][$option]);
                     continue;
                 }
 
                 if (isset($resolverDefaults[$option])) {
-                    $defaults[$option][$key] = var_export($resolverDefaults[$option], true);
+                    $defaults[$option][$key] = $this->formatVar($resolverDefaults[$option]);
                     continue;
                 }
 
@@ -158,5 +158,32 @@ class DocGenerator
         $prop->setAccessible(true);
 
         return $prop->getValue($resolver);
+    }
+
+    protected function formatVar($value)
+    {
+        switch (gettype($value)) {
+        case 'string':
+            return "'".$value."'";
+        case 'integer':
+        case 'double':
+            return $value;
+        case 'boolean':
+            return $value ? 'true' : 'false';
+        case 'array':
+            $pieces = [];
+            foreach ($value as $key => $value) {
+                $pieces[] = is_int($key) ?
+                          $this->formatVar($value) :
+                          $this->formatVar($key).' => '.$this->formatVar($value);
+            }
+            return '['.implode(', ', $pieces).']';
+        case 'NULL':
+            return null;
+        case 'object':
+            return '(object)';
+        default:
+            return '(resource)';
+        }
     }
 }
