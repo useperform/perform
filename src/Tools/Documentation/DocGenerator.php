@@ -48,7 +48,7 @@ class DocGenerator
         $pieces = explode('\\', $ref->getNamespaceName());
         $bundleName = $pieces[0].$pieces[1];
 
-        $rst = $this->twig->render(__DIR__.'/type_reference.rst.twig', [
+        $rst = $this->twig->render('type_reference.rst.twig', [
             'name' => $name,
             'summary' => $doc->getSummary(),
             'bundleName' => $bundleName,

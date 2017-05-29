@@ -19,7 +19,7 @@ Options
 ~
 {%- endfor %}
 
-{{option.description}}
+{{option.description|raw}}
 
 This option is {{option.required ? '*required*' : '*optional*'}}.
 
