@@ -1,0 +1,47 @@
+{{name|capitalize}}
+{% for i in range(1, name|length) %}
+=
+{%- endfor %}
+
+
+{{summary|raw}}
+
+{{description|raw}}
+
+Included in the **{{bundleName}}**.
+
+Options
+-------
+{% for optionName, option in options %}
+
+{{optionName}}
+{% for i in range(1, optionName|length) %}
+~
+{%- endfor %}
+
+{{option.description|raw}}
+
+This option is {{option.required ? '*required*' : '*optional*'}}.
+
+{% if option.allowed_types | length > 0 %}
+**Allowed types**: ``{{ option.allowed_types | join(', ') }}``
+{% endif %}
+
+**Defaults**:
+
+{% for key in ['list', 'view', 'create', 'edit'] %}
+* {{key|capitalize}} context: {% if option.defaults[key] is not null %}``{{option.defaults[key]|raw}}``{% else %}*No default*{% endif %}
+
+{% endfor %}
+
+{% endfor %}
+
+{% if example %}
+Example
+-------
+
+.. code-block:: php
+
+    <?php
+{{example|raw}}
+{% endif %}

@@ -6,7 +6,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Perform\BaseBundle\Form\Type\DatePickerType;
 
 /**
- * DateType.
+ * Use the ``date`` type for ``date`` doctrine fields.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/

@@ -8,12 +8,16 @@ use Perform\BaseBundle\Form\Type\DatePickerType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * DateTimeType
+ * Use the ``datetime`` type for ``datetime`` doctrine fields.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class DateTimeType extends AbstractType
 {
+    /**
+     * @doc human Show the data as a human-friendly string, e.g. 10 minutes ago.
+     * @doc format How to format the date, using PHP date() syntax.
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setRequired(['human', 'format']);
