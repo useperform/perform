@@ -11,7 +11,21 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Perform\MediaBundle\Exception\PluginNotFoundException;
 
 /**
- * MediaType.
+ * Use the ``media`` type to link to a file in the media library.
+ *
+ * @example
+ * $config->add('image', [
+ *     'type' => 'media',
+ *     'options' => [
+ *         'types' => 'image',
+ *         // same as
+ *         // 'types' => ['image'],
+ *     ],
+ *     'contexts' => [
+ *         TypeConfig::CONTEXT_LIST,
+ *         TypeConfig::CONTEXT_EDIT,
+ *     ],
+ * ])
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
@@ -72,6 +86,15 @@ class MediaType extends AbstractType
         ];
     }
 
+    /**
+     * @doc types The type of media to choose from.
+     * Each entry should refer to the name of a plugin.
+     *
+     * You may use a bare string instead of an array to use only one
+     * plugin.
+     *
+     * If no types are supplied, all media will be available.
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefault('types', []);
