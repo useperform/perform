@@ -77,6 +77,9 @@ class DocGenerator
             $options[$key]['defaults'] = $defaults[$key];
             $options[$key]['allowed_types'] = isset($allowedTypes[$key]) ? $allowedTypes[$key] : [];
         }
+        //tweak label slightly, since it will always have a value from TypeConfig
+        $options['label']['required'] = false;
+        $options['label']['description'] = 'The label to use for form labels and table headings. If no label is provided, a sensible label will be created automatically.';
 
         return $options;
     }
