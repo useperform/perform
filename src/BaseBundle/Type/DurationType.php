@@ -8,7 +8,17 @@ use Perform\BaseBundle\Util\DurationUtil;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * DurationType.
+ * Use the ``duration`` type to show periods of time.
+ *
+ * Stuff and things
+ *
+ * @example
+ * $config->add('length', [
+ *     'type' => 'duration',
+ *     'options' => [
+ *         'format' => DurationType::FORMAT_HUMAN,
+ *     ],
+ * ]);
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
@@ -45,6 +55,9 @@ class DurationType extends AbstractType
         return 'PerformBaseBundle:types:duration.html.twig';
     }
 
+    /**
+     * @doc format How to display the duration. Use one of the DurationType::FORMAT_* constants.
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
