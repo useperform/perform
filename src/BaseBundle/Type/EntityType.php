@@ -9,7 +9,26 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType as EntityFormType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * EntityType.
+ * Use the ``entity`` type for relations to other entities.
+ *
+ * For example, suppose a ``Pet`` entity has an ``owner``, a
+ * ``manyToOne`` doctrine relation to a ``User`` entity.
+ * You would use the ``entity`` type on the ``owner`` property to
+ * give a pet an owner.
+ *
+ * Note that sorting will not work out of the box.
+ * You'll need to define a :ref:`custom sort function <type_sorting>`
+ * if you want to sort by this field.
+ *
+ * @example
+ * $config->add('owner', [
+ *     'type' => 'entity',
+ *     'options' => [
+ *         'class' => 'PerformBaseBundle:User',
+ *         'display_field' => 'email',
+ *     ],
+ *     'sort' => false,
+ * ]);
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
@@ -32,6 +51,10 @@ class EntityType extends AbstractType
         ]);
     }
 
+    /**
+     * @doc class The related entity class
+     * @doc display_field The property to use to display the related entity
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefault('display_field', 'id');
