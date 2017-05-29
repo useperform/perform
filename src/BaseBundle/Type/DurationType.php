@@ -10,8 +10,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Use the ``duration`` type to show periods of time.
  *
- * Stuff and things
- *
  * @example
  * $config->add('length', [
  *     'type' => 'duration',
