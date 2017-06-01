@@ -24,7 +24,7 @@ class SubscribersPanel implements PanelInterface
 
     public function render()
     {
-        $subscribers = $this->entityManager->getRepository('PerformMailingListBundle:Subscriber')
+        $subscribers = $this->entityManager->getRepository('PerformMailingListBundle:LocalSubscriber')
                   ->findBy([], ['createdAt' => 'DESC'], 10);
 
         return $this->templating->render('PerformMailingListBundle:panels:subscribers.html.twig', [
