@@ -1,0 +1,16 @@
+Perform\MailingListBundle\Entity\LocalList:
+    type: entity
+    table: perform_mailing_list_local_list
+    table: null
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        name:
+            type: string
+        slug:
+            type: string
+            unique: true

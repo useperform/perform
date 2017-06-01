@@ -1,0 +1,29 @@
+Perform\MailingListBundle\Entity\LocalSubscriber:
+    type: entity
+    table: perform_mailing_list_local_subscriber
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        forename:
+            type: string
+        email:
+            type: string
+        createdAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: create
+        updatedAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: update
+    manyToOne:
+        list:
+            targetEntity: LocalList
+            joinColumn:
+                nullable: false
