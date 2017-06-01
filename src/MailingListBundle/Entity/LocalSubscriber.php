@@ -15,9 +15,9 @@ class LocalSubscriber
     protected $id;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $forename;
+    protected $firstName;
 
     /**
      * @var string
@@ -48,13 +48,13 @@ class LocalSubscriber
     }
 
     /**
-     * @param string $forename
+     * @param string $firstName|null
      *
      * @return Subscriber
      */
-    public function setForename($forename)
+    public function setFirstName($firstName = null)
     {
-        $this->forename = $forename;
+        $this->firstName = $firstName;
 
         return $this;
     }
@@ -62,9 +62,9 @@ class LocalSubscriber
     /**
      * @return string
      */
-    public function getForename()
+    public function getFirstName()
     {
-        return $this->forename;
+        return $this->firstName;
     }
 
     /**

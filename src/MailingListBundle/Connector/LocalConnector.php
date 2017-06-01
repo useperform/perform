@@ -40,7 +40,7 @@ class LocalConnector implements ConnectorInterface
         $localSub = new LocalSubscriber();
         $localSub->setEmail($subscriber->getEmail());
         $localSub->setList($list);
-        $localSub->setForename($subscriber->getAttribute(SubscriberFields::FIRST_NAME));
+        $localSub->setFirstName($subscriber->getOptionalAttribute(SubscriberFields::FIRST_NAME));
 
         $this->em->persist($localSub);
         $this->em->flush();
