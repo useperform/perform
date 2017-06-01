@@ -1,4 +1,9 @@
-team:
-    resource: "PerformMailingListBundle:Subscriber"
+subscribers:
+    resource: "PerformMailingListBundle:LocalSubscriber"
     type:     crud
     prefix: /subscribers
+
+lists:
+    resource: "PerformMailingListBundle:LocalList"
+    type:     crud
+    prefix: /lists
