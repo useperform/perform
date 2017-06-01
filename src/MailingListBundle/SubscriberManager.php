@@ -38,6 +38,7 @@ class SubscriberManager
             $this->em->remove($subscriber);
         }
         $this->em->flush();
+        $this->signups = [];
     }
 
     public function onKernelTerminate($event)
