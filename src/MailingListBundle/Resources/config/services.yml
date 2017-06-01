@@ -9,12 +9,6 @@ services:
         tags:
             - {name: perform_base.admin, entity: "PerformMailingListBundle:LocalList"}
 
-    perform_mailing_list.form.handler.subscriber:
-        class: Perform\MailingListBundle\Form\Handler\SubscriberFormHandler
-        arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@logger"
-
     perform_mailing_list.menu.mailing_list:
         class: Perform\MailingListBundle\Menu\MailingListLinkProvider
         tags:
