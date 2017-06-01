@@ -27,3 +27,16 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@templating"
+
+    perform_mailing_list.connector.local:
+        class: Perform\MailingListBundle\Connector\LocalConnector
+        arguments:
+            - "@doctrine.orm.entity_manager"
+
+    perform_mailing_list.manager:
+        class: Perform\MailingListBundle\SubscriberManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@perform_mailing_list.connector.local"
+        tags:
+            - {name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate}
