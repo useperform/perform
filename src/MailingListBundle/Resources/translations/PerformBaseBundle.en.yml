@@ -1,2 +1,4 @@
 menu:
-    mailing_list: 'Mailing List Subscribers'
+    mailing_list.main: 'Mailing List'
+    mailing_list.lists: 'Lists'
+    mailing_list.subscribers: 'Subscribers'

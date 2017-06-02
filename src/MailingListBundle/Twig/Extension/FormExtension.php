@@ -12,7 +12,8 @@ use Perform\MailingListBundle\Form\Type\SubscriberType;
  **/
 class FormExtension extends \Twig_Extension
 {
-    protected $form;
+    protected $forms = [];
+    protected $instances = [];
     protected $factory;
 
     public function __construct(FormFactoryInterface $factory)
@@ -23,23 +24,33 @@ class FormExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('perform_subscriber_form', [$this, 'getForm']),
+            new \Twig_SimpleFunction('perform_mailing_list_form', [$this, 'getForm']),
         ];
     }
 
-    public function getForm($action)
+    public function addForm($name, $type)
     {
-        if (!$this->form) {
-            $this->form = $this->factory->create(SubscriberType::class, null, [
+        $this->forms[$name] = $type;
+    }
+
+    public function getForm($name, $action)
+    {
+        if (!isset($this->instances[$name])) {
+            if (!isset($this->forms[$name])) {
+                throw new \Exception(sprintf('Unknown mailing list form "%s"', $name));
+            }
+            $type = $this->forms[$name];
+
+            $this->instances[$name] = $this->factory->create($type, null, [
                 'action' => $action,
             ])->createView();
         }
 
-        return $this->form;
+        return $this->instances[$name];
     }
 
     public function getName()
     {
-        return 'subscriberForm';
+        return 'mailing_list_form';
     }
 }
