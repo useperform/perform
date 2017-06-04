@@ -1,7 +1,6 @@
 Perform\MailingListBundle\Entity\LocalList:
     type: entity
     table: perform_mailing_list_local_list
-    table: null
     id:
         id:
             type: guid
