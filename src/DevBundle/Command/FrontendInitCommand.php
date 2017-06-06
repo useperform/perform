@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Perform\DevBundle\File\FileCreator;
 use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\Question;
 
 /**
  * FrontendInitCommand.
@@ -21,7 +22,7 @@ class FrontendInitCommand extends ContainerAwareCommand
     {
         $this->setName('perform-dev:frontend:init')
             ->setDescription('Create the base files for frontend pages in a bundle.')
-            ->addArgument('bundle', InputArgument::REQUIRED, 'The bundle to create the files in')
+            ->addArgument('bundle', InputArgument::OPTIONAL, 'The bundle to create the files in')
             ->addOption('frontend', 'f', InputOption::VALUE_REQUIRED, 'The frontend to use');
 
         FileCreator::addInputOptions($this);
@@ -29,23 +30,38 @@ class FrontendInitCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $frontend = $this->getContainer()->get('perform_dev.frontend_registry')
-                  ->get($this->getFrontend($input, $output));
-        $bundle = $this->getContainer()->get('kernel')->getBundle($input->getArgument('bundle'));
+        $bundle = $this->getBundle($input, $output);
+        $frontend = $this->getFrontend($input, $output);
 
         $creator = $this->getContainer()->get('perform_dev.file_creator');
         $frontend->createBaseFiles($bundle, $creator);
     }
 
-    protected function getFrontend(InputInterface $input, OutputInterface $output)
+    protected function getBundle(InputInterface $input, OutputInterface $output)
     {
-        if ($input->getOption('frontend')) {
-            return $input->getOption('frontend');
+        $kernel = $this->getContainer()->get('kernel');
+
+        if ($input->getArgument('bundle')) {
+            return $kernel->getBundle($input->getArgument('bundle'));
         }
 
-        $choices = array_keys($this->getContainer()->get('perform_dev.frontend_registry')->all());
+        $q = new Question('Bundle to create the frontend in: ');
+        $q->setAutocompleterValues(array_keys($kernel->getBundles()));
+
+        return $kernel->getBundle($this->getHelper('question')->ask($input, $output, $q));
+    }
+
+    protected function getFrontend(InputInterface $input, OutputInterface $output)
+    {
+        $registry = $this->getContainer()->get('perform_dev.frontend_registry');
+
+        if ($input->getOption('frontend')) {
+            return $registry->get($input->getOption('frontend'));
+        }
+
+        $choices = array_keys($registry->all());
         $q = new ChoiceQuestion('Select the frontend to use: ', $choices);
 
-        return $this->getHelper('question')->ask($input, $output, $q);
+        return $registry->get($this->getHelper('question')->ask($input, $output, $q));
     }
 }
