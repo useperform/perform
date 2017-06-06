@@ -18,9 +18,21 @@ class PerformDevExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
+        $container->getDefinition('perform_dev.twig.config')
+            ->addArgument(new Definition(Configuration::class))
+            ->addArgument($config['skeleton_vars']);
+
+        $this->defineBundleResources($container);
+    }
+
+    protected function defineBundleResources(ContainerBuilder $container)
+    {
         $registry = $container->getDefinition('perform_dev.resource_registry');
         $registry->addMethodCall('addParentResource', [new Definition(R\ContactBundleResource::class)]);
         $registry->addMethodCall('addParentResource', [new Definition(R\MediaBundleResource::class)]);
