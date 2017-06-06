@@ -19,3 +19,8 @@ push_packages:
 
 clean_bundles:
 	rm -rf src/*/vendor
+
+.PHONY: docs
+docs:
+	./bin/gendocs.php
+	(cd docs; make html)

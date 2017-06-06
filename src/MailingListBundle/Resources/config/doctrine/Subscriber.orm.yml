@@ -1,6 +1,6 @@
 Perform\MailingListBundle\Entity\Subscriber:
     type: entity
-    table: perform_mailing_list_subscriber
+    table: perform_mailing_list_subscriber_queue
     id:
         id:
             type: guid
@@ -8,22 +8,14 @@ Perform\MailingListBundle\Entity\Subscriber:
             generator:
                 strategy: UUID
     fields:
-        forename:
-            type: string
-        surname:
-            type: string
         email:
             type: string
-        enabled:
-            type: boolean
+        list:
+            type: string
+        attributes:
+            type: json_array
         createdAt:
             type: datetime
             gedmo:
                 timestampable:
                     on: create
-        updatedAt:
-            type: datetime
-            gedmo:
-                timestampable:
-                    on: update
-

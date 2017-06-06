@@ -35,8 +35,8 @@ Run the ``perform:debug:types`` command to list the available types:
 Types are registered with the ``perform_base.type_registry`` service (an instance of ``Perform\BaseBundle\Type\TypeRegistry``) when the container is compiled.
 You normally won't need to interact with this service directly.
 
-Adding types
-------------
+Using types
+-----------
 
 ``AdminInterface#configureTypes()`` takes an instance of ``Perform\BaseBundle\Type\TypeConfig``, which is used as a builder to add types for a given entity.
 Add a new type with ``TypeConfig#add()``, which requires the name of the field and an array of configuration.
@@ -77,6 +77,8 @@ Use the ``contexts`` option to restrict a type to certain contexts:
             ],
         ]);
     }
+
+.. _type_sorting:
 
 Sorting
 -------
@@ -157,3 +159,6 @@ For example, here we tell the ``datetime`` type to show a human friendly date di
                 ],
             ]);
     }
+
+Creating a new type
+-------------------

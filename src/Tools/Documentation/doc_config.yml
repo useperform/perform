@@ -1,0 +1,86 @@
+parameters:
+    locale: en
+    secret: docgen-kdjnskdjfnksjdfnk
+
+security:
+    encoders:
+        Perform\BaseBundle\Entity\User:
+            algorithm: bcrypt
+    providers:
+        perform_bundles:
+            entity:
+                class: Perform\BaseBundle\Entity\User
+                property: email
+    firewalls:
+        main:
+            anonymous: ~
+
+framework:
+    secret:          "%secret%"
+    translator:      { fallbacks: ["%locale%"] }
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: ~
+    form:            ~
+    csrf_protection: ~
+    validation:      true
+    templating:
+        engines: ['twig']
+    default_locale:  "%locale%"
+    trusted_hosts:   ~
+    trusted_proxies: ~
+    session:
+        handler_id:  null
+    fragments:       ~
+    http_method_override: true
+    assets:
+        version_strategy: perform_base.asset_strategy
+
+twig:
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+    form_themes:
+        - 'bootstrap_3_layout.html.twig'
+
+doctrine:
+    dbal:
+        driver:   pdo_sqlite
+        path: "%kernel.root_dir%/data.db"
+        charset:  UTF8
+    orm:
+        auto_generate_proxy_classes: true
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        auto_mapping: true
+
+oneup_flysystem:
+    adapters:
+        main:
+            local:
+                directory: "%kernel.root_dir%/../web/uploads"
+    filesystems:
+        main:
+            adapter: main
+
+stof_doctrine_extensions:
+    orm:
+        default:
+            timestampable: true
+            sluggable: true
+
+doctrine_cache:
+    providers:
+        default:
+            namespace: admin-sandbox
+            file_system: []
+
+perform_media:
+    plugins:
+        - image
+        - pdf
+        - audio
+        - other
+
+perform_base:
+    panels:
+        left: []
+        right: []

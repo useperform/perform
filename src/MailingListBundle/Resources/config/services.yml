@@ -1,14 +1,13 @@
 services:
-    perform_mailing_list.admin.subscriber:
-        class: Perform\MailingListBundle\Admin\SubscriberAdmin
+    perform_mailing_list.admin.local_subscriber:
+        class: Perform\MailingListBundle\Admin\LocalSubscriberAdmin
         tags:
-            - {name: perform_base.admin, entity: "PerformMailingListBundle:Subscriber"}
+            - {name: perform_base.admin, entity: "PerformMailingListBundle:LocalSubscriber"}
 
-    perform_mailing_list.form.handler.subscriber:
-        class: Perform\MailingListBundle\Form\Handler\SubscriberFormHandler
-        arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@logger"
+    perform_mailing_list.admin.local_list:
+        class: Perform\MailingListBundle\Admin\LocalListAdmin
+        tags:
+            - {name: perform_base.admin, entity: "PerformMailingListBundle:LocalList"}
 
     perform_mailing_list.menu.mailing_list:
         class: Perform\MailingListBundle\Menu\MailingListLinkProvider
@@ -27,3 +26,16 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@templating"
+
+    perform_mailing_list.connector.local:
+        class: Perform\MailingListBundle\Connector\LocalConnector
+        arguments:
+            - "@doctrine.orm.entity_manager"
+
+    perform_mailing_list.manager:
+        class: Perform\MailingListBundle\SubscriberManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@perform_mailing_list.connector.local"
+        tags:
+            - {name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate}

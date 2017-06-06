@@ -105,6 +105,16 @@ services:
             # higher priority than routing extension at 0
             - { name: knp_menu.factory_extension, priority: 1}
 
+    perform_base.menu_renderer:
+        class: Knp\Menu\Renderer\TwigRenderer
+        arguments:
+            - '@twig'
+            - 'PerformBaseBundle::menu.html.twig'
+            - '@knp_menu.matcher'
+            - { currentClass: 'active' }
+        tags:
+            - { name: knp_menu.renderer, alias: perform_admin }
+
     perform_base.menu_link.dashboard:
         class: Perform\BaseBundle\Menu\DashboardLinkProvider
         tags:
@@ -167,6 +177,11 @@ services:
         class: Perform\BaseBundle\Settings\AccountPanel
         tags:
             - { name: perform_base.settings_panel, alias: account }
+
+    perform_base.type.entity:
+        class: Perform\BaseBundle\Type\EntityType
+        arguments:
+            - "@doctrine.orm.entity_manager"
 
     perform_base.type.collection:
         class: Perform\BaseBundle\Type\CollectionType

@@ -4,6 +4,7 @@ namespace Perform\BaseBundle\Type;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * AbstractType
@@ -42,5 +43,9 @@ abstract class AbstractType implements TypeInterface
     public function getDefaultConfig()
     {
         return [];
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
     }
 }

@@ -12,6 +12,7 @@ use Symfony\Component\Form\FormEvents;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\BaseBundle\Asset\AssetContainer;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * CollectionType.
@@ -81,10 +82,20 @@ class CollectionType extends AbstractType
     public function getDefaultConfig()
     {
         return [
-            'options' => [
-                'sortField' => false,
-            ]
+            'sort' => false,
         ];
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setRequired('entity');
+        $resolver->setAllowedTypes('entity', 'string');
+        $resolver->setDefined('itemLabel');
+        $resolver->setAllowedTypes('itemLabel', ['string', 'array']);
+        $resolver->setDefaults([
+            'sortField' => false,
+        ]);
+        $resolver->setAllowedTypes('sortField', ['boolean', 'string']);
     }
 
     public function viewContext($entity, $field, array $options = [])

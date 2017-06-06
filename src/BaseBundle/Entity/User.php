@@ -209,6 +209,21 @@ class User implements UserInterface, RecipientInterface
     }
 
     /**
+     * @param string $role
+     */
+    public function removeRole($role)
+    {
+        if (!in_array($role, $this->roles)) {
+            return;
+        }
+
+        unset($this->roles[array_search($role, $this->roles)]);
+        $this->roles = array_values($this->roles);
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getRoles()

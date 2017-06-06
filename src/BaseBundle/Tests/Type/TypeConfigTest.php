@@ -3,10 +3,14 @@
 namespace Perform\BaseBundle\Tests\Type;
 
 use Perform\BaseBundle\Type\TypeConfig;
-use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Perform\BaseBundle\Type\StringType;
 use Perform\BaseBundle\Type\TypeInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Perform\BaseBundle\Type\DateTimeType;
+use Perform\BaseBundle\Type\BooleanType;
+use Perform\BaseBundle\Exception\InvalidTypeException;
+use Symfony\Component\OptionsResolver\Exception\ExceptionInterface;
 
 /**
  * TypeConfigTest.
@@ -16,16 +20,39 @@ use Perform\BaseBundle\Type\TypeInterface;
 class TypeConfigTest extends \PHPUnit_Framework_TestCase
 {
     protected $config;
+    protected $typeRegistry;
+    protected $stubType;
 
     public function setUp()
     {
-        $this->typeRegistry = $this->getMockBuilder(TypeRegistry::class)
-                            ->disableOriginalConstructor()
-                            ->getMock();
+        $container = $this->getMock(ContainerInterface::class);
+        $this->typeRegistry = new TypeRegistry($container);
+        $this->typeRegistry->addType('string', StringType::class);
+        $this->typeRegistry->addType('datetime', DateTimeType::class);
+        $this->typeRegistry->addType('boolean', BooleanType::class);
+        $this->stubType = $this->getMock(TypeInterface::class);
+        $container->expects($this->any())
+            ->method('get')
+            ->with('stub_service')
+            ->will($this->returnValue($this->stubType));
+
+        $this->typeRegistry->addTypeService('stub', 'stub_service');
+
         $this->config = new TypeConfig($this->typeRegistry);
-        $this->typeRegistry->expects($this->any())
-            ->method('getType')
-            ->will($this->returnValue(new StringType()));
+    }
+
+    protected function stubOptions($callback)
+    {
+        $this->stubType->expects($this->any())
+            ->method('configureOptions')
+            ->will($this->returnCallback($callback));
+    }
+
+    protected function stubDefaults(array $defaults)
+    {
+        $this->stubType->expects($this->any())
+            ->method('getDefaultConfig')
+            ->will($this->returnValue($defaults));
     }
 
     public function testGetNoTypes()
@@ -44,7 +71,7 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testTypeMustBeSupplied()
     {
-        $this->setExpectedException(MissingOptionsException::class);
+        $this->setExpectedException(InvalidTypeException::class);
         $this->config->add('title', []);
     }
 
@@ -153,8 +180,11 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testOverriddenLabelIsNotChanged()
     {
+        $this->stubOptions(function ($resolver) {
+            $resolver->setDefined('other_option');
+        });
         $this->config->add('title', [
-            'type' => 'string',
+            'type' => 'stub',
             'options' => [
                 'label' => 'Some label',
             ],
@@ -171,8 +201,11 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testOverriddenLabelCanBeChanged()
     {
+        $this->stubOptions(function ($resolver) {
+            $resolver->setDefined('other_option');
+        });
         $this->config->add('title', [
-            'type' => 'string',
+            'type' => 'stub',
             'options' => [
                 'label' => 'Some label',
             ],
@@ -190,8 +223,11 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testFieldsCanBeAddedMultipleTimes()
     {
+        $this->stubOptions(function ($resolver) {
+            $resolver->setDefined('stuff');
+        });
         $this->config->add('title', [
-            'type' => 'string',
+            'type' => 'stub',
             'options' => [
                 'stuff' => [
                     'foo' => true,
@@ -255,16 +291,11 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testDefaultConfigFromATypeIsNormalised()
     {
-        $registry = $this->getMockBuilder(TypeRegistry::class)
-                            ->disableOriginalConstructor()
-                            ->getMock();
-        $config = new TypeConfig($registry);
-        $type = $this->getMock(TypeInterface::class);
-        $registry->expects($this->any())
-            ->method('getType')
-            ->will($this->returnValue($type));
+        $this->stubOptions(function ($resolver) {
+            $resolver->setDefined('some_type_option');
+        });
         //contains options key, which should be normalised to the different contexts
-        $defaultConfig = [
+        $this->stubDefaults([
             'sort' => false,
             'options' => [
                 'some_type_option' => 'foo',
@@ -272,15 +303,31 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
             'listOptions' => [
                 'some_type_option' => 'bar',
             ],
-        ];
-        $type->expects($this->any())
-            ->method('getDefaultConfig')
-            ->will($this->returnValue($defaultConfig));
-        $config->add('title', ['type' => 'foo']);
+        ]);
 
-        $resolved = $config->getTypes(TypeConfig::CONTEXT_LIST)['title'];
+        $this->config->add('title', ['type' => 'stub']);
+
+        $resolved = $this->config->getTypes(TypeConfig::CONTEXT_LIST)['title'];
         $this->assertSame('foo', $resolved['viewOptions']['some_type_option']);
         $this->assertSame('bar', $resolved['listOptions']['some_type_option']);
+    }
+
+    public function testInvalidConfigIsWrappedInException()
+    {
+        try {
+            $this->config->add('test', [
+                'type' => 'stub',
+                'options' => [
+                    'not_an_option' => false,
+                ],
+            ]);
+        } catch (InvalidTypeException $e) {
+            $this->assertInstanceOf(ExceptionInterface::class, $e->getPrevious());
+
+            return;
+        }
+
+        $this->fail('Failed asserting that an exception was thrown.');
     }
 
     public function testGetAllTypes()

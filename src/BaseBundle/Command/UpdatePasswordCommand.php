@@ -34,7 +34,7 @@ class UpdatePasswordCommand extends ContainerAwareCommand
         $user = $em->getRepository('PerformBaseBundle:User')->findOneByEmail($email);
 
         if (!$user) {
-            throw new \RuntimeException(sprintf('User <info>%s</info> not found.', $email));
+            throw new \RuntimeException(sprintf('User with email "%s" was not found.', $email));
         }
 
         $helper = $this->getHelper('question');

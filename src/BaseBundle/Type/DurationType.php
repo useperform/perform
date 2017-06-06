@@ -5,9 +5,18 @@ namespace Perform\BaseBundle\Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Perform\BaseBundle\Form\Type\DurationType as FormType;
 use Perform\BaseBundle\Util\DurationUtil;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * DurationType.
+ * Use the ``duration`` type to show periods of time.
+ *
+ * @example
+ * $config->add('length', [
+ *     'type' => 'duration',
+ *     'options' => [
+ *         'format' => DurationType::FORMAT_HUMAN,
+ *     ],
+ * ]);
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
@@ -42,6 +51,16 @@ class DurationType extends AbstractType
     public function getTemplate()
     {
         return 'PerformBaseBundle:types:duration.html.twig';
+    }
+
+    /**
+     * @doc format How to display the duration. Use one of the DurationType::FORMAT_* constants.
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setDefaults(['format' => 0])
+            ->setAllowedTypes('format', 'integer');
     }
 
     public function getDefaultConfig()

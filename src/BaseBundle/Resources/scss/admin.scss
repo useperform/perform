@@ -177,28 +177,31 @@ ul.sidebar-menu {
   }
 }
 
-ul.sidebar-menu li{
+ul.sidebar-menu li {
   margin: 0 10px;
-}
 
-ul.sidebar-menu li a{
-  color: $gray-lighter;
-  text-decoration: none;
-  display: block;
-  padding: 15px 0 15px 10px;
-  font-size: 12px;
-  outline: none;
-  -webkit-transition: all 0.3s ease;
-  -moz-transition: all 0.3s ease;
-  -o-transition: all 0.3s ease;
-  -ms-transition: all 0.3s ease;
-  transition: all 0.3s ease;
-}
+  a {
+    color: $gray-lighter;
+    text-decoration: none;
+    display: block;
+    padding: 15px 0 15px 10px;
+    font-size: 12px;
+    outline: none;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+  }
 
-ul.sidebar-menu li a:hover {
-  background: $brand-info;
-  color: #fff;
-  display: block;
+  &.active a {
+    color: darken($brand-info, 20%);
+  }
+
+  a:hover {
+    background: $brand-info;
+    color: #fff;
+  }
 }
 
 ul.sidebar-menu li a i {

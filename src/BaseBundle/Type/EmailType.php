@@ -3,7 +3,8 @@
 namespace Perform\BaseBundle\Type;
 
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\TextType as FormType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\EmailType as EmailFormType;
 
 /**
  * EmailType
@@ -14,24 +15,22 @@ class EmailType extends AbstractType
 {
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
-        $builder->add($field, FormType::class);
+        $builder->add($field, EmailFormType::class);
     }
 
     public function listContext($entity, $field, array $options = [])
     {
         return [
             'email' => $this->accessor->getValue($entity, $field),
-            'link' => (bool) $options['link'],
+            'link' => $options['link'],
         ];
     }
 
-    public function getDefaultConfig()
+    public function configureOptions(OptionsResolver $resolver)
     {
-        return [
-            'options' => [
-                'link' => true,
-            ],
-        ];
+        $resolver
+            ->setDefault('link', true)
+            ->setAllowedTypes('link', 'boolean');
     }
 
     public function getTemplate()

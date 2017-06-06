@@ -22,7 +22,6 @@ class PlaylistAdmin extends AbstractAdmin
             ])
             ->add('items', [
                 'type' => 'collection',
-                'sort' => false,
                 'options' => [
                     'label' => 'Tracks',
                     'itemLabel' => 'track',

@@ -13,8 +13,6 @@ class ConfigureMenuPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        $container->setParameter('knp_menu.renderer.twig.template', 'PerformBaseBundle::menu.html.twig');
-
         $services = [];
         foreach ($container->findTaggedServiceIds('perform_base.link_provider') as $service => $tag) {
             if (!isset($tag[0]['alias'])) {

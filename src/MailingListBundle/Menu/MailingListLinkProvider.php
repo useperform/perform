@@ -14,8 +14,15 @@ class MailingListLinkProvider implements LinkProviderInterface
 {
     public function addLinks(ItemInterface $menu)
     {
-        $menu->addChild('mailing_list', [
-            'route' => 'perform_mailing_list_subscriber_list',
+        $parent = $menu->addChild('mailing_list.main', [
+            'uri' => '#'
         ])->setExtra('icon', 'users');
+
+        $parent->addChild('mailing_list.lists', [
+            'route' => 'perform_mailing_list_local_list_list',
+        ]);
+        $parent->addChild('mailing_list.subscribers', [
+            'route' => 'perform_mailing_list_local_subscriber_list',
+        ]);
     }
 }

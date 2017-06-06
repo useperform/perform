@@ -6,16 +6,21 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Perform\BaseBundle\Form\Type\DatePickerType;
 
 /**
- * DateType.
+ * Use the ``date`` type for ``date`` doctrine fields.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class DateType extends DateTimeType
 {
-    protected $defaultOptions = [
-        'format' => 'd/m/Y',
-        'human' => false,
-    ];
+    public function getDefaultConfig()
+    {
+        return [
+            'options' => [
+                'format' => 'd/m/Y',
+                'human' => false,
+            ],
+        ];
+    }
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {

@@ -10,6 +10,8 @@ use Perform\BaseBundle\Filter\FilterConfig;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Perform\BaseBundle\Type\StringType;
 use Perform\BaseBundle\Admin\AdminRequest;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Perform\BaseBundle\Type\BooleanType;
 
 /**
  * EntitySelectorTest.
@@ -20,6 +22,7 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
 {
     protected $entityManager;
     protected $registry;
+    protected $typeRegistry;
     protected $selector;
     protected $qb;
 
@@ -40,6 +43,10 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
         $this->registry->expects($this->any())
             ->method('getFilterConfig')
             ->will($this->returnValue(new FilterConfig([])));
+        $container = $this->getMock(ContainerInterface::class);
+        $this->typeRegistry = new TypeRegistry($container);
+        $this->typeRegistry->addType('string', StringType::class);
+        $this->typeRegistry->addType('boolean', BooleanType::class);
 
         $this->selector = new EntitySelector($this->entityManager, $this->registry);
     }
@@ -58,13 +65,7 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
 
     protected function expectTypeConfig($entityName, array $config)
     {
-        $typeRegistry = $this->getMockBuilder(TypeRegistry::class)
-                            ->disableOriginalConstructor()
-                            ->getMock();
-        $typeRegistry->expects($this->any())
-            ->method('getType')
-            ->will($this->returnValue(new StringType()));
-        $typeConfig = new TypeConfig($typeRegistry);
+        $typeConfig = new TypeConfig($this->typeRegistry);
         foreach ($config as $field => $config) {
             $typeConfig->add($field, $config);
         }
