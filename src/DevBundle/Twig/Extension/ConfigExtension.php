@@ -8,6 +8,10 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Console\Event\ConsoleTerminateEvent;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Perform\DevBundle\File\YamlModifier;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Grab perform_dev configuration for use in skeleton templates, or
@@ -22,15 +26,18 @@ class ConfigExtension extends \Twig_Extension
     protected $helper;
     protected $tree;
     protected $config = [];
-    protected $newConfig = [];
+    protected $configFile;
+    protected $newVars = [];
     protected $introduced;
+    protected $saveEnabled = true;
 
-    public function __construct(ConfigurationInterface $configuration, array $config)
+    public function __construct(ConfigurationInterface $configuration, array $config, $configFile)
     {
         $this->tree = $configuration->getConfigTreeBuilder()
                     ->buildTree()
                     ->getChildren()['skeleton_vars'];
         $this->config = $config;
+        $this->configFile = $configFile;
     }
 
     public function onConsoleCommand(ConsoleCommandEvent $event)
@@ -40,6 +47,43 @@ class ConfigExtension extends \Twig_Extension
         $helperSet = $event->getCommand()->getHelperSet();
 
         $this->setConsoleEnvironment($input, $output, $helperSet);
+    }
+
+    public function onConsoleException($event)
+    {
+        if ($event->getException() instanceof \Twig_Error_Runtime) {
+            //don't offer the chance to save config if there was a problem rendering a twig template
+            $this->saveEnabled = false;
+        }
+    }
+
+    public function onConsoleTerminate(ConsoleTerminateEvent $event)
+    {
+        if (empty($this->newVars) || !$this->saveEnabled) {
+            return;
+        }
+
+        $this->output->writeln('');
+        $msg = sprintf(
+            'Do you want to save the new %s for <info>%s</info> to config_dev.yml? (Y/n) ',
+            count($this->newVars) === 1 ? 'value' : 'values',
+            implode('</info>, <info>', array_keys($this->newVars))
+        );
+        $question = new ConfirmationQuestion($msg, true);
+
+        if (!$this->helperSet->get('question')->ask($this->input, $this->output, $question)) {
+            return;
+        }
+
+        $currentConfig = $this->config;
+        if (!isset($currentConfig['skeleton_vars'])) {
+            $currentConfig['skeleton_vars'] = [];
+        }
+
+        $currentConfig['skeleton_vars'] = array_merge($currentConfig['skeleton_vars'], $this->newVars);
+
+        $mod = new YamlModifier($this->configFile);
+        $mod->replaceSection('perform_dev', Yaml::dump(['perform_dev' => $currentConfig], 4));
     }
 
     public function setConsoleEnvironment(InputInterface $input, OutputInterface $output, HelperSet $helperSet)
@@ -52,7 +96,7 @@ class ConfigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-             new \Twig_SimpleFunction('perform_dev', [$this, 'getConfig']),
+            new \Twig_SimpleFunction('perform_dev', [$this, 'getConfig']),
         ];
     }
 
@@ -73,14 +117,14 @@ class ConfigExtension extends \Twig_Extension
 
         $node = $this->tree->getChildren()[$key];
 
-        if (isset($this->config[$key])) {
+        if (isset($this->config['skeleton_vars'][$key])) {
             $this->veryVerbose(sprintf('Fetching <info>%s</info> from perform_dev configuration.', $key));
 
-            return $this->config[$key];
+            return $this->config['skeleton_vars'][$key];
         }
 
-        if (isset($this->newConfig[$key])) {
-            return $this->newConfig[$key];
+        if (isset($this->newVars[$key])) {
+            return $this->newVars[$key];
         }
 
         $this->introduceConfigPrompts();
@@ -92,7 +136,7 @@ class ConfigExtension extends \Twig_Extension
 
         $question = new Question(sprintf('<info>%s</info>: ', $key));
         $value = $this->helperSet->get('question')->ask($this->input, $this->output, $question);
-        $this->newConfig[$key] = $value;
+        $this->newVars[$key] = $value;
 
         return $value;
     }

@@ -24,9 +24,13 @@ class PerformDevExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
+        $devConfigFile = $container->getParameter('kernel.root_dir').'/config/config_dev.yml';
         $container->getDefinition('perform_dev.twig.config')
-            ->addArgument(new Definition(Configuration::class))
-            ->addArgument($config['skeleton_vars']);
+            ->setArguments([
+                new Definition(Configuration::class),
+                $config,
+                $devConfigFile,
+            ]);
 
         $this->defineBundleResources($container);
     }
