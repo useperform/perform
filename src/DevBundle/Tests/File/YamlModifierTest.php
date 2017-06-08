@@ -103,4 +103,24 @@ class YamlModifierTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFileEquals($this->configDev('expected_no_section'), $this->configDev('actual'));
     }
+
+    public function testReplaceSectionAtBottom()
+    {
+        copy($this->configDev('current_with_bottom_section'), $this->configDev('actual'));
+
+        $mod = new YamlModifier($this->configDev('actual'));
+        $yaml = Yaml::dump([
+            'perform_dev' => [
+                'some_val' => 'foo',
+                'some_other_val' => ['bar', 'baz'],
+                'skeleton_vars' => [
+                    'app_name' => 'Super app',
+                    'app_description' => 'Awesome',
+                ],
+            ],
+        ], 5);
+        $mod->replaceSection('perform_dev', $yaml);
+
+        $this->assertFileEquals($this->configDev('expected_with_bottom_section'), $this->configDev('actual'));
+    }
 }

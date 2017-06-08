@@ -52,6 +52,8 @@ class YamlModifier
      *
      * If the section is not found, the yaml will be appended to the file.
      *
+     * Note that $yaml should include the section name; it will not be added automatically.
+     *
      * @param string $name
      * @param string $yaml
      */
@@ -59,11 +61,15 @@ class YamlModifier
     {
         $contents = file_get_contents($this->configFile);
 
-        //m for multiple
-        //s so . matches newlines
-        //match all lines starting from <name>: to the first empty
-        //line (or line made up of spaces).
-        $sectionPattern = sprintf('/^%s:.+^\w*$/ms', $name);
+        // match all lines starting from <name>: to the first empty
+        // line (or line made up of spaces).
+
+        // the alternative pattern (after the |) is the same without the
+        // empty line at the end, for when a section is at the end of a file.
+
+        // m for multiple
+        // s for matching newlines with .
+        $sectionPattern = sprintf('/(^%s:.+^\w*$)|(^%s:.+)/ms', $name, $name);
         $contents = preg_replace($sectionPattern, $yaml, $contents, 1, $count);
 
         if ($count === 0) {
