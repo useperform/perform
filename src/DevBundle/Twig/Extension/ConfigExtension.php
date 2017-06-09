@@ -51,7 +51,7 @@ class ConfigExtension extends \Twig_Extension
 
     public function onConsoleException($event)
     {
-        if ($event->getException() instanceof \Twig_Error_Runtime) {
+        if ($event->getException() instanceof \Twig_Error) {
             //don't offer the chance to save config if there was a problem rendering a twig template
             $this->saveEnabled = false;
         }
