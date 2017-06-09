@@ -137,6 +137,7 @@ class ConfigExtension extends \Twig_Extension
         $question = new Question(sprintf('<info>%s</info>: ', $key));
         $value = $this->helperSet->get('question')->ask($this->input, $this->output, $question);
         $this->newVars[$key] = $value;
+        $this->output->writeln('');
 
         return $value;
     }
