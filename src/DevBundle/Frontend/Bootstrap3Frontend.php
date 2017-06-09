@@ -34,4 +34,13 @@ class Bootstrap3Frontend implements FrontendInterface
         $creator->createInBundle($bundle, 'Resources/scss/vendors.scss', 'frontend/twbs3/vendors.scss.twig');
         $creator->createInBundle($bundle, 'Resources/scss/variables.scss', 'frontend/twbs3/variables.scss.twig');
     }
+
+    public function createPage(BundleInterface $bundle, FileCreator $creator, $page)
+    {
+        $pieces = explode('/', $page);
+        $creator->createInBundle($bundle, 'Resources/views/'.$page.'.html.twig', 'frontend/twbs3/page.html.twig.twig', [
+            'bundleName' => $bundle->getName(),
+            'title' => ucfirst(array_pop($pieces)),
+        ]);
+    }
 }

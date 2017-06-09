@@ -18,4 +18,6 @@ interface FrontendInterface
     public function getName();
 
     public function createBaseFiles(BundleInterface $bundle, FileCreator $creator);
+
+    public function createPage(BundleInterface $bundle, FileCreator $creator, $page);
 }
