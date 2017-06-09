@@ -14,6 +14,14 @@ Let's use the ``perform-dev:frontend:init`` command to create some basic files i
 
    ./bin/console perform-dev:frontend:init AppBundle --frontend twbs3
 
+This command will ask for information when generating some of the files, such as ``app_name`` - the name of our app to use for headings and titles.
+You can give any answers, but make sure to give a correct
+value for ``dev_url`` if you want browsersync live asset reloading to
+work correctly.
+We'll use ``localhost:8000`` since we're using the built-in server for this tutorial.
+
+.. image:: frontend_init.png
+
 Using ``twbs3`` for the frontend option has incorporated Twitter
 Bootstrap 3 in the generated files, including a ``package.json`` with
 the relevant packages and ``gulpfile.js`` with tasks to build the
@@ -31,3 +39,9 @@ assets.
 
 Add a route
 -----------
+
+Loading bikes
+-------------
+
+Styling
+-------
