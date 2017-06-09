@@ -29,5 +29,9 @@ class Bootstrap3Frontend implements FrontendInterface
 
         $creator->createInBundle($bundle, 'package.json', 'frontend/twbs3/package.json.twig');
         $creator->createInBundle($bundle, 'gulpfile.js', 'frontend/twbs3/gulpfile.js.twig');
+
+        $creator->createInBundle($bundle, 'Resources/scss/app.scss', 'frontend/twbs3/app.scss.twig');
+        $creator->createInBundle($bundle, 'Resources/scss/vendors.scss', 'frontend/twbs3/vendors.scss.twig');
+        $creator->createInBundle($bundle, 'Resources/scss/variables.scss', 'frontend/twbs3/variables.scss.twig');
     }
 }
