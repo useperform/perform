@@ -40,6 +40,93 @@ assets.
 Add a route
 -----------
 
+Let's use more commands from the dev bundle to create a controller and a page.
+
+Create a controller class:
+
+.. code-block:: bash
+
+   ./bin/console perform-dev:create:controller AppBundle:Page
+
+and a page:
+
+.. code-block:: bash
+
+   ./bin/console perform-dev:create:page AppBundle:Page:home --frontend twbs3
+
+Now open ``src/AppBundle/Controller/PageController.php``.
+Inside is a new controller class:
+
+.. code-block:: php
+
+    <?php
+
+    namespace AppBundle\Controller;
+
+    use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+    use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+    use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+
+    /**
+    * PageController
+    *
+    * @Route("/page")
+    **/
+    class PageController extends Controller
+    {
+        /**
+        * @Route("/")
+        * @Template
+        */
+        public function indexAction()
+        {
+            return [];
+        }
+    }
+
+Let's make some small modifications.
+Rename ``indexAction`` to ``homeAction`` to match the name of the page we just created,
+and remove the top level route annotation, so the action matches the url ``/`` in the browser.
+
+.. code-block:: diff
+
+    - * @Route("/page")
+      **/
+      class PageController extends Controller
+      {
+          /**
+          * @Route("/")
+          * @Template
+          */
+    -     public function indexAction()
+    +     public function homeAction()
+          {
+              return [];
+          }
+      }
+
+.. note::
+
+   Matching the action name with the twig template is merely a convention.
+   It enables use of the ``@Template`` annotation without arguments, which also allows the action to return an array, instead of returning a ``Response`` object directly.
+
+   Like everything else in Symfony, this is completely customisable.
+   See the `symfony docs <http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/view.html>`_ for more information.
+
+
+Now update ``app/config/routing.yml`` to load routes from the new controller:
+
+.. code-block:: diff
+
+    + app:
+    +     resource: "@AppBundle/Controller/"
+    +     type: annotation
+
+This will add all annotated controller actions in the AppBundle.
+
+Now head to the new home page action at ``http://127.0.0.1``.
+Congratulations, we've got a blank home page!
+
 Loading bikes
 -------------
 
