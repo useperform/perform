@@ -26,5 +26,8 @@ class Bootstrap3Frontend implements FrontendInterface
             'bundleName' => $bundle->getName(),
         ]);
         $creator->createInBundle($bundle, 'Resources/views/nav.html.twig', 'frontend/twbs3/nav.html.twig.twig');
+
+        $creator->createInBundle($bundle, 'package.json', 'frontend/twbs3/package.json.twig');
+        $creator->createInBundle($bundle, 'gulpfile.js', 'frontend/twbs3/gulpfile.js.twig');
     }
 }
