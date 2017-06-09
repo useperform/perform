@@ -21,9 +21,9 @@ class Bootstrap3Frontend implements FrontendInterface
 
     public function createBaseFiles(BundleInterface $bundle, FileCreator $creator)
     {
-        //package.json, gulpfile, base.html.twig, nav.html.twig, app.scss
         $creator->createInBundle($bundle, 'Resources/views/base.html.twig', 'frontend/twbs3/base.html.twig.twig', [
             'bundleName' => $bundle->getName(),
+            'bundleAssetName' => strtolower(substr($bundle->getName(), 0, -6)),
         ]);
         $creator->createInBundle($bundle, 'Resources/views/nav.html.twig', 'frontend/twbs3/nav.html.twig.twig');
 
