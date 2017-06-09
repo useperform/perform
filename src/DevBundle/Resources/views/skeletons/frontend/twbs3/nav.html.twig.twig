@@ -1,0 +1,24 @@
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="container">
+
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#nav-container" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+
+    <div class="collapse navbar-collapse" id="nav-container">
+      <ul class="nav navbar-nav">
+        {%- verbatim %}
+        {% block menu %}
+          <li><a href="/">Home</a></li>
+        {% endblock %}
+        {%- endverbatim %}
+      </ul>
+    </div>
+
+  </div>
+</nav>

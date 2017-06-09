@@ -19,6 +19,9 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->arrayNode('skeleton_vars')
                     ->children()
+                        ->scalarNode('app_name')
+                            ->info('Application name to use in titles and headings')
+                        ->end()
                     ->end()
                 ->end()
             ->end();
