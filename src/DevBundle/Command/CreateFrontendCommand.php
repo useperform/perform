@@ -12,15 +12,13 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 
 /**
- * FrontendInitCommand.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class FrontendInitCommand extends ContainerAwareCommand
+class CreateFrontendCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('perform-dev:frontend:init')
+        $this->setName('perform-dev:create:frontend')
             ->setDescription('Create the base files for frontend pages in a bundle.')
             ->addArgument('bundle', InputArgument::OPTIONAL, 'The bundle to create the files in')
             ->addOption('frontend', 'f', InputOption::VALUE_REQUIRED, 'The frontend to use');
