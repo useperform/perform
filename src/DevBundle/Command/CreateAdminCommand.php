@@ -35,7 +35,7 @@ class CreateAdminCommand extends ContainerAwareCommand
 
         $vars = $this->getTwigVars($input, $output, $bundleName, $entityName);
 
-        $creator = $this->get('perform_dev.file_creator');
+        $creator = $this->getContainer()->get('perform_dev.file_creator');
         $bundle = $this->getContainer()->get('kernel')->getBundle($bundleName);
         $creator->createBundleClass($bundle, $relativeClass, 'Admin.php.twig', $vars);
 
@@ -45,7 +45,7 @@ class CreateAdminCommand extends ContainerAwareCommand
     protected function getEntity(InputInterface $input, OutputInterface $output)
     {
         $entity = $input->getArgument('entity');
-        $em = $this->get('doctrine.orm.entity_manager');
+        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
 
         $mappings = array_map(function ($meta) {
             return $meta->getName();
@@ -62,7 +62,7 @@ class CreateAdminCommand extends ContainerAwareCommand
             ];
         };
         //mapper function results indexed by class
-        $entities = $this->get('perform_base.bundle_searcher')
+        $entities = $this->getContainer()->get('perform_base.bundle_searcher')
                   ->findClassesWithNamespaceSegment('Entity', $mapper);
 
         //add index by alias, and create autocomplete choices with aliases only
