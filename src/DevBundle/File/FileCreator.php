@@ -108,6 +108,18 @@ class FileCreator
         return [$file, $vars];
     }
 
+    public function chmod($file, $mode = 0644)
+    {
+        $this->fs->chmod($file, $mode);
+    }
+
+    public function chmodInBundle(BundleInterface $bundle, $relativeFile, $mode = 0644)
+    {
+        $file = $bundle->getPath().'/'.trim($relativeFile, '/');
+
+        $this->fs->chmod($file, $mode);
+    }
+
     public static function addInputOptions(Command $command)
     {
         $command->addOption(static::OPTION_SKIP_EXISTING, 's', InputOption::VALUE_NONE, 'Don\'t prompt to overwrite files that already exist.')
