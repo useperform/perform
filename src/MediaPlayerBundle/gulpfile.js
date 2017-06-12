@@ -34,6 +34,6 @@ gulp.task('watch', function () {
     gulp.watch('Resources/scss/*.scss', ['sass']);
 });
 
-gulp.task('develop', ['watch', 'sass', 'webpack-watch']);
+gulp.task('dev', ['watch', 'sass', 'webpack-watch']);
 gulp.task('build', ['sass', 'webpack']);
-gulp.task('default', ['develop']);
+gulp.task('default', ['dev']);
