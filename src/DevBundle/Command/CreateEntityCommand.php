@@ -12,20 +12,22 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Doctrine\ORM\Tools\Export\ClassMetadataExporter;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Doctrine\DBAL\Types\Type;
+use Perform\DevBundle\File\FileCreator;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
 /**
  * CreateEntityCommand.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class CreateEntityCommand extends CreateCommand
+class CreateEntityCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
         $this->setName('perform-dev:create:entity')
             ->setDescription('Create a new doctrine entity')
             ->addArgument('entity', InputArgument::OPTIONAL, 'The entity name');
-        parent::configure();
+        FileCreator::addInputOptions($this);
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
@@ -157,7 +159,7 @@ class CreateEntityCommand extends CreateCommand
         $gen->setFieldVisibility(EntityGenerator::FIELD_VISIBLE_PROTECTED);
 
         $code = trim($gen->generateEntityClass($meta)).PHP_EOL;
-        $this->dumpFile($input, $output, $file, $code);
+        $this->getContainer()->get('perform_dev.file_creator')->create($file, $code);
     }
 
     protected function createMappingFile(InputInterface $input, OutputInterface $output, ClassMetadataInfo $meta, $file)
@@ -165,6 +167,6 @@ class CreateEntityCommand extends CreateCommand
         $exporter = (new ClassMetadataExporter())->getExporter('yaml');
 
         $code = $exporter->exportClassMetadata($meta);
-        $this->dumpFile($input, $output, $file, $code);
+        $this->getContainer()->get('perform_dev.file_creator')->create($file, $code);
     }
 }

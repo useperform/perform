@@ -1,0 +1,25 @@
+{% verbatim %}{% extends '{% endverbatim %}{{bundleName}}{% verbatim %}::base.html.twig' %}{% endverbatim %}
+
+{%- verbatim %}
+
+{% block title %}
+{%- endverbatim %}
+  {{title}}
+{%- verbatim %}
+{% endblock %}
+{%- endverbatim %}
+
+{%- verbatim %}
+
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        {%- endverbatim %}
+        <h1>{{title}}</h1>
+        {%- verbatim %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{%- endverbatim %}

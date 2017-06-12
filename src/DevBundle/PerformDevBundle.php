@@ -3,6 +3,8 @@
 namespace Perform\DevBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Perform\DevBundle\DependencyInjection\Compiler\AddFrontendsPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * PerformDevBundle.
@@ -11,4 +13,9 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  **/
 class PerformDevBundle extends Bundle
 {
+    public function build(ContainerBuilder $container)
+    {
+        parent::build($container);
+        $container->addCompilerPass(new AddFrontendsPass());
+    }
 }
