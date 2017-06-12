@@ -1,12 +1,12 @@
 .perform-cms {
   @import "../../../BaseBundle/Resources/scss/variables";
-  @import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/mixins";
-  @import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/scaffolding";
-  @import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/buttons";
-  @import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/navs";
-  @import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/forms";
-  @import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/navbar";
-  @import "../../../BaseBundle/Resources/public/vendor/bootstrap-sass/assets/stylesheets/bootstrap/modals";
+  @import "../../../BaseBundle/node_modules/bootstrap-sass/assets/stylesheets/bootstrap/mixins";
+  @import "../../../BaseBundle/node_modules/bootstrap-sass/assets/stylesheets/bootstrap/scaffolding";
+  @import "../../../BaseBundle/node_modules/bootstrap-sass/assets/stylesheets/bootstrap/buttons";
+  @import "../../../BaseBundle/node_modules/bootstrap-sass/assets/stylesheets/bootstrap/navs";
+  @import "../../../BaseBundle/node_modules/bootstrap-sass/assets/stylesheets/bootstrap/forms";
+  @import "../../../BaseBundle/node_modules/bootstrap-sass/assets/stylesheets/bootstrap/navbar";
+  @import "../../../BaseBundle/node_modules/bootstrap-sass/assets/stylesheets/bootstrap/modals";
   @import "../../../BaseBundle/Resources/scss/toolbar";
 
   nav, .block .controls, .block .editor {
