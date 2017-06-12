@@ -36,4 +36,4 @@ gulp.task('watch', function () {
 });
 
 gulp.task('build', ['sass', 'js']);
-gulp.task('default', ['sass', 'js', 'watch']);
+gulp.task('dev', ['sass', 'js', 'watch']);
