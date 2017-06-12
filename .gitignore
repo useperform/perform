@@ -6,6 +6,7 @@ src/*/Resources/public/vendor
 src/*/Resources/public/css
 src/*/vendor
 src/*/composer.lock
+src/BaseBundle/Resources/public
 src/CmsBundle/Resources/public/js
 src/CmsBundle/gulp-sources.js
 src/MediaPlayerBundle/Resources/public

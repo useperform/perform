@@ -17,6 +17,8 @@ gulp.task('js', function () {
     'node_modules/moment/min/moment.min.js',
     'node_modules/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
     'node_modules/select2/dist/js/select2.min.js',
+    'Resources/js/*.js',
+    'Resources/js/*/*.js',
   ]).pipe(gulp.dest('Resources/public/js/'));
 });
 
@@ -33,4 +35,4 @@ gulp.task('watch', function () {
 });
 
 gulp.task('build', ['sass', 'js', 'fonts']);
-gulp.task('default', ['build', 'watch']);
+gulp.task('dev', ['build', 'watch']);
