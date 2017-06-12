@@ -2,9 +2,10 @@
  * Font awesome, tweaked a bit for our usage
  */
 
-@import "../public/vendor/font-awesome/scss/variables";
+@import "../../node_modules/font-awesome/scss/variables";
 
-$fa-font-path:        "../vendor/font-awesome/fonts";
+//public url relative to app.css
+$fa-font-path:        "../fonts";
 $fa-font-size-base:   14px;
 $fa-line-height-base: 1;
 $fa-css-prefix:       fa;
@@ -12,14 +13,14 @@ $fa-border-color:     #eee;
 $fa-inverse:          #fff;
 $fa-li-width:         (30em / 14);
 
-@import "../public/vendor/font-awesome/scss/mixins";
-@import "../public/vendor/font-awesome/scss/path";
-@import "../public/vendor/font-awesome/scss/core";
-@import "../public/vendor/font-awesome/scss/larger";
-@import "../public/vendor/font-awesome/scss/fixed-width";
-@import "../public/vendor/font-awesome/scss/list";
-@import "../public/vendor/font-awesome/scss/bordered-pulled";
-@import "../public/vendor/font-awesome/scss/animated";
-@import "../public/vendor/font-awesome/scss/rotated-flipped";
-@import "../public/vendor/font-awesome/scss/stacked";
-@import "../public/vendor/font-awesome/scss/icons";
+@import "../../node_modules/font-awesome/scss/mixins";
+@import "../../node_modules/font-awesome/scss/path";
+@import "../../node_modules/font-awesome/scss/core";
+@import "../../node_modules/font-awesome/scss/larger";
+@import "../../node_modules/font-awesome/scss/fixed-width";
+@import "../../node_modules/font-awesome/scss/list";
+@import "../../node_modules/font-awesome/scss/bordered-pulled";
+@import "../../node_modules/font-awesome/scss/animated";
+@import "../../node_modules/font-awesome/scss/rotated-flipped";
+@import "../../node_modules/font-awesome/scss/stacked";
+@import "../../node_modules/font-awesome/scss/icons";
