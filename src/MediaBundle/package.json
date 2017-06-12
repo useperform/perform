@@ -1,0 +1,11 @@
+{
+  "name": "PerformMediaBundle",
+  "dependencies": {
+    "blueimp-file-upload": "^9.18.0",
+    "gulp": "^3.9.1"
+  },
+  "scripts": {
+    "build": "gulp build",
+    "dev": "gulp dev"
+  }
+}
