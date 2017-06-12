@@ -33,6 +33,10 @@ class SubscriberManager
 
     public function flush()
     {
+        if (empty($this->signups)) {
+            return;
+        }
+
         foreach ($this->signups as $subscriber) {
             $this->connector->subscribe($subscriber);
             $this->em->remove($subscriber);
