@@ -16,7 +16,7 @@ Run the ``perform-dev:create:entity`` command to generate a new doctrine entity:
 The command will prompt you for field names and their types.
 Declare two fields with the following database types:
 
-* ``model`` - `string`
+* ``title`` - `string`
 * ``description`` - `text`
 
 Now update the database schema to create a new table for the entity:
@@ -70,14 +70,14 @@ Add the following code:
 
     public function configureTypes(TypeConfig $config)
     {
-        $config->add('model', [
+        $config->add('title', [
             'type' => 'string',
         ])->add('description', [
             'type' => 'text',
         ]);
     }
 
-This tells the admin to manage the ``model`` and ``description`` properties of ``Bike``.
+This tells the admin to manage the ``title`` and ``description`` properties of ``Bike``.
 
 .. note::
 

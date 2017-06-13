@@ -164,7 +164,7 @@ And update the ``content`` block in ``src/AppBundle/Resources/views/Page/home.ht
     +     <div class="row">
     +       <div class="col-md-12">
     +         {% for bike in bikes %}
-    +         <h2>{{bike.model}}</h2>
+    +         <h2>{{bike.title}}</h2>
     +         <p>
     +           {{bike.description | nl2br}}
     +         </p>

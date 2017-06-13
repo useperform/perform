@@ -53,7 +53,7 @@ Then add the relationship to ``src/AppBundle/Resources/config/doctrine/Bike.orm.
 .. code-block:: diff
 
       fields:
-          model:
+          title:
               type: string
           description:
               type: text
@@ -124,7 +124,7 @@ Update the frontend to show images along with the bikes:
           <div class="row">
             <div class="col-md-12">
               {% for bike in bikes %}
-              <h2>{{bike.model}}</h2>
+              <h2>{{bike.title}}</h2>
     +         {{perform_file_preview(bike.image, {size: 'small', attr: {class: 'img-responsive'}})}}
               <p>
                 {{bike.description | nl2br}}
