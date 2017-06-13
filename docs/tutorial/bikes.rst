@@ -64,18 +64,16 @@ Open up the newly generated ``BikeAdmin`` class, containing a few empty methods:
 For now, we'll only deal with the ``configureTypes`` method.
 Add the following code:
 
-.. code-block:: php
+.. code-block:: diff
 
-   <?php
-
-    public function configureTypes(TypeConfig $config)
-    {
-        $config->add('title', [
-            'type' => 'string',
-        ])->add('description', [
-            'type' => 'text',
-        ]);
-    }
+      public function configureTypes(TypeConfig $config)
+      {
+    +     $config->add('title', [
+    +         'type' => 'string',
+    +     ])->add('description', [
+    +         'type' => 'text',
+    +     ]);
+      }
 
 This tells the admin to manage the ``title`` and ``description`` properties of ``Bike``.
 
@@ -101,14 +99,18 @@ Add a menu link
 
 Add a new entry to ``perform_base:menu:simple`` in ``app/config/config.yml``:
 
-.. code-block:: yaml
+.. code-block:: diff
 
-    perform_base:
-        menu:
-            simple:
-                bikes:
-                    entity: "AppBundle:Bike"
-                    icon: bicycle
+      perform_base:
+          panels:
+              left: []
+              right: []
+          menu:
+              order: []
+    +         simple:
+    +             bikes:
+    +                 entity: "AppBundle:Bike"
+    +                 icon: bicycle
 
 Open our new admin
 ------------------
