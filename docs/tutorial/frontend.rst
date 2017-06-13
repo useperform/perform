@@ -27,6 +27,12 @@ Bootstrap 3 in the generated files, including a ``package.json`` with
 the relevant packages and ``gulpfile.js`` with tasks to build the
 assets.
 
+Now run the ``perform:install`` command, which will download and build the new assets in the AppBundle:
+
+.. code-block:: bash
+
+   ./bin/console perform:install
+
 .. note::
 
    A ``frontend`` is a concept restricted to the DevBundle, and is only used when generating new code.
@@ -173,3 +179,6 @@ And update the ``content`` block in ``src/AppBundle/Resources/views/Page/home.ht
     +     </div>
     +   </div>
       {% endblock %}
+
+Now add some bikes in the administration area and refresh the home page.
+You'll see a list of 10 bikes with their titles and descriptions.

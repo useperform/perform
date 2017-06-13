@@ -115,7 +115,7 @@ Showing pictures on the frontend
 
 Go ahead and create some bikes in the admin, linking them to your newly uploaded media files.
 
-Update the frontend to show images along with the bikes:
+Update ``src/AppBundle/Resources/views/home.html.twig`` to show images alongside the bikes:
 
 .. code-block:: diff
 
