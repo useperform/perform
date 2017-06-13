@@ -19,8 +19,6 @@ Declare two fields with the following database types:
 * ``model`` - `string`
 * ``description`` - `text`
 
-When prompted, declare a manyToOne doctrine relationship to ``PerformMediaBundle:File``, which we'll use to show a picture of each bike.
-
 Now update the database schema to create a new table for the entity:
 
 .. code-block:: bash

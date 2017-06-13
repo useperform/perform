@@ -24,4 +24,5 @@ We can put this together in no time with Perform.
    setup
    bikes
    frontend
+   media
    contact
