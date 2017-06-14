@@ -1,0 +1,12 @@
+Perform\BaseBundle\Tests\Fixtures\ExtendEntities\YamlBaseBundle\Entity\Item:
+    type: entity
+    table: base_entity_item
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        name:
+            type: string
