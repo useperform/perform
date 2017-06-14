@@ -25,4 +25,5 @@ We can put this together in no time with Perform.
    bikes
    frontend
    media
+   styling
    contact
