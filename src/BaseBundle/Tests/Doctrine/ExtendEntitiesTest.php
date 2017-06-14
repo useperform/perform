@@ -6,6 +6,7 @@ use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\ExtendEntitiesKernel;
 use Temping\Temping;
 use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\YamlBaseBundle\YamlBaseBundle;
 use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\XmlExtendBundle\XmlExtendBundle;
+use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\XmlExtendBundle\Entity\YamlItem;
 
 /**
  * ExtendEntitiesTest
@@ -37,11 +38,12 @@ class ExtendEntitiesTest extends \PHPUnit_Framework_TestCase
             new XmlExtendBundle(),
         ]);
         $em = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
+
         $yamlBase = $em->getClassMetadata('YamlBaseBundle:Item');
-        $yamlChild = $em->getClassMetadata('XmlExtendBundle:YamlItem');
-
         $this->assertTrue($yamlBase->isMappedSuperclass);
-
+        $yamlChild = $em->getClassMetadata('XmlExtendBundle:YamlItem');
         $this->assertSame(['id', 'name', 'extraField'], array_keys($yamlChild->fieldMappings));
+        $related = $em->getClassMetadata('YamlBaseBundle:ItemLink');
+        $this->assertSame(YamlItem::class, $related->associationMappings['item']['targetEntity']);
     }
 }

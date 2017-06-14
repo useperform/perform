@@ -145,6 +145,13 @@ services:
         tags:
             - { name: doctrine.event_subscriber }
 
+    perform_base.doctrine.extend_listener:
+        class: Perform\BaseBundle\Doctrine\ExtendEntitiesListener
+        arguments:
+            - "%perform_base.extended_entities%"
+        tags:
+            - { name: doctrine.event_subscriber }
+
     perform_base.importer.user:
         class: Perform\BaseBundle\Importer\UserImporter
         arguments: ["@doctrine.orm.entity_manager"]
