@@ -1,6 +1,6 @@
 <?php
 
-namespace Perform\BaseBundle\Tests\Fixtures\ExtendEntities\YamlBaseBundle\Entity;
+namespace Perform\BaseBundle\Tests\Fixtures\ExtendEntities\YamlParentBundle\Entity;
 
 /**
  * ItemLink
