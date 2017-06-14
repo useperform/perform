@@ -1,6 +1,6 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
-var browserSync = require('browser-sync');
+var browserSync = require('browser-sync').create();
 
 function handleError (err) {
   console.log(err);
@@ -23,8 +23,14 @@ gulp.task('js', function () {
   ]).pipe(gulp.dest('Resources/public/js/'));
 });
 
+gulp.task('fonts', function () {
+  return gulp.src([
+    'node_modules/bootstrap-sass/assets/fonts/bootstrap/glyphicons-halflings-regular.*',
+  ]).pipe(gulp.dest('Resources/public/fonts/'));
+});
+
 gulp.task('browser-sync', function () {
-  browserSync.create().init({
+  browserSync.init({
     open: false,
     proxy: '{{perform_dev('dev_url')}}'
   });
@@ -35,6 +41,6 @@ gulp.task('watch', function () {
   gulp.watch('Resources/js/*.js', ['js']);
 });
 
-gulp.task('develop', ['watch', 'sass', 'js', 'browser-sync']);
-gulp.task('build', ['sass', 'js']);
-gulp.task('default', ['develop']);
+gulp.task('dev', ['watch', 'build', 'browser-sync']);
+gulp.task('build', ['sass', 'js', 'fonts']);
+gulp.task('default', ['dev']);
