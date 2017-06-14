@@ -61,7 +61,7 @@ html:
 
 .PHONY: livehtml
 livehtml:
-	sphinx-autobuild -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+	sphinx-autobuild -p 7000 -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 
 .PHONY: dirhtml
 dirhtml:
