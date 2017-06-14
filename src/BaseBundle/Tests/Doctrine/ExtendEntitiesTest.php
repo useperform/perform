@@ -5,8 +5,10 @@ namespace Perform\BaseBundle\Tests\Doctrine;
 use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\ExtendEntitiesKernel;
 use Temping\Temping;
 use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\YamlParentBundle\YamlParentBundle;
+use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\XmlParentBundle\XmlParentBundle;
 use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\XmlChildBundle\XmlChildBundle;
 use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\XmlChildBundle\Entity\YamlItem;
+use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\XmlChildBundle\Entity\XmlItem;
 
 /**
  * ExtendEntitiesTest
@@ -35,6 +37,7 @@ class ExtendEntitiesTest extends \PHPUnit_Framework_TestCase
     {
         $this->useBundles([
             new YamlParentBundle(),
+            new XmlParentBundle(),
             new XmlChildBundle(),
         ]);
         $em = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
@@ -44,7 +47,15 @@ class ExtendEntitiesTest extends \PHPUnit_Framework_TestCase
         $yamlChild = $em->getClassMetadata('XmlChildBundle:YamlItem');
         $this->assertSame(['id', 'name', 'extraField'], array_keys($yamlChild->fieldMappings));
         $this->assertSame(['links'], array_keys($yamlChild->associationMappings));
-        $related = $em->getClassMetadata('YamlParentBundle:ItemLink');
-        $this->assertSame(YamlItem::class, $related->associationMappings['item']['targetEntity']);
+        $yamlRelated = $em->getClassMetadata('YamlParentBundle:ItemLink');
+        $this->assertSame(YamlItem::class, $yamlRelated->associationMappings['item']['targetEntity']);
+
+        $xmlParent = $em->getClassMetadata('XmlParentBundle:Item');
+        $this->assertTrue($xmlParent->isMappedSuperclass);
+        $xmlChild = $em->getClassMetadata('XmlChildBundle:XmlItem');
+        $this->assertEquals(['id', 'name', 'extraField'], array_keys($xmlChild->fieldMappings), "", 0, 10, true);
+        $this->assertSame(['links'], array_keys($xmlChild->associationMappings));
+        $xmlRelated = $em->getClassMetadata('XmlParentBundle:ItemLink');
+        $this->assertSame(XmlItem::class, $xmlRelated->associationMappings['item']['targetEntity']);
     }
 }

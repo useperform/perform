@@ -4,7 +4,11 @@
     xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
         http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Perform\BaseBundle\Tests\Fixtures\ExtendEntities\XmlChildBundle\Entity\YamlItem">
-        <field name="extraField" type="string" />
+    <entity name="Perform\BaseBundle\Tests\Fixtures\ExtendEntities\XmlParentBundle\Entity\Item">
+        <id name="id" type="guid">
+            <generator strategy="UUID" />
+        </id>
+        <field name="name" type="string" />
+        <one-to-many field="links" target-entity="ItemLink" mapped-by="item" />
     </entity>
 </doctrine-mapping>
