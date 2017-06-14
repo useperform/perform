@@ -12,4 +12,6 @@ class Item
     protected $id;
 
     protected $name;
+
+    protected $links;
 }

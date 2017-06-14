@@ -10,5 +10,6 @@ Perform\BaseBundle\Tests\Fixtures\ExtendEntities\YamlBaseBundle\Entity\ItemLink:
     manyToOne:
         item:
             targetEntity: Item
+            inversedBy: links
             joinColumn:
                 nullable: false

@@ -39,10 +39,11 @@ class ExtendEntitiesTest extends \PHPUnit_Framework_TestCase
         ]);
         $em = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
 
-        $yamlBase = $em->getClassMetadata('YamlBaseBundle:Item');
-        $this->assertTrue($yamlBase->isMappedSuperclass);
+        $yamlParent = $em->getClassMetadata('YamlBaseBundle:Item');
+        $this->assertTrue($yamlParent->isMappedSuperclass);
         $yamlChild = $em->getClassMetadata('XmlExtendBundle:YamlItem');
         $this->assertSame(['id', 'name', 'extraField'], array_keys($yamlChild->fieldMappings));
+        $this->assertSame(['links'], array_keys($yamlChild->associationMappings));
         $related = $em->getClassMetadata('YamlBaseBundle:ItemLink');
         $this->assertSame(YamlItem::class, $related->associationMappings['item']['targetEntity']);
     }

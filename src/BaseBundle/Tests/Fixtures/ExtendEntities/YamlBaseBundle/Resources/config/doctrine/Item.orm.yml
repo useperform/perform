@@ -10,3 +10,7 @@ Perform\BaseBundle\Tests\Fixtures\ExtendEntities\YamlBaseBundle\Entity\Item:
     fields:
         name:
             type: string
+    oneToMany:
+        links:
+            targetEntity: ItemLink
+            mappedBy: item
