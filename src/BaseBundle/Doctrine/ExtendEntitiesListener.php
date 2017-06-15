@@ -37,7 +37,9 @@ class ExtendEntitiesListener implements EventSubscriber
 
     public function __construct(array $entities)
     {
-        $this->entities = $entities;
+        foreach ($entities as $parent => $child) {
+            $this->entities[ltrim($parent, '\\')] = ltrim($child, '\\');
+        }
     }
 
     public function getSubscribedEvents()
