@@ -64,6 +64,11 @@ doctrine_cache:
             file_system: []
 
 perform_base:
+    extended_entities:
+        Perform\BaseBundle\Tests\Fixtures\ExtendEntities\YamlParentBundle\Entity\Item:
+            Perform\BaseBundle\Tests\Fixtures\ExtendEntities\XmlChildBundle\Entity\YamlItem
+        Perform\BaseBundle\Tests\Fixtures\ExtendEntities\XmlParentBundle\Entity\Item:
+            Perform\BaseBundle\Tests\Fixtures\ExtendEntities\XmlChildBundle\Entity\XmlItem
     panels:
         left: []
         right: []

@@ -34,4 +34,22 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($expected, $config['menu']);
     }
+
+    public function testExtendEntities()
+    {
+        $config = $this->process([]);
+        $this->assertSame([], $config['extended_entities']);
+
+        $entities = [
+            'ParentBundle\Entity\Bar' => 'ChildBundle\Entity\Bar',
+            'ParentBundle\\Entity\\Foo' => 'ChildBundle\\Entity\\Foo',
+        ];
+        $config = $this->process([
+            'perform_base' => [
+                'extended_entities' => $entities
+            ]
+        ]);
+
+        $this->assertSame($entities, $config['extended_entities']);
+    }
 }

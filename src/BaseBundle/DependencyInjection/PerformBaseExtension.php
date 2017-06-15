@@ -36,6 +36,7 @@ class PerformBaseExtension extends Extension
         $container->setParameter('perform_base.auto_asset_version', uniqid());
         $this->configureTypeRegistry($container);
         $this->configureMailer($config, $container);
+        $container->setParameter('perform_base.extended_entities', $config['extended_entities']);
         $this->findExtendedEntities($container);
         $this->createSimpleMenus($container, $config['menu']['simple']);
 
@@ -88,7 +89,6 @@ class PerformBaseExtension extends Extension
 
     protected function findExtendedEntities(ContainerBuilder $container)
     {
-        $extendedEntities = [];
         $entityAliases = [];
         $extendedAliases = [];
         $entities = $this->findEntities($container);
@@ -98,16 +98,10 @@ class PerformBaseExtension extends Extension
             if (false === $parent = $item[1]) {
                 continue;
             }
-            if (isset($extendedEntities[$parent])) {
-                throw new MappingException(sprintf('Unable to auto-extend parent entity "%s" in child entity "%s", as it has already been extended by "%s".', $parent, $child, $extendedEntities[$parent]));
-            }
-
-            $extendedEntities[$parent] = $class;
             $parentAlias = $entities[$parent][0];
             $extendedAliases[$parentAlias] = $alias;
         }
 
-        $container->setParameter('perform_base.extended_entities', $extendedEntities);
         $container->setParameter('perform_base.entity_aliases', $entityAliases);
         $container->setParameter('perform_base.extended_entity_aliases', $extendedAliases);
     }

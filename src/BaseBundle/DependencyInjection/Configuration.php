@@ -16,6 +16,7 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('perform_base');
 
         $rootNode
+            ->fixXmlConfig('extended_entity', 'extended_entities')
             ->children()
                 ->arrayNode('mailer')
                     ->children()
@@ -31,6 +32,12 @@ class Configuration implements ConfigurationInterface
                                 ->prototype('variable')->end()
                             ->end()
                         ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('extended_entities')
+                    ->useAttributeAsKey('parent')
+                    ->prototype('scalar')
+                        ->cannotBeEmpty()
                     ->end()
                 ->end()
                 ->arrayNode('panels')
