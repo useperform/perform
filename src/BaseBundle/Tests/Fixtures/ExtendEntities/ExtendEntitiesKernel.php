@@ -14,12 +14,22 @@ class ExtendEntitiesKernel extends Kernel
 {
     protected $dir;
     protected $entityBundles;
+    protected $extraConfig;
 
-    public function __construct($dir, array $entityBundles)
+    public function __construct($dir, array $entityBundles, $extraConfig)
     {
         parent::__construct('dev', true);
         $this->rootDir = $dir;
         $this->entityBundles = $entityBundles;
+        $this->extraConfig = $extraConfig;
+    }
+
+    protected function getContainerClass()
+    {
+        // turn yaml_child.yml into Yaml
+        $extra = ucfirst(substr($this->extraConfig, 0, strpos($this->extraConfig, '_')));
+
+        return $this->name.ucfirst($this->environment).$extra.($this->debug ? 'Debug' : '').'ProjectContainer';
     }
 
     public function registerBundles()
@@ -45,5 +55,6 @@ class ExtendEntitiesKernel extends Kernel
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load(__DIR__.'/config.yml');
+        $loader->load(__DIR__.'/'.$this->extraConfig);
     }
 }

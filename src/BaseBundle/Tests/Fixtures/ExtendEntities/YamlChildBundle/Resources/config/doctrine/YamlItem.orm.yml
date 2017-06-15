@@ -1,0 +1,5 @@
+Perform\BaseBundle\Tests\Fixtures\ExtendEntities\YamlChildBundle\Entity\YamlItem:
+    type: entity
+    fields:
+        extraField:
+            type: string
