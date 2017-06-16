@@ -4,8 +4,8 @@ namespace Perform\BaseBundle\Action;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Perform\BaseBundle\Admin\AdminRegistry;
 use Doctrine\ORM\EntityNotFoundException;
+use Perform\BaseBundle\Config\ConfigStoreInterface;
 
 /**
  * ActionRunner.
@@ -15,17 +15,17 @@ use Doctrine\ORM\EntityNotFoundException;
 class ActionRunner
 {
     protected $entityManager;
-    protected $registry;
+    protected $store;
 
-    public function __construct(EntityManagerInterface $entityManager, AdminRegistry $registry)
+    public function __construct(EntityManagerInterface $entityManager, ConfigStoreInterface $store)
     {
         $this->entityManager = $entityManager;
-        $this->registry = $registry;
+        $this->store = $store;
     }
 
     public function run($actionName, $entityClass, array $entityIds)
     {
-        $action = $this->registry->getActionConfig($entityClass)->get($actionName);
+        $action = $this->store->getActionConfig($entityClass)->get($actionName);
 
         $entities = [];
         foreach ($entityIds as $id) {

@@ -5,8 +5,8 @@ namespace Perform\BaseBundle\Twig\Extension;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Perform\BaseBundle\Action\ActionRegistry;
 use Perform\BaseBundle\Action\ConfiguredAction;
-use Perform\BaseBundle\Admin\AdminRegistry;
 use Perform\BaseBundle\Admin\AdminRequest;
+use Perform\BaseBundle\Config\ConfigStoreInterface;
 
 /**
  * ActionExtension.
@@ -17,14 +17,14 @@ class ActionExtension extends \Twig_Extension
 {
     protected $urlGenerator;
     protected $registry;
-    protected $adminRegistry;
+    protected $store;
     protected $request;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator, ActionRegistry $registry, AdminRegistry $adminRegistry)
+    public function __construct(UrlGeneratorInterface $urlGenerator, ActionRegistry $registry, ConfigStoreInterface $store)
     {
         $this->urlGenerator = $urlGenerator;
         $this->registry = $registry;
-        $this->adminRegistry = $adminRegistry;
+        $this->store = $store;
     }
 
     public function getFunctions()
@@ -79,6 +79,7 @@ class ActionExtension extends \Twig_Extension
             'buttonStyle' => $action->getButtonStyle(),
         ]);
         $attr['value'] = $this->urlGenerator->generate('perform_base_action_index', ['action' => $action->getName()]);
+
         return $twig->render('PerformBaseBundle:Action:option.html.twig', [
             'attr' => $attr,
             'label' => $label,
@@ -87,7 +88,7 @@ class ActionExtension extends \Twig_Extension
 
     public function actionsForEntity($entity)
     {
-        return $this->adminRegistry->getActionConfig($entity)->forEntity($entity);
+        return $this->store->getActionConfig($entity)->forEntity($entity);
     }
 
     public function getName()

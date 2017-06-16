@@ -9,7 +9,7 @@ services:
         class: Perform\BaseBundle\Action\ActionRunner
         arguments:
             - "@doctrine.orm.entity_manager"
-            - "@perform_base.admin.registry"
+            - "@perform_base.config_store"
 
     perform_base.action.delete:
         class: Perform\BaseBundle\Action\DeleteAction

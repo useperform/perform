@@ -8,9 +8,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Perform\BaseBundle\Type\TypeConfig;
 use Symfony\Component\OptionsResolver\Options;
-use Perform\BaseBundle\Admin\AdminRegistry;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
+use Perform\BaseBundle\Doctrine\EntityResolver;
+use Perform\BaseBundle\Config\ConfigStoreInterface;
 
 /**
  * AdminType.
@@ -19,12 +20,14 @@ use Symfony\Component\Form\FormInterface;
  **/
 class AdminType extends AbstractType
 {
-    protected $adminRegistry;
+    protected $store;
+    protected $resolver;
     protected $typeRegistry;
 
-    public function __construct(AdminRegistry $adminRegistry, TypeRegistry $typeRegistry)
+    public function __construct(ConfigStoreInterface $store, EntityResolver $resolver, TypeRegistry $typeRegistry)
     {
-        $this->adminRegistry = $adminRegistry;
+        $this->store = $store;
+        $this->resolver = $resolver;
         $this->typeRegistry = $typeRegistry;
     }
 
@@ -52,7 +55,7 @@ class AdminType extends AbstractType
 
     protected function getTypes($entity, $context)
     {
-        $typeConfig = $this->adminRegistry->getTypeConfig($entity);
+        $typeConfig = $this->store->getTypeConfig($entity);
 
         return $typeConfig->getTypes($context);
     }
@@ -62,7 +65,7 @@ class AdminType extends AbstractType
         $resolver->setRequired(['context', 'entity']);
         $resolver->setAllowedValues('context', [TypeConfig::CONTEXT_CREATE, TypeConfig::CONTEXT_EDIT]);
         $resolver->setDefault('data_class', function (Options $options) {
-            return $this->adminRegistry->resolveEntity($options['entity']);
+            return $this->resolver->resolve($options['entity']);
         });
     }
 }

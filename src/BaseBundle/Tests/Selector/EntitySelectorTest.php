@@ -12,6 +12,7 @@ use Perform\BaseBundle\Type\StringType;
 use Perform\BaseBundle\Admin\AdminRequest;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Perform\BaseBundle\Type\BooleanType;
+use Perform\BaseBundle\Config\ConfigStoreInterface;
 
 /**
  * EntitySelectorTest.
@@ -21,9 +22,8 @@ use Perform\BaseBundle\Type\BooleanType;
 class EntitySelectorTest extends \PHPUnit_Framework_TestCase
 {
     protected $entityManager;
-    protected $registry;
-    protected $typeRegistry;
     protected $selector;
+    protected $store;
     protected $qb;
 
     public function setUp()
@@ -37,18 +37,16 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
             ->method('createQueryBuilder')
             ->will($this->returnValue($this->qb));
 
-        $this->registry = $this->getMockBuilder('Perform\BaseBundle\Admin\AdminRegistry')
-                        ->disableOriginalConstructor()
-                        ->getMock();
-        $this->registry->expects($this->any())
-            ->method('getFilterConfig')
-            ->will($this->returnValue(new FilterConfig([])));
         $container = $this->getMock(ContainerInterface::class);
         $this->typeRegistry = new TypeRegistry($container);
         $this->typeRegistry->addType('string', StringType::class);
         $this->typeRegistry->addType('boolean', BooleanType::class);
+        $this->store = $this->getMock(ConfigStoreInterface::class);
+        $this->store->expects($this->any())
+            ->method('getFilterConfig')
+            ->will($this->returnValue(new FilterConfig([])));
 
-        $this->selector = new EntitySelector($this->entityManager, $this->registry);
+        $this->selector = new EntitySelector($this->entityManager, $this->store);
     }
 
     protected function expectQueryBuilder($entityName)
@@ -70,7 +68,7 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
             $typeConfig->add($field, $config);
         }
 
-        $this->registry->expects($this->any())
+        $this->store->expects($this->any())
             ->method('getTypeConfig')
             ->with($entityName)
             ->will($this->returnValue($typeConfig));

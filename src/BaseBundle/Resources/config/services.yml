@@ -10,9 +10,20 @@ services:
             - '@perform_base.action_registry'
             - '%perform_base.admins%'
 
+    perform_base.config_store:
+        class: Perform\BaseBundle\Config\ConfigStore
+        arguments:
+            - '@perform_base.doctrine.entity_resolver'
+            - '@perform_base.admin.registry'
+            - '@perform_base.type_registry'
+            - '@perform_base.action_registry'
+
     perform_base.form.type.admin:
         class: Perform\BaseBundle\Form\Type\AdminType
-        arguments: ['@perform_base.admin.registry', '@perform_base.type_registry']
+        arguments:
+            - '@perform_base.config_store'
+            - '@perform_base.doctrine.entity_resolver'
+            - '@perform_base.type_registry'
         tags:
             - {name: form.type}
 
@@ -28,7 +39,10 @@ services:
     perform_base.admin_collector:
         class: Perform\BaseBundle\DataCollector\AdminsDataCollector
         public: false
-        arguments: ['@perform_base.admin.registry', '%perform_base.extended_entities%']
+        arguments:
+            - '@perform_base.admin.registry'
+            - '@perform_base.config_store'
+            - '%perform_base.extended_entities%'
         tags:
             -
                 name: data_collector
@@ -75,7 +89,7 @@ services:
         arguments:
             - "@router"
             - "@perform_base.action_registry"
-            - "@perform_base.admin.registry"
+            - "@perform_base.config_store"
         tags:
             - {name: twig.extension}
 
@@ -160,7 +174,7 @@ services:
         class: Perform\BaseBundle\Selector\EntitySelector
         arguments:
             - "@doctrine.orm.entity_manager"
-            - "@perform_base.admin.registry"
+            - "@perform_base.config_store"
 
     perform_base.asset_strategy:
         class: Symfony\Component\Asset\VersionStrategy\StaticVersionStrategy

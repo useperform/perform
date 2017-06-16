@@ -3,13 +3,12 @@
 namespace Perform\BaseBundle\Tests\DataCollector;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Perform\BaseBundle\Type\TypeRegistry;
 use Perform\BaseBundle\Admin\AdminRegistry;
 use Perform\BaseBundle\DataCollector\AdminsDataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Perform\BaseBundle\Admin\AdminInterface;
-use Perform\BaseBundle\Action\ActionRegistry;
+use Perform\BaseBundle\Config\ConfigStoreInterface;
 
 /**
  * AdminsDataCollectorTest.
@@ -21,12 +20,9 @@ class AdminsDataCollectorTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->container = $this->getMock(ContainerInterface::class);
-        $this->typeRegistry = new TypeRegistry($this->container);
-        $actionRegistry = $this->getMockBuilder(ActionRegistry::class)
-                      ->disableOriginalConstructor()
-                      ->getMock();
-        $this->registry = new AdminRegistry($this->container, $this->typeRegistry, $actionRegistry);
-        $this->collector = new AdminsDataCollector($this->registry, []);
+        $this->registry = new AdminRegistry($this->container);
+        $store = $this->getMock(ConfigStoreInterface::class);
+        $this->collector = new AdminsDataCollector($this->registry, $store, []);
     }
 
     public function testCollectGetsLoadedAdmins()
