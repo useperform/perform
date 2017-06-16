@@ -2,8 +2,8 @@
 
 namespace Perform\BaseBundle\Admin;
 
-use Perform\BaseBundle\Type\TypeConfig;
-use Perform\BaseBundle\Action\ActionConfig;
+use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Config\ActionConfig;
 use Perform\BaseBundle\Controller\UserController;
 
 /**

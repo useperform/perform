@@ -7,12 +7,12 @@ use Perform\BaseBundle\Admin\AdminInterface;
 use Perform\BaseBundle\Doctrine\EntityResolver;
 use Perform\BaseBundle\Admin\AdminRegistry;
 use Perform\BaseBundle\Type\TypeRegistry;
-use Perform\BaseBundle\Type\TypeConfig;
+use Perform\BaseBundle\Config\TypeConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Perform\BaseBundle\Type\StringType;
 use Perform\BaseBundle\Action\ActionRegistry;
-use Perform\BaseBundle\Filter\FilterConfig;
-use Perform\BaseBundle\Action\ActionConfig;
+use Perform\BaseBundle\Config\FilterConfig;
+use Perform\BaseBundle\Config\ActionConfig;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
 
 /**

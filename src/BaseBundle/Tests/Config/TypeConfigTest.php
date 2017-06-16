@@ -2,7 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Config;
 
-use Perform\BaseBundle\Type\TypeConfig;
+use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Perform\BaseBundle\Type\StringType;
 use Perform\BaseBundle\Type\TypeInterface;

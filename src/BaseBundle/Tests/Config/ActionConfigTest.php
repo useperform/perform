@@ -3,7 +3,7 @@
 namespace Perform\BaseBundle\Tests\Config;
 
 use Perform\BaseBundle\Action\ActionRegistry;
-use Perform\BaseBundle\Action\ActionConfig;
+use Perform\BaseBundle\Config\ActionConfig;
 use Perform\BaseBundle\Action\ConfiguredAction;
 use Perform\BaseBundle\Action\ActionInterface;
 use Perform\BaseBundle\Admin\AdminRequest;

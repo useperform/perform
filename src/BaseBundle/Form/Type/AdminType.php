@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Perform\BaseBundle\Type\TypeRegistry;
-use Perform\BaseBundle\Type\TypeConfig;
+use Perform\BaseBundle\Config\TypeConfig;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;

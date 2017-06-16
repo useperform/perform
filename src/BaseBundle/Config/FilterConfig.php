@@ -4,6 +4,7 @@ namespace Perform\BaseBundle\Config;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Perform\BaseBundle\Util\StringUtil;
+use Perform\BaseBundle\Filter\Filter;
 
 /**
  * FilterConfig.

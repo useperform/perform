@@ -6,8 +6,8 @@ use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
-use Perform\BaseBundle\Type\TypeConfig;
-use Perform\BaseBundle\Filter\FilterConfig;
+use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Config\FilterConfig;
 use Perform\BaseBundle\Admin\AdminRequest;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
 

@@ -6,6 +6,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Perform\BaseBundle\Util\StringUtil;
 use Symfony\Component\OptionsResolver\Exception\ExceptionInterface;
 use Perform\BaseBundle\Exception\InvalidTypeException;
+use Perform\BaseBundle\Type\TypeRegistry;
 
 /**
  * TypeConfig.

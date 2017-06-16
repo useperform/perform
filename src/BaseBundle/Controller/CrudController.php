@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bridge\Twig\Extension\FormExtension;
-use Perform\BaseBundle\Type\TypeConfig;
+use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BaseBundle\Admin\AdminRequest;
 use Perform\BaseBundle\Twig\Extension\ActionExtension;
 

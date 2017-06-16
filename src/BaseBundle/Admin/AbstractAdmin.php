@@ -4,8 +4,8 @@ namespace Perform\BaseBundle\Admin;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Perform\BaseBundle\Form\Type\AdminType;
-use Perform\BaseBundle\Filter\FilterConfig;
-use Perform\BaseBundle\Action\ActionConfig;
+use Perform\BaseBundle\Config\FilterConfig;
+use Perform\BaseBundle\Config\ActionConfig;
 
 /**
  * AbstractAdmin

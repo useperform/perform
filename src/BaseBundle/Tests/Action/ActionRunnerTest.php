@@ -7,7 +7,7 @@ use Perform\BaseBundle\Action\ActionRunner;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Perform\BaseBundle\Action\ActionResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Perform\BaseBundle\Action\ActionConfig;
+use Perform\BaseBundle\Config\ActionConfig;
 use Perform\BaseBundle\Action\ConfiguredAction;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
 

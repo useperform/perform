@@ -5,7 +5,7 @@ namespace Perform\BaseBundle\Tests\Type;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Perform\BaseBundle\Type\DateType;
-use Perform\BaseBundle\Type\TypeConfig;
+use Perform\BaseBundle\Config\TypeConfig;
 
 /**
  * DateTypeTest.
