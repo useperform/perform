@@ -30,7 +30,6 @@ class PerformBaseExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $container->setParameter('perform_base.admins', $config['admins']);
         $container->setParameter('perform_base.panels.left', $config['panels']['left']);
         $container->setParameter('perform_base.panels.right', $config['panels']['right']);
         $container->setParameter('perform_base.menu_order', $config['menu']['order']);
@@ -38,6 +37,7 @@ class PerformBaseExtension extends Extension
         $this->configureTypeRegistry($container);
         $this->configureMailer($config, $container);
         $this->findExtendedEntities($container, $config);
+        $this->processAdminConfig($container, $config);
         $this->createSimpleMenus($container, $config['menu']['simple']);
 
         $tokenManager = $container->getDefinition('perform_base.reset_token_manager');
@@ -155,5 +155,16 @@ class PerformBaseExtension extends Extension
             $definition->setArguments([$alias, $options['entity'], $options['route'], $options['icon']]);
             $definition->addTag('perform_base.link_provider', ['alias' => $alias]);
         }
+    }
+
+    public function processAdminConfig(ContainerBuilder $container, array $config)
+    {
+        $admins = [];
+        $resolver = new EntityResolver($container->getParameter('perform_base.entity_aliases'));
+        foreach ($config['admins'] as $entity => $configuration) {
+            $admins[$resolver->resolveNoExtend($entity)] = $configuration;
+        }
+
+        $container->setParameter('perform_base.admins', $admins);
     }
 }
