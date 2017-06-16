@@ -11,6 +11,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Config\Resource\DirectoryResource;
 use Doctrine\Common\Persistence\Mapping\MappingException;
+use Perform\BaseBundle\Doctrine\EntityResolver;
 
 /**
  * PerformBaseExtension.
@@ -36,8 +37,7 @@ class PerformBaseExtension extends Extension
         $container->setParameter('perform_base.auto_asset_version', uniqid());
         $this->configureTypeRegistry($container);
         $this->configureMailer($config, $container);
-        $container->setParameter('perform_base.extended_entities', $config['extended_entities']);
-        $this->findExtendedEntities($container);
+        $this->findExtendedEntities($container, $config);
         $this->createSimpleMenus($container, $config['menu']['simple']);
 
         $tokenManager = $container->getDefinition('perform_base.reset_token_manager');
@@ -87,7 +87,7 @@ class PerformBaseExtension extends Extension
         }
     }
 
-    protected function findExtendedEntities(ContainerBuilder $container)
+    protected function findExtendedEntities(ContainerBuilder $container, array $config)
     {
         $entityAliases = [];
         $extendedAliases = [];
@@ -104,6 +104,14 @@ class PerformBaseExtension extends Extension
 
         $container->setParameter('perform_base.entity_aliases', $entityAliases);
         $container->setParameter('perform_base.extended_entity_aliases', $extendedAliases);
+
+        $extended = [];
+        $resolver = new EntityResolver($entityAliases);
+        foreach ($config['extended_entities'] as $parent => $child) {
+            $extended[$resolver->resolveNoExtend($parent)] = $resolver->resolveNoExtend($child);
+        }
+
+        $container->setParameter('perform_base.extended_entities', $extended);
     }
 
     protected function findEntities(ContainerBuilder $container)
