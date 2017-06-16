@@ -1,6 +1,6 @@
 <?php
 
-namespace Perform\BaseBundle\Tests\Action;
+namespace Perform\BaseBundle\Tests\Config;
 
 use Perform\BaseBundle\Action\ActionRegistry;
 use Perform\BaseBundle\Action\ActionConfig;
