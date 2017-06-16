@@ -4,11 +4,6 @@ namespace Perform\BaseBundle\Admin;
 
 use Perform\BaseBundle\Exception\AdminNotFoundException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Perform\BaseBundle\Type\TypeConfig;
-use Perform\BaseBundle\Filter\FilterConfig;
-use Perform\BaseBundle\Type\TypeRegistry;
-use Perform\BaseBundle\Action\ActionRegistry;
-use Perform\BaseBundle\Action\ActionConfig;
 
 /**
  * AdminRegistry.
@@ -18,21 +13,12 @@ use Perform\BaseBundle\Action\ActionConfig;
 class AdminRegistry
 {
     protected $container;
-    protected $typeRegistry;
-    protected $actionRegistry;
     protected $admins = [];
     protected $aliases = [];
-    protected $override = [];
-    protected $typeConfigs = [];
-    protected $filterConfigs = [];
-    protected $actionConfigs = [];
 
-    public function __construct(ContainerInterface $container, TypeRegistry $typeRegistry, ActionRegistry $actionRegistry, array $override = [])
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        $this->typeRegistry = $typeRegistry;
-        $this->actionRegistry = $actionRegistry;
-        $this->override = $override;
     }
 
     /**
@@ -99,69 +85,5 @@ class AdminRegistry
     public function getAdmins()
     {
         return $this->admins;
-    }
-
-    /**
-     * Get the TypeConfig for an entity. The type config may include
-     * overrides from application configuration.
-     *
-     * @param string|object $entity
-     *
-     * @return TypeConfig
-     */
-    public function getTypeConfig($entity)
-    {
-        $class = $this->resolveEntity($entity);
-        if (!isset($this->typeConfigs[$class])) {
-            $typeConfig = new TypeConfig($this->typeRegistry);
-            $this->getAdmin($class)->configureTypes($typeConfig);
-
-            if (isset($this->override[$class]['types'])) {
-                foreach ($this->override[$class]['types'] as $field => $config) {
-                    $typeConfig->add($field, $config);
-                }
-            }
-            $this->typeConfigs[$class] = $typeConfig;
-        }
-
-        return $this->typeConfigs[$class];
-    }
-
-    /**
-     * Get the FilterConfig for an entity. The filter config may include
-     * overrides from application configuration.
-     *
-     * @param string|object $entity
-     *
-     * @return FilterConfig
-     */
-    public function getFilterConfig($entity)
-    {
-        $class = $this->resolveEntity($entity);
-        if (!isset($this->filterConfigs[$class])) {
-            $this->filterConfigs[$class] = new FilterConfig();
-            $this->getAdmin($class)->configureFilters($this->filterConfigs[$class]);
-        }
-
-        return $this->filterConfigs[$class];
-    }
-
-    /**
-     * Get the ActionConfig for an entity. The action config may include
-     * overrides from application configuration.
-     *
-     * @param string|object $entity
-     *
-     * @return ActionConfig
-     */
-    public function getActionConfig($entity)
-    {
-        $class = $this->resolveEntity($entity);
-        if (!isset($this->actionConfigs[$class])) {
-            $this->actionConfigs[$class] = new ActionConfig($this->actionRegistry);
-            $this->getAdmin($class)->configureActions($this->actionConfigs[$class]);
-        }
-
-        return $this->actionConfigs[$class];
     }
 }
