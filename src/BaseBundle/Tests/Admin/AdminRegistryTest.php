@@ -4,6 +4,9 @@ namespace Perform\BaseBundle\Tests\Admin;
 
 use Perform\BaseBundle\Admin\AdminRegistry;
 use Perform\BaseBundle\Entity\User;
+use Perform\BaseBundle\Doctrine\EntityResolver;
+use Perform\BaseBundle\Admin\AdminInterface;
+use Perform\BaseBundle\Exception\AdminNotFoundException;
 
 /**
  * AdminRegistryTest.
@@ -18,13 +21,16 @@ class AdminRegistryTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
-        $this->registry = new AdminRegistry($this->container);
+        $entities = [
+            'PerformBaseBundle:User' => User::class,
+        ];
+        $this->registry = new AdminRegistry($this->container, new EntityResolver($entities));
     }
 
     public function testAddAndGetAdmin()
     {
-        $admin = $this->getMock('Perform\BaseBundle\Admin\AdminInterface');
-        $this->registry->addAdmin('PerformBaseBundle:User', 'Perform\BaseBundle\Entity\User', 'admin.service');
+        $admin = $this->getMock(AdminInterface::class);
+        $this->registry->addAdmin(User::class, 'admin.service');
         $this->container->expects($this->any())
             ->method('get')
             ->with('admin.service')
@@ -35,42 +41,31 @@ class AdminRegistryTest extends \PHPUnit_Framework_TestCase
 
     public function testUnknownAdmin()
     {
-        $this->setExpectedException('Perform\BaseBundle\Exception\AdminNotFoundException');
+        $this->setExpectedException(AdminNotFoundException::class);
         $this->registry->getAdmin('PerformBaseBundle:Foo');
     }
 
     public function testGetAdminByClass()
     {
-        $admin = $this->getMock('Perform\BaseBundle\Admin\AdminInterface');
-        $this->registry->addAdmin('PerformBaseBundle:User', 'Perform\BaseBundle\Entity\User', 'admin.service');
+        $admin = $this->getMock(AdminInterface::class);
+        $this->registry->addAdmin(User::class, 'admin.service');
         $this->container->expects($this->any())
             ->method('get')
             ->with('admin.service')
             ->will($this->returnValue($admin));
 
-        $this->assertSame($admin, $this->registry->getAdmin('Perform\BaseBundle\Entity\User'));
+        $this->assertSame($admin, $this->registry->getAdmin(User::class));
     }
 
     public function testGetAdminForEntity()
     {
-        $admin = $this->getMock('Perform\BaseBundle\Admin\AdminInterface');
-        $this->registry->addAdmin('PerformBaseBundle:User', 'Perform\BaseBundle\Entity\User', 'admin.service');
+        $admin = $this->getMock(AdminInterface::class);
+        $this->registry->addAdmin(User::class, 'admin.service');
         $this->container->expects($this->any())
             ->method('get')
             ->with('admin.service')
             ->will($this->returnValue($admin));
 
         $this->assertSame($admin, $this->registry->getAdmin(new User()));
-    }
-
-    public function testResolveEntity()
-    {
-        $alias = 'PerformBaseBundle:User';
-        $classname = 'Perform\BaseBundle\Entity\User';
-        $this->registry->addAdmin($alias, $classname, 'admin.service');
-
-        $this->assertSame($classname, $this->registry->resolveEntity($alias));
-        $this->assertSame($classname, $this->registry->resolveEntity($classname));
-        $this->assertSame($classname, $this->registry->resolveEntity(new User()));
     }
 }

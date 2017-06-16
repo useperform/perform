@@ -6,9 +6,7 @@ services:
         class: Perform\BaseBundle\Admin\AdminRegistry
         arguments:
             - '@service_container'
-            - '@perform_base.type_registry'
-            - '@perform_base.action_registry'
-            - '%perform_base.admins%'
+            - '@perform_base.doctrine.entity_resolver'
 
     perform_base.config_store:
         class: Perform\BaseBundle\Config\ConfigStore

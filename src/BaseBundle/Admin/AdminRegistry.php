@@ -4,6 +4,7 @@ namespace Perform\BaseBundle\Admin;
 
 use Perform\BaseBundle\Exception\AdminNotFoundException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Perform\BaseBundle\Doctrine\EntityResolver;
 
 /**
  * AdminRegistry.
@@ -15,68 +16,40 @@ class AdminRegistry
     protected $container;
     protected $admins = [];
     protected $aliases = [];
+    protected $resolver;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, EntityResolver $resolver)
     {
         $this->container = $container;
+        $this->resolver = $resolver;
     }
 
     /**
      * Register an admin service with the registry.
      *
-     * For performance reasons, the service is fetched lazily, and
-     * alias and class name are required in advance.
+     * The service is fetched lazily from the container for performance reasons.
      *
-     * @param string $entity      in the style of doctrine, e.g. PerformBaseBundle:User
-     * @param string $entityClass the fully qualified class name of the entity
-     * @param string $service     the name of the service in the container
+     * @param string $entity  the fully qualified class name of the entity
+     * @param string $service the name of the service in the container
      */
-    public function addAdmin($entity, $entityClass, $service)
+    public function addAdmin($entity, $service)
     {
-        if (strpos($entity, '\\') !== false || strpos($entity, ':') === false) {
-            throw new \InvalidArgumentException('An admin service must be registered with the entity alias, e.g. PerformBaseBundle:User.');
-        }
-
-        $this->admins[$entityClass] = $service;
-        $this->aliases[$entity] = $entityClass;
-
-        //an override may be indexed with the entity alias or entity class
-        //if both are supplied, alias wins
-        if (isset($this->override[$entity])) {
-            $this->override[$entityClass] = $this->override[$entity];
-            unset($this->override[$entity]);
-        }
+        $this->admins[$entity] = $service;
     }
 
     /**
      * Get the Admin instance for managing $entity.
      *
-     * @param string $entity in the style of doctrine (e.g. PerformBaseBundle:User), or the full class name of the entity
+     * @param string $entity the full class name of the entity
      */
     public function getAdmin($entity)
     {
-        $class = $this->resolveEntity($entity);
+        $class = $this->resolver->resolve($entity);
         if (isset($this->admins[$class])) {
             return $this->container->get($this->admins[$class]);
         }
 
         throw new AdminNotFoundException(sprintf('Admin not found for entity "%s"', $class));
-    }
-
-    /**
-     * Get the fully qualified classname of an entity alias or object.
-     *
-     * @param string|object $entity
-     *
-     * @return string
-     */
-    public function resolveEntity($entity)
-    {
-        if (!is_string($entity)) {
-            $entity = get_class($entity);
-        }
-
-        return isset($this->aliases[$entity]) ? $this->aliases[$entity] : $entity;
     }
 
     /**
