@@ -19,7 +19,7 @@ use Perform\BaseBundle\Action\ActionConfig;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ConfigStore
+class ConfigStore implements ConfigStoreInterface
 {
     protected $resolver;
     protected $adminRegistry;

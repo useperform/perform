@@ -13,6 +13,7 @@ use Perform\BaseBundle\Type\StringType;
 use Perform\BaseBundle\Action\ActionRegistry;
 use Perform\BaseBundle\Filter\FilterConfig;
 use Perform\BaseBundle\Action\ActionConfig;
+use Perform\BaseBundle\Config\ConfigStoreInterface;
 
 /**
  * ConfigStoreTest.
@@ -49,6 +50,12 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $this->store = new ConfigStore($resolver, $this->adminRegistry, $this->typeRegistry, $this->actionRegistry, $override);
+    }
+
+    public function testInterface()
+    {
+        $store = new ConfigStore(new EntityResolver(), $this->adminRegistry, $this->typeRegistry, $this->actionRegistry);
+        $this->assertInstanceOf(ConfigStoreInterface::class, $store);
     }
 
     public function testGetTypeConfig()
