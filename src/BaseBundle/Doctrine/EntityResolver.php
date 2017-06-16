@@ -19,12 +19,40 @@ class EntityResolver
         $this->extended = $extendedEntities;
     }
 
+    /**
+     * Get the fully qualified classname of an entity alias or object.
+     *
+     * If the entity has been extended, the child entity classname will be given.
+     *
+     * @param string|object $entity
+     *
+     * @return string
+     */
     public function resolve($entity)
     {
-        if (isset($this->aliases[$entity])) {
-            $entity = $this->aliases[$entity];
-        }
+        $entity = $this->resolveNoExtend($entity);
 
         return isset($this->extended[$entity]) ? $this->extended[$entity] : $entity;
+    }
+
+    /**
+     * Get the fully qualified classname of an entity alias or object.
+     *
+     * The actual entity classname will be given, even if the entity has been extended.
+     *
+     * @param string|object $entity
+     *
+     * @return string
+     */
+    public function resolveNoExtend($entity)
+    {
+        if (is_object($entity)) {
+            return get_class($entity);
+        }
+        if (!is_string($entity)) {
+            throw new \InvalidArgumentException(sprintf('EntityResolver#resolve() requires a string or entity object, %s given.', gettype($entity)));
+        }
+
+        return isset($this->aliases[$entity]) ? $this->aliases[$entity]: $entity;
     }
 }
