@@ -10,6 +10,9 @@ use Perform\BaseBundle\Type\TypeRegistry;
 use Perform\BaseBundle\Type\TypeConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Perform\BaseBundle\Type\StringType;
+use Perform\BaseBundle\Action\ActionRegistry;
+use Perform\BaseBundle\Filter\FilterConfig;
+use Perform\BaseBundle\Action\ActionConfig;
 
 /**
  * ConfigStoreTest.
@@ -20,6 +23,7 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
 {
     protected $adminRegistry;
     protected $typeRegistry;
+    protected $actionRegistry;
     protected $store;
 
     public function setUp()
@@ -29,6 +33,9 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
                              ->getMock();
         $this->typeRegistry = new TypeRegistry($this->getMock(ContainerInterface::class));
         $this->typeRegistry->addType('string', StringType::class);
+        $this->actionRegistry = $this->getMockBuilder(ActionRegistry::class)
+                      ->disableOriginalConstructor()
+                      ->getMock();
     }
 
     private function configure($alias, $class, $admin, array $override = [])
@@ -41,7 +48,7 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
             $alias => $class,
         ]);
 
-        $this->store = new ConfigStore($resolver, $this->adminRegistry, $this->typeRegistry, $override);
+        $this->store = new ConfigStore($resolver, $this->adminRegistry, $this->typeRegistry, $this->actionRegistry, $override);
     }
 
     public function testGetTypeConfig()
@@ -82,5 +89,53 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
 
         $config = $this->store->getTypeConfig(\stdClass::class);
         $this->assertArrayHasKey('slug', $config->getTypes(TypeConfig::CONTEXT_LIST));
+    }
+
+    public function testGetActionConfig()
+    {
+        $admin = $this->getMock(AdminInterface::class);
+        $admin->expects($this->once())
+            ->method('configureActions')
+            ->with($this->callback(function($config) {
+                    return $config instanceof ActionConfig;
+            }));
+
+        $alias = 'SomeBundle:stdClass';
+        $classname = \stdClass::class;
+        $this->configure($alias, $classname, $admin);
+
+        $aliasConfig = $this->store->getActionConfig($alias);
+        $classConfig = $this->store->getActionConfig($classname);
+        $objectConfig = $this->store->getActionConfig(new \stdClass());
+
+        $this->assertInstanceOf(ActionConfig::class, $aliasConfig);
+        //check the same object is always returned
+        $this->assertSame($aliasConfig, $classConfig);
+        $this->assertSame($aliasConfig, $objectConfig);
+        $this->assertSame($aliasConfig, $this->store->getActionConfig($alias));
+    }
+
+    public function testGetFilterConfig()
+    {
+        $admin = $this->getMock(AdminInterface::class);
+        $admin->expects($this->once())
+            ->method('configureFilters')
+            ->with($this->callback(function($config) {
+                    return $config instanceof FilterConfig;
+            }));
+
+        $alias = 'SomeBundle:stdClass';
+        $classname = \stdClass::class;
+        $this->configure($alias, $classname, $admin);
+
+        $aliasConfig = $this->store->getFilterConfig($alias);
+        $classConfig = $this->store->getFilterConfig($classname);
+        $objectConfig = $this->store->getFilterConfig(new \stdClass());
+
+        $this->assertInstanceOf(FilterConfig::class, $aliasConfig);
+        //check the same object is always returned
+        $this->assertSame($aliasConfig, $classConfig);
+        $this->assertSame($aliasConfig, $objectConfig);
+        $this->assertSame($aliasConfig, $this->store->getFilterConfig($alias));
     }
 }
