@@ -4,6 +4,7 @@ namespace Perform\BaseBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Perform\BaseBundle\Exception\InvalidAdminException;
 
 /**
  * Register admins automatically.
@@ -22,11 +23,12 @@ class RegisterAdminsPass implements CompilerPassInterface
                 throw new \InvalidArgumentException(sprintf('The service "%s" tagged with "perform_base.admin" must set the "entity" option in the tag.', $service));
             }
             $entityAlias = $tag[0]['entity'];
-            if (!isset($entityAliases[$entityAlias])) {
-                throw new \InvalidArgumentException(sprintf('The service "%s" references an unknown entity "%s".', $service, $entityAlias));
+            $entityClass = isset($entityAliases[$entityAlias]) ? $entityAliases[$entityAlias] : $entityAlias;
+            if (!class_exists($entityClass)) {
+                throw new InvalidAdminException(sprintf('The admin service "%s" references an unknown entity class "%s".', $service, $entityClass));
             }
 
-            $admins[$entityAliases[$entityAlias]] = $service;
+            $admins[$entityClass] = $service;
         }
 
         foreach ($admins as $entityClass => $service) {
