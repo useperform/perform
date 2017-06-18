@@ -62,8 +62,3 @@ doctrine_cache:
     providers:
         default:
             file_system: []
-
-perform_base:
-    panels:
-        left: []
-        right: []

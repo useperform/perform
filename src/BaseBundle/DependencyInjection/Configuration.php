@@ -41,6 +41,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->arrayNode('panels')
+                    ->addDefaultsIfNotSet()
                     ->children()
                         ->arrayNode('left')
                             ->prototype('scalar')->end()
