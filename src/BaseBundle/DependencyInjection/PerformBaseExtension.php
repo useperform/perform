@@ -11,6 +11,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Config\Resource\DirectoryResource;
 use Doctrine\Common\Persistence\Mapping\MappingException;
+use Perform\BaseBundle\Doctrine\EntityResolver;
 
 /**
  * PerformBaseExtension.
@@ -29,14 +30,14 @@ class PerformBaseExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $container->setParameter('perform_base.admins', $config['admins']);
         $container->setParameter('perform_base.panels.left', $config['panels']['left']);
         $container->setParameter('perform_base.panels.right', $config['panels']['right']);
         $container->setParameter('perform_base.menu_order', $config['menu']['order']);
         $container->setParameter('perform_base.auto_asset_version', uniqid());
         $this->configureTypeRegistry($container);
         $this->configureMailer($config, $container);
-        $this->findExtendedEntities($container);
+        $this->findExtendedEntities($container, $config);
+        $this->processAdminConfig($container, $config);
         $this->createSimpleMenus($container, $config['menu']['simple']);
 
         $tokenManager = $container->getDefinition('perform_base.reset_token_manager');
@@ -86,33 +87,33 @@ class PerformBaseExtension extends Extension
         }
     }
 
-    protected function findExtendedEntities(ContainerBuilder $container)
+    protected function findExtendedEntities(ContainerBuilder $container, array $config)
     {
-        $extendedEntities = [];
-        $entityAliases = [];
-        $extendedAliases = [];
-        $entities = $this->findEntities($container);
-        foreach ($entities as $class => $item) {
-            $alias = $item[0];
-            $entityAliases[$alias] = $class;
-            if (false === $parent = $item[1]) {
-                continue;
-            }
-            if (isset($extendedEntities[$parent])) {
-                throw new MappingException(sprintf('Unable to auto-extend parent entity "%s" in child entity "%s", as it has already been extended by "%s".', $parent, $child, $extendedEntities[$parent]));
+        $aliases = $this->findEntityAliases($container);
+        $container->setParameter('perform_base.entity_aliases', $aliases);
+
+        $extended = [];
+        $resolver = new EntityResolver($aliases);
+        $baseError = ' Make sure the configuration of perform_base:extended_entities contains valid entity classnames or aliases, e.g. SomeBundle\Entity\Item or SomeBundle:Item.';
+
+        foreach ($config['extended_entities'] as $parent => $child) {
+            $parentClass = $resolver->resolveNoExtend($parent);
+            if (!class_exists($parentClass)) {
+                throw new \InvalidArgumentException(sprintf('Parent entity class "%s" does not exist.', $parentClass).$baseError);
             }
 
-            $extendedEntities[$parent] = $class;
-            $parentAlias = $entities[$parent][0];
-            $extendedAliases[$parentAlias] = $alias;
+            $childClass = $resolver->resolveNoExtend($child);
+            if (!class_exists($childClass)) {
+                throw new \InvalidArgumentException(sprintf('Child entity class "%s" does not exist.', $childClass).$baseError);
+            }
+
+            $extended[$parentClass] = $resolver->resolveNoExtend($child);
         }
 
-        $container->setParameter('perform_base.extended_entities', $extendedEntities);
-        $container->setParameter('perform_base.entity_aliases', $entityAliases);
-        $container->setParameter('perform_base.extended_entity_aliases', $extendedAliases);
+        $container->setParameter('perform_base.extended_entities', $extended);
     }
 
-    protected function findEntities(ContainerBuilder $container)
+    protected function findEntityAliases(ContainerBuilder $container)
     {
         // can't use BundleSearcher here because kernel service isn't available
         $bundles = $container->getParameter('kernel.bundles');
@@ -128,22 +129,13 @@ class PerformBaseExtension extends Extension
 
             $finder = Finder::create()->files()->name('*.php')->in($dir);
             foreach ($finder as $file) {
-                $entityClass = str_replace('/', '\\', $reflection->getNamespaceName().'\\Entity\\'.basename($file->getBasename('.php')));
-                $refl = new \ReflectionClass($entityClass);
-                $parent = $refl->getParentClass() ? $refl->getParentClass()->getName() : false;
-
-                $filename = $refl->getFileName();
-                $container->addResource(new FileResource($filename));
-                $container->addResource(new DirectoryResource($dir));
-
-                $entities[$entityClass] = [
-                    $bundleName.':'.$file->getBasename('.php'),
-                    $parent,
-                ];
+                $classname = str_replace('/', '\\', $reflection->getNamespaceName().'\\Entity\\'.basename($file->getBasename('.php')));
+                $alias = $bundleName.':'.$file->getBasename('.php');
+                $aliases[$alias] = $classname;
             }
         }
 
-        return $entities;
+        return $aliases;
     }
 
     protected function createSimpleMenus(ContainerBuilder $container, array $config)
@@ -153,5 +145,16 @@ class PerformBaseExtension extends Extension
             $definition->setArguments([$alias, $options['entity'], $options['route'], $options['icon']]);
             $definition->addTag('perform_base.link_provider', ['alias' => $alias]);
         }
+    }
+
+    public function processAdminConfig(ContainerBuilder $container, array $config)
+    {
+        $admins = [];
+        $resolver = new EntityResolver($container->getParameter('perform_base.entity_aliases'));
+        foreach ($config['admins'] as $entity => $configuration) {
+            $admins[$resolver->resolveNoExtend($entity)] = $configuration;
+        }
+
+        $container->setParameter('perform_base.admins', $admins);
     }
 }

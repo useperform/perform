@@ -4,12 +4,12 @@ namespace Perform\BaseBundle\Selector;
 
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Perform\BaseBundle\Admin\AdminRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
-use Perform\BaseBundle\Type\TypeConfig;
-use Perform\BaseBundle\Filter\FilterConfig;
+use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Config\FilterConfig;
 use Perform\BaseBundle\Admin\AdminRequest;
+use Perform\BaseBundle\Config\ConfigStoreInterface;
 
 /**
  * EntitySelector.
@@ -19,12 +19,12 @@ use Perform\BaseBundle\Admin\AdminRequest;
 class EntitySelector
 {
     protected $entityManager;
-    protected $registry;
+    protected $store;
 
-    public function __construct(EntityManagerInterface $entityManager, AdminRegistry $registry)
+    public function __construct(EntityManagerInterface $entityManager, ConfigStoreInterface $store)
     {
         $this->entityManager = $entityManager;
-        $this->registry = $registry;
+        $this->store = $store;
     }
 
     public function listContext(AdminRequest $request, $entityName)
@@ -34,7 +34,7 @@ class EntitySelector
             ->from($entityName, 'e');
 
         //potentially add sorting, using custom functions from TypeConfig
-        $defaultSort = $this->registry->getTypeConfig($entityName)->getDefaultSort();
+        $defaultSort = $this->store->getTypeConfig($entityName)->getDefaultSort();
         $orderField = $request->getSortField($defaultSort[0]);
         $direction = $request->getSortDirection($defaultSort[1]);
 
@@ -49,7 +49,7 @@ class EntitySelector
 
         //potentially add filtering, using FilterConfig from the
         //admin, or even returning a new builder entirely
-        $filterName = $request->getFilter($this->registry->getFilterConfig($entityName)->getDefault());
+        $filterName = $request->getFilter($this->store->getFilterConfig($entityName)->getDefault());
 
         $qb = $this->maybeFilter($qb, $entityName, $filterName, true);
         if (!$qb instanceof QueryBuilder) {
@@ -72,7 +72,7 @@ class EntitySelector
 
     protected function assignFilterCounts($entityName)
     {
-        $filterConfig = $this->registry->getFilterConfig($entityName);
+        $filterConfig = $this->store->getFilterConfig($entityName);
         if (!$filterConfig) {
             return;
         }
@@ -100,7 +100,7 @@ class EntitySelector
             return $qb;
         }
 
-        $typeConfig = $this->registry->getTypeConfig($entityName)->getTypes(TypeConfig::CONTEXT_LIST);
+        $typeConfig = $this->store->getTypeConfig($entityName)->getTypes(TypeConfig::CONTEXT_LIST);
         if (!isset($typeConfig[$orderField]['sort'])) {
             return $qb;
         }
@@ -125,7 +125,7 @@ class EntitySelector
             return $qb;
         }
 
-        $filter = $this->registry->getFilterConfig($entityName)->getFilter($filterName);
+        $filter = $this->store->getFilterConfig($entityName)->getFilter($filterName);
         if (!$filter) {
             return $qb;
         }

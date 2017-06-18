@@ -4,7 +4,7 @@ namespace Perform\BaseBundle\Type;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Perform\BaseBundle\Type\TypeConfig;
+use Perform\BaseBundle\Config\TypeConfig;
 
 /**
  * TextType

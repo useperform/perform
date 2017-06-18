@@ -6,13 +6,22 @@ services:
         class: Perform\BaseBundle\Admin\AdminRegistry
         arguments:
             - '@service_container'
+            - '@perform_base.doctrine.entity_resolver'
+
+    perform_base.config_store:
+        class: Perform\BaseBundle\Config\ConfigStore
+        arguments:
+            - '@perform_base.doctrine.entity_resolver'
+            - '@perform_base.admin.registry'
             - '@perform_base.type_registry'
             - '@perform_base.action_registry'
-            - '%perform_base.admins%'
 
     perform_base.form.type.admin:
         class: Perform\BaseBundle\Form\Type\AdminType
-        arguments: ['@perform_base.admin.registry', '@perform_base.type_registry']
+        arguments:
+            - '@perform_base.config_store'
+            - '@perform_base.doctrine.entity_resolver'
+            - '@perform_base.type_registry'
         tags:
             - {name: form.type}
 
@@ -28,7 +37,10 @@ services:
     perform_base.admin_collector:
         class: Perform\BaseBundle\DataCollector\AdminsDataCollector
         public: false
-        arguments: ['@perform_base.admin.registry', '%perform_base.extended_entities%']
+        arguments:
+            - '@perform_base.admin.registry'
+            - '@perform_base.config_store'
+            - '%perform_base.extended_entities%'
         tags:
             -
                 name: data_collector
@@ -75,7 +87,7 @@ services:
         arguments:
             - "@router"
             - "@perform_base.action_registry"
-            - "@perform_base.admin.registry"
+            - "@perform_base.config_store"
         tags:
             - {name: twig.extension}
 
@@ -145,6 +157,13 @@ services:
         tags:
             - { name: doctrine.event_subscriber }
 
+    perform_base.doctrine.extend_listener:
+        class: Perform\BaseBundle\Doctrine\ExtendEntitiesListener
+        arguments:
+            - "%perform_base.extended_entities%"
+        tags:
+            - { name: doctrine.event_subscriber }
+
     perform_base.importer.user:
         class: Perform\BaseBundle\Importer\UserImporter
         arguments: ["@doctrine.orm.entity_manager"]
@@ -153,7 +172,7 @@ services:
         class: Perform\BaseBundle\Selector\EntitySelector
         arguments:
             - "@doctrine.orm.entity_manager"
-            - "@perform_base.admin.registry"
+            - "@perform_base.config_store"
 
     perform_base.asset_strategy:
         class: Symfony\Component\Asset\VersionStrategy\StaticVersionStrategy

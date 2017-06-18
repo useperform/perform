@@ -32,4 +32,36 @@ class EntityResolverTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('PerformBaseBundle:Bar', $resolver->resolve('PerformBaseBundle:Bar'));
         $this->assertSame('Perform\BaseBundle\Entity\Bar', $resolver->resolve('Perform\BaseBundle\Entity\Bar'));
     }
+
+    public function testResolveObject()
+    {
+        $resolver = new EntityResolver();
+
+        $this->assertSame(\stdClass::class, $resolver->resolve(new \stdClass()));
+    }
+
+    public function testResolveExtendedObject()
+    {
+        $resolver = new EntityResolver([], [
+            \stdClass::class => 'SomeBundle\Entity\Extended',
+        ]);
+
+        $this->assertSame('SomeBundle\Entity\Extended', $resolver->resolve(new \stdClass()));
+    }
+
+    public function testResolveInvalidType()
+    {
+        $resolver = new EntityResolver();
+        $this->setExpectedException(\InvalidArgumentException::class);
+        $resolver->resolve([]);
+    }
+
+    public function testResolveNoExtend()
+    {
+        $resolver = new EntityResolver([], [
+            \stdClass::class => 'SomeBundle\Entity\Extended',
+        ]);
+
+        $this->assertSame(\stdClass::class, $resolver->resolveNoExtend(new \stdClass()));
+    }
 }

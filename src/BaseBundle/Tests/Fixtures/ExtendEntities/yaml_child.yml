@@ -1,0 +1,6 @@
+perform_base:
+    extended_entities:
+        YamlParentBundle:Item:
+            YamlChildBundle:YamlItem
+        XmlParentBundle:Item:
+            YamlChildBundle:XmlItem

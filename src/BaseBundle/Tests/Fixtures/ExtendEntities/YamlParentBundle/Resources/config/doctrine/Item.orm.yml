@@ -1,0 +1,16 @@
+Perform\BaseBundle\Tests\Fixtures\ExtendEntities\YamlParentBundle\Entity\Item:
+    type: entity
+    table: base_entity_item
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        name:
+            type: string
+    oneToMany:
+        links:
+            targetEntity: ItemLink
+            mappedBy: item

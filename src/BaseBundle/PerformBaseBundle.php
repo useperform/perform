@@ -7,7 +7,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Perform\BaseBundle\DependencyInjection\Compiler\RegisterAdminsPass;
 use Perform\BaseBundle\DependencyInjection\Compiler\ConfigureMenuPass;
 use Perform\BaseBundle\DependencyInjection\Compiler\ConfigureSettingsPass;
-use Perform\BaseBundle\DependencyInjection\Compiler\ExtendEntitiesPass;
 use Perform\BaseBundle\DependencyInjection\Compiler\ConfigureActionsPass;
 use Perform\BaseBundle\DependencyInjection\Compiler\ConfigureTypesPass;
 
@@ -26,6 +25,5 @@ class PerformBaseBundle extends Bundle
         $container->addCompilerPass(new ConfigureSettingsPass());
         $container->addCompilerPass(new ConfigureActionsPass());
         $container->addCompilerPass(new ConfigureTypesPass());
-        $container->addCompilerPass(new ExtendEntitiesPass());
     }
 }

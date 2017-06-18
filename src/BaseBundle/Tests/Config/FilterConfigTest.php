@@ -1,8 +1,8 @@
 <?php
 
-namespace Perform\BaseBundle\Tests\Filter;
+namespace Perform\BaseBundle\Tests\Config;
 
-use Perform\BaseBundle\Filter\FilterConfig;
+use Perform\BaseBundle\Config\FilterConfig;
 use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 
 /**

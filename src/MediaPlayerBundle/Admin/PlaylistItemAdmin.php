@@ -3,7 +3,7 @@
 namespace Perform\MediaPlayerBundle\Admin;
 
 use Perform\BaseBundle\Admin\AbstractAdmin;
-use Perform\BaseBundle\Type\TypeConfig;
+use Perform\BaseBundle\Config\TypeConfig;
 
 /**
  * PlaylistItemAdmin

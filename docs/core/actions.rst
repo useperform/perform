@@ -303,4 +303,4 @@ Multiple ids can also be specified, separated with a space.
 
    3 items deleted.
 
-Finally, ``perform:action:list`` will show all available actions.
+Finally, ``perform:debug:actions`` will show all available actions.

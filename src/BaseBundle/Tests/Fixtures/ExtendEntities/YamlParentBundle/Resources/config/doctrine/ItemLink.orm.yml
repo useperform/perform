@@ -1,0 +1,15 @@
+Perform\BaseBundle\Tests\Fixtures\ExtendEntities\YamlParentBundle\Entity\ItemLink:
+    type: entity
+    table: base_entity_item_link
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    manyToOne:
+        item:
+            targetEntity: Item
+            inversedBy: links
+            joinColumn:
+                nullable: false

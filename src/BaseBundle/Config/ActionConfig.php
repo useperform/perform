@@ -1,10 +1,12 @@
 <?php
 
-namespace Perform\BaseBundle\Action;
+namespace Perform\BaseBundle\Config;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Perform\BaseBundle\Util\StringUtil;
 use Perform\BaseBundle\Admin\AdminRequest;
+use Perform\BaseBundle\Action\ActionRegistry;
+use Perform\BaseBundle\Action\ConfiguredAction;
 
 /**
  * ActionConfig.

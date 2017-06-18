@@ -4,7 +4,7 @@ namespace Perform\BaseBundle\Tests\Admin;
 
 use Symfony\Component\HttpFoundation\Request;
 use Perform\BaseBundle\Admin\AdminRequest;
-use Perform\BaseBundle\Type\TypeConfig;
+use Perform\BaseBundle\Config\TypeConfig;
 
 /**
  * AdminRequestTest.

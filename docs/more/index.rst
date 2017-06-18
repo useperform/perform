@@ -5,5 +5,6 @@ Further Reading
    :maxdepth: 2
 
    ./entity-collections
+   ./extending-entities
    ./working-with-dates
    ./settings

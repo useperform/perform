@@ -3,20 +3,15 @@
 namespace Perform\BaseBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bridge\Twig\Extension\FormExtension;
-use Perform\BaseBundle\Type\TypeConfig;
-use Pagerfanta\Pagerfanta;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Perform\BaseBundle\Filter\FilterConfig;
+use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BaseBundle\Admin\AdminRequest;
 use Perform\BaseBundle\Twig\Extension\ActionExtension;
 
 /**
- * CrudController
+ * CrudController.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
@@ -43,19 +38,19 @@ class CrudController extends Controller
 
     protected function getTypeConfig()
     {
-        return $this->get('perform_base.admin.registry')
+        return $this->get('perform_base.config_store')
             ->getTypeConfig($this->entity);
     }
 
     protected function getFilterConfig()
     {
-        return $this->get('perform_base.admin.registry')
+        return $this->get('perform_base.config_store')
             ->getFilterConfig($this->entity);
     }
 
     protected function getActionConfig()
     {
-        return $this->get('perform_base.admin.registry')
+        return $this->get('perform_base.config_store')
             ->getActionConfig($this->entity);
     }
 

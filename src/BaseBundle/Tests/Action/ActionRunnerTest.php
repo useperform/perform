@@ -7,9 +7,9 @@ use Perform\BaseBundle\Action\ActionRunner;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Perform\BaseBundle\Action\ActionResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Perform\BaseBundle\Admin\AdminRegistry;
-use Perform\BaseBundle\Action\ActionConfig;
+use Perform\BaseBundle\Config\ActionConfig;
 use Perform\BaseBundle\Action\ConfiguredAction;
+use Perform\BaseBundle\Config\ConfigStoreInterface;
 
 /**
  * ActionRunnerTest.
@@ -39,17 +39,15 @@ class ActionRunnerTest extends \PHPUnit_Framework_TestCase
         $this->config = $this->getMockBuilder(ActionConfig::class)
                         ->disableOriginalConstructor()
                         ->getMock();
-        $this->registry = $this->getMockBuilder(AdminRegistry::class)
-                        ->disableOriginalConstructor()
-                        ->getMock();
+        $this->store = $this->getMock(ConfigStoreInterface::class);
 
-        $this->runner = new ActionRunner($this->em, $this->registry);
+        $this->runner = new ActionRunner($this->em, $this->store);
     }
 
     public function testRun()
     {
         $actionName = 'foo_action';
-        $this->registry->expects($this->any())
+        $this->store->expects($this->any())
             ->method('getActionConfig')
             ->with('FooBundle\\Foo')
             ->will($this->returnValue($this->config));
@@ -78,7 +76,7 @@ class ActionRunnerTest extends \PHPUnit_Framework_TestCase
     public function testRunNotGranted()
     {
         $actionName = 'foo_action';
-        $this->registry->expects($this->any())
+        $this->store->expects($this->any())
             ->method('getActionConfig')
             ->with('FooBundle\\Foo')
             ->will($this->returnValue($this->config));

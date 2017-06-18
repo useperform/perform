@@ -38,7 +38,7 @@ You normally won't need to interact with this service directly.
 Using types
 -----------
 
-``AdminInterface#configureTypes()`` takes an instance of ``Perform\BaseBundle\Type\TypeConfig``, which is used as a builder to add types for a given entity.
+``AdminInterface#configureTypes()`` takes an instance of ``Perform\BaseBundle\Config\TypeConfig``, which is used as a builder to add types for a given entity.
 Add a new type with ``TypeConfig#add()``, which requires the name of the field and an array of configuration.
 
 The field name can be anything accessible by Symfony's `property access component <http://symfony.com/doc/current/components/property_access.html>`_.
