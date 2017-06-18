@@ -85,13 +85,12 @@ The ``BikeAdmin`` class needs updated to manage the image property:
 
       ])->add('description', [
           'type' => 'text',
-    - ])
     + ])->add('image', [
     +     'type' => 'media',
     +     'options' => [
     +         'types' => 'image',
     +     ],
-    + ]);
+      ]);
 
 Now head to the bike admin page at http://127.0.0.1:8000/admin/bikes.
 You'll notice a new column for the image, and that creating a bike requires you to choose an image from the media library.

@@ -9,7 +9,7 @@ Create a new directory and start a new project by running the ``perform new`` co
 
    perform new hipster-bikes
 
-This will create a the directory ``hipster-bikes`` and create a brand new Perform application inside.
+This will create the directory ``hipster-bikes`` and create a brand new Perform application inside.
 
 The cli will ask you some questions during setup:
 
