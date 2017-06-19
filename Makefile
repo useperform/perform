@@ -21,7 +21,7 @@ docker_image:
 	./bin/build-docker-image.sh $(php-version)
 
 docker_test:
-	docker run -ti --rm -v `pwd`:/opt/perform perform:$(php-version) make test_publish
+	docker run -i --rm -v `pwd`:/opt/perform perform:$(php-version) make test_publish
 
 clean:
 	rm -f Dockerfile

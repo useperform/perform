@@ -24,4 +24,4 @@ else
 	docker build . -t $PERFORM_IMAGE
 fi
 
-docker run -ti --rm -v `pwd`:/opt/perform $PERFORM_IMAGE composer install
+docker run -i --rm -v `pwd`:/opt/perform $PERFORM_IMAGE composer install
