@@ -1,0 +1,7 @@
+
+RUN apt-get update && apt-get install -y --no-install-recommends git zip zlib1g-dev
+RUN curl -L --silent --show-error https://getcomposer.org/installer | php
+RUN mv /composer.phar /usr/local/bin/composer
+RUN docker-php-ext-install mbstring opcache pdo pdo_mysql zip
+
+WORKDIR /opt/perform

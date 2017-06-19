@@ -13,6 +13,7 @@ src/MediaBundle/Resources/public
 src/MediaPlayerBundle/Resources/public
 
 test_results.xml
+Dockerfile
 
 docs/_build
 docs/reference/types
