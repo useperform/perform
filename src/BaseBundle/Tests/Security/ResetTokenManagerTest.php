@@ -89,12 +89,11 @@ class ResetTokenManagerTest extends \PHPUnit_Framework_TestCase
     public function testExpiryTimeCanBeConfigured()
     {
         $manager = new ResetTokenManager($this->em, $this->notifier, 3600);
-        $token =
         $user = new User();
         $token = $manager->createToken($user);
         $this->assertInstanceOf(\DateTime::class, $token->getExpiresAt());
         $expected = new \DateTime();
         $expected->modify('+3600 seconds');
-        $this->assertEquals($expected, $token->getExpiresAt());
+        $this->assertEquals($expected, $token->getExpiresAt(), '', 1);
     }
 }
