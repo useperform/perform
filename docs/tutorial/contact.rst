@@ -75,7 +75,7 @@ Update the ``contactAction`` method:
     +         }
     +     } catch (\Exception $e) {
     +         $this->get('logger')->error($e);
-    +         $this->addFlash('error', 'An error occurred. Please try again.');
+    +         $this->addFlash('danger', 'An error occurred. Please try again.');
     +     }
 
     -     return [];
@@ -129,13 +129,197 @@ Open the 'Contact Form' panel in the 'Settings' page of the admin and add an ema
 
 Depending on your system, you might need to update the swiftmailer bundle configuration to send emails correctly.
 By default, it uses the values of the ``mailer_*`` parameters in ``app/config/parameters.yml``.
-See the `Swiftmailer bundle documentation <http://symfony.com/doc/current/email.html>`_ for more information.
+See the `Swiftmailer bundle documentation <https://symfony.com/doc/current/reference/configuration/swiftmailer.html>`_ for more information.
 
 The ``delivery_address`` setting can be useful for local development.
-All emails will be sent to this address, with the original address being included
+All emails will be sent to this address, with the original address being included in the ``X-Swift-To`` email header.
 
 Once you've configured email sending, try submitting the form again.
 You'll be sent an email notification with details of the submission.
 
-Extending the Message entity
+Extending the message entity
 ----------------------------
+
+Unfortunately Perform's message entity doesn't quite fit our needs.
+We've been asked to include another optional field in the form; *favourite bike*, asking for the visitor's favourite bike on the site.
+
+Does this mean we have to scrap the PerformContactBundle, the admin interface, and all the tooling?
+Of course not! Perform has tools that make it easy to *extend* an entity from a vendor bundle to fit your requirements.
+
+First, create a new entity class that extends ``Perform\ContactBundle\Entity\Message``:
+
+.. code-block:: php
+
+    <?php
+
+    namespace AppBundle\Entity;
+
+    use Perform\ContactBundle\Entity\Message;
+
+    class ContactMessage extends Message
+    {
+        protected $favouriteBike;
+
+        /**
+         * @param Bike|null $favouriteBike
+         *
+         * @return ContactMessage
+         */
+        public function setFavouriteBike(Bike $favouriteBike = null)
+        {
+            $this->favouriteBike = $favouriteBike;
+
+            return $this;
+        }
+
+        /**
+         * @return Bike|null
+         */
+        public function getFavouriteBike()
+        {
+            return $this->favouriteBike;
+        }
+    }
+
+And a doctrine mapping file, but only include the new ``favouriteBike`` property:
+
+.. code-block:: yml
+
+    AppBundle\Entity\ContactMessage:
+        type: entity
+        manyToOne:
+            favouriteBike:
+                targetEntity: Bike
+                joinColumn:
+                    nullable: true
+
+.. note::
+
+   You could also use the ``perform-dev:create:entity`` command to create these files, but remember to remove the id and other unrelated fields and to extend the ``Perform\ContactBundle\Entity\Message`` class.
+
+
+Now for the clever bit - we will tell Perform that this entity *extends* the message entity in the contact bundle.
+All the tools in the contact bundle will continue to work, even though they have no knowledge about our new entity.
+
+Add an entry to ``perform_base:extended_entities`` in ``app/config/config.yml``:
+
+.. code-block:: diff
+
+      perform_base:
+    +     extended_entities:
+    +         "PerformContactBundle:Message": "AppBundle:ContactMessage"
+          panels:
+              left: []
+
+.. note::
+
+   Under the hood, Perform will rewrite some Doctrine metadata to treat the original message entity like an abstract mapped superclass.
+
+   Read the :doc:`extending entities documentation <../more/extending-entities>` for a look into how it works.
+
+Now update the database schema. You'll notice that the ``perform_contact_message`` table has been removed, and replaced with a table for the new message entity.
+
+.. code-block:: bash
+
+   ./bin/console doctrine:schema:update --force --dump-sql
+
+Extending the contact form
+--------------------------
+
+Now we need to add the new option to the contact form.
+
+Create a new form type in ``src/AppBundle/Form/Type/ContactMessageType.php`` that extends the existing form type:
+
+.. code-block:: php
+
+    <?php
+
+    namespace AppBundle\Form\Type;
+
+    use Symfony\Component\Form\FormBuilderInterface;
+    use Symfony\Component\OptionsResolver\OptionsResolver;
+    use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+    use Perform\ContactBundle\Form\Type\MessageType;
+    use AppBundle\Entity\ContactMessage;
+
+    class ContactMessageType extends MessageType
+    {
+        public function buildForm(FormBuilderInterface $builder, array $options)
+        {
+            parent::buildForm($builder, $options);
+
+            $builder->add('favouriteBike', EntityType::class, [
+                'class' => 'AppBundle:Bike',
+                'choice_label' => 'title',
+            ]);
+        }
+
+        public function configureOptions(OptionsResolver $resolver)
+        {
+            $resolver->setDefaults([
+                'data_class' => ContactMessage::class,
+            ]);
+        }
+    }
+
+And update the controller action to use this new form type:
+
+.. code-block:: diff
+
+      use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+    - use Perform\ContactBundle\Form\Type\MessageType;
+    + use AppBundle\Form\Type\ContactMessageType;
+      use Symfony\Component\HttpFoundation\Request;
+
+.. code-block:: diff
+
+      public function contactAction(Request $request)
+      {
+    -     $form = $this->createForm(MessageType::class);
+    +     $form = $this->createForm(ContactMessageType::class);
+          $handler = $this->get('perform_contact.form.handler.contact');
+
+Finally, update the twig template for the page:
+
+.. code-block:: diff
+
+      {{form_start(form)}}
+      {{form_row(form.name)}}
+      {{form_row(form.email)}}
+    + {{form_row(form.favouriteBike)}}
+      {{form_row(form.message)}}
+      <button type="submit" class="btn btn-primary">Send</button>
+      {{form_end(form)}}
+
+That's it!
+Refresh the contact page and you'll see the new form field.
+All contact form submissions will now be an instance of ``AppBundle\Entity\ContactMessage``, saving the ``favouriteBike`` field as well.
+
+Extending the message admin
+---------------------------
+
+There is just one piece missing.
+We can save form submissions with the new field, but there is no way to manage this field in the admin yet.
+
+Create a new admin class:
+
+.. code-block:: bash
+
+   ./bin/console perform-dev:create:admin AppBundle:ContactMessage
+
+and make some modifications:
+
+.. code-block:: diff
+
+      public function configureTypes(TypeConfig $config)
+      {
+    +     parent::configureTypes($config);
+    +
+    +     $config->add('favouriteBike', [
+    +         'type' => 'entity',
+    +         'options' => [
+    +             'class' => 'AppBundle:Bike',
+    +             'display_field' => 'title',
+    +         ],
+    +     ]);
+      }
