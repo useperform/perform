@@ -5,7 +5,12 @@ services:
             - { name: perform_base.admin, entity: "PerformContactBundle:Message" }
 
     perform_contact.menu_link.contact:
-        class: Perform\ContactBundle\Menu\ContactLinkProvider
+        class: Perform\BaseBundle\Menu\SimpleLinkProvider
+        arguments:
+            - 'contact'
+            - 'PerformContactBundle:Message'
+            - null
+            - 'envelope'
         tags:
             - { name: perform_base.link_provider, alias: contact }
 
