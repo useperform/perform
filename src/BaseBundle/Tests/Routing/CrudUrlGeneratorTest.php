@@ -6,6 +6,10 @@ use Perform\BaseBundle\Routing\CrudUrlGenerator;
 use Perform\BaseBundle\Entity\User;
 use Perform\BaseBundle\Admin\UserAdmin;
 use Perform\BaseBundle\Admin\AdminInterface;
+use Symfony\Component\Routing\RouterInterface;
+use Perform\BaseBundle\Admin\AdminRegistry;
+use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Routing\Route;
 
 /**
  * CrudUrlGeneratorTest.
@@ -15,16 +19,22 @@ use Perform\BaseBundle\Admin\AdminInterface;
 class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
 {
     protected $adminRegistry;
-    protected $urlGenerator;
+    protected $router;
+    protected $routeCollection;
     protected $generator;
 
     public function setUp()
     {
-        $this->adminRegistry = $this->getMockBuilder('Perform\BaseBundle\Admin\AdminRegistry')
+        $this->adminRegistry = $this->getMockBuilder(AdminRegistry::class)
                              ->disableOriginalConstructor()
                              ->getMock();
-        $this->urlGenerator = $this->getMock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
-        $this->generator = new CrudUrlGenerator($this->adminRegistry, $this->urlGenerator);
+        $this->router = $this->getMock(RouterInterface::class);
+        $this->routeCollection = new RouteCollection();
+        $this->router->expects($this->any())
+            ->method('getRouteCollection')
+            ->with()
+            ->will($this->returnValue($this->routeCollection));
+        $this->generator = new CrudUrlGenerator($this->adminRegistry, $this->router);
     }
 
     public function testGenerateList()
@@ -34,7 +44,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->method('getAdmin')
             ->with($user)
             ->will($this->returnValue(new UserAdmin()));
-        $this->urlGenerator->expects($this->any())
+        $this->router->expects($this->any())
             ->method('generate')
             ->with('perform_base_user_list')
             ->will($this->returnValue('/admin/users'));
@@ -48,7 +58,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->method('getAdmin')
             ->with('PerformBaseBundle:User')
             ->will($this->returnValue(new UserAdmin()));
-        $this->urlGenerator->expects($this->any())
+        $this->router->expects($this->any())
             ->method('generate')
             ->with('perform_base_user_list')
             ->will($this->returnValue('/admin/users'));
@@ -62,7 +72,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->method('getAdmin')
             ->with('PerformBaseBundle:User')
             ->will($this->returnValue(new UserAdmin()));
-        $this->urlGenerator->expects($this->any())
+        $this->router->expects($this->any())
             ->method('generate')
             ->with('perform_base_user_create')
             ->will($this->returnValue('/admin/users/create'));
@@ -80,7 +90,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->method('getAdmin')
             ->with($user)
             ->will($this->returnValue(new UserAdmin()));
-        $this->urlGenerator->expects($this->any())
+        $this->router->expects($this->any())
             ->method('generate')
             ->with('perform_base_user_view', ['id' => 1])
             ->will($this->returnValue('/admin/users/view/1'));
@@ -98,7 +108,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->method('getAdmin')
             ->with($user)
             ->will($this->returnValue(new UserAdmin()));
-        $this->urlGenerator->expects($this->any())
+        $this->router->expects($this->any())
             ->method('generate')
             ->with('perform_base_user_view_default')
             ->will($this->returnValue('/admin/users'));
@@ -117,7 +127,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->method('getAdmin')
             ->with($user)
             ->will($this->returnValue(new UserAdmin()));
-        $this->urlGenerator->expects($this->any())
+        $this->router->expects($this->any())
             ->method('generate')
             ->with('perform_base_user_edit', ['id' => 1])
             ->will($this->returnValue('/admin/users/edit/1'));
@@ -134,7 +144,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->method('getAdmin')
             ->with($user)
             ->will($this->returnValue(new UserAdmin()));
-        $this->urlGenerator->expects($this->any())
+        $this->router->expects($this->any())
             ->method('generate')
             ->with('perform_base_user_edit_default')
             ->will($this->returnValue('/admin/users/edit'));
@@ -154,15 +164,43 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
                 '/create' => 'create',
                 '/edit/{id}' => 'edit',
             ]));
+        $admin->expects($this->any())
+            ->method('getRoutePrefix')
+            ->will($this->returnValue('some_prefix_'));
+        $this->routeCollection->add('some_prefix_create', new Route('/'));
+        $this->routeCollection->add('some_prefix_modify', new Route('/'));
 
         $this->adminRegistry->expects($this->any())
             ->method('getAdmin')
             ->will($this->returnValue($admin));
 
         $this->assertTrue($this->generator->routeExists('TestBundle:Something', 'create'));
-        $this->assertTrue($this->generator->routeExists(new User(), 'create'));
+        $this->assertTrue($this->generator->routeExists(new \stdClass(), 'create'));
         $this->assertFalse($this->generator->routeExists('TestBundle:Something', 'modify'));
-        $this->assertFalse($this->generator->routeExists(new User(), 'modify'));
+        $this->assertFalse($this->generator->routeExists(new \stdClass(), 'modify'));
+    }
+
+    public function testRouteExistsButNotLoaded()
+    {
+        $admin = $this->getMock(AdminInterface::class);
+        $admin->expects($this->any())
+            ->method('getActions')
+            ->will($this->returnValue([
+                '/' => 'list',
+                '/view/{id}' => 'view',
+                '/create' => 'create',
+                '/edit/{id}' => 'edit',
+            ]));
+        $admin->expects($this->any())
+            ->method('getRoutePrefix')
+            ->will($this->returnValue('some_prefix_'));
+
+        $this->adminRegistry->expects($this->any())
+            ->method('getAdmin')
+            ->will($this->returnValue($admin));
+
+        $this->assertFalse($this->generator->routeExists('TestBundle:Something', 'view'));
+        $this->assertFalse($this->generator->routeExists(new \stdClass(), 'view'));
     }
 
     public function testGetDefaultEntityRouteList()
