@@ -36,6 +36,9 @@
         </div>
       {% endif %}
 
+      {% block extras %}
+      {% endblock %}
+
       <div class="well">
         {{entity.message | nl2br}}
       </div>
