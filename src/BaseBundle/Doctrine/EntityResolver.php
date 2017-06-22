@@ -2,6 +2,8 @@
 
 namespace Perform\BaseBundle\Doctrine;
 
+use Doctrine\Common\Util\ClassUtils;
+
 /**
  * EntityResolver resolves references to entities that have been extended by the
  * application.
@@ -47,12 +49,14 @@ class EntityResolver
     public function resolveNoExtend($entity)
     {
         if (is_object($entity)) {
-            return get_class($entity);
+            // get the real class if the entity is a proxy
+            return ClassUtils::getRealClass(get_class($entity));
         }
         if (!is_string($entity)) {
             throw new \InvalidArgumentException(sprintf('EntityResolver#resolve() requires a string or entity object, %s given.', gettype($entity)));
         }
+        $entity = ClassUtils::getRealClass($entity);
 
-        return isset($this->aliases[$entity]) ? $this->aliases[$entity]: $entity;
+        return isset($this->aliases[$entity]) ? $this->aliases[$entity] : $entity;
     }
 }

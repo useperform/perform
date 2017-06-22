@@ -3,6 +3,9 @@
 namespace Perform\BaseBundle\Tests\Doctrine;
 
 use Perform\BaseBundle\Doctrine\EntityResolver;
+use Doctrine\Common\Proxy\ProxyGenerator;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Temping\Temping;
 
 /**
  * EntityResolverTest.
@@ -11,6 +14,20 @@ use Perform\BaseBundle\Doctrine\EntityResolver;
  **/
 class EntityResolverTest extends \PHPUnit_Framework_TestCase
 {
+    protected $temp;
+    protected $proxyGenerator;
+
+    public function setUp()
+    {
+        $this->temp = new Temping();
+        $this->proxyGenerator = new ProxyGenerator($this->temp->getDirectory().'proxy', __NAMESPACE__.'\\Proxy');
+    }
+
+    public function tearDown()
+    {
+        $this->temp->reset();
+    }
+
     public function testResolve()
     {
         $aliases = [
@@ -63,5 +80,41 @@ class EntityResolverTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $this->assertSame(\stdClass::class, $resolver->resolveNoExtend(new \stdClass()));
+    }
+
+    protected function generateProxyClass($class)
+    {
+        $proxyClass = __NAMESPACE__.'\\Proxy\\__CG__\\'.$class;
+
+        if (class_exists($proxyClass, false)) {
+            return $proxyClass;
+        }
+
+        $metadata = $this->getMockBuilder(ClassMetadata::class)
+                  ->disableOriginalConstructor()
+                  ->getMock();
+        $metadata->expects($this->any())
+            ->method('getName')
+            ->will($this->returnValue($class));
+        $metadata->expects($this->any())
+            ->method('getReflectionClass')
+            ->will($this->returnValue(new \ReflectionClass($class)));
+
+        $this->proxyGenerator->generateProxyClass($metadata, $this->proxyGenerator->getProxyFileName($class));
+
+        require_once $this->proxyGenerator->getProxyFileName($class);
+
+        return $proxyClass;
+    }
+
+    public function testResolveProxies()
+    {
+        $resolver = new EntityResolver();
+
+        $proxyClass = $this->generateProxyClass(\stdClass::class);
+        $proxy = new $proxyClass();
+
+        $this->assertSame(\stdClass::class, $resolver->resolveNoExtend($proxyClass));
+        $this->assertSame(\stdClass::class, $resolver->resolveNoExtend($proxy));
     }
 }
