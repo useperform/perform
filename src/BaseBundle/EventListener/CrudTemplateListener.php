@@ -16,6 +16,9 @@ class CrudTemplateListener
 {
     protected $container;
 
+    // inject the container instead of dependencies for the sake of speed.
+    // this listener will run every request, so don't build and inject
+    // admin services just for them not to be used.
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
@@ -45,16 +48,12 @@ class CrudTemplateListener
         $entity = $request->attributes->get('_entity');
 
         //remove Action
-        $segment = substr($controller[1], 0, -6);
+        $context = substr($controller[1], 0, -6);
 
-        //try a template in the entity bundle first, e.g.
-        //PerformContactBundle:Message:view.html.twig
-        $template = $entity.':'.$segment.'.html.twig';
         $templating = $this->container->get('templating');
-
-        if (!$templating->exists($template)) {
-            $template = 'PerformBaseBundle:Crud:'.$segment.'.html.twig';
-        }
+        $template = $this->container->get('perform_base.admin.registry')
+                  ->getAdmin($entity)
+                  ->getTemplate($templating, $entity, $context);
 
         $annotation = new Template([]);
         $annotation->setTemplate($template);

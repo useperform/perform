@@ -6,6 +6,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Perform\BaseBundle\Form\Type\AdminType;
 use Perform\BaseBundle\Config\FilterConfig;
 use Perform\BaseBundle\Config\ActionConfig;
+use Symfony\Component\Templating\EngineInterface;
 
 /**
  * AbstractAdmin
@@ -59,5 +60,14 @@ abstract class AbstractAdmin implements AdminInterface
     public function configureActions(ActionConfig $config)
     {
         $config->add('perform_base_delete');
+    }
+
+    public function getTemplate(EngineInterface $templating, $entityName, $context)
+    {
+        //try a template in the entity bundle first, e.g.
+        //PerformContactBundle:Message:view.html.twig
+        $template = $entityName.':'.$context.'.html.twig';
+
+        return $templating->exists($template) ? $template : 'PerformBaseBundle:Crud:'.$context.'.html.twig';
     }
 }
