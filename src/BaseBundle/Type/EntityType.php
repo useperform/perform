@@ -54,6 +54,7 @@ class EntityType extends AbstractType
     /**
      * @doc class The related entity class
      * @doc display_field The property to use to display the related entity
+     * @doc link_to If true, display a link to view the related entity
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -61,6 +62,8 @@ class EntityType extends AbstractType
         $resolver->setAllowedTypes('display_field', 'string');
         $resolver->setRequired('class');
         $resolver->setAllowedTypes('class', 'string');
+        $resolver->setDefault('link_to', true);
+        $resolver->setAllowedTypes('link_to', 'boolean');
     }
 
     public function getDefaultConfig()
@@ -79,7 +82,16 @@ class EntityType extends AbstractType
             return '';
         }
 
-        return $this->accessor->getValue($relatedEntity, $options['display_field']);
+        return [
+            'value' => $this->accessor->getValue($relatedEntity, $options['display_field']),
+            'related_entity' => $relatedEntity,
+            'link_to' => $options['link_to'],
+        ];
+    }
+
+    public function getTemplate()
+    {
+        return 'PerformBaseBundle:types:entity.html.twig';
     }
 
     protected function ensureEntity($field, $value)

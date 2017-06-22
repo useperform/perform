@@ -1,0 +1,11 @@
+{% extends 'PerformBaseBundle:types:simple.html.twig' %}
+
+{% block list %}
+  {% if link_to is defined and link_to == true and perform_crud_route_exists(related_entity, 'view') %}
+    <a href="{{perform_crud_route(related_entity, 'view')}}">
+      {{value}}
+    </a>
+  {% else %}
+    {{value}}
+  {% endif %}
+{% endblock %}

@@ -33,9 +33,15 @@ class EntityTypeTest extends \PHPUnit_Framework_TestCase
         $options = [
             'class' => 'PerformBaseBundle:User',
             'display_field' => 'email',
+            'link_to' => false,
         ];
 
-        $this->assertSame('user@example.com', $this->type->listContext($entity, 'user', $options));
+        $expected = [
+            'value' => 'user@example.com',
+            'related_entity' => $user,
+            'link_to' => false,
+        ];
+        $this->assertSame($expected, $this->type->listContext($entity, 'user', $options));
     }
 
     public function testListContextWithNoEntity()
