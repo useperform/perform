@@ -7,14 +7,20 @@ Add another controller action to the ``PageController`` class:
 
 .. code-block:: diff
 
-    + /**
-    +  * @Route("/contact")
-    +  * @Template
-    +  */
-    + public function contactAction()
-    + {
-    +     return [];
-    + }
+              return [
+                  'bikes' => $bikes,
+              ];
+          }
+
+    +     /**
+    +      * @Route("/contact")
+    +      * @Template
+    +      */
+    +     public function contactAction()
+    +     {
+    +         return [];
+    +     }
+      }
 
 and create a new frontend template for it:
 
@@ -181,7 +187,7 @@ First, create a new entity class that extends ``Perform\ContactBundle\Entity\Mes
         }
     }
 
-And a doctrine mapping file, but only include the new ``favouriteBike`` property:
+Then create a doctrine mapping file, but only include the new ``favouriteBike`` property:
 
 .. code-block:: yml
 
@@ -195,7 +201,7 @@ And a doctrine mapping file, but only include the new ``favouriteBike`` property
 
 .. note::
 
-   You could also use the ``perform-dev:create:entity`` command to create these files, but remember to remove the id and other unrelated fields and to extend the ``Perform\ContactBundle\Entity\Message`` class.
+   You could also use the ``perform-dev:create:entity`` command to create these files, but remember to remove the id and other unrelated fields, and to extend the ``Perform\ContactBundle\Entity\Message`` class.
 
 
 Now for the clever bit - we will tell Perform that this entity *extends* the message entity in the contact bundle.
@@ -299,7 +305,7 @@ Extending the message admin
 ---------------------------
 
 There is just one piece missing.
-We can save form submissions with the new field, but there is no way to manage this field in the admin yet.
+We can save form submissions with the new field, but it doesn't appear in the admin yet.
 
 Create a new admin class:
 
@@ -307,7 +313,22 @@ Create a new admin class:
 
    ./bin/console perform-dev:create:admin AppBundle:ContactMessage
 
-and make some modifications:
+and make some modifications.
+
+First, extend the existing admin from the contact bundle:
+
+.. code-block:: diff
+
+    - use Perform\BaseBundle\Admin\AbstractAdmin;
+    + use Perform\ContactBundle\Admin\MessageAdmin;
+      use Perform\BaseBundle\Config\TypeConfig;
+      use Perform\BaseBundle\Config\FilterConfig;
+      use Perform\BaseBundle\Config\ActionConfig;
+
+    - class ContactMessageAdmin extends AbstractAdmin
+    + class ContactMessageAdmin extends MessageAdmin
+
+Then add the new field to ``configureTypes``, making sure to also call the parent method:
 
 .. code-block:: diff
 
@@ -323,3 +344,67 @@ and make some modifications:
     +         ],
     +     ]);
       }
+
+Finally, either call the parent method in ``configureFilters``, or remove the method entirely.
+
+.. code-block:: diff
+
+      public function configureFilters(FilterConfig $config)
+      {
+    +     parent::configureFilters($config);
+      }
+
+After refreshing the page, the contact message admin page should display the new field.
+
+Extending the message view template
+-----------------------------------
+
+While the new field shows up in the list of messages, unfortunately it's not visible when viewing the messages.
+
+This is because the contact bundle has a different template for viewing message entities.
+Let's override that template with our own version that displays the visitor's favourite bike too.
+
+Override the ``getTemplate`` method of ``ContactMessageAdmin`` to the following:
+
+.. code-block:: diff
+      use Perform\BaseBundle\Config\ActionConfig;
+      use Perform\ContactBundle\Admin\MessageAdmin;
+    + use Symfony\Component\Templating\EngineInterface;
+
+.. code-block:: php
+
+    <?php
+
+    public function getTemplate(EngineInterface $templating, $entityName, $context)
+    {
+        if ($context === TypeConfig::CONTEXT_VIEW) {
+            return 'AppBundle:Admin/ContactMessage:view.html.twig';
+        }
+
+        return parent::getTemplate($templating, $entityName, $context);
+    }
+
+Here we override the template, but only for the ``view`` context. All other contexts fall back to the default behaviour of the parent admin class.
+
+.. note::
+
+   See the :doc:`admins documentation <../core/admins>` for more information on overriding templates.
+
+Create the file ``src/AppBundle/Resources/views/Admin/ContactMessage/view.html.twig`` for this new view and insert the following:
+
+.. code-block:: html
+
+    {% extends 'PerformContactBundle:Message:view.html.twig' %}
+
+    {% block extras %}
+      {% if entity.favouriteBike is not null %}
+        <p>
+          Favourite bike:
+          <a href="{{perform_crud_route(entity.favouriteBike, 'view')}}">
+            {{entity.favouriteBike.title}}
+          </a>
+        </p>
+      {% endif %}
+    {% endblock %}
+
+Now a link to the visitor's favourite bike will be shown when viewing the contact form message.
