@@ -4,6 +4,7 @@ namespace Perform\NotificationBundle\RecipientProvider;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\BaseBundle\Settings\SettingsManager;
+use Perform\NotificationBundle\Recipient\SimpleRecipient;
 
 /**
  * SettingsProvider finds users whose email addresses are set in a given
@@ -28,12 +29,18 @@ class SettingsProvider implements RecipientProviderInterface
             throw new \Exception(__CLASS__.' requires the "setting" criteria.');
         }
 
-        //fetch emails using the settings store
         $emails = (array) $this->settings->getValue($criteria['setting']);
         $users = $this->entityManager->getRepository('PerformBaseBundle:User')
             ->findByEmails($emails);
 
-        //if some emails are missing, create them with default names
+        $missingEmails = array_combine($emails, $emails);
+        foreach ($users as $user) {
+            unset($missingEmails[$user->getEmail()]);
+        }
+
+        foreach ($missingEmails as $email) {
+            $users[] = new SimpleRecipient($email, $email);
+        }
 
         return $users;
     }
