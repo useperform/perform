@@ -3,6 +3,7 @@
 namespace Perform\NotificationBundle\Tests;
 
 use Perform\NotificationBundle\Notification;
+use Perform\NotificationBundle\Recipient\RecipientInterface;
 
 /**
  * NotificationTest
@@ -11,7 +12,7 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
 {
     protected function mockRecipient()
     {
-        return $this->getMock('Perform\NotificationBundle\RecipientInterface');
+        return $this->getMock(RecipientInterface::class);
     }
 
     public function testGetters()

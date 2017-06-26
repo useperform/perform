@@ -4,6 +4,8 @@ namespace Perform\NotificationBundle\Tests;
 
 use Perform\NotificationBundle\Notifier;
 use Perform\NotificationBundle\Notification;
+use Perform\NotificationBundle\Publisher\PublisherInterface;
+use Perform\NotificationBundle\Recipient\RecipientInterface;
 
 /**
  * NotifierTest
@@ -16,7 +18,7 @@ class NotifierTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->notifier = new Notifier();
-        $this->publisher = $this->getMock('Perform\NotificationBundle\Publisher\PublisherInterface');
+        $this->publisher = $this->getMock(PublisherInterface::class);
         $this->publisher->expects($this->any())
             ->method('getName')
             ->will($this->returnValue('testPublisher'));
@@ -26,7 +28,7 @@ class NotifierTest extends \PHPUnit_Framework_TestCase
 
     protected function newNotification()
     {
-        return new Notification($this->getMock('Perform\NotificationBundle\RecipientInterface'), 'test');
+        return new Notification($this->getMock(RecipientInterface::class), 'test');
     }
 
     public function testSend()

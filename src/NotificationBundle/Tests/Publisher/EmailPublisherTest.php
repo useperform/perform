@@ -4,6 +4,9 @@ namespace Perform\NotificationBundle\Tests\Publisher;
 
 use Perform\NotificationBundle\Publisher\EmailPublisher;
 use Perform\NotificationBundle\Notification;
+use Perform\NotificationBundle\Recipient\RecipientInterface;
+use Symfony\Component\Templating\EngineInterface;
+use Perform\BaseBundle\Email\Mailer;
 
 /**
  * EmailPublisherTest
@@ -18,16 +21,16 @@ class EmailPublisherTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->mailer = $this->getMockBuilder('Perform\BaseBundle\Email\Mailer')
+        $this->mailer = $this->getMockBuilder(Mailer::class)
                       ->disableOriginalConstructor()
                       ->getMock();
-        $this->templating = $this->getMock('Symfony\Component\Templating\EngineInterface');
+        $this->templating = $this->getMock(EngineInterface::class);
         $this->publisher = new EmailPublisher($this->mailer, $this->templating);
     }
 
     protected function newNotification($type)
     {
-        $recipient = $this->getMock('Perform\NotificationBundle\RecipientInterface');
+        $recipient = $this->getMock(RecipientInterface::class);
         $recipient->expects($this->any())
             ->method('getEmail')
             ->will($this->returnValue('test@example.com'));

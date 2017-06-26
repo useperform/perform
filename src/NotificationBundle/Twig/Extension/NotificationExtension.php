@@ -3,7 +3,7 @@
 namespace Perform\NotificationBundle\Twig\Extension;
 
 use Perform\NotificationBundle\Repository\NotificationLogRepository;
-use Perform\NotificationBundle\RecipientInterface;
+use Perform\NotificationBundle\Recipient\RecipientInterface;
 use Perform\NotificationBundle\RecipientProvider\RecipientProviderInterface;
 
 /**

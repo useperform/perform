@@ -4,7 +4,7 @@ namespace Perform\NotificationBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Perform\NotificationBundle\Entity\NotificationLog;
-use Perform\NotificationBundle\RecipientInterface;
+use Perform\NotificationBundle\Recipient\RecipientInterface;
 
 /**
  * NotificationLogRepository
