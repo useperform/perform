@@ -1,0 +1,83 @@
+{% extends 'WebProfilerBundle:Profiler:layout.html.twig' %}
+
+{% block toolbar %}
+  {% if collector.sentCount > 0 %}
+
+    {% set icon %}
+    {{include('@PerformNotification/data_collector/plane.svg')}}
+    <span class="sf-toolbar-value">{{collector.sentCount}}</span>
+    {% endset %}
+
+    {% set text %}
+    <div class="sf-toolbar-info-piece">
+      <b>Sent notifications</b>
+      <span class="sf-toolbar-status">{{collector.sentCount}}</span>
+    </div>
+    {% endset %}
+
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', {'link' : true}) }}
+  {% endif %}
+{% endblock %}
+
+{% block menu %}
+  <span class="label{{collector.sentCount == 0 ? ' disabled'}}">
+    <span class="icon">{{include('@PerformNotification/data_collector/plane.svg')}}</span>
+    <strong>Notifications</strong>
+    {% if collector.sentCount > 0 %}
+      <span class="count">
+        {{collector.sentCount}}
+      </span>
+    {% endif %}
+  </span>
+{% endblock %}
+
+{% block panel %}
+  <h2>Notifications</h2>
+  <div class="metrics">
+    <div class="metric">
+      <span class="value">{{collector.sentCount}}</span>
+      <span class="label">{{collector.sentCount == 1 ? 'notification' : 'notifications'}} sent</span>
+    </div>
+  </div>
+  {% if collector.sentCount > 0 %}
+    {% for item in collector.sent %}
+      <div class="card">
+        <h4>{{loop.index}}</h4>
+        <table>
+          <tr>
+            <th>Type</th>
+            <td>{{dump(item[0].type)}}</td>
+          </tr>
+          <tr>
+            <th>Context</th>
+            <td>{{dump(item[0].context)}}</td>
+          </tr>
+          <tr>
+            <th>Recipients</th>
+            <td>{{dump(item[0].recipients)}}</td>
+          </tr>
+          <tr>
+            <th>Publishers</th>
+            <td>{{dump(item[1])}}</td>
+          </tr>
+        </table>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <h2>Loaded publishers</h2>
+  <table>
+    <thead>
+      <th>Name</th>
+      <th>Class</th>
+    </thead>
+    <tbody>
+      {% for name, class in collector.publishers %}
+        <tr>
+          <td>{{name}}</td>
+          <td>{{class}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

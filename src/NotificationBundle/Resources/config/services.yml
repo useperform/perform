@@ -44,3 +44,14 @@ services:
         arguments: ['@perform_notification.provider.current_user', '@perform_notification.repository.notification_log']
         tags:
             - {name: twig.extension}
+
+    perform_notification.data_collector:
+        class: Perform\NotificationBundle\DataCollector\NotificationsDataCollector
+        public: false
+        arguments:
+            - '@perform_notification.notifier'
+        tags:
+            -
+                name: data_collector
+                template: 'PerformNotificationBundle:data_collector:notifications.html.twig'
+                id: 'perform_notification'
