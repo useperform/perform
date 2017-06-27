@@ -24,11 +24,6 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->arrayNode('default_publishers')
-                    ->performNoDeepMerging()
-                    ->prototype('scalar')
-                    ->end()
-                ->end()
                 ->scalarNode('active_recipient_provider')
                 ->end()
                 ->arrayNode('logging')

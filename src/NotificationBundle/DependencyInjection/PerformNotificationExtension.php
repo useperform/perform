@@ -19,12 +19,11 @@ class PerformNotificationExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $notifier = $container->getDefinition('perform_notification.notifier');
-        $notifier->addMethodCall('setDefaultPublishers', [$config['default_publishers']]);
-
         if ($config['logging']['enabled']) {
-            $level = isset($config['logging']['level']) ? $config['logging']['level'] : LogLevel::INFO;
+            $notifier = $container->getDefinition('perform_notification.notifier');
             $notifier->addTag('monolog.logger', ['channel' => 'notification']);
+
+            $level = isset($config['logging']['level']) ? $config['logging']['level'] : LogLevel::INFO;
             $notifier->addMethodCall('setLogger', [new Reference('logger'), $level]);
         }
 

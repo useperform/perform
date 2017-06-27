@@ -42,16 +42,6 @@ class NotifierTest extends \PHPUnit_Framework_TestCase
         $this->notifier->send($n, ['testPublisher']);
     }
 
-    public function testSendWithDefaultPublishers()
-    {
-        $n = $this->newNotification();
-        $this->publisher->expects($this->once())
-            ->method('send')
-            ->with($n);
-        $this->notifier->setDefaultPublishers(['testPublisher']);
-        $this->notifier->send($n);
-    }
-
     public function testSendWithLogging()
     {
         $n = $this->newNotification();
@@ -80,19 +70,5 @@ class NotifierTest extends \PHPUnit_Framework_TestCase
             ]);
 
         $this->notifier->send($n, ['testPublisher']);
-    }
-    public function testDefaultPublishersCanBeOveridden()
-    {
-        $n = $this->newNotification();
-        $publisher = $this->getMock('Perform\NotificationBundle\Publisher\PublisherInterface');
-        $publisher->expects($this->any())
-            ->method('getName')
-            ->will($this->returnValue('mySuperPublisher'));
-        $this->notifier->addPublisher($publisher);
-        $this->publisher->expects($this->never())
-            ->method('send');
-
-        $this->notifier->setDefaultPublishers(['testPublisher', 'someOtherPublisher']);
-        $this->notifier->send($n, ['mySuperPublisher']);
     }
 }

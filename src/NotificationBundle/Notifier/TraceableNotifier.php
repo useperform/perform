@@ -25,10 +25,6 @@ class TraceableNotifier extends Notifier
     {
         parent::send($notification, $publishers);
 
-        if (empty($publishers)) {
-            $publishers = $this->defaultPublishers;
-        }
-
         $this->sent[] = [$notification, $publishers];
     }
 

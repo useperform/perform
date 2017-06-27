@@ -10,24 +10,12 @@ use Psr\Log\LoggerInterface;
 class Notifier
 {
     protected $publishers = [];
-    protected $defaultPublishers = [];
     protected $logger;
     protected $logLevel = LogLevel::INFO;
 
     public function addPublisher(PublisherInterface $publisher)
     {
         $this->publishers[$publisher->getName()] = $publisher;
-    }
-
-    /**
-     * Set the publishers to use when a notification is sent without
-     * any.
-     *
-     * @param array $publishers The names of the publishers to use.
-     */
-    public function setDefaultPublishers(array $publishers)
-    {
-        $this->defaultPublishers = $publishers;
     }
 
     /**
@@ -48,10 +36,6 @@ class Notifier
      */
     public function send(Notification $notification, array $publishers = [])
     {
-        if (empty($publishers)) {
-            $publishers = $this->defaultPublishers;
-        }
-
         foreach ($publishers as $name) {
             if (!isset($this->publishers[$name])) {
                 throw new \Exception(sprintf('Unknown notification publisher "%s"', $name));
