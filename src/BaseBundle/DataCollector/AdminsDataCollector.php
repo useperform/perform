@@ -69,6 +69,14 @@ class AdminsDataCollector extends DataCollector
         return isset($this->data['activeAdmin']) ? $this->data['activeAdmin'] : null;
     }
 
+    public function getActiveAlias()
+    {
+        $admin = $this->getActiveAdmin();
+        $pieces = explode('\\', $this->getActiveAdmin());
+
+        return array_pop($pieces);
+    }
+
     public function getTypeConfig()
     {
         return isset($this->data['typeConfig']) ? $this->data['typeConfig'] : [];

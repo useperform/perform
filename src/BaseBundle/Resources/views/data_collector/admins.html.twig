@@ -3,10 +3,15 @@
 {% block toolbar %}
   {% if collector.activeAdmin is not null %}
   {% set icon %}
-    <span class="sf-toolbar-value">{{collector.activeAdmin}}</span>
+    <span class="icon">{{ include('@PerformBase/data_collector/admins.svg') }}</span>
+    <span class="sf-toolbar-value">&nbsp;&nbsp;{{collector.activeAlias}}</span>
   {% endset %}
 
   {% set text %}
+  <div class="sf-toolbar-info-piece">
+    <b>Active Admin</b>
+    <span class="sf-toolbar-status">{{collector.activeAdmin}}</span>
+  </div>
   <div class="sf-toolbar-info-piece">
     <b>Loaded Admins</b>
     <span class="sf-toolbar-status">{{ collector.admins | length }}</span>
