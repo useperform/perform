@@ -1,5 +1,7 @@
+{% if currentRecipient.forename %}
 Dear {{currentRecipient.forename}},
 
+{% endif %}
 {{message.name}} has sent you the following message via the contact form:
 
 {{message.message}}
