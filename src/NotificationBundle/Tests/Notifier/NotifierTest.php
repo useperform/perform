@@ -1,8 +1,8 @@
 <?php
 
-namespace Perform\NotificationBundle\Tests;
+namespace Perform\NotificationBundle\Tests\Notifier;
 
-use Perform\NotificationBundle\Notifier;
+use Perform\NotificationBundle\Notifier\Notifier;
 use Perform\NotificationBundle\Notification;
 use Perform\NotificationBundle\Publisher\PublisherInterface;
 use Perform\NotificationBundle\Recipient\RecipientInterface;

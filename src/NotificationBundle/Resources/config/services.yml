@@ -1,6 +1,6 @@
 services:
     perform_notification.notifier:
-        class: Perform\NotificationBundle\Notifier
+        class: Perform\NotificationBundle\Notifier\Notifier
 
     perform_notification.publisher.local:
         class: Perform\NotificationBundle\Publisher\LocalPublisher

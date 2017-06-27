@@ -8,7 +8,7 @@ The `perform_notification.notifier` service is used to send notifications.
 
 Create an instance of
 `Perform\NotificationBundle\Notification`, then use the
-`Perform\NotificationBundle\Notifier` to send it.
+`Perform\NotificationBundle\Notifier\Notifier` to send it.
 
 Notification is an immutable value object that requires an array of
 recipients (implementing `Perform\NotificationBundle\RecipientInterface`),

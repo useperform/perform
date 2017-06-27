@@ -2,7 +2,6 @@
 
 namespace Perform\NotificationBundle\Notifier;
 
-use Perform\NotificationBundle\Notifier;
 use Perform\NotificationBundle\Notification;
 
 /**
