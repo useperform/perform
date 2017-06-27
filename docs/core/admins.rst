@@ -135,3 +135,42 @@ active admin, as well as some general information about all loaded
 admins.
 
 .. image:: data_collector.png
+
+Overriding templates
+--------------------
+
+The template used for an admin action can be overridden in many
+different ways.
+
+Here are all the possible ways of overriding a template, in order of priority:
+
+Return a response object from the controller
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If an action returns a Symfony ``Response`` object, no template is
+needed.
+
+Use twig explicitly or with an annotation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Use ``render()`` or the ``@Template`` annotation to
+explicitly render a template in the controller action.
+
+Implement getTemplate() in the admin
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+An admin class may implement ``AdminInterface#getTemplate()`` to
+return a custom template name.
+
+Place a file in a specific location
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The template ``<Bundle>:<Entity>:<context>.html.twig`` will be used
+automatically if available,
+e.g. ``PerformContactBundle:Message:view.html.twig``.
+
+Default
+~~~~~~~
+
+If nothing else has been specified, the template
+``PerformBaseBundle:Crud:<context>.html.twig`` will be used.
