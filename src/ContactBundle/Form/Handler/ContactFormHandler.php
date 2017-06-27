@@ -73,7 +73,7 @@ class ContactFormHandler
             'replyTo' => [$message->getEmail() => $message->getName()],
             'message' => $message,
         ]);
-        $this->notifier->send($notification, ['email', 'logger']);
+        $this->notifier->send($notification, ['email']);
 
         if ($this->logger) {
             $this->logger->info(sprintf('Contact message submitted from %s at %s', $message->getEmail(), $message->getCreatedAt()->format('Y/m/d H:i:s')));
