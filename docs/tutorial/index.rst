@@ -7,7 +7,7 @@ We've been tasked with creating a website for *Hipster Bikes*, the trendiest bik
 
 The site needs to have:
 
-* A catalogue of information and pictures for each bike
+* Information and pictures for a collection of bikes
 * An admin area to add new bikes
 * A contact form for visitors to sing their praise.
 
