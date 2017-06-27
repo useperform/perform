@@ -189,7 +189,7 @@ First, create a new entity class that extends ``Perform\ContactBundle\Entity\Mes
 
 Then create a doctrine mapping file, but only include the new ``favouriteBike`` property:
 
-.. code-block:: yml
+.. code-block:: yaml
 
     AppBundle\Entity\ContactMessage:
         type: entity
@@ -223,11 +223,12 @@ Add an entry to ``perform_base:extended_entities`` in ``app/config/config.yml``:
 
    Read the :doc:`extending entities documentation <../more/extending-entities>` for a look into how it works.
 
-Now update the database schema. You'll notice that the ``perform_contact_message`` table has been removed, and replaced with a table for the new message entity.
+Now update the database schema, where you'll notice creation of a table for the new message entity.
+With the ``--complete`` flag, the existing ``perform_contact_message`` table will be removed.
 
 .. code-block:: bash
 
-   ./bin/console doctrine:schema:update --force --dump-sql
+   ./bin/console doctrine:schema:update --force --dump-sql --complete
 
 Extending the contact form
 --------------------------
@@ -367,6 +368,7 @@ Let's override that template with our own version that displays the visitor's fa
 Override the ``getTemplate`` method of ``ContactMessageAdmin`` to the following:
 
 .. code-block:: diff
+
       use Perform\BaseBundle\Config\ActionConfig;
       use Perform\ContactBundle\Admin\MessageAdmin;
     + use Symfony\Component\Templating\EngineInterface;
