@@ -4,11 +4,15 @@ namespace Perform\NotificationBundle\Notifier;
 
 use Perform\NotificationBundle\Publisher\PublisherInterface;
 use Perform\NotificationBundle\Notification;
+use Psr\Log\LogLevel;
+use Psr\Log\LoggerInterface;
 
 class Notifier
 {
     protected $publishers = [];
     protected $defaultPublishers = [];
+    protected $logger;
+    protected $logLevel = LogLevel::INFO;
 
     public function addPublisher(PublisherInterface $publisher)
     {
@@ -24,6 +28,16 @@ class Notifier
     public function setDefaultPublishers(array $publishers)
     {
         $this->defaultPublishers = $publishers;
+    }
+
+    /**
+     * @param LoggerInterface|null $logger
+     * @param string $logLevel
+     */
+    public function setLogger(LoggerInterface $logger = null, $logLevel = LogLevel::INFO)
+    {
+        $this->logger = $logger;
+        $this->logLevel = $logLevel;
     }
 
     /**
@@ -44,6 +58,13 @@ class Notifier
             }
 
             $this->publishers[$name]->send($notification);
+        }
+
+        if ($this->logger) {
+            $this->logger->log($this->logLevel, sprintf('Sent notification of type "%s".', $notification->getType()), [
+                'recipients' => $notification->getRecipients(),
+                'publishers' => $publishers,
+            ]);
         }
     }
 }
