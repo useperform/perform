@@ -4,7 +4,7 @@ namespace Perform\BaseBundle\Security;
 
 use Perform\BaseBundle\Entity\User;
 use Perform\BaseBundle\Entity\ResetToken;
-use Perform\NotificationBundle\Notifier;
+use Perform\NotificationBundle\Notifier\Notifier;
 use Perform\NotificationBundle\Notification;
 use Doctrine\ORM\EntityManagerInterface;
 

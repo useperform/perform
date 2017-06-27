@@ -1,6 +1,6 @@
 <?php
 
-namespace Perform\NotificationBundle;
+namespace Perform\NotificationBundle\Recipient;
 
 /**
  * RecipientInterface

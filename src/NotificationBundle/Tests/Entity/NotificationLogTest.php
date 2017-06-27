@@ -3,6 +3,7 @@
 namespace Perform\NotificationBundle\Tests\Entity;
 
 use Perform\NotificationBundle\Entity\NotificationLog;
+use Perform\NotificationBundle\Recipient\RecipientInterface;
 
 /**
  * NotificationLogTest
@@ -11,7 +12,7 @@ class NotificationLogTest extends \PHPUnit_Framework_TestCase
 {
     public function testSetRecipient()
     {
-        $recipient = $this->getMock('Perform\NotificationBundle\RecipientInterface');
+        $recipient = $this->getMock(RecipientInterface::class);
         $recipient->expects($this->once())
             ->method('getId')
             ->will($this->returnValue('some_guid'));

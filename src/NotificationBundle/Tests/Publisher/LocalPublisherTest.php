@@ -4,6 +4,9 @@ namespace NotificationBundle\Tests\Publisher;
 
 use Perform\NotificationBundle\Publisher\LocalPublisher;
 use Perform\NotificationBundle\Notification;
+use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\Templating\EngineInterface;
+use Perform\NotificationBundle\Recipient\RecipientInterface;
 
 /**
  * LocalPublisherTest
@@ -18,14 +21,14 @@ class LocalPublisherTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->entityManager = $this->getMock('Doctrine\Common\Persistence\ObjectManager');
-        $this->templating = $this->getMock('Symfony\Component\Templating\EngineInterface');
+        $this->entityManager = $this->getMock(ObjectManager::class);
+        $this->templating = $this->getMock(EngineInterface::class);
         $this->publisher = new LocalPublisher($this->entityManager, $this->templating);
     }
 
     protected function newNotification($type)
     {
-        return new Notification($this->getMock('Perform\NotificationBundle\RecipientInterface'), $type);
+        return new Notification($this->getMock(RecipientInterface::class), $type);
     }
 
     public function testSend()

@@ -3,7 +3,7 @@
 namespace Perform\NotificationBundle\Entity;
 
 use Perform\NotificationBundle\Notification;
-use Perform\NotificationBundle\RecipientInterface;
+use Perform\NotificationBundle\Recipient\RecipientInterface;
 
 /**
  * Used by the local publisher to publish notifications

@@ -3,7 +3,7 @@
 namespace Perform\NotificationBundle\Twig\Extension;
 
 use Perform\NotificationBundle\Repository\NotificationLogRepository;
-use Perform\NotificationBundle\RecipientInterface;
+use Perform\NotificationBundle\Recipient\RecipientInterface;
 use Perform\NotificationBundle\RecipientProvider\RecipientProviderInterface;
 
 /**
@@ -28,20 +28,20 @@ class NotificationExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('perform_unread_notification_count', [$this, 'getUnreadNotificationCount']),
+            new \Twig_SimpleFunction('perform_notification_unread_count', [$this, 'getUnreadCount']),
         ];
     }
 
     /**
      * @return int
      */
-    public function getUnreadNotificationCount()
+    public function getUnreadCount()
     {
-        $recipient = $this->provider->getRecipients();
-        if (!$recipient instanceof RecipientInterface) {
+        $recipients = $this->provider->getRecipients();
+        if (!isset($recipients[0]) || !$recipients[0] instanceof RecipientInterface) {
             return 0;
         }
 
-        return $this->repository->getUnreadCountByRecipient($recipient);
+        return $this->repository->getUnreadCountByRecipient($recipients[0]);
     }
 }

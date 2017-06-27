@@ -5,7 +5,7 @@ namespace Perform\ContactBundle\Form\Handler;
 use Symfony\Component\HttpFoundation\Request;
 use Perform\ContactBundle\SpamChecker\SpamCheckerInterface;
 use Psr\Log\LoggerInterface;
-use Perform\NotificationBundle\Notifier;
+use Perform\NotificationBundle\Notifier\Notifier;
 use Symfony\Component\Form\FormInterface;
 use Perform\ContactBundle\Entity\Message;
 use Perform\NotificationBundle\RecipientProvider\RecipientProviderInterface;

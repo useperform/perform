@@ -2,7 +2,7 @@
 
 namespace Perform\ContactBundle\Tests\Form\Handler;
 
-use Perform\NotificationBundle\Notifier;
+use Perform\NotificationBundle\Notifier\Notifier;
 use Perform\NotificationBundle\RecipientProvider\RecipientProviderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\ContactBundle\SpamChecker\SpamCheckerInterface;

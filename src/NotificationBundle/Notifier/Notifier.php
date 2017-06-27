@@ -1,6 +1,6 @@
 <?php
 
-namespace Perform\NotificationBundle;
+namespace Perform\NotificationBundle\Notifier;
 
 use Perform\NotificationBundle\Publisher\PublisherInterface;
 use Perform\NotificationBundle\Notification;

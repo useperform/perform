@@ -4,7 +4,7 @@ namespace Perform\NotificationBundle\Publisher;
 
 use Perform\NotificationBundle\Entity\NotificationLog;
 use Perform\NotificationBundle\Notification;
-use Perform\NotificationBundle\RecipientInterface;
+use Perform\NotificationBundle\Recipient\RecipientInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Templating\EngineInterface;
 

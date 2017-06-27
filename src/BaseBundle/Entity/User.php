@@ -3,7 +3,7 @@
 namespace Perform\BaseBundle\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
-use Perform\NotificationBundle\RecipientInterface;
+use Perform\NotificationBundle\Recipient\RecipientInterface;
 
 /**
  * User
