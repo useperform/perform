@@ -87,7 +87,7 @@ class ResetTokenManager
             'subject' => 'Reset your password',
             'token' => $token,
         ]);
-        $this->notifier->send($notification, ['email', 'logger']);
+        $this->notifier->send($notification, ['email']);
     }
 
     /**
