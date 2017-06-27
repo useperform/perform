@@ -7,6 +7,13 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
+    protected $debug;
+
+    public function __construct($debug)
+    {
+        $this->debug = $debug;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -23,6 +30,15 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('active_recipient_provider')
+                ->end()
+                ->arrayNode('logging')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                    ->booleanNode('enabled')
+                        ->defaultValue($this->debug)
+                    ->end()
+                    ->scalarNode('level')
+                    ->end()
                 ->end()
             ->end();
 
