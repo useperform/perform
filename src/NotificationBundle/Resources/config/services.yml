@@ -10,13 +10,6 @@ services:
         tags:
             - {name: perform_notification.publisher}
 
-    perform_notification.publisher.logger:
-        class: Perform\NotificationBundle\Publisher\LoggerPublisher
-        arguments:
-            - "@logger"
-        tags:
-            - {name: perform_notification.publisher}
-
     perform_notification.publisher.email:
         class: Perform\NotificationBundle\Publisher\EmailPublisher
         arguments:
