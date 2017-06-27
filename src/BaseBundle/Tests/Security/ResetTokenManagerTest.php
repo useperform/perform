@@ -7,7 +7,7 @@ use Perform\BaseBundle\Entity\User;
 use Perform\BaseBundle\Entity\ResetToken;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Persistence\ObjectRepository;
-use Perform\NotificationBundle\Notifier;
+use Perform\NotificationBundle\Notifier\Notifier;
 
 /**
  * ResetTokenManagerTest.
