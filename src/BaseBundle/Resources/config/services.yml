@@ -1,5 +1,6 @@
 imports:
     - { resource: services_actions.yml }
+    - { resource: services_user.yml }
 
 services:
     perform_base.admin.registry:
