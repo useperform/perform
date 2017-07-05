@@ -23,7 +23,7 @@ class PerformBaseExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $this->ensureUTC();
+        // $this->ensureUTC();
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
@@ -82,8 +82,8 @@ class PerformBaseExtension extends Extension
      */
     protected function ensureUTC()
     {
-        if ('UTC' !== date_default_timezone_get()) {
-            throw new \Exception('The server timezone must be set to UTC');
+        if ('UTC' !== $timezone = date_default_timezone_get()) {
+            throw new \Exception(sprintf('The server timezone must be set to UTC, it is currently "%s".', $timezone));
         }
     }
 
