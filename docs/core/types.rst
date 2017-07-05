@@ -126,6 +126,8 @@ It's not possible to sort by this method in the database, so a custom sort funct
 On first load, the `list` context is completely unsorted.
 Use ``TypeConfig#setDefaultSort()`` to sort by a certain field by default.
 
+You may also pass in a field that has not been added to the type config, which will be treated as if it had been added with the ``sort`` option set to ``true``.
+
 .. code-block:: php
 
    <?php
