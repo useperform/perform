@@ -48,6 +48,11 @@ class User implements UserInterface, RecipientInterface
     protected $roles = ['ROLE_USER'];
 
     /**
+     * @var \DateTime|null
+     */
+    protected $lastLogin;
+
+    /**
      * @return uuid
      */
     public function getId()
@@ -229,5 +234,25 @@ class User implements UserInterface, RecipientInterface
     public function getRoles()
     {
         return $this->roles;
+    }
+
+    /**
+     * @param \DateTime|null $lastLogin
+     *
+     * @return User
+     */
+    public function setLastLogin(\DateTime $lastLogin = null)
+    {
+        $this->lastLogin = $lastLogin;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getLastLogin()
+    {
+        return $this->lastLogin;
     }
 }

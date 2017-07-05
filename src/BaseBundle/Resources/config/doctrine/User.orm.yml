@@ -20,3 +20,6 @@ Perform\BaseBundle\Entity\User:
             unique: true
         roles:
             type: array
+        lastLogin:
+            type: datetime
+            nullable: true
