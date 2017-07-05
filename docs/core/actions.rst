@@ -59,7 +59,7 @@ Here is a basic action that simply logs the entities as JSON:
                 $this->logger->info(json_encode($entity));
             }
 
-            $response = new ActionResponse(sprintf('Logged %s items.', count($entities));
+            $response = new ActionResponse(sprintf('Logged %s items.', count($entities)));
 
             return $response;
         }
@@ -69,7 +69,7 @@ Here is a basic action that simply logs the entities as JSON:
             return true;
         }
 
-        public function isAvailable()
+        public function isAvailable(AdminRequest $request)
         {
             return true;
         }
