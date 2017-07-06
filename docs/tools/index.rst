@@ -5,3 +5,4 @@ Development Tools
    :maxdepth: 2
 
    ./cli
+   ./vagrant
