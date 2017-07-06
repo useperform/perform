@@ -66,4 +66,4 @@ For example, if using bash, you could add the following to your ``.bashrc``:
 
    PATH+=:~/.composer/vendor/bin
 
-Then run ``perform`` to check the cli is installed.
+Then run ``perform`` to check the cli is installed, and ``perform requirements`` to check your system is configured properly.

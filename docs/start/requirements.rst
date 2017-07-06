@@ -1,7 +1,7 @@
 Requirements
 ============
 
-Perform requires the following tools to run correctly:
+Perform requires the following to run correctly:
 
 * PHP 5.6 or later
 * The dom, gd, pdo, xml, and zip PHP extensions
@@ -9,8 +9,8 @@ Perform requires the following tools to run correctly:
 * The `composer <https://getcomposer.org>`_ package manager
 * Node.js 5 or later, to install and build the css and javascript files
 
-Optional requirements
----------------------
+Recommendations
+---------------
 
 * The `yarn <https://yarnpkg.com>`_ package manager for faster npm installs
 
