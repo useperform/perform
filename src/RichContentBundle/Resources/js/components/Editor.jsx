@@ -2,35 +2,41 @@ import React from 'react';
 import css from './editor.scss';
 import BlockList from './BlockList';
 import Toolbar from './Toolbar';
+import 'whatwg-fetch';
 
 class Editor extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      loaded: false,
+      blocks: {},
+      order: [],
+    };
   }
 
   componentDidMount() {
+    if (true === this.state.loaded) {
+      return;
+    }
+
+    fetch('/admin/_editor/version/1', {
+      credentials: 'include',
+    }).then(res => {
+      return res.json();
+    }).then(json => {
+      this.setState({
+        blocks: json.blocks,
+        order: json.order,
+        loaded: true
+      });
+    });
   }
 
   render() {
-    const blocks = {
-      1: {
-        type: 'Text',
-        value: 'Test text',
-      },
-      2: {
-        type: 'Image',
-        value: '#',
-      }
-    };
-
-    const order = [
-      1, 2, 1
-    ];
-
     return (
       <div className={css.editor}>
         <Toolbar />
-        <BlockList blocks={blocks} order={order} />
+        <BlockList blocks={this.state.blocks} order={this.state.order} />
       </div>
     );
   }

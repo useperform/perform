@@ -1,0 +1,3 @@
+editor:
+    resource: "@PerformRichContentBundle/Controller/EditorController.php"
+    type:     annotation
