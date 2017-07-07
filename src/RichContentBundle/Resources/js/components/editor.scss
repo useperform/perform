@@ -1,6 +1,15 @@
-$bg-color: #eee;
+$base-bg: #eee;
+$toolbar-bg: #3e3e3e;
 
 .editor {
-  background-color: $bg-color;
-  padding: 10px;
+  background-color: $base-bg;
+
+  :global .toolbar {
+    background-color: $toolbar-bg;
+    padding: 10px;
+  }
+
+  :global .block-list {
+    padding: 10px;
+  }
 }

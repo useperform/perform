@@ -4,7 +4,7 @@ class Image extends React.Component {
   render() {
     return (
       <div>
-        <img src="#" />
+        <img src={this.props.value} />
       </div>
     );
   }

@@ -1,19 +1,36 @@
 import React from 'react';
 import css from './editor.scss';
-import blockTypes from './blocktypes';
-
-const blockNames = Object.keys(blockTypes);
+import BlockList from './BlockList';
+import Toolbar from './Toolbar';
 
 class Editor extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  componentDidMount() {
+  }
+
   render() {
-    const components = [];
-    for (var i=0; i < blockNames.length; i++) {
-      let Tag = blockTypes[blockNames[i]];
-      components.push(<Tag key={i} />);
-    }
+    const blocks = {
+      1: {
+        type: 'Text',
+        value: 'Test text',
+      },
+      2: {
+        type: 'Image',
+        value: '#',
+      }
+    };
+
+    const order = [
+      1, 2, 1
+    ];
+
     return (
       <div className={css.editor}>
-        {components}
+        <Toolbar />
+        <BlockList blocks={blocks} order={order} />
       </div>
     );
   }
