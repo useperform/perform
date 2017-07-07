@@ -11,6 +11,7 @@ src/CmsBundle/Resources/public/js
 src/CmsBundle/gulp-sources.js
 src/MediaBundle/Resources/public
 src/MediaPlayerBundle/Resources/public
+src/RichContentBundle/Resources/public
 
 test_results.xml
 Dockerfile
