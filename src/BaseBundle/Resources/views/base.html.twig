@@ -4,7 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Site Administration</title>
-    <link rel="stylesheet" type="text/css" href="{{asset('bundles/performbase/css/app.css')}}" />
+    {% block css %}
+      <link rel="stylesheet" type="text/css" href="{{asset('bundles/performbase/css/app.css')}}" />
+      {% for css in perform_asset_css() %}
+        <link rel="stylesheet" type="text/css" href="{{asset(css)}}" />
+      {% endfor %}
+    {% endblock %}
   </head>
   <body>
     {% block body %}
