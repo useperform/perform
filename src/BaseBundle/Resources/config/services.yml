@@ -30,11 +30,6 @@ services:
         class: Perform\BaseBundle\Doctrine\EntityResolver
         arguments: ['%perform_base.entity_aliases%', '%perform_base.extended_entities%']
 
-    perform_base.admin.user:
-        class: Perform\BaseBundle\Admin\UserAdmin
-        tags:
-            - {name: perform_base.admin, entity: "PerformBaseBundle:User"}
-
     perform_base.admin_collector:
         class: Perform\BaseBundle\DataCollector\AdminsDataCollector
         public: false
@@ -133,16 +128,6 @@ services:
         tags:
             - { name: perform_base.link_provider, alias: dashboard }
 
-    perform_base.menu_link.users:
-        class: Perform\BaseBundle\Menu\SimpleLinkProvider
-        arguments:
-            - 'users'
-            - 'PerformBaseBundle:User'
-            - null
-            - 'users'
-        tags:
-            - { name: perform_base.link_provider, alias: users }
-
     perform_base.menu_link.settings:
         class: Perform\BaseBundle\Menu\SettingsLinkProvider
         tags:
@@ -152,22 +137,12 @@ services:
         class: Perform\BaseBundle\Email\Mailer
         arguments: ["@swiftmailer.mailer", "@twig", "%perform_base.mailer.from_address%", "@logger"]
 
-    perform_base.doctrine.user_listener:
-        class: Perform\BaseBundle\Doctrine\UserListener
-        arguments: ["@service_container"]
-        tags:
-            - { name: doctrine.event_subscriber }
-
     perform_base.doctrine.extend_listener:
         class: Perform\BaseBundle\Doctrine\ExtendEntitiesListener
         arguments:
             - "%perform_base.extended_entities%"
         tags:
             - { name: doctrine.event_subscriber }
-
-    perform_base.importer.user:
-        class: Perform\BaseBundle\Importer\UserImporter
-        arguments: ["@doctrine.orm.entity_manager"]
 
     perform_base.selector.entity:
         class: Perform\BaseBundle\Selector\EntitySelector
