@@ -1,0 +1,30 @@
+Perform\RichContentBundle\Entity\Block:
+    type: entity
+    table: perform_rich_content_block
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        type:
+            type: string
+        value:
+            type: json_array
+        shared:
+            type: boolean
+        title:
+            type: string
+            nullable: true
+        createdAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: create
+        updatedAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: update
+    lifecycleCallbacks: {  }
