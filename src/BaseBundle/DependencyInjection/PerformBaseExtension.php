@@ -65,9 +65,12 @@ class PerformBaseExtension extends Extension
 
     protected function configureMailer(array $config, ContainerBuilder $container)
     {
-        if (!$container->hasParameter('perform_base.mailer.from_address')) {
-            $container->setParameter('perform_base.mailer.from_address', 'noreply@glynnforrest.com');
+        if (!isset($config['mailer']['from_address'])) {
+            $container->removeDefinition('perform_base.email.mailer');
+            return;
         }
+
+        $container->setParameter('perform_base.mailer.from_address', $config['mailer']['from_address']);
 
         if (!isset($config['mailer']['excluded_domains'])) {
             return;
