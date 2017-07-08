@@ -18,3 +18,4 @@ tools to build administration areas rapdily:
    ./filters
    ./actions
    ./menu
+   ./email
