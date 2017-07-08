@@ -5,7 +5,7 @@ class Text extends React.Component {
     return (
       <div>
         <p>
-          {this.props.value}
+          {this.props.value.value}
         </p>
       </div>
     );

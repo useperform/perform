@@ -13,25 +13,27 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class EditorController extends Controller
 {
     /**
-     * @Route("/version/{id}")
+     * @Route("/content/{id}")
      * @Template
      */
-    public function getVersionAction()
+    public function getContentAction()
     {
+        $blocks = $this->getDoctrine()
+                ->getRepository('PerformRichContentBundle:Block')
+                ->findAll();
+
+        $blockData = [];
+        foreach ($blocks as $block) {
+            $blockData[$block->getId()] = $block->toArray();
+        }
+        $order = [];
+        for ($i = 0; $i < 5; $i++) {
+            $order[] = $blocks[array_rand($blocks)]->getId();
+        }
+
         return new JsonResponse([
-            'blocks' => [
-                '1' => [
-                    'type' => 'Text',
-                    'value' => 'Test from server',
-                ],
-                '2' => [
-                    'type' => 'Image',
-                    'value' => '#',
-                ],
-            ],
-            'order' => [
-                1, 2, 1,
-            ],
+            'blocks' => $blockData,
+            'order' => $order,
         ]);
     }
 }

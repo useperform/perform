@@ -19,7 +19,7 @@ class Editor extends React.Component {
       return;
     }
 
-    fetch('/admin/_editor/version/1', {
+    fetch('/admin/_editor/content/1', {
       credentials: 'include',
     }).then(res => {
       return res.json();
