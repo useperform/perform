@@ -1,0 +1,29 @@
+Perform\RichContentBundle\Entity\Content:
+    type: entity
+    table: perform_rich_content_content
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        title:
+            type: string
+        blockOrder:
+            type: array
+        createdAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: create
+        updatedAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: update
+    manyToMany:
+        blocks:
+            targetEntity: Block
+            joinTable:
+                name: perform_rich_content_content_block
