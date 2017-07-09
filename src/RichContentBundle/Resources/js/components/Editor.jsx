@@ -19,7 +19,8 @@ class Editor extends React.Component {
       return;
     }
 
-    fetch('/admin/_editor/content/1', {
+    const url = '/admin/_editor/content/' + this.props.contentId;
+    fetch(url, {
       credentials: 'include',
     }).then(res => {
       return res.json();
