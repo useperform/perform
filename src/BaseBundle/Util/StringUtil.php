@@ -3,7 +3,7 @@
 namespace Perform\BaseBundle\Util;
 
 /**
- * StringUtil
+ * StringUtil.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
@@ -23,5 +23,21 @@ class StringUtil
         $string = str_replace(['-', '_'], ' ', $string);
 
         return ucfirst(trim(strtolower($string)));
+    }
+
+    /**
+     * Show the beginning of a piece of non-formatted text.
+     *
+     * @param string $text
+     *
+     * @return string
+     */
+    public static function preview($text)
+    {
+        if (strlen($text) < 50) {
+            return $text;
+        }
+
+        return substr($text, 0, 50).'…';
     }
 }
