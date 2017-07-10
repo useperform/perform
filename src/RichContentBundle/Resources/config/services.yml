@@ -1,1 +1,6 @@
 services:
+    perform_rich_content.twig.content:
+        class: Perform\RichContentBundle\Twig\Extension\ContentExtension
+        arguments:
+        tags:
+            - {name: twig.extension}
