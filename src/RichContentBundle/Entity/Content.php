@@ -41,6 +41,11 @@ class Content
      */
     protected $blockOrder = [];
 
+    /**
+     * Used to cache block lookups by id
+     */
+    protected $blockIndex = [];
+
     public function __construct()
     {
         $this->blocks = new ArrayCollection();
@@ -173,6 +178,31 @@ class Content
     public function getBlocks()
     {
         return $this->blocks;
+    }
+
+    private function getBlockIndex()
+    {
+        if (empty($this->blockIndex)) {
+            foreach ($this->blocks as $block) {
+                $this->blockIndex[$block->getId()] = $block;
+            }
+        }
+
+        return $this->blockIndex;
+    }
+
+    /**
+     * @return Block[]
+     */
+    public function getOrderedBlocks()
+    {
+        $blocks = [];
+        $index = $this->getBlockIndex();
+        foreach ($this->blockOrder as $id) {
+            $blocks[] = $index[$id];
+        }
+
+        return $blocks;
     }
 
     /**

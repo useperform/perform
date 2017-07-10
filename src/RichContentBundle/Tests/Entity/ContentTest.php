@@ -34,5 +34,6 @@ class ContentTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame([$b1, $b2], $c->getBlocks()->toArray());
         $this->assertSame([1, 2, 2, 1], $c->getBlockOrder());
+        $this->assertSame([$b1, $b2, $b2, $b1], $c->getOrderedBlocks());
     }
 }
