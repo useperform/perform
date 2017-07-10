@@ -3,15 +3,17 @@ import css from './editor.scss';
 import BlockList from './BlockList';
 import Toolbar from './Toolbar';
 import 'whatwg-fetch';
+import PropTypes from 'prop-types';
 
 class Editor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       loaded: false,
-      blocks: {},
-      order: [],
     };
+  }
+  getChildContext() {
+    return {store: this.props.store};
   }
 
   componentDidMount() {
@@ -26,9 +28,11 @@ class Editor extends React.Component {
       return res.json();
     }).then(json => {
       this.setState({
-        blocks: json.blocks,
-        order: json.order,
         loaded: true
+      });
+      this.props.store.dispatch({
+        type: 'CONTENT_LOAD',
+        json
       });
     });
   }
@@ -37,10 +41,13 @@ class Editor extends React.Component {
     return (
       <div className={css.editor}>
         <Toolbar />
-        <BlockList blocks={this.state.blocks} order={this.state.order} />
+        <BlockList />
       </div>
     );
   }
 }
+Editor.childContextTypes = {
+  store: PropTypes.object
+};
 
 export default Editor;
