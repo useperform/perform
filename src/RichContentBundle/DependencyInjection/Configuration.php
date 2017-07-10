@@ -15,6 +15,14 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('perform_rich_content');
 
+        $rootNode
+            ->children()
+                ->arrayNode('block_types')
+                    ->prototype('scalar')->end()
+                ->end()
+            ->end()
+            ;
+
         return $treeBuilder;
     }
 }

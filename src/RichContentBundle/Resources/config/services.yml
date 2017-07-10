@@ -1,6 +1,12 @@
+imports:
+    - { resource: services_blocks.yml }
+
 services:
     perform_rich_content.twig.content:
         class: Perform\RichContentBundle\Twig\Extension\ContentExtension
         arguments:
         tags:
             - {name: twig.extension}
+
+    perform_rich_content.block_type_registry:
+        class: Perform\RichContentBundle\BlockType\BlockTypeRegistry
