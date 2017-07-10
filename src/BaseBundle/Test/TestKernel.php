@@ -1,35 +1,41 @@
 <?php
 
-namespace Perform\BaseBundle\Tests\Fixtures\ExtendEntities;
+namespace Perform\BaseBundle\Test;
 
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Temping\Temping;
 
 /**
- * ExtendEntitiesKernel
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ExtendEntitiesKernel extends Kernel
+class TestKernel extends Kernel
 {
-    protected $dir;
-    protected $entityBundles;
+    protected $temping;
+    protected $extraBundles;
     protected $extraConfig;
 
-    public function __construct($dir, array $entityBundles, $extraConfig)
+    public function __construct(array $extraBundles = [], $extraConfig = null)
     {
         parent::__construct('dev', true);
-        $this->rootDir = $dir;
-        $this->entityBundles = $entityBundles;
+        $this->temping = new Temping();
+        $this->rootDir = $this->temping->getDirectory();
+        $this->extraBundles = $extraBundles;
         $this->extraConfig = $extraConfig;
     }
 
-    protected function getContainerClass()
+    public function shutdown()
     {
-        // turn yaml_child.yml into Yaml
-        $extra = ucfirst(substr($this->extraConfig, 0, strpos($this->extraConfig, '_')));
+        $this->temping->reset();
+        parent::shutdown();
+    }
 
-        return $this->name.ucfirst($this->environment).$extra.($this->debug ? 'Debug' : '').'ProjectContainer';
+    /**
+     * Required to be unique so the kernel can be reused without conflicting with other tests.
+     */
+    public function getContainerClass()
+    {
+        return 'Test'.uniqid().'Container';
     }
 
     public function registerBundles()
@@ -49,12 +55,14 @@ class ExtendEntitiesKernel extends Kernel
 
             new \Perform\BaseBundle\PerformBaseBundle(),
             new \Perform\NotificationBundle\PerformNotificationBundle(),
-        ], $this->entityBundles);
+        ], $this->extraBundles);
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load(__DIR__.'/config.yml');
-        $loader->load(__DIR__.'/'.$this->extraConfig);
+        if ($this->extraConfig) {
+            $loader->load($this->extraConfig);
+        }
     }
 }

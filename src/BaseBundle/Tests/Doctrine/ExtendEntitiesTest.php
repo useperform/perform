@@ -2,8 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Doctrine;
 
-use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\ExtendEntitiesKernel;
-use Temping\Temping;
+use Perform\BaseBundle\Test\TestKernel;
 use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\YamlParentBundle\YamlParentBundle;
 use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\XmlParentBundle\XmlParentBundle;
 use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\XmlChildBundle\XmlChildBundle;
@@ -14,26 +13,21 @@ use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\YamlChildBundle\Entity\Yaml
 use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\YamlChildBundle\Entity\XmlItem as YamlExtendXmlItem;
 
 /**
- * ExtendEntitiesTest
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class ExtendEntitiesTest extends \PHPUnit_Framework_TestCase
 {
-    public function setUp()
-    {
-        $this->temp = new Temping();
-    }
+    protected $kernel;
 
     private function configure(array $bundles, $extraConfig)
     {
-        $this->kernel = new ExtendEntitiesKernel($this->temp->getDirectory(), $bundles, $extraConfig);
+        $this->kernel = new TestKernel($bundles, __DIR__.'/../Fixtures/ExtendEntities/'.$extraConfig);
         $this->kernel->boot();
     }
 
     public function tearDown()
     {
-        $this->temp->reset();
+        $this->kernel->shutdown();
     }
 
     public function testExtendWithXml()
@@ -56,7 +50,7 @@ class ExtendEntitiesTest extends \PHPUnit_Framework_TestCase
         $xmlParent = $em->getClassMetadata('XmlParentBundle:Item');
         $this->assertTrue($xmlParent->isMappedSuperclass);
         $xmlChild = $em->getClassMetadata('XmlChildBundle:XmlItem');
-        $this->assertEquals(['id', 'name', 'extraField'], array_keys($xmlChild->fieldMappings), "", 0, 10, true);
+        $this->assertEquals(['id', 'name', 'extraField'], array_keys($xmlChild->fieldMappings), '', 0, 10, true);
         $this->assertSame(['links'], array_keys($xmlChild->associationMappings));
         $xmlRelated = $em->getClassMetadata('XmlParentBundle:ItemLink');
         $this->assertSame(XmlExtendXmlItem::class, $xmlRelated->associationMappings['item']['targetEntity']);
@@ -82,7 +76,7 @@ class ExtendEntitiesTest extends \PHPUnit_Framework_TestCase
         $xmlParent = $em->getClassMetadata('XmlParentBundle:Item');
         $this->assertTrue($xmlParent->isMappedSuperclass);
         $yamlChild = $em->getClassMetadata('YamlChildBundle:XmlItem');
-        $this->assertEquals(['id', 'name', 'extraField'], array_keys($yamlChild->fieldMappings), "", 0, 10, true);
+        $this->assertEquals(['id', 'name', 'extraField'], array_keys($yamlChild->fieldMappings), '', 0, 10, true);
         $this->assertSame(['links'], array_keys($yamlChild->associationMappings));
         $xmlRelated = $em->getClassMetadata('XmlParentBundle:ItemLink');
         $this->assertSame(YamlExtendXmlItem::class, $xmlRelated->associationMappings['item']['targetEntity']);
