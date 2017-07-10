@@ -19,9 +19,6 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->arrayNode('block_types')
-                    ->prototype('scalar')->end()
-                ->end()
                 ->arrayNode('toolbar')
                     ->children()
                         ->arrayNode('excluded_urls')
