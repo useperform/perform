@@ -23,7 +23,8 @@ Once added, your ssh key will give you access to the Perform git repositories.
 
 .. note::
 
-   To check your key has been added successfully, run ``ssh pkg@perform.glynnforrest.com -p 404``. You should see a message listing the available repositories before being logged out.
+   To check your key has been added successfully, run ``ssh pkg@useperform.com -p 404``.
+   You should see a message listing the available repositories before being logged out.
 
 Configure composer
 ------------------
@@ -36,7 +37,7 @@ Add the perform repository to ``~/.composer/config.json``:
         "repositories": [
             {
                 "type": "composer",
-                "url":  "https://perform.glynnforrest.com/pkg"
+                "url":  "https://useperform.com/pkg"
             }
         ]
     }

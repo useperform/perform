@@ -5,8 +5,6 @@ namespace BaseBundle\Tests\Util;
 use Perform\BaseBundle\Util\StringUtil;
 
 /**
- * StringUtilTest
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class StringUtilTest extends \PHPUnit_Framework_TestCase
@@ -29,5 +27,22 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
     public function testSensibleLabelString($string, $expected)
     {
         $this->assertSame($expected, StringUtil::sensible($string));
+    }
+
+    public function previewProvider()
+    {
+        return [
+            ['', ''],
+            ['This is a short sentence.', 'This is a short sentence.'],
+            ['This is a long sentence, with a lot of words and letters. It will surely have to be shortened.', 'This is a long sentence, with a lot of words and l…'],
+        ];
+    }
+
+    /**
+     * @dataProvider previewProvider()
+     */
+    public function testPreviewString($string, $expected)
+    {
+        $this->assertSame($expected, StringUtil::preview($string));
     }
 }

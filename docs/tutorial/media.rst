@@ -61,20 +61,13 @@ Then add the relationship to ``src/AppBundle/Resources/config/doctrine/Bike.orm.
     +     image:
     +         targetEntity: Perform\MediaBundle\Entity\File
     +         joinColumn:
-    +             nullable: false
+    +             nullable: true
 
 Now update the database schema to create the new column in the bike table:
 
 .. code-block:: bash
 
    ./bin/console doctrine:schema:update --force --dump-sql
-
-.. note::
-
-   If you've added any bikes to the database, this command may fail due to a ``NOT NULL`` constraint.
-   Make sure the bikes table is empty before updating the schema.
-
-   In a production scenario, you would use database migrations to add a new constraint safely.
 
 Updating the admin
 ------------------
@@ -108,6 +101,45 @@ Click on the media tab to show the media library, then click 'upload' to add som
 You can upload multiple images at once, and any large files will be split into chunks to get around PHP's maximum upload size.
 
 Find out more in the :doc:`media bundle documentation <../bundles/media/index>`.
+
+Enforcing schema correctness
+----------------------------
+
+We want to make sure that *every* bike in the gallery has an image.
+
+Check that every bike you've created has an image linked to it, then update the schema again in ``Bike.orm.yml``:
+
+.. code-block:: diff
+
+      manyToOne:
+          image:
+              targetEntity: Perform\MediaBundle\Entity\File
+              joinColumn:
+    -             nullable: true
+    +             nullable: false
+
+Then update the database schema:
+
+.. note::
+
+   Warning! When using SQLite, constraint violations that occur when running ``doctrine:schema:update`` *will* result in the table being emptied.
+   See the :doc:`databases guide <../more/databases>` to learn why this occurs.
+
+   Double check every bike has an image before running this command!
+
+.. code-block:: bash
+
+   ./bin/console doctrine:schema:update --force --dump-sql
+
+This ensures that all bike entities in the database have an image.
+
+We've managed to add this column safely, first by adding it without the constraint (``nullable: true``), populating it with data, then applying the constraint (``nullable: false``).
+
+This stepwise approach is a good way to add a new constraint to your database safely.
+
+.. note::
+
+   In a production scenario, you should use database migrations instead of the schema tool to prevent data loss.
 
 Showing pictures on the frontend
 --------------------------------
