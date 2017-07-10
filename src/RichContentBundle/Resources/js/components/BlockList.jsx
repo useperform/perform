@@ -1,8 +1,6 @@
 import React from 'react';
 
-import blockTypes from './blocktypes';
-
-const blockNames = Object.keys(blockTypes);
+import Block from './Block';
 
 class BlockList extends React.Component {
 
@@ -11,8 +9,9 @@ class BlockList extends React.Component {
     for (var i=0; i < this.props.order.length; i++) {
       let id = this.props.order[i];
       let block = this.props.blocks[id];
-      let Tag = blockTypes[block.type];
-      components.push(<Tag key={i} value={block.value} />);
+      components.push(
+        <Block key={i} block={block} />
+      );
     }
 
     return (
