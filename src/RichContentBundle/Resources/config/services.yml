@@ -5,8 +5,14 @@ services:
     perform_rich_content.twig.content:
         class: Perform\RichContentBundle\Twig\Extension\ContentExtension
         arguments:
+            - "@perform_rich_content.renderer"
         tags:
             - {name: twig.extension}
+
+    perform_rich_content.renderer:
+        class: Perform\RichContentBundle\Renderer\Renderer
+        arguments:
+            - "@perform_rich_content.block_type_registry"
 
     perform_rich_content.block_type_registry:
         class: Perform\RichContentBundle\BlockType\BlockTypeRegistry
