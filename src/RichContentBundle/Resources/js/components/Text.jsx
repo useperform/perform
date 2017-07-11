@@ -8,6 +8,12 @@ class Text extends React.Component {
     };
   }
 
+  componentWillReceiveProps(newProps) {
+    this.setState({
+      content: newProps.value.content
+    });
+  }
+
   onChange(e) {
     this.setState({
       content: e.currentTarget.value,
