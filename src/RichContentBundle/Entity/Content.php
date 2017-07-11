@@ -212,6 +212,17 @@ class Content
      */
     public function setBlockOrder($blockOrder)
     {
+        $index = $this->getBlockIndex();
+        foreach ($blockOrder as $id) {
+            if (!is_string($id)) {
+                throw new \InvalidArgumentException(sprintf('Ids passed to %s must be strings, %s given.', __METHOD__, gettype($id)));
+            }
+
+            if (!isset($index[$id])) {
+                throw new \InvalidArgumentException(sprintf('Unknown block id "%s" given in block order.', $id));
+            }
+        }
+
         $this->blockOrder = $blockOrder;
 
         return $this;

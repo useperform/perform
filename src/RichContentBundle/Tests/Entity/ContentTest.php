@@ -24,8 +24,8 @@ class ContentTest extends \PHPUnit_Framework_TestCase
     public function testAddBlock()
     {
         $c = new Content();
-        $b1 = $this->block(1);
-        $b2 = $this->block(2);
+        $b1 = $this->block('1');
+        $b2 = $this->block('2');
 
         $c->addBlock($b1);
         $c->addBlock($b2);
@@ -33,7 +33,43 @@ class ContentTest extends \PHPUnit_Framework_TestCase
         $c->addBlock($b1);
 
         $this->assertSame([$b1, $b2], $c->getBlocks()->toArray());
-        $this->assertSame([1, 2, 2, 1], $c->getBlockOrder());
+        $this->assertSame(['1', '2', '2', '1'], $c->getBlockOrder());
         $this->assertSame([$b1, $b2, $b2, $b1], $c->getOrderedBlocks());
+    }
+
+    public function testSetValidBlockOrder()
+    {
+        $c = new Content();
+        $b1 = $this->block('1');
+        $b2 = $this->block('2');
+        $c->addBlock($b1);
+        $c->addBlock($b2);
+
+        $c->setBlockOrder(['2', '1']);
+        $this->assertSame(['2', '1'], $c->getBlockOrder());
+    }
+
+    public function testSetInvalidBlockOrder()
+    {
+        $c = new Content();
+        $b1 = $this->block('1');
+        $b2 = $this->block('2');
+        $c->addBlock($b1);
+        $c->addBlock($b2);
+
+        $this->setExpectedException(\InvalidArgumentException::class);
+        $c->setBlockOrder([[1], [2]]);
+    }
+
+    public function testSetUnknownBlockOrder()
+    {
+        $c = new Content();
+        $b1 = $this->block('1');
+        $b2 = $this->block('2');
+        $c->addBlock($b1);
+        $c->addBlock($b2);
+
+        $this->setExpectedException(\InvalidArgumentException::class);
+        $c->setBlockOrder(['3', '1']);
     }
 }
