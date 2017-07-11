@@ -53,7 +53,7 @@ class PersisterTest extends \PHPUnit_Framework_TestCase
         $this->blockRepo->expects($this->once())
             ->method('createFromDefinitions')
             ->with(['new_defs'])
-            ->will($this->returnValue([$newBlock]));
+            ->will($this->returnValue(['_new_id' => $newBlock]));
         $this->blockRepo->expects($this->once())
             ->method('updateFromDefinitions')
             ->with(['current_defs'])
@@ -75,7 +75,7 @@ class PersisterTest extends \PHPUnit_Framework_TestCase
                 $transactionClosure();
             }));
 
-        $this->persister->saveFromEditor($content, ['current_defs'], ['new_defs'], ['new1', 'current1']);
+        $this->persister->saveFromEditor($content, ['current_defs'], ['new_defs'], ['_new_id', 'current1']);
         $this->assertSame(['new1', 'current1'], $content->getBlockOrder());
     }
 }

@@ -33,7 +33,16 @@ class Persister
         $this->em->transactional(function () use ($content, $blockDefinitions, $newBlockDefinitions, $blockOrder) {
             $newBlocks = $this->blockRepo->createFromDefinitions($newBlockDefinitions);
             $currentBlocks = $this->blockRepo->updateFromDefinitions($blockDefinitions);
-            $blocks = array_merge($newBlocks, $currentBlocks);
+            $blocks = array_merge(array_values($newBlocks), $currentBlocks);
+
+            // replace stub ids (from new definitions) with newly
+            // acquired database ids
+            // e.g. _983983498234 => some-guid-238498-230993
+            foreach ($blockOrder as $position => $id) {
+                if (isset($newBlocks[$id])) {
+                    $blockOrder[$position] = $newBlocks[$id]->getId();
+                }
+            }
 
             $this->contentRepo->setBlocks($content, $blocks);
             $content->setBlockOrder($blockOrder);
