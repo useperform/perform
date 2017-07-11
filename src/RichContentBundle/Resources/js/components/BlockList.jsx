@@ -24,7 +24,7 @@ class BlockList extends React.Component {
       let id = state.order[i];
       let block = state.blocks[id];
       components.push(
-        <Block key={i} block={block} />
+        <Block key={i} block={block} id={id} />
       );
     }
 

@@ -16,7 +16,9 @@ class Text extends React.Component {
 
   finishEdit(e) {
     e.preventDefault();
-    console.log('finishing edit');
+    this.props.setBlockValue({
+      content: this.state.content
+    });
   }
 
   render() {
@@ -27,7 +29,7 @@ class Text extends React.Component {
     return (
       <div>
         <textarea value={this.state.content} onChange={this.onChange.bind(this)} rows="10" cols="80"></textarea>
-        <a href="#" className="btn btn-info" onClick={this.finishEdit}>Done</a>
+        <a href="#" className="btn btn-info" onClick={this.finishEdit.bind(this)}>Done</a>
       </div>
     );
   }
