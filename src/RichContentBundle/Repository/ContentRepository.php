@@ -10,25 +10,37 @@ use Perform\RichContentBundle\Entity\Content;
  **/
 class ContentRepository extends EntityRepository
 {
-    public function updateContent(Content $content, array $blockDefinitions, array $blockOrder)
+    /**
+     * Declare the blocks associated with a piece of content.
+     *
+     * Any blocks currently associated with the content that are not
+     * in the supplied blocks will be dissociated.
+     * Any of the dissociated blocks that were only linked to this
+     * piece of content will be removed from the database.
+     *
+     * @param Content
+     * @param Block[] $blocks
+     */
+    public function setBlocks(Content $content, array $blocks)
     {
         $currentBlocks = $content->getBlocks();
 
-        foreach ($currentBlocks as $block) {
-            if (!isset($blockDefinitions[$block->getId()])) {
-                continue;
-                // remove blocks not present in definitions
+        foreach ($blocks as $block) {
+            if (!$currentBlocks->contains($block)) {
+                $currentBlocks->add($block);
             }
-            $def = $blockDefinitions[$block->getId()];
-            $block->setValue($def['value']);
-            $this->_em->persist($block);
-
-            unset($blockDefinitions[$block->getId()]);
         }
-        //any definitions left are new blocks to be created
 
-        $content->setBlockOrder($blockOrder);
+        foreach ($currentBlocks as $block) {
+            if (in_array($block, $blocks)) {
+                continue;
+            }
+            $currentBlocks->removeElement($block);
+        }
+
         $this->_em->persist($content);
         $this->_em->flush();
+
+        // check and remove newly orphaned blocks
     }
 }
