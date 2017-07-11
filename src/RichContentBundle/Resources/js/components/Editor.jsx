@@ -39,7 +39,15 @@ class Editor extends React.Component {
 
   save() {
     const url = '/admin/_editor/content/save/' + this.props.contentId;
-    const body = this.props.store.getState();
+    const state = this.props.store.getState();
+    const body = {
+      blocks: state.blocks,
+      order: state.order.map(i => {
+        // an array with the block id and a unique react key
+        // we only want the block id
+        return i[0];
+      })
+    };
 
     return fetch(url, {
       body: JSON.stringify(body),

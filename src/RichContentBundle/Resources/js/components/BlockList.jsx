@@ -21,10 +21,15 @@ class BlockList extends React.Component {
     const state = store.getState();
 
     for (var i=0; i < state.order.length; i++) {
-      let id = state.order[i];
+      let id = state.order[i][0];
+      let key = state.order[i][1];
+
+      if (!state.blocks[id]) {
+        console.error(`Unknown block ${id}`, state);
+      }
       let block = state.blocks[id];
       components.push(
-        <Block key={i} block={block} id={id} />
+        <Block key={key} block={block} id={id} position={i} />
       );
     }
 

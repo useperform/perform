@@ -17,6 +17,20 @@ class Block extends React.Component {
     });
   }
 
+  clickUp() {
+    this.context.store.dispatch({
+      type: 'BLOCK_MOVE_UP',
+      currentPosition: this.props.position,
+    });
+  }
+
+  clickDown() {
+    this.context.store.dispatch({
+      type: 'BLOCK_MOVE_DOWN',
+      currentPosition: this.props.position,
+    });
+  }
+
   setBlockValue(value) {
     this.setState({
       editing: false
@@ -25,7 +39,7 @@ class Block extends React.Component {
       type: 'BLOCK_UPDATE',
       id: this.props.id,
       value: value,
-    })
+    });
   }
 
   render() {
@@ -35,8 +49,12 @@ class Block extends React.Component {
     return (
       <div>
         <div className="btn-group">
-          <a className="btn btn-xs btn-default move-up"><i className="fa fa-arrow-up"></i></a>
-          <a className="btn btn-xs btn-default move-down"><i className="fa fa-arrow-down"></i></a>
+          <a className="btn btn-xs btn-default move-up" onClick={this.clickUp.bind(this)}>
+            <i className="fa fa-arrow-up"></i>
+          </a>
+          <a className="btn btn-xs btn-default move-down" onClick={this.clickDown.bind(this)}>
+            <i className="fa fa-arrow-down"></i>
+          </a>
           <a className="btn btn-xs btn-default edit" onClick={this.clickEdit.bind(this)}>
             <i className={editClass}></i>
           </a>
