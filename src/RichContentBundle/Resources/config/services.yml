@@ -14,5 +14,24 @@ services:
         arguments:
             - "@perform_rich_content.block_type_registry"
 
+    perform_rich_content.persister:
+        class: Perform\RichContentBundle\Persister\Persister
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@perform_rich_content.repo.content"
+            - "@perform_rich_content.repo.block"
+
+    perform_rich_content.repo.content:
+        class: Perform\RichContentBundle\Repository\ContentRepository
+        factory: ["@doctrine.orm.entity_manager", "getRepository"]
+        arguments:
+            - "PerformRichContentBundle:Content"
+
+    perform_rich_content.repo.block:
+        class: Perform\RichBlockBundle\Repository\BlockRepository
+        factory: ["@doctrine.orm.entity_manager", "getRepository"]
+        arguments:
+            - "PerformRichContentBundle:Block"
+
     perform_rich_content.block_type_registry:
         class: Perform\RichContentBundle\BlockType\BlockTypeRegistry
