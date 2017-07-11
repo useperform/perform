@@ -7,6 +7,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Perform\RichContentBundle\Entity\Content;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -27,6 +29,23 @@ class EditorController extends Controller
         return new JsonResponse([
             'blocks' => $blockData,
             'order' => $content->getBlockOrder(),
+        ]);
+    }
+
+    /**
+     * @Route("/content/save/{id}")
+     * @Method("POST")
+     * @Template
+     */
+    public function saveContentAction(Request $request, Content $content)
+    {
+        $body = json_decode($request->getContent(), true);
+        $repo = $this->getDoctrine()
+              ->getRepository('PerformRichContentBundle:Content');
+        $repo->updateContent($content, $body['blocks'], $body['order']);
+
+        return new JsonResponse([
+            'done' => true,
         ]);
     }
 }

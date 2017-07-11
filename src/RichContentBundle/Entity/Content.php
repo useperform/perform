@@ -151,7 +151,7 @@ class Content
      * @param Block    $block
      * @param int|null $index
      *
-     * @return Section
+     * @return Content
      */
     public function addBlock(Block $block)
     {
@@ -203,6 +203,18 @@ class Content
         }
 
         return $blocks;
+    }
+
+    /**
+     * @param array
+     *
+     * @return Content
+     */
+    public function setBlockOrder($blockOrder)
+    {
+        $this->blockOrder = $blockOrder;
+
+        return $this;
     }
 
     /**

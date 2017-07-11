@@ -1,6 +1,7 @@
 Perform\RichContentBundle\Entity\Content:
     type: entity
     table: perform_rich_content_content
+    repositoryClass: Perform\RichContentBundle\Repository\ContentRepository
     id:
         id:
             type: guid
