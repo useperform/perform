@@ -4,6 +4,10 @@ import React from 'react';
 
 import {createStore} from 'redux';
 
+const newId = function() {
+  return Math.random().toString().substring(2);
+}
+
 const reducer = function (state, action) {
   console.debug(action);
 
@@ -13,7 +17,7 @@ const reducer = function (state, action) {
     // track of DOM nodes, since we can't use the position in the
     // order array.
     const order = action.json.order.map(id => {
-      return [id, Math.random().toString().substring(2)];
+      return [id, newId()];
     });
     return Object.assign({}, state, {
       blocks: action.json.blocks,
@@ -21,10 +25,10 @@ const reducer = function (state, action) {
     });
   }
   if (action.type === 'BLOCK_UPDATE') {
-    const newBlocks = state.blocks;
-    newBlocks[action.id].value = action.value;
+    const blocks = state.blocks;
+    blocks[action.id].value = action.value;
 
-    return Object.assign(state, {blocks: newBlocks});
+    return Object.assign(state, {blocks: blocks});
   }
   if (action.type === 'BLOCK_MOVE_UP') {
     const pos = action.currentPosition;
@@ -60,7 +64,7 @@ const reducer = function (state, action) {
   }
   if (action.type === 'BLOCK_REMOVE') {
     let newOrder = state.order;
-    let newBlocks = state.blocks;
+    let blocks = state.blocks;
     let orderedIds = state.order.map(i => {
       return i[0];
     });
@@ -72,13 +76,40 @@ const reducer = function (state, action) {
     const id = orderedIds[pos];
     orderedIds.splice(pos, 1);
     if (orderedIds.indexOf(id) === -1) {
-      delete newBlocks[id];
+      delete blocks[id];
     }
 
     return Object.assign(state, {
       order: newOrder,
-      blocks: newBlocks,
+      blocks: blocks,
     });
+  }
+  if (action.type === 'BLOCK_ADD') {
+    // set an arbitrary unique id, since there is no database id for
+    // this new block
+    const id = '_'+newId();
+    const block = {
+      type: action.blockType,
+      value: {
+        content: 'Some content'
+      },
+      isNew: true,
+    };
+
+    let newBlocks = state.newBlocks;
+    newBlocks[id] = block;
+    let blocks = state.blocks;
+    blocks[id] = block;
+    const order = [
+      ...state.order,
+      [id, newId()],
+    ];
+
+    return Object.assign(state, {
+      newBlocks: newBlocks,
+      blocks: blocks,
+      order: order
+    })
   }
 
   return state;
@@ -87,7 +118,7 @@ const reducer = function (state, action) {
 const initialState = {
   blocks: {},
   order: [],
-  newBlocks: [],
+  newBlocks: {},
 };
 
 const store = createStore(reducer, initialState);

@@ -40,9 +40,18 @@ class Editor extends React.Component {
   save() {
     const url = '/admin/_editor/content/save/' + this.props.contentId;
     const state = this.props.store.getState();
+    const blockIds = Object.keys(state.blocks);
+    let filteredBlocks = {};
+    for (let i=0; i < blockIds.length; i++) {
+      let block = state.blocks[blockIds[i]];
+      if (!block.isNew) {
+        filteredBlocks[blockIds[i]] = block;
+      }
+    }
+
     const body = {
       newBlocks: state.newBlocks,
-      blocks: state.blocks,
+      blocks: filteredBlocks,
       order: state.order.map(i => {
         // an array with the block id and a unique react key
         // we only want the block id
@@ -59,10 +68,17 @@ class Editor extends React.Component {
     })
   }
 
+  addBlock() {
+    this.props.store.dispatch({
+      type: 'BLOCK_ADD',
+      blockType: 'text'
+    });
+  }
+
   render() {
     return (
       <div className={css.editor}>
-        <Toolbar save={this.save.bind(this)}/>
+        <Toolbar save={this.save.bind(this)} add={this.addBlock.bind(this)} />
         <BlockList />
       </div>
     );

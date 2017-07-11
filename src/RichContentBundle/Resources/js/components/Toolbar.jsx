@@ -26,6 +26,9 @@ class Toolbar extends React.Component {
         <a className="btn btn-primary btn-xs" href="#" onClick={this.save.bind(this)} disabled={this.state.saving}>
           Save
         </a>
+        <a className="btn btn-primary btn-xs" href="#" onClick={this.props.add} disabled={this.state.saving}>
+          Add
+        </a>
       </div>
     )
   }
