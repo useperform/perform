@@ -37,10 +37,23 @@ class Editor extends React.Component {
     });
   }
 
+  save() {
+    const url = '/admin/_editor/content/save/' + this.props.contentId;
+    const body = this.props.store.getState();
+
+    return fetch(url, {
+      body: JSON.stringify(body),
+      credentials: 'include',
+      method: 'POST'
+    }).then(res => {
+      return res.json();
+    })
+  }
+
   render() {
     return (
       <div className={css.editor}>
-        <Toolbar />
+        <Toolbar save={this.save.bind(this)}/>
         <BlockList />
       </div>
     );
