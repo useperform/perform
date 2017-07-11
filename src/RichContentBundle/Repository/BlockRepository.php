@@ -15,13 +15,13 @@ class BlockRepository extends EntityRepository
     {
         $blocks = [];
 
-        foreach ($definitions as $def) {
+        foreach ($definitions as $key => $def) {
             $this->checkDefinition($def);
             $block = new Block();
             $block->setType($def['type']);
             $block->setValue($def['value']);
             $this->_em->persist($block);
-            $blocks[] = $block;
+            $blocks[$key] = $block;
         }
 
         $this->_em->flush();

@@ -40,13 +40,13 @@ class BlockRepositoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateFromDefinitions()
     {
         $defs = [
-            [
+            '_id1' => [
                 'type' => 'something',
                 'value' => [
                     'content' => 'new block 1',
                 ],
             ],
-            [
+            '_id2' => [
                 'type' => 'something',
                 'value' => [
                     'content' => 'new block 2',
@@ -56,10 +56,10 @@ class BlockRepositoryTest extends \PHPUnit_Framework_TestCase
         $blocks = $this->repo->createFromDefinitions($defs);
 
         $this->assertSame(2, count($blocks));
-        $b1 = $blocks[0];
+        $b1 = $blocks['_id1'];
         $this->assertSame('something', $b1->getType());
         $this->assertSame('new block 1', $b1->getValue()['content']);
-        $b2 = $blocks[1];
+        $b2 = $blocks['_id2'];
         $this->assertSame('something', $b2->getType());
         $this->assertSame('new block 2', $b2->getValue()['content']);
     }
