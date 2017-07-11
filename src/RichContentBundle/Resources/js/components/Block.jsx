@@ -31,6 +31,13 @@ class Block extends React.Component {
     });
   }
 
+  clickRemove() {
+    this.context.store.dispatch({
+      type: 'BLOCK_REMOVE',
+      currentPosition: this.props.position,
+    });
+  }
+
   setBlockValue(value) {
     this.setState({
       editing: false
@@ -49,16 +56,18 @@ class Block extends React.Component {
     return (
       <div>
         <div className="btn-group">
-          <a className="btn btn-xs btn-default move-up" onClick={this.clickUp.bind(this)}>
+          <a className="btn btn-xs btn-default" onClick={this.clickUp.bind(this)}>
             <i className="fa fa-arrow-up"></i>
           </a>
-          <a className="btn btn-xs btn-default move-down" onClick={this.clickDown.bind(this)}>
+          <a className="btn btn-xs btn-default" onClick={this.clickDown.bind(this)}>
             <i className="fa fa-arrow-down"></i>
           </a>
-          <a className="btn btn-xs btn-default edit" onClick={this.clickEdit.bind(this)}>
+          <a className="btn btn-xs btn-default" onClick={this.clickEdit.bind(this)}>
             <i className={editClass}></i>
           </a>
-          <a className="btn btn-xs btn-default remove"><i className="fa fa-trash"></i></a>
+          <a className="btn btn-xs btn-default" onClick={this.clickRemove.bind(this)}>
+            <i className="fa fa-trash"></i>
+          </a>
         </div>
         <Tag value={this.props.block.value} editing={this.state.editing} setBlockValue={this.setBlockValue.bind(this)} />
       </div>
