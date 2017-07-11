@@ -45,7 +45,7 @@ twig:
 doctrine:
     dbal:
         driver:   pdo_sqlite
-        path: "%kernel.root_dir%/data.db"
+        memory: true
         charset:  UTF8
     orm:
         auto_generate_proxy_classes: true

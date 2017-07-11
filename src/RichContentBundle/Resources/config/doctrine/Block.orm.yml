@@ -1,6 +1,7 @@
 Perform\RichContentBundle\Entity\Block:
     type: entity
     table: perform_rich_content_block
+    repositoryClass: Perform\RichContentBundle\Repository\BlockRepository
     id:
         id:
             type: guid
