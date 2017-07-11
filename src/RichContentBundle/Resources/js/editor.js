@@ -87,6 +87,7 @@ const reducer = function (state, action) {
 const initialState = {
   blocks: {},
   order: [],
+  newBlocks: [],
 };
 
 const store = createStore(reducer, initialState);

@@ -40,9 +40,8 @@ class EditorController extends Controller
     public function saveContentAction(Request $request, Content $content)
     {
         $body = json_decode($request->getContent(), true);
-        $repo = $this->getDoctrine()
-              ->getRepository('PerformRichContentBundle:Content');
-        $repo->updateContent($content, $body['blocks'], $body['order']);
+        $this->get('perform_rich_content.persister')
+            ->saveFromEditor($content, $body['blocks'], $body['newBlocks'], $body['order']);
 
         return new JsonResponse([
             'done' => true,

@@ -41,6 +41,7 @@ class Editor extends React.Component {
     const url = '/admin/_editor/content/save/' + this.props.contentId;
     const state = this.props.store.getState();
     const body = {
+      newBlocks: state.newBlocks,
       blocks: state.blocks,
       order: state.order.map(i => {
         // an array with the block id and a unique react key

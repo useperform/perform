@@ -8,7 +8,8 @@ class Toolbar extends React.Component {
     };
   }
 
-  save() {
+  save(e) {
+    e.preventDefault();
     this.setState({
       saving: true
     });
