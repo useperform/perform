@@ -4,6 +4,7 @@ var extractTextPlugin = require('extract-text-webpack-plugin');
 var config = {
   entry: {
     'editor': './Resources/js/editor.js',
+    'type': './Resources/js/type.js',
   },
   output: {
     path: path.join(__dirname, 'Resources/public'),
