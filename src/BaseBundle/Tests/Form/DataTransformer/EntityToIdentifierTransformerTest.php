@@ -2,7 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Form\DataTransformer;
 
-use Perform\BaseBundle\Form\DataTransformer\EntityToIdentifiertransformer;
+use Perform\BaseBundle\Form\DataTransformer\EntityToIdentifierTransformer;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\UnitOfWork;
 use Doctrine\ORM\EntityRepository;
