@@ -63,25 +63,28 @@ const reducer = function (state, action) {
     return Object.assign(state, {order: newOrder});
   }
   if (action.type === 'BLOCK_REMOVE') {
-    let newOrder = state.order;
+    let order = state.order;
     let blocks = state.blocks;
+    let newBlocks = state.newBlocks;
     let orderedIds = state.order.map(i => {
       return i[0];
     });
 
     const pos = action.currentPosition;
-    newOrder.splice(pos, 1);
+    order.splice(pos, 1);
 
     // also remove the block if it's not used anywhere else
     const id = orderedIds[pos];
     orderedIds.splice(pos, 1);
     if (orderedIds.indexOf(id) === -1) {
       delete blocks[id];
+      delete newBlocks[id];
     }
 
     return Object.assign(state, {
-      order: newOrder,
+      order: order,
       blocks: blocks,
+      newBlocks: newBlocks,
     });
   }
   if (action.type === 'BLOCK_ADD') {
