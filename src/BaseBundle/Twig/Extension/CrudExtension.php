@@ -68,6 +68,7 @@ class CrudExtension extends \Twig_Extension
         $vars = [
             'field' => $field,
             'form' => $form,
+            'label' => $config['createOptions']['label'],
             'entity' => $entity,
             'context' => TypeConfig::CONTEXT_CREATE,
             'type_vars' => $typeVars,
@@ -85,6 +86,7 @@ class CrudExtension extends \Twig_Extension
         $vars = [
             'field' => $field,
             'form' => $form,
+            'label' => $config['editOptions']['label'],
             'entity' => $entity,
             'context' => TypeConfig::CONTEXT_EDIT,
             'type_vars' => $typeVars,
