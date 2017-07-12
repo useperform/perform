@@ -12,29 +12,11 @@ use Doctrine\ORM\EntityNotFoundException;
  * @author Glynn Forrest <me@glynnforrest.com>
  * @group kernel
  **/
-class BlockRepositoryTest extends \PHPUnit_Framework_TestCase
+class BlockRepositoryTest extends RepositoryTestCase
 {
-    protected $kernel;
-    protected $em;
-    protected $repo;
-
-    protected function setUp()
+    protected function createRepo()
     {
-        $this->kernel = new TestKernel([
-            new \Perform\RichContentBundle\PerformRichContentBundle(),
-        ]);
-        $this->kernel->boot();
-        $this->em = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
-        $this->repo = $this->em->getRepository('PerformRichContentBundle:Block');
-        $schemaTool = new SchemaTool($this->em);
-        $schemaTool->createSchema([
-            $this->em->getClassMetadata(Block::class),
-        ]);
-    }
-
-    protected function tearDown()
-    {
-        $this->kernel->shutdown();
+        return $this->em->getRepository('PerformRichContentBundle:Block');
     }
 
     public function testCreateFromDefinitions()
@@ -62,17 +44,6 @@ class BlockRepositoryTest extends \PHPUnit_Framework_TestCase
         $b2 = $blocks['_id2'];
         $this->assertSame('something', $b2->getType());
         $this->assertSame('new block 2', $b2->getValue()['content']);
-    }
-
-    protected function newBlock()
-    {
-        $b = new Block();
-        $b->setType('something');
-        $b->setValue([]);
-        $this->em->persist($b);
-        $this->em->flush();
-
-        return $b;
     }
 
     public function testUpdateFromDefinitions()
