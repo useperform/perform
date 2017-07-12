@@ -31,16 +31,19 @@ class ContentRepository extends EntityRepository
             }
         }
 
+        $removedBlocks = [];
         foreach ($currentBlocks as $block) {
             if (in_array($block, $blocks)) {
                 continue;
             }
             $currentBlocks->removeElement($block);
+            $removedBlocks[] = $block;
         }
 
         $this->_em->persist($content);
         $this->_em->flush();
 
-        // check and remove newly orphaned blocks
+        $this->_em->getRepository('PerformRichContentBundle:Block')
+            ->removeIfUnused($removedBlocks);
     }
 }

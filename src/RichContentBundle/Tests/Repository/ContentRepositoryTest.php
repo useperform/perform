@@ -19,6 +19,7 @@ class ContentRepositoryTest extends RepositoryTestCase
         $b1 = $this->newBlock();
         $this->addBlocks($c, [$b1]);
         $b2 = $this->newBlock();
+        $b2id = $b2->getId();
         $this->addBlocks($c, [$b2]);
 
         $b3 = $this->newBlock();
@@ -28,6 +29,6 @@ class ContentRepositoryTest extends RepositoryTestCase
 
         // block 2 should have been removed from the database, since
         // it was only used for that piece of content
-        // $this->assertNull($this->em->getRepository('PerformRichContentBundle:Block')->find($b2->getId()));
+        $this->assertNull($this->em->getRepository('PerformRichContentBundle:Block')->find($b2id));
     }
 }
