@@ -81,4 +81,43 @@ class BlockRepositoryTest extends RepositoryTestCase
         $this->setExpectedException(EntityNotFoundException::class);
         $this->repo->findByIds([$b1->getId(), 'not-an-id']);
     }
+
+    public function testGetUsageCount()
+    {
+        $c1 = $this->newContent();
+        $c2 = $this->newContent();
+        $b1 = $this->newBlock();
+        $b2 = $this->newBlock();
+        $b3 = $this->newBlock();
+        $b4 = $this->newBlock();
+
+        $this->addBlocks($c1, [$b1, $b2]);
+        $this->addBlocks($c2, [$b1, $b3]);
+
+        $this->assertSame(2, $this->repo->getUsageCount($b1));
+        $this->assertSame(1, $this->repo->getUsageCount($b2));
+        $this->assertSame(1, $this->repo->getUsageCount($b3));
+        $this->assertSame(0, $this->repo->getUsageCount($b4));
+
+        $expected = [
+            $b1->getId() => ['count' => 2, 'block' => $b1],
+            $b2->getId() => ['count' => 1, 'block' => $b2],
+            $b3->getId() => ['count' => 1, 'block' => $b3],
+            $b4->getId() => ['count' => 0, 'block' => $b4],
+        ];
+        $this->assertEquals($expected, $this->repo->getUsageCounts([$b1, $b2, $b3, $b4]));
+    }
+
+    public function testRemoveUnused()
+    {
+        $c1 = $this->newContent();
+        $b1 = $this->newBlock();
+        $b2 = $this->newBlock();
+        $b3 = $this->newBlock();
+        $b3id = $b3->getId();
+
+        $this->addBlocks($c1, [$b1, $b2]);
+        $this->repo->removeIfUnused([$b1, $b2, $b3]);
+        $this->assertNull($this->repo->find($b3id));
+    }
 }
