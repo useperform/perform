@@ -195,3 +195,10 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@perform_notification.notifier"
+
+    perform_base.form.type.hidden_entity:
+        class: Perform\BaseBundle\Form\Type\HiddenEntityType
+        arguments:
+            - "@doctrine.orm.entity_manager"
+        tags:
+            - {name: form.type}
