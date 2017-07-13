@@ -33,7 +33,7 @@ class Persister
      */
     public function saveFromEditor(Content $content, array $blockDefinitions, array $newBlockDefinitions, array $blockOrder)
     {
-        return $this->em->transactional(function () use ($content, $blockDefinitions, $newBlockDefinitions, $blockOrder) {
+        $result = $this->em->transactional(function () use ($content, $blockDefinitions, $newBlockDefinitions, $blockOrder) {
             $newBlocks = $this->blockRepo->createFromDefinitions($newBlockDefinitions);
             $currentBlocks = $this->blockRepo->updateFromDefinitions($blockDefinitions);
             $blocks = array_merge(array_values($newBlocks), $currentBlocks);
@@ -55,6 +55,10 @@ class Persister
 
             return $newBlocks;
         });
+
+        //transactional will return true if the callback returns a
+        //falsy result (i.e. an empty array of new blocks)
+        return is_array($result) ? $result : [];
     }
 
     /**

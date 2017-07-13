@@ -120,4 +120,22 @@ class PersisterTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(Content::class, $content);
         $this->assertSame(['_new_1' => $b1, '_new_2' => $b2], $newBlocks);
     }
+
+    public function testSaveFromEditorWithNoNewBlocks()
+    {
+        $content = new Content();
+        $this->blockRepo->expects($this->once())
+            ->method('createFromDefinitions')
+            ->will($this->returnValue([]));
+        $this->blockRepo->expects($this->once())
+            ->method('updateFromDefinitions')
+            ->will($this->returnValue([]));
+        $this->em->expects($this->any())
+            ->method('transactional')
+            ->will($this->returnCallback(function ($transactionClosure) {
+                return $transactionClosure();
+            }));
+
+        $this->assertSame([], $this->persister->saveFromEditor($content, [], [], []));
+    }
 }
