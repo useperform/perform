@@ -38,6 +38,16 @@ const reducer = function (state, action) {
       loaded: true
     });
   }
+  if (action.type === 'CONTENT_SAVE') {
+    if (!action.status) {
+      //show loading state
+      return state;
+    }
+
+    return Object.assign(state, {
+      contentId: action.json.id
+    });
+  }
   if (action.type === 'BLOCK_UPDATE') {
     const blocks = state.blocks;
     blocks[action.id].value = action.value;

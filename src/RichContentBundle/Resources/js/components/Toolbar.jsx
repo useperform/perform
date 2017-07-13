@@ -1,5 +1,8 @@
 import React from 'react';
 
+import {save} from '../actions';
+import PropTypes from 'prop-types';
+
 class Toolbar extends React.Component {
   constructor(props) {
     super(props);
@@ -13,8 +16,7 @@ class Toolbar extends React.Component {
     this.setState({
       saving: true
     });
-    this.props.save(this.notSaving.bind(this),
-                    this.notSaving.bind(this));
+    this.context.store.dispatch(save(this.notSaving.bind(this), this.notSaving.bind(this)));
   }
 
   notSaving() {
@@ -36,5 +38,8 @@ class Toolbar extends React.Component {
     )
   }
 }
+Toolbar.contextTypes = {
+  store: PropTypes.object
+};
 
 export default Toolbar;

@@ -17,3 +17,62 @@ export function loadContent(id) {
     });
   }
 }
+
+const handleFetch = function(response) {
+  if (!response.ok) {
+    throw Error('An error occurred saving this content. Please try again.');
+  }
+
+  return response.json();
+}
+
+const getPostBody = function(state) {
+  const blockIds = Object.keys(state.blocks);
+  let filteredBlocks = {};
+  for (let i=0; i < blockIds.length; i++) {
+    let block = state.blocks[blockIds[i]];
+    if (!block.isNew) {
+      filteredBlocks[blockIds[i]] = block;
+    }
+  }
+
+  return {
+    newBlocks: state.newBlocks,
+    blocks: filteredBlocks,
+    order: state.order.map(i => {
+      // an array with the block id and a unique react key
+      // we only want the block id
+      return i[0];
+    })
+  };
+}
+
+export function save(onSuccess, onError) {
+  return function (dispatch, getState) {
+    dispatch({
+      type: 'CONTENT_SAVE',
+      status: false
+    });
+    const contentId = getState().contentId;
+    const url = contentId ? '/admin/_editor/content/save/' + contentId
+          : '/admin/_editor/content/save-new';
+
+    fetch(url, {
+      body: JSON.stringify(getPostBody(getState())),
+      credentials: 'include',
+      method: 'POST'
+    }).then(handleFetch)
+      .then(json => {
+        dispatch({
+          type: 'CONTENT_SAVE',
+          status: true,
+          json: json
+        });
+        onSuccess(json);
+      })
+      .catch(error => {
+        app.func.showError(error);
+        onError(error);
+      });
+  }
+}
