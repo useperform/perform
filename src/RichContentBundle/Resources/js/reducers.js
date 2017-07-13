@@ -123,16 +123,14 @@ const reducers = {
     // set an arbitrary unique id, since there is no database id for
     // this new block
     const id = '_'+newId();
-    let blocks = state.blocks
+    let blocks = state.blocks ? state.blocks : {};
 
     blocks[id] = {
       type: action.blockType,
-      value: {
-        content: 'Some content'
-      }
+      value: action.value,
     };
     const order = [
-      ...state.order,
+      ...state.order ? state.order : [],
       [id, newId()],
     ];
 

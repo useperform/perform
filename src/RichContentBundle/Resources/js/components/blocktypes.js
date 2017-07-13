@@ -2,6 +2,16 @@ import Text from './Text';
 import Image from './Image';
 
 export default {
-  text: Text,
-  image: Image,
+  text: {
+    class: Text,
+    defaults: {
+      content: 'Text content',
+    },
+  },
+  image: {
+    class: Image,
+    defaults: {
+      src: '/favicon.ico',
+    }
+  }
 }

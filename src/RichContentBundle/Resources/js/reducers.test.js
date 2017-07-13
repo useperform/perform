@@ -108,3 +108,42 @@ describe('CONTENT_LOAD', () => {
     expect(result.order[0][0]).toBe('some-guid');
   });
 });
+
+describe('BLOCK_ADD', () => {
+  it('creates a new block with the supplied type and value', () => {
+    const result = reducer({}, {
+      type: 'BLOCK_ADD',
+      blockType: 'some_block',
+      value: {
+        option1: 'foo',
+        option2: 'bar',
+      }
+    });
+
+    const blockKeys = Object.keys(result.blocks);
+    expect(blockKeys.length).toEqual(1);
+    expect(blockKeys[0].substring(0, 1)).toEqual('_');
+    expect(result.blocks[blockKeys[0]]).toEqual({
+      type: 'some_block',
+      value: {
+        option1: 'foo',
+        option2: 'bar',
+      }
+    });
+  });
+
+  it('adds a new block to the order', () => {
+    const result = reducer({}, {
+      type: 'BLOCK_ADD',
+      blockType: 'some_block',
+      value: {
+        option1: 'foo',
+        option2: 'bar',
+      }
+    });
+
+    expect(result.order.length).toEqual(1);
+    expect(result.order[0].length).toEqual(2);
+    expect(result.order[0][0].substring(0, 1)).toEqual('_');
+  });
+});

@@ -10,18 +10,10 @@ class Editor extends React.Component {
     return {store: this.props.store};
   }
 
-  addBlock(e) {
-    e.preventDefault();
-    this.props.store.dispatch({
-      type: 'BLOCK_ADD',
-      blockType: 'text'
-    });
-  }
-
   render() {
     return (
       <div className={css.editor}>
-        <Toolbar add={this.addBlock.bind(this)} />
+        <Toolbar />
         <BlockList />
       </div>
     );

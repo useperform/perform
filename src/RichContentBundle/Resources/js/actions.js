@@ -1,4 +1,5 @@
 import 'whatwg-fetch';
+import blockTypes from './components/blocktypes';
 
 export function loadContent(id) {
   return function(dispatch) {
@@ -80,5 +81,13 @@ export function save(onSuccess, onError) {
         app.func.showError(error);
         onError(error);
       });
+  }
+}
+
+export function addBlock(type) {
+  return {
+    type: 'BLOCK_ADD',
+    blockType: type,
+    value: blockTypes[type].defaults
   }
 }

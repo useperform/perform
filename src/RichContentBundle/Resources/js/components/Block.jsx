@@ -50,7 +50,7 @@ class Block extends React.Component {
   }
 
   render() {
-    const Tag = blockTypes[this.props.block.type];
+    const Tag = blockTypes[this.props.block.type].class;
     const editClass = 'fa ' + (this.state.editing ? 'fa-times' : 'fa-pencil');
 
     return (
