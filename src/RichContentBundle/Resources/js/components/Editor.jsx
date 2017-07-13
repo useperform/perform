@@ -6,36 +6,8 @@ import 'whatwg-fetch';
 import PropTypes from 'prop-types';
 
 class Editor extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loaded: false,
-      contentId: this.props.initialContentId,
-    };
-  }
   getChildContext() {
     return {store: this.props.store};
-  }
-
-  componentDidMount() {
-    if (true === this.state.loaded || !this.state.contentId) {
-      return;
-    }
-
-    const url = '/admin/_editor/content/get/' + this.state.contentId;
-    fetch(url, {
-      credentials: 'include',
-    }).then(res => {
-      return res.json();
-    }).then(json => {
-      this.setState({
-        loaded: true
-      });
-      this.props.store.dispatch({
-        type: 'CONTENT_LOAD',
-        json
-      });
-    });
   }
 
   saveNew(onSuccess, onError) {
@@ -47,9 +19,6 @@ class Editor extends React.Component {
       method: 'POST'
     }).then(this.handleFetch)
       .then(json => {
-        this.setState({
-          contentId: json.id,
-        });
         onSuccess(json);
       }).catch(error => {
         app.func.showError(error);
@@ -58,10 +27,11 @@ class Editor extends React.Component {
   }
 
   save(onSuccess, onError) {
-    if (!this.state.contentId) {
+    const contentId = this.props.store.getState().contentId;
+    if (!contentId) {
       return this.saveNew(onSuccess, onError);
     }
-    const url = '/admin/_editor/content/save/' + this.state.contentId;
+    const url = '/admin/_editor/content/save/' + contentId;
 
     return fetch(url, {
       body: JSON.stringify(this.getPostBody()),

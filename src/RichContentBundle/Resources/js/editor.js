@@ -2,7 +2,8 @@ import Editor from './components/Editor';
 import ReactDOM from 'react-dom';
 import React from 'react';
 
-import {createStore} from 'redux';
+import {createStore, applyMiddleware} from 'redux';
+import {loadContent} from './actions';
 
 const newId = function() {
   return Math.random().toString().substring(2);
@@ -12,6 +13,16 @@ const reducer = function (state, action) {
   console.debug(action);
 
   if (action.type === 'CONTENT_LOAD') {
+    const contentId = action.id;
+    if (!contentId) {
+      return state;
+    }
+
+    if (!action.status) {
+      //show loading state
+      return state;
+    }
+
     // Associate each ordered block with a random id.
     // This will be used for the key on the react component to keep
     // track of DOM nodes, since we can't use the position in the
@@ -21,7 +32,10 @@ const reducer = function (state, action) {
     });
     return Object.assign({}, state, {
       blocks: action.json.blocks,
-      order: order,
+      newBlocks: {},
+      order,
+      contentId,
+      loaded: true
     });
   }
   if (action.type === 'BLOCK_UPDATE') {
@@ -119,20 +133,30 @@ const reducer = function (state, action) {
 };
 
 const initialState = {
+  contentId: undefined,
+  loaded: false,
   blocks: {},
   order: [],
   newBlocks: {},
 };
 
-const store = createStore(reducer, initialState);
+const thunk = store => next => action =>
+      typeof action === 'function'
+      ? action(store.dispatch, store.getState)
+      : next(action);
+
+const store = createStore(reducer, initialState, applyMiddleware(thunk));
 
 store.subscribe(function() {
   console.debug('New state: ', store.getState());
-})
+});
 
 const init = function(element, config) {
-  ReactDOM.render(<Editor initialContentId={config.contentId} store={store} />, element);
-}
+  ReactDOM.render(<Editor store={store} />, element);
+  if (config.contentId) {
+    store.dispatch(loadContent(config.contentId));
+  }
+};
 
 window.Perform = {
   richContent: {
