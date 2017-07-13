@@ -10,6 +10,7 @@ class Editor extends React.Component {
     super(props);
     this.state = {
       loaded: false,
+      contentId: this.props.initialContentId,
     };
   }
   getChildContext() {
@@ -17,11 +18,11 @@ class Editor extends React.Component {
   }
 
   componentDidMount() {
-    if (true === this.state.loaded) {
+    if (true === this.state.loaded || !this.state.contentId) {
       return;
     }
 
-    const url = '/admin/_editor/content/' + this.props.contentId;
+    const url = '/admin/_editor/content/get/' + this.state.contentId;
     fetch(url, {
       credentials: 'include',
     }).then(res => {
@@ -37,8 +38,52 @@ class Editor extends React.Component {
     });
   }
 
-  save() {
-    const url = '/admin/_editor/content/save/' + this.props.contentId;
+  saveNew(onSuccess, onError) {
+    const url = '/admin/_editor/content/save-new';
+
+    return fetch(url, {
+      body: JSON.stringify(this.getPostBody()),
+      credentials: 'include',
+      method: 'POST'
+    }).then(this.handleFetch)
+      .then(json => {
+        this.setState({
+          contentId: json.id,
+        });
+        onSuccess(json);
+      }).catch(error => {
+        app.func.showError(error);
+        onError(error);
+      });
+  }
+
+  save(onSuccess, onError) {
+    if (!this.state.contentId) {
+      return this.saveNew(onSuccess, onError);
+    }
+    const url = '/admin/_editor/content/save/' + this.state.contentId;
+
+    return fetch(url, {
+      body: JSON.stringify(this.getPostBody()),
+      credentials: 'include',
+      method: 'POST'
+    }).then(this.handleFetch)
+      .then(onSuccess)
+      .catch(error => {
+        app.func.showError(error);
+        onError(error);
+      });
+  }
+
+  handleFetch(response) {
+    if (!response.ok) {
+      throw Error('An error occurred saving this content. Please try again.');
+    }
+
+    return response.json();
+  }
+
+  getPostBody() {
     const state = this.props.store.getState();
     const blockIds = Object.keys(state.blocks);
     let filteredBlocks = {};
@@ -49,7 +94,7 @@ class Editor extends React.Component {
       }
     }
 
-    const body = {
+    return {
       newBlocks: state.newBlocks,
       blocks: filteredBlocks,
       order: state.order.map(i => {
@@ -58,17 +103,10 @@ class Editor extends React.Component {
         return i[0];
       })
     };
-
-    return fetch(url, {
-      body: JSON.stringify(body),
-      credentials: 'include',
-      method: 'POST'
-    }).then(res => {
-      return res.json();
-    })
   }
 
-  addBlock() {
+  addBlock(e) {
+    e.preventDefault();
     this.props.store.dispatch({
       type: 'BLOCK_ADD',
       blockType: 'text'

@@ -131,7 +131,7 @@ store.subscribe(function() {
 })
 
 const init = function(element, config) {
-  ReactDOM.render(<Editor contentId={config.contentId} store={store} />, element);
+  ReactDOM.render(<Editor initialContentId={config.contentId} store={store} />, element);
 }
 
 window.Perform = {

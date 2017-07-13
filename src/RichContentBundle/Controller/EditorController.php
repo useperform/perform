@@ -4,7 +4,6 @@ namespace Perform\RichContentBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Perform\RichContentBundle\Entity\Content;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -16,8 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 class EditorController extends Controller
 {
     /**
-     * @Route("/content/{id}")
-     * @Template
+     * @Route("/content/get/{id}")
      */
     public function getContentAction(Content $content)
     {
@@ -35,7 +33,6 @@ class EditorController extends Controller
     /**
      * @Route("/content/save/{id}")
      * @Method("POST")
-     * @Template
      */
     public function saveContentAction(Request $request, Content $content)
     {
@@ -44,7 +41,22 @@ class EditorController extends Controller
             ->saveFromEditor($content, $body['blocks'], $body['newBlocks'], $body['order']);
 
         return new JsonResponse([
-            'done' => true,
+            'Saved' => true,
         ]);
+    }
+
+    /**
+     * @Route("/content/save-new")
+     * @Method("POST")
+     */
+    public function saveNewContentAction(Request $request)
+    {
+        $body = json_decode($request->getContent(), true);
+        $content = $this->get('perform_rich_content.persister')
+            ->createFromEditor($body['newBlocks'], $body['order']);
+
+        return new JsonResponse([
+            'id' => $content->getId(),
+        ], JsonResponse::HTTP_CREATED);
     }
 }

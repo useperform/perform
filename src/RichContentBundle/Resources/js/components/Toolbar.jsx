@@ -13,11 +13,14 @@ class Toolbar extends React.Component {
     this.setState({
       saving: true
     });
-    this.props.save().then(() => {
-      this.setState({
-        saving: false
-      });
-    })
+    this.props.save(this.notSaving.bind(this),
+                    this.notSaving.bind(this));
+  }
+
+  notSaving() {
+    this.setState({
+      saving: false
+    });
   }
 
   render() {
