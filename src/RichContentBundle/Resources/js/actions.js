@@ -27,18 +27,9 @@ const handleFetch = function(response) {
 }
 
 const getPostBody = function(state) {
-  const blockIds = Object.keys(state.blocks);
-  let filteredBlocks = {};
-  for (let i=0; i < blockIds.length; i++) {
-    let block = state.blocks[blockIds[i]];
-    if (!block.isNew) {
-      filteredBlocks[blockIds[i]] = block;
-    }
-  }
-
   return {
     newBlocks: state.newBlocks,
-    blocks: filteredBlocks,
+    blocks: state.blocks,
     order: state.order.map(i => {
       // an array with the block id and a unique react key
       // we only want the block id

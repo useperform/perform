@@ -35,8 +35,29 @@ const reducers = {
       return state;
     }
 
+    // move newBlocks to blocks, indexed by new database ids
+    let blocks = state.blocks;
+    const newIds = Object.entries(action.json.newBlocks);
+    for (let i=0; i < newIds.length; i++) {
+      const stubId = newIds[i][0];
+      const dbId = newIds[i][1];
+      blocks[dbId] = state.newBlocks[stubId];
+    }
+    // replace stub ids in the order with new database ids
+    const order = state.order.map(item => {
+      const dbId = action.json.newBlocks[item[0]];
+      if (dbId) {
+        return [dbId, item[1]];
+      }
+
+      return item
+    });
+
     return Object.assign(state, {
-      contentId: action.json.id
+      contentId: action.json.id,
+      newBlocks: {},
+      blocks,
+      order
     });
   },
   BLOCK_UPDATE: function(state, action) {
@@ -110,14 +131,11 @@ const reducers = {
       type: action.blockType,
       value: {
         content: 'Some content'
-      },
-      isNew: true,
+      }
     };
 
     let newBlocks = state.newBlocks;
     newBlocks[id] = block;
-    let blocks = state.blocks;
-    blocks[id] = block;
     const order = [
       ...state.order,
       [id, newId()],
@@ -125,7 +143,6 @@ const reducers = {
 
     return Object.assign(state, {
       newBlocks: newBlocks,
-      blocks: blocks,
       order: order
     })
   }
