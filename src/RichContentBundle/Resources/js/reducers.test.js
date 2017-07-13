@@ -22,9 +22,7 @@ describe('CONTENT_SAVE', () => {
         'some-guid-1': {
           type: 'text',
           value: 'block1'
-        }
-      },
-      newBlocks: {
+        },
         '_stub1': {
           type: 'text',
           value: 'new1'
@@ -56,7 +54,6 @@ describe('CONTENT_SAVE', () => {
           value: 'new2'
         },
       },
-      newBlocks: {},
       order: [
         ['some-guid-2', 'some-react-key-jf84'],
         ['some-guid-1', 'some-react-key-2j37'],

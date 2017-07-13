@@ -11,7 +11,6 @@ const initialState = {
   loaded: false,
   blocks: {},
   order: [],
-  newBlocks: {},
 };
 
 const thunk = store => next => action =>

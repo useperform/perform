@@ -23,7 +23,6 @@ const reducers = {
     });
     return Object.assign({}, state, {
       blocks: action.json.blocks,
-      newBlocks: {},
       order,
       contentId,
       loaded: true
@@ -35,13 +34,14 @@ const reducers = {
       return state;
     }
 
-    // move newBlocks to blocks, indexed by new database ids
+    // replace stub ids in blocks with new database ids
     let blocks = state.blocks;
     const newIds = Object.entries(action.json.newBlocks);
     for (let i=0; i < newIds.length; i++) {
       const stubId = newIds[i][0];
       const dbId = newIds[i][1];
-      blocks[dbId] = state.newBlocks[stubId];
+      blocks[dbId] = state.blocks[stubId];
+      delete blocks[stubId];
     }
     // replace stub ids in the order with new database ids
     const order = state.order.map(item => {
@@ -55,7 +55,6 @@ const reducers = {
 
     return Object.assign(state, {
       contentId: action.json.id,
-      newBlocks: {},
       blocks,
       order
     });
@@ -101,7 +100,6 @@ const reducers = {
   BLOCK_REMOVE: function(state, action) {
     let order = state.order;
     let blocks = state.blocks;
-    let newBlocks = state.newBlocks;
     let orderedIds = state.order.map(i => {
       return i[0];
     });
@@ -114,36 +112,33 @@ const reducers = {
     orderedIds.splice(pos, 1);
     if (orderedIds.indexOf(id) === -1) {
       delete blocks[id];
-      delete newBlocks[id];
     }
 
     return Object.assign(state, {
       order: order,
       blocks: blocks,
-      newBlocks: newBlocks,
     });
   },
   BLOCK_ADD: function(state, action) {
     // set an arbitrary unique id, since there is no database id for
     // this new block
     const id = '_'+newId();
-    const block = {
+    let blocks = state.blocks
+
+    blocks[id] = {
       type: action.blockType,
       value: {
         content: 'Some content'
       }
     };
-
-    let newBlocks = state.newBlocks;
-    newBlocks[id] = block;
     const order = [
       ...state.order,
       [id, newId()],
     ];
 
     return Object.assign(state, {
-      newBlocks: newBlocks,
-      order: order
+      blocks,
+      order
     })
   }
 };

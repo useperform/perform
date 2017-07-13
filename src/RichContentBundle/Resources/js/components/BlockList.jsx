@@ -24,10 +24,10 @@ class BlockList extends React.Component {
       let id = state.order[i][0];
       let key = state.order[i][1];
 
-      if (!state.blocks[id] && !state.newBlocks[id]) {
+      if (!state.blocks[id]) {
         console.error(`Unknown block ${id}`, state);
       }
-      let block = id.substring(0, 1) === '_' ? state.newBlocks[id] : state.blocks[id];
+      let block = state.blocks[id];
       components.push(
         <Block key={key} block={block} id={id} position={i} />
       );
