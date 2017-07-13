@@ -26,6 +26,11 @@ store.subscribe(function() {
 
 const init = function(element, config) {
   ReactDOM.render(<Editor store={store} />, element);
+  if (config.onChange) {
+    store.subscribe(() => {
+      config.onChange(store);
+    });
+  }
   if (config.contentId) {
     store.dispatch(loadContent(config.contentId));
   }

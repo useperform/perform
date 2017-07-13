@@ -148,6 +148,8 @@ export default function reducer(state, action) {
     return reducers[action.type](state, action);
   }
 
-  console.warn(`Warning: no reducer found for action "${action.type}"`);
+  if (action.type.substring(0, 7) !== '@@redux') {
+    console.warn(`Warning: no reducer found for action "${action.type}"`);
+  }
   return state;
 }

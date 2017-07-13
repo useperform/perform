@@ -8,7 +8,7 @@
 
 {% block create %}
   <div class="perform-rich-content-type">
-    {{form_row(form[field], {attr: {class: 'content-id'}})}}
+    {{form_widget(form[field], {attr: {class: 'content-id'}})}}
     <div class="form-group">
       <label class="col-sm-2" for="{{field}}">
         {{label}}
