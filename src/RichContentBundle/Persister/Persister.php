@@ -27,10 +27,13 @@ class Persister
 
     /**
      * Update content using data sent from the frontend editor.
+     *
+     * @return Block[] An array of newly created blocks, indexed by
+     * the stub ids that were passed in.
      */
     public function saveFromEditor(Content $content, array $blockDefinitions, array $newBlockDefinitions, array $blockOrder)
     {
-        $this->em->transactional(function () use ($content, $blockDefinitions, $newBlockDefinitions, $blockOrder) {
+        return $this->em->transactional(function () use ($content, $blockDefinitions, $newBlockDefinitions, $blockOrder) {
             $newBlocks = $this->blockRepo->createFromDefinitions($newBlockDefinitions);
             $currentBlocks = $this->blockRepo->updateFromDefinitions($blockDefinitions);
             $blocks = array_merge(array_values($newBlocks), $currentBlocks);
@@ -49,11 +52,17 @@ class Persister
 
             $this->em->persist($content);
             $this->em->flush();
+
+            return $newBlocks;
         });
     }
 
     /**
      * Create content using data sent from the frontend editor.
+     *
+     * @return array An array containing the new Content entity and
+     * and array of newly created blocks, indexed by the stub ids that
+     * were passed in.
      */
     public function createFromEditor(array $newBlockDefinitions, array $blockOrder)
     {
@@ -61,9 +70,9 @@ class Persister
             $content = new Content();
             $content->setTitle('Untitled');
 
-            $this->saveFromEditor($content, [], $newBlockDefinitions, $blockOrder);
+            $newBlocks = $this->saveFromEditor($content, [], $newBlockDefinitions, $blockOrder);
 
-            return $content;
+            return [$content, $newBlocks];
         });
     }
 }

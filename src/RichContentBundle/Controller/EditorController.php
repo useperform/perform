@@ -37,12 +37,10 @@ class EditorController extends Controller
     public function saveContentAction(Request $request, Content $content)
     {
         $body = json_decode($request->getContent(), true);
-        $this->get('perform_rich_content.persister')
-            ->saveFromEditor($content, $body['blocks'], $body['newBlocks'], $body['order']);
+        $newBlocks = $this->get('perform_rich_content.persister')
+                   ->saveFromEditor($content, $body['blocks'], $body['newBlocks'], $body['order']);
 
-        return new JsonResponse([
-            'Saved' => true,
-        ]);
+        return $this->saveResponse($content, $newBlocks, JsonResponse::HTTP_OK);
     }
 
     /**
@@ -52,11 +50,22 @@ class EditorController extends Controller
     public function saveNewContentAction(Request $request)
     {
         $body = json_decode($request->getContent(), true);
-        $content = $this->get('perform_rich_content.persister')
-            ->createFromEditor($body['newBlocks'], $body['order']);
+        list($content, $newBlocks) = $this->get('perform_rich_content.persister')
+                                   ->createFromEditor($body['newBlocks'], $body['order']);
+
+        return $this->saveResponse($content, $newBlocks, JsonResponse::HTTP_CREATED);
+    }
+
+    private function saveResponse(Content $content, array $newBlocks, $status)
+    {
+        $newIds = [];
+        foreach ($newBlocks as $tempId => $block) {
+            $newIds[$tempId] = $block->getId();
+        }
 
         return new JsonResponse([
             'id' => $content->getId(),
-        ], JsonResponse::HTTP_CREATED);
+            'newBlocks' => $newIds,
+        ], $status);
     }
 }

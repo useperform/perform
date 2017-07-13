@@ -72,10 +72,11 @@ class PersisterTest extends \PHPUnit_Framework_TestCase
         $this->em->expects($this->any())
             ->method('transactional')
             ->will($this->returnCallback(function ($transactionClosure) {
-                $transactionClosure();
+                return $transactionClosure();
             }));
 
-        $this->persister->saveFromEditor($content, ['current_defs'], ['new_defs'], ['_new_id', 'current1']);
+        $newBlocks = $this->persister->saveFromEditor($content, ['current_defs'], ['new_defs'], ['_new_id', 'current1']);
+        $this->assertSame(['_new_id' => $newBlock], $newBlocks);
         $this->assertSame(['new1', 'current1'], $content->getBlockOrder());
     }
 
@@ -115,7 +116,8 @@ class PersisterTest extends \PHPUnit_Framework_TestCase
                 return $transactionClosure();
             }));
 
-        $content = $this->persister->createFromEditor(['new_defs'], ['_new_1', '_new_2']);
+        list($content, $newBlocks) = $this->persister->createFromEditor(['new_defs'], ['_new_1', '_new_2']);
         $this->assertInstanceOf(Content::class, $content);
+        $this->assertSame(['_new_1' => $b1, '_new_2' => $b2], $newBlocks);
     }
 }
