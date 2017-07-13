@@ -7,6 +7,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Perform\BaseBundle\Type\AbstractType;
 use Perform\BaseBundle\Asset\AssetContainer;
 use Perform\BaseBundle\Form\Type\HiddenEntityType;
+use Perform\BaseBundle\Config\TypeConfig;
 
 /**
  * Use the ``rich_content`` type for linking to rich content.
@@ -51,6 +52,11 @@ class RichContentType extends AbstractType
     public function getDefaultConfig()
     {
         return [
+            'contexts' => [
+                TypeConfig::CONTEXT_VIEW,
+                TypeConfig::CONTEXT_CREATE,
+                TypeConfig::CONTEXT_EDIT,
+            ],
             'sort' => false,
         ];
     }
