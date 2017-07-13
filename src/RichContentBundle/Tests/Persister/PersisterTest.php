@@ -26,8 +26,8 @@ class PersisterTest extends \PHPUnit_Framework_TestCase
                          ->disableOriginalConstructor()
                          ->getMock();
         $this->contentRepo = $this->getMockBuilder(ContentRepository::class)
-                         ->disableOriginalConstructor()
-                         ->getMock();
+                           ->disableOriginalConstructor()
+                           ->getMock();
         $this->persister = new Persister($this->em, $this->contentRepo, $this->blockRepo);
     }
 
@@ -77,5 +77,45 @@ class PersisterTest extends \PHPUnit_Framework_TestCase
 
         $this->persister->saveFromEditor($content, ['current_defs'], ['new_defs'], ['_new_id', 'current1']);
         $this->assertSame(['new1', 'current1'], $content->getBlockOrder());
+    }
+
+    public function testCreateFromEditor()
+    {
+        $b1 = $this->block('new1');
+        $b2 = $this->block('new2');
+
+        $this->blockRepo->expects($this->once())
+            ->method('createFromDefinitions')
+            ->with(['new_defs'])
+            ->will($this->returnValue(['_new_1' => $b1, '_new_2' => $b2]));
+        $this->blockRepo->expects($this->once())
+            ->method('updateFromDefinitions')
+            ->with([])
+            ->will($this->returnValue([]));
+        $this->contentRepo->expects($this->once())
+            ->method('setBlocks')
+            ->with($this->callback(function ($val) {
+                return $val instanceof Content;
+            }), [$b1, $b2])
+            ->will($this->returnCallback(function ($content, $blocks) {
+                foreach ($blocks as $block) {
+                    $content->addBlock($block);
+                }
+            }));
+        $this->em->expects($this->once())
+            ->method('persist')
+            ->with($this->callback(function ($val) {
+                return $val instanceof Content;
+            }));
+        $this->em->expects($this->once())
+            ->method('flush');
+        $this->em->expects($this->any())
+            ->method('transactional')
+            ->will($this->returnCallback(function ($transactionClosure) {
+                return $transactionClosure();
+            }));
+
+        $content = $this->persister->createFromEditor(['new_defs'], ['_new_1', '_new_2']);
+        $this->assertInstanceOf(Content::class, $content);
     }
 }

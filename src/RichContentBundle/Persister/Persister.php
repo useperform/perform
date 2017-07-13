@@ -51,4 +51,19 @@ class Persister
             $this->em->flush();
         });
     }
+
+    /**
+     * Create content using data sent from the frontend editor.
+     */
+    public function createFromEditor(array $newBlockDefinitions, array $blockOrder)
+    {
+        return $this->em->transactional(function () use ($newBlockDefinitions, $blockOrder) {
+            $content = new Content();
+            $content->setTitle('Untitled');
+
+            $this->saveFromEditor($content, [], $newBlockDefinitions, $blockOrder);
+
+            return $content;
+        });
+    }
 }
