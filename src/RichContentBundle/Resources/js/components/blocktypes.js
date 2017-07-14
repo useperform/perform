@@ -1,5 +1,6 @@
 import Text from './Text';
 import Image from './Image';
+import Quote from './types/Quote';
 
 export default {
   text: {
@@ -12,6 +13,13 @@ export default {
     class: Image,
     defaults: {
       src: '/favicon.ico',
+    }
+  },
+  quote: {
+    class: Quote,
+    defaults: {
+      text: '',
+      cite: '',
     }
   }
 }

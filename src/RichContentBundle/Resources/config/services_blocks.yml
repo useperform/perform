@@ -5,6 +5,12 @@ services:
         tags:
             - {name: perform_rich_content.block_type, type: text}
 
+    perform_rich_content.block.quote:
+        public: false
+        class: Perform\RichContentBundle\BlockType\QuoteBlockType
+        tags:
+            - {name: perform_rich_content.block_type, type: quote}
+
     perform_rich_content.block.image:
         public: false
         class: Perform\RichContentBundle\BlockType\ImageBlockType
