@@ -1,6 +1,7 @@
 import Text from './types/Text';
 import Image from './types/Image';
 import Quote from './types/Quote';
+import Video from './types/Video';
 
 export default {
   text: {
@@ -20,6 +21,11 @@ export default {
     defaults: {
       text: '',
       cite: '',
+    }
+  },
+  video: {
+    class: Video,
+    defaults: {
     }
   }
 }

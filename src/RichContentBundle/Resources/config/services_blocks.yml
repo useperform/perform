@@ -11,6 +11,12 @@ services:
         tags:
             - {name: perform_rich_content.block_type, type: quote}
 
+    perform_rich_content.block.video:
+        public: false
+        class: Perform\RichContentBundle\BlockType\VideoBlockType
+        tags:
+            - {name: perform_rich_content.block_type, type: video}
+
     perform_rich_content.block.image:
         public: false
         class: Perform\RichContentBundle\BlockType\ImageBlockType
