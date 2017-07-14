@@ -1,5 +1,5 @@
-import Text from './Text';
-import Image from './Image';
+import Text from './types/Text';
+import Image from './types/Image';
 import Quote from './types/Quote';
 
 export default {
