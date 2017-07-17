@@ -59,7 +59,7 @@ class Toolbar extends React.Component {
     let addBtns = Object.keys(blockTypes).map(type => {
       return (
         <li onClick={this.addBlock.bind(this)} onMouseEnter={this.onHoverStart.bind(this)} onMouseLeave={this.onHoverStop.bind(this)} data-type={type} key={type}>
-          {type}
+          {blockTypes[type].name}
         </li>
       )
     });
