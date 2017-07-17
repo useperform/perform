@@ -32,8 +32,11 @@ class Video extends React.Component {
     let embed;
     switch (this.props.value.type) {
     case 'youtube':
-      embed = <iframe src={`https://www.youtube.com/embed/${this.props.value.id}`} frameBorder="0" allowFullScreen></iframe>;
+      embed = <iframe src={`https://www.youtube.com/embed/${this.props.value.id}`} width="560" height="315" frameBorder="0" allowFullScreen></iframe>;
       break;
+    case 'vimeo':
+      embed = <iframe src={`https://player.vimeo.com/video/${this.props.value.id}`} width="560" height="315" frameBorder="0" allowFullScreen></iframe>
+        break;
     }
 
     return (
