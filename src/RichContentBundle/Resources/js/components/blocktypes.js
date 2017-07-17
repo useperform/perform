@@ -6,18 +6,21 @@ import Video from './types/Video';
 export default {
   text: {
     class: Text,
+    description: 'Words and paragraphs.',
     defaults: {
       content: 'Text content',
     },
   },
   image: {
     class: Image,
+    description: 'Images from the media library.',
     defaults: {
       src: '/favicon.ico',
     }
   },
   quote: {
     class: Quote,
+    description: 'Prominently display a quote.',
     defaults: {
       text: '',
       cite: '',
@@ -25,6 +28,7 @@ export default {
   },
   video: {
     class: Video,
+    description: 'Embed a video from youtube, vimeo, or the media library.',
     defaults: {
     }
   }

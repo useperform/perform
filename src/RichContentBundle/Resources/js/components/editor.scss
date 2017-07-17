@@ -5,8 +5,46 @@ $toolbar-bg: #3e3e3e;
   background-color: $base-bg;
 
   :global .toolbar {
+    position: relative;
     background-color: $toolbar-bg;
     padding: 10px;
+
+    .block-selector {
+      position: absolute;
+      color: #eee;
+      background-color: $toolbar-bg;
+      z-index: 10;
+      margin-left: -10px;
+      padding: 10px 0 0;
+      width: 50%;
+
+      ul {
+        padding: 0;
+        margin: 0;
+        width: 30%;
+        float: left;
+      }
+
+      .description {
+        padding: 20px;
+        background-color: darken($toolbar-bg, 10%);
+        width: 70%;
+        float: left;
+      }
+
+      .clear {
+        clear: both;
+      }
+
+      li {
+        cursor: pointer;
+        padding: 10px 25px 10px 10px;
+
+        &:hover {
+          background-color: darken($toolbar-bg, 10%);
+        }
+      }
+    }
   }
 
   :global .block-list {
