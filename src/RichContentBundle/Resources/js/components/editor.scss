@@ -48,6 +48,29 @@ $toolbar-bg: #3e3e3e;
   }
 
   :global .block-list {
-    padding: 10px;
+    padding: 20px 0;
+
+    .block {
+      padding-left: 100px;
+
+      .actions {
+        position: absolute;
+        margin-left: -95px;
+        display: none;
+        width: 90px;
+
+        .btn {
+          border: none;
+          height: 30px;
+          vertical-align: middle;
+          padding-left: 9px;
+          width: 30px;
+        }
+      }
+
+      &:hover .actions {
+        display: block;
+      }
+    }
   }
 }

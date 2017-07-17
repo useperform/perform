@@ -13,7 +13,7 @@ class Block extends React.Component {
 
   clickEdit() {
     this.setState({
-      editing: true
+      editing: !this.state.editing,
     });
   }
 
@@ -54,18 +54,21 @@ class Block extends React.Component {
     const editClass = 'fa ' + (this.state.editing ? 'fa-times' : 'fa-pencil');
 
     return (
-      <div>
-        <div className="btn-group">
-          <a className="btn btn-xs btn-default" onClick={this.clickUp.bind(this)}>
+      <div className="block">
+        <div className="actions">
+          <a className="btn btn-default">
+            <i className="fa fa-arrows"></i>
+          </a>
+          <a className="btn btn-default" onClick={this.clickUp.bind(this)}>
             <i className="fa fa-arrow-up"></i>
           </a>
-          <a className="btn btn-xs btn-default" onClick={this.clickDown.bind(this)}>
+          <a className="btn btn-default" onClick={this.clickDown.bind(this)}>
             <i className="fa fa-arrow-down"></i>
           </a>
-          <a className="btn btn-xs btn-default" onClick={this.clickEdit.bind(this)}>
+          <a className="btn btn-default" onClick={this.clickEdit.bind(this)}>
             <i className={editClass}></i>
           </a>
-          <a className="btn btn-xs btn-default" onClick={this.clickRemove.bind(this)}>
+          <a className="btn btn-default" onClick={this.clickRemove.bind(this)}>
             <i className="fa fa-trash"></i>
           </a>
         </div>
