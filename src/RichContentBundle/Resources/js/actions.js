@@ -91,3 +91,11 @@ export function addBlock(type) {
     value: blockTypes[type].defaults
   }
 }
+
+export function moveBlock(currentPosition, newPosition) {
+  return {
+    type: 'BLOCK_MOVE',
+    currentPosition,
+    newPosition,
+  }
+}

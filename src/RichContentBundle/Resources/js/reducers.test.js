@@ -1,5 +1,7 @@
 import reducer from './reducers';
 
+import {moveBlock} from './actions';
+
 describe('CONTENT_SAVE', () => {
   it('sets content id on success', () => {
     const initialState = {
@@ -145,5 +147,67 @@ describe('BLOCK_ADD', () => {
     expect(result.order.length).toEqual(1);
     expect(result.order[0].length).toEqual(2);
     expect(result.order[0][0].substring(0, 1)).toEqual('_');
+  });
+});
+
+describe('BLOCK_MOVE', () => {
+  it('moves a block into a new position', () => {
+    const initialOrder = [
+      ['some-guid-1', 'some-react-key-0000'],
+      ['some-guid-1', 'some-react-key-1111'],
+      ['some-guid-2', 'some-react-key-2222'],
+      ['some-guid-2', 'some-react-key-3333'],
+    ];
+    const initialState = {
+      blocks: {
+        'some-guid-1': {
+          type: 'text',
+          value: 'block1'
+        },
+        'some-guid-2': {
+          type: 'text',
+          value: 'block2'
+        },
+      },
+      order: initialOrder
+    }
+
+    const tests = [
+      {
+        from: 1,
+        to: 2,
+        order: [0, 2, 1, 3],
+      },
+      {
+        from: 2,
+        to: 1,
+        order: [0, 2, 1, 3],
+      },
+      {
+        from: 0,
+        to: 3,
+        order: [1, 2, 3, 0],
+      },
+      {
+        from: 3,
+        to: 0,
+        order: [3, 0, 1, 2],
+      },
+      {
+        from: 2,
+        to: 3,
+        order: [0, 1, 3, 2],
+      },
+    ];
+
+    for (let i=0; i < tests.length; i++) {
+      let expectedOrder = [];
+      for (let k=0; k < tests[i].order.length; k++) {
+        expectedOrder.push(initialOrder[tests[i].order[k]]);
+      }
+      const result = reducer(initialState, moveBlock(tests[i].from, tests[i].to));
+
+      expect(result.order).toEqual(expectedOrder);
+    }
   });
 });

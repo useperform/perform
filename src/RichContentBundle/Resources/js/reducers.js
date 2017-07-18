@@ -65,6 +65,17 @@ const reducers = {
 
     return Object.assign(state, {blocks: blocks});
   },
+  BLOCK_MOVE: function(state, action) {
+    const pos = action.currentPosition;
+    const newPos = action.newPosition;
+    const order = state.order;
+    const block = order[pos];
+
+    order.splice(pos, 1);
+    order.splice(newPos, 0, block);
+
+    return Object.assign(state, {order: order})
+  },
   BLOCK_MOVE_UP: function(state, action) {
     const pos = action.currentPosition;
 
