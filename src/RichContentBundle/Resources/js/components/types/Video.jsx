@@ -1,7 +1,7 @@
 import React from 'react';
 
 import getVideoId from 'get-video-id';
-import {debounce} from 'lodash';
+import debounce from 'lodash.debounce';
 
 class Video extends React.Component {
   constructor(props) {
