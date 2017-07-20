@@ -19,22 +19,20 @@ const initialStateWithEditor = deepFreeze({
 
 describe('CONTENT_SAVE', () => {
   it('sets content id on success', () => {
-    const initialState = {
-      order: []
-    }
-    expect(reducer(initialState, {
+    const result = reducer(initialStateWithEditor, {
       type: 'CONTENT_SAVE',
       status: true,
+      editorIndex: 0,
       json: {
         id: 1,
         newBlocks: {},
       }
-    }).contentId).toEqual(1);
+    });
+    expect(result.editors[0].contentId).toEqual(1);
   });
 
   it('updates the ids of new blocks on success', () => {
-    const initialState = {
-      contentId: 1,
+    const initialState = deepFreeze({
       blocks: {
         'some-guid-1': {
           type: 'text',
@@ -49,14 +47,16 @@ describe('CONTENT_SAVE', () => {
           value: 'new2'
         },
       },
-      order: [
-        ['_stub1', 'some-react-key-jf84'],
-        ['some-guid-1', 'some-react-key-2j37'],
-        ['_stub2', 'some-react-key-73ux'],
-      ]
-    }
+      editors: [{
+        contentId: 1,
+        order: [
+          ['_stub1', 'some-react-key-jf84'],
+          ['some-guid-1', 'some-react-key-2j37'],
+          ['_stub2', 'some-react-key-73ux'],
+        ]
+      }]
+    });
     const newState = {
-      contentId: 1,
       blocks: {
         'some-guid-1': {
           type: 'text',
@@ -71,16 +71,20 @@ describe('CONTENT_SAVE', () => {
           value: 'new2'
         },
       },
-      order: [
-        ['some-guid-2', 'some-react-key-jf84'],
-        ['some-guid-1', 'some-react-key-2j37'],
-        ['some-guid-3', 'some-react-key-73ux'],
-      ]
+      editors: [{
+        contentId: 1,
+        order: [
+          ['some-guid-2', 'some-react-key-jf84'],
+          ['some-guid-1', 'some-react-key-2j37'],
+          ['some-guid-3', 'some-react-key-73ux'],
+        ]
+      }]
     }
 
     expect(reducer(initialState, {
       type: 'CONTENT_SAVE',
       status: true,
+      editorIndex: 0,
       json: {
         id: 1,
         newBlocks: {

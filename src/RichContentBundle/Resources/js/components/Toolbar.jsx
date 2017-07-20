@@ -19,7 +19,7 @@ class Toolbar extends React.Component {
       saving: true,
       choosing: false
     });
-    this.context.store.dispatch(save(this.notSaving.bind(this), this.notSaving.bind(this)));
+    this.context.store.dispatch(save(this.props.editorIndex, this.notSaving.bind(this), this.notSaving.bind(this)));
   }
 
   notSaving() {

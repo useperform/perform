@@ -28,7 +28,7 @@ const handleFetch = function(response) {
   return response.json();
 }
 
-const getPostBody = function(state) {
+const getPostBody = function(state, editorIndex) {
   const blockIds = Object.keys(state.blocks);
   let currentBlocks = {};
   let newBlocks = {}
@@ -47,7 +47,7 @@ const getPostBody = function(state) {
   return {
     newBlocks: newBlocks,
     blocks: currentBlocks,
-    order: state.order.map(i => {
+    order: state.editors[editorIndex].order.map(i => {
       // an array with the block id and a unique react key
       // we only want the block id
       return i[0];
@@ -55,24 +55,26 @@ const getPostBody = function(state) {
   };
 }
 
-export function save(onSuccess, onError) {
+export function save(editorIndex, onSuccess, onError) {
   return function (dispatch, getState) {
     dispatch({
       type: 'CONTENT_SAVE',
+      editorIndex: editorIndex,
       status: false
     });
-    const contentId = getState().contentId;
+    const contentId = getState().editors[editorIndex].contentId;
     const url = contentId ? '/admin/_editor/content/save/' + contentId
           : '/admin/_editor/content/save-new';
 
     fetch(url, {
-      body: JSON.stringify(getPostBody(getState())),
+      body: JSON.stringify(getPostBody(getState(), editorIndex)),
       credentials: 'include',
       method: 'POST'
     }).then(handleFetch)
       .then(json => {
         dispatch({
           type: 'CONTENT_SAVE',
+          editorIndex: editorIndex,
           status: true,
           json: json
         });

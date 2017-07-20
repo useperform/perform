@@ -49,7 +49,7 @@ const reducers = {
     }
 
     // replace stub ids in blocks with new database ids
-    let blocks = state.blocks;
+    let blocks = Object.assign({}, state.blocks);
     const newIds = Object.entries(action.json.newBlocks);
     for (let i=0; i < newIds.length; i++) {
       const stubId = newIds[i][0];
@@ -58,7 +58,8 @@ const reducers = {
       delete blocks[stubId];
     }
     // replace stub ids in the order with new database ids
-    const order = state.order.map(item => {
+    const editors = state.editors.map(editor => Object.assign({}, editor));
+    const order = editors[action.editorIndex].order.map(item => {
       const dbId = action.json.newBlocks[item[0]];
       if (dbId) {
         return [dbId, item[1]];
@@ -66,11 +67,12 @@ const reducers = {
 
       return item
     });
+    editors[action.editorIndex].order = order;
+    editors[action.editorIndex].contentId = action.json.id;
 
-    return Object.assign(state, {
-      contentId: action.json.id,
+    return Object.assign({}, state, {
       blocks,
-      order
+      editors
     });
   },
   BLOCK_UPDATE: function(state, action) {
