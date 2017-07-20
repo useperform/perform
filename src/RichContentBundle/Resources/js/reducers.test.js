@@ -129,6 +129,34 @@ describe('CONTENT_LOAD', () => {
     expect(result.editors[0].order[0].length).toBe(2);
     expect(result.editors[0].order[0][0]).toBe('some-guid');
   });
+
+  it('doesn\'t remove existing blocks', () => {
+    const initialState = {
+      blocks: {
+        'some-guid': {
+          type: 'text',
+          value: 'block-value',
+        }
+      }
+    };
+    const result = reducer(initialState, {
+      type: 'CONTENT_LOAD',
+      id: 1,
+      editorIndex: 0,
+      status: true,
+      json: {
+        blocks: {
+          'some-new-guid': {
+            type: 'text',
+            value: 'new-block-value',
+          },
+        },
+        order: [],
+      }
+    });
+
+    expect(result.blocks['some-guid'].type).toEqual('text');
+  });
 });
 
 describe('BLOCK_ADD', () => {

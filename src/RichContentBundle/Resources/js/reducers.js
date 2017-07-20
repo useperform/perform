@@ -38,7 +38,7 @@ const reducers = {
     });
 
     return Object.assign({}, state, {
-      blocks: action.json.blocks,
+      blocks: Object.assign({}, state.blocks, action.json.blocks),
       editors,
     });
   },
