@@ -28,30 +28,29 @@ const handleFetch = function(response) {
   return response.json();
 }
 
-const getPostBody = function(state, editorIndex) {
-  const blockIds = Object.keys(state.blocks);
+export function getPostBody(state, editorIndex) {
   let currentBlocks = {};
   let newBlocks = {}
+  let order = [];
+  const blockIds = Object.keys(state.blocks);
 
-  for (let i=0; i < blockIds.length; i++) {
-    let id = blockIds[i];
+  state.editors[editorIndex].order.forEach(item => {
+    let id = item[0];
     let block = state.blocks[id];
+    order.push(item[0]);
+
     // new blocks have a stub id starting with _
     if (id.substring(0, 1) === '_') {
       newBlocks[id] = block;
-      continue;
+      return;
     }
     currentBlocks[id] = block;
-  }
+  });
 
   return {
-    newBlocks: newBlocks,
     blocks: currentBlocks,
-    order: state.editors[editorIndex].order.map(i => {
-      // an array with the block id and a unique react key
-      // we only want the block id
-      return i[0];
-    })
+    newBlocks,
+    order,
   };
 }
 
