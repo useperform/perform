@@ -90,6 +90,9 @@ const reducers = {
     let sourceOrder = editors[pos[0]].order.slice();
     let destOrder = newPos[0] === pos[0] ? sourceOrder : editors[newPos[0]].order.slice();
     const block = sourceOrder[pos[1]];
+    if (!block) {
+      return state;
+    }
 
     sourceOrder.splice(pos[1], 1);
     destOrder.splice(newIndex, 0, block);
