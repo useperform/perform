@@ -146,24 +146,25 @@ const reducers = {
     // set an arbitrary unique id, since there is no database id for
     // this new block
     const id = '_'+newId();
-    let blocks = state.blocks ? state.blocks : {};
-
+    let blocks = Object.assign({}, state.blocks);
     blocks[id] = {
       type: action.blockType,
       value: action.value,
     };
-    const order = [
-      ...state.order ? state.order : [],
+
+    let editors = state.editors.map(editor => Object.assign({}, editor));
+    editors[action.editorIndex].order = [
+      ...editors[action.editorIndex].order,
       [id, newId()],
     ];
 
-    return Object.assign(state, {
+    return Object.assign({}, state, {
       blocks,
-      order
+      editors
     })
   },
   EDITOR_ADD: function(state, action) {
-    const editors = state.editors;
+    let editors = state.editors;
     editors.push({
       contentId: action.contentId,
       loaded: false,

@@ -13,7 +13,7 @@ class Editor extends React.Component {
   render() {
     return (
       <div className={css.editor}>
-        <Toolbar />
+        <Toolbar editorIndex={this.props.editorIndex}/>
         <BlockList editorIndex={this.props.editorIndex}/>
       </div>
     );

@@ -34,10 +34,11 @@ class Toolbar extends React.Component {
       choosing: false,
       blockChoice: false,
     });
-    this.context.store.dispatch(addBlock(e.currentTarget.getAttribute('data-type')));
+    this.context.store.dispatch(addBlock(e.currentTarget.getAttribute('data-type'), this.props.editorIndex));
   }
 
   chooseBlock(e) {
+    e.preventDefault();
     this.setState({
       choosing: !this.state.choosing,
     });

@@ -85,10 +85,11 @@ export function save(onSuccess, onError) {
   }
 }
 
-export function addBlock(type) {
+export function addBlock(type, editorIndex) {
   return {
     type: 'BLOCK_ADD',
     blockType: type,
+    editorIndex,
     value: blockTypes[type].defaults
   }
 }

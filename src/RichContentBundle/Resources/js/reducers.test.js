@@ -1,6 +1,21 @@
 import reducer from './reducers';
 
-import {moveBlock} from './actions';
+import {addBlock, moveBlock} from './actions';
+import deepFreeze from 'deep-freeze';
+
+const initialState = deepFreeze({
+  blocks: {},
+  editors: [],
+});
+
+const initialStateWithEditor = deepFreeze({
+  blocks: {},
+  editors: [{
+    contentId: false,
+    loaded: false,
+    order: [],
+  }],
+});
 
 describe('CONTENT_SAVE', () => {
   it('sets content id on success', () => {
@@ -114,45 +129,25 @@ describe('CONTENT_LOAD', () => {
 
 describe('BLOCK_ADD', () => {
   it('creates a new block with the supplied type and value', () => {
-    const result = reducer({}, {
-      type: 'BLOCK_ADD',
-      blockType: 'some_block',
-      value: {
-        option1: 'foo',
-        option2: 'bar',
-      }
-    });
+    const result = reducer(initialStateWithEditor, addBlock('text', 0));
 
     const blockKeys = Object.keys(result.blocks);
     expect(blockKeys.length).toEqual(1);
     expect(blockKeys[0].substring(0, 1)).toEqual('_');
-    expect(result.blocks[blockKeys[0]]).toEqual({
-      type: 'some_block',
-      value: {
-        option1: 'foo',
-        option2: 'bar',
-      }
-    });
+    expect(result.blocks[blockKeys[0]].type).toEqual('text');
   });
 
   it('adds a new block to the order', () => {
-    const result = reducer({}, {
-      type: 'BLOCK_ADD',
-      blockType: 'some_block',
-      value: {
-        option1: 'foo',
-        option2: 'bar',
-      }
-    });
+    const result = reducer(initialStateWithEditor, addBlock('text', 0));
 
-    expect(result.order.length).toEqual(1);
-    expect(result.order[0].length).toEqual(2);
-    expect(result.order[0][0].substring(0, 1)).toEqual('_');
+    expect(result.editors[0].order.length).toEqual(1);
+    expect(result.editors[0].order[0].length).toEqual(2);
+    expect(result.editors[0].order[0][0].substring(0, 1)).toEqual('_');
   });
 });
 
 describe('BLOCK_MOVE', () => {
-  it('moves a block into a new position', () => {
+  it('moves a block into a new position within the same editor', () => {
     const initialOrder = [
       ['some-guid-1', 'some-react-key-0000'],
       ['some-guid-1', 'some-react-key-1111'],
