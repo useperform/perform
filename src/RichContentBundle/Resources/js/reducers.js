@@ -2,6 +2,14 @@ const newId = function() {
   return Math.random().toString().substring(2);
 }
 
+const editorsUseBlock = function(editors, blockId) {
+  return editors.some(editor => {
+    return editor.order.some(order => {
+      return order[0] === blockId;
+    });
+  });
+}
+
 const reducers = {
   CONTENT_LOAD: function(state, action) {
     const contentId = action.id;
@@ -121,25 +129,24 @@ const reducers = {
     return Object.assign(state, {editors: editors});
   },
   BLOCK_REMOVE: function(state, action) {
-    let order = state.order;
-    let blocks = state.blocks;
-    let orderedIds = state.order.map(i => {
-      return i[0];
-    });
+    let blocks = Object.assign({}, state.blocks);
+    let editors = state.editors.map(editor => Object.assign({}, editor));
+    const pos = action.position;
+    const blockId = editors[action.editorIndex].order[pos][0];
 
-    const pos = action.currentPosition;
-    order.splice(pos, 1);
+    let order = editors[action.editorIndex].order;
+    editors[action.editorIndex].order = [
+      ...order.slice(0, pos),
+      ...order.slice(pos + 1),
+    ];
 
-    // also remove the block if it's not used anywhere else
-    const id = orderedIds[pos];
-    orderedIds.splice(pos, 1);
-    if (orderedIds.indexOf(id) === -1) {
-      delete blocks[id];
+    if (!editorsUseBlock(editors, blockId)) {
+      delete blocks[blockId];
     }
 
-    return Object.assign(state, {
-      order: order,
-      blocks: blocks,
+    return Object.assign({}, state, {
+      blocks,
+      editors,
     });
   },
   BLOCK_ADD: function(state, action) {

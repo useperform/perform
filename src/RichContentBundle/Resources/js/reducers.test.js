@@ -1,6 +1,6 @@
 import reducer from './reducers';
 
-import {addBlock, moveBlock} from './actions';
+import {addBlock, removeBlock, moveBlock} from './actions';
 import deepFreeze from 'deep-freeze';
 
 const initialState = deepFreeze({
@@ -143,6 +143,34 @@ describe('BLOCK_ADD', () => {
     expect(result.editors[0].order.length).toEqual(1);
     expect(result.editors[0].order[0].length).toEqual(2);
     expect(result.editors[0].order[0][0].substring(0, 1)).toEqual('_');
+  });
+});
+
+describe('BLOCK_REMOVE', () => {
+  it('removes a block from the order', () => {
+    const withBlock = deepFreeze(reducer(initialStateWithEditor, addBlock('text', 0)));
+    const result = reducer(withBlock, removeBlock(0, 0));
+
+    expect(result.editors[0].order.length).toEqual(0);
+    expect(Object.keys(result.blocks).length).toEqual(0);
+  });
+
+  it('keeps a block reference if it\'s used elsewhere', () => {
+    const withBlock = deepFreeze(reducer(initialStateWithEditor, addBlock('text', 0)));
+    const withTwoEditors = deepFreeze(Object.assign({}, withBlock, {
+      editors: [
+        withBlock.editors[0],
+        {
+          contentId: false,
+          loaded: false,
+          order: withBlock.editors[0].order,
+        }
+      ]
+    }))
+    const result = reducer(withTwoEditors, removeBlock(0, 0));
+
+    expect(result.editors[0].order.length).toEqual(0);
+    expect(Object.keys(result.blocks).length).toEqual(1);
   });
 });
 

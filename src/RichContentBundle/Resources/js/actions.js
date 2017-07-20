@@ -94,6 +94,14 @@ export function addBlock(type, editorIndex) {
   }
 }
 
+export function removeBlock(editorIndex, position) {
+  return {
+    type: 'BLOCK_REMOVE',
+    position,
+    editorIndex,
+  }
+}
+
 export function moveBlock(currentPosition, newPosition) {
   return {
     type: 'BLOCK_MOVE',

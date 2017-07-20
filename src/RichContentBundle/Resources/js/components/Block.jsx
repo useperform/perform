@@ -2,6 +2,7 @@ import React from 'react';
 
 import blockTypes from './blocktypes';
 import PropTypes from 'prop-types';
+import {removeBlock} from '../actions';
 
 class Block extends React.Component {
   constructor(props) {
@@ -34,10 +35,7 @@ class Block extends React.Component {
   }
 
   clickRemove() {
-    this.context.store.dispatch({
-      type: 'BLOCK_REMOVE',
-      currentPosition: this.props.position,
-    });
+    this.context.store.dispatch(removeBlock(this.props.editorIndex, this.props.position));
   }
 
   setBlockValue(value) {
