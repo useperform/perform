@@ -5,6 +5,7 @@ const newId = function() {
 const reducers = {
   CONTENT_LOAD: function(state, action) {
     const contentId = action.id;
+    const editorIndex = action.editorIndex;
     if (!contentId) {
       return state;
     }
@@ -21,11 +22,16 @@ const reducers = {
     const order = action.json.order.map(id => {
       return [id, newId()];
     });
-    return Object.assign({}, state, {
-      blocks: action.json.blocks,
+    const editors = state.editors || [];
+    editors[editorIndex] = Object.assign(editors[editorIndex] || {}, {
       order,
       contentId,
       loaded: true
+    });
+
+    return Object.assign({}, state, {
+      blocks: action.json.blocks,
+      editors,
     });
   },
   CONTENT_SAVE: function(state, action) {
@@ -149,6 +155,18 @@ const reducers = {
       blocks,
       order
     })
+  },
+  EDITOR_ADD: function(state, action) {
+    const editors = state.editors;
+    editors.push({
+      contentId: action.contentId,
+      loaded: false,
+      order: [],
+    });
+
+    return Object.assign(state, {
+      editors
+    });
   }
 };
 

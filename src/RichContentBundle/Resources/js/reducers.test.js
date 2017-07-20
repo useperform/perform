@@ -97,6 +97,7 @@ describe('CONTENT_LOAD', () => {
     const result = reducer({}, {
       type: 'CONTENT_LOAD',
       id: 1,
+      editorIndex: 0,
       status: true,
       json: {
         blocks,
@@ -105,9 +106,9 @@ describe('CONTENT_LOAD', () => {
     })
 
     expect(result.blocks).toEqual(blocks);
-    expect(result.order.length).toBe(1);
-    expect(result.order[0].length).toBe(2);
-    expect(result.order[0][0]).toBe('some-guid');
+    expect(result.editors[0].order.length).toBe(1);
+    expect(result.editors[0].order[0].length).toBe(2);
+    expect(result.editors[0].order[0][0]).toBe('some-guid');
   });
 });
 

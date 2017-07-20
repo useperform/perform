@@ -19,10 +19,11 @@ class BlockList extends React.Component {
     const components = [];
     const { store } = this.context;
     const state = store.getState();
+    const order = state.editors[this.props.editorIndex].order;
 
-    for (var i=0; i < state.order.length; i++) {
-      let id = state.order[i][0];
-      let key = state.order[i][1];
+    for (let i=0; i < order.length; i++) {
+      let id = order[i][0];
+      let key = order[i][1];
 
       if (!state.blocks[id]) {
         console.error(`Unknown block ${id}`, state);

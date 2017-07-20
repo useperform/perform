@@ -2,10 +2,8 @@ import {createStore, applyMiddleware} from 'redux';
 import reducer from './reducers';
 
 const initialState = {
-  contentId: undefined,
-  loaded: false,
   blocks: {},
-  order: [],
+  editors: [],
 };
 
 const thunk = store => next => action =>
@@ -13,10 +11,14 @@ const thunk = store => next => action =>
       ? action(store.dispatch, store.getState)
       : next(action);
 
-const store = createStore(reducer, initialState, applyMiddleware(thunk));
+export function newStore() {
+  return createStore(reducer, initialState, applyMiddleware(thunk));
+}
 
-store.subscribe(function() {
-  console.debug('New state: ', store.getState());
-});
-
-export default store;
+export function addEditor(store, contentId) {
+  store.dispatch({
+    type: 'EDITOR_ADD',
+    contentId: contentId,
+  });
+  return store.getState().editors.length - 1;
+};

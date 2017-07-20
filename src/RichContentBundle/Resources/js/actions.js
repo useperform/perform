@@ -1,7 +1,7 @@
 import 'whatwg-fetch';
 import blockTypes from './components/blocktypes';
 
-export function loadContent(id) {
+export function loadContent(editorIndex, id) {
   return function(dispatch) {
     const url = '/admin/_editor/content/get/' + id;
     fetch(url, {
@@ -11,6 +11,7 @@ export function loadContent(id) {
     }).then(json => {
       dispatch({
         type: 'CONTENT_LOAD',
+        editorIndex: editorIndex,
         id: id,
         status: true,
         json,
