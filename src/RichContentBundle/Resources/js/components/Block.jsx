@@ -2,7 +2,7 @@ import React from 'react';
 
 import blockTypes from './blocktypes';
 import PropTypes from 'prop-types';
-import {removeBlock} from '../actions';
+import {moveBlock, removeBlock} from '../actions';
 
 class Block extends React.Component {
   constructor(props) {
@@ -19,19 +19,17 @@ class Block extends React.Component {
   }
 
   clickUp() {
-    this.context.store.dispatch({
-      type: 'BLOCK_MOVE_UP',
-      editorIndex: this.props.editorIndex,
-      currentPosition: this.props.position,
-    });
+    this.context.store.dispatch(moveBlock(
+      [this.props.editorIndex, this.props.position],
+      [this.props.editorIndex, this.props.position - 1],
+    ));
   }
 
   clickDown() {
-    this.context.store.dispatch({
-      type: 'BLOCK_MOVE_DOWN',
-      editorIndex: this.props.editorIndex,
-      currentPosition: this.props.position,
-    });
+    this.context.store.dispatch(moveBlock(
+      [this.props.editorIndex, this.props.position],
+      [this.props.editorIndex, this.props.position + 1],
+    ));
   }
 
   clickRemove() {

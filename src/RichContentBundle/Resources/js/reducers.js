@@ -84,51 +84,19 @@ const reducers = {
   BLOCK_MOVE: function(state, action) {
     const pos = action.currentPosition;
     const newPos = action.newPosition;
-    const order = state.order;
-    const block = order[pos];
+    const newIndex = newPos[1] < 0 ? 0 : newPos[1];
 
-    order.splice(pos, 1);
-    order.splice(newPos, 0, block);
+    let editors = state.editors.map(editor => Object.assign({}, editor));
+    let sourceOrder = editors[pos[0]].order.slice();
+    let destOrder = newPos[0] === pos[0] ? sourceOrder : editors[newPos[0]].order.slice();
+    const block = sourceOrder[pos[1]];
 
-    return Object.assign(state, {order: order})
-  },
-  BLOCK_MOVE_UP: function(state, action) {
-    const pos = action.currentPosition;
+    sourceOrder.splice(pos[1], 1);
+    destOrder.splice(newIndex, 0, block);
+    editors[pos[0]].order = sourceOrder;
+    editors[newPos[0]].order = destOrder;
 
-    if (pos === 0) {
-      return state;
-    }
-
-    const editors = state.editors;
-    const order = editors[action.editorIndex].order;
-    const newOrder = [
-      ...order.slice(0, pos - 1),
-      order[pos],
-      order[pos - 1],
-      ...order.slice(pos + 1),
-    ];
-    editors[action.editorIndex].order = newOrder;
-
-    return Object.assign(state, {editors: editors});
-  },
-  BLOCK_MOVE_DOWN: function(state, action) {
-    const pos = action.currentPosition;
-
-    const editors = state.editors;
-    const order = editors[action.editorIndex].order;
-    if (pos + 1 === order.length) {
-      return state;
-    }
-
-    const newOrder = [
-      ...order.slice(0, pos),
-      order[pos + 1],
-      order[pos],
-      ...order.slice(pos + 2),
-    ];
-    editors[action.editorIndex].order = newOrder;
-
-    return Object.assign(state, {editors: editors});
+    return Object.assign({}, state, {editors: editors})
   },
   BLOCK_REMOVE: function(state, action) {
     let blocks = Object.assign({}, state.blocks);

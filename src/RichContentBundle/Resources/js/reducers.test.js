@@ -186,7 +186,7 @@ describe('BLOCK_MOVE', () => {
       ['some-guid-2', 'some-react-key-2222'],
       ['some-guid-2', 'some-react-key-3333'],
     ];
-    const initialState = {
+    const initialState = deepFreeze({
       blocks: {
         'some-guid-1': {
           type: 'text',
@@ -197,8 +197,10 @@ describe('BLOCK_MOVE', () => {
           value: 'block2'
         },
       },
-      order: initialOrder
-    }
+      editors: [{
+        order: initialOrder
+      }]
+    });
 
     const tests = [
       {
@@ -226,6 +228,21 @@ describe('BLOCK_MOVE', () => {
         to: 3,
         order: [0, 1, 3, 2],
       },
+      {
+        from: 0,
+        to: -1,
+        order: [0, 1, 2, 3],
+      },
+      {
+        from: 2,
+        to: 5,
+        order: [0, 1, 3, 2],
+      },
+      {
+        from: 3,
+        to: 5,
+        order: [0, 1, 2, 3],
+      }
     ];
 
     for (let i=0; i < tests.length; i++) {
@@ -233,9 +250,9 @@ describe('BLOCK_MOVE', () => {
       for (let k=0; k < tests[i].order.length; k++) {
         expectedOrder.push(initialOrder[tests[i].order[k]]);
       }
-      const result = reducer(initialState, moveBlock(tests[i].from, tests[i].to));
+      let result = reducer(initialState, moveBlock([0, tests[i].from], [0, tests[i].to]));
 
-      expect(result.order).toEqual(expectedOrder);
+      expect(result.editors[0].order).toEqual(expectedOrder);
     }
   });
 });
