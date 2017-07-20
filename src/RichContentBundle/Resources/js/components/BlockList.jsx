@@ -30,7 +30,7 @@ class BlockList extends React.Component {
       }
       let block = state.blocks[id];
       components.push(
-        <Block key={key} block={block} id={id} position={i} />
+        <Block key={key} block={block} id={id} position={i} editorIndex={this.props.editorIndex} />
       );
     }
 

@@ -89,30 +89,36 @@ const reducers = {
       return state;
     }
 
+    const editors = state.editors;
+    const order = editors[action.editorIndex].order;
     const newOrder = [
-      ...state.order.slice(0, pos - 1),
-      state.order[pos],
-      state.order[pos - 1],
-      ...state.order.slice(pos + 1),
+      ...order.slice(0, pos - 1),
+      order[pos],
+      order[pos - 1],
+      ...order.slice(pos + 1),
     ];
+    editors[action.editorIndex].order = newOrder;
 
-    return Object.assign(state, {order: newOrder});
+    return Object.assign(state, {editors: editors});
   },
   BLOCK_MOVE_DOWN: function(state, action) {
     const pos = action.currentPosition;
 
-    if (pos + 1 === state.order.length) {
+    const editors = state.editors;
+    const order = editors[action.editorIndex].order;
+    if (pos + 1 === order.length) {
       return state;
     }
 
     const newOrder = [
-      ...state.order.slice(0, pos),
-      state.order[pos + 1],
-      state.order[pos],
-      ...state.order.slice(pos + 2),
+      ...order.slice(0, pos),
+      order[pos + 1],
+      order[pos],
+      ...order.slice(pos + 2),
     ];
+    editors[action.editorIndex].order = newOrder;
 
-    return Object.assign(state, {order: newOrder});
+    return Object.assign(state, {editors: editors});
   },
   BLOCK_REMOVE: function(state, action) {
     let order = state.order;

@@ -20,6 +20,7 @@ class Block extends React.Component {
   clickUp() {
     this.context.store.dispatch({
       type: 'BLOCK_MOVE_UP',
+      editorIndex: this.props.editorIndex,
       currentPosition: this.props.position,
     });
   }
@@ -27,6 +28,7 @@ class Block extends React.Component {
   clickDown() {
     this.context.store.dispatch({
       type: 'BLOCK_MOVE_DOWN',
+      editorIndex: this.props.editorIndex,
       currentPosition: this.props.position,
     });
   }
