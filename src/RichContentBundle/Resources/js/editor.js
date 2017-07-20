@@ -17,7 +17,7 @@ const init = function(element, config) {
 
   if (config.onChange) {
     store.subscribe(() => {
-      config.onChange(store);
+      config.onChange(store, editorIndex);
     });
   }
   if (config.contentId) {
