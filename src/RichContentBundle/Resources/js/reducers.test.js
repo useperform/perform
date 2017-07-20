@@ -153,7 +153,7 @@ describe('BLOCK_ADD', () => {
 describe('BLOCK_REMOVE', () => {
   it('removes a block from the order', () => {
     const withBlock = deepFreeze(reducer(initialStateWithEditor, addBlock('text', 0)));
-    const result = reducer(withBlock, removeBlock(0, 0));
+    const result = reducer(withBlock, removeBlock([0, 0]));
 
     expect(result.editors[0].order.length).toEqual(0);
     expect(Object.keys(result.blocks).length).toEqual(0);
@@ -171,7 +171,7 @@ describe('BLOCK_REMOVE', () => {
         }
       ]
     }))
-    const result = reducer(withTwoEditors, removeBlock(0, 0));
+    const result = reducer(withTwoEditors, removeBlock([0, 0]));
 
     expect(result.editors[0].order.length).toEqual(0);
     expect(Object.keys(result.blocks).length).toEqual(1);

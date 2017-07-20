@@ -101,11 +101,12 @@ const reducers = {
   BLOCK_REMOVE: function(state, action) {
     let blocks = Object.assign({}, state.blocks);
     let editors = state.editors.map(editor => Object.assign({}, editor));
-    const pos = action.position;
-    const blockId = editors[action.editorIndex].order[pos][0];
+    const editorIndex = action.position[0];
+    const pos = action.position[1];
+    const blockId = editors[editorIndex].order[pos][0];
 
-    let order = editors[action.editorIndex].order;
-    editors[action.editorIndex].order = [
+    let order = editors[editorIndex].order;
+    editors[editorIndex].order = [
       ...order.slice(0, pos),
       ...order.slice(pos + 1),
     ];

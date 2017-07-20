@@ -96,11 +96,10 @@ export function addBlock(type, editorIndex) {
   }
 }
 
-export function removeBlock(editorIndex, position) {
+export function removeBlock(position) {
   return {
     type: 'BLOCK_REMOVE',
-    position,
-    editorIndex,
+    position
   }
 }
 

@@ -33,7 +33,7 @@ class Block extends React.Component {
   }
 
   clickRemove() {
-    this.context.store.dispatch(removeBlock(this.props.editorIndex, this.props.position));
+    this.context.store.dispatch(removeBlock([this.props.editorIndex, this.props.position]));
   }
 
   setBlockValue(value) {
