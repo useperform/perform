@@ -86,20 +86,38 @@ const reducers = {
     const newPos = action.newPosition;
     const newIndex = newPos[1] < 0 ? 0 : newPos[1];
 
+    let blocks = Object.assign({}, state.blocks);
     let editors = state.editors.map(editor => Object.assign({}, editor));
     let sourceOrder = editors[pos[0]].order.slice();
     let destOrder = newPos[0] === pos[0] ? sourceOrder : editors[newPos[0]].order.slice();
-    const block = sourceOrder[pos[1]];
-    if (!block) {
+    // blockRef is an array of [block-id, react-id]
+    let blockRef = sourceOrder[pos[1]];
+    if (!blockRef) {
       return state;
     }
+    const blockId = blockRef[0];
+    const block = blocks[blockId];
 
     sourceOrder.splice(pos[1], 1);
-    destOrder.splice(newIndex, 0, block);
     editors[pos[0]].order = sourceOrder;
+
+    // if the block is not used anywhere else, give it a new id, marking it as new.
+    // saving the source editor before the destination editor will
+    // delete the block from the database, so it needs to be marked as
+    // new to allow saving it again.
+    if (pos[0] !== newPos[0] && !editorsUseBlock(editors, blockId)) {
+      delete blocks[blockId];
+      blockRef = ['_'+newId(), blockRef[1]];
+      blocks[blockRef[0]] = block;
+    }
+
+    destOrder.splice(newIndex, 0, blockRef);
     editors[newPos[0]].order = destOrder;
 
-    return Object.assign({}, state, {editors: editors})
+    return Object.assign({}, state, {
+      blocks,
+      editors
+    });
   },
   BLOCK_REMOVE: function(state, action) {
     let blocks = Object.assign({}, state.blocks);

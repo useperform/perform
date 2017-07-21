@@ -281,6 +281,75 @@ describe('BLOCK_MOVE', () => {
       let result = reducer(initialState, moveBlock([0, tests[i].from], [0, tests[i].to]));
 
       expect(result.editors[0].order).toEqual(expectedOrder);
+      expect(Object.keys(result.blocks).sort()).toEqual([
+        'some-guid-1',
+        'some-guid-2',
+      ]);
     }
+  });
+
+  it('marks a block as new when moved to a different editor', () => {
+    const initialState = deepFreeze({
+      blocks: {
+        'some-guid-1': {
+          type: 'text',
+          value: 'block1'
+        },
+        'some-guid-2': {
+          type: 'text',
+          value: 'block2'
+        },
+      },
+      editors: [
+        {
+          order: [
+            ['some-guid-1', 'some-react-key-0000'],
+            ['some-guid-2', 'some-react-key-1111'],
+          ]
+        },
+        {
+          order: [],
+        }
+      ]
+    });
+
+    const result = reducer(initialState, moveBlock([0, 1], [1, 0]));
+
+    expect(result.editors[0].order.length).toEqual(1);
+    expect(result.editors[1].order.length).toEqual(1);
+    const blockKeys = Object.keys(result.blocks).sort();
+    expect(blockKeys.length).toEqual(2);
+    expect(blockKeys[0].substring(0, 1)).toEqual('_');
+    expect(blockKeys[1]).toEqual('some-guid-1');
+  });
+
+  it('does\'t mark a block as new when moved within the same editor', () => {
+    const initialState = deepFreeze({
+      blocks: {
+        'some-guid-1': {
+          type: 'text',
+          value: 'block1'
+        },
+        'some-guid-2': {
+          type: 'text',
+          value: 'block2'
+        },
+      },
+      editors: [
+        {
+          order: [
+            ['some-guid-1', 'some-react-key-0000'],
+            ['some-guid-2', 'some-react-key-1111'],
+          ]
+        }
+      ]
+    });
+
+    const result = reducer(initialState, moveBlock([0, 0], [0, 1]));
+
+    expect(Object.keys(result.blocks).sort()).toEqual([
+      'some-guid-1',
+      'some-guid-2',
+    ]);
   });
 });
