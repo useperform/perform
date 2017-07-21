@@ -13,6 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\BaseBundle\Asset\AssetContainer;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Perform\BaseBundle\Config\TypeConfig;
 
 /**
  * CollectionType.
