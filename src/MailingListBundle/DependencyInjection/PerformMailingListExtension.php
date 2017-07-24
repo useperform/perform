@@ -22,8 +22,8 @@ class PerformMailingListExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $ext = $container->getDefinition('perform_mailing_list.twig.form');
-        $ext->addMethodCall('addForm', ['email_only', EmailOnlyType::class]);
-        $ext->addMethodCall('addForm', ['email_name', EmailAndNameType::class]);
+        $factory = $container->getDefinition('perform_mailing_list.form_factory');
+        $factory->addMethodCall('addType', ['email_only', EmailOnlyType::class]);
+        $factory->addMethodCall('addType', ['email_name', EmailAndNameType::class]);
     }
 }

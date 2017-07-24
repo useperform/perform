@@ -14,10 +14,15 @@ services:
         tags:
             - { name: perform_base.link_provider, alias: mailing_list }
 
+    perform_mailing_list.form_factory:
+        class: Perform\MailingListBundle\Form\UniqueFormFactory
+        arguments:
+            - "@form.factory"
+
     perform_mailing_list.twig.form:
         class: Perform\MailingListBundle\Twig\Extension\FormExtension
         arguments:
-            - "@form.factory"
+            - "@perform_mailing_list.form_factory"
         tags:
             - {name: twig.extension}
 
