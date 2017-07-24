@@ -37,16 +37,18 @@ class SubscriberManager
             return;
         }
 
-        foreach ($this->signups as $subscriber) {
-            $this->connector->subscribe($subscriber);
-            $this->em->remove($subscriber);
+        $this->em->beginTransaction();
+        try {
+            foreach ($this->signups as $subscriber) {
+                $this->connector->subscribe($subscriber);
+                $this->em->remove($subscriber);
+            }
+            $this->em->flush();
+            $this->signups = [];
+            $this->em->commit();
+        } catch (\Exception $e) {
+            $this->em->rollback();
+            throw $e;
         }
-        $this->em->flush();
-        $this->signups = [];
-    }
-
-    public function onKernelTerminate($event)
-    {
-        $this->flush();
     }
 }

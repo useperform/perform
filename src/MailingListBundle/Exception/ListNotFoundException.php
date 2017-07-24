@@ -11,6 +11,6 @@ class ListNotFoundException extends \Exception
 {
     public function __construct($listId, $providerClass)
     {
-        parent::__construct(sprintf('List "%s" was not found by provider "%s"', $listId, $providerClass));
+        parent::__construct(sprintf('Mailing list "%s" was not found by provider "%s"', $listId, $providerClass));
     }
 }

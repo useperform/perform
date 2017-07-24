@@ -42,5 +42,13 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@perform_mailing_list.connector.local"
+
+    perform_mailing_list.listener.flush_subscribers:
+        public: false
+        class: Perform\MailingListBundle\EventListener\FlushSubscribersListener
+        arguments:
+            - "@perform_mailing_list.manager"
+            - "@logger"
         tags:
             - {name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate}
+            - {name: monolog.logger, channel: mailing_list}
