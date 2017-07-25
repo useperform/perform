@@ -56,11 +56,9 @@
     {% block extras %}
     {% endblock %}
 
-    {% block baseJs %}
+    {% block js %}
       {% include 'PerformBaseBundle::scripts.html.twig' %}
       {% include 'PerformBaseBundle::flash_messages.html.twig' %}
-    {% endblock %}
-    {% block js %}
       {% for js in perform_asset_js() %}
         <script type="text/javascript" src="{{asset(js)}}"></script>
       {% endfor %}

@@ -17,6 +17,7 @@
 {% endblock %}
 
 {% block js %}
+  {{parent()}}
   <script src="{{asset('bundles/performmedia/js/jquery.ui.widget.js')}}"></script>
   <script src="{{asset('bundles/performmedia/js/jquery.fileupload.js')}}"></script>
   <script src="{{asset('bundles/performmedia/js/jquery.iframe-transport.js')}}"></script>
