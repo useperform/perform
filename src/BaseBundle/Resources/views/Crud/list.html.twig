@@ -1,7 +1,12 @@
 {% extends 'PerformBaseBundle::base.html.twig' %}
 
+{% set title = 'crud.title.list'|trans({'%entity_type%': 'Items'}, 'PerformBaseBundle') %}
+{% block page_title %}
+  {{title}} | {{parent()}}
+{% endblock %}
+
 {% block workspace %}
-  <h3><i class="fa fa-angle-right"></i> Items</h3>
+  <h3><i class="fa fa-angle-right"></i> {{title}}</h3>
   {% block actions %}
     {% if perform_crud_route_exists(entityClass, 'create') %}
       <a href="{{perform_crud_route(entityClass, 'create')}}" class="btn btn-primary">Create</a>

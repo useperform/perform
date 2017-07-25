@@ -1,7 +1,14 @@
 {% extends 'PerformBaseBundle::base.html.twig' %}
 
+{% set title = 'crud.title.create'|trans({'%entity_type%': 'Item'}, 'PerformBaseBundle') %}
+{% set list_title = 'crud.title.list'|trans({'%entity_type%': 'Items'}, 'PerformBaseBundle') %}
+
+{% block page_title %}
+  {{title}} | {{list_title}} | {{parent()}}
+{% endblock %}
+
 {% block workspace %}
-  <h3><i class="fa fa-angle-right"></i> New Item</h3>
+  <h3><i class="fa fa-angle-right"></i> {{title}}</h3>
   {{form_start(form)}}
   {% for field, config in form.vars.fields %}
     {{perform_crud_create_context(entity, field, config, form)}}

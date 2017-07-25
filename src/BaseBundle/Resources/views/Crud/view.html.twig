@@ -1,11 +1,19 @@
 {% extends 'PerformBaseBundle::base.html.twig' %}
 
+{% set entity_name = perform_crud_entity_name(entity) %}
+{% set title = 'crud.title.view'|trans({'%entity_name%': entity_name}, 'PerformBaseBundle') %}
+{% set list_title = 'crud.title.list'|trans({'%entity_type%': 'Items'}, 'PerformBaseBundle') %}
+
+{% block page_title %}
+  {{title}} | {{list_title}} | {{parent()}}
+{% endblock %}
+
 {% block workspace %}
-  <h3><i class="fa fa-angle-right"></i> View</h3>
+  <h3><i class="fa fa-angle-right"></i> {{title}}</h3>
   <div class="panel panel-default">
     <div class="panel-heading">
       {% block panel_heading %}
-        {{perform_crud_entity_name(entity)}}
+        {{entity_name}}
       {% endblock %}
     </div>
     <div class="panel-body">

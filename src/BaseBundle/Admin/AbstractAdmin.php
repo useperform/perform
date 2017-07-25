@@ -48,9 +48,7 @@ abstract class AbstractAdmin implements AdminInterface
 
     public function getNameForEntity($entity)
     {
-        $pieces = explode('\\', get_class($entity));
-        $class = end($pieces);
-        return sprintf('%s %s', $class, $entity->getId());
+        return $entity->getId();
     }
 
     public function configureFilters(FilterConfig $config)

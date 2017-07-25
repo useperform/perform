@@ -1,6 +1,13 @@
 header:
     title: 'Site Administration'
 
+crud:
+    title:
+        list: "%entity_type%"
+        view: "%entity_name%"
+        create: "New %entity_type%"
+        edit: "Editing %entity_name%"
+
 menu:
     dashboard: Dashboard
     users: Users
