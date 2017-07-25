@@ -27,13 +27,6 @@ services:
         tags:
             - {name: twig.extension}
 
-    perform_cms.warmer.gulp:
-        class: Perform\CmsBundle\CacheWarmer\GulpSourcesWarmer
-        arguments:
-            - "@perform_cms.block_type_registry"
-        tags:
-            - {name: kernel.cache_warmer}
-
     perform_cms.publisher:
         class: Perform\CmsBundle\Publisher\Publisher
         arguments:
