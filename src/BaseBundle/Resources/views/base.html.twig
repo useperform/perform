@@ -3,7 +3,11 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Site Administration</title>
+    <title>
+      {% block page_title %}
+        {{'header.title'|trans({}, 'PerformBaseBundle')}}
+      {% endblock %}
+    </title>
     {% block css %}
       <link rel="stylesheet" type="text/css" href="{{asset('bundles/performbase/css/app.css')}}" />
       {% for css in perform_asset_css() %}
@@ -19,7 +23,7 @@
             <div class="fa fa-minus-square-o" id="menu-toggle" data-toggle="tooltip" data-placement="right" title="Toggle Navigation"></div>
           </div>
           <a href="{{path('perform_base_dashboard_index')}}" class="navbar-brand">
-            Site Administration
+            {{'header.title'|trans({}, 'PerformBaseBundle')}}
           </a>
         </div>
 
