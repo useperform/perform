@@ -7,6 +7,9 @@ use Perform\BaseBundle\Type\TypeRegistry;
 use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BaseBundle\Admin\AdminRegistry;
 use Symfony\Component\Form\FormView;
+use Pagerfanta\View\TwitterBootstrap3View;
+use Pagerfanta\Pagerfanta;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * CrudExtension.
@@ -18,12 +21,14 @@ class CrudExtension extends \Twig_Extension
     protected $urlGenerator;
     protected $typeRegistry;
     protected $adminRegistry;
+    protected $requestStack;
 
-    public function __construct(CrudUrlGenerator $urlGenerator, TypeRegistry $typeRegistry, AdminRegistry $adminRegistry)
+    public function __construct(CrudUrlGenerator $urlGenerator, TypeRegistry $typeRegistry, AdminRegistry $adminRegistry, RequestStack $requestStack)
     {
         $this->urlGenerator = $urlGenerator;
         $this->typeRegistry = $typeRegistry;
         $this->adminRegistry = $adminRegistry;
+        $this->requestStack = $requestStack;
     }
 
     public function getFunctions()
@@ -36,6 +41,7 @@ class CrudExtension extends \Twig_Extension
             new \Twig_SimpleFunction('perform_crud_create_context', [$this, 'createContext'], ['is_safe' => ['html'], 'needs_environment' => true]),
             new \Twig_SimpleFunction('perform_crud_edit_context', [$this, 'editContext'], ['is_safe' => ['html'], 'needs_environment' => true]),
             new \Twig_SimpleFunction('perform_crud_entity_name', [$this, 'entityName']),
+            new \Twig_SimpleFunction('perform_crud_paginator', [$this, 'paginator'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -98,6 +104,23 @@ class CrudExtension extends \Twig_Extension
     public function entityName($entity)
     {
         return $this->adminRegistry->getAdmin($entity)->getNameForEntity($entity);
+    }
+
+    public function paginator(Pagerfanta $pagerfanta, $entityClass)
+    {
+        $view = new TwitterBootstrap3View();
+        $options = [
+            'proximity' => 3,
+        ];
+        $requestParams = $this->requestStack->getCurrentRequest()->query->all();
+
+        $routeGenerator = function($page) use ($requestParams, $entityClass) {
+            $params = array_merge($requestParams, ['page' => $page]);
+
+            return $this->urlGenerator->generate($entityClass, 'list', $params);
+        };
+
+        return $view->render($pagerfanta, $routeGenerator, $options);
     }
 
     public function getName()
