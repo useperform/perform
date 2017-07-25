@@ -42,3 +42,24 @@ tbody {
     word-break: break-word;
   }
 }
+
+::-webkit-input-placeholder {
+  font-style: italic;
+  color: $placeholder-color;
+}
+:-moz-placeholder {
+  font-style: italic;
+  color: $placeholder-color;
+}
+::-moz-placeholder {
+  font-style: italic;
+  color: $placeholder-color;
+}
+:-ms-input-placeholder {
+  font-style: italic;
+  color: $placeholder-color;
+}
+::placeholder {
+  font-style: italic;
+  color: $placeholder-color;
+}
