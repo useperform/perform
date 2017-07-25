@@ -36,6 +36,15 @@ services:
     perform_rich_content.block_type_registry:
         class: Perform\RichContentBundle\BlockType\BlockTypeRegistry
 
+    perform_rich_content.warmer.block_type:
+        class: Perform\RichContentBundle\CacheWarmer\BlockTypeWarmer
+        arguments:
+            - "@perform_rich_content.block_type_registry"
+            - "@twig"
+        tags:
+            - {name: kernel.cache_warmer}
+
+
     perform_rich_content.type:
         class: Perform\RichContentBundle\Type\RichContentType
         arguments:

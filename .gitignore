@@ -12,6 +12,7 @@ src/CmsBundle/gulp-sources.js
 src/MediaBundle/Resources/public
 src/MediaPlayerBundle/Resources/public
 src/RichContentBundle/Resources/public
+src/RichContentBundle/Resources/js/components/blocktypes.js
 
 test_results.xml
 Dockerfile
