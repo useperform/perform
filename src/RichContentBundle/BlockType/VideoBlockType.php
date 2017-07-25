@@ -25,4 +25,14 @@ class VideoBlockType implements BlockTypeInterface
             return '';
         }
     }
+
+    public function getDescription()
+    {
+        return 'Embed a video from youtube, vimeo, or the media library.';
+    }
+
+    public function getDefaults()
+    {
+        return [];
+    }
 }

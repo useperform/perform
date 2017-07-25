@@ -20,4 +20,16 @@ class ImageBlockType implements BlockTypeInterface
 
         return sprintf('<img src="%s" />', $value['src']);
     }
+
+    public function getDescription()
+    {
+        return 'Images from the media library.';
+    }
+
+    public function getDefaults()
+    {
+        return [
+            'src' => '/favicon.ico',
+        ];
+    }
 }

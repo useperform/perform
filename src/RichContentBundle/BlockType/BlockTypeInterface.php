@@ -20,6 +20,15 @@ interface BlockTypeInterface
      */
     public function render(Block $block);
 
-    //RichContentBundle\Config\BlockTypeConfig?
-    // public function configure();
+    /**
+     * @return string
+     */
+    public function getDescription();
+
+    /**
+     * Get the default value to be passed to a new instance of this block type.
+     *
+     * @return array
+     */
+    public function getDefaults();
 }

@@ -20,4 +20,16 @@ class TextBlockType implements BlockTypeInterface
 
         return sprintf('<p>%s</p>', $value['content']);
     }
+
+    public function getDescription()
+    {
+        return 'Words and paragraphs.';
+    }
+
+    public function getDefaults()
+    {
+        return [
+            'content' => 'Text content',
+        ];
+    }
 }

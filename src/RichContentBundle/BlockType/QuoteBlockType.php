@@ -19,4 +19,17 @@ class QuoteBlockType implements BlockTypeInterface
 
         return sprintf('<blockquote>%s<footer><cite>%s</cite></footer></blockquote>', $text, $cite);
     }
+
+    public function getDescription()
+    {
+        return 'Prominently display a quote.';
+    }
+
+    public function getDefaults()
+    {
+        return [
+            'text' => '',
+            'cite' => '',
+        ];
+    }
 }
