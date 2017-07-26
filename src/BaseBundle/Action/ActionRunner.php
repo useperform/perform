@@ -23,7 +23,7 @@ class ActionRunner
         $this->store = $store;
     }
 
-    public function run($actionName, $entityClass, array $entityIds)
+    public function run($actionName, $entityClass, array $entityIds, array $options = [])
     {
         $action = $this->store->getActionConfig($entityClass)->get($actionName);
 
@@ -41,6 +41,6 @@ class ActionRunner
             $entities[] = $entity;
         }
 
-        return $action->run($entities);
+        return $action->run($entities, $options);
     }
 }

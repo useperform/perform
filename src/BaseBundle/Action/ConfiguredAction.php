@@ -66,10 +66,8 @@ class ConfiguredAction
         return $this->options['buttonStyle'];
     }
 
-    public function run($entities)
+    public function run($entities, array $options = [])
     {
-        //any other configured options passed into this class
-        $options = [];
         return $this->action->run($entities, $options);
     }
 }

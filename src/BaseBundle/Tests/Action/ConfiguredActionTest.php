@@ -13,6 +13,8 @@ use Perform\BaseBundle\Admin\AdminRequest;
  **/
 class ConfiguredActionTest extends \PHPUnit_Framework_TestCase
 {
+    protected $action;
+
     public function setUp()
     {
         $this->action = $this->getMock(ActionInterface::class);
@@ -80,5 +82,18 @@ class ConfiguredActionTest extends \PHPUnit_Framework_TestCase
             'buttonStyle' => 'btn-danger'
         ]);
         $this->assertSame('btn-danger', $ca->getButtonStyle());
+    }
+
+    public function testRun()
+    {
+        $entities = [new \stdClass];
+        $options = ['options'];
+        $ca = new ConfiguredAction('foo', $this->action, []);
+
+        $this->action->expects($this->once())
+            ->method('run')
+            ->with($entities, $options);
+
+        $ca->run($entities, $options);
     }
 }

@@ -65,12 +65,16 @@ class ActionRunnerTest extends \PHPUnit_Framework_TestCase
             ->method('isGranted')
             ->with($entity)
             ->will($this->returnValue(true));
+        $options = [
+            'some_option' => true,
+            'other_options' => false,
+        ];
         $this->action->expects($this->once())
             ->method('run')
-            ->with([$entity])
+            ->with([$entity], $options)
             ->will($this->returnValue($response));
 
-        $this->assertSame($response, $this->runner->run($actionName, 'FooBundle\\Foo', ['some-id'], []));
+        $this->assertSame($response, $this->runner->run($actionName, 'FooBundle\\Foo', ['some-id'], $options));
     }
 
     public function testRunNotGranted()
