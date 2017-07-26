@@ -125,6 +125,7 @@ You might want to redirect somewhere after running an action.
 * ``ActionResponse::REDIRECT_ROUTE`` - redirect to a named route
 * ``ActionResponse::REDIRECT_PREVIOUS`` - redirect to the previous page
 * ``ActionResponse::REDIRECT_CURRENT`` - reload the current page
+* ``ActionResponse::REDIRECT_ENTITY_DEFAULT`` - redirect to the default route for the current entity type (usually the list context)
 
 Set this redirect by calling ``setRedirect()`` on the response before returning it:
 

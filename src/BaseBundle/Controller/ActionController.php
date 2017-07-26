@@ -26,9 +26,12 @@ class ActionController extends Controller
     public function indexAction($action, Request $request)
     {
         try {
-            $response = $this->get('perform_base.action_runner')
-                      ->run($action, $request->request->get('entityClass'), $request->request->get('ids', []), $request->request->all());
+            $entityClass = $request->request->get('entityClass');
+            $ids = $request->request->get('ids', []);
+            $options = [];
 
+            $response = $this->get('perform_base.action_runner')
+                      ->run($action, $entityClass, $ids, $options);
         } catch (EntityNotFoundException $e) {
             return [
                 'code' => 404,
@@ -43,6 +46,10 @@ class ActionController extends Controller
 
         if ($response->getRedirect() === ActionResponse::REDIRECT_URL) {
             $json['redirect'] = $response->getUrl();
+        }
+        if ($response->getRedirect() === ActionResponse::REDIRECT_ENTITY_DEFAULT) {
+            $defaultRoute = $this->get('perform_base.routing.crud_url')->getDefaultEntityRoute($entityClass);
+            $response->setRedirectRoute($defaultRoute);
         }
         if ($response->getRedirect() === ActionResponse::REDIRECT_ROUTE) {
             $json['redirect'] = $this->generateUrl($response->getRoute(), $response->getRouteParams());
