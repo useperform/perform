@@ -41,7 +41,7 @@ class ActionExtension extends \Twig_Extension
         $this->request = $request;
     }
 
-    public function actionButton(\Twig_Environment $twig, ConfiguredAction $action, $entity, array $attr = [])
+    public function actionButton(\Twig_Environment $twig, ConfiguredAction $action, $entity, $context, array $attr = [])
     {
         $label = $action->getLabel($this->request, $entity);
 
@@ -49,6 +49,7 @@ class ActionExtension extends \Twig_Extension
             'entityClass' => get_class($entity),
             'ids' => [$entity->getId()],
             'label' => $label,
+            'context' => $context,
             'message' => $action->getConfirmationMessage($this->request, $entity),
             'confirm' => $action->isConfirmationRequired(),
             'buttonStyle' => $action->getButtonStyle(),
@@ -65,7 +66,7 @@ class ActionExtension extends \Twig_Extension
         ]);
     }
 
-    public function actionOption(\Twig_Environment $twig, ConfiguredAction $action, $entityClass)
+    public function actionOption(\Twig_Environment $twig, ConfiguredAction $action, $entityClass, $context)
     {
         $label = $action->getBatchLabel($this->request);
 
@@ -73,6 +74,7 @@ class ActionExtension extends \Twig_Extension
         $attr['data-action'] = json_encode([
             'entityClass' => $entityClass,
             'label' => $label,
+            'context' => $context,
             //need to change the message depending on the number of entities - ajax?
             'message' => 'Are you sure you want to do this?',
             'confirm' => $action->isConfirmationRequired(),

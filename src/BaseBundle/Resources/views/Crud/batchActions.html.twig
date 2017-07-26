@@ -5,7 +5,7 @@
       <div class="col-sm-8">
         <select class="form-control">
           {% for action in actions %}
-            {{perform_action_option(action, entityClass)}}
+            {{perform_action_option(action, entityClass, 'list')}}
           {% endfor %}
         </select>
       </div>

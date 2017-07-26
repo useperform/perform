@@ -5,6 +5,6 @@
     <a href="{{perform_crud_route(entity, 'editDefault')}}" class="btn btn-warning">Edit</a>
   {% endif %}
   {% for action in perform_actions_for_entity(entity) %}
-    {{perform_action_button(action, entity)}}
+    {{perform_action_button(action, entity, 'view')}}
   {% endfor %}
 {% endblock %}
