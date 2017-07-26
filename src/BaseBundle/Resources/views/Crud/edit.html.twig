@@ -1,8 +1,7 @@
 {% extends 'PerformBaseBundle::base.html.twig' %}
 
-{% set entity_name = perform_crud_entity_name(entity) %}
-{% set title = 'crud.title.edit'|trans({'%entity_name%': entity_name}, 'PerformBaseBundle') %}
-{% set list_title = 'crud.title.list'|trans({'%entity_type%': 'Items'}, 'PerformBaseBundle') %}
+{% set title = 'crud.title.edit'|trans({'%entity_label%': labelConfig.getEntityLabel(entity)}, 'PerformBaseBundle') %}
+{% set list_title = 'crud.title.list'|trans({'%entity_name%': labelConfig.getEntityNamePlural()}, 'PerformBaseBundle') %}
 
 {% block page_title %}
   {{title}} | {{list_title}} | {{parent()}}
@@ -11,6 +10,11 @@
 {% block workspace %}
   <h3><i class="fa fa-angle-right"></i> {{title}}</h3>
   <div class="panel panel-default">
+    <div class="panel-heading">
+      {% block panel_heading %}
+        {{labelConfig.getEntityName()}}
+      {% endblock %}
+    </div>
     <div class="panel-body">
       {{form_start(form)}}
       {% for field, config in form.vars.fields %}
