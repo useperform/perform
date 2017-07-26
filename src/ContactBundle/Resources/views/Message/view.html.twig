@@ -47,6 +47,6 @@
         Back
       </a>
       {% for action in perform_actions_for_entity(entity) %}
-        {{perform_action_button(action, entity)}}
+        {{perform_action_button(action, entity, 'view')}}
       {% endfor %}
 {% endblock %}
