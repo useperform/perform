@@ -28,7 +28,7 @@ class ActionController extends Controller
         try {
             $entityClass = $request->request->get('entityClass');
             $ids = $request->request->get('ids', []);
-            $options = [];
+            $options = $request->request->get('options', []);
 
             $response = $this->get('perform_base.action_runner')
                       ->run($action, $entityClass, $ids, $options);

@@ -1,9 +1,9 @@
 $(function () {
-  var runAction = function(href, entityClass, ids, button) {
+  var runAction = function(href, action, button) {
     if (!href) {
       return console.error('Missing action href');
     }
-    if (ids.length < 1) {
+    if (action.ids.length < 1) {
       return;
     }
     button.attr('disabled', true);
@@ -11,8 +11,11 @@ $(function () {
       url: href,
       type: 'post',
       data: {
-        entityClass: entityClass,
-        ids: ids,
+        entityClass: action.entityClass,
+        ids: action.ids,
+        options: {
+          context: action.context
+        }
       },
       success: function (data) {
         if (!data.redirectType) {
@@ -84,7 +87,7 @@ $(function () {
     if (action.confirm) {
       return confirmAction(href, action);
     }
-    runAction($(this).attr('href'), action.entityClass, action.ids, $(this));
+    runAction($(this).attr('href'), action, $(this));
   });
 
   $('.batch-action-button').click(function(e) {
@@ -101,6 +104,6 @@ $(function () {
     if (action.confirm) {
       return confirmAction(href, action);
     }
-    runAction(href, action.entityClass, action.ids, $(this));
+    runAction(href, action, $(this));
   });
 });
