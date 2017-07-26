@@ -45,4 +45,21 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertSame($expected, StringUtil::preview($string));
     }
+
+    public function adminClassProvider()
+    {
+        return [
+            ['AppBundle\Admin\TestAdmin', 'Test'],
+            ['AppBundle\Admin\MySuperEntityAdmin', 'My Super Entity'],
+            ['AppBundle\Admin\HTMLEntityAdmin', 'HTML Entity'],
+        ];
+    }
+
+    /**
+     * @dataProvider adminClassProvider()
+     */
+    public function testAdminClassToEntityName($class, $expected)
+    {
+        $this->assertSame($expected, StringUtil::adminClassToEntityName($class));
+    }
 }
