@@ -65,6 +65,11 @@ class CrudUrlGenerator
         return $admin->getRoutePrefix().strtolower(preg_replace('/([A-Z])/', '_\1', $action));
     }
 
+    public function generateDefaultEntityRoute($entity)
+    {
+        return $this->router->generate($this->getDefaultEntityRoute($entity));
+    }
+
     public function getDefaultEntityRoute($entity)
     {
         $admin = $this->adminRegistry->getAdmin($entity);

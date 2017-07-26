@@ -262,4 +262,29 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(\Exception::class);
         $this->assertSame('some_prefix_view_default', $this->generator->getDefaultEntityRoute('TestBundle:Something'));
     }
+
+    public function testGenerateDefaultEntityRoute()
+    {
+        $admin = $this->getMock(AdminInterface::class);
+        $admin->expects($this->any())
+            ->method('getActions')
+            ->will($this->returnValue([
+                '/' => 'list',
+            ]));
+        $admin->expects($this->any())
+            ->method('getRoutePrefix')
+            ->will($this->returnValue('some_prefix_'));
+
+        $this->adminRegistry->expects($this->any())
+            ->method('getAdmin')
+            ->will($this->returnValue($admin));
+
+        $this->router->expects($this->any())
+            ->method('generate')
+            ->with('some_prefix_list')
+            ->will($this->returnValue('/some/url'));
+
+        $this->assertSame('/some/url', $this->generator->generateDefaultEntityRoute('TestBundle:Something'));
+        $this->assertSame('/some/url', $this->generator->generateDefaultEntityRoute(new User()));
+    }
 }
