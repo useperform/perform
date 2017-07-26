@@ -6,7 +6,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Perform\BaseBundle\Form\Type\AdminType;
 use Perform\BaseBundle\Config\FilterConfig;
 use Perform\BaseBundle\Config\ActionConfig;
+use Perform\BaseBundle\Config\LabelConfig;
 use Symfony\Component\Templating\EngineInterface;
+use Perform\BaseBundle\Util\StringUtil;
 
 /**
  * AbstractAdmin
@@ -46,11 +48,6 @@ abstract class AbstractAdmin implements AdminInterface
         ];
     }
 
-    public function getNameForEntity($entity)
-    {
-        return $entity->getId();
-    }
-
     public function configureFilters(FilterConfig $config)
     {
     }
@@ -58,6 +55,14 @@ abstract class AbstractAdmin implements AdminInterface
     public function configureActions(ActionConfig $config)
     {
         $config->add('perform_base_delete');
+    }
+
+    public function configureLabels(LabelConfig $config)
+    {
+        $config->setEntityName(StringUtil::adminClassToEntityName(static::class))
+            ->setEntityLabel(function($entity) {
+                return $entity->getId();
+            });
     }
 
     public function getTemplate(EngineInterface $templating, $entityName, $context)

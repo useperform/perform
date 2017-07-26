@@ -40,4 +40,17 @@ class StringUtil
 
         return substr($text, 0, 50).'…';
     }
+
+    /**
+     * Create a suitable name for an entity managed by an admin class.
+     *
+     * @param string $class The classname of the admin
+     */
+    public static function adminClassToEntityName($class)
+    {
+        $pieces = explode('\\', $class);
+        //EntityNameAdmin -> Entity Name
+
+        return trim(preg_replace('/([A-Z][a-z])/', ' \1', substr(end($pieces), 0, -5)));
+    }
 }

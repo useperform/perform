@@ -2,10 +2,10 @@
 
 {% block view %}
   {% if admin is not null %}
-    <ul>
+    <ul class="list-unstyled">
       {% for item in collection %}
         <li>
-          {{admin.getNameForEntity(item)}}
+          {{perform_entity_label(item)}}
         </li>
       {% endfor %}
     </ul>

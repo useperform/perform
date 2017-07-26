@@ -1,6 +1,6 @@
 {% extends 'PerformBaseBundle::base.html.twig' %}
 
-{% set title = 'crud.title.list'|trans({'%entity_type%': 'Items'}, 'PerformBaseBundle') %}
+{% set title = 'crud.title.list'|trans({'%entity_name%': labelConfig.getEntityNamePlural()}, 'PerformBaseBundle') %}
 {% block page_title %}
   {{title}} | {{parent()}}
 {% endblock %}

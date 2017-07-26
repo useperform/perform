@@ -54,6 +54,12 @@ class CrudController extends Controller
             ->getActionConfig($this->entity);
     }
 
+    protected function getLabelConfig()
+    {
+        return $this->get('perform_base.config_store')
+            ->getLabelConfig($this->entity);
+    }
+
     protected function newEntity()
     {
         $className = $this->getDoctrine()
@@ -105,6 +111,7 @@ class CrudController extends Controller
             'fields' => $this->getTypeConfig()->getTypes($request->getContext()),
             'filters' => $this->getFilterConfig()->getFilters(),
             'actions' => $this->getActionConfig()->forRequest($request),
+            'labelConfig' => $this->getLabelConfig(),
             'orderBy' => $orderBy,
             'routePrefix' => $admin->getRoutePrefix(),
             'paginator' => $paginator,
@@ -120,6 +127,7 @@ class CrudController extends Controller
         return [
             'fields' => $this->getTypeConfig()->getTypes($request->getContext()),
             'entity' => $this->findEntity($id),
+            'labelConfig' => $this->getLabelConfig(),
         ];
     }
 
@@ -158,6 +166,7 @@ class CrudController extends Controller
         return [
             'entity' => $entity,
             'form' => $formView,
+            'labelConfig' => $this->getLabelConfig(),
         ];
     }
 
@@ -194,6 +203,7 @@ class CrudController extends Controller
         return [
             'entity' => $entity,
             'form' => $formView,
+            'labelConfig' => $this->getLabelConfig(),
         ];
     }
 

@@ -3,10 +3,10 @@ header:
 
 crud:
     title:
-        list: "%entity_type%"
-        view: "%entity_name%"
-        create: "New %entity_type%"
-        edit: "Editing %entity_name%"
+        list: "%entity_name%"
+        view: "%entity_label%"
+        create: "New %entity_name%"
+        edit: "Editing %entity_label%"
 
 menu:
     dashboard: Dashboard

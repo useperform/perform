@@ -6,9 +6,6 @@ use Perform\BaseBundle\Doctrine\EntityResolver;
 use Perform\BaseBundle\Admin\AdminRegistry;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Perform\BaseBundle\Action\ActionRegistry;
-use Perform\BaseBundle\Config\TypeConfig;
-use Perform\BaseBundle\Config\FilterConfig;
-use Perform\BaseBundle\Config\ActionConfig;
 
 /**
  * ConfigStore creates and stores a single instance of the different
@@ -30,6 +27,7 @@ class ConfigStore implements ConfigStoreInterface
     protected $typeConfigs = [];
     protected $filterConfigs = [];
     protected $actionConfigs = [];
+    protected $labelConfigs = [];
 
     public function __construct(EntityResolver $resolver, AdminRegistry $adminRegistry, TypeRegistry $typeRegistry, ActionRegistry $actionRegistry, array $override = [])
     {
@@ -40,14 +38,6 @@ class ConfigStore implements ConfigStoreInterface
         $this->override = $override;
     }
 
-    /**
-     * Get the TypeConfig for an entity. The type config may include
-     * overrides from application configuration.
-     *
-     * @param string|object $entity
-     *
-     * @return TypeConfig
-     */
     public function getTypeConfig($entity)
     {
         $class = $this->resolver->resolve($entity);
@@ -66,14 +56,6 @@ class ConfigStore implements ConfigStoreInterface
         return $this->typeConfigs[$class];
     }
 
-    /**
-     * Get the ActionConfig for an entity. The action config may include
-     * overrides from application configuration.
-     *
-     * @param string|object $entity
-     *
-     * @return ActionConfig
-     */
     public function getActionConfig($entity)
     {
         $class = $this->resolver->resolve($entity);
@@ -85,14 +67,6 @@ class ConfigStore implements ConfigStoreInterface
         return $this->actionConfigs[$class];
     }
 
-    /**
-     * Get the FilterConfig for an entity. The filter config may include
-     * overrides from application configuration.
-     *
-     * @param string|object $entity
-     *
-     * @return FilterConfig
-     */
     public function getFilterConfig($entity)
     {
         $class = $this->resolver->resolve($entity);
@@ -102,5 +76,16 @@ class ConfigStore implements ConfigStoreInterface
         }
 
         return $this->filterConfigs[$class];
+    }
+
+    public function getLabelConfig($entity)
+    {
+        $class = $this->resolver->resolve($entity);
+        if (!isset($this->labelConfigs[$class])) {
+            $this->labelConfigs[$class] = new LabelConfig();
+            $this->adminRegistry->getAdmin($class)->configureLabels($this->labelConfigs[$class]);
+        }
+
+        return $this->labelConfigs[$class];
     }
 }

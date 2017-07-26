@@ -5,6 +5,7 @@ namespace Perform\BaseBundle\Admin;
 use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BaseBundle\Config\FilterConfig;
 use Perform\BaseBundle\Config\ActionConfig;
+use Perform\BaseBundle\Config\LabelConfig;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
@@ -19,6 +20,8 @@ interface AdminInterface
     public function configureFilters(FilterConfig $config);
 
     public function configureActions(ActionConfig $config);
+
+    public function configureLabels(LabelConfig $config);
 
     /**
      * @return string
@@ -39,13 +42,6 @@ interface AdminInterface
      * @return array
      */
     public function getActions();
-
-    /**
-     * Get a readable name for an entity.
-     *
-     * @return string
-     */
-    public function getNameForEntity($entity);
 
     /**
      * Get the name of the template for the given entity and context.

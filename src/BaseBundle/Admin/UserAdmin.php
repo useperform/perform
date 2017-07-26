@@ -5,6 +5,7 @@ namespace Perform\BaseBundle\Admin;
 use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BaseBundle\Config\ActionConfig;
 use Perform\BaseBundle\Controller\UserController;
+use Perform\BaseBundle\Config\LabelConfig;
 
 /**
  * UserAdmin
@@ -47,6 +48,14 @@ class UserAdmin extends AbstractAdmin
     {
         parent::configureActions($config);
         $config->add('perform_base_create_reset_token');
+    }
+
+    public function configureLabels(LabelConfig $config)
+    {
+        $config->setEntityName('User')
+            ->setEntityLabel(function ($user) {
+                return $user->getFullname();
+            });
     }
 
     public function getControllerName()
