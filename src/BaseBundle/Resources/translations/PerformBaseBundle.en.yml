@@ -1,6 +1,8 @@
 header:
     title: 'Site Administration'
 
+footer: 'A <a target="_blank" href="https://useperform.com">Perform</a> project.'
+
 crud:
     title:
         list: "%entity_name%"

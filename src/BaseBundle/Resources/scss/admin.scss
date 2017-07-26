@@ -1447,13 +1447,11 @@ label {
   border-left: 3px solid #BEC3C7;
 }
 
-/*footer*/
 .site-footer {
-  background: $brand-info;
-  color: #fff;
+  background: $footer-bg;
+  color: $footer-color;
   padding: 10px 0;
 }
-
 
 .go-top {
   margin-right: 1%;

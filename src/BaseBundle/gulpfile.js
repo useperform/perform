@@ -1,9 +1,15 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 
+function handleError (err) {
+  console.log(err);
+  this.emit('end');
+}
+
 gulp.task('sass', function (cb) {
   return gulp.src('Resources/scss/app.scss')
     .pipe(sass())
+    .on('error', handleError)
     .pipe(gulp.dest('Resources/public/css'));
 });
 

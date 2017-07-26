@@ -49,10 +49,8 @@
         </section>
       </section>
 
-      <footer class="site-footer">
-        <div class="text-center">
-          A <a target="_blank" href="//glynnforrest.com">glynnforrest.com</a> project.
-        </div>
+      <footer class="site-footer text-center">
+        {{'footer' | trans({}, 'PerformBaseBundle') | raw}}
       </footer>
 
     {% endblock %}
