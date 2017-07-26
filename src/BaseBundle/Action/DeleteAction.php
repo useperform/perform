@@ -2,8 +2,9 @@
 
 namespace Perform\BaseBundle\Action;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Perform\BaseBundle\Admin\AdminRequest;
+use Perform\BaseBundle\Config\TypeConfig;
 
 /**
  * DeleteAction.
@@ -14,7 +15,7 @@ class DeleteAction implements ActionInterface
 {
     protected $entityManager;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }
@@ -28,7 +29,11 @@ class DeleteAction implements ActionInterface
         $this->entityManager->flush();
 
         $response = new ActionResponse(sprintf('%s deleted.', count($entities) === 1 ? 'Item' : count($entities).' items'));
-        $response->setRedirect(ActionResponse::REDIRECT_CURRENT);
+        $response->setRedirect(
+            isset($options['context']) && $options['context'] === TypeConfig::CONTEXT_VIEW ?
+            ActionResponse::REDIRECT_PREVIOUS :
+            ActionResponse::REDIRECT_CURRENT
+        );
 
         return $response;
     }
