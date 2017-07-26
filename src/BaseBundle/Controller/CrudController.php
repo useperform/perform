@@ -152,12 +152,14 @@ class CrudController extends Controller
         $form->handleRequest($request->getRequest());
 
         if ($form->isValid()) {
-            $manager = $this->getDoctrine()->getManager();
-            $manager->persist($entity);
-            $manager->flush();
-            $this->addFlash('success', 'Item created successfully.');
+            try {
+                $this->get('perform_base.entity_manager')->create($entity);
+                $this->addFlash('success', 'Item created successfully.');
 
-            return $this->redirect($this->get('perform_base.routing.crud_url')->generate($entity, 'list'));
+                return $this->redirect($this->get('perform_base.routing.crud_url')->generateDefaultEntityRoute($entity));
+            } catch (\Exception $e) {
+                $this->addFlash('danger', 'An error occurred.');
+            }
         }
 
         $formView = $form->createView();
@@ -184,17 +186,14 @@ class CrudController extends Controller
         $form->handleRequest($request->getRequest());
 
         if ($form->isValid()) {
-            $manager = $this->getDoctrine()->getManager();
-            $manager->persist($entity);
-            $manager->flush();
-            $this->addFlash('success', 'Item updated successfully.');
+            try {
+                $this->get('perform_base.entity_manager')->update($entity);
+                $this->addFlash('success', 'Item updated successfully.');
 
-            $urlGenerator = $this->get('perform_base.routing.crud_url');
-            $url = $urlGenerator->routeExists($entity, 'viewDefault') ?
-                 $urlGenerator->generate($entity, 'viewDefault') :
-                 $urlGenerator->generate($entity, 'list');
-
-            return $this->redirect($url);
+                return $this->redirect($this->get('perform_base.routing.crud_url')->generateDefaultEntityRoute($entity));
+            } catch (\Exception $e) {
+                $this->addFlash('danger', 'An error occurred.');
+            }
         }
 
         $formView = $form->createView();
