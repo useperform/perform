@@ -6,6 +6,7 @@ use Perform\BaseBundle\Twig\Extension\UtilExtension;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
+use Perform\BaseBundle\Config\ConfigStoreInterface;
 
 /**
  * UtilExtensionTest.
@@ -16,11 +17,13 @@ class UtilExtensionTest extends \PHPUnit_Framework_TestCase
 {
     protected $extension;
     protected $router;
+    protected $configStore;
 
     public function setUp()
     {
         $this->router = $this->getMock(RouterInterface::class);
-        $this->extension = new UtilExtension($this->router);
+        $this->configStore = $this->getMock(ConfigStoreInterface::class);
+        $this->extension = new UtilExtension($this->router, $this->configStore);
     }
 
     public function testHumanDateNoDate()
