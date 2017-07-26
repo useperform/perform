@@ -42,6 +42,22 @@ class EntityManagerTest extends \PHPUnit_Framework_TestCase
         $this->manager->create($entity);
     }
 
+    public function testCreateWithChangedEntity()
+    {
+        $entity = new \stdClass();
+        $newEntity = new \stdClass();
+        $this->em->expects($this->once())
+            ->method('persist')
+            ->with($this->identicalTo($newEntity));
+        $this->dispatcher->expects($this->any())
+            ->method('dispatch')
+            ->will($this->returnCallback(function($type, $event) use ($newEntity) {
+                $event->setEntity($newEntity);
+            }));
+
+        $this->manager->create($entity);
+    }
+
     public function testUpdate()
     {
         $entity = new \stdClass();
@@ -59,6 +75,22 @@ class EntityManagerTest extends \PHPUnit_Framework_TestCase
                 [$this->equalTo(EntityEvent::PRE_UPDATE), $this->callback($eventCallback)],
                 [$this->equalTo(EntityEvent::POST_UPDATE), $this->callback($eventCallback)]
             );
+
+        $this->manager->update($entity);
+    }
+
+    public function testUpdateWithChangedEntity()
+    {
+        $entity = new \stdClass();
+        $newEntity = new \stdClass();
+        $this->em->expects($this->once())
+            ->method('persist')
+            ->with($this->identicalTo($newEntity));
+        $this->dispatcher->expects($this->any())
+            ->method('dispatch')
+            ->will($this->returnCallback(function($type, $event) use ($newEntity) {
+                $event->setEntity($newEntity);
+            }));
 
         $this->manager->update($entity);
     }

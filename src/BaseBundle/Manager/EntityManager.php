@@ -32,8 +32,9 @@ class EntityManager
     public function create($entity)
     {
         try {
-            $this->dispatcher->dispatch(EntityEvent::PRE_CREATE, new EntityEvent($entity));
-            $this->em->persist($entity);
+            $event = new EntityEvent($entity);
+            $this->dispatcher->dispatch(EntityEvent::PRE_CREATE, $event);
+            $this->em->persist($event->getEntity());
             $this->em->flush();
             $this->dispatcher->dispatch(EntityEvent::POST_CREATE, new EntityEvent($entity));
         } catch (\Exception $e) {
@@ -51,8 +52,9 @@ class EntityManager
     public function update($entity)
     {
         try {
-            $this->dispatcher->dispatch(EntityEvent::PRE_UPDATE, new EntityEvent($entity));
-            $this->em->persist($entity);
+            $event = new EntityEvent($entity);
+            $this->dispatcher->dispatch(EntityEvent::PRE_UPDATE, $event);
+            $this->em->persist($event->getEntity());
             $this->em->flush();
             $this->dispatcher->dispatch(EntityEvent::POST_UPDATE, new EntityEvent($entity));
         } catch (\Exception $e) {

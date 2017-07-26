@@ -39,6 +39,14 @@ class EntityEvent extends Event
     }
 
     /**
+     * @param object $entity
+     */
+    public function setEntity($entity)
+    {
+        $this->entity = $entity;
+    }
+
+    /**
      * @return object
      */
     public function getEntity()
