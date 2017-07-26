@@ -40,7 +40,6 @@ class CrudExtension extends \Twig_Extension
             new \Twig_SimpleFunction('perform_crud_view_context', [$this, 'viewContext'], ['is_safe' => ['html'], 'needs_environment' => true]),
             new \Twig_SimpleFunction('perform_crud_create_context', [$this, 'createContext'], ['is_safe' => ['html'], 'needs_environment' => true]),
             new \Twig_SimpleFunction('perform_crud_edit_context', [$this, 'editContext'], ['is_safe' => ['html'], 'needs_environment' => true]),
-            new \Twig_SimpleFunction('perform_crud_entity_name', [$this, 'entityName']),
             new \Twig_SimpleFunction('perform_crud_paginator', [$this, 'paginator'], ['is_safe' => ['html']]),
         ];
     }
@@ -99,11 +98,6 @@ class CrudExtension extends \Twig_Extension
         ];
 
         return $twig->loadTemplate($template)->renderBlock('edit', $vars);
-    }
-
-    public function entityName($entity)
-    {
-        return $this->adminRegistry->getAdmin($entity)->getNameForEntity($entity);
     }
 
     public function paginator(Pagerfanta $pagerfanta, $entityClass)

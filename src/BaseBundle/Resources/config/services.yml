@@ -95,6 +95,7 @@ services:
         class: Perform\BaseBundle\Twig\Extension\UtilExtension
         arguments:
             - "@router"
+            - '@perform_base.config_store'
         tags:
             - {name: twig.extension}
 
