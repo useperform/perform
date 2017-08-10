@@ -18,6 +18,8 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->fixXmlConfig('extended_entity', 'extended_entities')
             ->children()
+                ->scalarNode('project_key')
+                ->end()
                 ->arrayNode('mailer')
                     ->children()
                         ->scalarNode('from_address')
