@@ -11,11 +11,13 @@ class KeyChecker
 {
     protected $url;
     protected $bundleNames = [];
+    protected $performVersions = [];
 
-    public function __construct($url, array $bundleNames)
+    public function __construct($url, array $bundleNames, array $performVersions)
     {
         $this->url = $url;
         $this->bundleNames = $bundleNames;
+        $this->performVersions = $performVersions;
     }
 
     public function validate($key)
@@ -27,6 +29,7 @@ class KeyChecker
             'extensions' => get_loaded_extensions(),
             'timezone' => date_default_timezone_get(),
             'bundles' => $this->bundleNames,
+            'perform_versions' => $this->performVersions,
         ];
 
         $c = curl_init($this->url);

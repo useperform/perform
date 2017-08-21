@@ -8,13 +8,11 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Config\Resource\FileResource;
-use Symfony\Component\Config\Resource\DirectoryResource;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Perform\BaseBundle\Doctrine\EntityResolver;
 use Perform\BaseBundle\Licensing\KeyChecker;
 use Symfony\Component\DependencyInjection\Definition;
 use Perform\BaseBundle\EventListener\ProjectKeyListener;
+use Perform\BaseBundle\Util\PackageUtil;
 
 /**
  * PerformBaseExtension.
@@ -71,6 +69,7 @@ class PerformBaseExtension extends Extension
     {
         if (!isset($config['mailer']['from_address'])) {
             $container->removeDefinition('perform_base.email.mailer');
+
             return;
         }
 
@@ -186,7 +185,7 @@ class PerformBaseExtension extends Extension
 
         $key = isset($config['project_key']) ? $config['project_key'] : '';
 
-        $checker = new KeyChecker('https://useperform.com/api/validate', $builder->getParameter('kernel.bundles'));
+        $checker = new KeyChecker('https://useperform.com/api/validate', $builder->getParameter('kernel.bundles'), $this->getPerformVersions($builder));
         $response = $checker->validate($key);
 
         $def = new Definition(ProjectKeyListener::class);
@@ -196,5 +195,20 @@ class PerformBaseExtension extends Extension
             'method' => 'onKernelRequest',
         ]);
         $builder->setDefinition('perform_base.listener.project_key', $def);
+    }
+
+    protected function getPerformVersions(ContainerBuilder $builder)
+    {
+        try {
+            $projectDir = $builder->hasParameter('kernel.project_dir') ?
+                        $builder->getParameter('kernel.project_dir') :
+                        $builder->getParameter('kernel.root_dir').'/../';
+
+            return PackageUtil::getPerformVersions([
+                $projectDir.'/composer.lock',
+            ]);
+        } catch (\RuntimeException $e) {
+            return [];
+        }
     }
 }
