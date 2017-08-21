@@ -186,7 +186,7 @@ class PerformBaseExtension extends Extension
 
         $key = isset($config['project_key']) ? $config['project_key'] : '';
 
-        $checker = new KeyChecker('https://useperform.com/api/validate');
+        $checker = new KeyChecker('https://useperform.com/api/validate', $builder->getParameter('kernel.bundles'));
         $response = $checker->validate($key);
 
         $def = new Definition(ProjectKeyListener::class);

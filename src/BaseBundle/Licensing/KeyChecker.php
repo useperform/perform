@@ -10,17 +10,28 @@ use Perform\BaseBundle\Exception\LicensingException;
 class KeyChecker
 {
     protected $url;
+    protected $bundleNames = [];
 
-    public function __construct($url)
+    public function __construct($url, array $bundleNames)
     {
         $this->url = $url;
+        $this->bundleNames = $bundleNames;
     }
 
     public function validate($key)
     {
+        $data = [
+            'project_key' => $key,
+            'os' => PHP_OS,
+            'php_version' => PHP_VERSION,
+            'extensions' => get_loaded_extensions(),
+            'timezone' => date_default_timezone_get(),
+            'bundles' => $this->bundleNames,
+        ];
+
         $c = curl_init($this->url);
         curl_setopt($c, CURLOPT_POST, true);
-        curl_setopt($c, CURLOPT_POSTFIELDS, json_encode(['project_key' => $key]));
+        curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($data));
         curl_setopt($c, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($c, CURLOPT_FAILONERROR, true);
