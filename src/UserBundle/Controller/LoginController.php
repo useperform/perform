@@ -1,16 +1,14 @@
 <?php
 
-namespace Perform\BaseBundle\Controller;
+namespace Perform\UserBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
- * SecurityController
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class SecurityController extends Controller
+class LoginController extends Controller
 {
     /**
      * @Template()
@@ -23,7 +21,7 @@ class SecurityController extends Controller
 
         return [
             'last_username' => $lastUsername,
-            'error'         => $error,
+            'error' => $error,
         ];
     }
 }

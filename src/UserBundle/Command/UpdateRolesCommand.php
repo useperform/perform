@@ -1,6 +1,6 @@
 <?php
 
-namespace Perform\BaseBundle\Command;
+namespace Perform\UserBundle\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -12,8 +12,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * UpdateRolesCommand.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  */
 class UpdateRolesCommand extends ContainerAwareCommand

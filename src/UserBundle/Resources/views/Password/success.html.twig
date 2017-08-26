@@ -1,4 +1,4 @@
-{% extends 'PerformBaseBundle:Security:login.html.twig' %}
+{% extends 'PerformUserBundle:Login:login.html.twig' %}
 
 {% block title %}
   Thank you
@@ -6,5 +6,5 @@
 
 {% block panel_body %}
   <p>{{message}}</p>
-  <a class="btn btn-primary" href="{{path('perform_base_login')}}">Login</a>
+  <a class="btn btn-primary" href="{{path('perform_user_login')}}">Login</a>
 {% endblock %}

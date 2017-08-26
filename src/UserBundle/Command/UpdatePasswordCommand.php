@@ -1,6 +1,6 @@
 <?php
 
-namespace Perform\BaseBundle\Command;
+namespace Perform\UserBundle\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -9,6 +9,9 @@ use Perform\UserBundle\Entity\User;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Input\InputArgument;
 
+/**
+ * @author Glynn Forrest <me@glynnforrest.com>
+ */
 class UpdatePasswordCommand extends ContainerAwareCommand
 {
     protected $name = 'perform:user:update-password';

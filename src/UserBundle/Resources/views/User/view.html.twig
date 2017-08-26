@@ -6,7 +6,7 @@
     <div class="panel-heading">
       Password reset tokens
     </div>
-    {% set routeExists = perform_route_exists('perform_base_password_reset') %}
+    {% set routeExists = perform_route_exists('perform_user_password_reset') %}
     <div class="panel-body">
       {% if tokens|length > 0 %}
         <table class="table">
@@ -20,8 +20,8 @@
               <tr>
                 <td>
                   {% if routeExists %}
-                    <a href="{{url('perform_base_password_reset', {id: token.id, secret: token.secret})}}">
-                      {{url('perform_base_password_reset', {id: token.id, secret: token.secret})}}
+                    <a href="{{url('perform_user_password_reset', {id: token.id, secret: token.secret})}}">
+                      {{url('perform_user_password_reset', {id: token.id, secret: token.secret})}}
                     </a>
                   {% else %}
                     {{token.id}}

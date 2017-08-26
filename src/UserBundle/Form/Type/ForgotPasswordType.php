@@ -1,14 +1,12 @@
 <?php
 
-namespace Perform\BaseBundle\Form\Type;
+namespace Perform\UserBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 
 /**
- * ForgotPasswordType.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class ForgotPasswordType extends AbstractType
