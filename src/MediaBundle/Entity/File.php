@@ -2,7 +2,7 @@
 
 namespace Perform\MediaBundle\Entity;
 
-use Perform\BaseBundle\Entity\User;
+use Perform\UserBundle\Entity\User;
 
 /**
  * File

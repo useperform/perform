@@ -5,7 +5,7 @@ namespace Perform\BaseBundle\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Perform\BaseBundle\Entity\User;
+use Perform\UserBundle\Entity\User;
 use Symfony\Component\Console\Question\Question;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Input\InputArgument;
@@ -73,7 +73,7 @@ class UpdateRolesCommand extends ContainerAwareCommand
             $email = $this->getHelper('question')->ask($input, $output, $question);
         }
 
-        $user = $em->getRepository('PerformBaseBundle:User')->findOneByEmail($email);
+        $user = $em->getRepository('PerformUserBundle:User')->findOneByEmail($email);
 
         if (!$user) {
             throw new \RuntimeException(sprintf('User with email "%s" was not found.', $email));

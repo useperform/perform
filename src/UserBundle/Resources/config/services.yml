@@ -1,32 +1,45 @@
 services:
-    perform_base.listener.login:
-        class: Perform\BaseBundle\EventListener\LoginListener
+    perform_user.listener.login:
+        class: Perform\UserBundle\EventListener\LoginListener
         arguments:
             - "@doctrine.orm.entity_manager"
         tags:
             - {name: kernel.event_listener, event: security.interactive_login, method: onLogin}
 
-    perform_base.admin.user:
-        class: Perform\BaseBundle\Admin\UserAdmin
+    perform_user.admin.user:
+        class: Perform\UserBundle\Admin\UserAdmin
         tags:
-            - {name: perform_base.admin, entity: "PerformBaseBundle:User"}
+            - {name: perform_base.admin, entity: "PerformUserBundle:User"}
 
-    perform_base.menu_link.users:
+    perform_user.menu_link.users:
         class: Perform\BaseBundle\Menu\SimpleLinkProvider
         arguments:
             - 'users'
-            - 'PerformBaseBundle:User'
+            - 'PerformUserBundle:User'
             - null
             - 'users'
         tags:
             - { name: perform_base.link_provider, alias: users }
 
-    perform_base.doctrine.user_listener:
-        class: Perform\BaseBundle\Doctrine\UserListener
+    perform_user.doctrine.user_listener:
+        class: Perform\UserBundle\Doctrine\UserListener
         arguments: ["@service_container"]
         tags:
             - { name: doctrine.event_subscriber }
 
-    perform_base.importer.user:
-        class: Perform\BaseBundle\Importer\UserImporter
+    perform_user.importer.user:
+        class: Perform\UserBundle\Importer\UserImporter
         arguments: ["@doctrine.orm.entity_manager"]
+
+    perform_user.reset_token_manager:
+        class: Perform\UserBundle\Security\ResetTokenManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@perform_notification.notifier"
+
+    perform_user.action.create_reset_token:
+        class: Perform\UserBundle\Action\CreateResetTokenAction
+        arguments:
+            - "@perform_user.reset_token_manager"
+        tags:
+            - { name: perform_base.action, alias: perform_user_create_reset_token }

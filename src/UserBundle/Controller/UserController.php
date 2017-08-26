@@ -3,6 +3,7 @@
 namespace Perform\UserBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Perform\BaseBundle\Controller\CrudController;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>

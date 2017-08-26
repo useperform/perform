@@ -1,6 +1,6 @@
 Perform\UserBundle\Entity\User:
     type: entity
-    table: perform_base_user
+    table: perform_user_user
     repositoryClass: Perform\UserBundle\Repository\UserRepository
     id:
         id:

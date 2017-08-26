@@ -5,7 +5,7 @@ namespace Perform\BaseBundle\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Perform\BaseBundle\Entity\User;
+use Perform\UserBundle\Entity\User;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Input\InputArgument;
 
@@ -31,7 +31,7 @@ class UpdatePasswordCommand extends ContainerAwareCommand
         }
 
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $user = $em->getRepository('PerformBaseBundle:User')->findOneByEmail($email);
+        $user = $em->getRepository('PerformUserBundle:User')->findOneByEmail($email);
 
         if (!$user) {
             throw new \RuntimeException(sprintf('User with email "%s" was not found.', $email));

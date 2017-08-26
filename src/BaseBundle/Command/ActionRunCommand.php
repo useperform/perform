@@ -19,7 +19,7 @@ class ActionRunCommand extends ContainerAwareCommand
         $this->setName('perform:action:run')
             ->setDescription('Run an action on an entity or list of entities')
             ->addArgument('action', InputArgument::REQUIRED)
-            ->addArgument('entityClass', InputArgument::REQUIRED, 'The entity name or class, e.g. PerformBaseBundle:User')
+            ->addArgument('entityClass', InputArgument::REQUIRED, 'The entity name or class, e.g. PerformUserBundle:User')
             ->addArgument('entity', InputArgument::IS_ARRAY, 'An entity id or list of entity ids')
             ;
     }

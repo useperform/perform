@@ -4,7 +4,7 @@ namespace Perform\BaseBundle\Tests\Type;
 
 use Perform\BaseBundle\Type\EntityType;
 use Doctrine\ORM\EntityManagerInterface;
-use Perform\BaseBundle\Entity\User;
+use Perform\UserBundle\Entity\User;
 use Perform\BaseBundle\Exception\InvalidTypeException;
 
 /**
@@ -31,7 +31,7 @@ class EntityTypeTest extends \PHPUnit_Framework_TestCase
         $entity->user = $user;
 
         $options = [
-            'class' => 'PerformBaseBundle:User',
+            'class' => 'PerformUserBundle:User',
             'display_field' => 'email',
             'link_to' => false,
         ];
@@ -50,7 +50,7 @@ class EntityTypeTest extends \PHPUnit_Framework_TestCase
         $entity->user = null;
 
         $options = [
-            'class' => 'PerformBaseBundle:User',
+            'class' => 'PerformUserBundle:User',
             'display_field' => 'email',
         ];
 
@@ -63,7 +63,7 @@ class EntityTypeTest extends \PHPUnit_Framework_TestCase
         $entity->user = 100;
 
         $options = [
-            'class' => 'PerformBaseBundle:User',
+            'class' => 'PerformUserBundle:User',
             'display_field' => 'email',
         ];
 

@@ -3,7 +3,7 @@
 namespace Perform\BaseBundle\Tests\Admin;
 
 use Perform\BaseBundle\Admin\AdminRegistry;
-use Perform\BaseBundle\Entity\User;
+use Perform\UserBundle\Entity\User;
 use Perform\BaseBundle\Doctrine\EntityResolver;
 use Perform\BaseBundle\Admin\AdminInterface;
 use Perform\BaseBundle\Exception\AdminNotFoundException;
@@ -22,7 +22,7 @@ class AdminRegistryTest extends \PHPUnit_Framework_TestCase
     {
         $this->container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
         $entities = [
-            'PerformBaseBundle:User' => User::class,
+            'PerformUserBundle:User' => User::class,
         ];
         $this->registry = new AdminRegistry($this->container, new EntityResolver($entities));
     }
@@ -36,7 +36,7 @@ class AdminRegistryTest extends \PHPUnit_Framework_TestCase
             ->with('admin.service')
             ->will($this->returnValue($admin));
 
-        $this->assertSame($admin, $this->registry->getAdmin('PerformBaseBundle:User'));
+        $this->assertSame($admin, $this->registry->getAdmin('PerformUserBundle:User'));
     }
 
     public function testUnknownAdmin()

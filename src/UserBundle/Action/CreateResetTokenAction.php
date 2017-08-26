@@ -4,6 +4,8 @@ namespace Perform\UserBundle\Action;
 
 use Perform\UserBundle\Security\ResetTokenManager;
 use Perform\BaseBundle\Admin\AdminRequest;
+use Perform\BaseBundle\Action\ActionInterface;
+use Perform\BaseBundle\Action\ActionResponse;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
