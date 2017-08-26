@@ -1,0 +1,24 @@
+Perform\UserBundle\Entity\ResetToken:
+    type: entity
+    table: perform_user_reset_token
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        secret:
+            type: string
+        expiresAt:
+            type: datetime
+        createdAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: create
+    manyToOne:
+        user:
+            targetEntity: User
+            joinColumn:
+                nullable: false

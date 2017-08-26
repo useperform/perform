@@ -1,0 +1,25 @@
+Perform\UserBundle\Entity\User:
+    type: entity
+    table: perform_base_user
+    repositoryClass: Perform\UserBundle\Repository\UserRepository
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        forename:
+            type: string
+        surname:
+            type: string
+        password:
+            type: string
+        email:
+            type: string
+            unique: true
+        roles:
+            type: array
+        lastLogin:
+            type: datetime
+            nullable: true
