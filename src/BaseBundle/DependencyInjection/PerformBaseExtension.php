@@ -41,9 +41,6 @@ class PerformBaseExtension extends Extension
         $this->findExtendedEntities($container, $config);
         $this->processAdminConfig($container, $config);
         $this->createSimpleMenus($container, $config['menu']['simple']);
-
-        $tokenManager = $container->getDefinition('perform_base.reset_token_manager');
-        $tokenManager->addArgument($config['security']['reset_token_expiry']);
     }
 
     protected function configureTypeRegistry(ContainerBuilder $container)
