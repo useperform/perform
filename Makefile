@@ -16,6 +16,7 @@ push_packages:
 	./bin/subsplit.sh DevBundle dev-bundle
 	./bin/subsplit.sh MediaBundle media-bundle
 	./bin/subsplit.sh NotificationBundle notification-bundle
+	./bin/subsplit.sh UserBundle user-bundle
 
 docker_image:
 	./bin/build-docker-image.sh $(php-version)
