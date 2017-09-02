@@ -4,10 +4,9 @@ namespace Perform\UserBundle\Installer;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Perform\BaseBundle\Installer\InstallerInterface;
 
 /**
- * UsersInstaller.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class UsersInstaller implements InstallerInterface
