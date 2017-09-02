@@ -40,6 +40,7 @@ class PerformDevExtension extends Extension
         $registry = $container->getDefinition('perform_dev.resource_registry');
         $registry->addMethodCall('addParentResource', [new Definition(R\ContactBundleResource::class)]);
         $registry->addMethodCall('addParentResource', [new Definition(R\MediaBundleResource::class)]);
+        $registry->addMethodCall('addParentResource', [new Definition(R\UserResource::class)]);
         $registry->addMethodCall('addResource', [new Definition(R\OneupFlysystemResource::class)]);
     }
 }
