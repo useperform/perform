@@ -28,6 +28,7 @@ perform_user_login:
 
 perform_user_password:
     resource: "@PerformUserBundle/Resources/config/routing_password.yml"
+    prefix: /reset-password
 
 perform_user_admin:
     resource: "@PerformUserBundle/Resources/config/routing_admin.yml"

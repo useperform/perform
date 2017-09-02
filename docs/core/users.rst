@@ -36,6 +36,7 @@ Add the following routing resource to include password reset functionality:
 
     perform_user_password:
         resource: "@PerformUserBundle/Resources/config/routing_password.yml"
+        prefix: /reset-password
 
 Three new routes will be created for you:
 
@@ -47,12 +48,7 @@ Three new routes will be created for you:
 
 .. note::
 
-
-   Remember the ``/reset-password`` url path is just a default, and can be overridden to suit your needs.
-
-   You can load this resource with a ``prefix``, or change the urls completely by copying the contents of this file into your routing configuration and changing the url paths.
-
-
+   The ``/reset-password`` path prefix is just a suggestion, and can be changed to suit your needs.
 
 A `forgot your password?` link will also appear on the login form.
 
