@@ -34,7 +34,8 @@ class UpdatePasswordCommand extends ContainerAwareCommand
         }
 
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $user = $em->getRepository('PerformUserBundle:User')->findOneByEmail($email);
+        $resolver = $this->getContainer()->get('perform_base.doctrine.entity_resolver');
+        $user = $em->getRepository($resolver->resolve('PerformUserBundle:User'))->findOneByEmail($email);
 
         if (!$user) {
             throw new \RuntimeException(sprintf('User with email "%s" was not found.', $email));

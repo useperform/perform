@@ -29,10 +29,12 @@ class CreateUserCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $this->checkUserTable($em);
+        $resolver = $this->getContainer()->get('perform_base.doctrine.entity_resolver');
+        $userClass = $resolver->resolve('PerformUserBundle:User');
+        $this->checkUserTable($em, $userClass);
 
         $helper = $this->getHelper('question');
-        $user = new User();
+        $user = new $userClass();
         $user->setForename($helper->ask($input, $output, new Question('Forename: ')));
         $user->setSurname($helper->ask($input, $output, new Question('Surname: ')));
         $user->setEmail($helper->ask($input, $output, new Question('Email: ')));
@@ -48,9 +50,9 @@ class CreateUserCommand extends ContainerAwareCommand
         $output->writeln(sprintf('Created user <info>%s</info>, email <info>%s</info>.', $user->getFullname(), $user->getEmail()));
     }
 
-    protected function checkUserTable(EntityManagerInterface $em)
+    protected function checkUserTable(EntityManagerInterface $em, $userClass)
     {
-        $repo = $em->getRepository('PerformUserBundle:User');
+        $repo = $em->getRepository($userClass);
         try {
             $repo->findOneBy([]);
         } catch (\Exception $e) {
