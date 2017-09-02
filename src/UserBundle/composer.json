@@ -1,0 +1,19 @@
+{
+    "name": "perform/user-bundle",
+    "description": "User implementation and management",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Glynn Forrest",
+            "email": "me@glynnforrest.com"
+        }
+    ],
+    "require": {
+        "perform/notification-bundle": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "Perform\\UserBundle\\": ""
+        }
+    }
+}
