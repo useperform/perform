@@ -11,6 +11,8 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Perform\BaseBundle\DataFixtures\ORM\EntityDeclaringFixtureInterface;
 use Perform\BaseBundle\DataFixtures\ORM\Purger;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
+use Doctrine\Common\DataFixtures\FixtureInterface;
 
 /**
  * FixturesRunCommand.
@@ -83,11 +85,12 @@ class FixturesRunCommand extends ContainerAwareCommand
 
         $mapper = function ($class) use ($output) {
             $r = new \ReflectionClass($class);
-            if (!$r->isSubclassOf(EntityDeclaringFixtureInterface::class) || $r->isAbstract()) {
+            if (!$r->isSubclassOf(FixtureInterface::class) || $r->isAbstract()) {
                 return false;
             }
             $fixture = $r->newInstance();
-            $usedExcludedEntities = array_intersect($fixture->getEntityClasses(), $this->excludedEntities);
+            $usedExcludedEntities = $r->isSubclassOf(EntityDeclaringFixtureInterface::class) ?
+                                  array_intersect($fixture->getEntityClasses(), $this->excludedEntities) : [];
             if (count($usedExcludedEntities) > 0) {
                 if ($output->isVerbose()) {
                     $output->writeln(sprintf(
@@ -106,8 +109,21 @@ class FixturesRunCommand extends ContainerAwareCommand
             return $fixture;
         };
 
-        return $this->getContainer()->get('perform_base.bundle_searcher')
+        $fixtures = $this->getContainer()->get('perform_base.bundle_searcher')
             ->findClassesWithNamespaceSegment('DataFixtures\\ORM', $mapper, $bundleNames);
+
+        usort($fixtures, function($a, $b) {
+            $aOrder = $a instanceof OrderedFixtureInterface ? $a->getOrder() : 0;
+            $bOrder = $b instanceof OrderedFixtureInterface ? $b->getOrder() : 0;
+
+            if ($aOrder === $bOrder) {
+                return 0;
+            }
+
+            return $aOrder < $bOrder ? -1 : 1;
+        });
+
+        return $fixtures;
     }
 
     /**
@@ -123,6 +139,10 @@ class FixturesRunCommand extends ContainerAwareCommand
 
         $declaredClasses = [];
         foreach ($fixtures as $fixture) {
+            if (!$fixture instanceof EntityDeclaringFixtureInterface) {
+                throw new \RuntimeException(sprintf('%s does not implement %s. To be able to use the --only-bundles and --exclude-bundles options, all of the target fixture classes must implement this interface.', get_class($fixture), EntityDeclaringFixtureInterface::class));
+            }
+
             $declaredClasses = array_merge($declaredClasses, $fixture->getEntityClasses());
         }
 
