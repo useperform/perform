@@ -38,7 +38,7 @@ class Notifier
     {
         foreach ($publishers as $name) {
             if (!isset($this->publishers[$name])) {
-                throw new \Exception(sprintf('Unknown notification publisher "%s"', $name));
+                throw new \Exception(sprintf('Unknown notification publisher "%s". Available publishers are "%s". You may need to set configuration to enable additional publishers.', $name, implode('", "', array_keys($this->publishers))));
             }
 
             $this->publishers[$name]->send($notification);
