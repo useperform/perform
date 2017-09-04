@@ -8,6 +8,7 @@ use Perform\UserBundle\Entity\ResetToken;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Perform\NotificationBundle\Notifier\Notifier;
+use Perform\BaseBundle\Doctrine\EntityResolver;
 
 /**
  * ResetTokenManagerTest.
@@ -22,15 +23,21 @@ class ResetTokenManagerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->em = $this->getMock(EntityManagerInterface::class);
+        $this->resolver = $this->getMock(EntityResolver::class);
         $this->repo = $this->getMock(ObjectRepository::class);
+
+        $this->resolver->expects($this->any())
+            ->method('resolve')
+            ->with('PerformUserBundle:User')
+            ->will($this->returnValue('Perform\UserBundle\Entity\User'));
         $this->em->expects($this->any())
             ->method('getRepository')
-            ->with('PerformUserBundle:User')
+            ->with('Perform\UserBundle\Entity\User')
             ->will($this->returnValue($this->repo));
 
         $this->notifier = $this->getMock(Notifier::class);
 
-        $this->manager = new ResetTokenManager($this->em, $this->notifier, 1800);
+        $this->manager = new ResetTokenManager($this->em, $this->resolver, $this->notifier, 1800);
     }
 
     public function testCreateToken()
@@ -88,7 +95,7 @@ class ResetTokenManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testExpiryTimeCanBeConfigured()
     {
-        $manager = new ResetTokenManager($this->em, $this->notifier, 3600);
+        $manager = new ResetTokenManager($this->em, $this->resolver, $this->notifier, 3600);
         $user = new User();
         $token = $manager->createToken($user);
         $this->assertInstanceOf(\DateTime::class, $token->getExpiresAt());

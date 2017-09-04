@@ -35,6 +35,7 @@ services:
         class: Perform\UserBundle\Security\ResetTokenManager
         arguments:
             - "@doctrine.orm.entity_manager"
+            - "@perform_base.doctrine.entity_resolver"
             - "@perform_notification.notifier"
 
     perform_user.action.create_reset_token:

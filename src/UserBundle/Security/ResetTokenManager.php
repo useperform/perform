@@ -7,21 +7,24 @@ use Perform\UserBundle\Entity\ResetToken;
 use Perform\NotificationBundle\Notifier\Notifier;
 use Perform\NotificationBundle\Notification;
 use Doctrine\ORM\EntityManagerInterface;
+use Perform\BaseBundle\Doctrine\EntityResolver;
 
 /**
- * ResetTokenManager.
+ * Handles the creation and validation of password reset tokens.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class ResetTokenManager
 {
     protected $em;
+    protected $entityResolver;
     protected $notifier;
     protected $expirySeconds;
 
-    public function __construct(EntityManagerInterface $em, Notifier $notifier, $expirySeconds)
+    public function __construct(EntityManagerInterface $em, EntityResolver $entityResolver, Notifier $notifier, $expirySeconds)
     {
         $this->em = $em;
+        $this->entityResolver = $entityResolver;
         $this->expirySeconds = $expirySeconds;
         $this->notifier = $notifier;
     }
@@ -38,7 +41,7 @@ class ResetTokenManager
 
     public function createAndSaveToken($email)
     {
-        $user = $this->em->getRepository('PerformUserBundle:User')
+        $user = $this->em->getRepository($this->entityResolver->resolve('PerformUserBundle:User'))
               ->findOneBy(['email' => $email]);
         if (!$user) {
             throw new ResetTokenException(sprintf('User "%s" not found.', $email));
