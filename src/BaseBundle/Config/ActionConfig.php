@@ -7,10 +7,11 @@ use Perform\BaseBundle\Util\StringUtil;
 use Perform\BaseBundle\Admin\AdminRequest;
 use Perform\BaseBundle\Action\ActionRegistry;
 use Perform\BaseBundle\Action\ConfiguredAction;
+use Perform\BaseBundle\Action\ActionNotFoundException;
+use Perform\BaseBundle\Action\LinkAction;
+use Perform\BaseBundle\Action\ActionInterface;
 
 /**
- * ActionConfig.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class ActionConfig
@@ -18,6 +19,7 @@ class ActionConfig
     protected $registry;
     protected $resolver;
     protected $actions = [];
+    protected $linkIndex = 0;
 
     public function __construct(ActionRegistry $registry)
     {
@@ -38,12 +40,32 @@ class ActionConfig
             ->setAllowedTypes('confirmationMessage', ['string', 'Closure'])
             ->setAllowedTypes('confirmationRequired', ['bool', 'Closure'])
             ->setAllowedTypes('buttonStyle', 'string')
+            ->setDefined('link')
+            ->setAllowedTypes('link', 'Closure')
             ;
     }
 
+    /**
+     * Add a named action from the action registry for this entity type.
+     *
+     * Use the `perform:debug:actions` command to view the list of action names.
+     *
+     * @param string $name
+     * @param array  $options
+     */
     public function add($name, array $options = [])
     {
-        $action = $this->registry->getAction($name);
+        return $this->addInstance($name, $this->registry->getAction($name), $options);
+    }
+
+    /**
+     * Add an action instance for this entity type.
+     *
+     * @param string $name
+     * @param array  $options
+     */
+    public function addInstance($name, ActionInterface $action, array $options = [])
+    {
         $options = array_replace_recursive($action->getDefaultConfig(), $options);
 
         if (!isset($options['label'])) {
@@ -75,6 +97,26 @@ class ActionConfig
         $this->actions[$name] = new ConfiguredAction($name, $action, $options);
 
         return $this;
+    }
+
+    /**
+     * Add a link for this entity type.
+     *
+     * @param string|Closure $link    The url of the link
+     * @param string|Closure $label
+     * @param array          $options
+     */
+    public function addLink($link, $label, array $options = [])
+    {
+        $options['link'] = $link instanceof \Closure ? $link : function () use ($link) {
+            return $link;
+        };
+        $options['label'] = $label;
+
+        $name = 'link_'.$this->linkIndex;
+        ++$this->linkIndex;
+
+        return $this->addInstance($name, new LinkAction(), $options);
     }
 
     public function get($name)

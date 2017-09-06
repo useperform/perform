@@ -87,7 +87,10 @@ $(function () {
     if (action.confirm) {
       return confirmAction(href, action);
     }
-    runAction($(this).attr('href'), action, $(this));
+    if (action.link) {
+      return window.location = href;
+    }
+    runAction(href, action, $(this));
   });
 
   $('.batch-action-button').click(function(e) {

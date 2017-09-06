@@ -38,7 +38,7 @@ class DeleteAction implements ActionInterface
         return $response;
     }
 
-    public function isGranted($message)
+    public function isGranted($entity)
     {
         return true;
     }
