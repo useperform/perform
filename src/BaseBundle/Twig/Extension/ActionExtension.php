@@ -7,9 +7,10 @@ use Perform\BaseBundle\Action\ActionRegistry;
 use Perform\BaseBundle\Action\ConfiguredAction;
 use Perform\BaseBundle\Admin\AdminRequest;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
- * ActionExtension.
+ * Render action buttons and select options.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
@@ -61,7 +62,7 @@ class ActionExtension extends \Twig_Extension
                                  isset($attr['class']) ? ' '.trim($attr['class']) : '');
         $attr['href'] = $action->isLink() ?
                       $action->getLink($entity) :
-                      $this->urlGenerator->generate('perform_base_action_index', ['action' => $action->getName()]);
+                      $this->getActionHref($action);
 
         return $twig->render('PerformBaseBundle:Action:button.html.twig', [
             'label' => $label,
@@ -83,7 +84,7 @@ class ActionExtension extends \Twig_Extension
             'confirm' => $action->isConfirmationRequired(),
             'buttonStyle' => $action->getButtonStyle(),
         ]);
-        $attr['value'] = $this->urlGenerator->generate('perform_base_action_index', ['action' => $action->getName()]);
+        $attr['value'] = $this->getActionHref($action);
 
         return $twig->render('PerformBaseBundle:Action:option.html.twig', [
             'attr' => $attr,
@@ -99,5 +100,14 @@ class ActionExtension extends \Twig_Extension
     public function getName()
     {
         return 'perform_action';
+    }
+
+    private function getActionHref(ConfiguredAction $action)
+    {
+        try {
+            return $this->urlGenerator->generate('perform_base_action_index', ['action' => $action->getName()]);
+        } catch (RouteNotFoundException $e) {
+            throw new \RuntimeException('You must include routing_action.yml from the PerformBaseBundle to use action buttons. The "perform_base_action_index" route does not exist.', 1, $e);
+        }
     }
 }
