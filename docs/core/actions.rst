@@ -333,6 +333,43 @@ Use ``isAvailable`` to restrict when to display a batch action option.
    It is only called when displaying a batch action option, not when
    actually running an action.
 
+Link actions
+------------
+
+You can also use the ``configureActions`` method to add simple links
+to other resources, but with the additional benefits that actions
+bring, such as requiring confirmation.
+
+To add links next to entities, use the ``addLink`` method of ``ActionConfig``:
+
+.. code-block:: php
+
+   <?php
+
+   public function configureActions(ActionConfig $config)
+   {
+       parent::configureActions($config);
+       $config->addLink(
+           function($user) {
+               return '/?_switch_user='.$user->getEmail();
+           },
+           'Impersonate user',
+           [
+               'confirmationRequired' => true,
+           ]
+       );
+   }
+
+``addLink`` has two required parameters: the link and the label, both
+of which can be either a string or a function that returns a string
+depending on the entity.
+In the above example, the link parameter is a function that changes
+depending on the user's email address.
+
+``addLink`` optionally takes an array of options as a third parameter,
+where all of the options of ``add`` and ``addInstance`` can also be
+used.
+
 Running actions in the cli
 --------------------------
 
