@@ -2,9 +2,9 @@
 
 namespace Perform\BaseBundle\Entity;
 
+use Perform\UserBundle\Entity\User;
+
 /**
- * Setting.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class Setting
