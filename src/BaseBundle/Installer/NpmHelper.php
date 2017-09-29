@@ -27,15 +27,7 @@ class NpmHelper
         $logger->info('Installing npm packages in '.realpath($dir));
         $executable = static::getNpmExecutable($logger);
 
-        $process = new Process($executable.' install', $dir);
-        $process->setTimeout(300);
-        $process->mustRun(function ($type, $buffer) use ($logger) {
-            if (Process::ERR === $type) {
-                $logger->warning($buffer);
-            } else {
-                $logger->info($buffer);
-            }
-        });
+        ProcessHelper::mustRun($executable.' install', $logger, $dir);
     }
 
     /**
