@@ -10,22 +10,22 @@ use Symfony\Component\Process\Process;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-trait NpmTrait
+class NpmHelper
 {
     /**
      * Install npm packages in a given directory.
      *
-     * @param LoggerInterface $logger
      * @param string          $directory The directory path
+     * @param LoggerInterface $logger
      */
-    public function npmInstall(LoggerInterface $logger, $dir)
+    public static function install($dir, LoggerInterface $logger)
     {
         if (!is_dir($dir)) {
             throw new \RuntimeException(sprintf('The directory "%s" does not exist.', $dir));
         }
 
         $logger->info('Installing npm packages in '.realpath($dir));
-        $executable = $this->getNpmExecutable($logger);
+        $executable = static::getNpmExecutable($logger);
 
         $process = new Process($executable.' install', $dir);
         $process->setTimeout(300);
@@ -43,7 +43,7 @@ trait NpmTrait
      *
      * @return string npm or yarn
      */
-    public function getNpmExecutable(LoggerInterface $logger)
+    public static function getNpmExecutable(LoggerInterface $logger)
     {
         $process = new Process('which npm');
         if ($process->run() !== 0) {
