@@ -7,23 +7,23 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputOption;
+use Perform\BaseBundle\Installer\InstallerInterface;
 
 class InstallCommand extends ContainerAwareCommand
 {
-    protected $name = 'perform:install';
-    protected $description = 'Install required settings and configuration.';
-
     protected function configure()
     {
-        $this->setName($this->name)
-            ->setDescription($this->description)
+        $this->setName('perform:install')
+            ->setDescription('Install required settings and configuration.')
+            ->setHelp('This command should be run <info>after</info> the cache has been warmed up.')
             ->addOption(
-                'only',
-                'o',
+                'only-installers',
+                'i',
                 InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
-                'Only run the given installers'
+                'Only run installers matching the given names'
             )
             ;
+        BundleFilter::addOptions($this);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -37,18 +37,21 @@ class InstallCommand extends ContainerAwareCommand
     protected function getInstallers(InputInterface $input)
     {
         $classes = $this->getContainer()->get('perform_base.bundle_searcher')
-                 ->findClassesWithNamespaceSegment('Installer');
+                 ->findClassesWithNamespaceSegment(
+                     'Installer',
+                     null,
+                     BundleFilter::filterBundleNames($input, $this->getApplication()->getKernel()->getBundles()));
         $installers = [];
 
         foreach ($classes as $class) {
             $r = new \ReflectionClass($class);
-            if (!$r->isSubclassOf('Perform\\BaseBundle\\Installer\\InstallerInterface') || $r->isAbstract()) {
+            if (!$r->isSubclassOf(InstallerInterface::class) || $r->isAbstract()) {
                 continue;
             }
             $installers[] = $r->newInstance();
         }
 
-        $only = $input->getOption('only');
+        $only = $input->getOption('only-installers');
         if (!empty($only)) {
             $installers = array_filter($installers, function ($installer) use ($only) {
                 $class = get_class($installer);
