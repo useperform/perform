@@ -21,4 +21,9 @@ class SettingsInstaller implements InstallerInterface
             $importer->importYamlFile($file);
         }
     }
+
+    public function requiresConfiguration()
+    {
+        return true;
+    }
 }

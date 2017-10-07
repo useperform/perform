@@ -19,4 +19,9 @@ class AssetsInstaller implements InstallerInterface
         NpmHelper::install($dir, $logger);
         ProcessHelper::run('npm run build', $logger, $dir);
     }
+
+    public function requiresConfiguration()
+    {
+        return false;
+    }
 }
