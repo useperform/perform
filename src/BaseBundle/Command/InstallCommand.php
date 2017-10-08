@@ -8,6 +8,8 @@ use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputOption;
 use Perform\BaseBundle\Installer\InstallerInterface;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
+use Perform\BaseBundle\Installer\BundleAwareInstallerInterface;
 
 class InstallCommand extends ContainerAwareCommand
 {
@@ -40,10 +42,21 @@ class InstallCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $usedBundles = BundleFilter::filterBundles($input, $this->getApplication()->getKernel()->getBundles());
+
         foreach ($this->getInstallers($input, $output) as $installer) {
-            $output->writeln(sprintf('Running <info>%s</info>', get_class($installer)));
+            $msg = sprintf($installer instanceof BundleAwareInstallerInterface ?
+                           'Running bundle-aware <info>%s</info>' :
+                           'Running <info>%s</info>',
+                           get_class($installer));
+            $output->writeln($msg);
 
             if ($input->getOption('dry-run')) {
+                continue;
+            }
+
+            if ($installer instanceof BundleAwareInstallerInterface) {
+                $installer->installBundles($this->getContainer(), new ConsoleLogger($output), $usedBundles);
                 continue;
             }
 
@@ -53,20 +66,24 @@ class InstallCommand extends ContainerAwareCommand
 
     protected function getInstallers(InputInterface $input, OutputInterface $output)
     {
-        $classes = $this->getContainer()->get('perform_base.bundle_searcher')
-                 ->findClassesWithNamespaceSegment(
-                     'Installer',
-                     null,
-                     BundleFilter::filterBundleNames($input, $this->getApplication()->getKernel()->getBundles()));
-        $installers = [];
+        $usedBundleNames = BundleFilter::filterBundleNames($input, $this->getApplication()->getKernel()->getBundles());
 
-        foreach ($classes as $class) {
-            $r = new \ReflectionClass($class);
+        $mapper = function($classname, $classBasename, BundleInterface $bundle) use ($usedBundleNames) {
+            $r = new \ReflectionClass($classname);
             if (!$r->isSubclassOf(InstallerInterface::class) || $r->isAbstract()) {
-                continue;
+                return false;
             }
-            $installers[] = $r->newInstance();
-        }
+
+            // installers to use are in the used bundles, or are bundle-aware
+            if (in_array($bundle->getName(), $usedBundleNames) || $r->isSubclassOf(BundleAwareInstallerInterface::class)) {
+                return $r->newInstance();
+            }
+
+            return false;
+        };
+
+        $installers = $this->getContainer()->get('perform_base.bundle_searcher')
+                    ->findClassesWithNamespaceSegment('Installer', $mapper);
 
         $installers = $this->filterNames($installers, $input->getOption('only-installers'));
 
