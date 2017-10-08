@@ -23,6 +23,12 @@ class InstallCommand extends ContainerAwareCommand
                 "Only run installers that don't require configuration"
             )
             ->addOption(
+                'dry-run',
+                'd',
+                InputOption::VALUE_NONE,
+                'Only print the installers that would have been run'
+            )
+            ->addOption(
                 'only-installers',
                 'i',
                 InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
@@ -36,6 +42,11 @@ class InstallCommand extends ContainerAwareCommand
     {
         foreach ($this->getInstallers($input, $output) as $installer) {
             $output->writeln(sprintf('Running <info>%s</info>', get_class($installer)));
+
+            if ($input->getOption('dry-run')) {
+                continue;
+            }
+
             $installer->install($this->getContainer(), new ConsoleLogger($output));
         }
     }
