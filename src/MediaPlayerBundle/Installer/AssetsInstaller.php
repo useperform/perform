@@ -1,10 +1,12 @@
 <?php
 
-namespace Perform\BaseBundle\Installer;
+namespace Perform\MediaPlayerBundle\Installer;
 
+use Perform\BaseBundle\Installer\InstallerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Process\Process;
+use Perform\BaseBundle\Installer\NpmHelper;
+use Perform\BaseBundle\Installer\ProcessHelper;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>

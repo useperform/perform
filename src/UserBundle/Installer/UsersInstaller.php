@@ -22,4 +22,9 @@ class UsersInstaller implements InstallerInterface
         $importer = $container->get('perform_user.importer.user');
         $importer->importYamlFile($file);
     }
+
+    public function requiresConfiguration()
+    {
+        return true;
+    }
 }
