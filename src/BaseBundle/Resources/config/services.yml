@@ -1,6 +1,5 @@
 imports:
     - { resource: services_actions.yml }
-    - { resource: services_user.yml }
 
 services:
     perform_base.admin.registry:
@@ -201,12 +200,6 @@ services:
         class: Perform\BaseBundle\Util\BundleSearcher
         arguments:
             - "@kernel"
-
-    perform_base.reset_token_manager:
-        class: Perform\BaseBundle\Security\ResetTokenManager
-        arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@perform_notification.notifier"
 
     perform_base.form.type.hidden_entity:
         class: Perform\BaseBundle\Form\Type\HiddenEntityType

@@ -56,6 +56,22 @@ class ConfiguredAction
         return (bool) $this->options['confirmationRequired']();
     }
 
+    /**
+     * @return bool
+     */
+    public function isLink()
+    {
+        return isset($this->options['link']);
+    }
+
+    /**
+     * @return string
+     */
+    public function getLink($entity)
+    {
+        return $this->isLink() ? $this->options['link']($entity) : '';
+    }
+
     public function getConfirmationMessage(AdminRequest $request, $entity)
     {
         return $this->options['confirmationMessage']($entity, $this->getLabel($request, $entity));

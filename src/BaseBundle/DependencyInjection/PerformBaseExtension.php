@@ -8,10 +8,11 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Config\Resource\FileResource;
-use Symfony\Component\Config\Resource\DirectoryResource;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Perform\BaseBundle\Doctrine\EntityResolver;
+use Perform\BaseBundle\Licensing\KeyChecker;
+use Symfony\Component\DependencyInjection\Definition;
+use Perform\BaseBundle\EventListener\ProjectKeyListener;
+use Perform\BaseBundle\Util\PackageUtil;
 
 /**
  * PerformBaseExtension.
@@ -30,6 +31,7 @@ class PerformBaseExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
+        $this->validateProjectKey($container, $config);
         $container->setParameter('perform_base.panels.left', $config['panels']['left']);
         $container->setParameter('perform_base.panels.right', $config['panels']['right']);
         $container->setParameter('perform_base.menu_order', $config['menu']['order']);
@@ -39,9 +41,6 @@ class PerformBaseExtension extends Extension
         $this->findExtendedEntities($container, $config);
         $this->processAdminConfig($container, $config);
         $this->createSimpleMenus($container, $config['menu']['simple']);
-
-        $tokenManager = $container->getDefinition('perform_base.reset_token_manager');
-        $tokenManager->addArgument($config['security']['reset_token_expiry']);
     }
 
     protected function configureTypeRegistry(ContainerBuilder $container)
@@ -67,6 +66,7 @@ class PerformBaseExtension extends Extension
     {
         if (!isset($config['mailer']['from_address'])) {
             $container->removeDefinition('perform_base.email.mailer');
+
             return;
         }
 
@@ -159,5 +159,53 @@ class PerformBaseExtension extends Extension
         }
 
         $container->setParameter('perform_base.admins', $admins);
+    }
+
+    /**
+     * Thank you for choosing to use Perform for your application!
+     *
+     * As a customer, you are welcome to browse through this source
+     * code to see how things work.
+     *
+     * It's fairly simple to subvert this licensing code, but please
+     * consider saving your time and purchasing a license instead.
+     *
+     * Remember that your support helps fund future development.
+     *
+     * Thank you.
+     */
+    protected function validateProjectKey(ContainerBuilder $builder, array $config)
+    {
+        if ($builder->getParameter('kernel.debug')) {
+            return;
+        }
+
+        $key = isset($config['project_key']) ? $config['project_key'] : '';
+
+        $checker = new KeyChecker('https://useperform.com/api/validate', $builder->getParameter('kernel.bundles'), $this->getPerformVersions($builder));
+        $response = $checker->validate($key);
+
+        $def = new Definition(ProjectKeyListener::class);
+        $def->setArguments([new Reference('logger'), $key, $response->isValid(), $response->getDomains()]);
+        $def->addTag('kernel.event_listener', [
+            'event' => 'kernel.request',
+            'method' => 'onKernelRequest',
+        ]);
+        $builder->setDefinition('perform_base.listener.project_key', $def);
+    }
+
+    protected function getPerformVersions(ContainerBuilder $builder)
+    {
+        try {
+            $projectDir = $builder->hasParameter('kernel.project_dir') ?
+                        $builder->getParameter('kernel.project_dir') :
+                        $builder->getParameter('kernel.root_dir').'/../';
+
+            return PackageUtil::getPerformVersions([
+                $projectDir.'/composer.lock',
+            ]);
+        } catch (\RuntimeException $e) {
+            return [];
+        }
     }
 }

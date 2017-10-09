@@ -84,6 +84,22 @@ class ConfiguredActionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('btn-danger', $ca->getButtonStyle());
     }
 
+    public function testLink()
+    {
+        $ca = new ConfiguredAction('something', $this->action, [
+            'link' => function($entity) { return $entity->title; }
+        ]);
+        $entity = new \stdClass();
+        $entity->title = 'hello';
+        $this->assertSame('hello', $ca->getLink($entity));
+    }
+
+    public function testNotLink()
+    {
+        $ca = new ConfiguredAction('something', $this->action, []);
+        $this->assertSame('', $ca->getLink(new \stdClass()));
+    }
+
     public function testRun()
     {
         $entities = [new \stdClass];

@@ -4,7 +4,7 @@ Actions
 On top of viewing, creating, editing, and deleting entities, you may
 want to define operations that act on entities in some way.
 
-For example, an action might:
+For example, you might want operations to:
 
 - archive a message
 - trigger a report
@@ -26,12 +26,61 @@ page, depending on the response from the action.
 An action can also require confirmation before executing, and can be
 configured to only run after passing various conditions.
 
-Create an action
-----------------
+Required configuration
+----------------------
 
-All actions must implement
-``Perform\BaseBundle\Action\ActionInterface``, and define services
-tagged with ``perform_base.action``.
+Add ``routing_action.yml`` from the `BaseBundle` to your routing configuration:
+
+.. code-block:: yaml
+
+    perform_base_action:
+        resource: "@PerformBaseBundle/Resources/config/routing_action.yml"
+        prefix: /admin/_action
+
+This resource loads routes for a controller in the `BaseBundle` that handles the different actions.
+Javascript code on the frontend sends POST requests to this controller when action buttons are clicked.
+
+Make sure to use a sensible prefix that won't conflict with any existing routes, e.g. ``/admin/_action``.
+
+Using actions
+-------------
+
+Use the ``addInstance`` and ``add`` methods of the ``ActionConfig`` object in ``Perform\BaseBundle\Admin\AdminInterface#configureActions()`` to add actions for your entity.
+
+``addInstance`` requires an arbitrary action name (unique for this entity only) and an instance of ``Perform\BaseBundle\Action\ActionInterface``.
+However, you'll often find that actions require injected dependencies, such as the Doctrine entity manager to save entities.
+
+Fortunately, actions can be added to a `registry`, which handles their dependencies and allows you to refer to them globally by name.
+If the desired action is in the registry, use ``add``, which only requires the action name.
+
+.. note::
+
+   Use the ``perform:debug:actions`` console command to view all registered actions in the registry.
+
+Both ``addInstance`` and ``add`` take an array of options which can be used to customize how the button is displayed and how it behaves.
+
+.. code-block:: php
+
+   <?php
+
+    public function configureActions(ActionConfig $config)
+    {
+        // add a registered action with some options
+        $config->add('perform_base_delete', [
+            'label' => 'Destroy',
+            'confirmationRequired' => true,
+        ]);
+
+        // or add an action instance (assuming $this->em is an injected Doctrine entity manager)
+        $config->addInstance('delete', new DeleteAction($this->em));
+    }
+
+Creating a new action
+---------------------
+
+To create your own action, implement ``Perform\BaseBundle\Action\ActionInterface``.
+To register it with the action registry, define it as a service
+with the ``perform_base.action`` tag.
 
 ``ActionInterface#run()`` should return an instance of
 ``Perform\BaseBundle\Action\ActionResponse`` or throw an exception.
@@ -93,10 +142,7 @@ Define it as a service, and give it the ``perform_base.action`` tag.
         tags:
             - { name: perform_base.action, alias: app_log_json }
 
-Use the action
---------------
-
-The action is now available to use in admin classes with the ``configureActions`` method:
+The new action is now available to use in the ``configureActions`` method:
 
 .. code-block:: php
 
@@ -109,6 +155,10 @@ The action is now available to use in admin classes with the ``configureActions`
 
         // add the custom action
         $config->add('app_log_json');
+
+        // or as an instance, if you skipped creating a service for it.
+        // note that the logger will have to be injected to your admin class.
+        $config->addInstance('log', new LogJsonAction($this->logger));
     }
 
 This action will now appear next to each entity and in the batch actions dropdown.
@@ -233,7 +283,7 @@ Labels can also be overridden when adding the action in an entity admin:
 Both options can also be a function, allowing for dynamic labels.
 They are passed the current instance of
 ``Perform\BaseBundle\Admin\AdminRequest``, and the ``label`` function
-will be passed the entity in question.
+will also be passed the entity in question.
 
 .. code-block:: php
 
@@ -283,6 +333,43 @@ Use ``isAvailable`` to restrict when to display a batch action option.
    It is only called when displaying a batch action option, not when
    actually running an action.
 
+Link actions
+------------
+
+You can also use the ``configureActions`` method to add simple links
+to other resources, but with the additional benefits that actions
+bring, such as requiring confirmation.
+
+To add links next to entities, use the ``addLink`` method of ``ActionConfig``:
+
+.. code-block:: php
+
+   <?php
+
+   public function configureActions(ActionConfig $config)
+   {
+       parent::configureActions($config);
+       $config->addLink(
+           function($user) {
+               return '/?_switch_user='.$user->getEmail();
+           },
+           'Impersonate user',
+           [
+               'confirmationRequired' => true,
+           ]
+       );
+   }
+
+``addLink`` has two required parameters: the link and the label, both
+of which can be either a string or a function that returns a string
+depending on the entity.
+In the above example, the link parameter is a function that changes
+depending on the user's email address.
+
+``addLink`` optionally takes an array of options as a third parameter,
+where all of the options of ``add`` and ``addInstance`` can also be
+used.
+
 Running actions in the cli
 --------------------------
 
@@ -304,4 +391,4 @@ Multiple ids can also be specified, separated with a space.
 
    3 items deleted.
 
-Finally, ``perform:debug:actions`` will show all available actions.
+Use the ``perform:debug:actions`` console command to show all the available actions.

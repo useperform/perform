@@ -24,7 +24,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * $config->add('owner', [
  *     'type' => 'entity',
  *     'options' => [
- *         'class' => 'PerformBaseBundle:User',
+ *         'class' => 'PerformUserBundle:User',
  *         'display_field' => 'email',
  *     ],
  *     'sort' => false,

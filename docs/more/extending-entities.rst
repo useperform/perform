@@ -30,7 +30,7 @@ For example, to extend Perform's user entity:
 
     namespace AppBundle\Entity;
 
-    use Perform\BaseBundle\Entity\User as BaseUser;
+    use Perform\UserBundle\Entity\User as BaseUser;
 
     class User extends BaseUser
     {
@@ -65,9 +65,9 @@ For example, to extend Perform's user entity:
 
     perform_base:
         extended_entities:
-            "PerformBaseBundle:User": "AppBundle:User"
+            "PerformUserBundle:User": "AppBundle:User"
 
-This will configure ``PerformBaseBundle:User`` to be a mapped superclass, and ``AppBundle:User`` to be a concrete entity extending it.
+This will configure ``PerformUserBundle:User`` to be a mapped superclass, and ``AppBundle:User`` to be a concrete entity extending it.
 
 Working with the correct entity
 -------------------------------
@@ -85,10 +85,10 @@ For example, to get a fetch a user by id, regardless of it being extended or not
 
    /* @var EntityResolver $resolver */
    /* @var EntityManager $em */
-   $repo = $em->getRepository($resolver->resolve('PerformBaseBundle:User'));
+   $repo = $em->getRepository($resolver->resolve('PerformUserBundle:User'));
    $user = $repo->find(1);
 
-``$user`` may be an instance of ``Perform\BaseBundle\Entity\User``, or perhaps an instance of ``AppBundle\Entity\User``, but as long as the code expects a ``PerformBaseBundle\BaseBundle\Entity\User`` it will continue to work correctly.
+``$user`` may be an instance of ``Perform\UserBundle\Entity\User``, or perhaps an instance of ``AppBundle\Entity\User``, but as long as the code expects a ``Perform\UserBundle\Entity\User`` it will continue to work correctly.
 
 For instance, this method will always work, regardless of the user entity being extended or not:
 
@@ -96,7 +96,7 @@ For instance, this method will always work, regardless of the user entity being 
 
    <?php
 
-   public function botherUser(\Perform\BaseBundle\Entity\User $user) {
+   public function botherUser(\Perform\UserBundle\Entity\User $user) {
        //...
    }
 
@@ -105,11 +105,11 @@ EntityResolver usage
 
 ``EntityResolver`` will always return the fully qualified classname of the concrete entity.
 
-You may pass a classname (``Perform\BaseBundle\Entity\User``), an alias (``PerformBaseBundle:User``), or an instance of the entity (``new User()``) to ``resolve()``.
+You may pass a classname (``Perform\UserBundle\Entity\User``), an alias (``PerformUserBundle:User``), or an instance of the entity (``new User()``) to ``resolve()``.
 
 In this case, because the entity has been extended, all calls will return ``AppBundle\Entity\User``.
 
-If it had not been extended, all calls would return ``Perform\BaseBundle\Entity\User``.
+If it had not been extended, all calls would return ``Perform\UserBundle\Entity\User``.
 
 Admins for extended entities
 ----------------------------
@@ -122,7 +122,7 @@ To define a new admin for the extended entity, create an admin class that extend
 
    <?php
 
-    use Perform\BaseBundle\Admin\UserAdmin as BaseAdmin;
+    use Perform\UserBundle\Admin\UserAdmin as BaseAdmin;
     use Perform\BaseBundle\Config\TypeConfig;
 
     class UserAdmin extends BaseAdmin
@@ -152,11 +152,11 @@ The ``AdminRegistry`` uses the ``EntityResolver`` internally to fetch the correc
    <?php
 
    /* @var AdminRegistry $registry */
-   $registry->getAdmin('PerformBaseBundle:User');
+   $registry->getAdmin('PerformUserBundle:User');
 
 will return an instance of ``AppBundle\Admin\UserAdmin`` because the entity has been extended.
 
-If it had not been extended, or no new admin had been created, it would return an instance of ``Perform\BaseBundle\Admin\UserAdmin``.
+If it had not been extended, or no new admin had been created, it would return an instance of ``Perform\UserBundle\Admin\UserAdmin``.
 
 CRUD routing
 ------------
@@ -168,11 +168,11 @@ Loading a resource such as:
 .. code-block:: yaml
 
     user_admin:
-        resource: "PerformBaseBundle:User"
+        resource: "PerformUserBundle:User"
         type: crud
         prefix: /admin/users
 
 
 will create CRUD routes for ``AppBundle:User`` because the entity has been extended.
 
-If it had not been extended, it would create CRUD routes for ``PerformBaseBundle:User``.
+If it had not been extended, it would create CRUD routes for ``PerformUserBundle:User``.

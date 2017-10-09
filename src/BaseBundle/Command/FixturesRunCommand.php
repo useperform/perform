@@ -11,10 +11,10 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Perform\BaseBundle\DataFixtures\ORM\EntityDeclaringFixtureInterface;
 use Perform\BaseBundle\DataFixtures\ORM\Purger;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
+use Doctrine\Common\DataFixtures\FixtureInterface;
 
 /**
- * FixturesRunCommand.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class FixturesRunCommand extends ContainerAwareCommand
@@ -26,21 +26,12 @@ class FixturesRunCommand extends ContainerAwareCommand
         $this->setName('perform:fixtures')
             ->setDescription('Run database fixtures')
             ->addOption(
-                'only-bundles',
-                'o',
-                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
-                'Only run fixtures for the given bundles'
-            )->addOption(
-                'exclude-bundles',
-                'x',
-                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
-                'Exclude the given bundles'
-            )->addOption(
                 'append',
                 '',
                 InputOption::VALUE_NONE,
-                'Don\'t empty database tables'
+                "Don't empty database tables"
             );
+        BundleFilter::addOptions($this);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -51,7 +42,7 @@ class FixturesRunCommand extends ContainerAwareCommand
         $this->excludedEntities = array_keys(
             $this->getContainer()->getParameter('perform_base.extended_entities'));
 
-        $fixtures = $this->getFixtures($this->getInputBundles($input), $output);
+        $fixtures = $this->getFixtures($input, $output);
         if (empty($fixtures)) {
             $output->writeln('No fixtures found.');
 
@@ -75,19 +66,18 @@ class FixturesRunCommand extends ContainerAwareCommand
         $output->writeln(sprintf('Ran <info>%s</info> %s.', $count, $inflection));
     }
 
-    protected function getFixtures(array $bundleNames, OutputInterface $output)
+    protected function getFixtures(InputInterface $input, OutputInterface $output)
     {
-        if (empty($bundleNames)) {
-            return [];
-        }
+        $usedBundleNames = BundleFilter::filterBundleNames($input, $this->getApplication()->getKernel()->getBundles());
 
         $mapper = function ($class) use ($output) {
             $r = new \ReflectionClass($class);
-            if (!$r->isSubclassOf(EntityDeclaringFixtureInterface::class) || $r->isAbstract()) {
+            if (!$r->isSubclassOf(FixtureInterface::class) || $r->isAbstract()) {
                 return false;
             }
             $fixture = $r->newInstance();
-            $usedExcludedEntities = array_intersect($fixture->getEntityClasses(), $this->excludedEntities);
+            $usedExcludedEntities = $r->isSubclassOf(EntityDeclaringFixtureInterface::class) ?
+                                  array_intersect($fixture->getEntityClasses(), $this->excludedEntities) : [];
             if (count($usedExcludedEntities) > 0) {
                 if ($output->isVerbose()) {
                     $output->writeln(sprintf(
@@ -106,8 +96,21 @@ class FixturesRunCommand extends ContainerAwareCommand
             return $fixture;
         };
 
-        return $this->getContainer()->get('perform_base.bundle_searcher')
-            ->findClassesWithNamespaceSegment('DataFixtures\\ORM', $mapper, $bundleNames);
+        $fixtures = $this->getContainer()->get('perform_base.bundle_searcher')
+                  ->findClassesWithNamespaceSegment('DataFixtures\\ORM', $mapper, $usedBundleNames);
+
+        usort($fixtures, function ($a, $b) {
+            $aOrder = $a instanceof OrderedFixtureInterface ? $a->getOrder() : 0;
+            $bOrder = $b instanceof OrderedFixtureInterface ? $b->getOrder() : 0;
+
+            if ($aOrder === $bOrder) {
+                return 0;
+            }
+
+            return $aOrder < $bOrder ? -1 : 1;
+        });
+
+        return $fixtures;
     }
 
     /**
@@ -123,64 +126,14 @@ class FixturesRunCommand extends ContainerAwareCommand
 
         $declaredClasses = [];
         foreach ($fixtures as $fixture) {
+            if (!$fixture instanceof EntityDeclaringFixtureInterface) {
+                throw new \RuntimeException(sprintf('%s does not implement %s. To be able to use the --only-bundles and --exclude-bundles options, all of the target fixture classes must implement this interface.', get_class($fixture), EntityDeclaringFixtureInterface::class));
+            }
+
             $declaredClasses = array_merge($declaredClasses, $fixture->getEntityClasses());
         }
 
         return $declaredClasses;
-    }
-
-    /**
-     * Get bundle names from the given input.
-     * --only-bundles takes priority over --exclude-bundles.
-     * Defaults to all bundles.
-     *
-     * @param InputInterface $input
-     */
-    protected function getInputBundles(InputInterface $input)
-    {
-        $bundles = $this->getApplication()->getKernel()->getBundles();
-
-        if ($input->getOption('only-bundles')) {
-            $included = $this->normaliseBundleNames($input->getOption('only-bundles'));
-
-            $bundles = array_filter($bundles, function ($bundle) use ($included) {
-                foreach ($included as $name) {
-                    if ($name === strtolower($bundle->getName())) {
-                        return true;
-                    }
-                }
-
-                return false;
-            });
-        } elseif ($input->getOption('exclude-bundles')) {
-            $excluded = $this->normaliseBundleNames($input->getOption('exclude-bundles'));
-
-            $bundles = array_filter($bundles, function ($bundle) use ($excluded) {
-                foreach ($excluded as $name) {
-                    if ($name === strtolower($bundle->getName())) {
-                        return false;
-                    }
-                }
-
-                return true;
-            });
-        }
-
-        return array_map(function ($bundle) {
-            return $bundle->getName();
-        }, $bundles);
-    }
-
-    protected function normaliseBundleNames(array $bundleNames)
-    {
-        return array_map(function ($name) {
-            $name = strtolower($name);
-            if (substr($name, -6) !== 'bundle') {
-                $name .= 'bundle';
-            }
-
-            return str_replace('_', '', $name);
-        }, $bundleNames);
     }
 
     private function askConfirmation(InputInterface $input, OutputInterface $output, $question, $default)

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Please login to continue{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{{asset('bundles/performbase/css/app.css')}}" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="col-md-4 col-md-offset-4">
+        <div class="panel panel-primary mt">
+          <div class="panel-heading">
+            <h3>{{block('title')}}</h3>
+          </div>
+          <div class="panel-body">
+            {% block panel_body %}
+              {% if error %}
+                <div class="alert alert-danger">
+                  {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
+              {% endif %}
+
+              <form action="{{ path('perform_user_login') }}" method="post">
+                <div class="form-group">
+                  <label for="username" class="control-label">Email</label>
+                  <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}" />
+                </div>
+                <div class="form-group">
+                  <label for="password" class="control-label">Password</label>
+                  {% if perform_route_exists('perform_user_password_forgot') %}
+                    <a href="{{path('perform_user_password_forgot')}}" class="pull-right" tabindex="-1">
+                      Forgotten your password?
+                    </a>
+                  {% endif %}
+                  <input type="password" class="form-control" id="password" name="_password" />
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
+              </form>
+            {% endblock %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

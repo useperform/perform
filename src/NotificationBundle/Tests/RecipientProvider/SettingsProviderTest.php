@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Perform\BaseBundle\Settings\SettingsManager;
 use Perform\NotificationBundle\RecipientProvider\SettingsProvider;
 use Perform\NotificationBundle\Recipient\RecipientInterface;
-use Perform\BaseBundle\Repository\UserRepository;
+use Perform\UserBundle\Repository\UserRepository;
 use Perform\NotificationBundle\Recipient\SimpleRecipient;
 
 /**

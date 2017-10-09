@@ -2,7 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Admin;
 
-use Perform\BaseBundle\Admin\UserAdmin;
+use Perform\UserBundle\Admin\UserAdmin;
 use Symfony\Component\Templating\EngineInterface;
 
 /**

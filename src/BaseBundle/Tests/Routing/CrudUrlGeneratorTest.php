@@ -3,8 +3,8 @@
 namespace Perform\BaseBundle\Tests\Routing;
 
 use Perform\BaseBundle\Routing\CrudUrlGenerator;
-use Perform\BaseBundle\Entity\User;
-use Perform\BaseBundle\Admin\UserAdmin;
+use Perform\UserBundle\Entity\User;
+use Perform\UserBundle\Admin\UserAdmin;
 use Perform\BaseBundle\Admin\AdminInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Perform\BaseBundle\Admin\AdminRegistry;
@@ -46,7 +46,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(new UserAdmin()));
         $this->router->expects($this->any())
             ->method('generate')
-            ->with('perform_base_user_list')
+            ->with('perform_user_user_list')
             ->will($this->returnValue('/admin/users'));
 
         $this->assertSame('/admin/users', $this->generator->generate($user, 'list'));
@@ -56,33 +56,33 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $this->adminRegistry->expects($this->any())
             ->method('getAdmin')
-            ->with('PerformBaseBundle:User')
+            ->with('PerformUserBundle:User')
             ->will($this->returnValue(new UserAdmin()));
         $this->router->expects($this->any())
             ->method('generate')
-            ->with('perform_base_user_list')
+            ->with('perform_user_user_list')
             ->will($this->returnValue('/admin/users'));
 
-        $this->assertSame('/admin/users', $this->generator->generate('PerformBaseBundle:User', 'list'));
+        $this->assertSame('/admin/users', $this->generator->generate('PerformUserBundle:User', 'list'));
     }
 
     public function testGenerateCreateWithString()
     {
         $this->adminRegistry->expects($this->any())
             ->method('getAdmin')
-            ->with('PerformBaseBundle:User')
+            ->with('PerformUserBundle:User')
             ->will($this->returnValue(new UserAdmin()));
         $this->router->expects($this->any())
             ->method('generate')
-            ->with('perform_base_user_create')
+            ->with('perform_user_user_create')
             ->will($this->returnValue('/admin/users/create'));
 
-        $this->assertSame('/admin/users/create', $this->generator->generate('PerformBaseBundle:User', 'create'));
+        $this->assertSame('/admin/users/create', $this->generator->generate('PerformUserBundle:User', 'create'));
     }
 
     public function testGenerateView()
     {
-        $user = $this->getMock('Perform\BaseBundle\Entity\User');
+        $user = $this->getMock('Perform\UserBundle\Entity\User');
         $user->expects($this->any())
             ->method('getId')
             ->will($this->returnValue(1));
@@ -92,7 +92,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(new UserAdmin()));
         $this->router->expects($this->any())
             ->method('generate')
-            ->with('perform_base_user_view', ['id' => 1])
+            ->with('perform_user_user_view', ['id' => 1])
             ->will($this->returnValue('/admin/users/view/1'));
 
         $this->assertSame('/admin/users/view/1', $this->generator->generate($user, 'view'));
@@ -100,7 +100,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
 
     public function testGenerateViewDefault()
     {
-        $user = $this->getMock('Perform\BaseBundle\Entity\User');
+        $user = $this->getMock('Perform\UserBundle\Entity\User');
         $user->expects($this->any())
             ->method('getId')
             ->will($this->returnValue(1));
@@ -110,7 +110,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(new UserAdmin()));
         $this->router->expects($this->any())
             ->method('generate')
-            ->with('perform_base_user_view_default')
+            ->with('perform_user_user_view_default')
             ->will($this->returnValue('/admin/users'));
 
         $this->assertSame('/admin/users', $this->generator->generate($user, 'viewDefault'));
@@ -119,7 +119,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
 
     public function testGenerateEdit()
     {
-        $user = $this->getMock('Perform\BaseBundle\Entity\User');
+        $user = $this->getMock('Perform\UserBundle\Entity\User');
         $user->expects($this->any())
             ->method('getId')
             ->will($this->returnValue(1));
@@ -129,7 +129,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(new UserAdmin()));
         $this->router->expects($this->any())
             ->method('generate')
-            ->with('perform_base_user_edit', ['id' => 1])
+            ->with('perform_user_user_edit', ['id' => 1])
             ->will($this->returnValue('/admin/users/edit/1'));
 
         $this->assertSame('/admin/users/edit/1', $this->generator->generate($user, 'edit'));
@@ -137,7 +137,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
 
     public function testGenerateEditDefault()
     {
-        $user = $this->getMock('Perform\BaseBundle\Entity\User');
+        $user = $this->getMock('Perform\UserBundle\Entity\User');
         $user->expects($this->never())
             ->method('getId');
         $this->adminRegistry->expects($this->any())
@@ -146,7 +146,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(new UserAdmin()));
         $this->router->expects($this->any())
             ->method('generate')
-            ->with('perform_base_user_edit_default')
+            ->with('perform_user_user_edit_default')
             ->will($this->returnValue('/admin/users/edit'));
 
         $this->assertSame('/admin/users/edit', $this->generator->generate($user, 'editDefault'));

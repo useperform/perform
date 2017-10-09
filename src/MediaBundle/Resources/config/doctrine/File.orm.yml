@@ -32,6 +32,6 @@ Perform\MediaBundle\Entity\File:
                     on: update
     manyToOne:
         owner:
-            targetEntity: Perform\BaseBundle\Entity\User
+            targetEntity: Perform\UserBundle\Entity\User
             joinColumn:
                 nullable: true

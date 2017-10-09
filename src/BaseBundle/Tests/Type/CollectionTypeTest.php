@@ -2,7 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Type;
 
-use Perform\BaseBundle\Entity\User;
+use Perform\UserBundle\Entity\User;
 use Perform\BaseBundle\Type\CollectionType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Perform\BaseBundle\Admin\AdminRegistry;

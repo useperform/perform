@@ -48,6 +48,7 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('foo', $ca->getName());
         $this->assertSame('Foo', $ca->getLabel($this->stubRequest(), new \stdClass()));
         $this->assertSame('Foo', $ca->getBatchLabel($this->stubRequest()));
+        $this->assertFalse($ca->isLink());
     }
 
     public function testAddWithStringLabels()
@@ -70,6 +71,49 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('foo', $ca->getName());
         $this->assertSame('Foo label', $ca->getLabel($this->stubRequest(), new \stdClass()));
         $this->assertSame('Foo batch label', $ca->getBatchLabel($this->stubRequest()));
+    }
+
+    public function testAddLink()
+    {
+        $this->assertSame($this->config, $this->config->addLink('http://example.com', 'Test link'));
+
+        $ca = $this->config->get('link_0');
+        $this->assertInstanceOf(ConfiguredAction::class, $ca);
+        $this->assertSame('link_0', $ca->getName());
+        $this->assertSame('Test link', $ca->getLabel($this->stubRequest(), new \stdClass()));
+        $this->assertTrue($ca->isLink());
+        $this->assertSame('http://example.com', $ca->getLink(new \stdClass()));
+    }
+
+    public function testLinkIndexIsIncremented()
+    {
+        $this->config->addLink('http://example.com', 'Link 0');
+        $this->config->addLink('http://example.com', 'Link 1');
+        $this->config->addLink('http://example.com', 'Link 2');
+        $this->config->addLink('http://example.com', 'Link 3');
+
+        $this->assertSame(['link_0', 'link_1', 'link_2', 'link_3'], array_keys($this->config->all()));
+    }
+
+    public function testAddInstance()
+    {
+        $action = $this->getMock(ActionInterface::class);
+        $action->expects($this->any())
+            ->method('getDefaultConfig')
+            ->will($this->returnValue([]));
+
+        $this->assertSame($this->config, $this->config->addInstance('some_action', $action));
+
+        $ca = $this->config->get('some_action');
+        $this->assertInstanceOf(ConfiguredAction::class, $ca);
+        $this->assertFalse($ca->isLink());
+
+        $options = ['opt' => true];
+        $entities = [new \stdClass];
+        $action->expects($this->once())
+            ->method('run')
+            ->with($entities, $options);
+        $ca->run($entities, $options);
     }
 
     public function testForEntity()

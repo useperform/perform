@@ -1,8 +1,8 @@
-perform_base_login:
+perform_user_login:
     resource: "@PerformBaseBundle/Resources/config/routing_security.yml"
     prefix: /admin
 
-perform_base_passwords:
+perform_user_passwords:
     resource: "@PerformBaseBundle/Resources/config/routing_password.yml"
 
 perform_base_index:

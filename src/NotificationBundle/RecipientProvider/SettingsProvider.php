@@ -30,7 +30,7 @@ class SettingsProvider implements RecipientProviderInterface
         }
 
         $emails = (array) $this->settings->getValue($criteria['setting']);
-        $users = $this->entityManager->getRepository('PerformBaseBundle:User')
+        $users = $this->entityManager->getRepository('PerformUserBundle:User')
             ->findByEmails($emails);
 
         $missingEmails = array_combine($emails, $emails);
