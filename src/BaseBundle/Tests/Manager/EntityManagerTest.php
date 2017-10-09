@@ -39,7 +39,7 @@ class EntityManagerTest extends \PHPUnit_Framework_TestCase
                 [$this->equalTo(EntityEvent::POST_CREATE), $this->callback($eventCallback)]
             );
 
-        $this->manager->create($entity);
+        $this->assertSame($entity, $this->manager->create($entity));
     }
 
     public function testCreateWithChangedEntity()
@@ -55,7 +55,7 @@ class EntityManagerTest extends \PHPUnit_Framework_TestCase
                 $event->setEntity($newEntity);
             }));
 
-        $this->manager->create($entity);
+        $this->assertSame($newEntity, $this->manager->create($entity));
     }
 
     public function testUpdate()
@@ -76,7 +76,7 @@ class EntityManagerTest extends \PHPUnit_Framework_TestCase
                 [$this->equalTo(EntityEvent::POST_UPDATE), $this->callback($eventCallback)]
             );
 
-        $this->manager->update($entity);
+        $this->assertSame($entity, $this->manager->update($entity));
     }
 
     public function testUpdateWithChangedEntity()
@@ -92,6 +92,6 @@ class EntityManagerTest extends \PHPUnit_Framework_TestCase
                 $event->setEntity($newEntity);
             }));
 
-        $this->manager->update($entity);
+        $this->assertSame($newEntity, $this->manager->update($entity));
     }
 }
