@@ -9,4 +9,5 @@ Further Reading
    ./entity-collections
    ./extending-entities
    ./working-with-dates
+   ./crud-events
    ./settings
