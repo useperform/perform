@@ -41,6 +41,14 @@ class ProjectKeyListenerTest extends \PHPUnit_Framework_TestCase
         return file_get_contents(__DIR__.'/../../Resources/views/Licensing/invalid.html');
     }
 
+    private function assertInvalid(GetResponseEvent $event)
+    {
+        $response = $event->getResponse();
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertSame(Response::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
+        $this->assertSame($this->errorFile(), $response->getContent());
+    }
+
     public function testNoOpOnValid()
     {
         $listener = new ProjectKeyListener($this->logger, 'some-valid-key', true, ['example.com']);
@@ -48,6 +56,26 @@ class ProjectKeyListenerTest extends \PHPUnit_Framework_TestCase
         $this->logger->expects($this->never())
             ->method('emergency');
 
+        $listener->onKernelRequest($event);
+        $this->assertNull($event->getResponse());
+    }
+
+    public function characterProvider()
+    {
+        return [
+            ['example.com.'],
+            ['example.com '],
+            ['example.com. '],
+        ];
+    }
+
+    /**
+     * @dataProvider characterProvider
+     */
+    public function testCharactersAreTrimmedFromValidHost($host)
+    {
+        $listener = new ProjectKeyListener($this->logger, 'some-valid-key', true, ['example.com']);
+        $event = $this->newEvent($this->newRequest($host));
         $listener->onKernelRequest($event);
         $this->assertNull($event->getResponse());
     }
@@ -60,10 +88,7 @@ class ProjectKeyListenerTest extends \PHPUnit_Framework_TestCase
             ->method('emergency');
 
         $listener->onKernelRequest($event);
-        $response = $event->getResponse();
-        $this->assertInstanceOf(Response::class, $response);
-        $this->assertSame(Response::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
-        $this->assertSame($this->errorFile(), $response->getContent());
+        $this->assertInvalid($event);
     }
 
     public function invalidHostProvider()
@@ -86,9 +111,29 @@ class ProjectKeyListenerTest extends \PHPUnit_Framework_TestCase
             ->method('emergency');
 
         $listener->onKernelRequest($event);
-        $response = $event->getResponse();
-        $this->assertInstanceOf(Response::class, $response);
-        $this->assertSame(Response::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
-        $this->assertSame($this->errorFile(), $response->getContent());
+        $this->assertInvalid($event);
+    }
+
+    public function invalidSubdomainProvider()
+    {
+        return [
+            ['dev.example.com'],
+            ['a.b.c.example.com'],
+            ['.example.com'],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidSubdomainProvider
+     */
+    public function testSubdomainsAreInvalid($host)
+    {
+        $listener = new ProjectKeyListener($this->logger, 'some-valid-key', true, ['example.com']);
+        $event = $this->newEvent($this->newRequest($host));
+        $this->logger->expects($this->once())
+            ->method('emergency');
+
+        $listener->onKernelRequest($event);
+        $this->assertInvalid($event);
     }
 }

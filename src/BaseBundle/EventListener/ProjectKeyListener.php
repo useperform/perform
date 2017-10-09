@@ -33,7 +33,8 @@ class ProjectKeyListener
             ));
         }
 
-        $host = $event->getRequest()->getHost();
+        // trim root DNS dot and whitespace from the end of the host
+        $host = rtrim($event->getRequest()->getHost(), ". \t\n\r\0\x0B");
         if (!in_array($host, $this->domains)) {
             $domainMsg = count($this->domains) === 0 ?
                        'There are no domains registered for this project' :
