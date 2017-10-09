@@ -36,7 +36,7 @@ class EntityManager
             $this->dispatcher->dispatch(EntityEvent::PRE_CREATE, $event);
             $this->em->persist($event->getEntity());
             $this->em->flush();
-            $this->dispatcher->dispatch(EntityEvent::POST_CREATE, new EntityEvent($entity));
+            $this->dispatcher->dispatch(EntityEvent::POST_CREATE, new EntityEvent($event->getEntity()));
         } catch (\Exception $e) {
             $this->logger->error('An exception occurred creating an entity.', [
                 'entity' => $entity,
@@ -56,7 +56,7 @@ class EntityManager
             $this->dispatcher->dispatch(EntityEvent::PRE_UPDATE, $event);
             $this->em->persist($event->getEntity());
             $this->em->flush();
-            $this->dispatcher->dispatch(EntityEvent::POST_UPDATE, new EntityEvent($entity));
+            $this->dispatcher->dispatch(EntityEvent::POST_UPDATE, new EntityEvent($event->getEntity()));
         } catch (\Exception $e) {
             $this->logger->error('An exception occurred updating an entity.', [
                 'entity' => $entity,
