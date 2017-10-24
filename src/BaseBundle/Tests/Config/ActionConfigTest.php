@@ -30,12 +30,36 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
             ->getMock();
     }
 
-    public function testAddNoLabels()
+    protected function stubAction(array $defaultConfig = [])
     {
         $action = $this->getMock(ActionInterface::class);
         $action->expects($this->any())
             ->method('getDefaultConfig')
             ->will($this->returnValue([]));
+
+        return $action;
+    }
+
+    public function testAddInstance()
+    {
+        $action = $this->stubAction();
+        $this->assertSame($this->config, $this->config->addInstance('some_action', $action));
+
+        $ca = $this->config->get('some_action');
+        $this->assertInstanceOf(ConfiguredAction::class, $ca);
+        $this->assertFalse($ca->isLink());
+
+        $options = ['opt' => true];
+        $entities = [new \stdClass];
+        $action->expects($this->once())
+            ->method('run')
+            ->with($entities, $options);
+        $ca->run($entities, $options);
+    }
+
+    public function testAddNoLabels()
+    {
+        $action = $this->stubAction();
         $this->registry->expects($this->any())
             ->method('getAction')
             ->with('foo')
@@ -53,10 +77,7 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testAddWithStringLabels()
     {
-        $action = $this->getMock(ActionInterface::class);
-        $action->expects($this->any())
-            ->method('getDefaultConfig')
-            ->will($this->returnValue([]));
+        $action = $this->stubAction();
         $this->registry->expects($this->any())
             ->method('getAction')
             ->with('foo')
@@ -95,56 +116,74 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(['link_0', 'link_1', 'link_2', 'link_3'], array_keys($this->config->all()));
     }
 
-    public function testAddInstance()
-    {
-        $action = $this->getMock(ActionInterface::class);
-        $action->expects($this->any())
-            ->method('getDefaultConfig')
-            ->will($this->returnValue([]));
-
-        $this->assertSame($this->config, $this->config->addInstance('some_action', $action));
-
-        $ca = $this->config->get('some_action');
-        $this->assertInstanceOf(ConfiguredAction::class, $ca);
-        $this->assertFalse($ca->isLink());
-
-        $options = ['opt' => true];
-        $entities = [new \stdClass];
-        $action->expects($this->once())
-            ->method('run')
-            ->with($entities, $options);
-        $ca->run($entities, $options);
-    }
-
-    public function testForEntity()
+    public function testGetForEntity()
     {
         $entity = new \stdClass();
         $one = $this->getMock(ActionInterface::class);
         $one->expects($this->any())
             ->method('getDefaultConfig')
-            ->will($this->returnValue([]));
-        $one->expects($this->any())
-            ->method('isGranted')
-            ->with($entity)
-            ->will($this->returnValue(true));
+            ->will($this->returnValue([
+                'isGranted' => true,
+            ]));
         $two = $this->getMock(ActionInterface::class);
         $two->expects($this->any())
             ->method('getDefaultConfig')
-            ->will($this->returnValue([]));
-        $two->expects($this->any())
-            ->method('isGranted')
-            ->with($entity)
-            ->will($this->returnValue(false));
-        $this->registry->expects($this->any())
-            ->method('getAction')
-            ->withConsecutive(['foo'], ['bar'])
-            ->will($this->onConsecutiveCalls($one, $two));
-        $this->config
-            ->add('foo')
-            ->add('bar');
+            ->will($this->returnValue([
+                'isGranted' => false,
+            ]));
+        $this->config->addInstance('foo', $one)->addInstance('bar', $two);
 
-        $allowed = $this->config->forEntity($entity);
+        $allowed = $this->config->getForEntity($entity);
         $this->assertSame(1, count($allowed));
         $this->assertInstanceOf(ConfiguredAction::class, $allowed[0]);
+        $this->assertSame('foo', $allowed[0]->getName());
+    }
+
+    public function testGetButtonsForEntity()
+    {
+        $entity = new \stdClass();
+        $one = $this->getMock(ActionInterface::class);
+        $one->expects($this->any())
+            ->method('getDefaultConfig')
+            ->will($this->returnValue([
+                'isButtonAvailable' => false,
+            ]));
+        $two = $this->getMock(ActionInterface::class);
+        $two->expects($this->any())
+            ->method('getDefaultConfig')
+            ->will($this->returnValue([
+                'isButtonAvailable' => true,
+            ]));
+        $this->config->addInstance('foo', $one)->addInstance('bar', $two);
+
+        $allowed = $this->config->getButtonsForEntity($this->stubRequest(), $entity);
+        $this->assertSame(1, count($allowed));
+        $this->assertInstanceOf(ConfiguredAction::class, $allowed[0]);
+        $this->assertSame('bar', $allowed[0]->getName());
+    }
+
+    public function testGetBatchOptionsForRequest()
+    {
+        $entity = new \stdClass();
+        $one = $this->getMock(ActionInterface::class);
+        $one->expects($this->any())
+            ->method('getDefaultConfig')
+            ->will($this->returnValue([
+                'isBatchOptionAvailable' => function($request) {
+                    return $request instanceof AdminRequest; //true
+                },
+            ]));
+        $two = $this->getMock(ActionInterface::class);
+        $two->expects($this->any())
+            ->method('getDefaultConfig')
+            ->will($this->returnValue([
+                'isBatchOptionAvailable' => false,
+            ]));
+        $this->config->addInstance('foo', $one)->addInstance('bar', $two);
+
+        $allowed = $this->config->getBatchOptionsForRequest($this->stubRequest());
+        $this->assertSame(1, count($allowed));
+        $this->assertInstanceOf(ConfiguredAction::class, $allowed[0]);
+        $this->assertSame('foo', $allowed[0]->getName());
     }
 }

@@ -7,7 +7,7 @@ use Perform\BaseBundle\Admin\AdminRequest;
 /**
  * Represents an action configured with options from admin classes.
  *
- * This class shouldn't need to be constructed manually; get one from
+ * This class shouldn't be constructed manually; get one from
  * ActionConfig instead.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -40,15 +40,36 @@ class ConfiguredAction
         return call_user_func($this->options['batchLabel'], $request);
     }
 
+    /**
+     * Return true if this action is allowed to be run on the given entity.
+     *
+     * @param object $entity
+     *
+     * @return bool
+     */
     public function isGranted($entity)
     {
-        //also check with any custom code passed in
-        return $this->action->isGranted($entity);
+        return (bool) $this->options['isGranted']($entity);
     }
 
-    public function isAvailable(AdminRequest $request)
+    /**
+     * Return true if the button for this action should be shown for this entity.
+     * Note that this does not guarantee the action will be allowed on the entity.
+     * The result of isGranted() will be used for that.
+     *
+     * @param AdminRequest $request
+     * @param object       $entity
+     *
+     * @return bool
+     */
+    public function isButtonAvailable(AdminRequest $request, $entity)
     {
-        return $this->action->isAvailable($request);
+        return (bool) $this->options['isButtonAvailable']($request, $entity);
+    }
+
+    public function isBatchOptionAvailable(AdminRequest $request)
+    {
+        return (bool) $this->options['isBatchOptionAvailable']($request);
     }
 
     public function isConfirmationRequired()

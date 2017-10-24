@@ -31,12 +31,18 @@ class ActionConfig
             ->setDefined('batchLabel')
             ->setAllowedTypes('batchLabel', ['string', 'Closure'])
             ->setDefaults([
+                'isGranted' => true,
+                'isButtonAvailable' => true,
+                'isBatchOptionAvailable' => true,
                 'confirmationRequired' => false,
                 'confirmationMessage' => function ($entity, $label) {
                     return sprintf('Are you sure you want to %s this item?', strtolower($label));
                 },
                 'buttonStyle' => 'btn-default',
             ])
+            ->setAllowedTypes('isGranted', ['bool', 'Closure'])
+            ->setAllowedTypes('isButtonAvailable', ['bool', 'Closure'])
+            ->setAllowedTypes('isBatchOptionAvailable', ['bool', 'Closure'])
             ->setAllowedTypes('confirmationMessage', ['string', 'Closure'])
             ->setAllowedTypes('confirmationRequired', ['bool', 'Closure'])
             ->setAllowedTypes('buttonStyle', 'string')
@@ -79,6 +85,9 @@ class ActionConfig
         $options = $this->resolver->resolve($options);
 
         $maybeClosures = [
+            'isGranted',
+            'isButtonAvailable',
+            'isBatchOptionAvailable',
             'label',
             'batchLabel',
             'confirmationRequired',
@@ -128,15 +137,22 @@ class ActionConfig
         return $this->actions[$name];
     }
 
+    /**
+     * @return ConfiguredAction[]
+     */
     public function all()
     {
         return $this->actions;
     }
 
     /**
+     * Get an array of actions that are allowed to be ran for the given entity.
+     *
      * @param object $entity
+     *
+     * @return ConfiguredAction[]
      */
-    public function forEntity($entity)
+    public function getForEntity($entity)
     {
         $allowed = [];
         foreach ($this->actions as $action) {
@@ -149,13 +165,43 @@ class ActionConfig
     }
 
     /**
+     * Get an array of actions to be used for showing buttons for an
+     * entity.
+     * This method is purely presentational; the presence of a button
+     * doesn't guarantee the action will be granted for the entity.
+     *
      * @param AdminRequest $request
+     * @param object       $entity
+     *
+     * @return ConfiguredAction[]
      */
-    public function forRequest(AdminRequest $request)
+    public function getButtonsForEntity(AdminRequest $request, $entity)
     {
         $allowed = [];
         foreach ($this->actions as $action) {
-            if ($action->isAvailable($request)) {
+            if ($action->isButtonAvailable($request, $entity)) {
+                $allowed[] = $action;
+            }
+        }
+
+        return $allowed;
+    }
+
+    /**
+     * Get an array of actions to be used when displaying a list of
+     * batch action options.
+     * This method is purely presentational; the presence of an option
+     * doesn't guarantee the action will be granted.
+     *
+     * @param AdminRequest $request
+     *
+     * @return ConfiguredAction[]
+     */
+    public function getBatchOptionsForRequest(AdminRequest $request)
+    {
+        $allowed = [];
+        foreach ($this->actions as $action) {
+            if ($action->isBatchOptionAvailable($request)) {
                 $allowed[] = $action;
             }
         }
