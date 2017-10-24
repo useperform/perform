@@ -35,7 +35,7 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
         $action = $this->getMock(ActionInterface::class);
         $action->expects($this->any())
             ->method('getDefaultConfig')
-            ->will($this->returnValue([]));
+            ->will($this->returnValue($defaultConfig));
 
         return $action;
     }
@@ -119,18 +119,12 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
     public function testGetForEntity()
     {
         $entity = new \stdClass();
-        $one = $this->getMock(ActionInterface::class);
-        $one->expects($this->any())
-            ->method('getDefaultConfig')
-            ->will($this->returnValue([
-                'isGranted' => true,
-            ]));
-        $two = $this->getMock(ActionInterface::class);
-        $two->expects($this->any())
-            ->method('getDefaultConfig')
-            ->will($this->returnValue([
-                'isGranted' => false,
-            ]));
+        $one = $this->stubAction([
+            'isGranted' => true,
+        ]);
+        $two = $this->stubAction([
+            'isGranted' => false,
+        ]);
         $this->config->addInstance('foo', $one)->addInstance('bar', $two);
 
         $allowed = $this->config->getForEntity($entity);
@@ -142,21 +136,15 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
     public function testGetButtonsForEntity()
     {
         $entity = new \stdClass();
-        $one = $this->getMock(ActionInterface::class);
-        $one->expects($this->any())
-            ->method('getDefaultConfig')
-            ->will($this->returnValue([
-                'isButtonAvailable' => false,
-            ]));
-        $two = $this->getMock(ActionInterface::class);
-        $two->expects($this->any())
-            ->method('getDefaultConfig')
-            ->will($this->returnValue([
-                'isButtonAvailable' => true,
-            ]));
+        $one = $this->stubAction([
+            'isButtonAvailable' => false,
+        ]);
+        $two = $this->stubAction([
+            'isButtonAvailable' => true,
+        ]);
         $this->config->addInstance('foo', $one)->addInstance('bar', $two);
 
-        $allowed = $this->config->getButtonsForEntity($this->stubRequest(), $entity);
+        $allowed = $this->config->getButtonsForEntity($entity, $this->stubRequest());
         $this->assertSame(1, count($allowed));
         $this->assertInstanceOf(ConfiguredAction::class, $allowed[0]);
         $this->assertSame('bar', $allowed[0]->getName());
@@ -165,25 +153,46 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
     public function testGetBatchOptionsForRequest()
     {
         $entity = new \stdClass();
-        $one = $this->getMock(ActionInterface::class);
-        $one->expects($this->any())
-            ->method('getDefaultConfig')
-            ->will($this->returnValue([
-                'isBatchOptionAvailable' => function($request) {
-                    return $request instanceof AdminRequest; //true
-                },
-            ]));
-        $two = $this->getMock(ActionInterface::class);
-        $two->expects($this->any())
-            ->method('getDefaultConfig')
-            ->will($this->returnValue([
-                'isBatchOptionAvailable' => false,
-            ]));
+        $one = $this->stubAction([
+            'isBatchOptionAvailable' => function($request) {
+                return $request instanceof AdminRequest; //true
+            },
+        ]);
+        $two = $this->stubAction([
+            'isBatchOptionAvailable' => false,
+        ]);
         $this->config->addInstance('foo', $one)->addInstance('bar', $two);
 
         $allowed = $this->config->getBatchOptionsForRequest($this->stubRequest());
         $this->assertSame(1, count($allowed));
         $this->assertInstanceOf(ConfiguredAction::class, $allowed[0]);
         $this->assertSame('foo', $allowed[0]->getName());
+    }
+
+    public function testButtonAvailableDefaultsToIsGranted()
+    {
+        $this->config->addInstance('stub', $this->stubAction([
+            'isGranted' => false,
+        ]));
+
+        $action = $this->config->get('stub');
+        $this->assertFalse($action->isButtonAvailable(new \stdClass(), $this->stubRequest()));
+    }
+
+    public function testButtonAvailableDefaultsToIsGrantedClosure()
+    {
+        $this->config->addInstance('stub', $this->stubAction([
+            'isGranted' => function($entity) {
+                return $entity->attr === 1;
+            },
+        ]));
+
+        $action = $this->config->get('stub');
+        $one = new \stdClass();
+        $one->attr = 1;
+        $this->assertTrue($action->isButtonAvailable($one, $this->stubRequest()));
+        $two = new \stdClass();
+        $two->attr = 2;
+        $this->assertFalse($action->isButtonAvailable($two, $this->stubRequest()));
     }
 }

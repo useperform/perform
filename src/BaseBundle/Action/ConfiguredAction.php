@@ -57,14 +57,14 @@ class ConfiguredAction
      * Note that this does not guarantee the action will be allowed on the entity.
      * The result of isGranted() will be used for that.
      *
-     * @param AdminRequest $request
      * @param object       $entity
+     * @param AdminRequest $request
      *
      * @return bool
      */
-    public function isButtonAvailable(AdminRequest $request, $entity)
+    public function isButtonAvailable($entity, AdminRequest $request)
     {
-        return (bool) $this->options['isButtonAvailable']($request, $entity);
+        return (bool) $this->options['isButtonAvailable']($entity, $request);
     }
 
     public function isBatchOptionAvailable(AdminRequest $request)

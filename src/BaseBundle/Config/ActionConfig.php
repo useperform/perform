@@ -82,6 +82,14 @@ class ActionConfig
                                    $options['label'] : StringUtil::sensible($name);
         }
 
+        // isButtonAvailable defaults to the result of isGranted.
+        // It is passed ($entity, $adminRequest) vs isGranted($entity),
+        // so using the isGranted closure will still work. The 2nd
+        // $adminRequest argument passed in will be ignored.
+        if (!isset($options['isButtonAvailable']) && isset($options['isGranted'])) {
+            $options['isButtonAvailable'] = $options['isGranted'];
+        }
+
         $options = $this->resolver->resolve($options);
 
         $maybeClosures = [
@@ -170,16 +178,16 @@ class ActionConfig
      * This method is purely presentational; the presence of a button
      * doesn't guarantee the action will be granted for the entity.
      *
-     * @param AdminRequest $request
      * @param object       $entity
+     * @param AdminRequest $request
      *
      * @return ConfiguredAction[]
      */
-    public function getButtonsForEntity(AdminRequest $request, $entity)
+    public function getButtonsForEntity($entity, AdminRequest $request)
     {
         $allowed = [];
         foreach ($this->actions as $action) {
-            if ($action->isButtonAvailable($request, $entity)) {
+            if ($action->isButtonAvailable($entity, $request)) {
                 $allowed[] = $action;
             }
         }
