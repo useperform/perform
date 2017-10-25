@@ -41,16 +41,20 @@ $(function () {
       },
       error: function (data) {
         var error;
-        switch (data.status) {
-        case 403:
-          error = 'This action is not allowed.';
-          break;
-        case 404:
-          error = 'One or more items were not found.';
-          break;
-        default:
-          error = 'An error occurred.'
-          break;
+        if (data.responseJSON && data.responseJSON.message) {
+          error = data.responseJSON.message;
+        } else {
+          switch (data.status) {
+          case 403:
+            error = 'This action is not allowed.';
+            break;
+          case 404:
+            error = 'One or more items were not found.';
+            break;
+          default:
+            error = 'An error occurred.'
+            break;
+          }
         }
         $('#modal-action-confirm').modal('hide');
         app.func.showError(error);

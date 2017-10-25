@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Doctrine\ORM\EntityNotFoundException;
 use Perform\BaseBundle\Action\ActionResponse;
+use Perform\BaseBundle\Action\ActionFailedException;
 
 /**
  * ActionController.
@@ -35,6 +36,10 @@ class ActionController extends Controller
         } catch (EntityNotFoundException $e) {
             return [
                 'code' => 404,
+            ];
+        } catch (ActionFailedException $e) {
+            return [
+                'code' => 500,
                 'message' => $e->getMessage(),
             ];
         }
