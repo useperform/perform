@@ -110,7 +110,7 @@ class CrudController extends Controller
         return [
             'fields' => $this->getTypeConfig()->getTypes($request->getContext()),
             'filters' => $this->getFilterConfig()->getFilters(),
-            'actions' => $this->getActionConfig()->forRequest($request),
+            'batchActions' => $this->getActionConfig()->getBatchOptionsForRequest($request),
             'labelConfig' => $this->getLabelConfig(),
             'orderBy' => $orderBy,
             'routePrefix' => $admin->getRoutePrefix(),

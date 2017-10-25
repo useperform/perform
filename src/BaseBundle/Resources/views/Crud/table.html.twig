@@ -43,7 +43,7 @@
             {% if perform_crud_route_exists(entity, 'edit') %}
               <a href="{{perform_crud_route(entity, 'edit')}}" class="btn btn-xs btn-warning">Edit</a>
             {% endif %}
-            {% for action in perform_actions_for_entity(entity) %}
+            {% for action in perform_action_buttons_for(entity) %}
               {{perform_action_button(action, entity, 'list', {class: "btn-xs"})}}
             {% endfor %}
           </td>

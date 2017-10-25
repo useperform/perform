@@ -33,7 +33,7 @@ class ActionExtension extends \Twig_Extension
         return [
             new \Twig_SimpleFunction('perform_action_button', [$this, 'actionButton'], ['is_safe' => ['html'], 'needs_environment' => true]),
             new \Twig_SimpleFunction('perform_action_option', [$this, 'actionOption'], ['is_safe' => ['html'], 'needs_environment' => true]),
-            new \Twig_SimpleFunction('perform_actions_for_entity', [$this, 'actionsForEntity']),
+            new \Twig_SimpleFunction('perform_action_buttons_for', [$this, 'buttonsForEntity']),
         ];
     }
 
@@ -92,9 +92,9 @@ class ActionExtension extends \Twig_Extension
         ]);
     }
 
-    public function actionsForEntity($entity)
+    public function buttonsForEntity($entity)
     {
-        return $this->store->getActionConfig($entity)->forEntity($entity);
+        return $this->store->getActionConfig($entity)->getButtonsForEntity($entity, $this->request);
     }
 
     public function getName()
