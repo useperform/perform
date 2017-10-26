@@ -28,6 +28,7 @@ class LoadMessageData implements EntityDeclaringFixtureInterface
             $message->setEmail($faker->safeEmail);
             $message->setMessage($faker->paragraph);
             $message->setStatus($statuses[array_rand($statuses)]);
+            $manager->setCreatedAt($faker->dateTimeThisYear);
             $manager->persist($message);
         }
         $manager->flush();
