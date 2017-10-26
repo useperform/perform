@@ -9,7 +9,7 @@ use Perform\BaseBundle\Action\ActionInterface;
 use Perform\BaseBundle\Admin\AdminRequest;
 
 /**
- * ArchiveAction
+ * Archive a message.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
@@ -37,20 +37,16 @@ class ArchiveAction implements ActionInterface
         return $response;
     }
 
-    public function isGranted($message)
-    {
-        return $message->getStatus() === Message::STATUS_NEW;
-    }
-
-    public function isAvailable(AdminRequest $request)
-    {
-        return $request->getFilter('new') === 'new';
-    }
-
     public function getDefaultConfig()
     {
         return [
             'label' => 'Archive',
+            'isGranted' => function($message) {
+                return $message->getStatus() === Message::STATUS_NEW;
+            },
+            'isBatchOptionAvailable' => function($request) {
+                return $request->getFilter('new') === 'new';
+            }
         ];
     }
 }

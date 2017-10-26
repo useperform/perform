@@ -46,7 +46,7 @@
       <a href="{{perform_crud_route(entity, 'list')}}" class="back-button btn btn-default">
         Back
       </a>
-      {% for action in perform_actions_for_entity(entity) %}
+      {% for action in perform_action_buttons_for(entity) %}
         {{perform_action_button(action, entity, 'view')}}
       {% endfor %}
 {% endblock %}
