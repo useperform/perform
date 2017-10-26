@@ -17,11 +17,12 @@ For example, you might want operations to:
 Actions are a way of doing these operations without having to create new
 controllers, routes, and frontend code every time.
 
-When configured, links to these actions are automatically displayed
+When configured, buttons for these actions are automatically displayed
 next to entities.
-Clicking these links will run the action and display a success
-message, either on the current page or after redirecting to another
-page, depending on the response from the action.
+Clicking an action button will send an AJAX request to run the action
+and then display a success message, either on the current page or
+after redirecting to another page, depending on the response from the
+action.
 
 An action can also require confirmation before executing, and can be
 configured to only run after passing various conditions.
@@ -113,16 +114,6 @@ Here is a basic action that simply logs the entities as JSON:
             return $response;
         }
 
-        public function isGranted()
-        {
-            return true;
-        }
-
-        public function isAvailable(AdminRequest $request)
-        {
-            return true;
-        }
-
         public function getDefaultConfig()
         {
             return [
@@ -190,9 +181,12 @@ Set this redirect by calling ``setRedirect()`` on the response before returning 
    //url requires the url option
    $response->setRedirect(ActionResponse::REDIRECT_URL, ['url' => 'https://example.com']);
 
-   //route requires the route and params
-   $response->setRedirect(ActionResponse::REDIRECT_URL, ['route' => 'admin_foo_list']);
-   $response->setRedirect(ActionResponse::REDIRECT_URL, ['route' => 'admin_foo_view', 'params' => ['id' => 1]]);
+   //route requires the route name and params
+   $response->setRedirect(ActionResponse::REDIRECT_ROUTE, ['route' => 'admin_foo_list']);
+   $response->setRedirect(ActionResponse::REDIRECT_ROUTE, ['route' => 'admin_foo_view', 'params' => ['id' => 1]]);
+
+   //default route of the current entity (usually the list context)
+   $response->setRedirect(ActionResponse::REDIRECT_ENTITY_DEFAULT);
 
 .. note::
 
@@ -301,37 +295,108 @@ will also be passed the entity in question.
 Restricting usage
 -----------------
 
-Use ``isGranted`` to restrict an action to certain conditions:
+Use the ``isGranted`` option to restrict an action to certain conditions:
+
 
 .. code-block:: php
 
-   <?php
+    <?php
 
-   public function isGranted($entity)
-   {
-        // only allow this action on non-archived entities
-        return !$entity->isArchived();
-   }
+    public function getDefaultConfig()
+    {
+        return [
+            'label' => 'Archive',
+            'isGranted' => function($message) {
+                // only allow this action on non-archived entities
+                return $message->getStatus() !== Message::STATUS_ARCHIVED;
+            },
+        ];
+    }
 
-Use ``isAvailable`` to restrict when to display a batch action option.
+This option can either be a boolean or a function that returns a boolean.
+If a function, it is called with the entity in question.
+If it evaluates to ``true``, the button will be displayed next to the entity.
+
+The default is ``true``.
+
+Deciding when to show the buttons
+---------------------------------
+
+Use the ``isButtonAvailable`` and ``isBatchOptionAvailable`` options to decide when to show action buttons.
+
+``isButtonActionAvailable`` decides when to show a button next to an entity.
+
+The value can be a boolean or a function that returns a boolean.
+If a function, it is called with the entity in question and an ``AdminRequest`` instance.
 
 .. code-block:: php
 
-   <?php
+    <?php
 
-   public function isAvailable(AdminRequest $request)
-   {
-        // don't show the batch action when viewing the 'archived' filter
-        return $request->getFilter() !== 'archived';
+    public function getDefaultConfig()
+    {
+        return [
+            'label' => 'Archive',
+            'isButtonAvailable' => function($message, AdminRequest $request) {
+                return $message->getStatus() !== Message::STATUS_ARCHIVED;
+            }
+        ];
+    }
 
-        // something wacky - only show the batch action on the 2nd page
-        return $request->getPage() === 2;
-   }
+Since you normally want to display a button for an entity when the
+action is allowed, this value defaults to the value of ``isGranted``.
 
 .. note::
-   ``isAvailable`` should not be used to enforce action permissions.
-   It is only called when displaying a batch action option, not when
+   ``isButtonAvailable`` should not be used to enforce action permissions.
+   It is only called when deciding to show a batch action button, not when
    actually running an action.
+
+
+``isBatchActionAvailable`` decides when to display a batch action option.
+
+This can also be a boolean or a function that returns a boolean.
+If a function, it is passed an ``AdminRequest`` instance.
+
+The default is ``true``.
+
+.. code-block:: php
+
+    <?php
+
+    public function getDefaultConfig()
+    {
+        return [
+            'label' => 'Archive',
+            'isBatchOptionAvailable' => function(AdminRequest $request) {
+                // don't show the batch action when viewing the 'archived' filter
+                return $request->getFilter() !== 'archived';
+
+                // or something wacky - only show the batch action on the 2nd page
+                return $request->getPage() === 2;
+            }
+        ];
+    }
+
+Handling errors
+---------------
+
+Any exceptions that are thrown during an action's ``run`` method will
+result in a generic error message shown to the user.
+
+You can also specify the error message to show by throwing a
+``Perform\BaseBundle\Action\ActionFailedException``.
+
+.. code-block:: php
+
+    <?php
+    public function run(array $entities, array $options)
+    {
+        // will show a generic error shown to the user, hiding exception details
+        throw new \RuntimeException('The flux capacitor failed to start.');
+
+        // will show the exception message to the user
+        throw new ActionFailedException('The flux capacitor failed to start.');
+    }
 
 Link actions
 ------------
