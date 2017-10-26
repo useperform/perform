@@ -34,16 +34,6 @@ class CreateResetTokenAction implements ActionInterface
         return $response;
     }
 
-    public function isGranted($message)
-    {
-        return true;
-    }
-
-    public function isAvailable(AdminRequest $request)
-    {
-        return true;
-    }
-
     public function getDefaultConfig()
     {
         return [
