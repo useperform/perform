@@ -16,21 +16,12 @@ class LinkAction implements ActionInterface
         throw new \RuntimeException(sprintf('%s should not be called; it should only be used to render a link.', __METHOD__));
     }
 
-    public function isGranted($entity)
-    {
-        return true;
-    }
-
-    public function isAvailable(AdminRequest $request)
-    {
-        return false;
-    }
-
     public function getDefaultConfig()
     {
         return [
             'buttonStyle' => 'btn-default',
             'confirmationMessage' => 'Are you sure you want to visit this link?',
+            'isBatchOptionAvailable' => false,
         ];
     }
 }
