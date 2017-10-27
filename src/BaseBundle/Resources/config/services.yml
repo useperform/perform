@@ -15,6 +15,7 @@ services:
             - '@perform_base.admin.registry'
             - '@perform_base.type_registry'
             - '@perform_base.action_registry'
+            - '@security.authorization_checker'
 
     perform_base.form.type.admin:
         class: Perform\BaseBundle\Form\Type\AdminType

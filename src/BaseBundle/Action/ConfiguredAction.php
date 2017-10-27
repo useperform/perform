@@ -3,6 +3,7 @@
 namespace Perform\BaseBundle\Action;
 
 use Perform\BaseBundle\Admin\AdminRequest;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Represents an action configured with options from admin classes.
@@ -47,9 +48,9 @@ class ConfiguredAction
      *
      * @return bool
      */
-    public function isGranted($entity)
+    public function isGranted($entity, AuthorizationCheckerInterface $authChecker)
     {
-        return (bool) $this->options['isGranted']($entity);
+        return (bool) $this->options['isGranted']($entity, $authChecker);
     }
 
     /**

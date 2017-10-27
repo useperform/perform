@@ -10,6 +10,7 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@perform_base.config_store"
+            - "@security.authorization_checker"
 
     perform_base.action.delete:
         class: Perform\BaseBundle\Action\DeleteAction

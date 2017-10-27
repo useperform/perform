@@ -6,12 +6,14 @@ use Perform\BaseBundle\Action\LinkAction;
 use Perform\BaseBundle\Admin\AdminRequest;
 use Perform\BaseBundle\Config\ActionConfig;
 use Perform\BaseBundle\Action\ActionRegistry;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class LinkActionTest extends \PHPUnit_Framework_TestCase
 {
+    protected $authChecker;
     protected $action;
 
     public function setUp()
@@ -19,7 +21,8 @@ class LinkActionTest extends \PHPUnit_Framework_TestCase
         $this->registry = $this->getMockBuilder(ActionRegistry::class)
                         ->disableOriginalConstructor()
                         ->getMock();
-        $this->config = new ActionConfig($this->registry);
+        $this->authChecker = $this->getMock(AuthorizationCheckerInterface::class);
+        $this->config = new ActionConfig($this->registry, $this->authChecker);
         $this->config->addInstance('link', new LinkAction());
         $this->action = $this->config->get('link');
     }
@@ -40,6 +43,6 @@ class LinkActionTest extends \PHPUnit_Framework_TestCase
 
     public function testIsAlwaysGranted()
     {
-        $this->assertTrue($this->action->isGranted(new \stdClass()));
+        $this->assertTrue($this->action->isGranted(new \stdClass(), $this->authChecker));
     }
 }

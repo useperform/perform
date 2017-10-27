@@ -10,6 +10,7 @@ use Perform\BaseBundle\Action\ConfiguredAction;
 use Perform\BaseBundle\Action\ActionNotFoundException;
 use Perform\BaseBundle\Action\LinkAction;
 use Perform\BaseBundle\Action\ActionInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -17,13 +18,15 @@ use Perform\BaseBundle\Action\ActionInterface;
 class ActionConfig
 {
     protected $registry;
+    protected $authChecker;
     protected $resolver;
     protected $actions = [];
     protected $linkIndex = 0;
 
-    public function __construct(ActionRegistry $registry)
+    public function __construct(ActionRegistry $registry, AuthorizationCheckerInterface $authChecker)
     {
         $this->registry = $registry;
+        $this->authChecker = $authChecker;
         $this->resolver = new OptionsResolver();
         $this->resolver
             ->setDefined('label')
@@ -80,14 +83,6 @@ class ActionConfig
         if (!isset($options['batchLabel'])) {
             $options['batchLabel'] = is_string($options['label']) ?
                                    $options['label'] : StringUtil::sensible($name);
-        }
-
-        // isButtonAvailable defaults to the result of isGranted.
-        // It is passed ($entity, $adminRequest) vs isGranted($entity),
-        // so using the isGranted closure will still work. The 2nd
-        // $adminRequest argument passed in will be ignored.
-        if (!isset($options['isButtonAvailable']) && isset($options['isGranted'])) {
-            $options['isButtonAvailable'] = $options['isGranted'];
         }
 
         $options = $this->resolver->resolve($options);
@@ -164,7 +159,7 @@ class ActionConfig
     {
         $allowed = [];
         foreach ($this->actions as $action) {
-            if ($action->isGranted($entity)) {
+            if ($action->isGranted($entity, $this->authChecker)) {
                 $allowed[] = $action;
             }
         }
@@ -187,7 +182,7 @@ class ActionConfig
     {
         $allowed = [];
         foreach ($this->actions as $action) {
-            if ($action->isButtonAvailable($entity, $request)) {
+            if ($action->isButtonAvailable($entity, $request) && $action->isGranted($entity, $this->authChecker)) {
                 $allowed[] = $action;
             }
         }
