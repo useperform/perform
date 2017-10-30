@@ -86,6 +86,7 @@ services:
         class: Perform\BaseBundle\Twig\Extension\ActionExtension
         arguments:
             - "@router"
+            - "@perform_base.routing.crud_url"
             - "@perform_base.action_registry"
             - "@perform_base.config_store"
         tags:

@@ -4,6 +4,8 @@ namespace Perform\BaseBundle\Action;
 
 use Perform\BaseBundle\Admin\AdminRequest;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Perform\BaseBundle\Routing\CrudUrlGeneratorInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Represents an action configured with options from admin classes.
@@ -87,11 +89,21 @@ class ConfiguredAction
     }
 
     /**
+     * Get the URL of the link.
+     *
+     * The URL may change depending on the entity, and may be
+     * generated from the supplied $crudUrlGenerator and
+     * $urlGenerator.
+     *
+     * @param object                    $entity
+     * @param CrudUrlGeneratorInterface $crudUrlGenerator
+     * @param UrlGeneratorInterface     $urlGenerator
+     *
      * @return string
      */
-    public function getLink($entity)
+    public function getLink($entity, CrudUrlGeneratorInterface $crudUrlGenerator, UrlGeneratorInterface $urlGenerator)
     {
-        return $this->isLink() ? $this->options['link']($entity) : '';
+        return $this->isLink() ? $this->options['link']($entity, $crudUrlGenerator, $urlGenerator) : '';
     }
 
     public function getConfirmationMessage(AdminRequest $request, $entity)

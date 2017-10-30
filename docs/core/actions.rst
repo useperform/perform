@@ -435,6 +435,12 @@ depending on the entity.
 In the above example, the link parameter is a function that changes
 depending on the user's email address.
 
+If the link parameter is a function, it will be passed the entity in
+question, plus an instance of
+``Perform\BaseBundle\Routing\CrudUrlGeneratorInterface`` and
+``Symfony\Component\Routing\Generator\UrlGeneratorInterface`` as the
+second and third arguments, to make it easy to create a URL.
+
 ``addLink`` optionally takes an array of options as a third parameter,
 where all of the options of ``add`` and ``addInstance`` can also be
 used.
