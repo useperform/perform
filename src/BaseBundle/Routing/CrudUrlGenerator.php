@@ -8,11 +8,9 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Routing\Route;
 
 /**
- * CrudUrlGenerator.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class CrudUrlGenerator
+class CrudUrlGenerator implements CrudUrlGeneratorInterface
 {
     protected $adminRegistry;
     protected $router;
@@ -23,14 +21,6 @@ class CrudUrlGenerator
         $this->router = $router;
     }
 
-    /**
-     * Get the url to a crud action for an entity.
-     *
-     * @param string|object $entity
-     * @param string        $action
-     *
-     * @return string
-     */
     public function generate($entity, $action, array $params = [])
     {
         $params = in_array($action, ['view', 'edit']) ?
@@ -41,14 +31,6 @@ class CrudUrlGenerator
         return $this->router->generate($this->createRouteName($admin, $action), $params);
     }
 
-    /**
-     * Check if a crud action exists for an entity.
-     *
-     * @param string|object $entity
-     * @param string        $action
-     *
-     * @return string
-     */
     public function routeExists($entity, $action)
     {
         $admin = $this->adminRegistry->getAdmin($entity);
