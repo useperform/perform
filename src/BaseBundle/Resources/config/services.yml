@@ -17,6 +17,14 @@ services:
             - '@perform_base.action_registry'
             - '@security.authorization_checker'
 
+    perform_base.voter.crud:
+        class: Perform\BaseBundle\Security\CrudVoter
+        arguments:
+            - '@perform_base.admin.registry'
+            - '@perform_base.routing.crud_url'
+        tags:
+            - security.voter
+
     perform_base.form.type.admin:
         class: Perform\BaseBundle\Form\Type\AdminType
         arguments:
