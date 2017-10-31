@@ -8,6 +8,11 @@
   {% endset %}
 
   {% set text %}
+  {% if not collector.correctVoterStrategy %}
+    <div class="sf-toolbar-info-piece">
+      <span class="sf-toolbar-status sf-toolbar-status-red">Invalid Security Voter Strategy</span>
+    </div>
+  {% endif %}
   <div class="sf-toolbar-info-piece">
     <b>Active Admin</b>
     <span class="sf-toolbar-status">{{collector.activeAdmin}}</span>
@@ -22,7 +27,7 @@
   </div>
   {% endset %}
 
-  {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', {'link' : true}) }}
+  {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', {'link' : true, status: collector.correctVoterStrategy ? '' : 'red'}) }}
   {% endif %}
 {% endblock %}
 
@@ -34,6 +39,19 @@
 {% endblock %}
 
 {% block panel %}
+  {% if not collector.correctVoterStrategy %}
+    <div class="status-error">
+      <h2>Invalid Security Voter Strategy</h2>
+      <p>
+        You should set the security voter strategy to <span class="text-bold">unanimous</span> in <code>security.yml</code> to ensure correct security decisions.
+      </p>
+      <pre>
+security:
+    access_decision_manager:
+        strategy: unanimous
+      </pre>
+    </div>
+  {% endif %}
   {% if collector.activeAdmin is not null %}
     <h2>Active Admin</h2>
     {{collector.activeAdmin}}
