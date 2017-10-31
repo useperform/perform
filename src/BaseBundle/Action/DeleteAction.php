@@ -44,6 +44,9 @@ class DeleteAction implements ActionInterface
             'label' => 'Delete',
             'confirmationRequired' => true,
             'buttonStyle' => 'btn-danger',
+            'isGranted' => function($entity, $authChecker) {
+                return $authChecker->isGranted('DELETE', $entity);
+            },
         ];
     }
 }

@@ -69,6 +69,9 @@ abstract class AbstractAdmin implements AdminInterface
                 'isButtonAvailable' => function($entity, $request) {
                     return $request->getContext() !== 'view';
                 },
+                'isGranted' => function($entity, $authChecker) {
+                    return $authChecker->isGranted('VIEW', $entity);
+                },
                 'buttonStyle' => 'btn-primary',
             ]);
     }
@@ -80,6 +83,9 @@ abstract class AbstractAdmin implements AdminInterface
         },
             'Edit',
             [
+                'isGranted' => function($entity, $authChecker) {
+                    return $authChecker->isGranted('EDIT', $entity);
+                },
                 'buttonStyle' => 'btn-warning',
             ]);
     }

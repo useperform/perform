@@ -123,10 +123,12 @@ class CrudController extends Controller
     {
         $request = new AdminRequest($request, TypeConfig::CONTEXT_VIEW);
         $this->initialize($request);
+        $entity = $this->findEntity($id);
+        $this->denyAccessUnlessGranted('VIEW', $entity);
 
         return [
             'fields' => $this->getTypeConfig()->getTypes($request->getContext()),
-            'entity' => $this->findEntity($id),
+            'entity' => $entity,
             'labelConfig' => $this->getLabelConfig(),
         ];
     }
@@ -177,6 +179,7 @@ class CrudController extends Controller
         $request = new AdminRequest($request, TypeConfig::CONTEXT_EDIT);
         $this->initialize($request);
         $entity = $this->findEntity($id);
+        $this->denyAccessUnlessGranted('EDIT', $entity);
         $admin = $this->getAdmin();
         $form = $this->createForm($admin->getFormType(), $entity, [
             'entity' => $this->entity,
