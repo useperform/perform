@@ -54,7 +54,34 @@ abstract class AbstractAdmin implements AdminInterface
 
     public function configureActions(ActionConfig $config)
     {
+        $this->addViewAction($config);
+        $this->addEditAction($config);
         $config->add('perform_base_delete');
+    }
+
+    protected function addViewAction(ActionConfig $config)
+    {
+        $config->addLink(function($entity, $crudUrlGenerator) {
+            return $crudUrlGenerator->generate($entity, 'view');
+        },
+            'View',
+            [
+                'isButtonAvailable' => function($entity, $request) {
+                    return $request->getContext() !== 'view';
+                },
+                'buttonStyle' => 'btn-primary',
+            ]);
+    }
+
+    protected function addEditAction(ActionConfig $config)
+    {
+        $config->addLink(function($entity, $crudUrlGenerator) {
+            return $crudUrlGenerator->generate($entity, 'edit');
+        },
+            'Edit',
+            [
+                'buttonStyle' => 'btn-warning',
+            ]);
     }
 
     public function configureLabels(LabelConfig $config)

@@ -37,12 +37,6 @@
         {% endfor %}
         {% block entityActions %}
           <td>
-            {% if perform_crud_route_exists(entity, 'view') %}
-              <a href="{{perform_crud_route(entity, 'view')}}" class="btn btn-xs btn-primary">View</a>
-            {% endif %}
-            {% if perform_crud_route_exists(entity, 'edit') %}
-              <a href="{{perform_crud_route(entity, 'edit')}}" class="btn btn-xs btn-warning">Edit</a>
-            {% endif %}
             {% for action in perform_action_buttons_for(entity) %}
               {{perform_action_button(action, entity, 'list', {class: "btn-xs"})}}
             {% endfor %}
