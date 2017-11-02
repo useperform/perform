@@ -88,6 +88,7 @@ class MessageAdmin extends AbstractAdmin
 
     public function configureActions(ActionConfig $config)
     {
+        $this->addViewAction($config);
         $config->add('perform_contact_archive');
         $config->add('perform_contact_new');
         $config->add('perform_contact_spam');
