@@ -87,6 +87,12 @@ class CollectionType extends AbstractType
         ];
     }
 
+    /**
+     * @doc itemLabel The word to use when referring to one or many of the
+     * entities. Defaults to 'item' or 'items'. Use a string and the
+     * plural word will be guessed, or an array of two strings to
+     * define the plural word explicitly.
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setRequired('entity');
