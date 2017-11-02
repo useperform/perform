@@ -7,6 +7,9 @@ use Perform\BaseBundle\Config\ActionConfig;
 use Perform\BaseBundle\Action\ConfiguredAction;
 use Perform\BaseBundle\Action\ActionInterface;
 use Perform\BaseBundle\Admin\AdminRequest;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Perform\BaseBundle\Routing\CrudUrlGeneratorInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * ActionConfigTest.
@@ -20,7 +23,8 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
         $this->registry = $this->getMockBuilder(ActionRegistry::class)
                         ->disableOriginalConstructor()
                         ->getMock();
-        $this->config = new ActionConfig($this->registry);
+        $this->authChecker = $this->getMock(AuthorizationCheckerInterface::class);
+        $this->config = new ActionConfig($this->registry, $this->authChecker);
     }
 
     protected function stubRequest()
@@ -50,7 +54,7 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($ca->isLink());
 
         $options = ['opt' => true];
-        $entities = [new \stdClass];
+        $entities = [new \stdClass()];
         $action->expects($this->once())
             ->method('run')
             ->with($entities, $options);
@@ -103,7 +107,8 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('link_0', $ca->getName());
         $this->assertSame('Test link', $ca->getLabel($this->stubRequest(), new \stdClass()));
         $this->assertTrue($ca->isLink());
-        $this->assertSame('http://example.com', $ca->getLink(new \stdClass()));
+        $link = $ca->getLink(new \stdClass(), $this->getMock(CrudUrlGeneratorInterface::class), $this->getMock(UrlGeneratorInterface::class));
+        $this->assertSame('http://example.com', $link);
     }
 
     public function testLinkIndexIsIncremented()
@@ -118,7 +123,6 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testGetForEntity()
     {
-        $entity = new \stdClass();
         $one = $this->stubAction([
             'isGranted' => true,
         ]);
@@ -127,7 +131,7 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->config->addInstance('foo', $one)->addInstance('bar', $two);
 
-        $allowed = $this->config->getForEntity($entity);
+        $allowed = $this->config->getForEntity(new \stdClass());
         $this->assertSame(1, count($allowed));
         $this->assertInstanceOf(ConfiguredAction::class, $allowed[0]);
         $this->assertSame('foo', $allowed[0]->getName());
@@ -135,7 +139,6 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testGetButtonsForEntity()
     {
-        $entity = new \stdClass();
         $one = $this->stubAction([
             'isButtonAvailable' => false,
         ]);
@@ -144,17 +147,35 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->config->addInstance('foo', $one)->addInstance('bar', $two);
 
-        $allowed = $this->config->getButtonsForEntity($entity, $this->stubRequest());
+        $allowed = $this->config->getButtonsForEntity(new \stdClass(), $this->stubRequest());
         $this->assertSame(1, count($allowed));
         $this->assertInstanceOf(ConfiguredAction::class, $allowed[0]);
         $this->assertSame('bar', $allowed[0]->getName());
+    }
+
+    public function testGetButtonsForEntityAlsoChecksIsGranted()
+    {
+        $one = $this->stubAction([
+            'isButtonAvailable' => true,
+            'isGranted' => true,
+        ]);
+        $two = $this->stubAction([
+            'isButtonAvailable' => true,
+            'isGranted' => false,
+        ]);
+        $this->config->addInstance('foo', $one)->addInstance('bar', $two);
+
+        $allowed = $this->config->getButtonsForEntity(new \stdClass(), $this->stubRequest());
+        $this->assertSame(1, count($allowed));
+        $this->assertInstanceOf(ConfiguredAction::class, $allowed[0]);
+        $this->assertSame('foo', $allowed[0]->getName());
     }
 
     public function testGetBatchOptionsForRequest()
     {
         $entity = new \stdClass();
         $one = $this->stubAction([
-            'isBatchOptionAvailable' => function($request) {
+            'isBatchOptionAvailable' => function ($request) {
                 return $request instanceof AdminRequest; //true
             },
         ]);
@@ -167,32 +188,5 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(1, count($allowed));
         $this->assertInstanceOf(ConfiguredAction::class, $allowed[0]);
         $this->assertSame('foo', $allowed[0]->getName());
-    }
-
-    public function testButtonAvailableDefaultsToIsGranted()
-    {
-        $this->config->addInstance('stub', $this->stubAction([
-            'isGranted' => false,
-        ]));
-
-        $action = $this->config->get('stub');
-        $this->assertFalse($action->isButtonAvailable(new \stdClass(), $this->stubRequest()));
-    }
-
-    public function testButtonAvailableDefaultsToIsGrantedClosure()
-    {
-        $this->config->addInstance('stub', $this->stubAction([
-            'isGranted' => function($entity) {
-                return $entity->attr === 1;
-            },
-        ]));
-
-        $action = $this->config->get('stub');
-        $one = new \stdClass();
-        $one->attr = 1;
-        $this->assertTrue($action->isButtonAvailable($one, $this->stubRequest()));
-        $two = new \stdClass();
-        $two->attr = 2;
-        $this->assertFalse($action->isButtonAvailable($two, $this->stubRequest()));
     }
 }

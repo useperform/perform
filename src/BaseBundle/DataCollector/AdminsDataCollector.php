@@ -7,22 +7,24 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Perform\BaseBundle\Admin\AdminRegistry;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
+use Symfony\Component\Security\Core\Authorization\TraceableAccessDecisionManager;
 
 /**
- * AdminsDataCollector.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class AdminsDataCollector extends DataCollector
 {
     protected $registry;
     protected $store;
+    protected $accessDecisionManager;
     protected $extendedEntities;
 
-    public function __construct(AdminRegistry $registry, ConfigStoreInterface $store, array $extendedEntities)
+    public function __construct(AdminRegistry $registry, ConfigStoreInterface $store, AccessDecisionManagerInterface $accessDecisionManager, array $extendedEntities)
     {
         $this->registry = $registry;
         $this->store = $store;
+        $this->accessDecisionManager = $accessDecisionManager;
         $this->extendedEntities = $extendedEntities;
     }
 
@@ -34,6 +36,7 @@ class AdminsDataCollector extends DataCollector
         $this->data = [
             'admins' => $admins,
             'extendedEntities' => $this->extendedEntities,
+            'correctVoterStrategy' => $this->accessDecisionManager instanceof TraceableAccessDecisionManager ? $this->accessDecisionManager->getStrategy() === 'unanimous' : true,
         ];
         if ($request->attributes->has('_entity')) {
             $this->data['activeEntity'] = $request->attributes->get('_entity');
@@ -90,6 +93,11 @@ class AdminsDataCollector extends DataCollector
     public function getExtendedEntities()
     {
         return $this->data['extendedEntities'];
+    }
+
+    public function getCorrectVoterStrategy()
+    {
+        return $this->data['correctVoterStrategy'];
     }
 
     public function getName()

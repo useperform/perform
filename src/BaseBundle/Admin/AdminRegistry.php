@@ -53,6 +53,16 @@ class AdminRegistry
     }
 
     /**
+     * Return true if the given entity or class has an admin.
+     *
+     * @return bool
+     */
+    public function hasAdmin($entity)
+    {
+        return isset($this->admins[$this->resolver->resolve($entity)]);
+    }
+
+    /**
      * @return array
      */
     public function getAdmins()

@@ -10,4 +10,5 @@ Further Reading
    ./extending-entities
    ./working-with-dates
    ./crud-events
+   ./security
    ./settings

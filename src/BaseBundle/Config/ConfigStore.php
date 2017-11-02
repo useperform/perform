@@ -6,6 +6,7 @@ use Perform\BaseBundle\Doctrine\EntityResolver;
 use Perform\BaseBundle\Admin\AdminRegistry;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Perform\BaseBundle\Action\ActionRegistry;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * ConfigStore creates and stores a single instance of the different
@@ -22,6 +23,7 @@ class ConfigStore implements ConfigStoreInterface
     protected $adminRegistry;
     protected $typeRegistry;
     protected $actionRegistry;
+    protected $authChecker;
     protected $override;
 
     protected $typeConfigs = [];
@@ -29,12 +31,13 @@ class ConfigStore implements ConfigStoreInterface
     protected $actionConfigs = [];
     protected $labelConfigs = [];
 
-    public function __construct(EntityResolver $resolver, AdminRegistry $adminRegistry, TypeRegistry $typeRegistry, ActionRegistry $actionRegistry, array $override = [])
+    public function __construct(EntityResolver $resolver, AdminRegistry $adminRegistry, TypeRegistry $typeRegistry, ActionRegistry $actionRegistry, AuthorizationCheckerInterface $authChecker, array $override = [])
     {
         $this->resolver = $resolver;
         $this->adminRegistry = $adminRegistry;
         $this->typeRegistry = $typeRegistry;
         $this->actionRegistry = $actionRegistry;
+        $this->authChecker = $authChecker;
         $this->override = $override;
     }
 
@@ -60,7 +63,7 @@ class ConfigStore implements ConfigStoreInterface
     {
         $class = $this->resolver->resolve($entity);
         if (!isset($this->actionConfigs[$class])) {
-            $this->actionConfigs[$class] = new ActionConfig($this->actionRegistry);
+            $this->actionConfigs[$class] = new ActionConfig($this->actionRegistry, $this->authChecker);
             $this->adminRegistry->getAdmin($class)->configureActions($this->actionConfigs[$class]);
         }
 

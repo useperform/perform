@@ -5,6 +5,8 @@ namespace Perform\BaseBundle\Tests\Action;
 use Perform\BaseBundle\Action\ActionInterface;
 use Perform\BaseBundle\Action\ConfiguredAction;
 use Perform\BaseBundle\Admin\AdminRequest;
+use Perform\BaseBundle\Routing\CrudUrlGeneratorInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * ConfiguredActionTest
@@ -91,13 +93,13 @@ class ConfiguredActionTest extends \PHPUnit_Framework_TestCase
         ]);
         $entity = new \stdClass();
         $entity->title = 'hello';
-        $this->assertSame('hello', $ca->getLink($entity));
+        $this->assertSame('hello', $ca->getLink($entity, $this->getMock(CrudUrlGeneratorInterface::class), $this->getMock(UrlGeneratorInterface::class)));
     }
 
     public function testNotLink()
     {
         $ca = new ConfiguredAction('something', $this->action, []);
-        $this->assertSame('', $ca->getLink(new \stdClass()));
+        $this->assertSame('', $ca->getLink(new \stdClass, $this->getMock(CrudUrlGeneratorInterface::class), $this->getMock(UrlGeneratorInterface::class)));
     }
 
     public function testRun()

@@ -1,6 +1,6 @@
 <?php
 
-namespace SomeBundle\Tests\Config;
+namespace Perform\BaseBundle\Tests\Config;
 
 use Perform\BaseBundle\Config\ConfigStore;
 use Perform\BaseBundle\Admin\AdminInterface;
@@ -14,6 +14,7 @@ use Perform\BaseBundle\Action\ActionRegistry;
 use Perform\BaseBundle\Config\FilterConfig;
 use Perform\BaseBundle\Config\ActionConfig;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * ConfigStoreTest.
@@ -26,6 +27,7 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
     protected $typeRegistry;
     protected $actionRegistry;
     protected $store;
+    protected $authChecker;
 
     public function setUp()
     {
@@ -37,6 +39,7 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
         $this->actionRegistry = $this->getMockBuilder(ActionRegistry::class)
                       ->disableOriginalConstructor()
                       ->getMock();
+        $this->authChecker = $this->getMock(AuthorizationCheckerInterface::class);
     }
 
     private function configure($alias, $class, $admin, array $override = [])
@@ -49,12 +52,12 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
             $alias => $class,
         ]);
 
-        $this->store = new ConfigStore($resolver, $this->adminRegistry, $this->typeRegistry, $this->actionRegistry, $override);
+        $this->store = new ConfigStore($resolver, $this->adminRegistry, $this->typeRegistry, $this->actionRegistry, $this->authChecker, $override);
     }
 
     public function testInterface()
     {
-        $store = new ConfigStore(new EntityResolver(), $this->adminRegistry, $this->typeRegistry, $this->actionRegistry);
+        $store = new ConfigStore(new EntityResolver(), $this->adminRegistry, $this->typeRegistry, $this->actionRegistry, $this->authChecker);
         $this->assertInstanceOf(ConfigStoreInterface::class, $store);
     }
 

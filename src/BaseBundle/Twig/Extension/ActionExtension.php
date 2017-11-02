@@ -8,6 +8,7 @@ use Perform\BaseBundle\Action\ConfiguredAction;
 use Perform\BaseBundle\Admin\AdminRequest;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Perform\BaseBundle\Routing\CrudUrlGeneratorInterface;
 
 /**
  * Render action buttons and select options.
@@ -17,13 +18,15 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 class ActionExtension extends \Twig_Extension
 {
     protected $urlGenerator;
+    protected $crudUrlGenerator;
     protected $registry;
     protected $store;
     protected $request;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator, ActionRegistry $registry, ConfigStoreInterface $store)
+    public function __construct(UrlGeneratorInterface $urlGenerator, CrudUrlGeneratorInterface $crudUrlGenerator, ActionRegistry $registry, ConfigStoreInterface $store)
     {
         $this->urlGenerator = $urlGenerator;
+        $this->crudUrlGenerator = $crudUrlGenerator;
         $this->registry = $registry;
         $this->store = $store;
     }
@@ -61,7 +64,7 @@ class ActionExtension extends \Twig_Extension
                                  $action->getButtonStyle(),
                                  isset($attr['class']) ? ' '.trim($attr['class']) : '');
         $attr['href'] = $action->isLink() ?
-                      $action->getLink($entity) :
+                      $action->getLink($entity, $this->crudUrlGenerator, $this->urlGenerator) :
                       $this->getActionHref($action);
 
         return $twig->render('PerformBaseBundle:Action:button.html.twig', [

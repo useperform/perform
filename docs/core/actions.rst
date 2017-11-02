@@ -306,15 +306,18 @@ Use the ``isGranted`` option to restrict an action to certain conditions:
     {
         return [
             'label' => 'Archive',
-            'isGranted' => function($message) {
-                // only allow this action on non-archived entities
-                return $message->getStatus() !== Message::STATUS_ARCHIVED;
+            'isGranted' => function($message, AuthorizationCheckerInterface $authChecker) {
+                // only allow this action on non-archived entities, and if the user is allowed to
+                return $message->getStatus() !== Message::STATUS_ARCHIVED && $authChecker->isGranted('ARCHIVE', $message);
             },
         ];
     }
 
 This option can either be a boolean or a function that returns a boolean.
-If a function, it is called with the entity in question.
+If a function, it is called with the entity in question and an
+instance of
+``Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface``,
+which you can use to query the Symfony security system.
 If it evaluates to ``true``, the button will be displayed next to the entity.
 
 The default is ``true``.
@@ -324,10 +327,12 @@ Deciding when to show the buttons
 
 Use the ``isButtonAvailable`` and ``isBatchOptionAvailable`` options to decide when to show action buttons.
 
-``isButtonActionAvailable`` decides when to show a button next to an entity.
+``isButtonAvailable`` decides when to show a button next to an entity.
 
 The value can be a boolean or a function that returns a boolean.
 If a function, it is called with the entity in question and an ``AdminRequest`` instance.
+
+The default is ``true``.
 
 .. code-block:: php
 
@@ -343,13 +348,12 @@ If a function, it is called with the entity in question and an ``AdminRequest`` 
         ];
     }
 
-Since you normally want to display a button for an entity when the
-action is allowed, this value defaults to the value of ``isGranted``.
-
 .. note::
-   ``isButtonAvailable`` should not be used to enforce action permissions.
-   It is only called when deciding to show a batch action button, not when
-   actually running an action.
+   The result of ``isGranted`` is also used when deciding to display a
+   button, since it doesn't make sense to display a button for an
+   action that is not allowed.
+   If ``isButtonAvailable`` evaluates to ``true`` but ``isGranted``
+   does not, the button will not be shown.
 
 
 ``isBatchActionAvailable`` decides when to display a batch action option.
@@ -430,6 +434,12 @@ of which can be either a string or a function that returns a string
 depending on the entity.
 In the above example, the link parameter is a function that changes
 depending on the user's email address.
+
+If the link parameter is a function, it will be passed the entity in
+question, plus an instance of
+``Perform\BaseBundle\Routing\CrudUrlGeneratorInterface`` and
+``Symfony\Component\Routing\Generator\UrlGeneratorInterface`` as the
+second and third arguments, to make it easy to create a URL.
 
 ``addLink`` optionally takes an array of options as a third parameter,
 where all of the options of ``add`` and ``addInstance`` can also be
