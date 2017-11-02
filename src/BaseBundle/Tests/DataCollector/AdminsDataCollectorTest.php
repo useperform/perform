@@ -10,10 +10,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Perform\BaseBundle\Admin\AdminInterface;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
 use Perform\BaseBundle\Doctrine\EntityResolver;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
 /**
- * AdminsDataCollectorTest.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class AdminsDataCollectorTest extends \PHPUnit_Framework_TestCase
@@ -23,7 +22,8 @@ class AdminsDataCollectorTest extends \PHPUnit_Framework_TestCase
         $this->container = $this->getMock(ContainerInterface::class);
         $this->registry = new AdminRegistry($this->container, new EntityResolver());
         $store = $this->getMock(ConfigStoreInterface::class);
-        $this->collector = new AdminsDataCollector($this->registry, $store, []);
+        $accessManager = $this->getMock(AccessDecisionManagerInterface::class);
+        $this->collector = new AdminsDataCollector($this->registry, $store, $accessManager, []);
     }
 
     public function testCollectGetsLoadedAdmins()
