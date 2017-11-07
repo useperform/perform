@@ -101,6 +101,14 @@ services:
         tags:
             - {name: twig.extension}
 
+    perform_base.twig.export:
+        class: Perform\BaseBundle\Twig\Extension\ExportExtension
+        arguments:
+            - "@router"
+            - "@perform_base.doctrine.entity_resolver"
+        tags:
+            - {name: twig.extension}
+
     perform_base.twig.util:
         class: Perform\BaseBundle\Twig\Extension\UtilExtension
         arguments:

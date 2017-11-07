@@ -60,6 +60,12 @@ class CrudController extends Controller
             ->getLabelConfig($this->entity);
     }
 
+    protected function getExportConfig()
+    {
+        return $this->get('perform_base.config_store')
+            ->getExportConfig($this->entity);
+    }
+
     protected function newEntity()
     {
         $className = $this->getDoctrine()
@@ -112,6 +118,7 @@ class CrudController extends Controller
             'filters' => $this->getFilterConfig()->getFilters(),
             'batchActions' => $this->getActionConfig()->getBatchOptionsForRequest($request),
             'labelConfig' => $this->getLabelConfig(),
+            'exportConfig' => $this->getExportConfig(),
             'orderBy' => $orderBy,
             'routePrefix' => $admin->getRoutePrefix(),
             'paginator' => $paginator,

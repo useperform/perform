@@ -14,20 +14,24 @@ class ExportConfig
     const FORMAT_XLS = 'xls';
 
     protected $fields = [];
-    protected $availableFormats = [];
+    protected $formats = [
+        'Json' => self::FORMAT_JSON,
+        'CSV' => self::FORMAT_CSV,
+        'Excel' => self::FORMAT_XLS,
+    ];
 
     public function __construct()
     {
     }
 
     /**
-     * @param array $availableFormats
+     * @param array $formats
      *
      * @return ExportConfig
      */
-    public function setFormats(array $availableFormats)
+    public function setFormats(array $formats)
     {
-        $this->availableFormats = $availableFormats;
+        $this->formats = $formats;
 
         return $this;
     }
@@ -37,7 +41,7 @@ class ExportConfig
      */
     public function getFormats()
     {
-        return $this->availableFormats;
+        return $this->formats;
     }
 
     public function getFilename($format)
