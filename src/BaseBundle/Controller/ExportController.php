@@ -28,8 +28,7 @@ class ExportController extends Controller
     {
         // $this->denyAccessUnlessGranted('EXPORT')
 
-        // should be context_export
-        $adminRequest = new AdminRequest($request, TypeConfig::CONTEXT_LIST);
+        $adminRequest = new AdminRequest($request, TypeConfig::CONTEXT_EXPORT);
         // entity name is only set on routes created by CrudLoader. Set it manually here
         if (!$request->query->has('entity')) {
             throw new \InvalidArgumentException(sprintf('%s requires the entity name.', __METHOD__));
@@ -38,8 +37,7 @@ class ExportController extends Controller
 
         $entity = $this->get('perform_base.doctrine.entity_resolver')->resolve($adminRequest->getEntity());
         $query = $this->get('perform_base.selector.entity')->getQueryBuilder($adminRequest, $entity)->getQuery();
-        // $config = $this->get('perform_base.config_store')->getExportConfig($entity);
-        $config = new ExportConfig();
+        $config = $this->get('perform_base.config_store')->getExportConfig($entity);
 
         // writers should be configured by the export config
         $exporter = new Exporter([

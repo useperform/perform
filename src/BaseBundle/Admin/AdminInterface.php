@@ -6,6 +6,7 @@ use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BaseBundle\Config\FilterConfig;
 use Perform\BaseBundle\Config\ActionConfig;
 use Perform\BaseBundle\Config\LabelConfig;
+use Perform\BaseBundle\Config\ExportConfig;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
@@ -22,6 +23,14 @@ interface AdminInterface
     public function configureActions(ActionConfig $config);
 
     public function configureLabels(LabelConfig $config);
+
+    /**
+     * @param ExportConfig $config
+     *
+     * Configure how exports work for this entity.
+     * You may wish to set the available formats and configure how they behave.
+     */
+    public function configureExports(ExportConfig $config);
 
     /**
      * @return string

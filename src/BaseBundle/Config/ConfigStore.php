@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * ConfigStore creates and stores a single instance of the different
- * config classes for each entity.
+ * config classes for each entity class.
  *
  * Config classes are configured by the entity admin, and may also be
  * overridden by configuration passed to the ConfigStore.
@@ -90,5 +90,20 @@ class ConfigStore implements ConfigStoreInterface
         }
 
         return $this->labelConfigs[$class];
+    }
+
+    public function getExportConfig($entity)
+    {
+        $class = $this->resolver->resolve($entity);
+        if (!isset($this->exportConfigs[$class])) {
+            $this->exportConfigs[$class] = new ExportConfig();
+            foreach ($this->getTypeConfig($entity)->getTypes(TypeConfig::CONTEXT_EXPORT) as $field => $config) {
+                $this->exportConfigs[$class]->addField($config['exportOptions']['label'], $field);
+            }
+
+            $this->adminRegistry->getAdmin($class)->configureExports($this->exportConfigs[$class]);
+        }
+
+        return $this->exportConfigs[$class];
     }
 }

@@ -7,6 +7,7 @@ use Perform\BaseBundle\Form\Type\AdminType;
 use Perform\BaseBundle\Config\FilterConfig;
 use Perform\BaseBundle\Config\ActionConfig;
 use Perform\BaseBundle\Config\LabelConfig;
+use Perform\BaseBundle\Config\ExportConfig;
 use Symfony\Component\Templating\EngineInterface;
 use Perform\BaseBundle\Util\StringUtil;
 
@@ -49,6 +50,10 @@ abstract class AbstractAdmin implements AdminInterface
     }
 
     public function configureFilters(FilterConfig $config)
+    {
+    }
+
+    public function configureExports(ExportConfig $config)
     {
     }
 

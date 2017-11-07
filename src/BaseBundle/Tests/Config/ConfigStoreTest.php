@@ -15,6 +15,7 @@ use Perform\BaseBundle\Config\FilterConfig;
 use Perform\BaseBundle\Config\ActionConfig;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Perform\BaseBundle\Config\ExportConfig;
 
 /**
  * ConfigStoreTest.
@@ -147,5 +148,29 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($aliasConfig, $classConfig);
         $this->assertSame($aliasConfig, $objectConfig);
         $this->assertSame($aliasConfig, $this->store->getFilterConfig($alias));
+    }
+
+    public function testGetExportConfig()
+    {
+        $admin = $this->getMock(AdminInterface::class);
+        $admin->expects($this->once())
+            ->method('configureExports')
+            ->with($this->callback(function($config) {
+                    return $config instanceof ExportConfig;
+            }));
+
+        $alias = 'SomeBundle:stdClass';
+        $classname = \stdClass::class;
+        $this->configure($alias, $classname, $admin);
+
+        $aliasConfig = $this->store->getExportConfig($alias);
+        $classConfig = $this->store->getExportConfig($classname);
+        $objectConfig = $this->store->getExportConfig(new \stdClass());
+
+        $this->assertInstanceOf(ExportConfig::class, $aliasConfig);
+        //check the same object is always returned
+        $this->assertSame($aliasConfig, $classConfig);
+        $this->assertSame($aliasConfig, $objectConfig);
+        $this->assertSame($aliasConfig, $this->store->getExportConfig($alias));
     }
 }

@@ -19,12 +19,14 @@ class TypeConfig
     const CONTEXT_VIEW = 'view';
     const CONTEXT_CREATE = 'create';
     const CONTEXT_EDIT = 'edit';
+    const CONTEXT_EXPORT = 'export';
 
     protected static $optionKeys = [
         'listOptions',
         'viewOptions',
         'createOptions',
         'editOptions',
+        'exportOptions',
     ];
 
     protected $resolver;
@@ -49,6 +51,7 @@ class TypeConfig
                     static::CONTEXT_VIEW,
                     static::CONTEXT_CREATE,
                     static::CONTEXT_EDIT,
+                    static::CONTEXT_EXPORT,
                 ],
                 'sort' => true,
             ])
