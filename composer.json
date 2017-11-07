@@ -33,7 +33,11 @@
     "require-dev": {
         "phpunit/phpunit": "^4.8",
         "glynnforrest/temping": "^0.5.0",
-        "phpdocumentor/reflection-docblock": "^3.1"
+        "phpdocumentor/reflection-docblock": "^3.1",
+        "sonata-project/exporter": "^1.7"
+    },
+    "suggest": {
+        "sonata-project/exporter": "Export entities to a variety of formats"
     },
     "replace": {
         "perform/base-bundle": "self.version",
