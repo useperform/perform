@@ -13,6 +13,7 @@ class AdminRequest
 {
     protected $request;
     protected $context;
+    protected $entityOverride;
 
     public function __construct(Request $request, $context)
     {
@@ -30,9 +31,24 @@ class AdminRequest
         return $this->context;
     }
 
+    /**
+     * Override the entity class for this request.
+     *
+     * @param string $entity
+     */
+    public function setEntity($entity)
+    {
+        $this->entityOverride = $entity;
+    }
+
+    /**
+     * Get the entity name for this request.
+     *
+     * @return string
+     */
     public function getEntity()
     {
-        return $this->request->attributes->get('_entity');
+        return $this->entityOverride ? $this->entityOverride : $this->request->attributes->get('_entity');
     }
 
     public function getPage()
