@@ -108,6 +108,7 @@ services:
             - "@perform_base.doctrine.entity_resolver"
         tags:
             - {name: twig.extension}
+            - {name: kernel.event_listener, method: onKernelRequest, event: kernel.request}
 
     perform_base.twig.util:
         class: Perform\BaseBundle\Twig\Extension\UtilExtension
