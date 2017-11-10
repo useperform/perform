@@ -89,6 +89,18 @@ class EntityType extends AbstractType
         ];
     }
 
+    public function exportContext($entity, $field, array $options = [])
+    {
+        $relatedEntity = $this->accessor->getValue($entity, $field);
+        $this->ensureEntity($field, $relatedEntity);
+
+        if (!$relatedEntity) {
+            return '';
+        }
+
+        return $this->accessor->getValue($relatedEntity, $options['display_field']);
+    }
+
     public function getTemplate()
     {
         return 'PerformBaseBundle:types:entity.html.twig';

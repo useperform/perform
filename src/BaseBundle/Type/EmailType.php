@@ -26,6 +26,11 @@ class EmailType extends AbstractType
         ];
     }
 
+    public function exportContext($entity, $field, array $options = [])
+    {
+        return $this->accessor->getValue($entity, $field);
+    }
+
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
