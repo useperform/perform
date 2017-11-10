@@ -6,13 +6,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BaseBundle\Admin\AdminRequest;
-use Exporter\Source\DoctrineORMQuerySourceIterator;
+use Perform\BaseBundle\Exporter\TypedDoctrineORMQuerySourceIterator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Exporter\Exporter;
 use Exporter\Writer\CsvWriter;
 use Exporter\Writer\JsonWriter;
 use Exporter\Writer\XlsWriter;
-use Perform\BaseBundle\Config\ExportConfig;
 
 /**
  * Export entities to a variety of formats.
@@ -36,8 +35,10 @@ class ExportController extends Controller
         $adminRequest->setEntity($request->query->get('entity'));
 
         $entity = $this->get('perform_base.doctrine.entity_resolver')->resolve($adminRequest->getEntity());
+        $typeRegistry = $this->get('perform_base.type_registry');
         $query = $this->get('perform_base.selector.entity')->getQueryBuilder($adminRequest, $entity)->getQuery();
         $config = $this->get('perform_base.config_store')->getExportConfig($entity);
+        $exportFields = $this->get('perform_base.config_store')->getTypeConfig($entity)->getTypes(TypeConfig::CONTEXT_EXPORT);
 
         // writers should be configured by the export config
         $exporter = new Exporter([
@@ -48,7 +49,7 @@ class ExportController extends Controller
 
         $format = $request->query->get('format');
         $filename = $config->getFilename($format);
-        $source = new DoctrineORMQuerySourceIterator($query, $config->getFields());
+        $source = new TypedDoctrineORMQuerySourceIterator($typeRegistry, $query, $exportFields);
 
         return $exporter->getResponse($format, $filename, $source);
     }
