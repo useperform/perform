@@ -10,10 +10,9 @@ use Perform\BaseBundle\Config\LabelConfig;
 use Perform\BaseBundle\Config\ExportConfig;
 use Symfony\Component\Templating\EngineInterface;
 use Perform\BaseBundle\Util\StringUtil;
+use Doctrine\Common\Inflector\Inflector;
 
 /**
- * AbstractAdmin
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 abstract class AbstractAdmin implements AdminInterface
@@ -55,6 +54,7 @@ abstract class AbstractAdmin implements AdminInterface
 
     public function configureExports(ExportConfig $config)
     {
+        $config->setFilename(str_replace(' ', '-', strtolower(Inflector::pluralize(StringUtil::adminClassToEntityName(static::class)))));
     }
 
     public function configureActions(ActionConfig $config)
