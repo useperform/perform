@@ -97,10 +97,6 @@ class ConfigStore implements ConfigStoreInterface
         $class = $this->resolver->resolve($entity);
         if (!isset($this->exportConfigs[$class])) {
             $this->exportConfigs[$class] = new ExportConfig();
-            foreach ($this->getTypeConfig($entity)->getTypes(TypeConfig::CONTEXT_EXPORT) as $field => $config) {
-                $this->exportConfigs[$class]->addField($config['exportOptions']['label'], $field);
-            }
-
             $this->adminRegistry->getAdmin($class)->configureExports($this->exportConfigs[$class]);
         }
 
