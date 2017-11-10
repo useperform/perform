@@ -15,6 +15,7 @@ class ExportConfig
 
     protected $formats = [];
     protected $formatOptions = [];
+    protected $filenameFunction;
 
     /**
      * @param array $formats
@@ -38,7 +39,7 @@ class ExportConfig
 
     /**
      * @param string $format
-     * @param array $options
+     * @param array  $options
      */
     public function configureFormat($format, array $options)
     {
@@ -60,8 +61,21 @@ class ExportConfig
         return $options;
     }
 
+    /**
+     * @param string|Closure
+     */
+    public function setFilename($filename)
+    {
+        $this->filenameFunction = $filename instanceof \Closure ? $filename : function ($format) use ($filename) {
+            return $filename.'.'.$format;
+        };
+    }
+
+    /**
+     * @return string
+     */
     public function getFilename($format)
     {
-        return 'data.'.$format;
+        return $this->filenameFunction ? call_user_func($this->filenameFunction, $format) : 'data.'.$format;
     }
 }
