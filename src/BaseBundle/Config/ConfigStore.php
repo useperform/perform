@@ -97,6 +97,11 @@ class ConfigStore implements ConfigStoreInterface
         $class = $this->resolver->resolve($entity);
         if (!isset($this->exportConfigs[$class])) {
             $this->exportConfigs[$class] = new ExportConfig();
+            $this->exportConfigs[$class]->setFormats([
+                ExportConfig::FORMAT_JSON,
+                ExportConfig::FORMAT_CSV,
+                ExportConfig::FORMAT_XLS,
+            ]);
             $this->adminRegistry->getAdmin($class)->configureExports($this->exportConfigs[$class]);
         }
 

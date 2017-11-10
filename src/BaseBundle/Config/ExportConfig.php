@@ -13,15 +13,8 @@ class ExportConfig
     const FORMAT_CSV = 'csv';
     const FORMAT_XLS = 'xls';
 
-    protected $formats = [
-        self::FORMAT_JSON,
-        self::FORMAT_CSV,
-        self::FORMAT_XLS,
-    ];
-
-    public function __construct()
-    {
-    }
+    protected $formats = [];
+    protected $formatOptions = [];
 
     /**
      * @param array $formats
@@ -41,6 +34,30 @@ class ExportConfig
     public function getFormats()
     {
         return $this->formats;
+    }
+
+    /**
+     * @param string $format
+     * @param array $options
+     */
+    public function configureFormat($format, array $options)
+    {
+        $this->formatOptions[$format] = $options;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFormatOptions()
+    {
+        $options = [];
+        foreach ($this->formats as $format) {
+            $options[$format] = isset($this->formatOptions[$format]) ? $this->formatOptions[$format] : [];
+        }
+
+        return $options;
     }
 
     public function getFilename($format)

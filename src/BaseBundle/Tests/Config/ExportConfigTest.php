@@ -23,7 +23,50 @@ class ExportConfigTest extends \PHPUnit_Framework_TestCase
             ExportConfig::FORMAT_JSON,
             ExportConfig::FORMAT_XLS,
         ];
-        $config->setFormats($formats);
+        $this->assertSame($config, $config->setFormats($formats));
         $this->assertSame($formats, $config->getFormats());
+    }
+
+    public function testConfigureKnownFormat()
+    {
+        $config = new ExportConfig();
+        $config->setFormats([ExportConfig::FORMAT_CSV]);
+        $this->assertSame($config, $config->configureFormat(ExportConfig::FORMAT_CSV, [
+            'showHeaders' => false,
+        ]));
+
+        $expected = [
+            ExportConfig::FORMAT_CSV => [
+                'showHeaders' => false,
+            ]
+        ];
+        $this->assertSame($expected, $config->getFormatOptions());
+    }
+
+    public function testConfigureUnknownFormat()
+    {
+        $config = new ExportConfig();
+        $this->assertSame($config, $config->configureFormat('foo', [
+            'bar' => true,
+        ]));
+
+        $this->assertSame([], $config->getFormatOptions());
+    }
+
+    public function testUnconfiguredFormats()
+    {
+        $config = new ExportConfig();
+        $this->assertSame($config, $config->setFormats([
+            ExportConfig::FORMAT_CSV,
+            ExportConfig::FORMAT_JSON,
+            ExportConfig::FORMAT_XLS,
+        ]));
+
+        $expected = [
+            ExportConfig::FORMAT_CSV => [],
+            ExportConfig::FORMAT_JSON => [],
+            ExportConfig::FORMAT_XLS => [],
+        ];
+        $this->assertSame($expected, $config->getFormatOptions());
     }
 }
