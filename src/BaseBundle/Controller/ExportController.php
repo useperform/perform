@@ -9,9 +9,6 @@ use Perform\BaseBundle\Admin\AdminRequest;
 use Perform\BaseBundle\Exporter\TypedDoctrineORMQuerySourceIterator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Exporter\Exporter;
-use Exporter\Writer\CsvWriter;
-use Exporter\Writer\JsonWriter;
-use Exporter\Writer\XlsWriter;
 
 /**
  * Export entities to a variety of formats.
@@ -32,25 +29,10 @@ class ExportController extends Controller
         if (!$request->query->has('entity')) {
             throw new \InvalidArgumentException(sprintf('%s requires the entity name.', __METHOD__));
         }
-        $adminRequest->setEntity($request->query->get('entity'));
-
-        $entity = $this->get('perform_base.doctrine.entity_resolver')->resolve($adminRequest->getEntity());
-        $typeRegistry = $this->get('perform_base.type_registry');
-        $query = $this->get('perform_base.selector.entity')->getQueryBuilder($adminRequest, $entity)->getQuery();
-        $config = $this->get('perform_base.config_store')->getExportConfig($entity);
-        $exportFields = $this->get('perform_base.config_store')->getTypeConfig($entity)->getTypes(TypeConfig::CONTEXT_EXPORT);
-
-        // writers should be configured by the export config
-        $exporter = new Exporter([
-            'csv' => new CsvWriter('php://output'),
-            'json' => new JsonWriter('php://output'),
-            'xls' => new XlsWriter('php://output'),
-        ]);
-
+        $entity = $this->get('perform_base.doctrine.entity_resolver')->resolve($request->query->get('entity'));
+        $adminRequest->setEntity($entity);
         $format = $request->query->get('format');
-        $filename = $config->getFilename($format);
-        $source = new TypedDoctrineORMQuerySourceIterator($typeRegistry, $query, $exportFields);
 
-        return $exporter->getResponse($format, $filename, $source);
+        return $this->get('perform_base.exporter')->getResponse($adminRequest, $format);
     }
 }
