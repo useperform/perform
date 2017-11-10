@@ -14,9 +14,9 @@ class ExportConfig
     const FORMAT_XLS = 'xls';
 
     protected $formats = [
-        'Json' => self::FORMAT_JSON,
-        'CSV' => self::FORMAT_CSV,
-        'Excel' => self::FORMAT_XLS,
+        self::FORMAT_JSON,
+        self::FORMAT_CSV,
+        self::FORMAT_XLS,
     ];
 
     public function __construct()

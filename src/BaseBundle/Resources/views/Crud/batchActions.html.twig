@@ -22,8 +22,8 @@
       </button>
       {% set query = app.request.query.all() %}
       <ul class="dropdown-menu" aria-labelledby="perform-export">
-        {% for label, format in exportConfig.getFormats() %}
-          <li><a href="{{perform_export_route(entityClass, format)}}">{{label}}</a></li>
+        {% for format in exportConfig.getFormats() %}
+          <li><a href="{{perform_export_route(entityClass, format)}}">{{('export.format.'~format)|trans({}, 'PerformBaseBundle')}}</a></li>
         {% endfor %}
       </ul>
     </div>

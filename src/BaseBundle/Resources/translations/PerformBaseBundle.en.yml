@@ -10,6 +10,12 @@ crud:
         create: "New %entity_name%"
         edit: "Editing %entity_label%"
 
+export:
+    format:
+        json: 'Json'
+        csv: 'CSV'
+        xls: 'Excel'
+
 menu:
     dashboard: Dashboard
     users: Users
