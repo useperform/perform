@@ -227,3 +227,14 @@ services:
             - "@doctrine.orm.entity_manager"
         tags:
             - {name: form.type}
+
+    perform_base.export.writer_factory:
+        class: Perform\BaseBundle\Exporter\WriterFactory
+
+    perform_base.exporter:
+        class: Perform\BaseBundle\Exporter\Exporter
+        arguments:
+            - '@perform_base.config_store'
+            - '@perform_base.selector.entity'
+            - '@perform_base.type_registry'
+            - '@perform_base.export.writer_factory'
