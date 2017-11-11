@@ -1,0 +1,11 @@
+<div class="dropdown">
+  <button class="btn btn-default dropdown-toggle" type="button" id="perform-export" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    Download
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="perform-export">
+    {% for format in formats %}
+      <li><a href="{{perform_export_route(entityClass, format)}}">{{('export.format.'~format)|trans({}, 'PerformBaseBundle')}}</a></li>
+    {% endfor %}
+  </ul>
+</div>

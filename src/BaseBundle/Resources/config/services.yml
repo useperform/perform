@@ -105,7 +105,7 @@ services:
         class: Perform\BaseBundle\Twig\Extension\ExportExtension
         arguments:
             - "@router"
-            - "@perform_base.doctrine.entity_resolver"
+            - "@perform_base.config_store"
         tags:
             - {name: twig.extension}
             - {name: kernel.event_listener, method: onKernelRequest, event: kernel.request}
