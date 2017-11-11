@@ -95,8 +95,18 @@ By default, the filename will be a sensible suggestion for the current admin (e.
 Using export links elsewhere
 ----------------------------
 
-Use the twig method ``perform_export_route`` to get a link to an entity export in other places.
-The entity alias or classname is required, e.g. ``AppBundle:Post`` or ``AppBundle\Entity\Post``.
+You can also show links to export entities in other places with the ``perform_export_dropdown`` and ``perform_export_route`` twig functions.
+
+``perform_export_dropdown`` will render a dropdown with all available formats for that entity, and ``perform_export_route`` will return a url for the given format.
+
+Both require the entity alias or classname, e.g. ``AppBundle:Post`` or ``AppBundle\Entity\Post``.
+``perform_export_route`` also requires the format, and ``perform_export_dropdown`` can optionally take a translation key for the dropdown label (the default is ``perform.export.dropdown``).
+
+.. code-block:: html+twig
+
+    {{perform_export_dropdown('PerformUserBundle:User')}}
+
+    {{perform_export_dropdown('PerformUserBundle:User', 'app.download_label')}} <!-- custom translation label -->
 
 .. code-block:: html+twig
 

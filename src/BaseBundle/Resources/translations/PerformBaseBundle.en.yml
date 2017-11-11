@@ -11,6 +11,7 @@ crud:
         edit: "Editing %entity_label%"
 
 export:
+    dropdown: 'Download'
     format:
         json: 'Json'
         csv: 'CSV'

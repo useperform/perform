@@ -39,7 +39,7 @@ class ExportExtension extends \Twig_Extension
         $this->request = $event->getRequest();
     }
 
-    public function exportDropdown(\Twig_Environment $twig, $entity)
+    public function exportDropdown(\Twig_Environment $twig, $entity, $label = 'export.dropdown')
     {
         if (!$this->router->getRouteCollection()->get('perform_base_export_stream') instanceof Route) {
             return '';
@@ -53,6 +53,7 @@ class ExportExtension extends \Twig_Extension
         return $twig->render('PerformBaseBundle:Crud:export_dropdown.html.twig', [
             'formats' => $formats,
             'entityClass' => $entity,
+            'label' => $label,
         ]);
     }
 
