@@ -9,6 +9,7 @@ use Perform\BaseBundle\Admin\AdminRequest;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Perform\BaseBundle\Routing\CrudUrlGeneratorInterface;
+use Perform\BaseBundle\Routing\MissingResourceException;
 
 /**
  * Render action buttons and select options.
@@ -110,7 +111,7 @@ class ActionExtension extends \Twig_Extension
         try {
             return $this->urlGenerator->generate('perform_base_action_index', ['action' => $action->getName()]);
         } catch (RouteNotFoundException $e) {
-            throw new \RuntimeException('You must include routing_action.yml from the PerformBaseBundle to use action buttons. The "perform_base_action_index" route does not exist.', 1, $e);
+            throw MissingResourceException::create($e, '@PerformBaseBundle/Resources/config/routing_action.yml', 'to use action buttons', 'perform_base_action_index');
         }
     }
 }
