@@ -23,6 +23,8 @@ gulp.task('js', function () {
     'node_modules/moment/min/moment.min.js',
     'node_modules/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
     'node_modules/select2/dist/js/select2.min.js',
+    'node_modules/vue/dist/vue.min.js',
+    'node_modules/bootstrap-vue/dist/bootstrap-vue.min.js*',
     'Resources/js/*.js',
     'Resources/js/*/*.js',
   ]).pipe(gulp.dest('Resources/public/js/'));
