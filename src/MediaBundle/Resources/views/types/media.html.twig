@@ -4,3 +4,17 @@
   {# potential for live media previews etc here #}
   {{value | raw}}
 {% endblock %}
+
+{% block create %}
+  <div class="form-group">
+    {{form_label(form[field])}}
+    <div class="col-sm-6">
+      {{form_widget(form[field])}}
+      {{form_errors(form[field])}}
+    </div>
+    <div class="col-sm-4">
+      <div class="perform-media-type"></div>
+    </div>
+  </div>
+
+{% endblock %}

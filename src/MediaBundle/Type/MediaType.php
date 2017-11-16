@@ -9,6 +9,7 @@ use Perform\MediaBundle\Plugin\PluginRegistry;
 use Perform\MediaBundle\Entity\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Perform\MediaBundle\Exception\PluginNotFoundException;
+use Perform\BaseBundle\Asset\AssetContainer;
 
 /**
  * Use the ``media`` type to link to a file in the media library.
@@ -32,15 +33,19 @@ use Perform\MediaBundle\Exception\PluginNotFoundException;
 class MediaType extends AbstractType
 {
     protected $registry;
+    protected $assets;
 
-    public function __construct(PluginRegistry $registry)
+    public function __construct(PluginRegistry $registry, AssetContainer $assets)
     {
         $this->registry = $registry;
+        $this->assets = $assets;
         parent::__construct();
     }
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
+        $this->assets->addJs('/bundles/performmedia/editor.js');
+
         $availableTypes = $this->registry->getPluginNames();
         $types = empty($options['types']) ? $availableTypes : $options['types'];
 
