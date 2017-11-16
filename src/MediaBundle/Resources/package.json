@@ -9,6 +9,7 @@
     "build": "cross-env NODE_ENV=production webpack --progress"
   },
   "dependencies": {
+    "bootstrap-vue": "^1.0.2",
     "vue": "^2.4.4"
   },
   "browserslist": [
