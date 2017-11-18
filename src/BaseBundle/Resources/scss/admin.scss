@@ -30,17 +30,17 @@ a:focus {
 }
 ::selection {
 
-  background: $brand-info;
+  background: theme-color("info");
   color: #fff;
 }
 ::-moz-selection {
-  background: $brand-info;
+  background: theme-color("info");
   color: #fff;
 }
 
 /* Bootstrap Modifications */
 .modal-header {
-  background: $brand-info;
+  background: theme-color("info");
 }
 
 .modal-title {
@@ -114,7 +114,7 @@ ul.top-menu > li > .logout {
   border: 1px solid #64c3c2 !important;
   padding: 5px 15px;
   margin-right: 15px;
-  background: $brand-info;
+  background: theme-color("info");
   margin-top: 15px;
 }
 
@@ -122,7 +122,7 @@ ul.top-menu > li > .logout {
 /*sidebar navigation*/
 
 #sidebar {
-  width: 210px;
+  width: $sidebar-width;
   height: 100%;
   position: fixed;
   background: #424a5d;
@@ -180,7 +180,7 @@ ul.sidebar-menu li {
   margin: 0 10px;
 
   a {
-    color: $gray-lighter;
+    color: gray("300");
     text-decoration: none;
     display: block;
     padding: 15px 0 15px 10px;
@@ -194,11 +194,11 @@ ul.sidebar-menu li {
   }
 
   &.active a {
-    color: darken($brand-info, 20%);
+    color: darken(theme-color("info"), 20%);
   }
 
   a:hover {
-    background: $brand-info;
+    background: theme-color("info");
     color: #fff;
   }
 }
@@ -213,26 +213,11 @@ ul.sidebar-menu li a i {
               font-size: 11px;
             }
 
-/* MAIN CONTENT CONFIGURATION */
-#main-content {
-  margin-left: 210px;
-}
-
 @import "toolbar";
 
 .footer {
   min-height: 60px;
   padding: 0 15px;
-}
-
-.wrapper {
-  display: inline-block;
-  margin-top: 60px;
-  padding-left: 15px;
-  padding-right: 15px;
-  padding-bottom: 15px;
-  padding-top: 0px;
-  width: 100%;
 }
 
 /*notification*/
@@ -305,7 +290,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
 }
 
 .dropdown-menu.extended li p.green {
-  background-color: $brand-info;
+  background-color: theme-color("info");
   color: #fff;
 }
 
@@ -413,9 +398,9 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
   border-top-color: #FCB322 !important;
 }
 .notify-arrow-green {
-  border-color: transparent transparent $brand-info;
-  border-bottom-color: $brand-info !important;
-  border-top-color: $brand-info !important;
+  border-color: transparent transparent theme-color("info");
+  border-bottom-color: theme-color("info") !important;
+  border-top-color: theme-color("info") !important;
 }
 
 
@@ -509,7 +494,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
 }
 
 .ds a {
-  color: $brand-info;
+  color: theme-color("info");
 }
 
 /* LINE ICONS CONFIGURATION */
@@ -602,7 +587,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
   position: absolute;
   bottom: 0;
   background: #ff865c;
-  color: $brand-info;
+  color: theme-color("info");
   width: 100%;
   -webkit-border-radius: 5px 5px 0 0;
   -moz-border-radius: 5px 5px 0 0;
@@ -752,7 +737,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
   font-weight: 900;
 }
 .profile-01 {
-  background: $brand-info;
+  background: theme-color("info");
   height: 50px;
 }
 .profile-01:hover {
@@ -800,7 +785,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
   color: #cdcdcd;
 }
 .pr2-social a:hover {
-  color: $brand-info;
+  color: theme-color("info");
 }
 .pr2-social i {
   margin-top: 15px;
@@ -856,7 +841,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
   font-size: 12px;
 }
 .panel.terques-chart .chart-tittle .value a:hover, .panel.terques-chart .chart-tittle .value a.active {
-  color: $brand-info;
+  color: theme-color("info");
   font-size: 12px;
 }
 .panel.terques-chart .chart-tittle {
@@ -911,7 +896,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
   display: block;
   position: relative;
   overflow: hidden;
-  background-color: $brand-info;
+  background-color: theme-color("info");
   -webkit-transition: background-color 0.4s;
   -moz-transition: background-color 0.4s;
   -o-transition: background-color 0.4s;
@@ -931,7 +916,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
 }
 
 .project:hover .photo-wrapper {
-  background-color: $brand-info;
+  background-color: theme-color("info");
   background-image:url(../img/zoom.png);
   background-repeat:no-repeat;
   background-position:center;
@@ -1169,7 +1154,7 @@ label {
   margin: 0;
   padding: 25px 20px;
   text-align: center;
-  background: $brand-info;
+  background: theme-color("info");
   border-radius: 5px 5px 0 0;
   -webkit-border-radius: 5px 5px 0 0;
   color: #fff;
@@ -1505,13 +1490,6 @@ label {
     position: absolute;
     width: 100%;
     z-index: 1001;
-  }
-
-
-  /* body container */
-  #main-content {
-    margin: 0px!important;
-    position: none !important;
   }
 
   #sidebar > ul > li > a > span {

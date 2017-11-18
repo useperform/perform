@@ -17,56 +17,50 @@
   </head>
   <body>
     {% block body %}
-      <nav class="navbar navbar-default navbar-top">
-        <div class="navbar-header">
-          <div class="sidebar-toggle-box">
-            <div class="fa fa-minus-square-o" id="menu-toggle" data-toggle="tooltip" data-placement="right" title="Toggle Navigation"></div>
-          </div>
-          <a href="{{path('perform_base_dashboard_index')}}" class="navbar-brand">
-            {{'header.title'|trans({}, 'PerformBaseBundle')}}
-          </a>
-        </div>
-
-        <ul id="perform-tasks" class="nav navbar-nav navbar-right">
+      <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light">
+        <a href="{{path('perform_base_dashboard_index')}}" class="navbar-brand">
+          {{'header.title'|trans({}, 'PerformBaseBundle')}}
+        </a>
+        <button class="btn btn-light btn-sm sidebar-toggler">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <ul id="perform-tasks" class="navbar-nav">
           <p-tasks :tasks="tasks"></p-tasks>
-          <a class="btn btn-info navbar-btn" href="{{path('perform_user_logout')}}">Logout</a>
         </ul>
+        <a class="btn btn-primary" href="{{path('perform_user_logout')}}">Logout</a>
       </nav>
 
       {% verbatim %}
         <script type="text/x-template" id="template-tasks">
-          <b-nav-item-dropdown text="Tasks" right>
-            <template slot="button-content">
-              <i class="fa fa-tasks"></i>
-              <span class="badge badge-primary" v-show="tasks.length > 0">{{tasks.length}}</span>
-            </template>
-            <b-dropdown-header>Running tasks</b-dropdown-header>
-            <template v-for="task in tasks">
-              <b-dropdown-item href="#">
-                <p>{{task.title}}</p>
-                <b-progress :value="task.current" :max="task.max" animated></b-progress>
-              </b-dropdown-item>
-            </template>
-          </b-nav-item-dropdown>
+         <b-nav-item-dropdown text="Tasks" right>
+         <template slot="button-content">
+         <i class="fa fa-tasks"></i>
+         <span class="badge badge-primary" v-show="tasks.length > 0">{{tasks.length}}</span>
+         </template>
+         <b-dropdown-header>Running tasks</b-dropdown-header>
+         <template v-for="task in tasks">
+         <b-dropdown-item href="#">
+         <p>{{task.title}}</p>
+         <b-progress :value="task.current" :max="task.max" animated></b-progress>
+         </b-dropdown-item>
+         </template>
+         </b-nav-item-dropdown>
         </script>
       {% endverbatim %}
 
       <div class="admin-flash-messages">
       </div>
 
-      <aside>
-        <div id="sidebar" class="nav-collapse">
+      <div class="wrapper">
+        <div id="sidebar" class="col-md-3">
           {{ knp_menu_render('main', {}, 'perform_admin') }}
         </div>
-      </aside>
 
-      <section id="main-content">
-        <section class="wrapper site-min-height">
-
+        <div id="workspace" class="container-fluid">
           {% block workspace %}
           {% endblock %}
-        </section>
-      </section>
+        </div>
+      </div>
 
       <footer class="site-footer text-center">
         {{'footer' | trans({}, 'PerformBaseBundle') | raw}}

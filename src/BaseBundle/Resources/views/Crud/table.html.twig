@@ -38,7 +38,7 @@
         {% block entityActions %}
           <td>
             {% for action in perform_action_buttons_for(entity) %}
-              {{perform_action_button(action, entity, 'list', {class: "btn-xs"})}}
+              {{perform_action_button(action, entity, 'list', {class: "btn-sm"})}}
             {% endfor %}
           </td>
         {% endblock %}
