@@ -6,37 +6,6 @@ Website: http://blacktie.co
 Premium: http://www.gridgum.com
 */
 
-/* Import fonts */
-@import url($base-font-url);
-
-/* BASIC THEME CONFIGURATION */
-body {
-  background: #f2f2f2;
-  font-family: $base-font, sans-serif;
-  padding: 0px !important;
-  margin: 0px !important;
-  font-size:13px;
-}
-
-ul li {
-  list-style: none;
-}
-
-a,
-a:hover,
-a:focus {
-  text-decoration: none;
-  outline: none;
-}
-::selection {
-
-  background: theme-color("info");
-  color: #fff;
-}
-::-moz-selection {
-  background: theme-color("info");
-  color: #fff;
-}
 
 /* Bootstrap Modifications */
 .modal-header {
@@ -86,18 +55,6 @@ hr {
   text-align: right;
 }
 
-.mt {
-  margin-top: 25px;
-}
-
-.mb {
-  margin-bottom: 25px;
-}
-
-.ml {
-  margin-left: 5px;
-}
-
 .no-padding {
   padding: 0 !important;
 }
@@ -119,101 +76,11 @@ ul.top-menu > li > .logout {
 }
 
 
-/*sidebar navigation*/
-
-#sidebar {
-  width: $sidebar-width;
-  height: 100%;
-  position: fixed;
-  background: #424a5d;
-  overflow: scroll;
-}
-
-#sidebar h5 {
-  color: #f2f2f2;
-  font-weight: 700;
-}
-
-#sidebar ul li {
-  position: relative;
-}
-
-/*LEFT NAVIGATION ICON*/
-.dcjq-icon {
-  height:17px;
-  width:17px;
-  display:inline-block;
-  border-radius:3px;
-  -moz-border-radius:3px;
-  -webkit-border-radius:3px;
-  position:absolute;
-  right:10px;
-  top:15px;
-}
-.active .dcjq-icon {
-  border-radius:3px;
-  -moz-border-radius:3px;
-  -webkit-border-radius:3px;
-}
-
-.nav-collapse.collapse {
-  display: inline;
-}
-
-ul.sidebar-menu {
-  padding: 0;
-  margin: 75px 0 0;
-
-  ul {
-    margin:0;
-    padding:0;
-    li {
-      line-height: 15px;
-      a {
-        padding: 10px 32px;
-      }
-    }
-  }
-}
-
-ul.sidebar-menu li {
-  margin: 0 10px;
-
-  a {
-    color: gray("300");
-    text-decoration: none;
-    display: block;
-    padding: 15px 0 15px 10px;
-    font-size: 12px;
-    outline: none;
-    -webkit-transition: all 0.3s ease;
-    -moz-transition: all 0.3s ease;
-    -o-transition: all 0.3s ease;
-    -ms-transition: all 0.3s ease;
-    transition: all 0.3s ease;
-  }
-
-  &.active a {
-    color: darken(theme-color("info"), 20%);
-  }
-
-  a:hover {
-    background: theme-color("info");
-    color: #fff;
-  }
-}
-
-ul.sidebar-menu li a i {
-  font-size: 15px;
-  padding-right: 6px;
-}
 
 .mail-info, .mail-info:hover {
               margin: -3px 6px 0 0;
               font-size: 11px;
             }
-
-@import "toolbar";
 
 .footer {
   min-height: 60px;

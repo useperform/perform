@@ -1,10 +1,40 @@
 @import "../../node_modules/bootstrap/scss/functions";
 @import "variables";
 @import "bootstrap";
-@import "admin";
 @import "font-awesome";
 @import "../../node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min";
 @import "../../node_modules/select2/dist/css/select2";
+@import "toolbar";
+@import "sidebar";
+
+@import url($base-font-url);
+
+body {
+  background: #f2f2f2;
+  font-family: $base-font, sans-serif;
+  padding: 0px !important;
+  margin: 0px !important;
+  font-size:13px;
+}
+
+ul li {
+  list-style: none;
+}
+
+a, a:hover, a:focus {
+  text-decoration: none;
+  outline: none;
+}
+
+::selection {
+  background: theme-color("info");
+  color: #fff;
+}
+
+::-moz-selection {
+  background: theme-color("info");
+  color: #fff;
+}
 
 .wrapper #workspace {
   padding-left: $sidebar-width + 15px;
