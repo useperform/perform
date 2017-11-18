@@ -78,7 +78,7 @@ $(function () {
       .text(label)
       .data('action', action)
       .attr('href', href)
-      .removeClass('btn-default btn-primary btn-info btn-warning btn-danger')
+      .removeClass('btn-light btn-primary btn-info btn-warning btn-danger')
       .addClass(action.buttonStyle);
 
     modal.modal('show');
