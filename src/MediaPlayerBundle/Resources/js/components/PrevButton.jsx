@@ -10,7 +10,7 @@ class PrevButton extends React.Component {
 
   render() {
     return (
-        <a className="btn btn-default" onClick={this.onClick.bind(this)}>Prev</a>
+        <a className="btn btn-light" onClick={this.onClick.bind(this)}>Prev</a>
     );
   }
 }
