@@ -4,6 +4,7 @@
   position: fixed;
   background: #424a5d;
   overflow: scroll;
+  padding: 75px 0;
 
   h5 {
     color: #f2f2f2;
@@ -12,7 +13,7 @@
 
   > ul {
     padding: 0;
-    margin: 75px 0 0;
+    margin: 0;
 
     li {
       line-height: 15px;

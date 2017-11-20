@@ -1,3 +1,9 @@
+.dashboard {
+  .card {
+    margin-bottom: 20px;
+  }
+}
+
 .bar-chart {
   height: 290px;
   margin: 20px;
@@ -24,7 +30,7 @@
     .value {
       position: absolute;
       bottom: 0;
-      background: theme-color("warning");
+      background: color("orange");
       width: 100%;
       -webkit-border-radius: 5px 5px 0 0;
       -moz-border-radius: 5px 5px 0 0;
@@ -37,7 +43,7 @@
     }
 
     .value:hover {
-      background: darken(theme-color("warning"), 20%);
+      background: darken(color("orange"), 20%);
     }
   }
 
