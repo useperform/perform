@@ -4,6 +4,7 @@ var webpack = require('webpack')
 module.exports = {
   entry: {
     editor: './src/editor.js',
+    selector: './src/selector.js',
   },
   output: {
     path: path.resolve(__dirname, './public'),
