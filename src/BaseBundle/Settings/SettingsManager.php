@@ -6,8 +6,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Perform\BaseBundle\Exception\SettingNotFoundException;
 
 /**
- * SettingsManager.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class SettingsManager
@@ -25,7 +23,7 @@ class SettingsManager
     {
         $setting = $this->repo->findOneBy(['key' => $key]);
         if (!$setting) {
-            $msg = sprintf('Setting "%s" not found. You may need to run the console command "perform:install --only settings" to install settings definitions, or create a new definition for "%s".', $key, $key);
+            $msg = sprintf('Setting "%s" not found. You may need to run the console command "perform:install -i settings" to install settings definitions, or create a new definition for "%s".', $key, $key);
             throw new SettingNotFoundException($msg);
         }
 
