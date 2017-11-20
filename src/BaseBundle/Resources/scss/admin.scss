@@ -82,11 +82,6 @@ ul.top-menu > li > .logout {
               font-size: 11px;
             }
 
-.footer {
-  min-height: 60px;
-  padding: 0 15px;
-}
-
 /*notification*/
 .notify-row {
   float: left;
@@ -422,80 +417,6 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
   width: 100%;
   font-weight: 700;
   color: #989898;
-}
-
-.custom-bar-chart {
-  height: 290px;
-  margin-top: 20px;
-  margin-left: 20px;
-  position: relative;
-  border-bottom: 1px solid #c9cdd7;
-}
-
-.custom-bar-chart .bar {
-  height: 100%;
-  position: relative;
-  width: 6%;
-  margin: 0px 4%;
-  float: left;
-  text-align: center;
-  z-index: 10;
-}
-
-.custom-bar-chart .bar .title {
-  position: absolute;
-  bottom: -30px;
-  width: 100%;
-  text-align: center;
-  font-size: 11px;
-}
-
-.custom-bar-chart .bar .value {
-  position: absolute;
-  bottom: 0;
-  background: #ff865c;
-  color: theme-color("info");
-  width: 100%;
-  -webkit-border-radius: 5px 5px 0 0;
-  -moz-border-radius: 5px 5px 0 0;
-  border-radius: 5px 5px 0 0;
-  -webkit-transition: all .3s ease;
-  -moz-transition: all .3s ease;
-  -ms-transition: all .3s ease;
-  -o-transition: all .3s ease;
-  transition: all .3s ease;
-}
-
-
-
-.custom-bar-chart .bar .value:hover {
-  background: darken(#ff865c, 25);
-}
-
-.y-axis {
-  color: #555555;
-  position: absolute;
-  text-align: left;
-  width: 100%;
-  font-size: 11px;
-}
-
-.y-axis li {
-  border-top: 1px dashed #dbdce0;
-  display: block;
-  height: 58px;
-  width: 100%;
-}
-
-.y-axis li:last-child {
-  border-top: none;
-}
-
-.y-axis li span {
-  display: block;
-  margin: -10px 0 0 -60px;
-  padding: 0 10px;
-  width: 40px;
 }
 
 /* Calendar Configuration */
@@ -1172,74 +1093,6 @@ label {
   height: 10px;
 }
 
-.panel-footer.revenue-foot {
-  background-color: #e6e7ec;
-  -webkit-border-radius: 0px 0px 4px 4px;
-  border-radius: 0px 0px 4px 4px;
-  border: none;
-  padding: 0;
-  width: 100%;
-  display: inline-block;
-}
-
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-  /* Safari and Chrome */
-  .panel-footer.revenue-foot {
-    margin-bottom: -4px;
-  };
-}
-
-
-.panel-footer.revenue-foot ul  {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  display: inline-flex;
-}
-
-.panel-footer.revenue-foot ul li {
-  float: left;
-  width: 33.33%;
-}
-
-.panel-footer.revenue-foot ul li.first a:hover, .panel-footer.revenue-foot ul li.first a {
-  -webkit-border-radius: 0px 0px 0px 4px;
-  border-radius: 0px 0px 0px 4px;
-}
-
-.panel-footer.revenue-foot ul li.last a:hover, .panel-footer.revenue-foot ul li.last a {
-  -webkit-border-radius: 0px 0px 4px 0px;
-  border-radius: 0px 0px 4px 0px;
-  border-right: none;
-
-}
-
-.panel-footer.revenue-foot ul li a{
-  display: inline-block;
-  width: 100%;
-  padding: 14px 15px;
-  text-align: center;
-  border-right: 1px solid #d5d8df;
-  color: #797979;
-}
-
-.panel-footer.revenue-foot ul li a:hover, .panel-footer.revenue-foot ul li.active a {
-  background: #fff;
-  position: relative;
-}
-
-.panel-footer.revenue-foot ul li a i {
-  color: #c6cad5;
-  display: block;
-  font-size: 16px;
-}
-.panel-footer.revenue-foot ul li a:hover i, .panel-footer.revenue-foot ul li.active a i {
-  color: #ff6c60;
-  display: block;
-  font-size: 16px;
-}
-
-
 /*flot chart*/
 .flot-chart .chart, .flot-chart .pie, .flot-chart .bars {
   height: 300px;
@@ -1299,12 +1152,6 @@ label {
   border-left: 3px solid #BEC3C7;
 }
 
-.site-footer {
-  background: $footer-bg;
-  color: $footer-color;
-  padding: 10px 0;
-}
-
 .go-top {
   margin-right: 1%;
   float: right;
@@ -1317,30 +1164,6 @@ label {
 
 .go-top i {
   color: #2A3542;
-}
-
-.site-min-height {
-  min-height: 900px;
-}
-
-@media (min-width: 980px) {
-  /*-----*/
-  .custom-bar-chart {
-    margin-bottom: 40px;
-  }
-
-}
-
-@media (min-width: 768px) and (max-width: 979px) {
-
-  /*-----*/
-  .custom-bar-chart {
-    margin-bottom: 40px;
-  }
-
-  /*chat room*/
-
-
 }
 
 @media (max-width: 768px) {

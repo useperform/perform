@@ -6,14 +6,19 @@
 @import "../../node_modules/select2/dist/css/select2";
 @import "toolbar";
 @import "sidebar";
+@import "dashboard";
 
 @import url($base-font-url);
+
+html, body {
+  height: 100%;
+}
 
 body {
   background: #f2f2f2;
   font-family: $base-font, sans-serif;
-  padding: 0px !important;
-  margin: 0px !important;
+  padding: 0px;
+  margin: 0px;
   font-size:13px;
 }
 
@@ -36,13 +41,23 @@ a, a:hover, a:focus {
   color: #fff;
 }
 
-.wrapper #workspace {
-  padding-top: 70px;
-  padding-left: $sidebar-width + 15px;
+.wrapper {
+  min-height: 95%;
+
+  #workspace {
+    padding-top: 70px;
+    padding-left: $sidebar-width + 15px;
+  }
+
+  &.sidebar-closed #workspace {
+    padding-left: 15px;
+  }
 }
 
-.wrapper.sidebar-closed #workspace {
-  padding-left: 15px;
+.site-footer {
+  background: $footer-bg;
+  color: $footer-color;
+  padding: 10px 0;
 }
 
 .panel {

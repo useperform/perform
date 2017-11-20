@@ -1,0 +1,68 @@
+.bar-chart {
+  height: 290px;
+  margin: 20px;
+  position: relative;
+  border-bottom: 1px solid #c9cdd7;
+
+  .bar {
+    height: 100%;
+    position: relative;
+    width: 6%;
+    margin: 0px 4%;
+    float: left;
+    text-align: center;
+    z-index: 10;
+
+    .title {
+      position: absolute;
+      bottom: -30px;
+      width: 100%;
+      text-align: center;
+      font-size: 11px;
+    }
+
+    .value {
+      position: absolute;
+      bottom: 0;
+      background: theme-color("warning");
+      width: 100%;
+      -webkit-border-radius: 5px 5px 0 0;
+      -moz-border-radius: 5px 5px 0 0;
+      border-radius: 5px 5px 0 0;
+      -webkit-transition: all .3s ease;
+      -moz-transition: all .3s ease;
+      -ms-transition: all .3s ease;
+      -o-transition: all .3s ease;
+      transition: all .3s ease;
+    }
+
+    .value:hover {
+      background: darken(theme-color("warning"), 20%);
+    }
+  }
+
+  .y-axis {
+    color: gray("700");
+    position: absolute;
+    text-align: left;
+    width: 100%;
+    font-size: 11px;
+
+    li {
+      border-top: 1px dashed #dbdce0;
+      display: block;
+      height: 58px;
+      width: 100%;
+
+      span {
+        display: block;
+        margin: -10px 0 0 -60px;
+        padding: 0 10px;
+      }
+    }
+
+    li:last-child {
+      border-top: none;
+    }
+  }
+}
