@@ -1,30 +1,29 @@
-$border-radius-base: 0;
-$border-radius-small: 0;
-$border-radius-large: 0;
-$panel-border-radius: 0;
-$input-border-radius: 0;
-$alert-border-radius: 0;
-$btn-border-radius-base: 0;
-$nav-pills-border-radius: 0;
-$navbar-border-radius: 0;
-$navbar-height: 60px;
-$navbar-default-bg: #a5d777;
-$navbar-default-brand-color: #ffffff;
-$navbar-default-brand-hover-color: darken(#ffffff, 2);
-$navbar-default-link-color: #ffffff;
-$navbar-default-link-hover-color: darken(#ffffff, 2);
+// $border-radius-base: 0;
+// $border-radius-small: 0;
+// $border-radius-large: 0;
+// $panel-border-radius: 0;
+// $input-border-radius: 0;
+// $alert-border-radius: 0;
+// $btn-border-radius-base: 0;
+// $nav-pills-border-radius: 0;
+// $navbar-border-radius: 0;
+// $navbar-height: 60px;
+// $navbar-default-bg: #a5d777;
+// $navbar-default-brand-color: #ffffff;
+// $navbar-default-brand-hover-color: darken(#ffffff, 2);
+// $navbar-default-link-color: #ffffff;
+// $navbar-default-link-hover-color: darken(#ffffff, 2);
 
-$placeholder-color: #cdcdcd;
+// $placeholder-color: #cdcdcd;
 
-$brand-info: #68dff0;
-
+$sidebar-width: 210px;
 $base-font-url: 'https://fonts.googleapis.com/css?family=Ruda:400,700,900';
 $base-font: 'Ruda';
 
-//relative to css/app.css
-$icon-font-path: '../fonts/';
+// //relative to css/app.css
+// $icon-font-path: '../fonts/';
 
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables";
+@import "../../node_modules/bootstrap/scss/variables";
 
-$footer-bg: $gray-dark;
+$footer-bg: gray("700");
 $footer-color: #fff;

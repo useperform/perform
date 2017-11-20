@@ -6,41 +6,10 @@ Website: http://blacktie.co
 Premium: http://www.gridgum.com
 */
 
-/* Import fonts */
-@import url($base-font-url);
-
-/* BASIC THEME CONFIGURATION */
-body {
-  background: #f2f2f2;
-  font-family: $base-font, sans-serif;
-  padding: 0px !important;
-  margin: 0px !important;
-  font-size:13px;
-}
-
-ul li {
-  list-style: none;
-}
-
-a,
-a:hover,
-a:focus {
-  text-decoration: none;
-  outline: none;
-}
-::selection {
-
-  background: $brand-info;
-  color: #fff;
-}
-::-moz-selection {
-  background: $brand-info;
-  color: #fff;
-}
 
 /* Bootstrap Modifications */
 .modal-header {
-  background: $brand-info;
+  background: theme-color("info");
 }
 
 .modal-title {
@@ -86,18 +55,6 @@ hr {
   text-align: right;
 }
 
-.mt {
-  margin-top: 25px;
-}
-
-.mb {
-  margin-bottom: 25px;
-}
-
-.ml {
-  margin-left: 5px;
-}
-
 .no-padding {
   padding: 0 !important;
 }
@@ -114,126 +71,16 @@ ul.top-menu > li > .logout {
   border: 1px solid #64c3c2 !important;
   padding: 5px 15px;
   margin-right: 15px;
-  background: $brand-info;
+  background: theme-color("info");
   margin-top: 15px;
 }
 
 
-/*sidebar navigation*/
-
-#sidebar {
-  width: 210px;
-  height: 100%;
-  position: fixed;
-  background: #424a5d;
-  overflow: scroll;
-}
-
-#sidebar h5 {
-  color: #f2f2f2;
-  font-weight: 700;
-}
-
-#sidebar ul li {
-  position: relative;
-}
-
-/*LEFT NAVIGATION ICON*/
-.dcjq-icon {
-  height:17px;
-  width:17px;
-  display:inline-block;
-  border-radius:3px;
-  -moz-border-radius:3px;
-  -webkit-border-radius:3px;
-  position:absolute;
-  right:10px;
-  top:15px;
-}
-.active .dcjq-icon {
-  border-radius:3px;
-  -moz-border-radius:3px;
-  -webkit-border-radius:3px;
-}
-
-.nav-collapse.collapse {
-  display: inline;
-}
-
-ul.sidebar-menu {
-  padding: 0;
-  margin: 75px 0 0;
-
-  ul {
-    margin:0;
-    padding:0;
-    li {
-      line-height: 15px;
-      a {
-        padding: 10px 32px;
-      }
-    }
-  }
-}
-
-ul.sidebar-menu li {
-  margin: 0 10px;
-
-  a {
-    color: $gray-lighter;
-    text-decoration: none;
-    display: block;
-    padding: 15px 0 15px 10px;
-    font-size: 12px;
-    outline: none;
-    -webkit-transition: all 0.3s ease;
-    -moz-transition: all 0.3s ease;
-    -o-transition: all 0.3s ease;
-    -ms-transition: all 0.3s ease;
-    transition: all 0.3s ease;
-  }
-
-  &.active a {
-    color: darken($brand-info, 20%);
-  }
-
-  a:hover {
-    background: $brand-info;
-    color: #fff;
-  }
-}
-
-ul.sidebar-menu li a i {
-  font-size: 15px;
-  padding-right: 6px;
-}
 
 .mail-info, .mail-info:hover {
               margin: -3px 6px 0 0;
               font-size: 11px;
             }
-
-/* MAIN CONTENT CONFIGURATION */
-#main-content {
-  margin-left: 210px;
-}
-
-@import "toolbar";
-
-.footer {
-  min-height: 60px;
-  padding: 0 15px;
-}
-
-.wrapper {
-  display: inline-block;
-  margin-top: 60px;
-  padding-left: 15px;
-  padding-right: 15px;
-  padding-bottom: 15px;
-  padding-top: 0px;
-  width: 100%;
-}
 
 /*notification*/
 .notify-row {
@@ -305,7 +152,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
 }
 
 .dropdown-menu.extended li p.green {
-  background-color: $brand-info;
+  background-color: theme-color("info");
   color: #fff;
 }
 
@@ -413,9 +260,9 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
   border-top-color: #FCB322 !important;
 }
 .notify-arrow-green {
-  border-color: transparent transparent $brand-info;
-  border-bottom-color: $brand-info !important;
-  border-top-color: $brand-info !important;
+  border-color: transparent transparent theme-color("info");
+  border-bottom-color: theme-color("info") !important;
+  border-top-color: theme-color("info") !important;
 }
 
 
@@ -509,7 +356,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
 }
 
 .ds a {
-  color: $brand-info;
+  color: theme-color("info");
 }
 
 /* LINE ICONS CONFIGURATION */
@@ -570,80 +417,6 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
   width: 100%;
   font-weight: 700;
   color: #989898;
-}
-
-.custom-bar-chart {
-  height: 290px;
-  margin-top: 20px;
-  margin-left: 20px;
-  position: relative;
-  border-bottom: 1px solid #c9cdd7;
-}
-
-.custom-bar-chart .bar {
-  height: 100%;
-  position: relative;
-  width: 6%;
-  margin: 0px 4%;
-  float: left;
-  text-align: center;
-  z-index: 10;
-}
-
-.custom-bar-chart .bar .title {
-  position: absolute;
-  bottom: -30px;
-  width: 100%;
-  text-align: center;
-  font-size: 11px;
-}
-
-.custom-bar-chart .bar .value {
-  position: absolute;
-  bottom: 0;
-  background: #ff865c;
-  color: $brand-info;
-  width: 100%;
-  -webkit-border-radius: 5px 5px 0 0;
-  -moz-border-radius: 5px 5px 0 0;
-  border-radius: 5px 5px 0 0;
-  -webkit-transition: all .3s ease;
-  -moz-transition: all .3s ease;
-  -ms-transition: all .3s ease;
-  -o-transition: all .3s ease;
-  transition: all .3s ease;
-}
-
-
-
-.custom-bar-chart .bar .value:hover {
-  background: darken(#ff865c, 25);
-}
-
-.y-axis {
-  color: #555555;
-  position: absolute;
-  text-align: left;
-  width: 100%;
-  font-size: 11px;
-}
-
-.y-axis li {
-  border-top: 1px dashed #dbdce0;
-  display: block;
-  height: 58px;
-  width: 100%;
-}
-
-.y-axis li:last-child {
-  border-top: none;
-}
-
-.y-axis li span {
-  display: block;
-  margin: -10px 0 0 -60px;
-  padding: 0 10px;
-  width: 40px;
 }
 
 /* Calendar Configuration */
@@ -752,7 +525,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
   font-weight: 900;
 }
 .profile-01 {
-  background: $brand-info;
+  background: theme-color("info");
   height: 50px;
 }
 .profile-01:hover {
@@ -800,7 +573,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
   color: #cdcdcd;
 }
 .pr2-social a:hover {
-  color: $brand-info;
+  color: theme-color("info");
 }
 .pr2-social i {
   margin-top: 15px;
@@ -856,7 +629,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
   font-size: 12px;
 }
 .panel.terques-chart .chart-tittle .value a:hover, .panel.terques-chart .chart-tittle .value a.active {
-  color: $brand-info;
+  color: theme-color("info");
   font-size: 12px;
 }
 .panel.terques-chart .chart-tittle {
@@ -911,7 +684,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
   display: block;
   position: relative;
   overflow: hidden;
-  background-color: $brand-info;
+  background-color: theme-color("info");
   -webkit-transition: background-color 0.4s;
   -moz-transition: background-color 0.4s;
   -o-transition: background-color 0.4s;
@@ -931,7 +704,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
 }
 
 .project:hover .photo-wrapper {
-  background-color: $brand-info;
+  background-color: theme-color("info");
   background-image:url(../img/zoom.png);
   background-repeat:no-repeat;
   background-position:center;
@@ -1169,7 +942,7 @@ label {
   margin: 0;
   padding: 25px 20px;
   text-align: center;
-  background: $brand-info;
+  background: theme-color("info");
   border-radius: 5px 5px 0 0;
   -webkit-border-radius: 5px 5px 0 0;
   color: #fff;
@@ -1320,74 +1093,6 @@ label {
   height: 10px;
 }
 
-.panel-footer.revenue-foot {
-  background-color: #e6e7ec;
-  -webkit-border-radius: 0px 0px 4px 4px;
-  border-radius: 0px 0px 4px 4px;
-  border: none;
-  padding: 0;
-  width: 100%;
-  display: inline-block;
-}
-
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-  /* Safari and Chrome */
-  .panel-footer.revenue-foot {
-    margin-bottom: -4px;
-  };
-}
-
-
-.panel-footer.revenue-foot ul  {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  display: inline-flex;
-}
-
-.panel-footer.revenue-foot ul li {
-  float: left;
-  width: 33.33%;
-}
-
-.panel-footer.revenue-foot ul li.first a:hover, .panel-footer.revenue-foot ul li.first a {
-  -webkit-border-radius: 0px 0px 0px 4px;
-  border-radius: 0px 0px 0px 4px;
-}
-
-.panel-footer.revenue-foot ul li.last a:hover, .panel-footer.revenue-foot ul li.last a {
-  -webkit-border-radius: 0px 0px 4px 0px;
-  border-radius: 0px 0px 4px 0px;
-  border-right: none;
-
-}
-
-.panel-footer.revenue-foot ul li a{
-  display: inline-block;
-  width: 100%;
-  padding: 14px 15px;
-  text-align: center;
-  border-right: 1px solid #d5d8df;
-  color: #797979;
-}
-
-.panel-footer.revenue-foot ul li a:hover, .panel-footer.revenue-foot ul li.active a {
-  background: #fff;
-  position: relative;
-}
-
-.panel-footer.revenue-foot ul li a i {
-  color: #c6cad5;
-  display: block;
-  font-size: 16px;
-}
-.panel-footer.revenue-foot ul li a:hover i, .panel-footer.revenue-foot ul li.active a i {
-  color: #ff6c60;
-  display: block;
-  font-size: 16px;
-}
-
-
 /*flot chart*/
 .flot-chart .chart, .flot-chart .pie, .flot-chart .bars {
   height: 300px;
@@ -1447,12 +1152,6 @@ label {
   border-left: 3px solid #BEC3C7;
 }
 
-.site-footer {
-  background: $footer-bg;
-  color: $footer-color;
-  padding: 10px 0;
-}
-
 .go-top {
   margin-right: 1%;
   float: right;
@@ -1465,30 +1164,6 @@ label {
 
 .go-top i {
   color: #2A3542;
-}
-
-.site-min-height {
-  min-height: 900px;
-}
-
-@media (min-width: 980px) {
-  /*-----*/
-  .custom-bar-chart {
-    margin-bottom: 40px;
-  }
-
-}
-
-@media (min-width: 768px) and (max-width: 979px) {
-
-  /*-----*/
-  .custom-bar-chart {
-    margin-bottom: 40px;
-  }
-
-  /*chat room*/
-
-
 }
 
 @media (max-width: 768px) {
@@ -1505,13 +1180,6 @@ label {
     position: absolute;
     width: 100%;
     z-index: 1001;
-  }
-
-
-  /* body container */
-  #main-content {
-    margin: 0px!important;
-    position: none !important;
   }
 
   #sidebar > ul > li > a > span {

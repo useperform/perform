@@ -8,7 +8,7 @@
  $(function() {
    {% for class, messages in app.session.flashbag.all %}
    {% for message in messages %}
-   app.func.showMessage('{{class}}', '{{message}}');
+   Perform.base.showMessage('{{class}}', '{{message}}');
    {% endfor %}
    {% endfor %}
  });

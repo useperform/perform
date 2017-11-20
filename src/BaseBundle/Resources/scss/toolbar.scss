@@ -1,21 +1,11 @@
-.navbar-top {
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  padding: 0 20px;
-  z-index: 1002;
-
-  .navbar-brand {
-    font-size: 20px;
-    text-transform: uppercase;
-  }
+.navbar-brand {
+  text-transform: uppercase;
 }
 
 .admin-flash-messages {
   position: fixed;
   width:600px;
-  top: $navbar-height + 10px;
+  top: 100px;
   right: 50px;
   z-index: 1;
 }

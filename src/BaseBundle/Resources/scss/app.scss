@@ -1,9 +1,64 @@
+@import "../../node_modules/bootstrap/scss/functions";
 @import "variables";
 @import "bootstrap";
-@import "admin";
 @import "font-awesome";
 @import "../../node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min";
 @import "../../node_modules/select2/dist/css/select2";
+@import "toolbar";
+@import "sidebar";
+@import "dashboard";
+
+@import url($base-font-url);
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background: #f2f2f2;
+  font-family: $base-font, sans-serif;
+  padding: 0px;
+  margin: 0px;
+  font-size:13px;
+}
+
+ul li {
+  list-style: none;
+}
+
+a, a:hover, a:focus {
+  text-decoration: none;
+  outline: none;
+}
+
+::selection {
+  background: theme-color("info");
+  color: #fff;
+}
+
+::-moz-selection {
+  background: theme-color("info");
+  color: #fff;
+}
+
+.wrapper {
+  min-height: 95%;
+
+  #workspace {
+    padding-top: 70px;
+    padding-left: $sidebar-width + 15px;
+  }
+
+  &.sidebar-closed #workspace {
+    padding-left: 15px;
+  }
+}
+
+.site-footer {
+  background: $footer-bg;
+  color: $footer-color;
+  padding: 10px 0;
+}
 
 .panel {
   box-shadow: 0px 3px 2px #aab2bd;
@@ -26,6 +81,7 @@
 .pagination-counter {
   p {
     font-weight: bold;
+    padding-top: 15px;
   }
 }
 
@@ -43,23 +99,23 @@ tbody {
   }
 }
 
-::-webkit-input-placeholder {
-  font-style: italic;
-  color: $placeholder-color;
-}
-:-moz-placeholder {
-  font-style: italic;
-  color: $placeholder-color;
-}
-::-moz-placeholder {
-  font-style: italic;
-  color: $placeholder-color;
-}
-:-ms-input-placeholder {
-  font-style: italic;
-  color: $placeholder-color;
-}
-::placeholder {
-  font-style: italic;
-  color: $placeholder-color;
-}
+// ::-webkit-input-placeholder {
+//   font-style: italic;
+//   color: $placeholder-color;
+// }
+// :-moz-placeholder {
+//   font-style: italic;
+//   color: $placeholder-color;
+// }
+// ::-moz-placeholder {
+//   font-style: italic;
+//   color: $placeholder-color;
+// }
+// :-ms-input-placeholder {
+//   font-style: italic;
+//   color: $placeholder-color;
+// }
+// ::placeholder {
+//   font-style: italic;
+//   color: $placeholder-color;
+// }

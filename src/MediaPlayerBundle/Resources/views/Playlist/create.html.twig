@@ -3,25 +3,25 @@
 {% block workspace %}
   <h3><i class="fa fa-angle-right"></i> New playlist</h3>
   {{form_start(form)}}
-  <div class="panel panel-default">
-    <div class="panel-heading">
+  <div class="card">
+    <div class="card-header">
       <h4>Details</h4>
     </div>
-    <div class="panel-body">
+    <div class="card-body">
       {{perform_crud_create_context(entity, 'title', form.vars.fields.title, form)}}
     </div>
   </div>
 
-  <div class="panel panel-default">
-    <div class="panel-heading">
+  <div class="card">
+    <div class="card-header">
       <h4>Tracks</h4>
     </div>
-    <div class="panel-body">
+    <div class="card-body">
       {{perform_crud_create_context(entity, 'items', form.vars.fields.items, form)}}
     </div>
   </div>
 
   <button type="submit" class="btn btn-primary">Save</button>
-  <a href="{{perform_crud_route(entity, 'list')}}" class="btn btn-default" tabindex="-1">Cancel</a>
+  <a href="{{perform_crud_route(entity, 'list')}}" class="btn btn-light" tabindex="-1">Cancel</a>
   {{form_end(form)}}
 {% endblock %}
