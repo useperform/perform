@@ -24,7 +24,7 @@ $(function() {
   });
 
   $('.wrapper form').each(function() {
-    window.app.func.fancyForm($(this));
+    Perform.base.fancyForm($(this));
   });
 
   $('.tooltips').tooltip();
