@@ -44,6 +44,7 @@ class MediaType extends AbstractType
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
+        $this->assets->addJs('/bundles/performmedia/selector.js');
         $this->assets->addJs('/bundles/performmedia/editor.js');
 
         $availableTypes = $this->registry->getPluginNames();

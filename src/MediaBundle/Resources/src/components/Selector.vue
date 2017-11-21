@@ -1,6 +1,6 @@
 <template>
 <b-modal title="Select files" ref="modal" hide-footer>
-  <p-file v-for="item in items" :item="item" @select="selectItem" />
+  <p-file v-for="(item, index) in items" key="index" :item="item" @select="selectItem" />
 </b-modal>
 </template>
 
