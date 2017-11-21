@@ -3,6 +3,7 @@ var webpack = require('webpack')
 
 module.exports = {
   entry: {
+    app: './src/app.js',
     editor: './src/editor.js',
     selector: './src/selector.js',
   },

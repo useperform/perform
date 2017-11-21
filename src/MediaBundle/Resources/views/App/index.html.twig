@@ -1,0 +1,11 @@
+{% extends 'PerformBaseBundle::base.html.twig' %}
+
+{% block workspace %}
+  <div id="perform-media-app">
+  </div>
+{% endblock %}
+
+{% block js %}
+  {{parent()}}
+  <script type="text/javascript" src="{{asset('/bundles/performmedia/app.js')}}"></script>
+{% endblock %}

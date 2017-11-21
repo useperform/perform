@@ -13,24 +13,26 @@ use Perform\MediaBundle\Entity\File;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 /**
- * FileController
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class FileController extends Controller
 {
     /**
-     * @Route("/")
-     * @Template
+     * @Route("/find")
      */
-    public function listAction()
+    public function findAction(Request $request)
     {
         $files = $this->getDoctrine()->getRepository('PerformMediaBundle:File')->findAll();
+        $data = [];
+        foreach ($files as $file) {
+            $data[] = [
+                'id' => $file->getId(),
+                'name' => $file->getName(),
+                'filename' => $file->getFilename(),
+            ];
+        }
 
-        return [
-            'files' => $files,
-            'deleteForm' => $this->createFormBuilder()->getForm()->createView(),
-        ];
+        return $this->json($data);
     }
 
     /**
