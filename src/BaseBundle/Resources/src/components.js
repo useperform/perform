@@ -5,7 +5,7 @@ const store = {
   tasks: [],
 };
 
-const initTasks = function(el) {
+const init = function(el) {
   new Vue({
     el: el,
     data: store,
@@ -15,7 +15,7 @@ const initTasks = function(el) {
   });
 }
 
-var addTask = function(title, current, max) {
+const add = function(title, current, max) {
   if (!current) {
     current = 0;
   }
@@ -31,12 +31,18 @@ var addTask = function(title, current, max) {
   return store.tasks.length - 1;
 };
 
-var getTask = function(index) {
+const get = function(index) {
   return store.tasks[index];
 };
 
-var setTaskProgress = function(index, current) {
-  getTask(index).current = current;
+const getUnfinished = function() {
+  return store.tasks.filter(function(task) {
+    return task.current < task.max;
+  });
+}
+
+const setProgress = function(index, current) {
+  get(index).current = current;
 };
 
 if (!window.Perform) {
@@ -46,8 +52,11 @@ if (!window.Perform.base) {
   window.Perform.base = {};
 }
 window.Perform.base = Object.assign(window.Perform.base, {
-  initTasks,
-  addTask,
-  getTask,
-  setTaskProgress,
+  tasks: {
+    init,
+    add,
+    get,
+    getUnfinished,
+    setProgress,
+  }
 });
