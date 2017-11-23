@@ -100,15 +100,12 @@ class FileController extends Controller
      */
     public function deleteAction(Request $request, File $file)
     {
-        $form = $this->createFormBuilder()->getForm();
-        $form->handleRequest($request);
+        $this->get('perform_media.importer.file')
+            ->delete($file);
 
-        if ($form->isValid()) {
-            $this->get('perform_media.importer.file')
-                ->delete($file);
-            $this->addFlash('success', 'File deleted.');
-
-            return $this->redirectToRoute('perform_media_file_list');
-        }
+        return $this->json([
+            'message' => 'File deleted.',
+            'id' => $file->getId(),
+        ]);
     }
 }

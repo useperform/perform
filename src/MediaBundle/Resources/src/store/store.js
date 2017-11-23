@@ -13,6 +13,11 @@ export default new Vuex.Store({
     loaded (state, files) {
       state.files = files;
     },
+    remove (state, id) {
+      state.files = state.files.filter(file => {
+        return file.id !== id;
+      });
+    },
   },
 
   actions: {
@@ -34,9 +39,13 @@ export default new Vuex.Store({
       });
     },
 
-    delete(context, id) {
-      console.log('deleting file');
-      console.log(id);
+    delete({commit}, id) {
+      return new Promise((resolve, reject) => {
+        axios.post("/admin/media/delete/"+id).then(function(response) {
+          commit('remove', id);
+          resolve(response);
+        });
+      });
     },
   }
 });

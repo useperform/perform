@@ -13,7 +13,7 @@
               <th></th>
             </thead>
             <tbody>
-              <FileRow key="{{file.id}}" v-for="file in files" v-bind="file" />
+              <FileRow :key="file.id" v-for="file in files" v-bind="file" />
             </tbody>
           </table>
         </div>
@@ -43,8 +43,10 @@ export default {
   methods: {
     upload(file) {
       const taskId = Perform.base.tasks.add('Uploading file...', 0, 100);
-      this.$store.dispatch('upload', file).then(function(response) {
+      const store = this.$store;
+      store.dispatch('upload', file).then(function(response) {
         Perform.base.tasks.setProgress(taskId, 100);
+        store.dispatch('find');
       });
     }
   }
