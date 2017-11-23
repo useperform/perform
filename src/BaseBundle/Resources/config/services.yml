@@ -128,7 +128,7 @@ services:
         class: Perform\BaseBundle\Menu\MenuBuilder
         arguments: ["@knp_menu.factory"]
         tags:
-            - { name: knp_menu.menu_builder, method: createMainMenu, alias: main }
+            - { name: knp_menu.menu_builder, method: createSidebar, alias: perform_sidebar }
 
     perform_base.menu_extension:
         class: Perform\BaseBundle\Menu\Extension\EntityExtension
@@ -145,7 +145,7 @@ services:
             - '@knp_menu.matcher'
             - { currentClass: 'active' }
         tags:
-            - { name: knp_menu.renderer, alias: perform_admin }
+            - { name: knp_menu.renderer, alias: perform_sidebar }
 
     perform_base.menu_link.dashboard:
         class: Perform\BaseBundle\Menu\DashboardLinkProvider
