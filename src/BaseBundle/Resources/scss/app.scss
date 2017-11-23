@@ -99,6 +99,14 @@ tbody {
   }
 }
 
+// transitions
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0
+}
+
 // ::-webkit-input-placeholder {
 //   font-style: italic;
 //   color: $placeholder-color;
