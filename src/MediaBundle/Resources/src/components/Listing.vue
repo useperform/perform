@@ -1,6 +1,6 @@
 <template>
 <div>
-  <router-link to="/upload" class="btn btn-primary">Upload</router-link>
+  <UploadButton @upload="upload" />
   <div class="row">
     <div class="col-lg-12">
       <div class="card">
@@ -13,18 +13,7 @@
               <th></th>
             </thead>
             <tbody>
-              <tr v-for="file in files">
-                <td>
-                  {{file.name}}
-                </td>
-                <td>
-                </td>
-                <td>
-                </td>
-                <td>
-                  <a href="#" class="btn btn-danger">Delete</a>
-                </td>
-              </tr>
+              <FileRow key="{{file.id}}" v-for="file in files" v-bind="file" />
             </tbody>
           </table>
         </div>
@@ -35,21 +24,27 @@
 </template>
 
 <script>
-import axios from 'axios'
+import UploadButton from './UploadButton'
+import FileRow from './FileRow'
 
 export default {
   created() {
-    this.fetchData();
+    this.$store.dispatch('find');
   },
-  data() {
-    return {
-      files: []
-    };
+  components: {
+    UploadButton,
+    FileRow
+  },
+  computed: {
+    files() {
+      return this.$store.state.files;
+    }
   },
   methods: {
-    fetchData() {
-      axios.get('/admin/media/find').then(response => {
-        this.files = response.data;
+    upload(file) {
+      const taskId = Perform.base.tasks.add('Uploading file...', 0, 100);
+      this.$store.dispatch('upload', file).then(function(response) {
+        Perform.base.tasks.setProgress(taskId, 100);
       });
     }
   }

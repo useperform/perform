@@ -52,7 +52,7 @@ class FileController extends Controller
 
         try {
             $handler = new UploadHandler();
-            $upload = $request->files->get('files');
+            $upload = $request->files->get('file');
             if (!$upload instanceof UploadedFile) {
                 throw new \Exception('No file submitted.');
             }
