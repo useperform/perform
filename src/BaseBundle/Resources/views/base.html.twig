@@ -24,29 +24,13 @@
         <button class="btn btn-light btn-sm sidebar-toggler">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <ul id="perform-tasks" class="navbar-nav">
-          <p-tasks :tasks="tasks"></p-tasks>
+        <ul class="navbar-nav">
+          <li id="perform-tasks" class="nav-item dropdown">
+            <i class="fa fa-tasks"></i>
+          </li>
         </ul>
         <a class="btn btn-primary" href="{{path('perform_user_logout')}}">Logout</a>
       </nav>
-
-      {% verbatim %}
-        <script type="text/x-template" id="template-tasks">
-         <b-nav-item-dropdown text="Tasks" right>
-         <template slot="button-content">
-         <i class="fa fa-tasks"></i>
-         <span class="badge badge-primary" v-show="tasks.length > 0">{{tasks.length}}</span>
-         </template>
-         <b-dropdown-header>Running tasks</b-dropdown-header>
-         <template v-for="task in tasks">
-         <b-dropdown-item href="#">
-         <p>{{task.title}}</p>
-         <b-progress :value="task.current" :max="task.max" animated></b-progress>
-         </b-dropdown-item>
-         </template>
-         </b-nav-item-dropdown>
-        </script>
-      {% endverbatim %}
 
       <div class="admin-flash-messages">
       </div>
