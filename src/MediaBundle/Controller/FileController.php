@@ -3,7 +3,6 @@
 namespace Perform\MediaBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -37,49 +36,32 @@ class FileController extends Controller
 
     /**
      * @Route("/upload")
-     * @Template
+     * @Method("POST")
      */
     public function uploadAction(Request $request)
     {
-        $method = $request->getMethod();
-        if ($method === 'GET') {
-            return [];
-        } else if ($method !== 'POST') {
-            return new JsonResponse([
-                'message' => "$method upload method not supported."
-            ], 405);
-        }
-
         try {
-            $handler = new UploadHandler();
             $upload = $request->files->get('file');
             if (!$upload instanceof UploadedFile) {
                 throw new \Exception('No file submitted.');
             }
+            $handler = new UploadHandler();
+            $result = $handler->process($request, $upload);
 
-            $handler->process($request, $upload);
+            if ($result->isComplete()) {
+                $importer = $this->get('perform_media.importer.file');
+                $file = $importer->import($result->getFile()->getPathname(), $result->getClientOriginalName());
 
-            //import all completed files (1 at most in this case)
-            $importer = $this->get('perform_media.importer.file');
-            foreach ($handler->getCompletedFiles() as $name => $file) {
-                $importer->import($file->getPathname(), $name);
+                return $this->json(array_merge($result->toArray(), [
+                    'id' => $file->getId(),
+                    'name' => $file->getName(),
+                ]), 200);
+            } else {
+                // the uploaded file is a chunk of a bigger file
+                return $this->json($result->toArray(), 201);
             }
-
-            //todo - need to return a plaintext response for opera and
-            //IE
-            //return the status of uploads for the progress bar. This
-            //included completed files but also chunks of files too.
-            $response = new \stdClass();
-            $response->files = [];
-            foreach ($handler->getUploadedFiles() as $name => $file) {
-                $i = new \stdClass();
-                $i->name = $name;
-                $i->size = $file->getSize();
-                $response->files[] = $i;
-            }
-            return new JsonResponse($response);
         } catch (\Exception $e) {
-            if (isset($upload)) {
+            if ($upload instanceof UploadedFile) {
                 $name = $upload->getClientOriginalName();
                 $context = ['request' => $request->getUri(), 'upload' => $name];
                 $msg = 'An error occurred uploading '.$name;
