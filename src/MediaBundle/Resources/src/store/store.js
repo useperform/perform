@@ -29,22 +29,9 @@ export default new Vuex.Store({
         });
     },
 
-    upload(context, file) {
-      const formData = new FormData();
-      formData.append("file", file);
-      return new Promise((resolve, reject) => {
-        axios.post("/admin/media/upload", formData).then(function(response) {
-          resolve(response);
-        });
-      });
-    },
-
     delete({commit}, id) {
-      return new Promise((resolve, reject) => {
-        axios.post("/admin/media/delete/"+id).then(function(response) {
+      return axios.post("/admin/media/delete/"+id).then(function(response) {
           commit('remove', id);
-          resolve(response);
-        });
       });
     },
   }

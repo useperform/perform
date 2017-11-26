@@ -26,6 +26,7 @@
 <script>
 import UploadButton from './UploadButton'
 import FileRow from './FileRow'
+import upload from '../api/upload'
 
 export default {
   created() {
@@ -44,9 +45,13 @@ export default {
     upload(file) {
       const taskId = Perform.base.tasks.add('Uploading file...', 0, 100);
       const store = this.$store;
-      store.dispatch('upload', file).then(function(response) {
-        Perform.base.tasks.setProgress(taskId, 100);
-        store.dispatch('find');
+      upload(file, {
+        progress(progress) {
+          Perform.base.tasks.setProgress(taskId, progress);
+        },
+        complete() {
+          store.dispatch('find');
+        },
       });
     }
   }
