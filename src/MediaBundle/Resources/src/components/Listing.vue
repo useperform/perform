@@ -52,6 +52,10 @@ export default {
         complete() {
           store.dispatch('find');
         },
+        error(response) {
+          Perform.base.showError(response.data.message);
+          Perform.base.tasks.cancel(taskId);
+        }
       });
     }
   }

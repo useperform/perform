@@ -6,6 +6,7 @@ const defaultOptions = {
   chunkSize: 1024 * 1024, // 1MB
   complete() {},
   progress() {},
+  error() {},
 };
 
 const upload = function(file, options) {
@@ -30,8 +31,8 @@ const upload = function(file, options) {
         end: (opts.end + opts.chunkSize) > file.size ? file.size : (opts.end + opts.chunkSize),
       }));
     }
-  }).catch(function (err) {
-    console.error(err);
+  }).catch(function (error) {
+    opts.error(error.response);
   });
 };
 

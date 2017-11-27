@@ -65,10 +65,10 @@ class FileController extends Controller
             if ($upload instanceof UploadedFile) {
                 $name = $upload->getClientOriginalName();
                 $context = ['request' => $request->getUri(), 'upload' => $name];
-                $msg = 'An error occurred uploading '.$name;
+                $msg = sprintf('An error occurred uploading %s.', $name);
             } else {
                 $context = ['request' => $request->getUri()];
-                $msg = 'An error occurred';
+                $msg = 'An error occurred.';
             }
 
             $this->get('logger')->error($e->getMessage(), $context);

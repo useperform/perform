@@ -12,6 +12,7 @@ export default {
       for (let i=0; i < files.length; i++) {
         this.$emit('upload', files[i]);
       }
+      e.target.value = null;
     }
   }
 }
