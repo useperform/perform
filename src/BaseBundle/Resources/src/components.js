@@ -22,17 +22,23 @@ const add = function(title, current, max) {
   if (!max) {
     max = 100;
   }
+  const id = Math.random().toString().substring(2);
   store.tasks.push({
-    title: title,
-    current: current,
-    max: max,
+    id,
+    title,
+    current,
+    max,
   });
 
-  return store.tasks.length - 1;
+  return id;
 };
 
-const get = function(index) {
-  return store.tasks[index];
+const get = function(id) {
+  for (var i=0; i < store.tasks.length; i++) {
+    if (store.tasks[i].id === id) {
+      return store.tasks[i];
+    }
+  }
 };
 
 const getUnfinished = function() {
@@ -41,8 +47,14 @@ const getUnfinished = function() {
   });
 }
 
-const setProgress = function(index, current) {
-  get(index).current = current;
+const setProgress = function(id, current) {
+  get(id).current = current;
+};
+
+const cancel = function(id) {
+  store.tasks = store.tasks.filter(function(task) {
+    return task.id !== id;
+  });
 };
 
 if (!window.Perform) {
@@ -58,5 +70,6 @@ window.Perform.base = Object.assign(window.Perform.base, {
     get,
     getUnfinished,
     setProgress,
+    cancel,
   }
 });
