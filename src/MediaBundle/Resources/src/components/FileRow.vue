@@ -5,8 +5,10 @@
       {{name}}
     </td>
     <td>
+      {{humanType}}
     </td>
     <td>
+      <component :is="previewComponent" :filename="filename" />
     </td>
     <td>
       <button class="btn btn-danger" @click.prevent="remove" :disabled="removing">
@@ -19,11 +21,22 @@
 </template>
 
 <script>
+import Image from './types/Image';
+import Other from './types/Other';
+
 export default {
-  props: ['name', 'id'],
+  props: ['name', 'id', 'type', 'humanType', 'filename'],
   data() {
     return {
       removing: false,
+    }
+  },
+  computed: {
+    previewComponent() {
+      if (this.type === 'image') {
+        return Image;
+      }
+      return Other;
     }
   },
   methods: {

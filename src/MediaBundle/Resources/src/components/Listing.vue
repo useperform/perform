@@ -43,7 +43,7 @@ export default {
   },
   methods: {
     upload(file) {
-      const taskId = Perform.base.tasks.add('Uploading file...', 0, 100);
+      const taskId = Perform.base.tasks.add('Uploading '+file.name, 0, 100);
       const store = this.$store;
       upload(file, {
         progress(progress) {

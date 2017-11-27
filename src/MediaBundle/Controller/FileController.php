@@ -23,12 +23,15 @@ class FileController extends Controller
     public function findAction(Request $request)
     {
         $files = $this->getDoctrine()->getRepository('PerformMediaBundle:File')->findAll();
+        $registry = $this->get('perform_media.plugin.registry');
         $data = [];
         foreach ($files as $file) {
             $data[] = [
                 'id' => $file->getId(),
                 'name' => $file->getName(),
                 'filename' => $file->getFilename(),
+                'type' => $file->getType(),
+                'humanType' => $registry->getListingType($file),
             ];
         }
 
