@@ -9,15 +9,36 @@ export default new Vuex.Store({
     files: [],
   },
 
+  getters: {
+    selectedFiles(state) {
+      return state.files.filter(file => {
+        return file.selected;
+      });
+    }
+  },
+
   mutations: {
     loaded (state, files) {
-      state.files = files;
+      state.files = files.map((file) => {
+        return Object.assign({}, file, {
+          selected: false,
+        });
+      });
     },
     remove (state, id) {
       state.files = state.files.filter(file => {
         return file.id !== id;
       });
     },
+    toggleSelect (state, id) {
+      for (var i=0; i < state.files.length; i++) {
+        if (state.files[i].id !== id) {
+          continue;
+        }
+        state.files[i].selected = !state.files[i].selected;
+        return;
+      }
+    }
   },
 
   actions: {
@@ -34,5 +55,9 @@ export default new Vuex.Store({
           commit('remove', id);
       });
     },
+
+    toggleSelect({commit}, id) {
+      commit('toggleSelect', id);
+    }
   }
 });

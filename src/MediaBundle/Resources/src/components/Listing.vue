@@ -1,44 +1,47 @@
 <template>
 <div>
-  <UploadButton @upload="upload" />
-  <div class="row">
-    <div class="col-lg-12">
-      <div class="card">
-        <div class="card-body">
-          <table class="table media-listing">
-            <thead>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Preview</th>
-              <th></th>
-            </thead>
-            <tbody>
-              <FileRow :key="file.id" v-for="file in files" v-bind="file" />
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
+  <UploadButton v-if="allowUpload" @upload="upload" />
+  <button v-if="!lockLayout" @click="layout = 0">Table</button>
+  <button v-if="!lockLayout" @click="layout = 1">Grid</button>
+  <component :is="layoutComponent" :files="files" />
 </div>
 </template>
 
 <script>
 import UploadButton from './UploadButton'
-import FileRow from './FileRow'
+import FileTable from './FileTable'
+import FileGrid from './FileGrid'
 import upload from '../api/upload'
 
 export default {
+  props: {
+    allowUpload: {
+      type: Boolean,
+      default: true,
+    },
+    layout: {
+      type: Number,
+      // 0 for table, 1 for grid
+      default: 0,
+    },
+    lockLayout: {
+      type: Boolean,
+      default: false,
+    },
+  },
   created() {
     this.$store.dispatch('find');
   },
   components: {
     UploadButton,
-    FileRow
+    FileTable
   },
   computed: {
     files() {
       return this.$store.state.files;
+    },
+    layoutComponent() {
+      return this.layout === 0 ? FileTable : FileGrid;
     }
   },
   methods: {

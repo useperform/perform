@@ -1,34 +1,41 @@
 <template>
-<b-modal title="Select files" ref="modal" hide-footer>
-  <p-file v-for="(item, index) in items" key="index" :item="item" @select="selectItem" />
-</b-modal>
+<bModal title="Select files" size="lg" ref="modal">
+  <Listing v-bind:allowUpload="false" v-bind:layout="1" v-bind:lockLayout="true" />
+  <div slot="modal-footer" class="w-100">
+    <bBtn size="sm" variant="secondary" @click="hide">
+      Cancel
+    </bBtn>
+    <bBtn size="sm" variant="primary" @click="select">
+      Select
+    </bBtn>
+  </div>
+</bModal>
 </template>
 
 <script>
 import bModal from 'bootstrap-vue/es/components/modal/modal'
-import File from './File.vue'
+import bBtn from 'bootstrap-vue/es/components/button/button'
+import File from './File'
+import Listing from './Listing'
 
 export default {
   props: ['onSelect'],
-  data () {
-    return {
-      items: [
-        {name: 'hello.jpg'},
-        {name: 'world.jpg'},
-      ]
-    }
-  },
   components: {
-    'b-modal': bModal,
-    'p-file': File,
+    bModal,
+    bBtn,
+    File,
+    Listing,
   },
   methods: {
     show() {
       this.$refs.modal.show();
     },
-    selectItem(e) {
+    hide() {
+      this.$refs.modal.hide();
+    },
+    select() {
       if (this.onSelect) {
-        this.onSelect(e);
+        this.onSelect(this.$store.getters.selectedFiles);
       }
       this.$refs.modal.hide();
     }

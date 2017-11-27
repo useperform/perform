@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Selector from './components/Selector'
+import store from './store/store'
 
 Vue.config.productionTip = false
 
@@ -38,13 +39,14 @@ const app = new Vue({
   data: {
     onSelect: false,
   },
+  store,
   components: {
-    'selector': Selector,
+    Selector,
   },
   methods: {
     show() {
       this.$refs.selector.show();
     }
   },
-  template: '<selector ref="selector" :onSelect="onSelect" />',
+  template: '<Selector ref="selector" :onSelect="onSelect" />',
 });
