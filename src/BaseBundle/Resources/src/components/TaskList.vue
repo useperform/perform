@@ -1,5 +1,5 @@
 <template>
-<div>
+<li class="nav-item dropdown">
   <a class="nav-link dropdown-toggle" href="#" id="perform-tasks-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     <i class="fa fa-tasks"></i>
     <span class="badge badge-primary" v-show="unfinished.length > 0">{{unfinished.length}}</span>
@@ -15,7 +15,7 @@
       </transition>
     </template>
   </div>
-</div>
+</li>
 </template>
 
 <script>
