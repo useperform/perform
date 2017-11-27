@@ -29,7 +29,11 @@ export default {
   methods: {
     remove() {
       this.removing = true;
-      this.$store.dispatch('delete', this.id);
+      const row = this;
+      this.$store.dispatch('delete', this.id).catch(function(error) {
+        Perform.base.showError(error.response.data.message);
+        row.removing = false;
+      });
     }
   }
 }

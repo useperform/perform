@@ -10,6 +10,7 @@ use Perform\MediaBundle\Upload\UploadHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Perform\MediaBundle\Entity\File;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -82,12 +83,22 @@ class FileController extends Controller
      */
     public function deleteAction(Request $request, File $file)
     {
-        $this->get('perform_media.importer.file')
-            ->delete($file);
+        try {
+            $this->get('perform_media.importer.file')
+                ->delete($file);
 
-        return $this->json([
-            'message' => 'File deleted.',
-            'id' => $file->getId(),
-        ]);
+            return $this->json([
+                'id' => $file->getId(),
+                'message' => 'File deleted.',
+            ]);
+        } catch (\Exception $e) {
+            return $this->json([
+                'id' => $file->getId(),
+                'message' => sprintf(
+                    'Unable to delete %s. %s',
+                    $file->getName(),
+                    $e instanceof ForeignKeyConstraintViolationException ? 'It is being used by another entity.' : 'An error occurred.'),
+            ], 500);
+        }
     }
 }
