@@ -19,7 +19,7 @@ export default {
       type: Boolean,
       default: true,
     },
-    layout: {
+    initialLayout: {
       type: Number,
       // 0 for table, 1 for grid
       default: 0,
@@ -29,7 +29,13 @@ export default {
       default: false,
     },
   },
+  data() {
+    return {
+      layout: 0,
+    }
+  },
   created() {
+    this.layout = this.initialLayout;
     this.$store.dispatch('find');
   },
   components: {

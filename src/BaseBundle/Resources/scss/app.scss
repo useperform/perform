@@ -7,6 +7,8 @@
 @import "toolbar";
 @import "sidebar";
 @import "dashboard";
+// should live in media bundle and get imported
+@import "media";
 
 @import url($base-font-url);
 

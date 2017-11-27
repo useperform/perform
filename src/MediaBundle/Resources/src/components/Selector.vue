@@ -1,6 +1,6 @@
 <template>
 <bModal title="Select files" size="lg" ref="modal">
-  <Listing v-bind:allowUpload="false" v-bind:layout="1" v-bind:lockLayout="true" />
+  <Listing v-bind:allowUpload="false" v-bind:initialLayout="1" v-bind:lockLayout="true" />
   <div slot="modal-footer" class="w-100">
     <bBtn size="sm" variant="secondary" @click="hide">
       Cancel

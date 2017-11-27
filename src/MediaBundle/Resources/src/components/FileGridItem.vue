@@ -1,9 +1,7 @@
 <template>
-<div class="perform-media-grid-item" @click="click" @mouseover="hover">
+<div class="perform-media-grid-item" :class="{selected}" @click="click" @mouseover="hover">
   <component :is="previewComponent" :filename="filename" />
   <p>{{name}}</p>
-  <span v-if="selected">X</span>
-  <span v-if="hovering">H</span>
 </div>
 </template>
 

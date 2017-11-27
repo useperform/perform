@@ -1,6 +1,6 @@
 <template>
 <div class="row">
-  <div class="col-lg-12">
+  <div class="col-lg-12 perform-media-grid">
     <FileGridItem :key="file.id" v-for="file in files" v-bind="file" />
   </div>
 </div>
