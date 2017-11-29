@@ -36,6 +36,7 @@ class PerformBaseExtension extends Extension
         $container->setParameter('perform_base.panels.right', $config['panels']['right']);
         $container->setParameter('perform_base.menu_order', $config['menu']['order']);
         $container->setParameter('perform_base.auto_asset_version', uniqid());
+        $container->setParameter('perform_base.theme', $config['theme']);
         $this->configureTypeRegistry($container);
         $this->configureMailer($config, $container);
         $this->findExtendedEntities($container, $config);
