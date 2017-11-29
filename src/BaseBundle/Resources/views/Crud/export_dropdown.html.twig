@@ -3,7 +3,7 @@
     {{label|trans({}, 'PerformBaseBundle')}}
     <span class="caret"></span>
   </button>
-  <div class="dropdown-menu" aria-labelledby="perform-export">
+  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="perform-export">
     {% for format in formats %}
       <a href="{{perform_export_route(entityClass, format)}}" class="dropdown-item">
         {{('export.format.'~format)|trans({}, 'PerformBaseBundle')}}
