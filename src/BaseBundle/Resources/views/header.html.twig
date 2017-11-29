@@ -1,11 +1,11 @@
-<nav class="navbar navbar-expand fixed-top navbar-light bg-light justify-content-between">
+<nav class="navbar navbar-expand fixed-top navbar-light perform-header justify-content-between">
   <div>
     <a href="{{path('perform_base_dashboard_index')}}" class="navbar-brand">
       {{'header.title'|trans({}, 'PerformBaseBundle')}}
     </a>
-    <button class="btn btn-light btn-sm sidebar-toggler">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    <a class="sidebar-toggler" tabindex="-1">
+      <i class="fa fa-bars"></i>
+    </a>
   </div>
   <div class="d-flex">
     <ul class="navbar-nav">

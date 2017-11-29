@@ -2,7 +2,7 @@
   width: $sidebar-width;
   height: 100%;
   position: fixed;
-  background: #424a5d;
+  background: $p-sidebar-bg;
   overflow: scroll;
   padding: 75px 0;
 
@@ -41,12 +41,12 @@
       }
 
       &.active a {
-        color: lighten(theme-color("info"), 10%);
+        color: lighten($p-sidebar-highlight, 10%);
       }
 
       a:hover {
-        background: theme-color("info");
-        color: #fff;
+        background: $p-sidebar-highlight;
+        color: $p-sidebar-color;
       }
     }
   }

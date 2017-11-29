@@ -37,7 +37,7 @@ gulp.task('fonts', function () {
 });
 
 gulp.task('watch', function () {
-  gulp.watch('Resources/scss/*.scss', ['sass']);
+  gulp.watch('Resources/scss/**/*.scss', ['sass']);
   gulp.watch('Resources/js/*.js', ['js']);
 });
 
