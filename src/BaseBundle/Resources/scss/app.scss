@@ -47,7 +47,7 @@ a, a:hover, a:focus {
 
   #workspace {
     padding-top: 70px;
-    padding-left: $sidebar-width + 15px;
+    padding-left: $p-sidebar-width + 15px;
   }
 
   &.sidebar-closed #workspace {
