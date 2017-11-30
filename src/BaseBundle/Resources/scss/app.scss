@@ -1,5 +1,5 @@
 @import "../../node_modules/bootstrap/scss/functions";
-@import "themes/default/variables";
+@import "theme_variables";
 @import "bootstrap";
 @import "font-awesome";
 @import "../../node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min";
@@ -7,7 +7,7 @@
 @import "header";
 @import "sidebar";
 @import "dashboard";
-@import "themes/default/theme";
+@import "theme";
 
 @import url($base-font-url);
 
