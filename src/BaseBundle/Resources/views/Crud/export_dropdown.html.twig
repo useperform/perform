@@ -1,11 +1,13 @@
 <div class="dropdown">
-  <button class="btn btn-default dropdown-toggle" type="button" id="perform-export" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="perform-export" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
     {{label|trans({}, 'PerformBaseBundle')}}
     <span class="caret"></span>
   </button>
-  <ul class="dropdown-menu" aria-labelledby="perform-export">
+  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="perform-export">
     {% for format in formats %}
-      <li><a href="{{perform_export_route(entityClass, format)}}">{{('export.format.'~format)|trans({}, 'PerformBaseBundle')}}</a></li>
+      <a href="{{perform_export_route(entityClass, format)}}" class="dropdown-item">
+        {{('export.format.'~format)|trans({}, 'PerformBaseBundle')}}
+      </a>
     {% endfor %}
-  </ul>
+  </div>
 </div>

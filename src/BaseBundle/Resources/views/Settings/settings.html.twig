@@ -2,13 +2,13 @@
 
 {% block workspace %}
   <h3><i class="fa fa-angle-right"></i> Settings</h3>
-  <div class="row mt">
+  <div class="row">
     <div class="col-lg-2">
-      <ul class="nav nav-pills nav-stacked">
+      <ul class="nav nav-pills flex-column">
         {% for name in registry.enabledPanels %}
           {% set title %}{{registry.renderBlock(name, 'title')|raw}}{% endset %}
-          <li role="presentation"{% if name == activePanel %} class="active"{% endif %}>
-            <a href="{{path('perform_base_settings_settings', {panel: name})}}" aria-controls="{{name}}" role="tab">
+          <li role="presentation" class="nav-item">
+            <a href="{{path('perform_base_settings_settings', {panel: name})}}" class="nav-link{{ name == activePanel ? ' active' : '' }}">
               {{title}}
             </a>
           </li>
@@ -16,13 +16,13 @@
       </ul>
     </div>
     <div class="col-lg-10">
-      <div class="panel panel-default">
+      <div class="card">
         {% set panel_title %}{{registry.renderBlock(activePanel, 'panel_title')|raw}}{% endset %}
-        <div class="panel-heading">
+        <div class="card-header">
           <h3>{{panel_title}}</h3>
         </div>
 
-        <div class="panel-body">
+        <div class="card-body">
           <div class="tab-content">
             {{form_start(form)}}
             {% set panel %}{{registry.renderBlock(activePanel, 'panel', {app: app, form: form})|raw}}{% endset %}

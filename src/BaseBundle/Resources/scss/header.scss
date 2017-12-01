@@ -1,0 +1,24 @@
+.perform-header {
+  background-color: $p-header-bg;
+
+  .navbar-brand {
+    text-transform: uppercase;
+  }
+
+  .sidebar-toggler {
+    cursor: pointer;
+    color: $navbar-light-color;
+
+    &:hover {
+      color: $navbar-light-hover-color;
+    }
+  }
+}
+
+.admin-flash-messages {
+  position: fixed;
+  width:600px;
+  top: 100px;
+  right: 50px;
+  z-index: 1;
+}

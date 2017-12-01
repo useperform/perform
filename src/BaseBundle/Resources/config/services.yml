@@ -238,3 +238,12 @@ services:
             - '@perform_base.selector.entity'
             - '@perform_base.type_registry'
             - '@perform_base.export.writer_factory'
+
+    perform_base.warmer.sass:
+        class: Perform\BaseBundle\CacheWarmer\SassWarmer
+        arguments:
+            - '@perform_base.bundle_searcher'
+            - '@filesystem'
+            - '%perform_base.theme%'
+        tags:
+            - {name: kernel.cache_warmer}

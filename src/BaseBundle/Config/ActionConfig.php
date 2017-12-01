@@ -41,7 +41,7 @@ class ActionConfig
                 'confirmationMessage' => function ($entity, $label) {
                     return sprintf('Are you sure you want to %s this item?', strtolower($label));
                 },
-                'buttonStyle' => 'btn-default',
+                'buttonStyle' => 'btn-light',
             ])
             ->setAllowedTypes('isGranted', ['bool', 'Closure'])
             ->setAllowedTypes('isButtonAvailable', ['bool', 'Closure'])

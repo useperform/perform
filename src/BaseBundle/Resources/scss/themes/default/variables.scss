@@ -1,0 +1,21 @@
+// bootstrap variables
+$border-radius: 0;
+$border-radius-lg: 0;
+$border-radius-sm: 0;
+$badge-border-radius: .5em;
+
+$blue: #128bde;
+
+@import "bootstrap/scss/variables";
+
+$navbar-light-color:                rgba($white,.8);
+$navbar-light-hover-color:          rgba($white, 1);
+$navbar-light-active-color:         rgba($white, 1);
+$navbar-light-disabled-color:       rgba($white,.3);
+$navbar-light-toggler-border-color: rgba($white,.1);
+
+
+// perform variables
+$p-header-bg: darken($teal, 10);
+$p-sidebar-bg: #424a5d;
+$p-sidebar-highlight: darken($teal, 10);

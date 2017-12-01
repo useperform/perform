@@ -38,7 +38,7 @@ class CreateResetTokenAction implements ActionInterface
     {
         return [
             'label' => 'Reset Password',
-            'buttonStyle' => 'btn-default',
+            'buttonStyle' => 'btn-light',
         ];
     }
 }

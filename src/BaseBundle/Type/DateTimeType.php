@@ -4,8 +4,8 @@ namespace Perform\BaseBundle\Type;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Carbon\Carbon;
-use Perform\BaseBundle\Form\Type\DatePickerType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType as FormType;
 
 /**
  * Use the ``datetime`` type for ``datetime`` doctrine fields.
@@ -54,9 +54,10 @@ class DateTimeType extends AbstractType
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
-        $builder->add($field, DatePickerType::class, [
-            'format' => 'h:mma dd/MM/y',
-            'datepicker_format' => 'h:mmA DD/MM/YYYY',
+        $builder->add($field, FormType::class, [
+            'format' => 'HH:mm dd/MM/y',
+            'widget' => 'single_text',
+            'html5' => true,
         ]);
     }
 }
