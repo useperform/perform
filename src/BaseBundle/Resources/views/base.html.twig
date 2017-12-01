@@ -17,27 +17,14 @@
   </head>
   <body>
     {% block body %}
-      <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light">
-        <a href="{{path('perform_base_dashboard_index')}}" class="navbar-brand">
-          {{'header.title'|trans({}, 'PerformBaseBundle')}}
-        </a>
-        <button class="btn btn-light btn-sm sidebar-toggler">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <ul class="navbar-nav">
-          <li id="perform-tasks" class="nav-item dropdown">
-            <i class="fa fa-tasks"></i>
-          </li>
-        </ul>
-        <a class="btn btn-primary" href="{{path('perform_user_logout')}}">Logout</a>
-      </nav>
+      {% include 'PerformBaseBundle::header.html.twig' %}
 
       <div class="admin-flash-messages">
       </div>
 
       <div class="wrapper">
         <div id="sidebar" class="col-md-3">
-          {{ knp_menu_render('main', {}, 'perform_admin') }}
+          {{ knp_menu_render('perform_sidebar', {}, 'perform_sidebar') }}
         </div>
 
         <div id="workspace" class="container-fluid">

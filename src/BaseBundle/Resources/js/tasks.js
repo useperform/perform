@@ -1,5 +1,6 @@
 $(function () {
-  Perform.base.tasks.init('#perform-tasks');
+  Perform.base.tasks.renderDropdown('#perform-tasks-dropdown');
+  Perform.base.tasks.renderCounter('#perform-tasks-counter');
 
   window.addEventListener('beforeunload', function(e) {
     if (Perform.base.tasks.getUnfinished().length > 0) {

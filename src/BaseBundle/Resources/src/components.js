@@ -1,16 +1,27 @@
 import TaskList from './components/TaskList'
+import TaskCounter from './components/TaskCounter'
 import Vue from 'vue'
 
 const store = {
   tasks: [],
 };
 
-const init = function(el) {
+const renderDropdown = function(el) {
   new Vue({
     el: el,
     data: store,
     render(h) {
       return h(TaskList, {props: {tasks: this.tasks}});
+    }
+  });
+}
+
+const renderCounter = function(el) {
+  new Vue({
+    el: el,
+    data: store,
+    render(h) {
+      return h(TaskCounter, {props: {tasks: this.tasks}});
     }
   });
 }
@@ -65,7 +76,8 @@ if (!window.Perform.base) {
 }
 window.Perform.base = Object.assign(window.Perform.base, {
   tasks: {
-    init,
+    renderCounter,
+    renderDropdown,
     add,
     get,
     getUnfinished,

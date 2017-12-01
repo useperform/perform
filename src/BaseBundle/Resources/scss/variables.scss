@@ -1,29 +1,12 @@
-// $border-radius-base: 0;
-// $border-radius-small: 0;
-// $border-radius-large: 0;
-// $panel-border-radius: 0;
-// $input-border-radius: 0;
-// $alert-border-radius: 0;
-// $btn-border-radius-base: 0;
-// $nav-pills-border-radius: 0;
-// $navbar-border-radius: 0;
-// $navbar-height: 60px;
-// $navbar-default-bg: #a5d777;
-// $navbar-default-brand-color: #ffffff;
-// $navbar-default-brand-hover-color: darken(#ffffff, 2);
-// $navbar-default-link-color: #ffffff;
-// $navbar-default-link-hover-color: darken(#ffffff, 2);
-
-// $placeholder-color: #cdcdcd;
-
-$sidebar-width: 210px;
-$base-font-url: 'https://fonts.googleapis.com/css?family=Ruda:400,700,900';
-$base-font: 'Ruda';
-
-// //relative to css/app.css
-// $icon-font-path: '../fonts/';
-
-@import "../../node_modules/bootstrap/scss/variables";
-
-$footer-bg: gray("700");
-$footer-color: #fff;
+// perform variables
+// must be !default so themes can override them
+$placeholder-color: #cdcdcd !default;
+$base-font-url: 'https://fonts.googleapis.com/css?family=Ruda:400,700,900' !default;
+$base-font: 'Ruda' !default;
+$p-footer-bg: gray("700") !default;
+$p-footer-color: $white !default;
+$p-header-bg: $light !default;
+$p-sidebar-bg: $secondary !default;
+$p-sidebar-highlight: $gray-500 !default;
+$p-sidebar-color: $white !default;
+$p-sidebar-width: 210px !default;
