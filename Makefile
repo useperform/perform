@@ -8,10 +8,6 @@ test:
 test_publish:
 	./vendor/bin/phpunit -v --log-junit test_results.xml
 
-# requires PERFORM_GIT_SERVER to be set
-push_packages:
-	./bin/push-parent.sh
-
 docker_image:
 	./bin/build-docker-image.sh $(php-version)
 
