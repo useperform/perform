@@ -43,7 +43,7 @@ $(function () {
     var template = _.template(html.replace(/__name__/g, index));
 
     collection.children('.collection-rows').append(template());
-    window.app.func.fancyForm($('.wrapper form'));
+    window.Perform.base.fancyForm($('.wrapper form'));
     collection.data('collection-index', index + 1);
     bindButtons(collection);
     reorderRows(collection);

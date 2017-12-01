@@ -2,7 +2,7 @@
 
 {% block workspace %}
   <h3><i class="fa fa-angle-right"></i> Dashboard</h3>
-  <div class="row mt">
+  <div class="row dashboard">
     <div class="col-lg-8">
       {% for panel in panels.left %}
         {{ panel.render()|raw }}

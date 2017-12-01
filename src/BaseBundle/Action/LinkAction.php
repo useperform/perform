@@ -19,7 +19,7 @@ class LinkAction implements ActionInterface
     public function getDefaultConfig()
     {
         return [
-            'buttonStyle' => 'btn-default',
+            'buttonStyle' => 'btn-light',
             'confirmationMessage' => 'Are you sure you want to visit this link?',
             'isBatchOptionAvailable' => false,
         ];

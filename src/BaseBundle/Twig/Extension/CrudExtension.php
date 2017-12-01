@@ -7,7 +7,7 @@ use Perform\BaseBundle\Type\TypeRegistry;
 use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BaseBundle\Admin\AdminRegistry;
 use Symfony\Component\Form\FormView;
-use Pagerfanta\View\TwitterBootstrap3View;
+use Pagerfanta\View\TwitterBootstrap4View;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -102,7 +102,7 @@ class CrudExtension extends \Twig_Extension
 
     public function paginator(Pagerfanta $pagerfanta, $entityClass)
     {
-        $view = new TwitterBootstrap3View();
+        $view = new TwitterBootstrap4View();
         $options = [
             'proximity' => 3,
         ];

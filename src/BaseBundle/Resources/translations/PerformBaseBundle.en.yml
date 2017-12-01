@@ -1,5 +1,8 @@
 header:
     title: 'Site Administration'
+    links:
+        logout: 'Logout'
+        home: 'Go to site homepage'
 
 footer: 'A <a target="_blank" href="https://useperform.com">Perform</a> project.'
 

@@ -18,6 +18,9 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->fixXmlConfig('extended_entity', 'extended_entities')
             ->children()
+                ->scalarNode('theme')
+                    ->defaultValue('PerformBaseBundle:default')
+                ->end()
                 ->scalarNode('project_key')
                 ->end()
                 ->arrayNode('mailer')

@@ -2,12 +2,12 @@
 
 {% block workspace %}
   <h3><i class="fa fa-angle-right"></i> Contact Form Message</h3>
-  <div class="panel panel-default">
-    <div class="panel-heading">
+  <div class="card">
+    <div class="card-header">
       <i class="fa fa-user fa-fw"></i>
       {{entity.name}}
     </div>
-    <div class="panel-body">
+    <div class="card-body">
       <p>
         <small class="text-muted">
           <i class="fa fa-envelope"></i>
@@ -29,7 +29,7 @@
 
       {% if entity.isSpam() %}
         <div class="alert alert-danger">
-          <h4><i class="fa fa-warning"></i> This message was identified as spam.</h4>
+          <strong><i class="fa fa-warning"></i> This message was identified as spam.</strong>
           {% for report in entity.spamReports %}
             {% include 'PerformContactBundle:SpamReport:'~report.type~'.html.twig' with {report: report}%}
           {% endfor %}
@@ -39,14 +39,16 @@
       {% block extras %}
       {% endblock %}
 
-      <div class="well">
+      <p class="card-text">
         {{entity.message | nl2br}}
-      </div>
+      </p>
 
-      <a href="{{perform_crud_route(entity, 'list')}}" class="back-button btn btn-default">
+      <a href="{{perform_crud_route(entity, 'list')}}" class="back-button btn btn-light">
         Back
       </a>
       {% for action in perform_action_buttons_for(entity) %}
         {{perform_action_button(action, entity, 'view')}}
       {% endfor %}
+    </div>
+  </div>
 {% endblock %}

@@ -1,12 +1,15 @@
+@import "../../../BaseBundle/node_modules/bootstrap/scss/functions";
 @import "../../../BaseBundle/Resources/scss/variables";
-@import "../../../BaseBundle/node_modules/bootstrap-sass/assets/stylesheets/bootstrap/mixins";
-@import "../../../BaseBundle/node_modules/bootstrap-sass/assets/stylesheets/bootstrap/scaffolding";
-@import "../../../BaseBundle/node_modules/bootstrap-sass/assets/stylesheets/bootstrap/buttons";
-@import "../../../BaseBundle/node_modules/bootstrap-sass/assets/stylesheets/bootstrap/navs";
-@import "../../../BaseBundle/node_modules/bootstrap-sass/assets/stylesheets/bootstrap/forms";
-@import "../../../BaseBundle/node_modules/bootstrap-sass/assets/stylesheets/bootstrap/navbar";
-@import "../../../BaseBundle/node_modules/bootstrap-sass/assets/stylesheets/bootstrap/progress-bars";
-@import "../../../BaseBundle/node_modules/bootstrap-sass/assets/stylesheets/bootstrap/grid";
+@import "../../../BaseBundle/node_modules/bootstrap/scss/mixins";
+@import "../../../BaseBundle/node_modules/bootstrap/scss/root";
+@import "../../../BaseBundle/node_modules/bootstrap/scss/reboot";
+@import "../../../BaseBundle/node_modules/bootstrap/scss/type";
+@import "../../../BaseBundle/node_modules/bootstrap/scss/buttons";
+@import "../../../BaseBundle/node_modules/bootstrap/scss/nav";
+@import "../../../BaseBundle/node_modules/bootstrap/scss/forms";
+@import "../../../BaseBundle/node_modules/bootstrap/scss/navbar";
+@import "../../../BaseBundle/node_modules/bootstrap/scss/progress";
+@import "../../../BaseBundle/node_modules/bootstrap/scss/grid";
 
 .playlist {
   list-style-type: none;
@@ -16,13 +19,13 @@
       padding: 10px;
       display: inline-block;
       &:hover, &:visited {
-        background-color: $gray-lighter;
+        background-color: gray("500");
         text-decoration: none;
       }
     }
 
     .active, .active:hover {
-      background-color: lighten($brand-primary, 20%);
+      background-color: lighten(theme-color("primary"), 20%);
     }
   }
 }
@@ -31,12 +34,12 @@
   position: absolute;
   height: 20px;
   width: 2px;
-  background-color: $gray-darker;
+  background-color: gray("800");
   span {
     position: relative;
     bottom: 20px;
     color: #eee;
-    background-color: $gray-darker;
+    background-color: gray("800");
     padding: 5px;
   }
 }

@@ -9,13 +9,13 @@
 
 {% block workspace %}
   <h3><i class="fa fa-angle-right"></i> {{title}}</h3>
-  <div class="panel panel-default">
-    <div class="panel-heading">
+  <div class="card">
+    <div class="card-header">
       {% block panel_heading %}
         {{labelConfig.getEntityName()}}
       {% endblock %}
     </div>
-    <div class="panel-body">
+    <div class="card-body">
       {% block panel_start %}
       {% endblock %}
       <table class="table">
@@ -33,7 +33,7 @@
         </tbody>
       </table>
       {% block actions %}
-        <a href="{{perform_crud_route(entity, 'list')}}" class="btn btn-default">Back</a>
+        <a href="{{perform_crud_route(entity, 'list')}}" class="btn btn-light">Back</a>
         {% for action in perform_action_buttons_for(entity) %}
           {{perform_action_button(action, entity, 'view')}}
         {% endfor %}

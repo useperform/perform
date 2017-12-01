@@ -1,8 +1,11 @@
 $(function () {
 
-  var app = window.app;
+  var Perform = window.Perform;
+  if (!Perform.media) {
+    Perform.media = {};
+  }
 
-  app.models.UploadModel = Backbone.Model.extend({
+  Perform.media.UploadModel = Backbone.Model.extend({
     defaults : function() {
       return {
         filename: 'Upload',
@@ -12,7 +15,7 @@ $(function () {
     }
   });
 
-  app.views.UploadView = Backbone.View.extend({
+  Perform.media.UploadView = Backbone.View.extend({
     tagName: "div",
 
     template: _.template($('#template-upload').html()),
@@ -39,8 +42,8 @@ $(function () {
     add: function (e, data) {
       for( var i=0; i < data.files.length; i++){
         var name = data.files[i].name;
-        var upload = new app.models.UploadModel({filename: name});
-        var view = new app.views.UploadView({model: upload});
+        var upload = new Perform.media.UploadModel({filename: name});
+        var view = new Perform.media.UploadView({model: upload});
         uploads[name] = upload;
         $('.file-list').append(view.render().el);
       }

@@ -1,10 +1,10 @@
 <div class="row">
-  <div class="col-sm-3 pagination-counter">
+  <div class="col-sm-4 pagination-counter">
     <p>
       {{paginator.currentPageOffsetStart}} - {{paginator.currentPageOffsetEnd}} of {{paginator.nbResults}}
     </p>
   </div>
-  <div class="col-sm-9">
+  <div class="col-sm-8">
     {% if paginator.haveToPaginate %}
       {% set query = app.request.query.all %}
       <nav aria-label="Page navigation">

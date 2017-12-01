@@ -2,12 +2,12 @@
 
 {% block workspace %}
   {{parent()}}
-  <div class="panel panel-default">
-    <div class="panel-heading">
+  <div class="card">
+    <div class="card-header">
       Password reset tokens
     </div>
     {% set routeExists = perform_route_exists('perform_user_password_reset') %}
-    <div class="panel-body">
+    <div class="card-body">
       {% if tokens|length > 0 %}
         <table class="table">
           <thead>
