@@ -5,7 +5,6 @@ module.exports = {
   entry: {
     app: './Resources/src/app.js',
     editor: './Resources/src/editor.js',
-    selector: './Resources/src/selector.js',
   },
   output: {
     path: path.resolve(__dirname, './Resources/public'),

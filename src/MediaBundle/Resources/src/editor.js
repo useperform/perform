@@ -6,6 +6,6 @@ $(function() {
       onSelect: function(file) {
         input.val(file.name);
       }
-    })
+    });
   });
 });
