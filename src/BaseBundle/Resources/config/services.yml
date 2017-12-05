@@ -245,5 +245,6 @@ services:
             - '@perform_base.bundle_searcher'
             - '@filesystem'
             - '%perform_base.theme%'
+            - '%perform_base.extra_sass%'
         tags:
             - {name: kernel.cache_warmer}

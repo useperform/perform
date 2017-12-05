@@ -10,6 +10,7 @@ src/*/composer.lock
 src/BaseBundle/Resources/public
 src/BaseBundle/Resources/scss/_theme.scss
 src/BaseBundle/Resources/scss/_theme_variables.scss
+src/BaseBundle/Resources/scss/_extras.scss
 src/CmsBundle/Resources/public/js
 src/CmsBundle/gulp-sources.js
 src/MediaBundle/Resources/public

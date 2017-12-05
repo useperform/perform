@@ -45,9 +45,9 @@ class SassWarmerTest extends \PHPUnit_Framework_TestCase
             ));
     }
 
-    public function testWarmupDefaultTheme()
+    public function testLoadDefaultTheme()
     {
-        $warmer = new SassWarmer($this->searcher, $this->fs, 'PerformBaseBundle:default');
+        $warmer = new SassWarmer($this->searcher, $this->fs, 'PerformBaseBundle:default', []);
         $this->expectThemeSearch('default', 'PerformBaseBundle');
         $this->fs->expects($this->any())
             ->method('makePathRelative')
@@ -62,10 +62,10 @@ class SassWarmerTest extends \PHPUnit_Framework_TestCase
         $this->fs->expects($this->exactly(2))
             ->method('dumpFile')
             ->withConsecutive(
-                [SassWarmer::TARGET_DIR.'_theme.scss', '@import "/traverse/fs/../../path/to/theme.scss";'],
-                [SassWarmer::TARGET_DIR.'_theme_variables.scss', '@import "/traverse/fs/../../path/to/variables.scss";']
+                [SassWarmer::TARGET_DIR.'_theme.scss', '@import "/traverse/fs/../../path/to/theme.scss";'.PHP_EOL],
+                [SassWarmer::TARGET_DIR.'_theme_variables.scss', '@import "/traverse/fs/../../path/to/variables.scss";'.PHP_EOL]
             );
 
-        $warmer->warmup('');
+        $warmer->loadTheme();
     }
 }

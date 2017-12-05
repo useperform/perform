@@ -7,9 +7,6 @@
 @import "header";
 @import "sidebar";
 @import "dashboard";
-// should live in media bundle and get imported
-@import "media";
-@import "theme";
 
 @import url($base-font-url);
 
@@ -132,3 +129,6 @@ tbody {
 //   font-style: italic;
 //   color: $placeholder-color;
 // }
+
+@import "extras";
+@import "theme";

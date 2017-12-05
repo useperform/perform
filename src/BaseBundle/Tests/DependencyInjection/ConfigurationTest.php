@@ -52,4 +52,15 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($entities, $config['extended_entities']);
     }
+
+    public function testAssetDefaults()
+    {
+        $config = $this->process([]);
+        $expected = [
+            'theme' => 'PerformBaseBundle:default',
+            'extra_sass' => [],
+        ];
+
+        $this->assertSame($expected, $config['assets']);
+    }
 }

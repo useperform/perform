@@ -108,11 +108,17 @@ class BundleSearcher
                 ->files()
                 ->name(basename($path));
 
+        $dirFound = false;
         foreach ($this->getBundles($bundles) as $bundle) {
             $dir = $bundle->getPath().'/Resources/'.dirname($path);
             if (is_dir($dir)) {
                 $finder->in($dir);
+                $dirFound = true;
             }
+        }
+
+        if (!$dirFound) {
+            throw new \LogicException(sprintf('The "Resources/%s" directory was not found in any of the given bundles.', dirname($path)));
         }
 
         return $finder;

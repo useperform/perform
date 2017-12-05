@@ -36,7 +36,8 @@ class PerformBaseExtension extends Extension
         $container->setParameter('perform_base.panels.right', $config['panels']['right']);
         $container->setParameter('perform_base.menu_order', $config['menu']['order']);
         $container->setParameter('perform_base.auto_asset_version', uniqid());
-        $container->setParameter('perform_base.theme', $config['theme']);
+        $container->setParameter('perform_base.theme', $config['assets']['theme']);
+        self::addExtraSass($container, $config['assets']['extra_sass']);
         $this->configureTypeRegistry($container);
         $this->configureMailer($config, $container);
         $this->findExtendedEntities($container, $config);
@@ -208,5 +209,21 @@ class PerformBaseExtension extends Extension
         } catch (\RuntimeException $e) {
             return [];
         }
+    }
+
+    /**
+     * Add extra files to be included in the sass build.
+     *
+     * This method is available to other bundles so they don't have to
+     * implement PrependExtensionInterface to add extra sass files.
+     *
+     * @param ContainerBuilder $container
+     * @param array $files
+     */
+    public static function addExtraSass(ContainerBuilder $container, array $files)
+    {
+        $param = 'perform_base.extra_sass';
+        $existing = $container->hasParameter($param) ? $container->getParameter($param) : [];
+        $container->setParameter($param, array_merge($existing, $files));
     }
 }
