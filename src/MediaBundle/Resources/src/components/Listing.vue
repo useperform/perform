@@ -6,7 +6,6 @@
   <component
      :is="layoutComponent"
      :items="items"
-     :allowSelect="allowSelect"
      @toggleSelect="toggleSelect"
      />
 </div>
@@ -35,6 +34,10 @@ export default {
       default: false,
     },
     allowSelect: {
+      type: Boolean,
+      default: false,
+    },
+    allowMultipleSelect: {
       type: Boolean,
       default: false,
     },
@@ -98,22 +101,29 @@ export default {
         }
       });
     },
-      reset() {
-          this.selectedIds = {};
-      },
-      toggleSelect(id) {
-          if (!this.allowSelect) {
-              return;
-          }
-          const newValue = !this.selectedIds[id];
-          // true is selecting a new file
-          // check it is allowed
-          if (newValue && this.selectedCount == this.selectLimit && this.selectLimit !== 0) {
-              return;
-          }
-
-          Vue.set(this.selectedIds, id, newValue);
+    reset() {
+      this.selectedIds = {};
+    },
+    toggleSelect(id) {
+      if (!this.allowSelect) {
+        return;
       }
+      // true if selecting a new file
+      const newValue = !this.selectedIds[id];
+
+      if (newValue) {
+        // deselect current selection if in single mode
+        if (!this.allowMultipleSelect) {
+          this.selectedIds = {};
+        }
+        // not allowed if the select limit has been reached
+        if (this.selectedCount == this.selectLimit && this.selectLimit !== 0) {
+          return;
+        }
+      }
+
+      Vue.set(this.selectedIds, id, newValue);
+    }
   }
 }
 </script>

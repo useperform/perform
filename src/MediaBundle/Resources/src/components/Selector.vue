@@ -5,6 +5,7 @@
      v-bind:initialLayout="1"
      v-bind:lockLayout="true"
      v-bind:allowSelect="true"
+     :allowMultipleSelect="multiple"
      :selectLimit="limit"
      ref="listing"
      />
