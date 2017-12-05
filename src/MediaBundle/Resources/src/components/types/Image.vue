@@ -1,5 +1,7 @@
 <template>
+<div class="perform-media-preview">
   <img :src="url" />
+</div>
 </template>
 
 <script>

@@ -3,7 +3,7 @@
   <div class="col-lg-12">
     <div class="card">
       <div class="card-body">
-        <table class="table media-listing">
+        <table class="table">
           <thead>
             <th>Name</th>
             <th>Type</th>

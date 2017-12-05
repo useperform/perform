@@ -6,6 +6,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
+use Perform\BaseBundle\DependencyInjection\PerformBaseExtension;
 
 /**
  * PerformMediaExtension.
@@ -23,5 +24,8 @@ class PerformMediaExtension extends Extension
         $loader->load('services.yml');
 
         $container->setParameter('perform_media.plugins', $config['plugins']);
+        if (class_exists(PerformBaseExtension::class)) {
+            PerformBaseExtension::addExtraSass($container, ['PerformMediaBundle:media.scss']);
+        }
     }
 }

@@ -1,3 +1,11 @@
+.perform-media-preview {
+  max-height: 100px;
+  overflow-y: hidden;
+  img {
+    max-width: 100px;
+  }
+}
+
 .perform-media-grid {
   .perform-media-grid-item {
     width: 100px;
