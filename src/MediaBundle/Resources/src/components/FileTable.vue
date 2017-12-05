@@ -11,7 +11,7 @@
             <th></th>
           </thead>
           <tbody>
-            <FileRow :key="file.id" v-for="file in files" v-bind="file" />
+            <FileRow :key="item.file.id" v-for="item in items" v-bind="item.file" />
           </tbody>
         </table>
       </div>
@@ -24,7 +24,7 @@
 import FileRow from './FileRow'
 
 export default {
-  props: ['files'],
+  props: ['items'],
   components: {
     FileRow
   },

@@ -1,8 +1,14 @@
 <template>
-<bModal title="Select files" size="lg" ref="modal">
-  <Listing v-bind:allowUpload="false" v-bind:initialLayout="1" v-bind:lockLayout="true" />
+<bModal title="Select files" size="lg" ref="modal" @hide="$refs.listing.reset()">
+  <Listing
+     v-bind:allowUpload="false"
+     v-bind:initialLayout="1"
+     v-bind:lockLayout="true"
+     v-bind:allowSelect="true"
+     ref="listing"
+     />
   <div slot="modal-footer" class="w-100">
-    <bBtn size="sm" variant="secondary" @click="hide">
+    <bBtn size="sm" variant="secondary" @click="cancel">
       Cancel
     </bBtn>
     <bBtn size="sm" variant="primary" @click="select">
@@ -30,12 +36,12 @@ export default {
     show() {
       this.$refs.modal.show();
     },
-    hide() {
+    cancel() {
       this.$refs.modal.hide();
     },
     select() {
       if (this.onSelect) {
-        this.onSelect(this.$store.getters.selectedFiles);
+        this.onSelect(this.$refs.listing.selectedFiles);
       }
       this.$refs.modal.hide();
     }

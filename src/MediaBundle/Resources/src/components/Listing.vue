@@ -3,7 +3,12 @@
   <UploadButton v-if="allowUpload" @upload="upload" />
   <button v-if="!lockLayout" @click="layout = 0">Table</button>
   <button v-if="!lockLayout" @click="layout = 1">Grid</button>
-  <component :is="layoutComponent" :files="files" />
+  <component
+     :is="layoutComponent"
+     :items="items"
+     :allowSelect="allowSelect"
+     @toggleSelect="toggleSelect"
+     />
 </div>
 </template>
 
@@ -11,6 +16,7 @@
 import UploadButton from './UploadButton'
 import FileTable from './FileTable'
 import FileGrid from './FileGrid'
+import Vue from 'vue'
 import upload from '../api/upload'
 
 export default {
@@ -28,10 +34,15 @@ export default {
       type: Boolean,
       default: false,
     },
+    allowSelect: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
       layout: 0,
+        selectedIds: {},
     }
   },
   created() {
@@ -43,11 +54,22 @@ export default {
     FileTable
   },
   computed: {
-    files() {
-      return this.$store.state.files;
+    items() {
+      let listing = this;
+      return this.$store.state.files.map((file) => {
+        return {
+          file,
+          selected: !!listing.selectedIds[file.id]
+        }
+      });
     },
     layoutComponent() {
       return this.layout === 0 ? FileTable : FileGrid;
+    },
+    selectedFiles() {
+      return this.items.filter((item) => {
+        return !!item.selected;
+      }).map(item => item.file);
     }
   },
   methods: {
@@ -66,7 +88,17 @@ export default {
           Perform.base.tasks.cancel(taskId);
         }
       });
-    }
+    },
+      reset() {
+          this.selectedIds = {};
+      },
+      toggleSelect(id) {
+          if (!this.allowSelect) {
+              return;
+          }
+
+          Vue.set(this.selectedIds, id, !this.selectedIds[id]);
+      }
   }
 }
 </script>
