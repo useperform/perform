@@ -9,13 +9,17 @@
 .perform-media-grid {
   .perform-media-grid-item {
     width: 100px;
-    height: 100px;
-    padding: 10px;
+    margin: 5px;
     float: left;
-    overflow: hidden;
+
+    .card-body {
+      padding: .25em;
+      font-size: 12px;
+    }
 
     &.selected {
       background-color: theme-color("info");
+      color: color-yiq(theme-color("info"));
     }
 
     img {

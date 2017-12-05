@@ -1,7 +1,11 @@
 <template>
-<div class="perform-media-grid-item" :class="{selected}" @click="click" @mouseover="hover">
-  <component :is="previewComponent" :filename="file.filename" />
-  <p>{{file.name}}</p>
+<div class="card perform-media-grid-item" :class="{selected}" @click="click" @mouseover="hover">
+  <component :is="previewComponent" :filename="file.filename" class="card-img-top"/>
+  <div class="card-body">
+    <p class="card-text">
+      {{file.name}}
+    </p>
+  </div>
 </div>
 </template>
 
