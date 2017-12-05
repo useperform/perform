@@ -7,7 +7,6 @@
 @import "header";
 @import "sidebar";
 @import "dashboard";
-@import "theme";
 
 @import url($base-font-url);
 
@@ -130,3 +129,6 @@ tbody {
 //   font-style: italic;
 //   color: $placeholder-color;
 // }
+
+@import "extras";
+@import "theme";
