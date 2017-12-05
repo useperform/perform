@@ -38,6 +38,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    selectLimit: {
+      type: Number,
+      default: 0,
+    },
   },
   data() {
     return {
@@ -70,6 +74,11 @@ export default {
       return this.items.filter((item) => {
         return !!item.selected;
       }).map(item => item.file);
+    },
+    selectedCount() {
+      return Object.values(this.selectedIds).reduce((prev, current) => {
+        return !!current ? prev + 1 : prev;
+      }, 0);
     }
   },
   methods: {
@@ -96,8 +105,14 @@ export default {
           if (!this.allowSelect) {
               return;
           }
+          const newValue = !this.selectedIds[id];
+          // true is selecting a new file
+          // check it is allowed
+          if (newValue && this.selectedCount == this.selectLimit && this.selectLimit !== 0) {
+              return;
+          }
 
-          Vue.set(this.selectedIds, id, !this.selectedIds[id]);
+          Vue.set(this.selectedIds, id, newValue);
       }
   }
 }

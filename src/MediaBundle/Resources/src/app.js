@@ -28,7 +28,9 @@ const initSelector = function() {
   selector = new Vue({
     el: '#perform-media-selector',
     data: {
-      onSelect: false,
+      onSelect: function() {},
+      limit: 0,
+      multiple: true
     },
     store,
     components: {
@@ -39,23 +41,22 @@ const initSelector = function() {
         this.$refs.selector.show();
       }
     },
-    template: '<Selector ref="selector" :onSelect="onSelect" />',
+    template: '<Selector ref="selector" :onSelect="onSelect" :limit="limit" :multiple="multiple" />'
   });
 };
 
 const selectFiles = function(options) {
   initSelector();
-  options = Object.assign({
+  Object.assign(selector, {
+    limit: 0,
     multiple: true,
-    onSelect: function() {},
   }, options);
-
-  selector.onSelect = options.onSelect;
   selector.show();
 };
 
 const selectFile = function(options) {
   return selectFiles(Object.assign(options, {
+    limit: 1,
     multiple: false
   }));
 };

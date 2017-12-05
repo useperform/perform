@@ -1,10 +1,11 @@
 <template>
-<bModal title="Select files" size="lg" ref="modal" @hide="$refs.listing.reset()">
+<bModal :title="title" size="lg" ref="modal" @hide="$refs.listing.reset()">
   <Listing
      v-bind:allowUpload="false"
      v-bind:initialLayout="1"
      v-bind:lockLayout="true"
      v-bind:allowSelect="true"
+     :selectLimit="limit"
      ref="listing"
      />
   <div slot="modal-footer" class="w-100">
@@ -25,12 +26,17 @@ import File from './File'
 import Listing from './Listing'
 
 export default {
-  props: ['onSelect'],
+  props: ['onSelect', 'limit', 'multiple'],
   components: {
     bModal,
     bBtn,
     File,
     Listing,
+  },
+  computed: {
+    title() {
+      return this.multiple ? 'Select files' : 'Select file';
+    }
   },
   methods: {
     show() {
