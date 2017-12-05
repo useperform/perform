@@ -1,10 +1,15 @@
 $(function() {
   $('.perform-media-type .btn').click(function(e) {
-    var input = $(this).parents('.perform-media-type').find('input');
     e.preventDefault();
+
+    var container = $(this).parents('.perform-media-type');
+    var input = container.find('input');
+    var indicator = container.find('.filename');
+
     Perform.media.selectFile({
-      onSelect: function(file) {
-        input.val(file.name);
+      onSelect: function(files) {
+        input.val(files[0].id);
+        indicator.text(files[0].name);
       }
     });
   });
