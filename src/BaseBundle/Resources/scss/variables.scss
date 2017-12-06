@@ -38,3 +38,33 @@ $p-sidebar-highlight: $gray-500 !default;
 Width of the sidebar.
 */
 $p-sidebar-width: 210px !default;
+
+/*
+Color of hovered datepicker cells.
+*/
+$p-comp-datepicker-cell-hover-color: $body-color !default;
+
+/*
+Background color of hovered datepicker cells.
+*/
+$p-comp-datepicker-cell-hover-bg: gray('200') !default;
+
+/*
+Color of datepicker cells not in the current range.
+*/
+$p-comp-datepicker-othercell-color: gray('400') !default;
+
+/*
+Color of hovered datepicker cells not in the current range.
+*/
+$p-comp-datepicker-othercell-hover-bg: gray('200') !default;
+
+/*
+Background color of hovered datepicker cells not in the current range.
+*/
+$p-comp-datepicker-othercell-hover-color: gray('500') !default;
+
+/*
+Border radius of datepicker cells.
+*/
+$p-comp-datepicker-cell-border-radius: $border-radius !default;

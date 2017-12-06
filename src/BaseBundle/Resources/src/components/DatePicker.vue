@@ -1,10 +1,14 @@
 <template>
-  <table class="table-condensed">
+  <table class="table-condensed p-comp-datepicker">
     <thead>
       <tr>
-        <th @click="subMonth">«</th>
+        <th class="control" @click="subMonth">
+          <i class="fa fa-chevron-left"></i>
+        </th>
         <th colspan="5">{{currentMonthYearName}}</th>
-        <th @click="addMonth">»</th>
+        <th class="control" @click="addMonth">
+          <i class="fa fa-chevron-right"></i>
+        </th>
       </tr>
       <tr>
         <th v-for="day in ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']">
@@ -14,7 +18,7 @@
     </thead>
     <tbody>
       <tr v-for="week in currentDays">
-        <td v-for="date in week" @click="select(date)">
+        <td v-for="date in week" @click="select(date)" :class="dayClasses(date)">
           {{date.getDate()}}
         </td>
       </tr>
@@ -58,6 +62,11 @@
          }
        }
 
+       // don't show the final week if it is entirely in the next month
+       if (rows[5][0].getMonth() !== this.current.getMonth()) {
+         rows.pop();
+       }
+
        return rows;
      },
      currentMonthYearName() {
@@ -73,6 +82,11 @@
      },
      select(date) {
        this.$emit('select', date);
+     },
+     dayClasses(date) {
+       return {
+         other: date.getMonth() !== this.current.getMonth()
+       };
      }
    }
  }
