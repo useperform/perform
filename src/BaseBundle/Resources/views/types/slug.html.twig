@@ -1,0 +1,7 @@
+{% extends 'PerformBaseBundle:types:simple.html.twig' %}
+
+{% block create %}
+  <div class="perform-type-slug" data-target="{{type_vars.target}}">
+    {{form_row(form[field], {attr: {disabled: not type_vars.edit}})}}
+  </div>
+{% endblock %}

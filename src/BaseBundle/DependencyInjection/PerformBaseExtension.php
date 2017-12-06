@@ -62,6 +62,7 @@ class PerformBaseExtension extends Extension
         $definition->addMethodCall('addType', ['choice', 'Perform\BaseBundle\Type\ChoiceType']);
         $definition->addMethodCall('addTypeService', ['entity', 'perform_base.type.entity']);
         $definition->addMethodCall('addTypeService', ['collection', 'perform_base.type.collection']);
+        $definition->addMethodCall('addTypeService', ['slug', 'perform_base.type.slug']);
     }
 
     protected function configureMailer(array $config, ContainerBuilder $container)
