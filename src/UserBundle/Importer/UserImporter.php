@@ -59,7 +59,9 @@ class UserImporter
         $resolver = new OptionsResolver();
         $resolver->setRequired('forename')
             ->setRequired('surname')
-            ->setRequired('password');
+            ->setRequired('password')
+            ->setDefault('roles', [])
+            ->setAllowedTypes('roles', 'array');
         $definition = $resolver->resolve($definition);
 
         $user = new User();
@@ -67,6 +69,9 @@ class UserImporter
             ->setForename($definition['forename'])
             ->setSurname($definition['surname'])
             ->setPassword($definition['password']);
+        foreach ($definition['roles'] as $role) {
+            $user->addRole($role);
+        }
 
         return $user;
     }
