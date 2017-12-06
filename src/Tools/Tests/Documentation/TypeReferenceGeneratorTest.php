@@ -2,17 +2,15 @@
 
 namespace Perform\Tools\Tests\Documentation;
 
-use Perform\Tools\Documentation\DocGenerator;
+use Perform\Tools\Documentation\TypeReferenceGenerator;
 use Temping\Temping;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * DocGeneratorTest.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class DocGeneratorTest extends \PHPUnit_Framework_TestCase
+class TypeReferenceGeneratorTest extends \PHPUnit_Framework_TestCase
 {
     protected $temp;
     protected $gen;
@@ -30,7 +28,7 @@ class DocGeneratorTest extends \PHPUnit_Framework_TestCase
         $registry = new TypeRegistry($this->getMock(ContainerInterface::class));
         $registry->addType('doctest', DocTestType::class);
 
-        $this->gen = new DocGenerator($twig, $registry);
+        $this->gen = new TypeReferenceGenerator($twig, $registry);
     }
 
     public function tearDown()

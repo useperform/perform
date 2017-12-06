@@ -2,10 +2,7 @@
 
 namespace Perform\Tools\Tests\Documentation;
 
-use Perform\Tools\Documentation\DocGenerator;
 use Temping\Temping;
-use Perform\BaseBundle\Type\TypeRegistry;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Perform\Tools\Documentation\SassReferenceGenerator;
 
 /**
