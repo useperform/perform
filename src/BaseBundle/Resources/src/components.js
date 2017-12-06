@@ -1,6 +1,6 @@
 import TaskList from './components/TaskList'
 import TaskCounter from './components/TaskCounter'
-import DatePicker from './components/DatePicker'
+import DatePickerInput from './components/DatePickerInput'
 import Vue from 'vue'
 
 const store = {
@@ -70,11 +70,10 @@ const cancel = function(id) {
 };
 
 const datepicker = function(el, opts) {
-  console.log(opts);
   new Vue({
     el: el,
     render(h) {
-      return h(DatePicker, {props: opts});
+      return h(DatePickerInput, {props: opts});
     }
   });
 };
