@@ -23,3 +23,9 @@ Perform\UserBundle\Entity\User:
         lastLogin:
             type: datetime
             nullable: true
+    oneToMany:
+        resetTokens:
+            targetEntity: ResetToken
+            mappedBy: user
+            cascade:
+                - remove

@@ -20,5 +20,6 @@ Perform\UserBundle\Entity\ResetToken:
     manyToOne:
         user:
             targetEntity: User
+            inversedBy: resetTokens
             joinColumn:
                 nullable: false

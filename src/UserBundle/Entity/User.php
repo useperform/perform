@@ -4,6 +4,7 @@ namespace Perform\UserBundle\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Perform\NotificationBundle\Recipient\RecipientInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -49,6 +50,16 @@ class User implements UserInterface, RecipientInterface
      * @var \DateTime|null
      */
     protected $lastLogin;
+
+    /**
+     * @var Collection
+     */
+    protected $resetTokens;
+
+    public function __construct()
+    {
+        $this->resetTokens = new ArrayCollection();
+    }
 
     /**
      * @return uuid
@@ -252,5 +263,36 @@ class User implements UserInterface, RecipientInterface
     public function getLastLogin()
     {
         return $this->lastLogin;
+    }
+
+    /**
+     * @param ResetToken $token
+     *
+     * @return User
+     */
+    public function addResetToken(ResetToken $token)
+    {
+        $this->resetTokens[] = $resetToken;
+        $resetToken->setUser($this);
+
+        return $this;
+    }
+
+    /**
+     * @param ResetToken $token
+     */
+    public function removeResetToken(ResetToken $token)
+    {
+        $this->items->removeElement($token);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getResetTokens()
+    {
+        return $this->resetTokens;
     }
 }
