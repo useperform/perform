@@ -1,0 +1,18 @@
+Sass Variable Reference
+=======================
+
+Here is a list of sass variables you can set in your admin themes.
+
+Also note that bootstrap defines many variables you can customise.
+{% for item in sass_vars %}
+
+{{item.name|capitalize}}
+{% for i in range(1, item.name|length) %}
+-
+{%- endfor %}
+
+
+{{item.doc}}
+
+Default value: ``{{item.default|raw}}``
+{% endfor %}
