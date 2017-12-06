@@ -53,7 +53,6 @@ class PerformBaseExtension extends Extension
         $definition->addMethodCall('addType', ['text', 'Perform\BaseBundle\Type\TextType']);
         $definition->addMethodCall('addType', ['password', 'Perform\BaseBundle\Type\PasswordType']);
         $definition->addMethodCall('addType', ['date', 'Perform\BaseBundle\Type\DateType']);
-        $definition->addMethodCall('addType', ['datetime', 'Perform\BaseBundle\Type\DateTimeType']);
         $definition->addMethodCall('addType', ['boolean', 'Perform\BaseBundle\Type\BooleanType']);
         $definition->addMethodCall('addType', ['integer', 'Perform\BaseBundle\Type\IntegerType']);
         $definition->addMethodCall('addType', ['hidden', 'Perform\BaseBundle\Type\HiddenType']);
@@ -61,6 +60,7 @@ class PerformBaseExtension extends Extension
         $definition->addMethodCall('addType', ['email', 'Perform\BaseBundle\Type\EmailType']);
         $definition->addMethodCall('addType', ['choice', 'Perform\BaseBundle\Type\ChoiceType']);
         $definition->addMethodCall('addTypeService', ['entity', 'perform_base.type.entity']);
+        $definition->addMethodCall('addTypeService', ['datetime', 'perform_base.type.datetime']);
         $definition->addMethodCall('addTypeService', ['collection', 'perform_base.type.collection']);
         $definition->addMethodCall('addTypeService', ['slug', 'perform_base.type.slug']);
     }

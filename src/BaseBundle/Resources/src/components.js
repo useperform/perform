@@ -1,5 +1,6 @@
 import TaskList from './components/TaskList'
 import TaskCounter from './components/TaskCounter'
+import DatePicker from './components/DatePicker'
 import Vue from 'vue'
 
 const store = {
@@ -68,13 +69,23 @@ const cancel = function(id) {
   });
 };
 
+const datepicker = function(el, opts) {
+  console.log(opts);
+  new Vue({
+    el: el,
+    render(h) {
+      return h(DatePicker, {props: opts});
+    }
+  });
+};
+
 if (!window.Perform) {
   window.Perform = {};
 }
 if (!window.Perform.base) {
   window.Perform.base = {};
 }
-window.Perform.base = Object.assign(window.Perform.base, {
+window.Perform.base = Object.assign({}, window.Perform.base, {
   tasks: {
     renderCounter,
     renderDropdown,
@@ -83,5 +94,8 @@ window.Perform.base = Object.assign(window.Perform.base, {
     getUnfinished,
     setProgress,
     cancel,
+  },
+  form: {
+    datepicker,
   }
 });

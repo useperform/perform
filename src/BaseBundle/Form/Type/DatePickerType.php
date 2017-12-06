@@ -9,7 +9,9 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 
 /**
- * DatePickerType
+ * Select dates, times, and timezones with an interactive picker.
+ *
+ * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class DatePickerType extends AbstractType
 {

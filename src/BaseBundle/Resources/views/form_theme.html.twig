@@ -20,6 +20,11 @@
 {%- endblock %}
 
 {% block datepicker_widget -%}
-  {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-control datepicker')|trim, "data-format": datepicker_format}) %}
-  <input type="text" {{ block('widget_attributes') }} {% if value %}value="{{value}}" {% endif %}/>
+  {# just a skeleton - the vue component will replace the elements in div.p-form-datepicker #}
+  <div class="input-group p-form-datepicker" id="p-comp-container-{{id}}">
+    <span class="input-group-addon">
+      <span class="fa fa-calendar"></span>
+    </span>
+    {{block('datetime_widget')}}
+  </div>
 {%- endblock %}
