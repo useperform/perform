@@ -8,6 +8,10 @@
     border-radius: $p-comp-datepicker-cell-border-radius;
   }
 
+  th.title {
+    text-align: left;
+  }
+
   th {
     cursor: default;
   }

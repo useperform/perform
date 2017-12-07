@@ -3,10 +3,12 @@
     <table class="table-condensed">
       <thead>
         <tr>
+          <th class="title" colspan="5">
+            {{currentMonthYearName}}
+          </th>
           <th class="control" @click="subMonth">
             <i class="fa fa-chevron-left"></i>
           </th>
-          <th colspan="5">{{currentMonthYearName}}</th>
           <th class="control" @click="addMonth">
             <i class="fa fa-chevron-right"></i>
           </th>
