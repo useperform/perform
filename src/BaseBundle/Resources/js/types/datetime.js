@@ -5,7 +5,9 @@ $(function () {
     Perform.base.form.datepicker(id, {
       inputName: input.attr('name'),
       initialValue: input.val(),
-      format: $(this).data('format')
+      format: $(this).data('format'),
+      pickDate: $(this).data('pick-date'),
+      pickTime: $(this).data('pick-time')
     });
   });
 });

@@ -29,6 +29,8 @@ class DatePickerType extends AbstractType
             'widget' => 'single_text',
             //http://userguide.icu-project.org/formatparse/datetime
             'datepicker_format' => 'dd/MM/yyyy',
+            'pick_date' => true,
+            'pick_time' => false,
         ]);
     }
 
@@ -37,6 +39,8 @@ class DatePickerType extends AbstractType
         parent::buildView($view, $form, $options);
         $this->assets->addJs('/bundles/performbase/js/types/datetime.js');
         $view->vars['datepicker_format'] = $options['datepicker_format'];
+        $view->vars['pick_date'] = $options['pick_date'];
+        $view->vars['pick_time'] = $options['pick_time'];
     }
 
     public function getParent()

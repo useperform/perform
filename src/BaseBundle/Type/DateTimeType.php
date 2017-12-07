@@ -16,14 +16,24 @@ use Perform\BaseBundle\Form\Type\DatePickerType;
 class DateTimeType extends AbstractType
 {
     /**
-     * @doc format The format to use when displaying the value, using PHP's date() syntax.
+     * @doc format The format to use when displaying the value, using PHP's ``date()`` syntax.
+     *
+     * See https://php.net/date for more information.
+     *
      * @doc human Show the data as a human-friendly string, e.g. 10 minutes ago.
+     *
      * @doc datepicker If true, use the interactive datepicker to set the value in forms.
+     *
      * @doc datepicker_format The ICU format to use in the datepicker field.
-     * This is not the same as PHP's date() format.
+     *
+     * This is not the same as PHP's ``date()`` format.
      * See http://userguide.icu-project.org/formatparse/datetime and
      * http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
      * for more information.
+     *
+     * @doc datepicker_pick_date If true, show the date component of the datepicker.
+     *
+     * @doc datepicker_pick_time If true, show the time component of the datepicker.
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -31,12 +41,17 @@ class DateTimeType extends AbstractType
             'format' => 'g:ia d/m/Y',
             'human' => true,
             'datepicker' => true,
-            'datepicker_format' => 'dd/MM/yyyy',
+            'datepicker_format' => 'hh:mma dd/MM/yyyy',
+            'datepicker_pick_date' => true,
+            'datepicker_pick_time' => true,
         ]);
         $resolver->setRequired(['human', 'format']);
         $resolver->setAllowedTypes('human', 'boolean');
         $resolver->setAllowedTypes('format', 'string');
         $resolver->setAllowedTypes('datepicker', 'boolean');
+        $resolver->setAllowedTypes('datepicker_format', 'string');
+        $resolver->setAllowedTypes('datepicker_pick_date', 'boolean');
+        $resolver->setAllowedTypes('datepicker_pick_time', 'boolean');
     }
 
     public function getDefaultConfig()
@@ -74,6 +89,9 @@ class DateTimeType extends AbstractType
 
         $builder->add($field, DatePickerType::class, [
             'format' => $options['datepicker_format'],
+            'datepicker_format' => $options['datepicker_format'],
+            'pick_date' => $options['datepicker_pick_date'],
+            'pick_time' => $options['datepicker_pick_time'],
         ]);
     }
 }
