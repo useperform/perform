@@ -1,9 +1,11 @@
 $(function () {
   $('.p-form-datepicker').each(function() {
-    var value = $(this).find('input').val();
+    var input = $(this).find('input');
     var id = '#'+$(this).attr('id');
     Perform.base.form.datepicker(id, {
-      initialValue: value
+      inputName: input.attr('name'),
+      initialValue: input.val(),
+      format: $(this).data('format')
     });
   });
 });

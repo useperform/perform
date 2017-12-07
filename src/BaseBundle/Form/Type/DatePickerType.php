@@ -27,11 +27,8 @@ class DatePickerType extends AbstractType
     {
         $resolver->setDefaults([
             'widget' => 'single_text',
-            //does not use date(), but intl constants
             //http://userguide.icu-project.org/formatparse/datetime
-            'format' => 'dd/MM/y',
-            //http://momentjs.com/docs/#/displaying/format/
-            'datepicker_format' => 'DD/MM/YYYY',
+            'datepicker_format' => 'dd/MM/yyyy',
         ]);
     }
 

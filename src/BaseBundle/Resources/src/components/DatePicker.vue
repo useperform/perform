@@ -27,11 +27,11 @@
 </template>
 
 <script>
- import subDays from 'date-fns/sub_days';
- import addDays from 'date-fns/add_days';
- import subMonths from 'date-fns/sub_months';
- import addMonths from 'date-fns/add_months';
- import startOfMonth from 'date-fns/start_of_month';
+ import subDays from 'date-fns/subDays';
+ import addDays from 'date-fns/addDays';
+ import subMonths from 'date-fns/subMonths';
+ import addMonths from 'date-fns/addMonths';
+ import startOfMonth from 'date-fns/startOfMonth';
  import formatDate from 'date-fns/format';
 
  export default {

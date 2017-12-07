@@ -16,8 +16,14 @@ use Perform\BaseBundle\Form\Type\DatePickerType;
 class DateTimeType extends AbstractType
 {
     /**
+     * @doc format The format to use when displaying the value, using PHP's date() syntax.
      * @doc human Show the data as a human-friendly string, e.g. 10 minutes ago.
-     * @doc format How to format the date, using PHP date() syntax.
+     * @doc datepicker If true, use the interactive datepicker to set the value in forms.
+     * @doc datepicker_format The ICU format to use in the datepicker field.
+     * This is not the same as PHP's date() format.
+     * See http://userguide.icu-project.org/formatparse/datetime and
+     * http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
+     * for more information.
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -25,6 +31,7 @@ class DateTimeType extends AbstractType
             'format' => 'g:ia d/m/Y',
             'human' => true,
             'datepicker' => true,
+            'datepicker_format' => 'dd/MM/yyyy',
         ]);
         $resolver->setRequired(['human', 'format']);
         $resolver->setAllowedTypes('human', 'boolean');
@@ -58,18 +65,15 @@ class DateTimeType extends AbstractType
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
         if (!$options['datepicker']) {
+            // select boxes
             $builder->add($field, FormType::class, [
-                'format' => 'HH:mm dd/MM/y',
-                'widget' => 'single_text',
-                'html5' => true,
             ]);
 
             return;
         }
 
         $builder->add($field, DatePickerType::class, [
-            'format' => 'h:mma dd/MM/y',
-            'datepicker_format' => 'h:mmA DD/MM/YYYY',
+            'format' => $options['datepicker_format'],
         ]);
     }
 }
