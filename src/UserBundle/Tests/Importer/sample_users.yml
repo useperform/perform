@@ -7,3 +7,6 @@
     forename: Test2
     surname: User2
     password: some_other_bcrypt_hash
+    roles:
+        - ROLE_ADMIN
+        - ROLE_SUPER_ADMIN

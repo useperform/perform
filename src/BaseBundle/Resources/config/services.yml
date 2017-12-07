@@ -34,6 +34,13 @@ services:
         tags:
             - {name: form.type}
 
+    perform_base.form.type.datepicker:
+        class: Perform\BaseBundle\Form\Type\DatePickerType
+        arguments:
+            - "@perform_base.asset_container"
+        tags:
+            - {name: form.type}
+
     perform_base.doctrine.entity_resolver:
         class: Perform\BaseBundle\Doctrine\EntityResolver
         arguments: ['%perform_base.entity_aliases%', '%perform_base.extended_entities%']
@@ -214,6 +221,11 @@ services:
         arguments:
             - "@perform_base.admin.registry"
             - "@doctrine.orm.entity_manager"
+            - "@perform_base.asset_container"
+
+    perform_base.type.slug:
+        class: Perform\BaseBundle\Type\SlugType
+        arguments:
             - "@perform_base.asset_container"
 
     perform_base.bundle_searcher:

@@ -1,0 +1,46 @@
+.p-comp-datepicker {
+  padding: 0 .5em;
+
+  td, th {
+    width: 2em;
+    padding: .3em;
+    text-align: center;
+    border-radius: $p-comp-datepicker-cell-border-radius;
+  }
+
+  th.title {
+    text-align: left;
+  }
+
+  th {
+    cursor: default;
+  }
+
+  td, th.control {
+    cursor: pointer;
+
+    &:hover {
+      background-color: $p-comp-datepicker-cell-hover-bg;
+      color: $p-comp-datepicker-cell-hover-color;
+    }
+  }
+
+  td.other {
+    color: $p-comp-datepicker-othercell-color;
+    &:hover {
+      background-color: $p-comp-datepicker-othercell-hover-bg;
+      color: $p-comp-datepicker-othercell-hover-color;
+    }
+  }
+}
+
+.p-comp-timepicker {
+  padding: 0 1em;
+  input {
+    width: initial;
+  }
+
+  button {
+    cursor: pointer;
+  }
+}

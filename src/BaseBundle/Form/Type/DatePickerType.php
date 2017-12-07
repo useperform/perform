@@ -7,28 +7,40 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
+use Perform\BaseBundle\Asset\AssetContainer;
 
 /**
- * DatePickerType
+ * Select dates, times, and timezones with an interactive picker.
+ *
+ * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class DatePickerType extends AbstractType
 {
+    protected $assets;
+
+    public function __construct(AssetContainer $assets)
+    {
+        $this->assets = $assets;
+    }
+
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'widget' => 'single_text',
-            //does not use date(), but intl constants
             //http://userguide.icu-project.org/formatparse/datetime
-            'format' => 'dd/MM/y',
-            //http://momentjs.com/docs/#/displaying/format/
-            'datepicker_format' => 'DD/MM/YYYY',
+            'datepicker_format' => 'dd/MM/yyyy',
+            'pick_date' => true,
+            'pick_time' => false,
         ]);
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         parent::buildView($view, $form, $options);
+        $this->assets->addJs('/bundles/performbase/js/types/datetime.js');
         $view->vars['datepicker_format'] = $options['datepicker_format'];
+        $view->vars['pick_date'] = $options['pick_date'];
+        $view->vars['pick_time'] = $options['pick_time'];
     }
 
     public function getParent()

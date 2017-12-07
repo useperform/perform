@@ -22,3 +22,4 @@ Dockerfile
 docs/_build
 docs/reference/types
 !docs/reference/types/index.rst
+docs/reference/sass.rst

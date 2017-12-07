@@ -8,11 +8,9 @@ use Perform\BaseBundle\Type\TypeInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * DocGenerator.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class DocGenerator
+class TypeReferenceGenerator
 {
     protected $twig;
     protected $registry;

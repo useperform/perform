@@ -64,12 +64,14 @@ class UserImporterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('Test', $one->getForename());
         $this->assertSame('User', $one->getSurname());
         $this->assertSame('some_bcrypt_hash', $one->getPassword());
+        $this->assertSame(['ROLE_USER'], $one->getRoles());
 
         $two = $users[1];
         $this->assertSame('test@example.co.uk', $two->getEmail());
         $this->assertSame('Test2', $two->getForename());
         $this->assertSame('User2', $two->getSurname());
         $this->assertSame('some_other_bcrypt_hash', $two->getPassword());
+        $this->assertSame(['ROLE_USER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN'], $two->getRoles());
     }
 
     public function testImportYamlFile()
