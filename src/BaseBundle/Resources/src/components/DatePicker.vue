@@ -1,29 +1,31 @@
 <template>
-  <table class="table-condensed p-comp-datepicker">
-    <thead>
-      <tr>
-        <th class="control" @click="subMonth">
-          <i class="fa fa-chevron-left"></i>
-        </th>
-        <th colspan="5">{{currentMonthYearName}}</th>
-        <th class="control" @click="addMonth">
-          <i class="fa fa-chevron-right"></i>
-        </th>
-      </tr>
-      <tr>
-        <th v-for="day in ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']">
-          {{day}}
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="week in currentDays">
-        <td v-for="date in week" @click="select(date)" :class="dayClasses(date)">
-          {{date.getDate()}}
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="p-comp-datepicker">
+    <table class="table-condensed">
+      <thead>
+        <tr>
+          <th class="control" @click="subMonth">
+            <i class="fa fa-chevron-left"></i>
+          </th>
+          <th colspan="5">{{currentMonthYearName}}</th>
+          <th class="control" @click="addMonth">
+            <i class="fa fa-chevron-right"></i>
+          </th>
+        </tr>
+        <tr>
+          <th v-for="abbrev, day in weekDays" :title="day">
+            {{abbrev}}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="week in currentDays">
+          <td v-for="date in week" @click="select(date)" :class="dayClasses(date)">
+            {{date.getDate()}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script>
@@ -43,6 +45,15 @@
    data() {
      return {
        current: null,
+       weekDays: {
+         'Monday': 'M',
+         'Tuesday': 'T',
+         'Wednesday': 'W',
+         'Thursday': 'T',
+         'Friday': 'F',
+         'Saturday': 'S',
+         'Sunday': 'S'
+       }
      };
    },
    computed: {

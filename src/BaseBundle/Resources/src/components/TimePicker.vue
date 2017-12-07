@@ -1,8 +1,10 @@
 <template>
-  <div class="p-comp-timepicker">
-    <input class="form-control" type="text" v-model="currentInput" @change="onInputChange" />
+  <div class="p-comp-timepicker d-flex flex-row align-items-start">
+    <div class="input-group">
+      <input class="form-control" type="text" v-model="currentInput" @change="onInputChange" />
+      <button class="input-group-addon" @click.prevent="select">OK</button>
+    </div>
     <!-- increments selection -->
-    <button class="btn btn-sm btn-primary" @click.prevent="select">OK</button>
   </div>
 </template>
 

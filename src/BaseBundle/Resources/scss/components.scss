@@ -1,4 +1,6 @@
 .p-comp-datepicker {
+  padding: 0 .5em;
+
   td, th {
     width: 2em;
     padding: .3em;
@@ -25,5 +27,16 @@
       background-color: $p-comp-datepicker-othercell-hover-bg;
       color: $p-comp-datepicker-othercell-hover-color;
     }
+  }
+}
+
+.p-comp-timepicker {
+  padding: 0 1em;
+  input {
+    width: initial;
+  }
+
+  button {
+    cursor: pointer;
   }
 }
