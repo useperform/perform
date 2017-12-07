@@ -3,7 +3,14 @@ Sass Variable Reference
 
 Here is a list of sass variables you can set in your admin themes.
 
-Also note that bootstrap defines many variables you can customise.
+.. note::
+
+    Remember that bootstrap also defines many variables you can customise.
+    Perform uses these variables throughout, so any changes you make to
+    them will cascade across Perform styles too.
+    Look for ``_variables.scss`` in the bootstrap source for the complete list.
+
+    https://getbootstrap.com/docs/4.0/getting-started/theming/
 {% for item in sass_vars %}
 
 {{item.name|capitalize}}
