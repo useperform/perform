@@ -6,7 +6,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Carbon\Carbon;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType as FormType;
-use Perform\BaseBundle\Asset\AssetContainer;
 use Perform\BaseBundle\Form\Type\DatePickerType;
 
 /**
@@ -16,14 +15,6 @@ use Perform\BaseBundle\Form\Type\DatePickerType;
  **/
 class DateTimeType extends AbstractType
 {
-    protected $assets;
-
-    public function __construct(AssetContainer $assets)
-    {
-        parent::__construct();
-        $this->assets = $assets;
-    }
-
     /**
      * @doc human Show the data as a human-friendly string, e.g. 10 minutes ago.
      * @doc format How to format the date, using PHP date() syntax.
@@ -76,8 +67,6 @@ class DateTimeType extends AbstractType
             return;
         }
 
-        // this could actually go in the datepicker form type, so this and datetype don't need to add it
-        $this->assets->addJs('/bundles/performbase/js/types/datetime.js');
         $builder->add($field, DatePickerType::class, [
             'format' => 'h:mma dd/MM/y',
             'datepicker_format' => 'h:mmA DD/MM/YYYY',

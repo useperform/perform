@@ -7,6 +7,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
+use Perform\BaseBundle\Asset\AssetContainer;
 
 /**
  * Select dates, times, and timezones with an interactive picker.
@@ -15,6 +16,13 @@ use Symfony\Component\Form\FormInterface;
  **/
 class DatePickerType extends AbstractType
 {
+    protected $assets;
+
+    public function __construct(AssetContainer $assets)
+    {
+        $this->assets = $assets;
+    }
+
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
@@ -30,6 +38,7 @@ class DatePickerType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         parent::buildView($view, $form, $options);
+        $this->assets->addJs('/bundles/performbase/js/types/datetime.js');
         $view->vars['datepicker_format'] = $options['datepicker_format'];
     }
 
