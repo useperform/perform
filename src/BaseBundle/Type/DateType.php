@@ -18,16 +18,9 @@ class DateType extends DateTimeType
             'options' => [
                 'format' => 'd/m/Y',
                 'human' => false,
+                'datepicker_format' => 'dd/MM/yyyy',
+                'datepicker_pick_time' => false,
             ],
         ];
-    }
-
-    public function createContext(FormBuilderInterface $builder, $field, array $options = [])
-    {
-        $builder->add($field, FormType::class, [
-            'format' => 'dd/MM/y',
-            'widget' => 'single_text',
-            'html5' => true,
-        ]);
     }
 }
