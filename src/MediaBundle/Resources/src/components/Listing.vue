@@ -1,14 +1,23 @@
 <template>
-<div>
-  <UploadButton v-if="allowUpload" @upload="upload" />
-  <button v-if="!lockLayout" @click="layout = 0">Table</button>
-  <button v-if="!lockLayout" @click="layout = 1">Grid</button>
-  <component
-     :is="layoutComponent"
-     :items="items"
-     @toggleSelect="toggleSelect"
-     />
-</div>
+  <div>
+    <div class="d-flex justify-content-between">
+      <UploadButton v-if="allowUpload" @upload="upload" />
+
+      <div class="btn-group" role="group" aria-label="Layouts">
+        <button v-if="!lockLayout" :class="btnCssClass(0)" @click.prevent="layout = 0">
+          <i class="fa fa-th-list"></i>
+        </button>
+        <button v-if="!lockLayout" :class="btnCssClass(1)" @click.prevent="layout = 1">
+          <i class="fa fa-th"></i>
+        </button>
+      </div>
+    </div>
+    <component
+      :is="layoutComponent"
+      :items="items"
+      @toggleSelect="toggleSelect"
+    />
+  </div>
 </template>
 
 <script>
@@ -123,6 +132,13 @@ export default {
       }
 
       Vue.set(this.selectedIds, id, newValue);
+    },
+    btnCssClass(layout) {
+      return {
+        'btn': true,
+        'btn-light': true,
+        'active': this.layout === layout,
+      }
     }
   }
 }
