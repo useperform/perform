@@ -97,7 +97,7 @@ class SassWarmer implements CacheWarmerInterface
         $content = '';
         foreach ($paths as $path) {
             $importPath = rtrim($this->fs->makePathRelative($path, self::TARGET_DIR), '/');
-            $content = sprintf('@import "%s";'.PHP_EOL, $importPath);
+            $content .= sprintf('@import "%s";'.PHP_EOL, $importPath);
         }
 
         $this->fs->dumpFile(self::TARGET_DIR.$target, $content);
