@@ -23,23 +23,41 @@ class DatePickerType extends AbstractType
         $this->assets = $assets;
     }
 
+    /**
+     * @doc format The ICU format to use in the datepicker field.
+     *
+     * This is not the same as PHP's ``date()`` format.
+     * See http://userguide.icu-project.org/formatparse/datetime and
+     * http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
+     * for more information.
+     *
+     * @doc pick_date If true, show the date component of the datepicker.
+     *
+     * @doc pick_time If true, show the time component of the datepicker.
+     *
+     * @doc week_start An integer between 0 and 6 declaring
+     * which day the week starts on. Like javascript's date handling,
+     * 0 is Sunday, 1 is Monday, etc.
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
         $resolver->setDefaults([
             'widget' => 'single_text',
-            //http://userguide.icu-project.org/formatparse/datetime
-            'datepicker_format' => 'dd/MM/yyyy',
             'pick_date' => true,
             'pick_time' => false,
             'week_start' => 1,
         ]);
+        $resolver->setAllowedTypes('pick_date', 'boolean');
+        $resolver->setAllowedTypes('pick_time', 'boolean');
+        $resolver->setAllowedTypes('week_start', 'integer');
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         parent::buildView($view, $form, $options);
         $this->assets->addJs('/bundles/performbase/js/types/datetime.js');
-        $view->vars['datepicker_format'] = $options['datepicker_format'];
+        $view->vars['format'] = $options['format'];
         $view->vars['pick_date'] = $options['pick_date'];
         $view->vars['pick_time'] = $options['pick_time'];
         $view->vars['week_start'] = $options['week_start'];

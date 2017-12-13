@@ -18,8 +18,10 @@ class DateType extends DateTimeType
             'options' => [
                 'format' => 'd/m/Y',
                 'human' => false,
-                'datepicker_format' => 'dd/MM/yyyy',
-                'datepicker_pick_time' => false,
+                'datepicker_options' => [
+                    'format' => 'dd/MM/yyyy',
+                    'pick_time' => false,
+                ]
             ],
         ];
     }
