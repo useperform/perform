@@ -7,7 +7,7 @@
       <input :name="inputName" type="text" class="form-control" :value="formattedValue" />
     </div>
     <div class="dropdown-menu d-flex" v-if="shown" style="display: block">
-      <DatePicker v-if="pickDate" :initialDate="initialPickerValue" @select="selectDate" />
+      <DatePicker v-if="pickDate" :initialDate="initialPickerValue" :weekStart="weekStart" @select="selectDate" />
       <TimePicker v-if="pickTime" :initialDate="initialPickerValue" @select="selectTime" />
     </div>
   </div>
@@ -26,7 +26,8 @@
      'initialValue',
      'format',
      'pickDate',
-     'pickTime'
+     'pickTime',
+     'weekStart'
    ],
    created() {
      // transform ICU format to date-fns version

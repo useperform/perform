@@ -14,7 +14,7 @@
           </th>
         </tr>
         <tr>
-          <th v-for="abbrev, day in weekDays" :title="day">
+          <th v-for="abbrev, day in dayLabels" :title="day">
             {{abbrev}}
           </th>
         </tr>
@@ -38,8 +38,24 @@
  import startOfMonth from 'date-fns/startOfMonth';
  import formatDate from 'date-fns/format';
 
+ const dayNames = [
+   'Sunday',
+   'Monday',
+   'Tuesday',
+   'Wednesday',
+   'Thursday',
+   'Friday',
+   'Saturday',
+ ];
+
  export default {
-   props: ['initialDate'],
+   props: {
+     initialDate: {},
+     weekStart: {
+       type: Number,
+       default: 0,
+     }
+   },
    created() {
      // set the hour to mid-day to avoid any problems with daylight savings when adding days and months
      this.current = new Date(this.initialDate.getFullYear(), this.initialDate.getMonth(), 1, 12);
@@ -47,23 +63,14 @@
    data() {
      return {
        current: null,
-       weekDays: {
-         'Monday': 'M',
-         'Tuesday': 'T',
-         'Wednesday': 'W',
-         'Thursday': 'T',
-         'Friday': 'F',
-         'Saturday': 'S',
-         'Sunday': 'S'
-       }
      };
    },
    computed: {
      currentDays() {
        let cursor = startOfMonth(this.current);
-       if (cursor.getDay() !== 1) {
-         cursor = subDays(cursor, cursor.getDay() - 1);
-       }
+       // adjust for start of the week
+       // 0-6, sunday-saturday
+       cursor = subDays(cursor, (cursor.getDay() - this.weekStart + 7) % 7);
        let rows = [];
        const rowCount = 6;
        const cellCount = 7;
@@ -84,6 +91,16 @@
      },
      currentMonthYearName() {
        return formatDate(this.current, 'MMMM YYYY');
+     },
+     dayLabels() {
+       let days = {};
+       let limit = this.weekStart + 7;
+       for (let i = this.weekStart; i < limit; i++) {
+         let dayName = dayNames[i%7];
+         days[dayName] = dayName.slice(0, 1);
+       }
+
+       return days;
      }
    },
    methods: {
