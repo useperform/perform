@@ -29,10 +29,10 @@ class SlugTypeTest extends \PHPUnit_Framework_TestCase
         $config = [
             'label' => 'Slug',
             'target' => 'title',
-            'edit' => false,
+            'readonly' => true,
         ];
         $expected = [
-            'edit' => false,
+            'readonly' => true,
             'target' => '#admin_form_title',
         ];
 
@@ -48,10 +48,10 @@ class SlugTypeTest extends \PHPUnit_Framework_TestCase
         $config = [
             'label' => 'Slug',
             'target' => 'title',
-            'edit' => false,
+            'readonly' => true,
         ];
         $expected = [
-            'edit' => false,
+            'readonly' => true,
             'target' => '#admin_form_title',
         ];
 

@@ -36,7 +36,7 @@ class SlugType extends AbstractType
 
         return [
             'target' => sprintf('#%s_%s', $builder->getName(), $options['target']),
-            'edit' => $options['edit'],
+            'readonly' => $options['readonly'],
         ];
     }
 
@@ -45,17 +45,16 @@ class SlugType extends AbstractType
      * from, e.g. 'title'.
      * The field must exist for the current context.
      *
-     * @doc edit Allow the input field to be edited.
-     * If false, the input will be disabled.
+     * @doc readonly Set the readonly attribute on the input element.
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'edit' => true,
+            'readonly' => false,
         ]);
         $resolver->setRequired('target');
         $resolver->setAllowedTypes('target', ['string']);
-        $resolver->setAllowedTypes('edit', ['boolean']);
+        $resolver->setAllowedTypes('readonly', ['boolean']);
     }
 
     public function getTemplate()

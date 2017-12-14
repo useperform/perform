@@ -7,7 +7,8 @@ $(function () {
       initialValue: input.val(),
       format: $(this).data('format'),
       pickDate: $(this).data('pick-date'),
-      pickTime: $(this).data('pick-time')
+      pickTime: $(this).data('pick-time'),
+      weekStart: $(this).data('week-start')
     });
   });
 });

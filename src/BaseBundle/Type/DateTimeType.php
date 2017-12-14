@@ -34,6 +34,10 @@ class DateTimeType extends AbstractType
      * @doc datepicker_pick_date If true, show the date component of the datepicker.
      *
      * @doc datepicker_pick_time If true, show the time component of the datepicker.
+     *
+     * @doc datepicker_week_start An integer between 0 and 6 declaring
+     * which day the week starts on. Like javascript's date handling,
+     * 0 is Sunday, 1 is Monday, etc.
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -44,6 +48,7 @@ class DateTimeType extends AbstractType
             'datepicker_format' => 'hh:mma dd/MM/yyyy',
             'datepicker_pick_date' => true,
             'datepicker_pick_time' => true,
+            'datepicker_week_start' => 1,
         ]);
         $resolver->setRequired(['human', 'format']);
         $resolver->setAllowedTypes('human', 'boolean');
@@ -52,6 +57,7 @@ class DateTimeType extends AbstractType
         $resolver->setAllowedTypes('datepicker_format', 'string');
         $resolver->setAllowedTypes('datepicker_pick_date', 'boolean');
         $resolver->setAllowedTypes('datepicker_pick_time', 'boolean');
+        $resolver->setAllowedTypes('datepicker_week_start', 'integer');
     }
 
     public function getDefaultConfig()
@@ -92,6 +98,7 @@ class DateTimeType extends AbstractType
             'datepicker_format' => $options['datepicker_format'],
             'pick_date' => $options['datepicker_pick_date'],
             'pick_time' => $options['datepicker_pick_time'],
+            'week_start' => $options['datepicker_week_start'],
         ]);
     }
 }

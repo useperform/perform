@@ -31,6 +31,7 @@ class DatePickerType extends AbstractType
             'datepicker_format' => 'dd/MM/yyyy',
             'pick_date' => true,
             'pick_time' => false,
+            'week_start' => 1,
         ]);
     }
 
@@ -41,6 +42,7 @@ class DatePickerType extends AbstractType
         $view->vars['datepicker_format'] = $options['datepicker_format'];
         $view->vars['pick_date'] = $options['pick_date'];
         $view->vars['pick_time'] = $options['pick_time'];
+        $view->vars['week_start'] = $options['week_start'];
     }
 
     public function getParent()
