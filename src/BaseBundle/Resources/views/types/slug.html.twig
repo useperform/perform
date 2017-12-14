@@ -2,6 +2,6 @@
 
 {% block create %}
   <div class="perform-type-slug" data-target="{{type_vars.target}}">
-    {{form_row(form[field], {attr: {disabled: not type_vars.edit}})}}
+    {{form_row(form[field], {attr: {readonly: type_vars.readonly} | merge(type_vars.readonly ? {tabindex: '-1'} : {})})}}
   </div>
 {% endblock %}
