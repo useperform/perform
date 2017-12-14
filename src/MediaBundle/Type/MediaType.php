@@ -53,7 +53,8 @@ class MediaType extends AbstractType
             ]);
 
             return [
-                'use_selector' => true
+                'use_selector' => true,
+                'file' => $this->accessor->getValue($builder->getData(), $field),
             ];
         }
 

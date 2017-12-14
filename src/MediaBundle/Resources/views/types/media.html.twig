@@ -14,7 +14,11 @@
         <a class="btn btn-secondary btn-sm" href="#">
           Select file
         </a>
-        <span class="filename"></span>
+        <span class="filename">
+          {% if type_vars.file %}
+            {{type_vars.file.name}}
+          {% endif %}
+        </span>
         {{form_errors(form[field])}}
       </div>
     </div>
