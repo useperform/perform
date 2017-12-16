@@ -54,7 +54,7 @@ class FileController extends Controller
 
             if ($result->isComplete()) {
                 $importer = $this->get('perform_media.importer.file');
-                $file = $importer->import($result->getFile()->getPathname(), $result->getClientOriginalName());
+                $file = $importer->importFile($result->getFile()->getPathname(), $result->getClientOriginalName());
 
                 return $this->json(array_merge($result->toArray(), [
                     'id' => $file->getId(),

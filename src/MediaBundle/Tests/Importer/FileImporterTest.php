@@ -11,6 +11,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Perform\MediaBundle\Entity\File;
 use Perform\MediaBundle\Event\FileEvent;
+use Perform\UserBundle\Entity\User;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -41,7 +42,7 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
 
     public function testImportFileSuccessfulMimeGuess()
     {
-        $file = $this->importer->import(__FILE__);
+        $file = $this->importer->importFile(__FILE__);
         $this->assertSame(36, strlen($file->getId()));
         $this->assertSame('text/x-php', $file->getMimeType());
         $this->assertSame('us-ascii', $file->getCharset());
@@ -50,7 +51,7 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
     public function testImportFileFailedMimeGuess()
     {
         $this->vfs->createFile('/file.txt', 'Hello world');
-        $file = $this->importer->import($this->vfs->path('/file.txt'));
+        $file = $this->importer->importFile($this->vfs->path('/file.txt'));
         $this->assertSame(36, strlen($file->getId()));
         $this->assertSame('text/plain', $file->getMimeType());
         $this->assertSame('us-ascii', $file->getCharset());
@@ -58,7 +59,7 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
 
     public function testImportFileSuccessfulMimeGuessNoExtension()
     {
-        $file = $this->importer->import(__DIR__.'/../fixtures/binary_no_extension');
+        $file = $this->importer->importFile(__DIR__.'/../fixtures/binary_no_extension');
         $this->assertSame(36, strlen($file->getId()));
         $this->assertSame('application/octet-stream', $file->getMimeType());
         $this->assertSame('binary', $file->getCharset());
@@ -82,5 +83,47 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
             ->with(FileEvent::DELETE, new FileEvent($file));
 
         $this->importer->delete($file);
+    }
+
+    public function testImportDirectory()
+    {
+        $this->vfs->createDirectory('/dir/subdir', true);
+        $this->vfs->createFile('/dir/subdir/file.txt', 'Hello world');
+        $this->vfs->createFile('/dir/subdir/file2.md', '# Hello world');
+
+        $owner = new User();
+        $files = $this->importer->importDirectory($this->vfs->path('/dir'), [], $owner);
+        $this->assertSame(2, count($files));
+        $this->assertSame($owner, $files[0]->getOwner());
+        $this->assertSame('file.txt', $files[0]->getName());
+        $this->assertSame($owner, $files[1]->getOwner());
+        $this->assertSame('file2.md', $files[1]->getName());
+    }
+
+    public function extensionProvider()
+    {
+        return [
+            ['txt'],
+            ['.txt'],
+            ['TXT'],
+            ['.TXT'],
+            ['.Txt'],
+        ];
+    }
+
+    /**
+     * @dataProvider extensionProvider
+     */
+    public function testImportDirectoryFilterExtensions($extension)
+    {
+        $this->vfs->createDirectory('/dir/subdir', true);
+        $this->vfs->createFile('/dir/subdir/file.txt', 'Hello world');
+        $this->vfs->createFile('/dir/subdir/file2.md', '# Hello world');
+
+        $owner = new User();
+        $files = $this->importer->importDirectory($this->vfs->path('/dir'), [$extension], $owner);
+        $this->assertSame(1, count($files));
+        $this->assertSame($owner, $files[0]->getOwner());
+        $this->assertSame('file.txt', $files[0]->getName());
     }
 }

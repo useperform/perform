@@ -6,11 +6,11 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use League\Flysystem\FilesystemInterface;
 use League\Flysystem\FileNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Perform\MediaBundle\Entity\File;
-use Perform\AppBundle\Entity\User;
+use Perform\UserBundle\Entity\User;
 use Perform\MediaBundle\Event\FileEvent;
 use Mimey\MimeTypes;
+use Symfony\Component\Finder\Finder;
 
 /**
  * Add files to the media library.
@@ -35,13 +35,24 @@ class FileImporter
     }
 
     /**
+     * Import a file or directory into the media library.
+     *
+     * @param string      $pathname The location of the file or directory
+     * @param User        $user     The optional owner of the files
+     */
+    public function import($pathname, User $owner = null)
+    {
+        return is_dir($pathname) ? $this->importDirectory($pathname, $owner) : $this->importFile($pathname, $owner);
+    }
+
+    /**
      * Import a file into the media library.
      *
      * @param string      $pathname The location of the file
      * @param string|null $name     Optionally, the name to give the file
      * @param User        $user     The optional owner of the file
      */
-    public function import($pathname, $name = null, User $owner = null)
+    public function importFile($pathname, $name = null, User $owner = null)
     {
         if (!file_exists($pathname)) {
             throw new \InvalidArgumentException("$pathname does not exist.");
@@ -81,6 +92,30 @@ class FileImporter
             $this->entityManager->rollback();
             throw $e;
         }
+    }
+
+    /**
+     * Import a directory of files into the media library.
+     *
+     * @param string $pathname   The location of the directory
+     * @param array  $extensions Only import the files with the given extensions
+     * @param User   $user       The optional owner of the files
+     */
+    public function importDirectory($pathname, array $extensions = [], User $owner = null)
+    {
+        $finder = Finder::create()
+                ->files()
+                ->in($pathname);
+        foreach ($extensions as $ext) {
+            $finder->name(sprintf('/\\.%s$/i', trim($ext, '.')));
+        }
+        $files = [];
+
+        foreach ($finder as $file) {
+            $files[] = $this->importFile($file->getPathname(), null, $owner);
+        }
+
+        return $files;
     }
 
     /**
