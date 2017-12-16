@@ -11,10 +11,11 @@
     "require": {
         "perform/base-bundle": "self.version",
         "oneup/flysystem-bundle": "^1.3",
-        "dflydev/apache-mime-types": "^1.0"
+        "ralouphie/mimey": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.8"
+        "phpunit/phpunit": "^4.8",
+        "php-vfs/php-vfs": "^1.3"
     },
     "suggest": {
         "imagine/imagine": "To use the image plugin"

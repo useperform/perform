@@ -19,7 +19,6 @@
         "stof/doctrine-extensions-bundle": "^1.2",
         "doctrine/doctrine-migrations-bundle": "^1.2",
         "oneup/flysystem-bundle": "^1.3",
-        "dflydev/apache-mime-types": "^1.0",
         "knplabs/knp-menu-bundle": "^2.1",
         "nesbot/carbon": "^1.21",
         "symfony/swiftmailer-bundle": "^2.3",
@@ -27,13 +26,15 @@
         "fzaninotto/faker": "^1.5",
         "lyrixx/twitter-sdk": "^1.1",
         "imagine/imagine": "^0.6.3",
-        "pagerfanta/pagerfanta": "^1.0"
+        "pagerfanta/pagerfanta": "^1.0",
+        "ralouphie/mimey": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.8",
         "glynnforrest/temping": "^0.5.0",
         "phpdocumentor/reflection-docblock": "^3.1",
-        "sonata-project/exporter": "^1.7"
+        "sonata-project/exporter": "^1.7",
+        "php-vfs/php-vfs": "^1.3"
     },
     "suggest": {
         "sonata-project/exporter": "Export entities to a variety of formats"
