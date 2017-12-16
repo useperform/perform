@@ -35,38 +35,6 @@ class FileImporter
     }
 
     /**
-     * @return FilesystemInterface
-     */
-    public function getFilesystem()
-    {
-        return $this->storage;
-    }
-
-    /**
-     * Get an upload error suitable for displaying to a user.
-     *
-     * @return string
-     */
-    public function getUserFacingUploadError(UploadedFile $file)
-    {
-        static $errors = [
-            UPLOAD_ERR_INI_SIZE => 'The file "%s" is too large.',
-            UPLOAD_ERR_FORM_SIZE => 'The file "%s" is too large.',
-            UPLOAD_ERR_PARTIAL => 'The file "%s" was only partially uploaded.',
-            UPLOAD_ERR_NO_FILE => 'No file was uploaded.',
-            // UPLOAD_ERR_CANT_WRITE
-            // UPLOAD_ERR_NO_TMP_DIR
-            // UPLOAD_ERR_EXTENSION
-            // all default to error below
-        ];
-
-        $errorCode = $file->getError();
-        $message = isset($errors[$errorCode]) ? $errors[$errorCode] : 'The file "%s" could not be uploaded';
-
-        return sprintf($message, $file->getClientOriginalName());
-    }
-
-    /**
      * Import a file into the media library.
      *
      * @param string      $pathname The location of the file

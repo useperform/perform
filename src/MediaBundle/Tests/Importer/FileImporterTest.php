@@ -9,13 +9,15 @@ use Perform\MediaBundle\Importer\FileImporter;
 use VirtualFileSystem\FileSystem;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
+use Perform\MediaBundle\Entity\File;
+use Perform\MediaBundle\Event\FileEvent;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class FileImporterTest extends \PHPUnit_Framework_TestCase
 {
-    protected $flysystem;
+    protected $storage;
     protected $platform;
     protected $em;
     protected $conn;
@@ -24,7 +26,7 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->flysystem = $this->getMock(FilesystemInterface::class);
+        $this->storage = $this->getMock(FilesystemInterface::class);
         $this->em = $this->getMock(EntityManagerInterface::class);
         $this->conn = DriverManager::getConnection([
             'url' => 'sqlite:///:memory:',
@@ -33,7 +35,7 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
             ->method('getConnection')
             ->will($this->returnValue($this->conn));
         $this->dispatcher = $this->getMock(EventDispatcherInterface::class);
-        $this->importer = new FileImporter($this->flysystem, $this->em, $this->dispatcher);
+        $this->importer = new FileImporter($this->storage, $this->em, $this->dispatcher);
         $this->vfs = new FileSystem();
     }
 
@@ -61,5 +63,24 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('application/octet-stream', $file->getMimeType());
         $this->assertSame('binary', $file->getCharset());
         $this->assertSame('.bin', substr($file->getFilename(), -4));
+    }
+
+    public function testDelete()
+    {
+        $file = new File();
+        $file->setFilename('file.bin');
+        $this->em->expects($this->once())
+            ->method('remove')
+            ->with($file);
+        $this->em->expects($this->once())
+            ->method('flush');
+        $this->storage->expects($this->once())
+            ->method('delete')
+            ->with('file.bin');
+        $this->dispatcher->expects($this->once())
+            ->method('dispatch')
+            ->with(FileEvent::DELETE, new FileEvent($file));
+
+        $this->importer->delete($file);
     }
 }
