@@ -11,7 +11,7 @@
             <th></th>
           </thead>
           <tbody>
-            <FileRow :key="item.file.id" v-for="item in items" v-bind="item.file" />
+            <FileRow :key="item.file.id" v-for="item in items" :file="item.file" />
           </tbody>
         </table>
       </div>

@@ -2,13 +2,13 @@
 <transition name="fade">
   <tr>
     <td>
-      {{name}}
+      {{file.name}}
     </td>
     <td>
-      {{humanType}}
+      {{file.humanType}}
     </td>
     <td>
-      <component :is="previewComponent" :filename="filename" />
+      <FilePreview :file="file" />
     </td>
     <td>
       <button class="btn btn-danger" @click.prevent="remove" :disabled="removing">
@@ -21,29 +21,23 @@
 </template>
 
 <script>
-import Image from './types/Image';
-import Other from './types/Other';
+import FilePreview from './FilePreview';
 
 export default {
-  props: ['name', 'id', 'type', 'humanType', 'filename'],
+  props: ['file'],
   data() {
     return {
       removing: false,
     }
   },
-  computed: {
-    previewComponent() {
-      if (this.type === 'image') {
-        return Image;
-      }
-      return Other;
-    }
+  components: {
+    FilePreview,
   },
   methods: {
     remove() {
       this.removing = true;
       const row = this;
-      this.$store.dispatch('delete', this.id).catch(function(error) {
+      this.$store.dispatch('delete', this.file.id).catch(function(error) {
         Perform.base.showError(error.response.data.message);
         row.removing = false;
       });

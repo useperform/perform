@@ -1,6 +1,6 @@
 <template>
 <div class="card perform-media-grid-item" :class="{selected}" @click="click" @mouseover="hover">
-  <component :is="previewComponent" :filename="file.filename" class="card-img-top"/>
+  <FilePreview :file="file" class="card-img-top"/>
   <div class="card-body">
     <p class="card-text">
       {{file.name}}
@@ -10,22 +10,13 @@
 </template>
 
 <script>
-import Image from './types/Image';
-import Other from './types/Other';
+import FilePreview from './FilePreview'
 
 export default {
   props: ['file', 'selected'],
   data () {
     return {
       hovering: false,
-    }
-  },
-  computed: {
-    previewComponent() {
-      if (this.file.type === 'image') {
-        return Image;
-      }
-      return Other;
     }
   },
   methods: {
@@ -35,6 +26,9 @@ export default {
     hover() {
       this.hovering = !this.hovering;
     }
+  },
+  components: {
+    FilePreview
   }
 }
 </script>

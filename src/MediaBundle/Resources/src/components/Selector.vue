@@ -23,7 +23,6 @@
 <script>
 import bModal from 'bootstrap-vue/es/components/modal/modal'
 import bBtn from 'bootstrap-vue/es/components/button/button'
-import File from './File'
 import Listing from './Listing'
 
 export default {
@@ -31,7 +30,6 @@ export default {
   components: {
     bModal,
     bBtn,
-    File,
     Listing,
   },
   computed: {
