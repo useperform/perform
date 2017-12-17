@@ -37,8 +37,8 @@ class FileImporter
     /**
      * Import a file or directory into the media library.
      *
-     * @param string      $pathname The location of the file or directory
-     * @param User        $user     The optional owner of the files
+     * @param string $pathname The location of the file or directory
+     * @param User   $user     The optional owner of the files
      */
     public function import($pathname, User $owner = null)
     {
@@ -116,6 +116,24 @@ class FileImporter
         }
 
         return $files;
+    }
+
+    /**
+     * Import the URL of a file into the media library.
+     *
+     * @param string      $url  The URL of the file
+     * @param string|null $name Optionally, the name to give the file
+     * @param User        $user The optional owner of the file
+     */
+    public function importUrl($url, $name = null, User $owner = null)
+    {
+        $local = tempnam(sys_get_temp_dir(), 'perform-media');
+        copy($url, $local);
+        if (!$name) {
+            $name = basename(parse_url($url, PHP_URL_PATH));
+        }
+        $this->importFile($local, $name, $owner);
+        unlink($local);
     }
 
     /**
