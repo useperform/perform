@@ -6,19 +6,16 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * FileImportCommand.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  */
 class FileImportCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName( 'perform:media:import')
+        $this->setName('perform:media:import')
             ->setDescription('Add files to the media library.')
             ->addArgument(
                 'paths',
@@ -41,9 +38,10 @@ class FileImportCommand extends ContainerAwareCommand
         foreach ($input->getArgument('paths') as $path) {
             if (is_dir($path)) {
                 $importer->importDirectory($path, $extensions);
-            }
-            if (is_file($path)) {
+            } elseif (is_file($path)) {
                 $importer->importFile($path);
+            } else {
+                $importer->importUrl($path);
             }
 
             $output->writeln(sprintf('Imported <info>%s</info>.', $path));
