@@ -41,7 +41,7 @@ services:
         class: Perform\MailingListBundle\SubscriberManager
         arguments:
             - "@doctrine.orm.entity_manager"
-            - "@perform_mailing_list.connector.local"
+            - ["@perform_mailing_list.connector.local"]
 
     perform_mailing_list.listener.flush_subscribers:
         public: false

@@ -24,6 +24,11 @@ class Subscriber
     /**
      * @var string
      */
+    protected $connectorName;
+
+    /**
+     * @var string
+     */
     protected $list;
 
     /**
@@ -52,6 +57,26 @@ class Subscriber
     public function getEmail()
     {
         return $this->email;
+    }
+
+    /**
+     * @param string $connectorName
+     *
+     * @return Subscriber
+     */
+    public function setConnectorName($connectorName)
+    {
+        $this->connectorName = $connectorName;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getConnectorName()
+    {
+        return $this->connectorName;
     }
 
     /**
