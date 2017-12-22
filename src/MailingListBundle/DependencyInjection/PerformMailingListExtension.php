@@ -11,6 +11,8 @@ use Perform\MailingListBundle\Form\Type\EmailAndNameType;
 use Perform\MailingListBundle\Connector\LocalConnector;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
+use Perform\MailingListBundle\Connector\MailChimpConnector;
+use DrewM\MailChimp\MailChimp;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -34,23 +36,31 @@ class PerformMailingListExtension extends Extension
 
         $connectors = [];
         foreach ($config['connectors'] as $name => $connectorConfig) {
-            $connectors[$name] = $this->createConnector($container, $connectorConfig);
+            $connectors[$name] = $this->createConnector($container, $name, $connectorConfig);
         }
 
         $container->getDefinition('perform_mailing_list.manager')
             ->setArgument(1, $connectors);
     }
 
-    protected function createConnector(ContainerBuilder $container, array $config)
+    protected function createConnector(ContainerBuilder $container, $name, array $config)
     {
+        $def = $container->register(sprintf('perform_mailing_list.connector.%s', $name));
         switch ($config['connector']) {
         case 'local':
-            $def = new Definition(LocalConnector::class);
+            $def->setClass(LocalConnector::class);
             $def->setArgument(0, new Reference(sprintf('doctrine.orm.%s_entity_manager', $config['entity_manager'] ?: 'default')));
-
-            return $def;
+            break;
+        case 'mailchimp':
+            $mailchimp = new Definition(MailChimp::class, [$config['api_key']]);
+            $def->setClass(MailChimpConnector::class);
+            $def->setArguments([$mailchimp, new Reference('logger')]);
+            break;
         }
 
-        throw new \Exception(sprintf('Unable to configure unknown mailing list connector type "%s"', $config['connector']));
+        $def->addTag('monolog.logger', ['channel' => 'mailing_list']);
+        $def->setPublic(false);
+
+        return $def;
     }
 }
