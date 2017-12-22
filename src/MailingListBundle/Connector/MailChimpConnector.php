@@ -5,6 +5,8 @@ namespace Perform\MailingListBundle\Connector;
 use Perform\MailingListBundle\Entity\Subscriber;
 use DrewM\MailChimp\MailChimp;
 use Psr\Log\LoggerInterface;
+use Perform\MailingListBundle\Exception\ListNotFoundException;
+use Perform\MailingListBundle\Exception\ConnectorException;
 
 /**
  * Add subscribers to a MailChimp list.
@@ -24,12 +26,22 @@ class MailChimpConnector implements ConnectorInterface
 
     public function subscribe(Subscriber $subscriber)
     {
-        $url = "lists/{$subscriber->getList()}/members";
+        $url = sprintf('lists/%s/members/%s', $subscriber->getList(), $this->mailChimp->subscriberHash($subscriber->getEmail()));
         $params = [
             'email_address' => $subscriber->getEmail(),
             'status' => 'subscribed',
         ];
-        $this->mailChimp->post($url, $params);
-        $this->logger->debug('MailChimp: POST '.$url, $params);
+        $result = $this->mailChimp->put($url, $params);
+        $this->logger->debug('MailChimp: PUT '.$url, $params);
+
+        // MailChimp returns the subscriber resource on success, an error with a status code otherwise
+        switch ($result['status']) {
+        case 'subscribed':
+            return;
+        case 404:
+            throw new ListNotFoundException($subscriber->getList(), __CLASS__);
+        default:
+            throw new ConnectorException(isset($result['detail']) ? $result['detail'] : '', __CLASS__);
+        }
     }
 }
