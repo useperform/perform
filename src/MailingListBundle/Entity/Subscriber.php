@@ -49,11 +49,21 @@ class Subscriber
         return $this->id;
     }
 
+    /**
+     * @param string $email
+     *
+     * @return Subscriber
+     */
     public function setEmail($email)
     {
         $this->email = mb_convert_case($email, MB_CASE_LOWER, mb_detect_encoding($email));
+
+        return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getEmail()
     {
         return $this->email;
