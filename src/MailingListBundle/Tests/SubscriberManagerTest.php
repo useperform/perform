@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Perform\MailingListBundle\Connector\ConnectorInterface;
 use Perform\MailingListBundle\SubscriberManager;
 use Perform\MailingListBundle\Entity\Subscriber;
+use Psr\Log\LoggerInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -15,16 +16,18 @@ class SubscriberManagerTest extends \PHPUnit_Framework_TestCase
     protected $em;
     protected $connector;
     protected $manager;
+    protected $logger;
 
     public function setUp()
     {
         $this->em = $this->getMock(EntityManagerInterface::class);
         $this->connector1 = $this->getMock(ConnectorInterface::class);
         $this->connector2 = $this->getMock(ConnectorInterface::class);
+        $this->logger = $this->getMock(LoggerInterface::class);
         $this->manager = new SubscriberManager($this->em, [
             'one' => $this->connector1,
             'two' => $this->connector2,
-        ]);
+        ], $this->logger);
     }
 
     public function testNewSubscriberIsSaved()

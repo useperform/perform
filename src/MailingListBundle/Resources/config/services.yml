@@ -36,6 +36,10 @@ services:
         class: Perform\MailingListBundle\SubscriberManager
         arguments:
             - "@doctrine.orm.entity_manager"
+            - []
+            - "@logger"
+        tags:
+            - {name: monolog.logger, channel: mailing_list}
 
     perform_mailing_list.listener.flush_subscribers:
         public: false

@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Perform\MailingListBundle\Connector\ConnectorInterface;
 use Perform\MailingListBundle\Entity\Subscriber;
 use Perform\MailingListBundle\Exception\ConnectorNotFoundException;
+use Psr\Log\LoggerInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -14,16 +15,18 @@ class SubscriberManager
 {
     protected $em;
     protected $connector;
+    protected $logger;
     protected $signups = [];
 
     /**
-     * @var EntityManagerInterface $em
-     * @var ConnectorInterface[] $connectors
+     * @param EntityManagerInterface $em
+     * @param ConnectorInterface[]   $connectors
      */
-    public function __construct(EntityManagerInterface $em, array $connectors)
+    public function __construct(EntityManagerInterface $em, array $connectors, LoggerInterface $logger)
     {
         $this->em = $em;
         $this->connectors = $connectors;
+        $this->logger = $logger;
     }
 
     /**
@@ -81,6 +84,16 @@ class SubscriberManager
             foreach ($this->signups as $subscriber) {
                 $this->getConnector($subscriber->getConnectorName())->subscribe($subscriber);
                 $this->em->remove($subscriber);
+                $this->logger->info(
+                    sprintf('Created new subscriber "%s" with connector "%s".',
+                            $subscriber->getEmail(),
+                            $subscriber->getConnectorName()),
+                    [
+                        'email' => $subscriber->getEmail(),
+                        'list' => $subscriber->getList(),
+                        'connector' => $subscriber->getConnectorName(),
+                        'attributes' => $subscriber->getAttributes(),
+                    ]);
             }
             $this->em->flush();
             $this->signups = [];
