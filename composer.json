@@ -26,7 +26,6 @@
         "twig/twig": "^1.24",
         "fzaninotto/faker": "^1.5",
         "lyrixx/twitter-sdk": "^1.1",
-        "imagine/imagine": "^0.6.3",
         "pagerfanta/pagerfanta": "^1.0"
     },
     "require-dev": {
@@ -34,10 +33,12 @@
         "glynnforrest/temping": "^0.5.0",
         "phpdocumentor/reflection-docblock": "^3.1",
         "sonata-project/exporter": "^1.7",
+        "imagine/imagine": "^0.6.3",
         "drewm/mailchimp-api": "^2.4"
     },
     "suggest": {
         "sonata-project/exporter": "Export entities to a variety of formats",
+        "imagine/imagine": "Use the image media plugin",
         "drewm/mailchimp-api": "Use the MailChimp mailing list connector"
     },
     "replace": {
