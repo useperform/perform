@@ -34,13 +34,9 @@ class PerformMailingListExtension extends Extension
         $factory->addMethodCall('addType', ['email_only', EmailOnlyType::class]);
         $factory->addMethodCall('addType', ['email_name', EmailAndNameType::class]);
 
-        $connectors = [];
         foreach ($config['connectors'] as $name => $connectorConfig) {
-            $connectors[$name] = $this->createConnector($container, $name, $connectorConfig);
+             $this->createConnector($container, $name, $connectorConfig);
         }
-
-        $container->getDefinition('perform_mailing_list.manager')
-            ->setArgument(1, $connectors);
     }
 
     protected function createConnector(ContainerBuilder $container, $name, array $config)
@@ -58,9 +54,8 @@ class PerformMailingListExtension extends Extension
             break;
         }
 
+        $def->addTag('perform_mailing_list.connector', ['alias' => $name]);
         $def->addTag('monolog.logger', ['channel' => 'mailing_list']);
         $def->setPublic(false);
-
-        return $def;
     }
 }

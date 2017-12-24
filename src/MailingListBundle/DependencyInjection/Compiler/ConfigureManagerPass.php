@@ -22,6 +22,17 @@ class ConfigureManagerPass implements CompilerPassInterface
             $container->removeDefinition('perform_mailing_list.enricher.user');
         }
 
+        $connectors = [];
+        foreach ($container->findTaggedServiceIds('perform_mailing_list.connector') as $service => $tag) {
+            if (!isset($tag[0]['alias'])) {
+                throw new \InvalidArgumentException(sprintf('The service "%s" tagged with "perform_mailing_list.connector" must set the "alias" option in the tag.', $service));
+            }
+
+            $connectors[$tag[0]['alias']] = new Reference($service);
+        }
+        $container->getDefinition('perform_mailing_list.manager')
+            ->setArgument(1, $connectors);
+
         $enrichers = [];
         foreach ($container->findTaggedServiceIds('perform_mailing_list.enricher') as $service => $tag) {
             $enrichers[] = new Reference($service);
