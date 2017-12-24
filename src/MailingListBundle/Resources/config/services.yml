@@ -51,3 +51,11 @@ services:
         tags:
             - {name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate}
             - {name: monolog.logger, channel: mailing_list}
+
+    perform_mailing_list.enricher.user:
+        public: false
+        class: Perform\MailingListBundle\Enricher\UserEnricher
+        arguments:
+            - "@perform_user.repo.user"
+        tags:
+            - perform_mailing_list.enricher
