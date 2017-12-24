@@ -36,8 +36,8 @@ class LocalConnector implements ConnectorInterface
         if (!$localSub) {
             $localSub = new LocalSubscriber();
             $localSub->setEmail($subscriber->getEmail());
-            $localSub->setFirstName($subscriber->getOptionalAttribute(SubscriberFields::FIRST_NAME));
         }
+        $localSub->setFirstName($subscriber->getOptionalAttribute(SubscriberFields::FIRST_NAME));
         $localSub->addList($list);
 
         $this->em->persist($localSub);
