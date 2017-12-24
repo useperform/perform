@@ -129,9 +129,42 @@ class Subscriber
         return $this->attributes;
     }
 
+    /**
+     * @param string $name
+     * @param mixed $value
+     *
+     * @return Subscriber
+     */
     public function setAttribute($name, $value)
     {
         $this->attributes[$name] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function hasAttribute($name)
+    {
+        return isset($this->attributes[$name]);
+    }
+
+    /**
+     * @param string $name
+     * @param mixed $value
+     *
+     * @return Subscriber
+     */
+    public function setAttributeIfUnset($name, $value)
+    {
+        if (!isset($this->attributes[$name])) {
+            $this->attributes[$name] = $value;
+        }
+
+        return $this;
     }
 
     /**
