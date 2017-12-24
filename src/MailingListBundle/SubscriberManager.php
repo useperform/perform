@@ -112,4 +112,16 @@ class SubscriberManager
             throw $e;
         }
     }
+
+    public function processQueue($batchSize)
+    {
+        $repo = $this->em->getRepository('PerformMailingListBundle:Subscriber');
+        while (true) {
+            $this->signups = $repo->findBy([], [], $batchSize);
+            if (empty($this->signups)) {
+                return;
+            }
+            $this->flush();
+        }
+    }
 }

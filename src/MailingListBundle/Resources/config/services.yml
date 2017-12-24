@@ -59,3 +59,11 @@ services:
             - "@perform_user.repo.user"
         tags:
             - perform_mailing_list.enricher
+
+    perform_mailing_list.command.process:
+        public: false
+        class: Perform\MailingListBundle\Command\ProcessQueueCommand
+        arguments:
+            - "@perform_mailing_list.manager"
+        tags:
+            - {name: console.command, command: 'perform:mailing-list:process-queue'}
