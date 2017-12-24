@@ -37,6 +37,7 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - []
+            - []
             - "@logger"
         tags:
             - {name: monolog.logger, channel: mailing_list}

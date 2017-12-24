@@ -4,6 +4,7 @@ namespace Perform\MailingListBundle;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\MailingListBundle\Connector\ConnectorInterface;
+use Perform\MailingListBundle\Enricher\EnricherInterface;
 use Perform\MailingListBundle\Entity\Subscriber;
 use Perform\MailingListBundle\Exception\ConnectorNotFoundException;
 use Psr\Log\LoggerInterface;
@@ -14,18 +15,22 @@ use Psr\Log\LoggerInterface;
 class SubscriberManager
 {
     protected $em;
-    protected $connector;
+    protected $connectors = [];
+    protected $enrichers = [];
     protected $logger;
     protected $signups = [];
 
     /**
      * @param EntityManagerInterface $em
      * @param ConnectorInterface[]   $connectors
+     * @param EnricherInterface[]    $enrichers
+     * @param LoggerInterface        $logger
      */
-    public function __construct(EntityManagerInterface $em, array $connectors, LoggerInterface $logger)
+    public function __construct(EntityManagerInterface $em, array $connectors, array $enrichers, LoggerInterface $logger)
     {
         $this->em = $em;
         $this->connectors = $connectors;
+        $this->enrichers = $enrichers;
         $this->logger = $logger;
     }
 
@@ -81,6 +86,10 @@ class SubscriberManager
 
         $this->em->beginTransaction();
         try {
+            foreach ($this->enrichers as $enricher) {
+                $enricher->enrich($this->signups);
+            }
+
             foreach ($this->signups as $subscriber) {
                 $this->getConnector($subscriber->getConnectorName())->subscribe($subscriber);
                 $this->em->remove($subscriber);
