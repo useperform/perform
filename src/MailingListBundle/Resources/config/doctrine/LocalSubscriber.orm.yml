@@ -23,8 +23,8 @@ Perform\MailingListBundle\Entity\LocalSubscriber:
             gedmo:
                 timestampable:
                     on: update
-    manyToOne:
-        list:
+    manyToMany:
+        lists:
             targetEntity: LocalList
-            joinColumn:
-                nullable: false
+            joinTable:
+                name: perform_mailing_list_local_subscriber_lists
