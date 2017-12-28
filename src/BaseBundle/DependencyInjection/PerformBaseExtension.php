@@ -9,13 +9,10 @@ use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Finder\Finder;
 use Perform\BaseBundle\Doctrine\EntityResolver;
-use Perform\BaseBundle\Licensing\KeyChecker;
-use Symfony\Component\DependencyInjection\Definition;
-use Perform\BaseBundle\EventListener\ProjectKeyListener;
-use Perform\BaseBundle\Util\PackageUtil;
+use Perform\Licensing\Licensing;
 
 /**
- * PerformBaseExtension.
+ * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class PerformBaseExtension extends Extension
 {
@@ -24,6 +21,7 @@ class PerformBaseExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
+        Licensing::validateProject($container);
         // $this->ensureUTC();
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
@@ -31,7 +29,6 @@ class PerformBaseExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $this->validateProjectKey($container, $config);
         $container->setParameter('perform_base.panels.left', $config['panels']['left']);
         $container->setParameter('perform_base.panels.right', $config['panels']['right']);
         $container->setParameter('perform_base.menu_order', $config['menu']['order']);
@@ -165,61 +162,13 @@ class PerformBaseExtension extends Extension
     }
 
     /**
-     * Thank you for choosing to use Perform for your application!
-     *
-     * As a customer, you are welcome to browse through this source
-     * code to see how things work.
-     *
-     * It's fairly simple to subvert this licensing code, but please
-     * consider saving your time and purchasing a license instead.
-     *
-     * Remember that your support helps fund future development.
-     *
-     * Thank you.
-     */
-    protected function validateProjectKey(ContainerBuilder $builder, array $config)
-    {
-        if ($builder->getParameter('kernel.debug')) {
-            return;
-        }
-
-        $key = isset($config['project_key']) ? $config['project_key'] : '';
-
-        $checker = new KeyChecker('https://useperform.com/api/validate', $builder->getParameter('kernel.bundles'), $this->getPerformVersions($builder));
-        $response = $checker->validate($key);
-
-        $def = new Definition(ProjectKeyListener::class);
-        $def->setArguments([new Reference('logger'), $key, $response->isValid(), $response->getDomains()]);
-        $def->addTag('kernel.event_listener', [
-            'event' => 'kernel.request',
-            'method' => 'onKernelRequest',
-        ]);
-        $builder->setDefinition('perform_base.listener.project_key', $def);
-    }
-
-    protected function getPerformVersions(ContainerBuilder $builder)
-    {
-        try {
-            $projectDir = $builder->hasParameter('kernel.project_dir') ?
-                        $builder->getParameter('kernel.project_dir') :
-                        $builder->getParameter('kernel.root_dir').'/../';
-
-            return PackageUtil::getPerformVersions([
-                $projectDir.'/composer.lock',
-            ]);
-        } catch (\RuntimeException $e) {
-            return [];
-        }
-    }
-
-    /**
      * Add extra files to be included in the sass build.
      *
      * This method is available to other bundles so they don't have to
      * implement PrependExtensionInterface to add extra sass files.
      *
      * @param ContainerBuilder $container
-     * @param array $files
+     * @param array            $files
      */
     public static function addExtraSass(ContainerBuilder $container, array $files)
     {
