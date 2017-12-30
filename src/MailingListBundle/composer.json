@@ -8,9 +8,6 @@
             "email": "me@glynnforrest.com"
         }
     ],
-    "require": {
-        "perform/base-bundle": "self.version"
-    },
     "require-dev": {
         "phpunit/phpunit": "^4.8",
         "drewm/mailchimp-api": "^2.4"
