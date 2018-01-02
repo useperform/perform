@@ -88,12 +88,17 @@ services:
         tags:
             - {name: kernel.event_subscriber}
 
+    perform_base.context_renderer:
+        class: Perform\BaseBundle\Admin\ContextRenderer
+        arguments:
+            - '@perform_base.type_registry'
+            - '@twig'
+
     perform_base.twig.crud:
         class: Perform\BaseBundle\Twig\Extension\CrudExtension
         arguments:
+            - '@perform_base.context_renderer'
             - '@perform_base.routing.crud_url'
-            - '@perform_base.type_registry'
-            - '@perform_base.admin.registry'
             - '@request_stack'
         tags:
             - {name: twig.extension}
