@@ -77,6 +77,7 @@ class PerformBaseExtension extends Extension
         }
 
         $definition = $container->getDefinition('perform_base.email.mailer');
+        // test each composer.json requires licensing
         $definition->addMethodCall('setExcludedDomains', [$config['mailer']['excluded_domains']]);
     }
 

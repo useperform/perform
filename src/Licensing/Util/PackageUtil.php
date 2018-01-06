@@ -1,6 +1,6 @@
 <?php
 
-namespace Perform\BaseBundle\Util;
+namespace Perform\Licensing\Util;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>

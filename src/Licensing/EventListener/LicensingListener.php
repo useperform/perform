@@ -1,6 +1,6 @@
 <?php
 
-namespace Perform\BaseBundle\EventListener;
+namespace Perform\Licensing\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpFoundation\Response;
@@ -9,7 +9,7 @@ use Psr\Log\LoggerInterface;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ProjectKeyListener
+class LicensingListener
 {
     protected $logger;
     protected $key;
@@ -57,7 +57,7 @@ class ProjectKeyListener
     {
         $this->logger->emergency($msg);
         $event->setResponse(new Response(
-            file_get_contents(__DIR__.'/../Resources/views/Licensing/invalid.html'),
+            file_get_contents(__DIR__.'/../Resources/views/invalid.html'),
             Response::HTTP_INTERNAL_SERVER_ERROR));
     }
 }

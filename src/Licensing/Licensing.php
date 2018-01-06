@@ -4,9 +4,9 @@ namespace Perform\Licensing;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
-use Perform\BaseBundle\EventListener\ProjectKeyListener;
-use Perform\BaseBundle\Util\PackageUtil;
-use Perform\BaseBundle\Licensing\KeyChecker;
+use Perform\Licensing\EventListener\LicensingListener;
+use Perform\Licensing\Util\PackageUtil;
+use Perform\Licensing\KeyChecker;
 
 /**
  * Thank you for choosing to use Perform for your application!
@@ -27,7 +27,7 @@ class Licensing
 {
     const PARAM_PROJECT_KEY = 'perform.project_key';
     const PARAM_LOGGER_SERVICE = 'perform.licensing.logger';
-    const LISTENER_SERVICE = 'perform.listener.project_key';
+    const LISTENER_SERVICE = 'perform.licensing.listener';
 
     public static function validateProject(ContainerBuilder $container)
     {
@@ -43,7 +43,7 @@ class Licensing
 
         $logger = $container->hasParameter(self::PARAM_LOGGER_SERVICE) ?
                 $container->getParameter(self::PARAM_LOGGER_SERVICE) : 'logger';
-        $def = $container->register(self::LISTENER_SERVICE, ProjectKeyListener::class);
+        $def = $container->register(self::LISTENER_SERVICE, LicensingListener::class);
         $def->setArguments([new Reference($logger), $key, $response->isValid(), $response->getDomains()]);
         $def->addTag('kernel.event_listener', [
             'event' => 'kernel.request',

@@ -1,6 +1,6 @@
 <?php
 
-namespace Perform\BaseBundle\Exception;
+namespace Perform\Licensing\Exception;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
