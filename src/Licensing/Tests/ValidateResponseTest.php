@@ -1,9 +1,9 @@
 <?php
 
-namespace Perform\BaseBundle\Tests\Licensing;
+namespace Perform\Licensing\Tests;
 
-use Perform\BaseBundle\Licensing\ValidateResponse;
-use Perform\BaseBundle\Exception\LicensingException;
+use Perform\Licensing\ValidateResponse;
+use Perform\Licensing\Exception\LicensingException;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>

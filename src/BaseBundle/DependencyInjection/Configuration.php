@@ -29,8 +29,6 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-                ->scalarNode('project_key')
-                ->end()
                 ->arrayNode('mailer')
                     ->children()
                         ->scalarNode('from_address')

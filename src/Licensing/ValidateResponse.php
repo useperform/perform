@@ -1,8 +1,8 @@
 <?php
 
-namespace Perform\BaseBundle\Licensing;
+namespace Perform\Licensing;
 
-use Perform\BaseBundle\Exception\LicensingException;
+use Perform\Licensing\Exception\LicensingException;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>

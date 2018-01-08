@@ -1,15 +1,16 @@
 <?php
 
-namespace Perform\BaseBundle\EventListener;
+namespace Perform\Licensing\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Psr\Log\LoggerInterface;
+use Perform\Licensing\Licensing;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ProjectKeyListener
+class LicensingListener
 {
     protected $logger;
     protected $key;
@@ -28,8 +29,9 @@ class ProjectKeyListener
     {
         if (!$this->valid) {
             return $this->invalid($event, sprintf(
-                'INVALID PROJECT KEY: The project key "%s" is invalid. Please visit https://useperform.com to either create a new project, or to get the correct key for an existing project. Then set the "perform_base.project_key" configuration option when you have a valid key.',
-                $this->key
+                'INVALID PROJECT KEY: The project key "%s" is invalid. Please visit https://useperform.com to either create a new project, or to get the correct key for an existing project. Then set the "%s" parameter when you have a valid key.',
+                $this->key,
+                Licensing::PARAM_PROJECT_KEY
             ));
         }
 
@@ -57,7 +59,7 @@ class ProjectKeyListener
     {
         $this->logger->emergency($msg);
         $event->setResponse(new Response(
-            file_get_contents(__DIR__.'/../Resources/views/Licensing/invalid.html'),
+            file_get_contents(__DIR__.'/../Resources/views/invalid.html'),
             Response::HTTP_INTERNAL_SERVER_ERROR));
     }
 }

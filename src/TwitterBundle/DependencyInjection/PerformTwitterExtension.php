@@ -8,9 +8,10 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Config\Definition\Exception\UnsetKeyException;
+use Perform\Licensing\Licensing;
 
 /**
- * PerformTwitterExtension.
+ * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class PerformTwitterExtension extends Extension
 {
@@ -19,6 +20,7 @@ class PerformTwitterExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
+        Licensing::validateProject($container);
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
         foreach (['screen_name', 'cache_ttl'] as $key) {

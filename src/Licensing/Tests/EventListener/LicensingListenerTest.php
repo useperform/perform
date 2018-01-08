@@ -1,18 +1,18 @@
 <?php
 
-namespace Perform\BaseBundle\Tests\EventListener;
+namespace Perform\Licensing\Tests\EventListener;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Perform\BaseBundle\EventListener\ProjectKeyListener;
+use Perform\Licensing\EventListener\LicensingListener;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ProjectKeyListenerTest extends \PHPUnit_Framework_TestCase
+class LicensingListenerTest extends \PHPUnit_Framework_TestCase
 {
     protected $logger;
 
@@ -38,7 +38,7 @@ class ProjectKeyListenerTest extends \PHPUnit_Framework_TestCase
 
     private function errorFile()
     {
-        return file_get_contents(__DIR__.'/../../Resources/views/Licensing/invalid.html');
+        return file_get_contents(__DIR__.'/../../Resources/views/invalid.html');
     }
 
     private function assertInvalid(GetResponseEvent $event)
@@ -51,7 +51,7 @@ class ProjectKeyListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testNoOpOnValid()
     {
-        $listener = new ProjectKeyListener($this->logger, 'some-valid-key', true, ['example.com']);
+        $listener = new LicensingListener($this->logger, 'some-valid-key', true, ['example.com']);
         $event = $this->newEvent($this->newRequest('example.com'));
         $this->logger->expects($this->never())
             ->method('emergency');
@@ -74,7 +74,7 @@ class ProjectKeyListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCharactersAreTrimmedFromValidHost($host)
     {
-        $listener = new ProjectKeyListener($this->logger, 'some-valid-key', true, ['example.com']);
+        $listener = new LicensingListener($this->logger, 'some-valid-key', true, ['example.com']);
         $event = $this->newEvent($this->newRequest($host));
         $listener->onKernelRequest($event);
         $this->assertNull($event->getResponse());
@@ -82,7 +82,7 @@ class ProjectKeyListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidKey()
     {
-        $listener = new ProjectKeyListener($this->logger, 'some-invalid-key', false, ['example.com']);
+        $listener = new LicensingListener($this->logger, 'some-invalid-key', false, ['example.com']);
         $event = $this->newEvent($this->newRequest('example.com'));
         $this->logger->expects($this->once())
             ->method('emergency');
@@ -105,7 +105,7 @@ class ProjectKeyListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidHost(array $hosts)
     {
-        $listener = new ProjectKeyListener($this->logger, 'some-valid-key', true, $hosts);
+        $listener = new LicensingListener($this->logger, 'some-valid-key', true, $hosts);
         $event = $this->newEvent($this->newRequest('example.com'));
         $this->logger->expects($this->once())
             ->method('emergency');
@@ -128,7 +128,7 @@ class ProjectKeyListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSubdomainsAreInvalid($host)
     {
-        $listener = new ProjectKeyListener($this->logger, 'some-valid-key', true, ['example.com']);
+        $listener = new LicensingListener($this->logger, 'some-valid-key', true, ['example.com']);
         $event = $this->newEvent($this->newRequest($host));
         $this->logger->expects($this->once())
             ->method('emergency');
