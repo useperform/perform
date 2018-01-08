@@ -8,11 +8,13 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Psr\Log\LogLevel;
+use Perform\Licensing\Licensing;
 
 class PerformNotificationExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {
+        Licensing::validateProject($container);
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 

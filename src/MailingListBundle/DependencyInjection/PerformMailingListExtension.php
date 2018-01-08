@@ -13,6 +13,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Perform\MailingListBundle\Connector\MailChimpConnector;
 use DrewM\MailChimp\MailChimp;
+use Perform\Licensing\Licensing;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -24,6 +25,7 @@ class PerformMailingListExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
+        Licensing::validateProject($container);
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 
