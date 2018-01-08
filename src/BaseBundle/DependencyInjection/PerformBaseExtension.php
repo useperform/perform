@@ -124,7 +124,7 @@ class PerformBaseExtension extends Extension
     {
         // can't use BundleSearcher here because kernel service isn't available
         $bundles = $container->getParameter('kernel.bundles');
-        $entities = [];
+        $aliases = [];
 
         foreach ($bundles as $bundleClass) {
             $reflection = new \ReflectionClass($bundleClass);
