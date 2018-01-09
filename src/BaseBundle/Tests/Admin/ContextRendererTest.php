@@ -54,6 +54,7 @@ class ContextRendererTest extends \PHPUnit_Framework_TestCase
         $listOptions = ['some_option' => true];
         $config = [
             'type' => 'some_type',
+            'template' => 'some_template.html.twig',
             'listOptions' => $listOptions,
         ];
         list($type, $template) = $this->mockType('some_type', 'some_template.html.twig');
@@ -75,6 +76,7 @@ class ContextRendererTest extends \PHPUnit_Framework_TestCase
         $viewOptions = ['some_option' => false];
         $config = [
             'type' => 'some_type',
+            'template' => 'template.html.twig',
             'viewOptions' => $viewOptions,
         ];
         list($type, $template) = $this->mockType('some_type', 'template.html.twig');
@@ -96,6 +98,7 @@ class ContextRendererTest extends \PHPUnit_Framework_TestCase
         $createOptions = ['some_option' => true, 'label' => 'Title'];
         $config = [
             'type' => 'another_type',
+            'template' => 'template.html.twig',
             'createOptions' => $createOptions,
         ];
 
@@ -128,6 +131,7 @@ class ContextRendererTest extends \PHPUnit_Framework_TestCase
         $editOptions = ['some_option' => true, 'label' => 'Title'];
         $config = [
             'type' => 'another_type',
+            'template' => 'template.html.twig',
             'editOptions' => $editOptions,
         ];
 

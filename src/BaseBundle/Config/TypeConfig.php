@@ -56,6 +56,8 @@ class TypeConfig
                 'sort' => true,
             ])
             ->setAllowedTypes('contexts', 'array')
+            ->setDefault('template', 'PerformBaseBundle:types:simple.html.twig')
+            ->setAllowedTypes('template', 'string')
             ->setDefined(static::$optionKeys);
         foreach (static::$optionKeys as $key) {
             $this->resolver->setAllowedTypes($key, 'array');
