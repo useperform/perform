@@ -30,7 +30,7 @@
   <div class="collection" data-field="{{field}}" data-sort-field="{{type_vars.sortField}}">
     <div class="collection-rows" id="collection-{{field}}">
       {% for childForm in form[field] %}
-        <div class="collection-row" data-form-id="{{childForm.vars.id}}">
+        <div class="collection-row row" data-form-id="{{childForm.vars.id}}">
           <div class="col-sm-2 link-actions">
             {{block('linkActions')}}
           </div>
@@ -53,7 +53,7 @@
 
   <script type="text/template" id="template-collection-{{field}}">
      {% set childForm = form[field].vars.prototype %}
-     <div class="collection-row" data-form-id="{{childForm.vars.id}}">
+     <div class="collection-row row" data-form-id="{{childForm.vars.id}}">
         <div class="col-sm-2 link-actions">
         {{block('linkActions')}}
         </div>
