@@ -49,6 +49,7 @@ Configuration should be an array with the following properties:
 * ``sort`` - `boolean` or `Closure`. Whether to allow sorting by this field. Pass a closure for custom sorting by this field. Defaults to true.
 * ``options`` - `array`. Options to pass to the type. Different types require different options.
 * ``listOptions``, ``viewOptions``, ``createOptions``, ``editOptions`` - `array`. Options specific to a certain context.
+* ``template`` - `string`. Override the twig template used to render this type. Will only apply to this entity field.
 
 Restricting to certain contexts
 -------------------------------
