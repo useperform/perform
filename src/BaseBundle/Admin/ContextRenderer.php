@@ -30,7 +30,7 @@ class ContextRenderer
         $type = $this->typeRegistry->getType($config['type']);
         $value = $type->listContext($entity, $field, $config['listOptions']);
         $vars = is_array($value) ? $value : ['value' => $value];
-        $template = $type->getTemplate();
+        $template = $config['template'];
 
         return $this->twig->loadTemplate($template)->renderBlock('list', $vars);
     }
@@ -43,7 +43,7 @@ class ContextRenderer
         $type = $this->typeRegistry->getType($config['type']);
         $value = $type->viewContext($entity, $field, $config['viewOptions']);
         $vars = is_array($value) ? $value : ['value' => $value];
-        $template = $type->getTemplate();
+        $template = $config['template'];
 
         return $this->twig->loadTemplate($template)->renderBlock('view', $vars);
     }
@@ -54,7 +54,7 @@ class ContextRenderer
     public function createContext($entity, $field, array $config, FormView $form)
     {
         $type = $this->typeRegistry->getType($config['type']);
-        $template = $type->getTemplate();
+        $template = $config['template'];
         //type vars are anything returned from the createContext() method call
         $typeVars = isset($form->vars['type_vars'][$field]) ? $form->vars['type_vars'][$field] : [];
         $vars = [
@@ -75,7 +75,7 @@ class ContextRenderer
     public function editContext($entity, $field, array $config, FormView $form)
     {
         $type = $this->typeRegistry->getType($config['type']);
-        $template = $type->getTemplate();
+        $template = $config['template'];
         //type vars are anything returned from the editContext() method call
         $typeVars = isset($form->vars['type_vars'][$field]) ? $form->vars['type_vars'][$field] : [];
         $vars = [

@@ -84,6 +84,7 @@ class CollectionType extends AbstractType
     {
         return [
             'sort' => false,
+            'template' => 'PerformBaseBundle:types:collection.html.twig',
         ];
     }
 
@@ -141,10 +142,5 @@ class CollectionType extends AbstractType
         if (!$value instanceof Collection) {
             throw new InvalidTypeException(sprintf('The entity field "%s" passed to %s must be an instance of %s', $field, __CLASS__, Collection::class));
         }
-    }
-
-    public function getTemplate()
-    {
-        return 'PerformBaseBundle:types:collection.html.twig';
     }
 }

@@ -24,6 +24,7 @@ class CountryTypeTest extends TypeTestCase
         $obj->homeCountry = 'GB';
         $config = [
             'type' => 'country',
+            'template' => 'PerformBaseBundle:types:simple.html.twig',
             'listOptions' => [],
         ];
         $this->assertTrimmedString('United Kingdom', $this->renderer->listContext($obj, 'homeCountry', $config));

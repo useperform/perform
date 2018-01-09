@@ -76,6 +76,7 @@ class EntityType extends AbstractType
     public function getDefaultConfig()
     {
         return [
+            'template' => 'PerformBaseBundle:types:entity.html.twig',
             'sort' => false,
         ];
     }
@@ -107,11 +108,6 @@ class EntityType extends AbstractType
         }
 
         return $this->accessor->getValue($relatedEntity, $options['display_field']);
-    }
-
-    public function getTemplate()
-    {
-        return 'PerformBaseBundle:types:entity.html.twig';
     }
 
     protected function ensureEntity($field, $value)
