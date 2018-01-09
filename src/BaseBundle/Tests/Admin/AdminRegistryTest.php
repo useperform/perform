@@ -45,6 +45,12 @@ class AdminRegistryTest extends \PHPUnit_Framework_TestCase
         $this->registry->getAdmin('PerformBaseBundle:Foo');
     }
 
+    public function testGetAdminInvalidArgument()
+    {
+        $this->setExpectedException(AdminNotFoundException::class);
+        $this->registry->getAdmin(false);
+    }
+
     public function testGetAdminByClass()
     {
         $admin = $this->getMock(AdminInterface::class);
@@ -67,5 +73,13 @@ class AdminRegistryTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($admin));
 
         $this->assertSame($admin, $this->registry->getAdmin(new User()));
+    }
+
+    public function testHasAdmin()
+    {
+        $this->registry->addAdmin(\stdClass::class, 'admin.service');
+        $this->assertTrue($this->registry->hasAdmin(\stdClass::class));
+        $this->assertFalse($this->registry->hasAdmin('Perform\\UnknownClass'));
+        $this->assertFalse($this->registry->hasAdmin(null));
     }
 }
