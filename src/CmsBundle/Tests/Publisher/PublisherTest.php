@@ -10,8 +10,6 @@ use Perform\CmsBundle\Block\BlockTypeRegistry;
 use Perform\CmsBundle\Block\HtmlBlockType;
 
 /**
- * PublisherTest.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class PublisherTest extends \PHPUnit_Framework_TestCase
@@ -22,7 +20,10 @@ class PublisherTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->entityManager = $this->getMock('Doctrine\ORM\EntityManagerInterface');
-        $this->registry = new BlockTypeRegistry($this->getMock('\Twig_Environment'));
+        $twig = $this->getMockBuilder(\Twig_Environment::class)
+              ->disableOriginalConstructor()
+              ->getMock();
+        $this->registry = new BlockTypeRegistry($twig);
         $this->registry->addType('html', new HtmlBlockType());
         $this->publisher = new Publisher($this->entityManager, $this->registry);
     }

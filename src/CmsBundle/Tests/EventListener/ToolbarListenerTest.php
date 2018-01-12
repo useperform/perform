@@ -14,8 +14,6 @@ use Perform\CmsBundle\Twig\Extension\ContentExtension;
 use Perform\CmsBundle\Block\BlockTypeRegistry;
 
 /**
- * ToolbarListenerTest.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
@@ -27,7 +25,9 @@ class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->twig = $this->getMock('\Twig_Environment');
+        $this->twig = $this->getMockBuilder(\Twig_Environment::class)
+                    ->disableOriginalConstructor()
+                    ->getMock();
         $this->contentExtension = $this->getMockBuilder('Perform\CmsBundle\Twig\Extension\ContentExtension')
                                 ->disableOriginalConstructor()
                                 ->getMock();

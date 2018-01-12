@@ -23,7 +23,9 @@ class ContextRendererTest extends \PHPUnit_Framework_TestCase
         $this->registry = $this->getMockBuilder(TypeRegistry::class)
                         ->disableOriginalConstructor()
                         ->getMock();
-        $this->twig = $this->getMock(\Twig_Environment::class);
+        $this->twig = $this->getMockBuilder(\Twig_Environment::class)
+                    ->disableOriginalConstructor()
+                    ->getMock();
         $this->renderer = new ContextRenderer($this->registry, $this->twig);
     }
 

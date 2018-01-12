@@ -13,8 +13,6 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * FileCreatorTest
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class FileCreatorTest extends \PHPUnit_Framework_TestCase
@@ -29,7 +27,9 @@ class FileCreatorTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->fs = $this->getMock(Filesystem::class);
-        $this->twig = $this->getMock(\Twig_Environment::class);
+        $this->twig = $this->getMockBuilder(\Twig_Environment::class)
+                    ->disableOriginalConstructor()
+                    ->getMock();
         $this->creator = new FileCreator($this->fs, $this->twig);
         $this->output = new StreamOutput(fopen('php://memory', 'w', false));
         $this->helperSet = new HelperSet([new QuestionHelper()]);
