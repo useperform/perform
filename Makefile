@@ -3,10 +3,10 @@ build:
 
 .PHONY: test
 test:
-	./vendor/bin/phpunit -v
+	SYMFONY_DEPRECATIONS_HELPER="weak_vendors" ./vendor/bin/phpunit -v
 
 test_publish:
-	./vendor/bin/phpunit -v --log-junit test_results.xml
+	SYMFONY_DEPRECATIONS_HELPER="weak_vendors" ./vendor/bin/phpunit -v --log-junit test_results.xml
 
 docker_image:
 	./bin/build-docker-image.sh $(php-version)

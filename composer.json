@@ -38,7 +38,8 @@
         "imagine/imagine": "^0.6.3",
         "phpdocumentor/reflection-docblock": "^3.1",
         "phpunit/phpunit": "^4.8",
-        "sonata-project/exporter": "^1.7"
+        "sonata-project/exporter": "^1.7",
+        "symfony/phpunit-bridge": "^4.0"
     },
     "suggest": {
         "doctrine/data-fixtures": "Use database fixtures",
