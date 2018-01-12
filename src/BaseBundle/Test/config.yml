@@ -14,6 +14,7 @@ security:
     firewalls:
         main:
             anonymous: ~
+            logout_on_user_change: true
 
 framework:
     secret:          "%secret%"
@@ -28,7 +29,6 @@ framework:
         engines: ['twig']
     default_locale:  "%locale%"
     trusted_hosts:   ~
-    trusted_proxies: ~
     session:
         handler_id:  null
     fragments:       ~
