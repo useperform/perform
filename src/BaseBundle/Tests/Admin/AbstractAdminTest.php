@@ -25,10 +25,10 @@ class AbstractAdminTest extends \PHPUnit_Framework_TestCase
     public function templateProvider()
     {
         return [
-            ['list', 'PerformBaseBundle:Crud:list.html.twig'],
-            ['view', 'PerformBaseBundle:Crud:view.html.twig'],
-            ['create', 'PerformBaseBundle:Crud:create.html.twig'],
-            ['edit', 'PerformBaseBundle:Crud:edit.html.twig'],
+            ['list', '@PerformBase/crud/list.html.twig'],
+            ['view', '@PerformBase/crud/view.html.twig'],
+            ['create', '@PerformBase/crud/create.html.twig'],
+            ['edit', '@PerformBase/crud/edit.html.twig'],
         ];
     }
 
@@ -45,10 +45,10 @@ class AbstractAdminTest extends \PHPUnit_Framework_TestCase
     public function overrideTemplateProvider()
     {
         return [
-            ['list', 'SomeBundle:SomeEntity:list.html.twig'],
-            ['view', 'SomeBundle:SomeEntity:view.html.twig'],
-            ['create', 'SomeBundle:SomeEntity:create.html.twig'],
-            ['edit', 'SomeBundle:SomeEntity:edit.html.twig'],
+            ['list', '@Some/admin/some_entity/list.html.twig'],
+            ['view', '@Some/admin/some_entity/view.html.twig'],
+            ['create', '@Some/admin/some_entity/create.html.twig'],
+            ['edit', '@Some/admin/some_entity/edit.html.twig'],
         ];
     }
 

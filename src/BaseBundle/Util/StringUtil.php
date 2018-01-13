@@ -53,4 +53,23 @@ class StringUtil
 
         return trim(preg_replace('/([A-Z][a-z])/', ' \1', substr(end($pieces), 0, -5)));
     }
+
+    /**
+     * Suggest a twig template location for an entity.
+     *
+     * @param string $entityName e.g. SomeBundle:SomeEntity
+     * @param string $context    The admin context
+     */
+    public static function crudTemplateForEntity($entityName, $context)
+    {
+        $pieces = explode(':', $entityName);
+        if (count($pieces) !== 2) {
+            throw new \InvalidArgumentException(sprintf('An entity name must be of the format <Bundle>:<EntityName>, "%s" given.', $entityName));
+        }
+
+        $bundle = preg_replace('/Bundle$/', '', $pieces[0]);
+        $entity = strtolower(preg_replace('/([a-z\d])([A-Z])/', '\\1_\\2', $pieces[1]));
+
+        return sprintf('@%s/admin/%s/%s.html.twig', $bundle, $entity, $context);
+    }
 }
