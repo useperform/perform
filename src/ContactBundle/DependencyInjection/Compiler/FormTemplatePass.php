@@ -14,7 +14,7 @@ class FormTemplatePass implements CompilerPassInterface
     {
         $templates = $container->getParameter('twig.form.resources');
 
-        $honeypotTemplate = 'PerformContactBundle:Form:honeypot.html.twig';
+        $honeypotTemplate = '@PerformContact/form/honeypot.html.twig';
 
         if (!in_array($honeypotTemplate, $templates)) {
             array_unshift($templates, $honeypotTemplate);

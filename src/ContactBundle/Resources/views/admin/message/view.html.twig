@@ -1,4 +1,4 @@
-{% extends 'PerformBaseBundle:Crud:view.html.twig' %}
+{% extends '@PerformBase/crud/view.html.twig' %}
 
 {% block workspace %}
   <h3><i class="fa fa-angle-right"></i> Contact Form Message</h3>
@@ -31,7 +31,7 @@
         <div class="alert alert-danger">
           <strong><i class="fa fa-warning"></i> This message was identified as spam.</strong>
           {% for report in entity.spamReports %}
-            {% include 'PerformContactBundle:SpamReport:'~report.type~'.html.twig' with {report: report}%}
+            {% include '@PerformContact/spam_report/_'~report.type~'.html.twig' with {report: report}%}
           {% endfor %}
         </div>
       {% endif %}

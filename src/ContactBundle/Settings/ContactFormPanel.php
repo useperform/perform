@@ -33,7 +33,7 @@ class ContactFormPanel implements SettingsPanelInterface
 
     public function getTemplate()
     {
-        return 'PerformContactBundle:Settings:contactForm.html.twig';
+        return '@PerformContact/settings/contact_form.html.twig';
     }
 
     public function getTemplateVars()

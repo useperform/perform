@@ -31,7 +31,7 @@ class MessagesPanel implements PanelInterface
         $messages = $this->entityManager->getRepository($this->resolver->resolve('PerformContactBundle:Message'))
                   ->findBy(['status' => Message::STATUS_NEW], ['createdAt' => 'DESC'], 10);
 
-        return $this->templating->render('PerformContactBundle:panels:messages.html.twig', [
+        return $this->templating->render('@PerformContact/panel/messages.html.twig', [
             'messages' => $messages,
         ]);
     }

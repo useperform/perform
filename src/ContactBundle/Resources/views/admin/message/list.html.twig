@@ -1,4 +1,4 @@
-{% extends 'PerformBaseBundle:Crud:list.html.twig' %}
+{% extends '@PerformBase/crud/list.html.twig' %}
 
 {% block workspace %}
   {% set currentFilter = null %}
@@ -19,7 +19,7 @@
     <div class="col-lg-2">
       <div class="card">
         <div class="card-body">
-          {% include 'PerformBaseBundle:Crud:named_filters.html.twig' %}
+          {% include '@PerformBase/crud/named_filters.html.twig' %}
         </div>
       </div>
     </div>
@@ -27,15 +27,15 @@
     <div class="col-lg-10">
       <div class="card">
         <div class="card-body">
-          {% include 'PerformBaseBundle:Crud:table.html.twig' %}
+          {% include '@PerformBase/crud/table.html.twig' %}
         </div>
       </div>
     </div>
   </div>
   {% block batchActions %}
-    {% include 'PerformBaseBundle:Crud:batchActions.html.twig' %}
+    {% include '@PerformBase/crud/batch_actions.html.twig' %}
   {% endblock %}
   {% block paginator %}
-    {% include 'PerformBaseBundle:Crud:paginator.html.twig' %}
+    {% include '@PerformBase/crud/paginator.html.twig' %}
   {% endblock %}
 {% endblock %}
