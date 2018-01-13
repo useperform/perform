@@ -123,7 +123,7 @@ class FileCreatorTest extends \PHPUnit_Framework_TestCase
     {
         $this->twig->expects($this->once())
             ->method('render')
-            ->with('PerformDevBundle:skeletons:template.twig', ['foo' => 'bar'])
+            ->with('@PerformDev/skeletons/template.twig', ['foo' => 'bar'])
             ->will($this->returnValue('rendered'));
 
         $this->assertSame('rendered', $this->creator->render('template.twig', ['foo' => 'bar']));
