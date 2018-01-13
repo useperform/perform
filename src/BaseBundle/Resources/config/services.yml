@@ -153,7 +153,7 @@ services:
         class: Knp\Menu\Renderer\TwigRenderer
         arguments:
             - '@twig'
-            - 'PerformBaseBundle::menu.html.twig'
+            - '@@PerformBase/menu.html.twig'
             - '@knp_menu.matcher'
             - { currentClass: 'active' }
         tags:

@@ -1,4 +1,4 @@
-{% extends 'PerformBaseBundle::base.html.twig' %}
+{% extends '@PerformBase/base.html.twig' %}
 
 {% set title = 'crud.title.edit'|trans({'%entity_label%': labelConfig.getEntityLabel(entity)}, 'PerformBaseBundle') %}
 {% set list_title = 'crud.title.list'|trans({'%entity_name%': labelConfig.getEntityNamePlural()}, 'PerformBaseBundle') %}

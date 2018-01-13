@@ -1,4 +1,4 @@
-{% extends 'PerformBaseBundle::base.html.twig' %}
+{% extends '@PerformBase/base.html.twig' %}
 
 {% set title = 'crud.title.view'|trans({'%entity_label%': labelConfig.getEntityLabel(entity)}, 'PerformBaseBundle') %}
 {% set list_title = 'crud.title.list'|trans({'%entity_name%': labelConfig.getEntityNamePlural()}, 'PerformBaseBundle') %}
@@ -43,5 +43,5 @@
 {% endblock %}
 
 {% block extras %}
-  {% include 'PerformBaseBundle:Crud:modal/actionConfirm.html.twig' %}
+  {% include '@PerformBase/crud/modal/action_confirm.html.twig' %}
 {% endblock %}
