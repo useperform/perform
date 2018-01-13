@@ -46,5 +46,5 @@ services:
         tags:
             -
                 name: data_collector
-                template: 'PerformNotificationBundle:data_collector:notifications.html.twig'
+                template: '@PerformNotification/data_collector/notifications.html.twig'
                 id: 'perform_notification'
