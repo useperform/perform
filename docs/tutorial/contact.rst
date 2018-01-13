@@ -380,7 +380,7 @@ Override the ``getTemplate`` method of ``ContactMessageAdmin`` to the following:
     public function getTemplate(EngineInterface $templating, $entityName, $context)
     {
         if ($context === TypeConfig::CONTEXT_VIEW) {
-            return 'AppBundle:Admin/ContactMessage:view.html.twig';
+            return '@App/admin/contact_message/view.html.twig';
         }
 
         return parent::getTemplate($templating, $entityName, $context);
@@ -392,11 +392,11 @@ Here we override the template, but only for the ``view`` context. All other cont
 
    See the :doc:`admins documentation <../core/admins>` for more information on overriding templates.
 
-Create the file ``src/AppBundle/Resources/views/Admin/ContactMessage/view.html.twig`` for this new view and insert the following:
+Create the file ``src/AppBundle/Resources/views/admin/contact_message/view.html.twig`` for this new view and insert the following:
 
 .. code-block:: html
 
-    {% extends 'PerformContactBundle:Message:view.html.twig' %}
+    {% extends '@PerformContact/admin/message/view.html.twig' %}
 
     {% block extras %}
       {% if entity.favouriteBike is not null %}
