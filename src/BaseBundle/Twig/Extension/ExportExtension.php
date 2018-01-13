@@ -50,7 +50,7 @@ class ExportExtension extends \Twig_Extension
             return '';
         }
 
-        return $twig->render('PerformBaseBundle:Crud:export_dropdown.html.twig', [
+        return $twig->render('@PerformBase/crud/export_dropdown.html.twig', [
             'formats' => $formats,
             'entityClass' => $entity,
             'label' => $label,

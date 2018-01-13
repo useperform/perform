@@ -23,7 +23,7 @@ class AccountPanel implements SettingsPanelInterface
 
     public function getTemplate()
     {
-        return 'PerformBaseBundle:Settings:account.html.twig';
+        return '@PerformBase/settings/account.html.twig';
     }
 
     public function getTemplateVars()
