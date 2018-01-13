@@ -5,6 +5,7 @@ namespace Perform\NotificationBundle\Publisher;
 use Perform\BaseBundle\Email\Mailer;
 use Perform\NotificationBundle\Notification;
 use Symfony\Component\Templating\EngineInterface;
+use Perform\NotificationBundle\Renderer\RendererInterface;
 
 /**
  * EmailPublisher sends the notifications to the recipients via email.
@@ -12,21 +13,17 @@ use Symfony\Component\Templating\EngineInterface;
 class EmailPublisher implements PublisherInterface
 {
     protected $mailer;
-    protected $templating;
+    protected $renderer;
 
-    public function __construct(Mailer $mailer, EngineInterface $templating)
+    public function __construct(Mailer $mailer, RendererInterface $renderer)
     {
         $this->mailer = $mailer;
-        $this->templating = $templating;
+        $this->renderer = $renderer;
     }
 
     public function send(Notification $notification)
     {
-        $type = $notification->getType();
-        $pieces = explode(':', $type, 2);
-        $template = count($pieces) === 2 ?
-                  $pieces[0].':notifications:'.$pieces[1].'/email.html.twig' :
-                  "PerformNotificationBundle:$type:email.html.twig";
+        $template = $this->renderer->getTemplateName('email', $notification);
         $context = $notification->getContext();
 
         if (!isset($context['subject'])) {

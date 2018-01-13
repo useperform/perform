@@ -2,11 +2,16 @@ services:
     perform_notification.notifier:
         class: Perform\NotificationBundle\Notifier\Notifier
 
+    perform_notification.renderer:
+        class: Perform\NotificationBundle\Renderer\TwigRenderer
+        arguments:
+            - "@twig"
+
     perform_notification.publisher.local:
         class: Perform\NotificationBundle\Publisher\LocalPublisher
         arguments:
             - "@doctrine.orm.entity_manager"
-            - "@templating"
+            - "@perform_notification.renderer"
         tags:
             - {name: perform_notification.publisher}
 
@@ -14,7 +19,7 @@ services:
         class: Perform\NotificationBundle\Publisher\EmailPublisher
         arguments:
             - "@perform_base.email.mailer"
-            - "@templating"
+            - "@perform_notification.renderer"
         tags:
             - {name: perform_notification.publisher}
 
