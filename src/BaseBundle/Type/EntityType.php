@@ -76,7 +76,7 @@ class EntityType extends AbstractType
     public function getDefaultConfig()
     {
         return [
-            'template' => 'PerformBaseBundle:types:entity.html.twig',
+            'template' => '@PerformBase/type/entity.html.twig',
             'sort' => false,
         ];
     }

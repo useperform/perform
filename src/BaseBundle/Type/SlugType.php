@@ -60,7 +60,7 @@ class SlugType extends AbstractType
     public function getDefaultConfig()
     {
         return [
-            'template' => 'PerformBaseBundle:types:slug.html.twig',
+            'template' => '@PerformBase/type/slug.html.twig',
         ];
     }
 }

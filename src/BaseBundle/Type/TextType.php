@@ -31,7 +31,7 @@ class TextType extends AbstractType
     public function getDefaultConfig()
     {
         return [
-            'template' => 'PerformBaseBundle:types:text.html.twig',
+            'template' => '@PerformBase/type/text.html.twig',
             'listOptions' => [
                 'preview' => true,
             ],

@@ -56,7 +56,7 @@ class TypeConfig
                 'sort' => true,
             ])
             ->setAllowedTypes('contexts', 'array')
-            ->setDefault('template', 'PerformBaseBundle:types:simple.html.twig')
+            ->setDefault('template', '@PerformBase/type/simple.html.twig')
             ->setAllowedTypes('template', 'string')
             ->setDefined(static::$optionKeys);
         foreach (static::$optionKeys as $key) {

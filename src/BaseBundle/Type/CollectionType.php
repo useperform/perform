@@ -84,7 +84,7 @@ class CollectionType extends AbstractType
     {
         return [
             'sort' => false,
-            'template' => 'PerformBaseBundle:types:collection.html.twig',
+            'template' => '@PerformBase/type/collection.html.twig',
         ];
     }
 
