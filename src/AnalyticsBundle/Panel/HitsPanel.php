@@ -21,6 +21,6 @@ class HitsPanel implements PanelInterface
 
     public function render()
     {
-        return $this->templating->render('PerformAnalyticsBundle:panels:hits.html.twig', []);
+        return $this->templating->render('@PerformAnalytics/panel/hits.html.twig', []);
     }
 }
