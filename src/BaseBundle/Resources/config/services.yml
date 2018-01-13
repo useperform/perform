@@ -56,7 +56,7 @@ services:
         tags:
             -
                 name: data_collector
-                template: 'PerformBaseBundle:data_collector:admins.html.twig'
+                template: '@PerformBase/data_collector/admins.html.twig'
                 id: 'perform_base.admins'
 
     perform_base.asset_container:
