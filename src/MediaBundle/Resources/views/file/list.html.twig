@@ -1,4 +1,4 @@
-{% extends 'PerformBaseBundle::base.html.twig' %}
+{% extends '@PerformBase/base.html.twig' %}
 
 {% block workspace %}
   <h3><i class="fa fa-angle-right"></i> Media</h3>
@@ -40,5 +40,5 @@
 {% endblock %}
 
 {% block extras %}
-  {% include 'PerformMediaBundle:File:delete_modal.html.twig' %}
+  {% include '@PerformMedia/file/_delete_modal.html.twig' %}
 {% endblock %}

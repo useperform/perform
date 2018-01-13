@@ -77,7 +77,7 @@ class MediaType extends AbstractType
     public function getDefaultConfig()
     {
         return [
-            'template' => 'PerformMediaBundle:types:media.html.twig',
+            'template' => '@PerformMedia/type/media.html.twig',
             'sort' => false,
         ];
     }
