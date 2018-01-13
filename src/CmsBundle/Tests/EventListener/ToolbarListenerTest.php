@@ -86,8 +86,8 @@ class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
         $this->twig->expects($this->exactly(2))
             ->method('render')
             ->withConsecutive(
-                $this->equalTo('PerformCmsBundle::stylesheets.html.twig'),
-                $this->equalTo('PerformCmsBundle::toolbar.html.twig'))
+                $this->equalTo('@PerformCms/stylesheets.html.twig'),
+                $this->equalTo('@PerformCms/toolbar.html.twig'))
             ->willReturnOnConsecutiveCalls('<link/>', '<div>TOOLBAR</div>');
 
         $event = $this->createEvent('<head></head><body><div>Hello</div></body>');

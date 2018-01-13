@@ -20,6 +20,6 @@ class HtmlBlockType implements BlockTypeInterface
 
     public function getEditorTemplate()
     {
-        return 'PerformCmsBundle:blocks:html.html.twig';
+        return '@PerformCms/blocks/html.html.twig';
     }
 }

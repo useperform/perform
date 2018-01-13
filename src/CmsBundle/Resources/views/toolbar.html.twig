@@ -1,4 +1,4 @@
-{% include 'PerformCmsBundle::scripts.html.twig' %}
+{% include '@PerformCms/scripts.html.twig' %}
 
 <div class="perform-cms">
   <nav class="nav navbar-default navbar-top">
@@ -67,11 +67,11 @@
     </div>
   </div>
 
-  {% include 'PerformBaseBundle::flash_messages.html.twig' %}
+  {% include '@PerformBase/flash_messages.html.twig' %}
   <div class="admin-flash-messages">
   </div>
 
-  {% include 'PerformCmsBundle::modal.html.twig' %}
+  {% include '@PerformCms/modal.html.twig' %}
 </div>
 
 <script type="text/template" id="template-add-block">
