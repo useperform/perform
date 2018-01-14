@@ -4,7 +4,6 @@ namespace Perform\NotificationBundle\Publisher;
 
 use Perform\BaseBundle\Email\Mailer;
 use Perform\NotificationBundle\Notification;
-use Symfony\Component\Templating\EngineInterface;
 use Perform\NotificationBundle\Renderer\RendererInterface;
 
 /**
