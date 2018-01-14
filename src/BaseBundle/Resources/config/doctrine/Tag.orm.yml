@@ -1,6 +1,7 @@
 Perform\BaseBundle\Entity\Tag:
     type: entity
     table: perform_base_tag
+    repositoryClass: Perform\BaseBundle\Repository\TagRepository
     id:
         id:
             type: guid

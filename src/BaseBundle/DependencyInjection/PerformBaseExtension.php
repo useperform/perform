@@ -59,6 +59,7 @@ class PerformBaseExtension extends Extension
         $definition->addMethodCall('addType', ['choice', 'Perform\BaseBundle\Type\ChoiceType']);
         $definition->addMethodCall('addType', ['country', 'Perform\BaseBundle\Type\CountryType']);
         $definition->addMethodCall('addTypeService', ['entity', 'perform_base.type.entity']);
+        $definition->addMethodCall('addTypeService', ['tag', 'perform_base.type.tag']);
         $definition->addMethodCall('addTypeService', ['collection', 'perform_base.type.collection']);
         $definition->addMethodCall('addTypeService', ['slug', 'perform_base.type.slug']);
     }

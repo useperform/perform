@@ -221,6 +221,11 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
 
+    perform_base.type.tag:
+        class: Perform\BaseBundle\Type\TagType
+        arguments:
+            - "@doctrine.orm.entity_manager"
+
     perform_base.type.collection:
         class: Perform\BaseBundle\Type\CollectionType
         arguments:
