@@ -371,19 +371,19 @@ Override the ``getTemplate`` method of ``ContactMessageAdmin`` to the following:
 
       use Perform\BaseBundle\Config\ActionConfig;
       use Perform\ContactBundle\Admin\MessageAdmin;
-    + use Symfony\Component\Templating\EngineInterface;
+    + use Twig\Environment;
 
 .. code-block:: php
 
     <?php
 
-    public function getTemplate(EngineInterface $templating, $entityName, $context)
+    public function getTemplate(Environment $twig, $entityName, $context)
     {
         if ($context === TypeConfig::CONTEXT_VIEW) {
             return '@App/admin/contact_message/view.html.twig';
         }
 
-        return parent::getTemplate($templating, $entityName, $context);
+        return parent::getTemplate($twig, $entityName, $context);
     }
 
 Here we override the template, but only for the ``view`` context. All other contexts fall back to the default behaviour of the parent admin class.
