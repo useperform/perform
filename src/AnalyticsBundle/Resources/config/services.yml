@@ -2,7 +2,7 @@ services:
     perform_analytics.panel.hits:
         class: Perform\AnalyticsBundle\Panel\HitsPanel
         arguments:
-            - "@templating"
+            - "@twig"
 
     perform_analytics.settings.analytics:
         class: Perform\AnalyticsBundle\Settings\AnalyticsPanel

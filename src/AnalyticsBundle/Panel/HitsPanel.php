@@ -3,24 +3,22 @@
 namespace Perform\AnalyticsBundle\Panel;
 
 use Perform\BaseBundle\Panel\PanelInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Twig\Environment;
 
 /**
- * HitsPanel
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class HitsPanel implements PanelInterface
 {
-    protected $templating;
+    protected $twig;
 
-    public function __construct(EngineInterface $templating)
+    public function __construct(Environment $twig)
     {
-        $this->templating = $templating;
+        $this->twig = $twig;
     }
 
     public function render()
     {
-        return $this->templating->render('@PerformAnalytics/panel/hits.html.twig', []);
+        return $this->twig->render('@PerformAnalytics/panel/hits.html.twig', []);
     }
 }
