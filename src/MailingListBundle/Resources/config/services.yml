@@ -30,7 +30,7 @@ services:
         class: Perform\MailingListBundle\Panel\SubscribersPanel
         arguments:
             - "@doctrine.orm.entity_manager"
-            - "@templating"
+            - "@twig"
 
     perform_mailing_list.manager:
         class: Perform\MailingListBundle\SubscriberManager
