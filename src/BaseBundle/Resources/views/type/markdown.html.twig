@@ -1,9 +1,28 @@
 {% extends '@PerformBase/type/simple.html.twig' %}
 
 {% block list %}
-  {{html|raw}}
+  <div class="p-markdown">
+    {{html|raw}}
+  </div>
 {% endblock %}
 
 {% block create %}
-  {{form_row(form[field])}}
+  <div class="form-group row {% if not form[field].vars.valid %} is-invalid{% endif %}">
+    {{- form_label(form[field]) -}}
+    <div class="col-sm-10">
+      {% if type_vars.live_preview %}
+        <div class="row">
+          <div class="col-sm-6">
+            {{- form_widget(form[field]) -}}
+            {{- form_errors(form[field]) -}}
+          </div>
+          <div class="col-sm-6 p-markdown p-form-markdown-preview">
+          </div>
+        </div>
+      {% else %}
+        {{- form_widget(form[field]) -}}
+        {{- form_errors(form[field]) -}}
+      {% endif %}
+    </div>
+  </div>
 {% endblock %}

@@ -2,6 +2,7 @@ import TaskList from './components/TaskList'
 import TaskCounter from './components/TaskCounter'
 import DatePickerInput from './components/DatePickerInput'
 import Vue from 'vue'
+import md from './util/markdown';
 
 const store = {
   tasks: [],
@@ -78,6 +79,13 @@ const datepicker = function(el, opts) {
   });
 };
 
+const markdown = function(input, preview) {
+  input.on('keyup', function(e) {
+    preview.html(md.render(e.currentTarget.value));
+  });
+  preview.html(md.render(input.val()));
+};
+
 if (!window.Perform) {
   window.Perform = {};
 }
@@ -96,5 +104,6 @@ window.Perform.base = Object.assign({}, window.Perform.base, {
   },
   form: {
     datepicker,
+    markdown
   }
 });

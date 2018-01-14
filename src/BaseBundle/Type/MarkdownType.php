@@ -5,6 +5,8 @@ namespace Perform\BaseBundle\Type;
 use League\CommonMark\CommonMarkConverter;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Perform\BaseBundle\Asset\AssetContainer;
 
 /**
  * Use the ``markdown`` type for entity properties containing markdown
@@ -15,11 +17,13 @@ use Symfony\Component\Form\FormBuilderInterface;
 class MarkdownType extends AbstractType
 {
     protected $markdown;
+    protected $assets;
 
-    public function __construct(CommonMarkConverter $markdown)
+    public function __construct(CommonMarkConverter $markdown, AssetContainer $assets)
     {
         parent::__construct();
         $this->markdown = $markdown;
+        $this->assets = $assets;
     }
 
     public function listContext($entity, $field, array $options = [])
@@ -34,7 +38,21 @@ class MarkdownType extends AbstractType
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
+        $this->assets->addJs('/bundles/performbase/js/types/markdown.js');
         $builder->add($field, FormType::class);
+
+        return $options;
+    }
+
+    /**
+     * @doc live_preview If true, show a live HTML preview next to the form field.
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'live_preview' => true,
+        ]);
+        $resolver->setAllowedTypes('live_preview', 'boolean');
     }
 
     public function getDefaultConfig()
