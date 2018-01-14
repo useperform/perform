@@ -19,7 +19,7 @@
     <div class="col-lg-2">
       <div class="card">
         <div class="card-body">
-          {% include '@PerformBase/crud/named_filters.html.twig' %}
+          {% include '@PerformBase/crud/_named_filters.html.twig' %}
         </div>
       </div>
     </div>
@@ -27,15 +27,15 @@
     <div class="col-lg-10">
       <div class="card">
         <div class="card-body">
-          {% include '@PerformBase/crud/table.html.twig' %}
+          {% include '@PerformBase/crud/_table.html.twig' %}
         </div>
       </div>
     </div>
   </div>
   {% block batchActions %}
-    {% include '@PerformBase/crud/batch_actions.html.twig' %}
+    {% include '@PerformBase/action/_batch.html.twig' %}
   {% endblock %}
   {% block paginator %}
-    {% include '@PerformBase/crud/paginator.html.twig' %}
+    {% include '@PerformBase/crud/_paginator.html.twig' %}
   {% endblock %}
 {% endblock %}
