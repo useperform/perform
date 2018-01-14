@@ -1,0 +1,9 @@
+{% extends '@PerformBase/type/simple.html.twig' %}
+
+{% block list %}
+  {{html|raw}}
+{% endblock %}
+
+{% block create %}
+  {{form_row(form[field])}}
+{% endblock %}

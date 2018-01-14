@@ -35,6 +35,7 @@
         "fzaninotto/faker": "^1.5",
         "glynnforrest/temping": "^0.5.0",
         "imagine/imagine": "^0.6.3",
+        "league/commonmark": "^0.17.0",
         "phpdocumentor/reflection-docblock": "^3.1",
         "phpunit/phpunit": "^4.8",
         "sonata-project/exporter": "^1.7",
@@ -45,6 +46,7 @@
         "drewm/mailchimp-api": "Use the MailChimp mailing list connector",
         "fzaninotto/faker": "Use database fixtures",
         "imagine/imagine": "Use the image media plugin",
+        "league/commonmark": "Use the markdown type in the base bundle",
         "sonata-project/exporter": "Export entities to a variety of formats"
     },
     "replace": {

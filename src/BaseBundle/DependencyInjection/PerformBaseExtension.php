@@ -62,6 +62,7 @@ class PerformBaseExtension extends Extension
         $definition->addMethodCall('addTypeService', ['tag', 'perform_base.type.tag']);
         $definition->addMethodCall('addTypeService', ['collection', 'perform_base.type.collection']);
         $definition->addMethodCall('addTypeService', ['slug', 'perform_base.type.slug']);
+        $definition->addMethodCall('addTypeService', ['markdown', 'perform_base.type.markdown']);
     }
 
     protected function configureMailer(array $config, ContainerBuilder $container)

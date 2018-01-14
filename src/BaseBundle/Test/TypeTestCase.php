@@ -12,8 +12,10 @@ use Twig\Environment;
  **/
 abstract class TypeTestCase extends \PHPUnit_Framework_TestCase
 {
+    protected $kernel;
     protected $typeRegistry;
     protected $renderer;
+    protected $container;
 
     public function setUp()
     {
@@ -22,10 +24,19 @@ abstract class TypeTestCase extends \PHPUnit_Framework_TestCase
         $this->kernel->boot();
         $twig = $this->kernel->getContainer()->get('twig');
 
-        // but create a fresh type registry for testing
-        $this->typeRegistry = new TypeRegistry($this->getMock(ContainerInterface::class));
+        // but create a fresh type registry and container for testing
+        $this->container = $this->getMock(ContainerInterface::class);
+        $this->typeRegistry = new TypeRegistry($this->container);
         $this->renderer = new ContextRenderer($this->typeRegistry, $twig);
         $this->configure();
+    }
+
+    protected function mockService($name, $object)
+    {
+        $this->container->expects($this->any())
+            ->method('get')
+            ->with($name)
+            ->will($this->returnValue($object));
     }
 
     public function tearDown()

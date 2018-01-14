@@ -29,12 +29,14 @@
     "require-dev": {
         "doctrine/data-fixtures": "^1.2",
         "fzaninotto/faker": "^1.5",
+        "league/commonmark": "^0.17.0",
         "phpunit/phpunit": "^4.8",
         "sonata-project/exporter": "^1.7"
     },
     "suggest": {
         "doctrine/data-fixtures": "Use database fixtures",
         "fzaninotto/faker": "Use database fixtures",
+        "league/commonmark": "Use the markdown type",
         "sonata-project/exporter": "Export entities to a variety of formats"
     },
     "autoload": {

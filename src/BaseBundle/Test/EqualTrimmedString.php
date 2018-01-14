@@ -19,12 +19,12 @@ class EqualTrimmedString extends \PHPUnit_Framework_Constraint
 
     protected function trim($value)
     {
-        return trim($value);
+        return implode('', array_map('trim', explode(PHP_EOL, $value)));
     }
 
     public function matches($other)
     {
-        return $this->trim($other) === $this->trim($other);
+        return $this->trim($this->value) === $this->trim($other);
     }
 
     public function toString()

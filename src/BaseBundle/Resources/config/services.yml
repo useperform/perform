@@ -238,6 +238,14 @@ services:
         arguments:
             - "@perform_base.asset_container"
 
+    perform_base.markdown:
+        class: League\CommonMark\CommonMarkConverter
+
+    perform_base.type.markdown:
+        class: Perform\BaseBundle\Type\MarkdownType
+        arguments:
+            - "@perform_base.markdown"
+
     perform_base.bundle_searcher:
         class: Perform\BaseBundle\Util\BundleSearcher
         arguments:
