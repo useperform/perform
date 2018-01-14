@@ -23,12 +23,12 @@ class TwigRenderer implements RendererInterface
         $type = $notification->getType();
         $pieces = explode(':', $type, 2);
         if (count($pieces) !== 2) {
-            return sprintf('notifications/%s/%s.html.twig', $type, $publisherName);
+            return sprintf('notification/%s/%s.html.twig', $type, $publisherName);
         }
 
         $namespace = preg_replace('/Bundle$/', '', $pieces[0]);
 
-        return sprintf('@%s/notifications/%s/%s.html.twig', $namespace, $pieces[1], $publisherName);
+        return sprintf('@%s/notification/%s/%s.html.twig', $namespace, $pieces[1], $publisherName);
     }
 
     public function renderTemplate($template, Notification $notification, RecipientInterface $recipient)
