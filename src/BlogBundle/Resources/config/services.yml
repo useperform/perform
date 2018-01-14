@@ -1,8 +1,8 @@
 services:
-    perform_blog.admin.post:
-        class: Perform\BlogBundle\Admin\PostAdmin
+    perform_blog.admin.markdown_post:
+        class: Perform\BlogBundle\Admin\MarkdownPostAdmin
         tags:
-            - {name: perform_base.admin, entity: "PerformBlogBundle:Post"}
+            - {name: perform_base.admin, entity: "PerformBlogBundle:MarkdownPost"}
 
     perform_blog.menu_link.blog:
         class: Perform\BlogBundle\Menu\BlogLinkProvider
