@@ -6,9 +6,6 @@ use Perform\BaseBundle\Type\TypeRegistry;
 use Perform\BaseBundle\Admin\ContextRenderer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Twig\Environment;
-use Symfony\Component\Config\FileLocatorInterface;
-use Symfony\Component\Templating\TemplateNameParserInterface;
-use Perform\BaseBundle\Test\TestFilesystemLoader;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
