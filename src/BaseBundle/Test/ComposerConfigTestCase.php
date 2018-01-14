@@ -88,4 +88,17 @@ abstract class ComposerConfigTestCase extends \PHPUnit_Framework_TestCase
             $this->assertSame($parentDeps[$dep], $version, sprintf('Required dev version of "%s" does not match parent composer.json', $dep));
         }
     }
+
+    public function testSuggestsAreIncludedInParent()
+    {
+        $bundleConfig = $this->getBundleConfig();
+        $parentConfig = $this->getParentConfig();
+
+        $bundleSuggestions = isset($bundleConfig['suggest']) ? $bundleConfig['suggest'] : [];
+        $parentSuggestions = $parentConfig['suggest'];
+
+        foreach (array_keys($bundleSuggestions) as $suggestion) {
+            $this->assertArrayHasKey($suggestion, $parentSuggestions, sprintf('Parent composer.json does not contain suggested dependency "%s"', $suggestion));
+        }
+    }
 }

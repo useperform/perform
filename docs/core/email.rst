@@ -23,7 +23,7 @@ Call the ``send()`` method on the ``perform_base.email.mailer`` service, passing
 
     $mailer->send('user@example.com',
         'Welcome to our application',
-        'AppBundle:Email:welcome.html.twig',
+        '@App/email/welcome.html.twig',
         ['user' => $user]
     );
 

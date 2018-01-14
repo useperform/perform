@@ -21,6 +21,6 @@ class TextBlockType implements BlockTypeInterface
 
     public function getEditorTemplate()
     {
-        return 'PerformCmsBundle:blocks:text.html.twig';
+        return '@PerformCms/blocks/text.html.twig';
     }
 }

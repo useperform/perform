@@ -42,9 +42,4 @@ interface TypeInterface
      * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver);
-
-    /**
-     * @return string the name of template to render this field type
-     */
-    public function getTemplate();
 }

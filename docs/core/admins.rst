@@ -165,12 +165,12 @@ return a custom template name.
 Place a file in a specific location
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The template ``<Bundle>:<Entity>:<context>.html.twig`` will be used
+The template ``@<Bundle>/admin/<entity>/<context>.html.twig`` will be used
 automatically if available,
-e.g. ``PerformContactBundle:Message:view.html.twig``.
+e.g. ``@PerformContact/Message/view.html.twig``.
 
 Default
 ~~~~~~~
 
 If nothing else has been specified, the template
-``PerformBaseBundle:Crud:<context>.html.twig`` will be used.
+``@PerformBase/crud/<context>.html.twig`` will be used.

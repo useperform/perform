@@ -26,16 +26,14 @@ class LocalSubscriberAdmin extends AbstractAdmin
             ->add('email', [
                 'type' => 'email',
             ])
-            ->add('list', [
+            ->add('lists', [
                 'type' => 'entity',
                 'options' => [
+                    'multiple' => true,
                     'class' => 'PerformMailingListBundle:LocalList',
                     'display_field' => 'name',
                 ],
-                'sort' => function($qb, $direction) {
-                    return $qb->join('e.list', 'l')
-                        ->addOrderBy('l.name', $direction);
-                },
+                'sort' => false,
             ])
             ->add('createdAt', [
                 'type' => 'datetime',

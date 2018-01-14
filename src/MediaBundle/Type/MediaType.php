@@ -95,14 +95,10 @@ class MediaType extends AbstractType
         return $this->registry->getPreview($file, ['size' => 'small']);
     }
 
-    public function getTemplate()
-    {
-        return 'PerformMediaBundle:types:media.html.twig';
-    }
-
     public function getDefaultConfig()
     {
         return [
+            'template' => '@PerformMedia/type/media.html.twig',
             'sort' => false,
         ];
     }

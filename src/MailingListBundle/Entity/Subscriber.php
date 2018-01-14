@@ -24,6 +24,11 @@ class Subscriber
     /**
      * @var string
      */
+    protected $connectorName;
+
+    /**
+     * @var string
+     */
     protected $list;
 
     /**
@@ -44,14 +49,44 @@ class Subscriber
         return $this->id;
     }
 
+    /**
+     * @param string $email
+     *
+     * @return Subscriber
+     */
     public function setEmail($email)
     {
         $this->email = mb_convert_case($email, MB_CASE_LOWER, mb_detect_encoding($email));
+
+        return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getEmail()
     {
         return $this->email;
+    }
+
+    /**
+     * @param string $connectorName
+     *
+     * @return Subscriber
+     */
+    public function setConnectorName($connectorName)
+    {
+        $this->connectorName = $connectorName;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getConnectorName()
+    {
+        return $this->connectorName;
     }
 
     /**
@@ -94,9 +129,42 @@ class Subscriber
         return $this->attributes;
     }
 
+    /**
+     * @param string $name
+     * @param mixed $value
+     *
+     * @return Subscriber
+     */
     public function setAttribute($name, $value)
     {
         $this->attributes[$name] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function hasAttribute($name)
+    {
+        return isset($this->attributes[$name]);
+    }
+
+    /**
+     * @param string $name
+     * @param mixed $value
+     *
+     * @return Subscriber
+     */
+    public function setAttributeIfUnset($name, $value)
+    {
+        if (!isset($this->attributes[$name])) {
+            $this->attributes[$name] = $value;
+        }
+
+        return $this;
     }
 
     /**

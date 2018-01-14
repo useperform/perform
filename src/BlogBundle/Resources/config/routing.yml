@@ -1,3 +1,3 @@
-team:
-    resource: "PerformBlogBundle:Post"
+blog:
+    resource: "PerformBlogBundle:MarkdownPost"
     type:     crud

@@ -8,8 +8,6 @@ use Perform\UserBundle\Entity\User;
 use Perform\BaseBundle\Exception\InvalidTypeException;
 
 /**
- * EntityTypeTest.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class EntityTypeTest extends \PHPUnit_Framework_TestCase
@@ -34,12 +32,14 @@ class EntityTypeTest extends \PHPUnit_Framework_TestCase
             'class' => 'PerformUserBundle:User',
             'display_field' => 'email',
             'link_to' => false,
+            'multiple' => false,
         ];
 
         $expected = [
-            'value' => 'user@example.com',
-            'related_entity' => $user,
+            'value' => $user,
+            'display_field' => 'email',
             'link_to' => false,
+            'multiple' => false,
         ];
         $this->assertSame($expected, $this->type->listContext($entity, 'user', $options));
     }
@@ -52,6 +52,7 @@ class EntityTypeTest extends \PHPUnit_Framework_TestCase
         $options = [
             'class' => 'PerformUserBundle:User',
             'display_field' => 'email',
+            'multiple' => false,
         ];
 
         $this->assertSame('', $this->type->listContext($entity, 'user', $options));

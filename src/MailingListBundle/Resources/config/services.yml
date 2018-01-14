@@ -30,18 +30,17 @@ services:
         class: Perform\MailingListBundle\Panel\SubscribersPanel
         arguments:
             - "@doctrine.orm.entity_manager"
-            - "@templating"
-
-    perform_mailing_list.connector.local:
-        class: Perform\MailingListBundle\Connector\LocalConnector
-        arguments:
-            - "@doctrine.orm.entity_manager"
+            - "@twig"
 
     perform_mailing_list.manager:
         class: Perform\MailingListBundle\SubscriberManager
         arguments:
             - "@doctrine.orm.entity_manager"
-            - "@perform_mailing_list.connector.local"
+            - []
+            - []
+            - "@logger"
+        tags:
+            - {name: monolog.logger, channel: mailing_list}
 
     perform_mailing_list.listener.flush_subscribers:
         public: false
@@ -52,3 +51,19 @@ services:
         tags:
             - {name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate}
             - {name: monolog.logger, channel: mailing_list}
+
+    perform_mailing_list.enricher.user:
+        public: false
+        class: Perform\MailingListBundle\Enricher\UserEnricher
+        arguments:
+            - "@perform_user.repo.user"
+        tags:
+            - perform_mailing_list.enricher
+
+    perform_mailing_list.command.process:
+        public: false
+        class: Perform\MailingListBundle\Command\ProcessQueueCommand
+        arguments:
+            - "@perform_mailing_list.manager"
+        tags:
+            - {name: console.command, command: 'perform:mailing-list:process-queue'}

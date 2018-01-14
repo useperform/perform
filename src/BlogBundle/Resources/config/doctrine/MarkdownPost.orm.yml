@@ -1,0 +1,13 @@
+Perform\BlogBundle\Entity\MarkdownPost:
+    type: entity
+    table: perform_blog_markdown_post
+    fields:
+        markdown:
+            type: text
+    manyToMany:
+        tags:
+            targetEntity: Perform\BaseBundle\Entity\Tag
+            joinTable:
+                name: perform_blog_markdown_post_tags
+            cascade:
+                - persist

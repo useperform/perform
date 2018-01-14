@@ -1,0 +1,18 @@
+{
+    "name": "perform/blog-bundle",
+    "description": "Tools and entities to create a blog.",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Glynn Forrest",
+            "email": "me@glynnforrest.com"
+        }
+    ],
+    "require": {
+    },
+    "autoload": {
+        "psr-4": {
+            "Perform\\BlogBundle\\": ""
+        }
+    }
+}

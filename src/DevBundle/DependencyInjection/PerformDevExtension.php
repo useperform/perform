@@ -8,16 +8,16 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Perform\DevBundle\BundleResource as R;
+use Perform\Licensing\Licensing;
 
 /**
- * PerformDevExtension.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class PerformDevExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {
+        Licensing::validateProject($container);
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 

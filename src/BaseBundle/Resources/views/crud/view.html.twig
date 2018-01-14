@@ -1,0 +1,47 @@
+{% extends '@PerformBase/base.html.twig' %}
+
+{% set title = 'crud.title.view'|trans({'%entity_label%': labelConfig.getEntityLabel(entity)}, 'PerformBaseBundle') %}
+{% set list_title = 'crud.title.list'|trans({'%entity_name%': labelConfig.getEntityNamePlural()}, 'PerformBaseBundle') %}
+
+{% block page_title %}
+  {{title}} | {{list_title}} | {{parent()}}
+{% endblock %}
+
+{% block workspace %}
+  <h3><i class="fa fa-angle-right"></i> {{title}}</h3>
+  <div class="card">
+    <div class="card-header">
+      {% block panel_heading %}
+        {{labelConfig.getEntityName()}}
+      {% endblock %}
+    </div>
+    <div class="card-body">
+      {% block panel_start %}
+      {% endblock %}
+      <table class="table">
+        <tbody>
+          {% for field, config in fields %}
+            <tr>
+              <th>
+                {{config.viewOptions.label}}
+              </th>
+              <td>
+                {{perform_crud_view_context(entity, field, config)}}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% block actions %}
+        <a href="{{perform_crud_route(entity, 'list')}}" class="btn btn-light">Back</a>
+        {% for action in perform_action_buttons_for(entity) %}
+          {{perform_action_button(action, entity, 'view')}}
+        {% endfor %}
+      {% endblock %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block extras %}
+  {% include '@PerformBase/action/_confirm_modal.html.twig' %}
+{% endblock %}

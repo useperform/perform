@@ -1,0 +1,30 @@
+Perform\BlogBundle\Entity\AbstractPost:
+    type: mappedSuperclass
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        title:
+            type: string
+        slug:
+            type: string
+        publishDate:
+            type: datetime
+        status:
+            type: integer
+        createdAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: create
+        updatedAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: update
+    uniqueConstraints:
+        slug:
+            columns: [slug]

@@ -38,8 +38,10 @@ class EmailType extends AbstractType
             ->setAllowedTypes('link', 'boolean');
     }
 
-    public function getTemplate()
+    public function getDefaultConfig()
     {
-        return 'PerformBaseBundle:types:email.html.twig';
+        return [
+            'template' => '@PerformBase/type/email.html.twig',
+        ];
     }
 }

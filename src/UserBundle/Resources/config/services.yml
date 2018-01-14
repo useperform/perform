@@ -31,6 +31,11 @@ services:
         class: Perform\UserBundle\Importer\UserImporter
         arguments: ["@doctrine.orm.entity_manager"]
 
+    perform_user.repo.user:
+        class: Perform\UserBundle\Repository\UserRepository
+        arguments: ['PerformUserBundle:User']
+        factory: ['@doctrine.orm.entity_manager', 'getRepository']
+
     perform_user.reset_token_manager:
         class: Perform\UserBundle\Security\ResetTokenManager
         arguments:

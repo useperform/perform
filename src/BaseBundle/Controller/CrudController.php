@@ -96,7 +96,7 @@ class CrudController extends Controller
     {
         $this->get('twig')
             ->getExtension(FormExtension::class)
-            ->renderer->setTheme($formView, 'PerformBaseBundle::form_theme.html.twig');
+            ->renderer->setTheme($formView, '@PerformBase/form_theme.html.twig');
     }
 
     public function listAction(Request $request)

@@ -5,7 +5,7 @@ namespace Perform\BaseBundle\Tests\Email;
 use Perform\BaseBundle\Email\Mailer;
 
 /**
- * MailerTest
+ * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class MailerTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,7 +20,9 @@ class MailerTest extends \PHPUnit_Framework_TestCase
         $this->swift = $this->getMockBuilder('Swift_Mailer')
                      ->disableOriginalConstructor()
                      ->getMock();
-        $this->twig = $this->getMock('Twig_Environment');
+        $this->twig = $this->getMockBuilder(\Twig_Environment::class)
+                    ->disableOriginalConstructor()
+                    ->getMock();
         $this->fromAddress = 'mailer@admin.dev';
         $this->logger = $this->getMock('Psr\Log\LoggerInterface');
         $this->mailer = new Mailer($this->swift, $this->twig, $this->fromAddress, $this->logger);

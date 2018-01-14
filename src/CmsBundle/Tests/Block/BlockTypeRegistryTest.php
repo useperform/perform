@@ -8,8 +8,6 @@ use Perform\CmsBundle\Exception\BlockTypeNotFoundException;
 use Perform\CmsBundle\Entity\Block;
 
 /**
- * BlockTypeRegistryTest
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class BlockTypeRegistryTest extends \PHPUnit_Framework_TestCase
@@ -19,7 +17,9 @@ class BlockTypeRegistryTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->twig = $this->getMock('\Twig_Environment');
+        $this->twig = $this->getMockBuilder(\Twig_Environment::class)
+                    ->disableOriginalConstructor()
+                    ->getMock();
         $this->registry = new BlockTypeRegistry($this->twig);
     }
 

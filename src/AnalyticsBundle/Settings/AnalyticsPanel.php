@@ -45,7 +45,7 @@ class AnalyticsPanel implements SettingsPanelInterface
 
     public function getTemplate()
     {
-        return 'PerformAnalyticsBundle:Settings:analytics.html.twig';
+        return '@PerformAnalytics/settings_panel/analytics.html.twig';
     }
 
     public function getTemplateVars()

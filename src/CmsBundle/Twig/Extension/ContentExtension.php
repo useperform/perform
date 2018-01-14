@@ -74,7 +74,7 @@ class ContentExtension extends \Twig_Extension
 
     protected function createEditorSection($page, $sectionName)
     {
-        return $this->twig->render('PerformCmsBundle::section.html.twig', [
+        return $this->twig->render('@PerformCms/section.html.twig', [
             'sectionName' => $sectionName,
             'page' => $page,
             //the block is shared and not editable if it is from another page

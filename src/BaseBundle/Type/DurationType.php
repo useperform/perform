@@ -48,11 +48,6 @@ class DurationType extends AbstractType
         $builder->add($field, FormType::class, []);
     }
 
-    public function getTemplate()
-    {
-        return 'PerformBaseBundle:types:duration.html.twig';
-    }
-
     /**
      * @doc format How to display the duration. Use one of the DurationType::FORMAT_* constants.
      */
@@ -66,6 +61,7 @@ class DurationType extends AbstractType
     public function getDefaultConfig()
     {
         return [
+            'template' => '@PerformBase/type/duration.html.twig',
             'listOptions' => [
                 'format' => DurationType::FORMAT_DIGITAL,
             ],

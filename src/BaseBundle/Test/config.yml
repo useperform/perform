@@ -14,6 +14,7 @@ security:
     firewalls:
         main:
             anonymous: ~
+            logout_on_user_change: true
 
 framework:
     secret:          "%secret%"
@@ -24,11 +25,9 @@ framework:
     form:            ~
     csrf_protection: ~
     validation:      true
-    templating:
-        engines: ['twig']
+    templating: false
     default_locale:  "%locale%"
     trusted_hosts:   ~
-    trusted_proxies: ~
     session:
         handler_id:  null
     fragments:       ~

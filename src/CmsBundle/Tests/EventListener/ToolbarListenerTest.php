@@ -14,8 +14,6 @@ use Perform\CmsBundle\Twig\Extension\ContentExtension;
 use Perform\CmsBundle\Block\BlockTypeRegistry;
 
 /**
- * ToolbarListenerTest.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
@@ -27,7 +25,9 @@ class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->twig = $this->getMock('\Twig_Environment');
+        $this->twig = $this->getMockBuilder(\Twig_Environment::class)
+                    ->disableOriginalConstructor()
+                    ->getMock();
         $this->contentExtension = $this->getMockBuilder('Perform\CmsBundle\Twig\Extension\ContentExtension')
                                 ->disableOriginalConstructor()
                                 ->getMock();
@@ -86,8 +86,8 @@ class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
         $this->twig->expects($this->exactly(2))
             ->method('render')
             ->withConsecutive(
-                $this->equalTo('PerformCmsBundle::stylesheets.html.twig'),
-                $this->equalTo('PerformCmsBundle::toolbar.html.twig'))
+                $this->equalTo('@PerformCms/stylesheets.html.twig'),
+                $this->equalTo('@PerformCms/toolbar.html.twig'))
             ->willReturnOnConsecutiveCalls('<link/>', '<div>TOOLBAR</div>');
 
         $event = $this->createEvent('<head></head><body><div>Hello</div></body>');

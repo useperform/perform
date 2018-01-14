@@ -107,7 +107,7 @@ class ToolbarListener implements EventSubscriberInterface
             return;
         }
 
-        $html = $this->twig->render('PerformCmsBundle::stylesheets.html.twig', []);
+        $html = $this->twig->render('@PerformCms/stylesheets.html.twig', []);
         $content = substr($content, 0, $pos).$html.substr($content, $pos);
         $response->setContent($content);
     }
@@ -128,7 +128,7 @@ class ToolbarListener implements EventSubscriberInterface
         $current = $pageAvailable ? $repo->findCurrentVersion($this->page) : null;
 
         $html = $this->twig->render(
-            'PerformCmsBundle::toolbar.html.twig',
+            '@PerformCms/toolbar.html.twig',
             [
                 'versions' => $versions,
                 'currentVersion' => $current,

@@ -15,8 +15,8 @@ interface ConnectorInterface
     /**
      * Add a subscriber to a mailing list.
      *
-     * This method is safe to call multiple times with the same signup
-     * without being subscribed multiple times.
+     * This method should be safe to call multiple times with the same
+     * subscriber.
      */
     public function subscribe(Subscriber $subscriber);
 }

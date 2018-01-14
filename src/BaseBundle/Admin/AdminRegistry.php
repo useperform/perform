@@ -44,7 +44,12 @@ class AdminRegistry
      */
     public function getAdmin($entity)
     {
-        $class = $this->resolver->resolve($entity);
+        try {
+            $class = $this->resolver->resolve($entity);
+        } catch (\InvalidArgumentException $e) {
+            throw new AdminNotFoundException('Admin not found, invalid argument.', 1, $e);
+        }
+
         if (isset($this->admins[$class])) {
             return $this->container->get($this->admins[$class]);
         }
@@ -59,7 +64,11 @@ class AdminRegistry
      */
     public function hasAdmin($entity)
     {
-        return isset($this->admins[$this->resolver->resolve($entity)]);
+        try {
+            return isset($this->admins[$this->resolver->resolve($entity)]);
+        } catch (\InvalidArgumentException $e) {
+            return false;
+        }
     }
 
     /**

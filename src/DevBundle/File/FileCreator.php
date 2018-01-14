@@ -84,7 +84,7 @@ class FileCreator
 
     public function render($template, array $vars = [])
     {
-        return $this->twig->render('PerformDevBundle:skeletons:'.$template, $vars);
+        return $this->twig->render('@PerformDev/skeletons/'.$template, $vars);
     }
 
     public function createBundleClass(BundleInterface $bundle, $relativeClass, $template, array $vars = [])

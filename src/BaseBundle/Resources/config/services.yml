@@ -56,7 +56,7 @@ services:
         tags:
             -
                 name: data_collector
-                template: 'PerformBaseBundle:data_collector:admins.html.twig'
+                template: '@PerformBase/data_collector/admins.html.twig'
                 id: 'perform_base.admins'
 
     perform_base.asset_container:
@@ -88,12 +88,17 @@ services:
         tags:
             - {name: kernel.event_subscriber}
 
+    perform_base.context_renderer:
+        class: Perform\BaseBundle\Admin\ContextRenderer
+        arguments:
+            - '@perform_base.type_registry'
+            - '@twig'
+
     perform_base.twig.crud:
         class: Perform\BaseBundle\Twig\Extension\CrudExtension
         arguments:
+            - '@perform_base.context_renderer'
             - '@perform_base.routing.crud_url'
-            - '@perform_base.type_registry'
-            - '@perform_base.admin.registry'
             - '@request_stack'
         tags:
             - {name: twig.extension}
@@ -148,7 +153,7 @@ services:
         class: Knp\Menu\Renderer\TwigRenderer
         arguments:
             - '@twig'
-            - 'PerformBaseBundle::menu.html.twig'
+            - '@@PerformBase/_menu.html.twig'
             - '@knp_menu.matcher'
             - { currentClass: 'active' }
         tags:
@@ -216,6 +221,11 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
 
+    perform_base.type.tag:
+        class: Perform\BaseBundle\Type\TagType
+        arguments:
+            - "@doctrine.orm.entity_manager"
+
     perform_base.type.collection:
         class: Perform\BaseBundle\Type\CollectionType
         arguments:
@@ -226,6 +236,15 @@ services:
     perform_base.type.slug:
         class: Perform\BaseBundle\Type\SlugType
         arguments:
+            - "@perform_base.asset_container"
+
+    perform_base.markdown:
+        class: League\CommonMark\CommonMarkConverter
+
+    perform_base.type.markdown:
+        class: Perform\BaseBundle\Type\MarkdownType
+        arguments:
+            - "@perform_base.markdown"
             - "@perform_base.asset_container"
 
     perform_base.bundle_searcher:

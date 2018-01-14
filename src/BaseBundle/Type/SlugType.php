@@ -57,8 +57,10 @@ class SlugType extends AbstractType
         $resolver->setAllowedTypes('readonly', ['boolean']);
     }
 
-    public function getTemplate()
+    public function getDefaultConfig()
     {
-        return 'PerformBaseBundle:types:slug.html.twig';
+        return [
+            'template' => '@PerformBase/type/slug.html.twig',
+        ];
     }
 }

@@ -10,5 +10,6 @@ Further Reading
    ./extending-entities
    ./working-with-dates
    ./crud-events
+   ./tags
    ./security
    ./settings

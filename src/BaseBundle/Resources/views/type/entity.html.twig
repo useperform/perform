@@ -1,0 +1,37 @@
+{% extends '@PerformBase/type/simple.html.twig' %}
+
+{% block single_entity %}
+  {% if link_to is defined and link_to == true and perform_crud_route_exists(entity, 'view') %}
+    <a href="{{perform_crud_route(entity, 'view')}}">
+      {{attribute(entity, display_field)}}
+    </a>
+  {% else %}
+    {{attribute(entity, display_field)}}
+  {% endif %}
+{% endblock %}
+
+{% block view %}
+  {% if multiple %}
+    <ul class="list-unstyled">
+      {% for item in value %}
+        <li>
+          {% with {entity: item} %}
+            {{block('single_entity')}}
+          {% endwith %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    {{block('list')}}
+  {% endif %}
+{% endblock %}
+
+{% block list %}
+  {% if multiple %}
+    {{value | length}} items
+  {% else %}
+    {% with {entity: value} %}
+      {{block('single_entity')}}
+    {% endwith %}
+  {% endif %}
+{% endblock %}

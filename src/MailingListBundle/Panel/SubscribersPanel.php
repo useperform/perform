@@ -3,23 +3,21 @@
 namespace Perform\MailingListBundle\Panel;
 
 use Perform\BaseBundle\Panel\PanelInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Twig\Environment;
 
 /**
- * SubscribersPanel
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class SubscribersPanel implements PanelInterface
 {
     protected $entityManager;
-    protected $templating;
+    protected $twig;
 
-    public function __construct(EntityManagerInterface $entityManager, EngineInterface $templating)
+    public function __construct(EntityManagerInterface $entityManager, Environment $twig)
     {
         $this->entityManager = $entityManager;
-        $this->templating = $templating;
+        $this->twig = $twig;
     }
 
     public function render()
@@ -27,7 +25,7 @@ class SubscribersPanel implements PanelInterface
         $subscribers = $this->entityManager->getRepository('PerformMailingListBundle:LocalSubscriber')
                   ->findBy([], ['createdAt' => 'DESC'], 10);
 
-        return $this->templating->render('PerformMailingListBundle:panels:subscribers.html.twig', [
+        return $this->twig->render('@PerformMailingList/panel/subscribers.html.twig', [
             'subscribers' => $subscribers,
         ]);
     }
