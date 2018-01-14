@@ -44,7 +44,7 @@ services:
         arguments:
             - "@perform_base.doctrine.entity_resolver"
             - "@doctrine.orm.entity_manager"
-            - "@templating"
+            - "@twig"
 
     perform_contact.settings.contact_form:
         class: Perform\ContactBundle\Settings\ContactFormPanel
