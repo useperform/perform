@@ -1,15 +1,17 @@
 <?php
 
 namespace Perform\BlogBundle\Entity;
+
 use Doctrine\Common\Collections\ArrayCollection;
+use Perform\BaseBundle\Entity\TaggableTrait;
 
 /**
- * Post
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class Post
 {
+    use TaggableTrait;
+
     /**
      * @var uuid
      */
@@ -49,11 +51,6 @@ class Post
      * @var \DateTime
      */
     protected $updatedAt;
-
-    /**
-     * @var Collection
-     */
-    protected $tags;
 
     public function __construct()
     {
@@ -206,29 +203,5 @@ class Post
     public function getUpdatedAt()
     {
         return $this->updatedAt;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getTags()
-    {
-        return $this->tags;
-    }
-
-    /**
-     * @param Tag $tag
-     *
-     * @return Post
-     */
-    public function addTag(Tag $tag)
-    {
-        if ($this->tags->contains($tag)) {
-            return $this;
-        }
-
-        $this->tags[] = $tag;
-
-        return $this;
     }
 }

@@ -34,6 +34,12 @@ class PostAdmin extends AbstractAdmin
                     'label' => 'Published',
                 ],
             ])
+            ->add('tags', [
+                'type' => 'tag',
+                'options' => [
+                    'discriminator' => 'blog',
+                ],
+            ])
             ->add('content', [
                 'type' => 'text',
                 'contexts' => [

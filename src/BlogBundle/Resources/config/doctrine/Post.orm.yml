@@ -36,11 +36,11 @@ Perform\BlogBundle\Entity\Post:
                     on: update
     manyToMany:
         tags:
-            targetEntity: Tag
+            targetEntity: Perform\BaseBundle\Entity\Tag
             joinTable:
                 name: perform_blog_post_tags
-            cascade: [persist]
-            inversedBy: posts
+            cascade:
+                - persist
     uniqueConstraints:
         slug:
             columns: [slug]

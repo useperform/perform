@@ -6,11 +6,9 @@ use Faker;
 use Doctrine\Common\Persistence\ObjectManager;
 use Perform\BlogBundle\Entity\Post;
 use Perform\BaseBundle\DataFixtures\ORM\EntityDeclaringFixtureInterface;
-use Perform\BlogBundle\Entity\Tag;
+use Perform\BaseBundle\Entity\Tag;
 
 /**
- * LoadTeamMemberData.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class LoadPostData implements EntityDeclaringFixtureInterface
@@ -25,9 +23,10 @@ class LoadPostData implements EntityDeclaringFixtureInterface
                   'Funding',
                   'Teaching',
                   'Tour',
-        ] as $name) {
+        ] as $title) {
             $tag = new Tag();
-            $tag->setName($name);
+            $tag->setTitle($title);
+            $tag->setDiscriminator('blog');
             $tags[] = $tag;
         }
 
