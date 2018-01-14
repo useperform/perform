@@ -6,6 +6,14 @@
   overflow: scroll;
   padding: 75px 0;
 
+  ul {
+    padding-left: 20px;
+  }
+
+  li {
+    list-style-type: none;
+  }
+
   > ul {
     padding: 0;
     margin: 0;

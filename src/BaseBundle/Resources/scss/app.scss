@@ -7,6 +7,7 @@
 @import "header";
 @import "sidebar";
 @import "dashboard";
+@import "types";
 @import "components";
 
 @import url($base-font-url);
@@ -21,10 +22,6 @@ body {
   padding: 0px;
   margin: 0px;
   font-size:13px;
-}
-
-ul li {
-  list-style: none;
 }
 
 a, a:hover, a:focus {
