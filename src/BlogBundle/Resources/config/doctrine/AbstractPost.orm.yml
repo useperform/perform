@@ -1,7 +1,5 @@
-Perform\BlogBundle\Entity\Post:
-    type: entity
-    table: perform_blog_post
-    repositoryClass: Perform\BlogBundle\Repository\PostRepository
+Perform\BlogBundle\Entity\AbstractPost:
+    type: mappedSuperclass
     id:
         id:
             type: guid
@@ -13,17 +11,10 @@ Perform\BlogBundle\Entity\Post:
             type: string
         slug:
             type: string
-            gedmo:
-                slug:
-                    separator: -
-                    fields:
-                        - title
         publishDate:
             type: datetime
-        content:
-            type: text
-        enabled:
-            type: boolean
+        status:
+            type: integer
         createdAt:
             type: datetime
             gedmo:
@@ -34,13 +25,6 @@ Perform\BlogBundle\Entity\Post:
             gedmo:
                 timestampable:
                     on: update
-    manyToMany:
-        tags:
-            targetEntity: Perform\BaseBundle\Entity\Tag
-            joinTable:
-                name: perform_blog_post_tags
-            cascade:
-                - persist
     uniqueConstraints:
         slug:
             columns: [slug]

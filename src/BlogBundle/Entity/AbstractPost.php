@@ -2,16 +2,11 @@
 
 namespace Perform\BlogBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Perform\BaseBundle\Entity\TaggableTrait;
-
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class Post
+abstract class AbstractPost
 {
-    use TaggableTrait;
-
     /**
      * @var uuid
      */
@@ -32,15 +27,13 @@ class Post
      */
     protected $publishDate;
 
-    /**
-     * @var string
-     */
-    protected $content;
+    const STATUS_DRAFT = 0;
+    const STATUS_PUBLISHED = 1;
 
     /**
-     * @var bool
+     * @var int
      */
-    protected $enabled = true;
+    protected $status;
 
     /**
      * @var \DateTime
@@ -51,11 +44,6 @@ class Post
      * @var \DateTime
      */
     protected $updatedAt;
-
-    public function __construct()
-    {
-        $this->tags = new ArrayCollection();
-    }
 
     /**
      * @return uuid
@@ -68,7 +56,7 @@ class Post
     /**
      * @param string $title
      *
-     * @return Post
+     * @return AbstractPost
      */
     public function setTitle($title)
     {
@@ -88,7 +76,7 @@ class Post
     /**
      * @param string $slug
      *
-     * @return Post
+     * @return AbstractPost
      */
     public function setSlug($slug)
     {
@@ -108,7 +96,7 @@ class Post
     /**
      * @param \DateTime $publishDate
      *
-     * @return Post
+     * @return AbstractPost
      */
     public function setPublishDate(\DateTime $publishDate)
     {
@@ -126,49 +114,29 @@ class Post
     }
 
     /**
-     * @param string $content
+     * @param int $status
      *
-     * @return Post
+     * @return AbstractPost
      */
-    public function setContent($content)
+    public function setStatus($status)
     {
-        $this->content = $content;
+        $this->status = $status;
 
         return $this;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getContent()
+    public function getStatus()
     {
-        return $this->content;
-    }
-
-    /**
-     * @param bool $enabled
-     *
-     * @return Post
-     */
-    public function setEnabled($enabled)
-    {
-        $this->enabled = $enabled;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getEnabled()
-    {
-        return $this->enabled;
+        return $this->status;
     }
 
     /**
      * @param \DateTime $createdAt
      *
-     * @return Post
+     * @return AbstractPost
      */
     public function setCreatedAt(\DateTime $createdAt)
     {
@@ -188,7 +156,7 @@ class Post
     /**
      * @param \DateTime $updatedAt
      *
-     * @return Post
+     * @return AbstractPost
      */
     public function setUpdatedAt(\DateTime $updatedAt)
     {
