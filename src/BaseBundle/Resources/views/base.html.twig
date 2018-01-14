@@ -17,7 +17,7 @@
   </head>
   <body>
     {% block body %}
-      {% include '@PerformBase/header.html.twig' %}
+      {% include '@PerformBase/_header.html.twig' %}
 
       <div class="admin-flash-messages">
       </div>
@@ -43,8 +43,8 @@
     {% endblock %}
 
     {% block js %}
-      {% include '@PerformBase/scripts.html.twig' %}
-      {% include '@PerformBase/flash_messages.html.twig' %}
+      {% include '@PerformBase/_scripts.html.twig' %}
+      {% include '@PerformBase/_flash_messages.html.twig' %}
       {% for js in perform_asset_js() %}
         <script type="text/javascript" src="{{asset(js)}}"></script>
       {% endfor %}

@@ -68,7 +68,7 @@ class ActionExtension extends \Twig_Extension
                       $action->getLink($entity, $this->crudUrlGenerator, $this->urlGenerator) :
                       $this->getActionHref($action);
 
-        return $twig->render('@PerformBase/action/button.html.twig', [
+        return $twig->render('@PerformBase/action/_button.html.twig', [
             'label' => $label,
             'attr' => $attr,
         ]);
@@ -90,7 +90,7 @@ class ActionExtension extends \Twig_Extension
         ]);
         $attr['value'] = $this->getActionHref($action);
 
-        return $twig->render('@PerformBase/action/option.html.twig', [
+        return $twig->render('@PerformBase/action/_option.html.twig', [
             'attr' => $attr,
             'label' => $label,
         ]);
