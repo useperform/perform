@@ -2,12 +2,11 @@
 
 namespace Perform\BaseBundle\Tests\Admin;
 
-use Perform\UserBundle\Admin\UserAdmin;
-use Symfony\Component\Templating\EngineInterface;
+use Twig\Loader\ExistsLoaderInterface;
+use Twig\Environment;
+use Perform\BaseBundle\Admin\AdminInterface;
 
 /**
- * AbstractAdminTest
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class AbstractAdminTest extends \PHPUnit_Framework_TestCase
@@ -15,11 +14,18 @@ class AbstractAdminTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->admin = new TestAdmin();
+        $this->twig = $this->getMockBuilder(Environment::class)
+                    ->disableOriginalConstructor()
+                    ->getMock();
+        $this->twigLoader = $this->getMock(ExistsLoaderInterface::class);
+        $this->twig->expects($this->any())
+            ->method('getLoader')
+            ->will($this->returnValue($this->twigLoader));
     }
 
     public function testIsAdmin()
     {
-        $this->assertInstanceOf('Perform\BaseBundle\Admin\AdminInterface', $this->admin);
+        $this->assertInstanceOf(AdminInterface::class, $this->admin);
     }
 
     public function templateProvider()
@@ -37,9 +43,7 @@ class AbstractAdminTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetTemplate($context, $expected)
     {
-        $templating = $this->getMock(EngineInterface::class);
-
-        $this->assertSame($expected, $this->admin->getTemplate($templating, 'SomeBundle:SomeEntity', $context));
+        $this->assertSame($expected, $this->admin->getTemplate($this->twig, 'SomeBundle:SomeEntity', $context));
     }
 
     public function overrideTemplateProvider()
@@ -57,12 +61,11 @@ class AbstractAdminTest extends \PHPUnit_Framework_TestCase
      */
     public function testOverrideTemplate($context, $expected)
     {
-        $templating = $this->getMock(EngineInterface::class);
-        $templating->expects($this->any())
+        $this->twigLoader->expects($this->any())
             ->method('exists')
             ->with($expected)
             ->will($this->returnValue(true));
 
-        $this->assertSame($expected, $this->admin->getTemplate($templating, 'SomeBundle:SomeEntity', $context));
+        $this->assertSame($expected, $this->admin->getTemplate($this->twig, 'SomeBundle:SomeEntity', $context));
     }
 }
