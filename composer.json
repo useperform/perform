@@ -12,7 +12,7 @@
         "dflydev/apache-mime-types": "^1.0",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/orm": "^2.5",
-        "knplabs/knp-menu-bundle": "^2.1",
+        "knplabs/knp-menu-bundle": "^2.2.1",
         "lyrixx/twitter-sdk": "^1.1",
         "nesbot/carbon": "^1.21",
         "oneup/flysystem-bundle": "^1.3",
