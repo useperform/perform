@@ -1,5 +1,7 @@
 <template>
-  <component :is="previewComponent" :file="file" />
+  <div class="p-media-preview">
+    <component :is="previewComponent" :file="file" />
+  </div>
 </template>
 
 <script>

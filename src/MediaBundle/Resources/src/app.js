@@ -19,7 +19,7 @@ const startApp = function(el)  {
 let selector;
 // ensure the selector is initialized
 const initSelector = function() {
-  if (selector) {
+  if (typeof selector === 'object') {
     return;
   }
   const parent = document.createElement('div');
@@ -56,7 +56,7 @@ const selectFiles = function(options) {
 };
 
 const selectFile = function(options) {
-  return selectFiles(Object.assign(options, {
+  return selectFiles(Object.assign({}, options, {
     limit: 1,
     multiple: false
   }));
@@ -72,7 +72,10 @@ window.Perform.media = {
   selectFiles,
   preview(element, file) {
     //if file is not an object, fetch via ajax
-    selector = new Vue({
+    if (!file.id) {
+      return;
+    }
+    new Vue({
       el: element,
       data: {
         file
