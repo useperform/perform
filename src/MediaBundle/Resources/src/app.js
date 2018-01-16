@@ -3,6 +3,7 @@ import store from './store/store';
 import router from './router';
 import App from './components/App';
 import Selector from './components/Selector';
+import FilePreview from './components/FilePreview';
 
 // entry point to the main media application
 const startApp = function(el)  {
@@ -69,4 +70,17 @@ window.Perform.media = {
   startApp,
   selectFile,
   selectFiles,
+  preview(element, file) {
+    //if file is not an object, fetch via ajax
+    selector = new Vue({
+      el: element,
+      data: {
+        file
+      },
+      components: {
+        FilePreview,
+      },
+      template: '<FilePreview :file="file" />'
+    });
+  }
 };

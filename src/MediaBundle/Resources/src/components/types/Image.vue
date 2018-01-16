@@ -1,15 +1,13 @@
 <template>
-<div class="perform-media-preview">
   <img :src="url" />
-</div>
 </template>
 
 <script>
 export default {
-  props: ['filename'],
+  props: ['file'],
   computed: {
     url() {
-      return '/uploads/thumbs/'+this.filename;
+      return '/uploads/thumbs/'+this.file.filename;
     }
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <component :is="previewComponent" :filename="file.filename" />
+  <component :is="previewComponent" :file="file" />
 </template>
 
 <script>
