@@ -6,8 +6,6 @@ use Perform\MediaBundle\Entity\File;
 use Perform\MediaBundle\Plugin\PluginRegistry;
 
 /**
- * FileExtension
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class FileExtension extends \Twig_Extension
@@ -24,12 +22,22 @@ class FileExtension extends \Twig_Extension
         return [
             new \Twig_SimpleFunction('perform_file_listing_type', [$this->registry, 'getListingType']),
             new \Twig_SimpleFunction('perform_file_url', [$this->registry, 'getUrl']),
-            new \Twig_SimpleFunction('perform_file_preview', [$this->registry, 'getPreview'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('perform_media_preview', [$this, 'getPreview'], ['is_safe' => ['html'], 'needs_environment' => true]),
         ];
     }
 
-    public function getName()
+    public function getPreview(\Twig_Environment $twig, File $file = null)
     {
-        return 'file';
+        $data = $file ? [
+            'id' => $file->getId(),
+            'name' => $file->getName(),
+            'filename' => $file->getFilename(),
+            'type' => $file->getType(),
+        ] : [];
+
+        return $twig->render('@PerformMedia/file/_preview.html.twig', [
+            'file' => $file,
+            'data' => $data,
+        ]);
     }
 }

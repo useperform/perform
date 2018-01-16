@@ -1,8 +1,9 @@
 {% extends '@PerformBase/type/simple.html.twig' %}
 
 {% block list %}
-  {# potential for live media previews etc here #}
-  {{value | raw}}
+  <div class="p-type-media">
+    {{perform_media_preview(file)}}
+  </div>
 {% endblock %}
 
 {% block create %}

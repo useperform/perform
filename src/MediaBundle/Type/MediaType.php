@@ -86,13 +86,17 @@ class MediaType extends AbstractType
 
     public function listContext($entity, $field, array $options = [])
     {
+        $this->assets->addJs('/bundles/performmedia/app.js');
+        $this->assets->addJs('/bundles/performmedia/editor.js');
         $file = $this->accessor->getValue($entity, $field);
 
-        if (!$file instanceof File) {
-            return 'None';
+        if ($file && !$file instanceof File) {
+            throw new \Exception('Must be a file or null');
         }
 
-        return $this->registry->getPreview($file, ['size' => 'small']);
+        return [
+            'file' => $file,
+        ];
     }
 
     public function getDefaultConfig()
