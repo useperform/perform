@@ -50,6 +50,7 @@
         "sonata-project/exporter": "Export entities to a variety of formats"
     },
     "replace": {
+        "perform/analytics-bundle": "self.version",
         "perform/base-bundle": "self.version",
         "perform/blog-bundle": "self.version",
         "perform/contact-bundle": "self.version",
