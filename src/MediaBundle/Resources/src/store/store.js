@@ -7,6 +7,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     files: [],
+    page: 1,
   },
 
   getters: {
@@ -24,16 +25,32 @@ export default new Vuex.Store({
       state.files = state.files.filter(file => {
         return file.id !== id;
       });
+    },
+    changePage(state, page) {
+      state.page = page;
     }
   },
 
   actions: {
-    find({commit}) {
-      axios.get('/admin/media/find')
+    find(context) {
+      axios.get('/admin/media/find?page='+context.state.page)
         .then(r => r.data)
         .then(function(data) {
-          commit('loaded', data);
+          context.commit('loaded', data);
         });
+    },
+
+    nextPage(context) {
+      context.commit('changePage', context.state.page + 1);
+      context.dispatch('find');
+    },
+
+    prevPage(context) {
+      if (context.state.page === 1) {
+        return;
+      }
+      context.commit('changePage', context.state.page - 1);
+      context.dispatch('find');
     },
 
     delete({commit}, id) {

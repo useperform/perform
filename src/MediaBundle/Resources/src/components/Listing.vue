@@ -17,6 +17,9 @@
       :items="items"
       @toggleSelect="toggleSelect"
     />
+    <a @click="$store.dispatch('prevPage')" class="btn btn-light">Prev</a>
+    <a @click="$store.dispatch('nextPage')" class="btn btn-light">Next</a>
+
   </div>
 </template>
 
@@ -54,16 +57,20 @@ export default {
       type: Number,
       default: 0,
     },
+    page: {
+      type: Number,
+      default: 1,
+    },
   },
   data() {
     return {
       layout: 0,
-        selectedIds: {},
+      selectedIds: {},
     }
   },
   created() {
     this.layout = this.initialLayout;
-    this.$store.dispatch('find');
+    this.fetchData();
   },
   components: {
     UploadButton,
@@ -93,6 +100,12 @@ export default {
       }, 0);
     }
   },
+  watch: {
+    '$route'() {
+      this.page = this.$route.query.page;
+      this.fetchData();
+    }
+  },
   methods: {
     upload(file) {
       const taskId = Perform.base.tasks.add('Uploading '+file.name, 0, 100);
@@ -102,7 +115,7 @@ export default {
           Perform.base.tasks.setProgress(taskId, progress);
         },
         complete() {
-          store.dispatch('find');
+          this.fetchData();
         },
         error(response) {
           Perform.base.showError(response.data.message);
@@ -112,6 +125,9 @@ export default {
     },
     reset() {
       this.selectedIds = {};
+    },
+    fetchData() {
+      this.$store.dispatch('find', this.page);
     },
     toggleSelect(id) {
       if (!this.allowSelect) {
