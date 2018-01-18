@@ -1,23 +1,22 @@
 <template>
-<div class="row">
-  <div class="col-lg-12">
+  <div class="p-comp-media-filetable">
     <div class="card">
+      <div class="card-header">
+        <div class="row">
+          <div class="col-5 offset-1">
+            Name
+          </div>
+          <div class="col-2">
+            Type
+          </div>
+        </div>
+      </div>
       <div class="card-body">
-        <table class="table">
-          <thead>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Preview</th>
-            <th></th>
-          </thead>
-          <tbody>
-            <FileRow :key="item.file.id" v-for="item in items" :file="item.file" />
-          </tbody>
+        <FileRow :key="item.file.id" v-for="item in items" :file="item.file" />
         </table>
       </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>

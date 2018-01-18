@@ -28,3 +28,43 @@
     }
   }
 }
+
+.p-comp-media-filetable {
+  .card-body {
+    padding-top: 0;
+  }
+
+  .card-header {
+    padding-top: 1em;
+    padding-bottom: 1em;
+    font-weight: bold;
+  }
+}
+
+.p-comp-media-filerow {
+  height: 3em;
+  overflow: hidden;
+  padding-top: .5em;
+
+  &:nth-child(odd) {
+    background-color: darken($card-bg, 5%);
+  }
+
+  .actions {
+    a {
+      color: $body-color;
+      padding: 1em;
+      &:hover {
+        color: lighten($body-color, 10);
+      }
+    }
+  }
+}
+
+.p-comp-media-preview {
+  img {
+    height: 2em;
+    max-height: 100%;
+    max-width: 100%;
+  }
+}

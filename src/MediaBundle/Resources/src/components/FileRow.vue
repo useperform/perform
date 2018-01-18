@@ -1,23 +1,21 @@
 <template>
-<transition name="fade">
-  <tr>
-    <td>
-      {{file.name}}
-    </td>
-    <td>
-      {{file.humanType}}
-    </td>
-    <td>
+  <div class="p-comp-media-filerow row">
+    <div class="col-1">
       <FilePreview :file="file" />
-    </td>
-    <td>
-      <button class="btn btn-danger" @click.prevent="remove" :disabled="removing">
+    </div>
+    <div class="col-5">
+      {{file.name}}
+    </div>
+    <div class="col-2">
+      {{file.humanType}}
+    </div>
+    <div class="col-4 actions">
+      <a href="#" @click.prevent="remove" :disabled="removing">
         <i class="fa fa-spin fa-circle-o-notch" v-if="removing"></i>
-        <span v-else>Delete</span>
-      </button>
-    </td>
-  </tr>
-</transition>
+        <i class="fa fa-lg fa-trash" v-else></i>
+      </a>
+    </div>
+  </div>
 </template>
 
 <script>

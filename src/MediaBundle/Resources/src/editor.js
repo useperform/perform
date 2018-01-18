@@ -5,7 +5,7 @@ $(function() {
     var container = $(this).parents('.perform-media-type');
     var input = container.find('input');
     var indicator = container.find('.filename');
-    var preview = container.find('.p-media-preview');
+    var preview = container.find('.p-comp-media-preview');
 
     Perform.media.selectFile({
       onSelect: function(files) {
@@ -16,7 +16,7 @@ $(function() {
     });
   });
 
-  $('.p-media-preview').each(function(e) {
+  $('.p-comp-media-preview').each(function(e) {
     Perform.media.preview(this, $(this).data());
   });
 });
