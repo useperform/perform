@@ -1,6 +1,7 @@
 Perform\MediaBundle\Entity\File:
     type: entity
     table: perform_media_file
+    repositoryClass: Perform\MediaBundle\Repository\FileRepository
     id:
         id:
             type: guid
