@@ -2,9 +2,20 @@ services:
     perform_media.importer.file:
         class: Perform\MediaBundle\Importer\FileImporter
         arguments:
-            - "@oneup_flysystem.main_filesystem"
+            - "@perform_media.bucket_registry"
             - "@doctrine.orm.entity_manager"
             - "@event_dispatcher"
+
+    perform_media.bucket_registry:
+        class: Perform\MediaBundle\Storage\BucketRegistry
+        arguments:
+            - "@perform_media.bucket_locator"
+
+    perform_media.bucket.main:
+        class: Perform\MediaBundle\Storage\Bucket
+        arguments:
+            - "@oneup_flysystem.main_filesystem"
+            - "@perform_media.url.simple"
 
     perform_media.plugin.registry:
         class: Perform\MediaBundle\Plugin\PluginRegistry

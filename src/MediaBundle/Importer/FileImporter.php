@@ -4,13 +4,13 @@ namespace Perform\MediaBundle\Importer;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use League\Flysystem\FilesystemInterface;
-use League\Flysystem\FileNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\MediaBundle\Entity\File;
 use Perform\UserBundle\Entity\User;
 use Perform\MediaBundle\Event\FileEvent;
 use Mimey\MimeTypes;
 use Symfony\Component\Finder\Finder;
+use Perform\MediaBundle\Storage\BucketRegistry;
 
 /**
  * Add files to the media library.
@@ -19,15 +19,15 @@ use Symfony\Component\Finder\Finder;
  **/
 class FileImporter
 {
-    protected $storage;
+    protected $bucketRegistry;
     protected $entityManager;
     protected $repository;
     protected $dispatcher;
     protected $mimes;
 
-    public function __construct(FilesystemInterface $storage, EntityManagerInterface $entityManager, EventDispatcherInterface $dispatcher)
+    public function __construct(BucketRegistry $bucketRegistry, EntityManagerInterface $entityManager, EventDispatcherInterface $dispatcher)
     {
-        $this->storage = $storage;
+        $this->bucketRegistry = $bucketRegistry;
         $this->entityManager = $entityManager;
         $this->repository = $entityManager->getRepository('PerformMediaBundle:File');
         $this->dispatcher = $dispatcher;
@@ -59,10 +59,11 @@ class FileImporter
         }
         $file = new File();
         $file->setName($name ?: basename($pathname));
+        $bucket = $this->bucketRegistry->get('main');
         try {
             $this->entityManager->beginTransaction();
 
-            // set guid manually to have it available for hashed filename before insert
+            // set guid manually to have it available for creating a file path before insert
             $file->setId($this->generateUuid());
             $extension = pathinfo($pathname, PATHINFO_EXTENSION);
 
@@ -76,7 +77,7 @@ class FileImporter
             }
 
             $this->dispatcher->dispatch(FileEvent::CREATE, new FileEvent($file));
-            $this->storage->writeStream($file->getFilename(), fopen($pathname, 'r'));
+            $bucket->writeStream($file, fopen($pathname, 'r'));
             $this->dispatcher->dispatch(FileEvent::PROCESS, new FileEvent($file));
             $this->entityManager->persist($file);
             $this->entityManager->flush();
@@ -85,8 +86,8 @@ class FileImporter
 
             return $file;
         } catch (\Exception $e) {
-            if ($file->getFilename() && $this->storage->has($file->getFilename())) {
-                $this->storage->delete($file->getFilename());
+            if ($bucket->has($file)) {
+                $bucket->delete($file);
             }
 
             $this->entityManager->rollback();
