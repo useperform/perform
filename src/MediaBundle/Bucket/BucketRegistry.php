@@ -1,6 +1,6 @@
 <?php
 
-namespace Perform\MediaBundle\Storage;
+namespace Perform\MediaBundle\Bucket;
 
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Perform\MediaBundle\Entity\File;
@@ -11,7 +11,7 @@ use Perform\MediaBundle\Entity\File;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class BucketRegistry
+class BucketRegistry implements BucketRegistryInterface
 {
     protected $locator;
 
@@ -20,8 +20,9 @@ class BucketRegistry
         $this->locator = $locator;
     }
 
-    public function getDefault()
+    public function getDefaultName()
     {
+        return 'main';
     }
 
     public function get($bucketName)
@@ -35,5 +36,6 @@ class BucketRegistry
 
     public function getForFile(File $file)
     {
+        return $this->get($file->getBucketName());
     }
 }

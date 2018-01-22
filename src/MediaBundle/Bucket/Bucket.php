@@ -1,6 +1,6 @@
 <?php
 
-namespace Perform\MediaBundle\Storage;
+namespace Perform\MediaBundle\Bucket;
 
 use Perform\MediaBundle\Url\FileUrlGeneratorInterface;
 use League\Flysystem\FilesystemInterface;
@@ -10,7 +10,7 @@ use Perform\MediaBundle\Entity\File;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class Bucket
+class Bucket implements BucketInterface
 {
     protected $storage;
     protected $urlGenerator;
@@ -20,7 +20,18 @@ class Bucket
     {
         $this->storage = $storage;
         $this->urlGenerator = $urlGenerator;
-        $this->mediaTypes = $mediaTypes;
+        // $this->pluginRegistry = $pluginRegistry;
+    }
+
+    public function getUrl(File $file, array $criteria = [])
+    {
+        $plugin = $this->pluginRegistry->getPlugin($file->getPlugin());
+        $path = $plugin->getMediaPath($file, $criteria);
+        if ($path->isUrl()) {
+            return $path->getPath();
+        }
+
+        return $this->urlGenerator->getUrl($path->getPath());
     }
 
     public function writeStream(File $file, $dataStream)
