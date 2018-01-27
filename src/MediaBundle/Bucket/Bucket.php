@@ -6,6 +6,7 @@ use Perform\MediaBundle\Url\FileUrlGeneratorInterface;
 use League\Flysystem\FilesystemInterface;
 use League\Flysystem\FileNotFoundException;
 use Perform\MediaBundle\Entity\File;
+use Perform\MediaBundle\Location\Location;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -56,20 +57,26 @@ class Bucket implements BucketInterface
         return $this->urlGenerator->getUrl($path->getPath());
     }
 
-    public function writeStream(File $file, $dataStream)
+    public function save(Location $location, $dataStream)
     {
-        $this->storage->writeStream($file->getFilename(), $dataStream);
+        if ($location->isFile()) {
+            $this->storage->writeStream($location->getPath(), $dataStream);
+        }
     }
 
-    public function has(File $file)
+    public function has(Location $location)
     {
-        return $this->storage->has($file->getFilename());
+        return $location->isFile() && $this->storage->has($location->getLocation());
     }
 
-    public function delete(File $file)
+    public function delete(Location $location)
     {
         try {
-            $this->storage->delete($file->getFilename());
+            if (!$location->isFile()) {
+                return;
+            }
+
+            $this->storage->delete($location->getPath());
         } catch (FileNotFoundException $e) {
             //already deleted
         }
