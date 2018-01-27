@@ -5,7 +5,7 @@ namespace Perform\MediaBundle\Entity;
 use Perform\UserBundle\Entity\User;
 
 /**
- * File
+ * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class File
 {
@@ -23,6 +23,11 @@ class File
      * @var string
      */
     protected $filename;
+
+    /**
+     * @var string
+     */
+    protected $bucketName;
 
     /**
      * @var string
@@ -117,6 +122,26 @@ class File
     public function getFilename()
     {
         return $this->filename;
+    }
+
+    /**
+     * @param string $bucketName
+     *
+     * @return File
+     */
+    public function setBucketName($bucketName)
+    {
+        $this->bucketName = $bucketName;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBucketName()
+    {
+        return $this->bucketName;
     }
 
     /**

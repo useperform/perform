@@ -13,6 +13,8 @@ Perform\MediaBundle\Entity\File:
             type: string
         filename:
             type: string
+        bucketName:
+            type: string
         type:
             type: string
         typeOptions:
