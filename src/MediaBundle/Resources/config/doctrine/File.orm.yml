@@ -11,12 +11,14 @@ Perform\MediaBundle\Entity\File:
     fields:
         name:
             type: string
-        filename:
-            type: string
         bucketName:
             type: string
         type:
             type: string
+        locationPath:
+            type: string
+        locationType:
+            type: smallint
         typeOptions:
             type: json_array
         mimeType:

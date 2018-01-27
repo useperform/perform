@@ -3,6 +3,7 @@
 namespace Perform\MediaBundle\Entity;
 
 use Perform\UserBundle\Entity\User;
+use Perform\MediaBundle\Location\Location;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -22,7 +23,12 @@ class File
     /**
      * @var string
      */
-    protected $filename;
+    protected $locationPath;
+
+    /**
+     * @var int
+     */
+    protected $locationType;
 
     /**
      * @var string
@@ -105,23 +111,24 @@ class File
     }
 
     /**
-     * @param string $filename
+     * @param Location $location
      *
      * @return File
      */
-    public function setFilename($filename)
+    public function setLocation(Location $location)
     {
-        $this->filename = $filename;
+        $this->locationPath = $location->getPath();
+        $this->locationType = $location->getType();
 
         return $this;
     }
 
     /**
-     * @return string
+     * @return Location
      */
-    public function getFilename()
+    public function getLocation()
     {
-        return $this->filename;
+        return new Location($this->locationPath, $this->locationType);
     }
 
     /**

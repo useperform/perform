@@ -3,10 +3,9 @@
 namespace Perform\MediaBundle\Tests\Entity;
 
 use Perform\MediaBundle\Entity\File;
+use Perform\MediaBundle\Location\Location;
 
 /**
- * FileTest
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class FileTest extends \PHPUnit_Framework_TestCase
@@ -17,5 +16,13 @@ class FileTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($file->hasType());
         $file->setType('pdf');
         $this->assertTrue($file->hasType());
+    }
+
+    public function testGetAndSetLocation()
+    {
+        $file = new File();
+        $location = Location::file('uh_oh.txt');
+        $this->assertSame($file, $file->setLocation($location));
+        $this->assertEquals($location, $file->getLocation());
     }
 }
