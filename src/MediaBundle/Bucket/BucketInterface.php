@@ -15,6 +15,11 @@ interface BucketInterface
     public function getName();
 
     /**
+     * @return array
+     */
+    public function getMediaTypes();
+
+    /**
      * Get the minimum size of files allowed in this bucket.
      *
      * @return int The minimum size in bytes

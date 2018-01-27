@@ -25,10 +25,6 @@ class BucketRegistryTest extends \PHPUnit_Framework_TestCase
     private function mockBucket($name)
     {
         $bucket = $this->getMock(BucketInterface::class);
-        $bucket->expects($this->any())
-            ->method('getName')
-            ->will($this->returnValue($name));
-
         $this->locator->expects($this->any())
             ->method('has')
             ->with($name)

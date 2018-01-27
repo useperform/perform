@@ -26,6 +26,7 @@ class Bucket implements BucketInterface
         $this->name = $name;
         $this->storage = $storage;
         $this->urlGenerator = $urlGenerator;
+        $this->mediaTypes = $mediaTypes;
     }
 
     /**
@@ -46,15 +47,9 @@ class Bucket implements BucketInterface
         return INF;
     }
 
-    public function getUrl(File $file, array $criteria = [])
+    public function getMediaTypes()
     {
-        $plugin = $this->pluginRegistry->getPlugin($file->getPlugin());
-        $path = $plugin->getMediaPath($file, $criteria);
-        if ($path->isUrl()) {
-            return $path->getPath();
-        }
-
-        return $this->urlGenerator->getUrl($path->getPath());
+        return $this->mediaTypes;
     }
 
     public function save(Location $location, $dataStream)
@@ -66,7 +61,7 @@ class Bucket implements BucketInterface
 
     public function has(Location $location)
     {
-        return $location->isFile() && $this->storage->has($location->getLocation());
+        return $location->isFile() && $this->storage->has($location->getPath());
     }
 
     public function delete(Location $location)
