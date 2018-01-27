@@ -4,6 +4,7 @@ namespace Perform\MediaBundle\Bucket;
 
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Perform\MediaBundle\Entity\File;
+use Perform\MediaBundle\Exception\BucketNotFoundException;
 
 /**
  * A store of the available media buckets.
@@ -14,15 +15,12 @@ use Perform\MediaBundle\Entity\File;
 class BucketRegistry implements BucketRegistryInterface
 {
     protected $locator;
+    protected $defaultBucket;
 
-    public function __construct(ServiceLocator $locator)
+    public function __construct(ServiceLocator $locator, $defaultBucket)
     {
         $this->locator = $locator;
-    }
-
-    public function getDefaultName()
-    {
-        return 'main';
+        $this->defaultBucket = $defaultBucket;
     }
 
     public function get($bucketName)
@@ -32,6 +30,11 @@ class BucketRegistry implements BucketRegistryInterface
         }
 
         return $this->locator->get($bucketName);
+    }
+
+    public function getDefault()
+    {
+        return $this->get($this->defaultBucket);
     }
 
     public function getForFile(File $file)

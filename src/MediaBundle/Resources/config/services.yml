@@ -7,9 +7,10 @@ services:
             - "@event_dispatcher"
 
     perform_media.bucket_registry:
-        class: Perform\MediaBundle\Storage\BucketRegistry
+        class: Perform\MediaBundle\Bucket\BucketRegistry
         arguments:
             - "@perform_media.bucket_locator"
+            - "main"
 
     perform_media.bucket.main:
         class: Perform\MediaBundle\Bucket\Bucket
