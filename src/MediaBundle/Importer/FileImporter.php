@@ -66,6 +66,7 @@ class FileImporter
         $bucket = $bucketName ?
                 $this->bucketRegistry->get($bucketName) :
                 $this->bucketRegistry->getDefault();
+        $this->validateFileSize($bucket, $pathname);
 
         $file = new File();
         $file->setName($name ?: basename($pathname));
@@ -238,5 +239,18 @@ class FileImporter
         }
 
         return 'binary';
+    }
+
+    protected function validateFileSize(BucketInterface $bucket, $pathname)
+    {
+        $filesize = filesize($pathname);
+        if ($filesize < $bucket->getMinSize() || $filesize > $bucket->getMaxSize()) {
+            throw new InvalidFileSizeException(sprintf(
+                'Files added to the "%s" bucket must be between %s and %s bytes, the supplied file is %s bytes.',
+                $bucket->getName(),
+                $bucket->getMinSize(),
+                $bucket->getMaxSize(),
+                $filesize));
+        }
     }
 }
