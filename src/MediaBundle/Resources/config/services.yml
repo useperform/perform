@@ -23,12 +23,6 @@ services:
     perform_media.media_type_registry:
         class: Perform\MediaBundle\MediaType\MediaTypeRegistry
 
-    perform_media.listener.file_plugin:
-        class: Perform\MediaBundle\EventListener\FilePluginListener
-        arguments: ["@perform_media.plugin.registry"]
-        tags:
-            - {name: kernel.event_subscriber}
-
     perform_media.twig.file:
         class: Perform\MediaBundle\Twig\Extension\FileExtension
         arguments: ["@perform_media.plugin.registry"]
