@@ -151,7 +151,7 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
 
         $owner = new User();
         $this->expectDefaultBucket();
-        $files = $this->importer->importDirectory($this->vfs->path('/dir'), [], null, $owner);
+        $files = $this->importer->importDirectory($this->vfs->path('/dir'), $owner, null, []);
         $this->assertSame(2, count($files));
         $this->assertSame($owner, $files[0]->getOwner());
         $this->assertSame('file.txt', $files[0]->getName());
@@ -181,7 +181,7 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
 
         $owner = new User();
         $this->expectDefaultBucket();
-        $files = $this->importer->importDirectory($this->vfs->path('/dir'), [$extension], null, $owner);
+        $files = $this->importer->importDirectory($this->vfs->path('/dir'), $owner, null, [$extension]);
         $this->assertSame(1, count($files));
         $this->assertSame($owner, $files[0]->getOwner());
         $this->assertSame('file.txt', $files[0]->getName());

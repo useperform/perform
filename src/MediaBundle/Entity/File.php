@@ -4,6 +4,7 @@ namespace Perform\MediaBundle\Entity;
 
 use Perform\UserBundle\Entity\User;
 use Perform\MediaBundle\Location\Location;
+use Perform\MediaBundle\MediaResource;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -69,6 +70,15 @@ class File
      * @var User
      */
     protected $owner;
+
+    public static function fromResource(MediaResource $resource)
+    {
+        $file = new self();
+        $file->setName($resource->getName());
+        $file->setOwner($resource->getOwner());
+
+        return $file;
+    }
 
     /**
      * @param guid $id
@@ -257,7 +267,7 @@ class File
      *
      * @return File
      */
-    public function setOwner(User $owner)
+    public function setOwner(User $owner = null)
     {
         $this->owner = $owner;
 

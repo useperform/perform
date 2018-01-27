@@ -13,6 +13,7 @@ use Perform\MediaBundle\Bucket\BucketRegistryInterface;
 use Perform\MediaBundle\Location\Location;
 use Perform\MediaBundle\Exception\InvalidFileSizeException;
 use Perform\MediaBundle\Bucket\BucketInterface;
+use Perform\MediaBundle\MediaResource;
 
 /**
  * Add files to the media library.
@@ -37,58 +38,45 @@ class FileImporter
     }
 
     /**
-     * Import a file or directory into the media library.
+     * Import a new resource into the media library.
      *
-     * @param string      $pathname   The location of the file or directory
-     * @param string|null $bucketName The name of the bucket to store the imported files
-     * @param User        $user       The optional owner of the files
+     * @param MediaResource $resource
+     * @param string|null   $bucketName The name of the bucket to store the imported file
      */
-    public function import($pathname, $bucketName = null, User $owner = null)
+    public function import(MediaResource $resource, $bucketName = null)
     {
-        return is_dir($pathname) ?
-            $this->importDirectory($pathname, $bucketName, $owner) :
-            $this->importFile($pathname, $bucketName, $owner);
-    }
-
-    /**
-     * Import a file into the media library.
-     *
-     * @param string      $pathname   The location of the file
-     * @param string|null $name       Optionally, the name to give the file
-     * @param string|null $bucketName The name of the bucket to store the imported file
-     * @param User|null   $user       The optional owner of the file
-     */
-    public function importFile($pathname, $name = null, $bucketName = null, User $owner = null)
-    {
-        if (!file_exists($pathname)) {
-            throw new \InvalidArgumentException("$pathname does not exist.");
-        }
         $bucket = $bucketName ?
                 $this->bucketRegistry->get($bucketName) :
                 $this->bucketRegistry->getDefault();
-        $this->validateFileSize($bucket, $pathname);
 
-        $file = new File();
-        $file->setName($name ?: basename($pathname));
+        $file = File::fromResource($resource);
         $this->entityManager->beginTransaction();
         try {
             $file->setBucketName($bucket->getName());
 
-            // set guid manually to have it available for creating a file path before insert
+            // set guid manually so a location can be created before saving to the database
             $file->setId($this->generateUuid());
-            $extension = pathinfo($pathname, PATHINFO_EXTENSION);
 
-            list($mimeType, $charset) = $this->getContentType($pathname, $extension);
-            $file->setMimeType($mimeType);
-            $file->setCharset($charset);
+            if ($resource->isFile()) {
+                $pathname = $resource->getPath();
+                $this->validateFileSize($bucket, $pathname);
+                $extension = pathinfo($pathname, PATHINFO_EXTENSION);
 
-            $file->setLocation(Location::file(sprintf('%s.%s', sha1($file->getId()), $this->getSuitableExtension($mimeType, $extension))));
-            if ($owner) {
-                $file->setOwner($owner);
+                list($mimeType, $charset) = $this->getContentType($pathname, $extension);
+                $file->setMimeType($mimeType);
+                $file->setCharset($charset);
+
+                $file->setLocation(Location::file(sprintf('%s.%s', sha1($file->getId()), $this->getSuitableExtension($mimeType, $extension))));
+            } else {
+                $file->setMimeType('');
+                $file->setCharset('');
+                $file->setLocation(Location::url($resource->getPath()));
             }
 
             $this->dispatcher->dispatch(FileEvent::CREATE, new FileEvent($file));
-            $bucket->save($file->getLocation(), fopen($pathname, 'r'));
+            if ($resource->isFile()) {
+                $bucket->save($file->getLocation(), fopen($resource->getPath(), 'r'));
+            }
             $this->dispatcher->dispatch(FileEvent::PROCESS, new FileEvent($file));
             $this->entityManager->persist($file);
             $this->entityManager->flush();
@@ -108,14 +96,27 @@ class FileImporter
     }
 
     /**
+     * Import a file into the media library.
+     *
+     * @param string      $pathname   The location of the file or directory
+     * @param string|null $name       Optionally, the name to give the media
+     * @param User|null   $owner      The optional owner of the files
+     * @param string|null $bucketName The name of the bucket to store the imported files
+     */
+    public function importFile($pathname, $name = null, User $owner = null, $bucketName = null)
+    {
+        return $this->import(new MediaResource($pathname, $name, $owner), $bucketName);
+    }
+
+    /**
      * Import a directory of files into the media library.
      *
      * @param string      $pathname   The location of the directory
-     * @param array       $extensions Only import the files with the given extensions
+     * @param User|null   $owner      The optional owner of the files
      * @param string|null $bucketName The name of the bucket to store the imported files
-     * @param User        $user       The optional owner of the files
+     * @param array       $extensions Only import the files with the given extensions
      */
-    public function importDirectory($pathname, array $extensions = [], $bucketName = null, User $owner = null)
+    public function importDirectory($pathname, User $owner = null, $bucketName = null, array $extensions = [])
     {
         $finder = Finder::create()
                 ->files()
@@ -126,7 +127,7 @@ class FileImporter
         $files = [];
 
         foreach ($finder as $file) {
-            $files[] = $this->importFile($file->getPathname(), null, $bucketName, $owner);
+            $files[] = $this->import(new MediaResource($file->getPathname(), null, $owner), $bucketName);
         }
 
         return $files;
@@ -137,17 +138,17 @@ class FileImporter
      *
      * @param string      $url        The URL of the file
      * @param string|null $name       The name to give the file. If null, use the filename.
+     * @param User|null   $owner      The optional owner of the file
      * @param string|null $bucketName The name of the bucket to store the imported files
-     * @param User        $user       The optional owner of the file
      */
-    public function importUrl($url, $name = null, $bucketName = null, User $owner = null)
+    public function importUrl($url, $name = null, User $owner = null, $bucketName = null)
     {
         $local = tempnam(sys_get_temp_dir(), 'perform-media');
         copy($url, $local);
         if (!$name) {
             $name = basename(parse_url($url, PHP_URL_PATH));
         }
-        $this->importFile($local, $name, $bucketName, $owner);
+        $this->import(new MediaResource($local, $name, $owner), $bucketName);
         unlink($local);
     }
 
