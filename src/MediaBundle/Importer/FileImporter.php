@@ -3,14 +3,16 @@
 namespace Perform\MediaBundle\Importer;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use League\Flysystem\FilesystemInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\MediaBundle\Entity\File;
 use Perform\UserBundle\Entity\User;
 use Perform\MediaBundle\Event\FileEvent;
 use Mimey\MimeTypes;
 use Symfony\Component\Finder\Finder;
-use Perform\MediaBundle\Storage\BucketRegistry;
+use Perform\MediaBundle\Bucket\BucketRegistryInterface;
+use Perform\MediaBundle\Location\Location;
+use Perform\MediaBundle\Exception\InvalidFileSizeException;
+use Perform\MediaBundle\Bucket\BucketInterface;
 
 /**
  * Add files to the media library.
@@ -25,7 +27,7 @@ class FileImporter
     protected $dispatcher;
     protected $mimes;
 
-    public function __construct(BucketRegistry $bucketRegistry, EntityManagerInterface $entityManager, EventDispatcherInterface $dispatcher)
+    public function __construct(BucketRegistryInterface $bucketRegistry, EntityManagerInterface $entityManager, EventDispatcherInterface $dispatcher)
     {
         $this->bucketRegistry = $bucketRegistry;
         $this->entityManager = $entityManager;
@@ -37,31 +39,39 @@ class FileImporter
     /**
      * Import a file or directory into the media library.
      *
-     * @param string $pathname The location of the file or directory
-     * @param User   $user     The optional owner of the files
+     * @param string      $pathname   The location of the file or directory
+     * @param string|null $bucketName The name of the bucket to store the imported files
+     * @param User        $user       The optional owner of the files
      */
-    public function import($pathname, User $owner = null)
+    public function import($pathname, $bucketName = null, User $owner = null)
     {
-        return is_dir($pathname) ? $this->importDirectory($pathname, $owner) : $this->importFile($pathname, $owner);
+        return is_dir($pathname) ?
+            $this->importDirectory($pathname, $bucketName, $owner) :
+            $this->importFile($pathname, $bucketName, $owner);
     }
 
     /**
      * Import a file into the media library.
      *
-     * @param string      $pathname The location of the file
-     * @param string|null $name     Optionally, the name to give the file
-     * @param User        $user     The optional owner of the file
+     * @param string      $pathname   The location of the file
+     * @param string|null $name       Optionally, the name to give the file
+     * @param string|null $bucketName The name of the bucket to store the imported file
+     * @param User|null   $user       The optional owner of the file
      */
-    public function importFile($pathname, $name = null, User $owner = null)
+    public function importFile($pathname, $name = null, $bucketName = null, User $owner = null)
     {
         if (!file_exists($pathname)) {
             throw new \InvalidArgumentException("$pathname does not exist.");
         }
+        $bucket = $bucketName ?
+                $this->bucketRegistry->get($bucketName) :
+                $this->bucketRegistry->getDefault();
+
         $file = new File();
         $file->setName($name ?: basename($pathname));
-        $bucket = $this->bucketRegistry->get('main');
+        $this->entityManager->beginTransaction();
         try {
-            $this->entityManager->beginTransaction();
+            $file->setBucketName($bucket->getName());
 
             // set guid manually to have it available for creating a file path before insert
             $file->setId($this->generateUuid());
@@ -71,13 +81,13 @@ class FileImporter
             $file->setMimeType($mimeType);
             $file->setCharset($charset);
 
-            $file->setFilename(sprintf('%s.%s', sha1($file->getId()), $this->getSuitableExtension($mimeType, $extension)));
+            $file->setLocation(Location::file(sprintf('%s.%s', sha1($file->getId()), $this->getSuitableExtension($mimeType, $extension))));
             if ($owner) {
                 $file->setOwner($owner);
             }
 
             $this->dispatcher->dispatch(FileEvent::CREATE, new FileEvent($file));
-            $bucket->writeStream($file, fopen($pathname, 'r'));
+            $bucket->save($file->getLocation(), fopen($pathname, 'r'));
             $this->dispatcher->dispatch(FileEvent::PROCESS, new FileEvent($file));
             $this->entityManager->persist($file);
             $this->entityManager->flush();
@@ -86,8 +96,9 @@ class FileImporter
 
             return $file;
         } catch (\Exception $e) {
-            if ($bucket->has($file)) {
-                $bucket->delete($file);
+            $location = $file->getLocation();
+            if ($location instanceof Location && $bucket->has($location)) {
+                $bucket->delete($location);
             }
 
             $this->entityManager->rollback();
@@ -98,11 +109,12 @@ class FileImporter
     /**
      * Import a directory of files into the media library.
      *
-     * @param string $pathname   The location of the directory
-     * @param array  $extensions Only import the files with the given extensions
-     * @param User   $user       The optional owner of the files
+     * @param string      $pathname   The location of the directory
+     * @param array       $extensions Only import the files with the given extensions
+     * @param string|null $bucketName The name of the bucket to store the imported files
+     * @param User        $user       The optional owner of the files
      */
-    public function importDirectory($pathname, array $extensions = [], User $owner = null)
+    public function importDirectory($pathname, array $extensions = [], $bucketName = null, User $owner = null)
     {
         $finder = Finder::create()
                 ->files()
@@ -113,7 +125,7 @@ class FileImporter
         $files = [];
 
         foreach ($finder as $file) {
-            $files[] = $this->importFile($file->getPathname(), null, $owner);
+            $files[] = $this->importFile($file->getPathname(), null, $bucketName, $owner);
         }
 
         return $files;
@@ -122,40 +134,41 @@ class FileImporter
     /**
      * Import the URL of a file into the media library.
      *
-     * @param string      $url  The URL of the file
-     * @param string|null $name Optionally, the name to give the file
-     * @param User        $user The optional owner of the file
+     * @param string      $url        The URL of the file
+     * @param string|null $name       The name to give the file. If null, use the filename.
+     * @param string|null $bucketName The name of the bucket to store the imported files
+     * @param User        $user       The optional owner of the file
      */
-    public function importUrl($url, $name = null, User $owner = null)
+    public function importUrl($url, $name = null, $bucketName = null, User $owner = null)
     {
         $local = tempnam(sys_get_temp_dir(), 'perform-media');
         copy($url, $local);
         if (!$name) {
             $name = basename(parse_url($url, PHP_URL_PATH));
         }
-        $this->importFile($local, $name, $owner);
+        $this->importFile($local, $name, $bucketName, $owner);
         unlink($local);
     }
 
     /**
-     * Remove a file from the database, delete it and perform any cleanup operations.
+     * Remove a file from the database and delete it from its bucket.
      *
      * @param File $file
      */
     public function delete(File $file)
     {
-        $connection = $this->entityManager->getConnection();
-        $connection->transactional(function ($connection) use ($file) {
+        $bucket = $this->bucketRegistry->getForFile($file);
+        $this->entityManager->beginTransaction();
+        try {
             $this->entityManager->remove($file);
             $this->entityManager->flush();
-
-            try {
-                $this->storage->delete($file->getFilename());
-            } catch (FileNotFoundException $e) {
-            }
-
             $this->dispatcher->dispatch(FileEvent::DELETE, new FileEvent($file));
-        });
+            $bucket->delete($file->getLocation());
+            $this->entityManager->commit();
+        } catch (\Exception $e) {
+            $this->entityManager->rollback();
+            throw $e;
+        }
     }
 
     /**
