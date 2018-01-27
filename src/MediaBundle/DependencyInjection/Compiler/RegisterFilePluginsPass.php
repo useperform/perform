@@ -29,7 +29,7 @@ class RegisterFilePluginsPass implements CompilerPassInterface
 
         $locator->setArguments([$plugins]);
 
-        $container->getDefinition('perform_media.plugin.registry')
+        $container->getDefinition('perform_media.media_type_registry')
             ->setArgument(0, $locator);
     }
 }

@@ -1,16 +1,16 @@
 <?php
 
-namespace MediaBundle\Tests\Plugin;
+namespace MediaBundle\Tests\MediaType;
 
 use Perform\MediaBundle\Exception\MediaTypeException;
 use Perform\MediaBundle\MediaType\MediaTypeInterface;
-use Perform\MediaBundle\Plugin\PluginRegistry;
+use Perform\MediaBundle\MediaType\MediaTypeRegistry;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class PluginRegistryTest extends \PHPUnit_Framework_TestCase
+class MediaTypeRegistryTest extends \PHPUnit_Framework_TestCase
 {
     protected $locator;
     protected $registry;
@@ -20,12 +20,12 @@ class PluginRegistryTest extends \PHPUnit_Framework_TestCase
         $this->locator = $this->getMockBuilder(ServiceLocator::class)
                        ->disableOriginalConstructor()
                        ->getMock();
-        $this->registry = new PluginRegistry($this->locator);
+        $this->registry = new MediaTypeRegistry($this->locator);
     }
 
-    public function testAddAndGetPlugin()
+    public function testGet()
     {
-        $plugin = $this->getMock(MediaTypeInterface::class);
+        $type = $this->getMock(MediaTypeInterface::class);
         $this->locator->expects($this->any())
             ->method('has')
             ->with('test')
@@ -33,8 +33,8 @@ class PluginRegistryTest extends \PHPUnit_Framework_TestCase
         $this->locator->expects($this->any())
             ->method('get')
             ->with('test')
-            ->will($this->returnValue($plugin));
-        $this->assertSame($plugin, $this->registry->get('test'));
+            ->will($this->returnValue($type));
+        $this->assertSame($type, $this->registry->get('test'));
     }
 
     public function testGetUnknown()

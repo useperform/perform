@@ -1,6 +1,6 @@
 <?php
 
-namespace Perform\MediaBundle\Plugin;
+namespace Perform\MediaBundle\MediaType;
 
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Perform\MediaBundle\Exception\MediaTypeException;
@@ -8,7 +8,7 @@ use Perform\MediaBundle\Exception\MediaTypeException;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class PluginRegistry
+class MediaTypeRegistry
 {
     protected $locator;
 
@@ -17,12 +17,12 @@ class PluginRegistry
         $this->locator = $locator;
     }
 
-    public function get($pluginName)
+    public function get($typeName)
     {
-        if (!$this->locator->has($pluginName)) {
-            throw new MediaTypeException(sprintf('Media type "%s" is not available.', $pluginName));
+        if (!$this->locator->has($typeName)) {
+            throw new MediaTypeException(sprintf('Media type "%s" is not available.', $typeName));
         }
 
-        return $this->locator->get($pluginName);
+        return $this->locator->get($typeName);
     }
 }

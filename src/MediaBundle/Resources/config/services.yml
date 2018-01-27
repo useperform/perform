@@ -19,8 +19,8 @@ services:
             - "@oneup_flysystem.main_filesystem"
             - "@perform_media.url.simple"
 
-    perform_media.plugin.registry:
-        class: Perform\MediaBundle\Plugin\PluginRegistry
+    perform_media.media_type_registry:
+        class: Perform\MediaBundle\MediaType\MediaTypeRegistry
 
     perform_media.listener.file_plugin:
         class: Perform\MediaBundle\EventListener\FilePluginListener
