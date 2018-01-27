@@ -12,15 +12,37 @@ use Perform\MediaBundle\Entity\File;
  **/
 class Bucket implements BucketInterface
 {
+    /**
+     * @var string
+     */
+    protected $name;
     protected $storage;
     protected $urlGenerator;
     protected $mediaTypes = [];
 
-    public function __construct(FilesystemInterface $storage, FileUrlGeneratorInterface $urlGenerator, array $mediaTypes = [])
+    public function __construct($name, FilesystemInterface $storage, FileUrlGeneratorInterface $urlGenerator, array $mediaTypes = [])
     {
+        $this->name = $name;
         $this->storage = $storage;
         $this->urlGenerator = $urlGenerator;
-        // $this->pluginRegistry = $pluginRegistry;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getMinSize()
+    {
+        return 0;
+    }
+
+    public function getMaxSize()
+    {
+        return INF;
     }
 
     public function getUrl(File $file, array $criteria = [])

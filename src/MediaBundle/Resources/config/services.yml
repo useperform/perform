@@ -12,8 +12,9 @@ services:
             - "@perform_media.bucket_locator"
 
     perform_media.bucket.main:
-        class: Perform\MediaBundle\Storage\Bucket
+        class: Perform\MediaBundle\Bucket\Bucket
         arguments:
+            - "main"
             - "@oneup_flysystem.main_filesystem"
             - "@perform_media.url.simple"
 
