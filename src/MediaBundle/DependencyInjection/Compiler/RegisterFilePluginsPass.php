@@ -5,35 +5,31 @@ namespace Perform\MediaBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\Config\Definition\Processor;
-use Perform\MediaBundle\DependencyInjection\Configuration;
-use Perform\MediaBundle\Exception\PluginNotFoundException;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 
 /**
- * RegisterFilePluginsPass
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class RegisterFilePluginsPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        $registry = $container->getDefinition('perform_media.plugin.registry');
-        $pluginServices = [];
+        $locator = new Definition(ServiceLocator::class);
+        $locator->setPublic(false)
+            ->addTag('container.service_locator');
 
+        $plugins = [];
         foreach ($container->findTaggedServiceIds('perform_media.file_plugin') as $service => $tag) {
             if (!isset($tag[0]['pluginName'])) {
                 throw new \InvalidArgumentException(sprintf('The service %s tagged with "perform_media.file_plugin" must set the "pluginName" option in the tag.', $service));
             }
-            $pluginServices[$tag[0]['pluginName']] = $service;
+            $plugins[$tag[0]['pluginName']] = new Reference($service);
         }
 
-        foreach ($container->getParameter('perform_media.plugins') as $plugin) {
-            if (!isset($pluginServices[$plugin])) {
-                throw new PluginNotFoundException(sprintf('"%s" media plugin not found.', $plugin));
-            }
+        $locator->setArguments([$plugins]);
 
-            $registry->addMethodCall('addPlugin', [new Reference($pluginServices[$plugin])]);
-        }
+        $container->getDefinition('perform_media.plugin.registry')
+            ->setArgument(0, $locator);
     }
 }

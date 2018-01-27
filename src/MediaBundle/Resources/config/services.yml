@@ -21,8 +21,6 @@ services:
 
     perform_media.plugin.registry:
         class: Perform\MediaBundle\Plugin\PluginRegistry
-        arguments:
-            - "@perform_media.url.simple"
 
     perform_media.listener.file_plugin:
         class: Perform\MediaBundle\EventListener\FilePluginListener

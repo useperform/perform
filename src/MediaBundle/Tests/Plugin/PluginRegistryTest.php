@@ -3,46 +3,42 @@
 namespace MediaBundle\Tests\Plugin;
 
 use Perform\MediaBundle\Plugin\PluginRegistry;
-use Perform\MediaBundle\Url\SimpleFileUrlGenerator;
-use Perform\MediaBundle\Entity\File;
+use Symfony\Component\DependencyInjection\ServiceLocator;
+use Perform\MediaBundle\Exception\PluginNotFoundException;
 
 /**
- * PluginRegistryTest
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class PluginRegistryTest extends \PHPUnit_Framework_TestCase
 {
+    protected $locator;
     protected $registry;
-    protected $urlGenerator;
 
     public function setUp()
     {
-        $this->urlGenerator = new SimpleFileUrlGenerator('example.com');
-        $this->registry = new PluginRegistry($this->urlGenerator);
+        $this->locator = $this->getMockBuilder(ServiceLocator::class)
+                       ->disableOriginalConstructor()
+                       ->getMock();
+        $this->registry = new PluginRegistry($this->locator);
     }
 
     public function testAddAndGetPlugin()
     {
-        $plugin = $this->getMock('Perform\MediaBundle\Plugin\FilePluginInterface');
-        $plugin->expects($this->any())
-            ->method('getName')
-            ->will($this->returnValue('test'));
-
-        $this->registry->addPlugin($plugin);
-        $this->assertSame($plugin, $this->registry->getPlugin('test'));
+        $plugin = $this->getMock(FilePluginInterface::class);
+        $this->locator->expects($this->any())
+            ->method('has')
+            ->with('test')
+            ->will($this->returnValue(true));
+        $this->locator->expects($this->any())
+            ->method('get')
+            ->with('test')
+            ->will($this->returnValue($plugin));
+        $this->assertSame($plugin, $this->registry->get('test'));
     }
 
-    public function testGetUnknownPlugin()
+    public function testGetUnknown()
     {
-        $this->setExpectedException('Perform\MediaBundle\Exception\PluginNotFoundException');
-        $this->registry->getPlugin('foo');
-    }
-
-    public function testGetUrl()
-    {
-        $file = new File();
-        $file->setFilename('foo.jpg');
-        $this->assertSame('example.com/foo.jpg', $this->registry->getUrl($file));
+        $this->setExpectedException(PluginNotFoundException::class);
+        $this->registry->get('foo');
     }
 }
