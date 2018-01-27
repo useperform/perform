@@ -14,6 +14,7 @@ use Perform\MediaBundle\Location\Location;
 use Perform\MediaBundle\Exception\InvalidFileSizeException;
 use Perform\MediaBundle\Bucket\BucketInterface;
 use Perform\MediaBundle\MediaResource;
+use Perform\MediaBundle\MediaType\MediaTypeRegistry;
 
 /**
  * Add files to the media library.
@@ -24,15 +25,15 @@ class FileImporter
 {
     protected $bucketRegistry;
     protected $entityManager;
-    protected $repository;
+    protected $mediaTypeRegistry;
     protected $dispatcher;
     protected $mimes;
 
-    public function __construct(BucketRegistryInterface $bucketRegistry, EntityManagerInterface $entityManager, EventDispatcherInterface $dispatcher)
+    public function __construct(BucketRegistryInterface $bucketRegistry, EntityManagerInterface $entityManager, MediaTypeRegistry $mediaTypeRegistry, EventDispatcherInterface $dispatcher)
     {
         $this->bucketRegistry = $bucketRegistry;
         $this->entityManager = $entityManager;
-        $this->repository = $entityManager->getRepository('PerformMediaBundle:File');
+        $this->mediaTypeRegistry = $mediaTypeRegistry;
         $this->dispatcher = $dispatcher;
         $this->mimes = new MimeTypes();
     }
@@ -73,6 +74,7 @@ class FileImporter
                 $file->setLocation(Location::url($resource->getPath()));
             }
 
+            $file->setType($this->findType($bucket, $file, $resource));
             $this->dispatcher->dispatch(FileEvent::CREATE, new FileEvent($file));
             if ($resource->isFile()) {
                 $bucket->save($file->getLocation(), fopen($resource->getPath(), 'r'));
@@ -252,6 +254,16 @@ class FileImporter
                 $bucket->getMinSize(),
                 $bucket->getMaxSize(),
                 $filesize));
+        }
+    }
+
+    protected function findType(BucketInterface $bucket, File $file, MediaResource $resource)
+    {
+        foreach ($bucket->getMediaTypes() as $name) {
+            $type = $this->mediaTypeRegistry->get($name);
+            if ($type->supports($file, $resource)) {
+                return $name;
+            }
         }
     }
 }

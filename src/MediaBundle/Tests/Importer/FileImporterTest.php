@@ -15,6 +15,7 @@ use Perform\UserBundle\Entity\User;
 use Perform\MediaBundle\Bucket\BucketInterface;
 use Perform\MediaBundle\Bucket\BucketRegistryInterface;
 use Perform\MediaBundle\Location\Location;
+use Perform\MediaBundle\MediaType\MediaTypeRegistry;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -40,7 +41,10 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
             ->method('getConnection')
             ->will($this->returnValue($this->conn));
         $this->dispatcher = $this->getMock(EventDispatcherInterface::class);
-        $this->importer = new FileImporter($this->bucketRegistry, $this->em, $this->dispatcher);
+        $this->mediaTypeRegistry = $this->getMockBuilder(MediaTypeRegistry::class)
+                                 ->disableOriginalConstructor()
+                                 ->getMock();
+        $this->importer = new FileImporter($this->bucketRegistry, $this->em, $this->mediaTypeRegistry, $this->dispatcher);
         $this->vfs = new FileSystem();
     }
 
@@ -88,6 +92,9 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
         $bucket->expects($this->any())
             ->method('getMaxSize')
             ->will($this->returnValue(INF));
+        $bucket->expects($this->any())
+            ->method('getMediaTypes')
+            ->will($this->returnValue([]));
 
         return $bucket;
     }
