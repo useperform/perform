@@ -2,9 +2,10 @@
 
 namespace MediaBundle\Tests\Plugin;
 
+use Perform\MediaBundle\Exception\MediaTypeException;
+use Perform\MediaBundle\MediaType\MediaTypeInterface;
 use Perform\MediaBundle\Plugin\PluginRegistry;
 use Symfony\Component\DependencyInjection\ServiceLocator;
-use Perform\MediaBundle\Exception\PluginNotFoundException;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -24,7 +25,7 @@ class PluginRegistryTest extends \PHPUnit_Framework_TestCase
 
     public function testAddAndGetPlugin()
     {
-        $plugin = $this->getMock(FilePluginInterface::class);
+        $plugin = $this->getMock(MediaTypeInterface::class);
         $this->locator->expects($this->any())
             ->method('has')
             ->with('test')
@@ -38,7 +39,7 @@ class PluginRegistryTest extends \PHPUnit_Framework_TestCase
 
     public function testGetUnknown()
     {
-        $this->setExpectedException(PluginNotFoundException::class);
+        $this->setExpectedException(MediaTypeException::class);
         $this->registry->get('foo');
     }
 }
