@@ -52,11 +52,10 @@ services:
         class: Imagine\Gd\Imagine
 
     perform_media.plugin.image:
-        class: Perform\MediaBundle\Plugin\ImagePlugin
+        class: Perform\MediaBundle\MediaType\ImageType
         arguments:
-            - "@oneup_flysystem.main_filesystem"
-            - "@perform_media.url.simple"
             - "@perform_media.imagine"
+            - [50, 200, 1024]
         tags:
             - {name: perform_media.file_plugin, pluginName: image}
 
