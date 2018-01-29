@@ -2,12 +2,10 @@
 
 namespace Perform\MediaBundle\Tests\Importer;
 
-use League\Flysystem\FilesystemInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Perform\MediaBundle\Importer\FileImporter;
 use VirtualFileSystem\FileSystem;
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Perform\MediaBundle\Entity\File;
 use Perform\MediaBundle\Event\FileEvent;
@@ -16,6 +14,7 @@ use Perform\MediaBundle\Bucket\BucketInterface;
 use Perform\MediaBundle\Bucket\BucketRegistryInterface;
 use Perform\MediaBundle\Location\Location;
 use Perform\MediaBundle\MediaType\MediaTypeRegistry;
+use Perform\MediaBundle\MediaType\MediaTypeInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -44,6 +43,9 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
         $this->mediaTypeRegistry = $this->getMockBuilder(MediaTypeRegistry::class)
                                  ->disableOriginalConstructor()
                                  ->getMock();
+        $this->mediaTypeRegistry->expects($this->any())
+            ->method('get')
+            ->will($this->returnValue($this->getMock(MediaTypeInterface::class)));
         $this->importer = new FileImporter($this->bucketRegistry, $this->em, $this->mediaTypeRegistry, $this->dispatcher);
         $this->vfs = new FileSystem();
     }
@@ -53,6 +55,9 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
         $bucket = $this->mockBucket('_default');
         $this->bucketRegistry->expects($this->any())
             ->method('getDefault')
+            ->will($this->returnValue($bucket));
+        $this->bucketRegistry->expects($this->any())
+            ->method('getForFile')
             ->will($this->returnValue($bucket));
 
         return $bucket;
@@ -65,16 +70,8 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->with($name)
             ->will($this->returnValue($bucket));
-
-        return $bucket;
-    }
-
-    private function expectBucketForFile($name, File $file)
-    {
-        $bucket = $this->mockBucket($name);
         $this->bucketRegistry->expects($this->any())
             ->method('getForFile')
-            ->with($file)
             ->will($this->returnValue($bucket));
 
         return $bucket;
@@ -133,7 +130,7 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
         $file = new File();
         $location = Location::file('file.bin');
         $file->setLocation($location);
-        $bucket = $this->expectBucketForFile('binaries', $file);
+        $bucket = $this->expectBucket('binaries');
 
         $this->em->expects($this->once())
             ->method('remove')

@@ -74,16 +74,15 @@ class FileImporter
                 $file->setLocation(Location::url($resource->getPath()));
             }
 
-            $file->setType($this->findType($bucket, $file, $resource));
+            $file->setType($this->findType($file, $resource));
             $this->dispatcher->dispatch(FileEvent::CREATE, new FileEvent($file));
-            if ($resource->isFile()) {
-                $bucket->save($file->getLocation(), fopen($resource->getPath(), 'r'));
-            }
-            $this->dispatcher->dispatch(FileEvent::PROCESS, new FileEvent($file));
             $this->entityManager->persist($file);
             $this->entityManager->flush();
 
             $this->entityManager->commit();
+
+            // run this in the background
+            $this->process($file, $resource);
 
             return $file;
         } catch (\Exception $e) {
@@ -152,6 +151,21 @@ class FileImporter
         }
         $this->import(new MediaResource($local, $name, $owner), $bucketName);
         unlink($local);
+    }
+
+    public function process(File $file, MediaResource $resource)
+    {
+        $bucket = $this->bucketRegistry->getForFile($file);
+        if ($resource->isFile()) {
+            $bucket->save($file->getLocation(), fopen($resource->getPath(), 'r'));
+        }
+
+        $this->mediaTypeRegistry->get($file->getType())
+            ->process($file, $resource, $bucket);
+        $this->dispatcher->dispatch(FileEvent::PROCESS, new FileEvent($file));
+
+        $this->entityManager->persist($file);
+        $this->entityManager->flush();
     }
 
     /**
@@ -257,8 +271,9 @@ class FileImporter
         }
     }
 
-    protected function findType(BucketInterface $bucket, File $file, MediaResource $resource)
+    protected function findType(File $file, MediaResource $resource)
     {
+        $bucket = $this->bucketRegistry->getForFile($file);
         foreach ($bucket->getMediaTypes() as $name) {
             $type = $this->mediaTypeRegistry->get($name);
             if ($type->supports($file, $resource)) {
