@@ -2,7 +2,7 @@
 
 namespace Perform\MediaBundle\Bucket;
 
-use Perform\MediaBundle\Url\FileUrlGeneratorInterface;
+use Perform\MediaBundle\Url\UrlGeneratorInterface;
 use League\Flysystem\FilesystemInterface;
 use League\Flysystem\FileNotFoundException;
 use Perform\MediaBundle\Entity\File;
@@ -21,12 +21,17 @@ class Bucket implements BucketInterface
     protected $urlGenerator;
     protected $mediaTypes = [];
 
-    public function __construct($name, FilesystemInterface $storage, FileUrlGeneratorInterface $urlGenerator, array $mediaTypes = [])
+    public function __construct($name, FilesystemInterface $storage, UrlGeneratorInterface $urlGenerator, array $mediaTypes = [])
     {
         $this->name = $name;
         $this->storage = $storage;
         $this->urlGenerator = $urlGenerator;
         $this->mediaTypes = $mediaTypes;
+    }
+
+    public function getUrlGenerator()
+    {
+        return $this->urlGenerator;
     }
 
     /**
@@ -74,6 +79,17 @@ class Bucket implements BucketInterface
             $this->storage->delete($location->getPath());
         } catch (FileNotFoundException $e) {
             //already deleted
+        }
+    }
+
+    /**
+     * Delete all locations linked to a media item from storage.
+     */
+    public function deleteRecord(File $file)
+    {
+        $this->delete($file->getLocation());
+        foreach ($file->getExtraLocations() as $location) {
+            $this->delete($location);
         }
     }
 }

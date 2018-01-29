@@ -3,6 +3,7 @@
 namespace Perform\MediaBundle\Bucket;
 
 use Perform\MediaBundle\Location\Location;
+use Perform\MediaBundle\Url\UrlGeneratorInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -53,4 +54,9 @@ interface BucketInterface
      * If the supplied location is a URL, don't do anything.
      */
     public function delete(Location $location);
+
+    /**
+     * @return UrlGeneratorInterface
+     */
+    public function getUrlGenerator();
 }
