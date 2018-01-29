@@ -222,6 +222,21 @@ class FileImporter
     }
 
     /**
+     * Get the canonical URL of a media item.
+     * The URL may not be public.
+     *
+     * @param File $file
+     *
+     * @return string
+     */
+    public function getUrl(File $file)
+    {
+        $bucket = $this->bucketRegistry->getForFile($file);
+
+        return $bucket->getUrlGenerator()->generate($file->getLocation());
+    }
+
+    /**
      * Can't use UuidGenerator, since it depends on EntityManager, not EntityManagerInterface.
      *
      * The UuidGenerator can replace this method when upgrading to doctrine 3.
