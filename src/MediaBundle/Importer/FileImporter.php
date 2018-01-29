@@ -51,49 +51,36 @@ class FileImporter
                 $this->bucketRegistry->getDefault();
 
         $file = File::fromResource($resource);
-        $this->entityManager->beginTransaction();
-        try {
-            $file->setBucketName($bucket->getName());
+        $file->setBucketName($bucket->getName());
 
-            // set guid manually so a location can be created before saving to the database
-            $file->setId($this->generateUuid());
+        // set guid manually so a location can be created before saving to the database
+        $file->setId($this->generateUuid());
 
-            if ($resource->isFile()) {
-                $pathname = $resource->getPath();
-                $this->validateFileSize($bucket, $pathname);
-                $extension = pathinfo($pathname, PATHINFO_EXTENSION);
+        if ($resource->isFile()) {
+            $pathname = $resource->getPath();
+            $this->validateFileSize($bucket, $pathname);
+            $extension = pathinfo($pathname, PATHINFO_EXTENSION);
 
-                list($mimeType, $charset) = $this->getContentType($pathname, $extension);
-                $file->setMimeType($mimeType);
-                $file->setCharset($charset);
+            list($mimeType, $charset) = $this->getContentType($pathname, $extension);
+            $file->setMimeType($mimeType);
+            $file->setCharset($charset);
 
-                $file->setLocation(Location::file(sprintf('%s.%s', sha1($file->getId()), $this->getSuitableExtension($mimeType, $extension))));
-            } else {
-                $file->setMimeType('');
-                $file->setCharset('');
-                $file->setLocation(Location::url($resource->getPath()));
-            }
-
-            $file->setType($this->findType($file, $resource));
-            $this->dispatcher->dispatch(FileEvent::CREATE, new FileEvent($file));
-            $this->entityManager->persist($file);
-            $this->entityManager->flush();
-
-            $this->entityManager->commit();
-
-            // run this in the background
-            $this->process($file, $resource);
-
-            return $file;
-        } catch (\Exception $e) {
-            $location = $file->getLocation();
-            if ($location instanceof Location && $bucket->has($location)) {
-                $bucket->delete($location);
-            }
-
-            $this->entityManager->rollback();
-            throw $e;
+            $file->setLocation(Location::file(sprintf('%s.%s', sha1($file->getId()), $this->getSuitableExtension($mimeType, $extension))));
+        } else {
+            $file->setMimeType('');
+            $file->setCharset('');
+            $file->setLocation(Location::url($resource->getPath()));
         }
+
+        $file->setType($this->findType($file, $resource));
+        $this->dispatcher->dispatch(FileEvent::CREATE, new FileEvent($file));
+        $this->entityManager->persist($file);
+        $this->entityManager->flush();
+
+        // run this in the background
+        $this->process($file, $resource);
+
+        return $file;
     }
 
     /**
