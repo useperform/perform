@@ -236,6 +236,15 @@ class FileImporter
         return $bucket->getUrlGenerator()->generate($file->getLocation());
     }
 
+    public function getSuitableUrl(File $file, array $criteria = [])
+    {
+        $bucket = $this->bucketRegistry->getForFile($file);
+        $type = $this->mediaTypeRegistry->get($file->getType());
+        $location = $type->getSuitableLocation($file, $criteria);
+
+        return $bucket->getUrlGenerator()->generate($location);
+    }
+
     /**
      * Can't use UuidGenerator, since it depends on EntityManager, not EntityManagerInterface.
      *
