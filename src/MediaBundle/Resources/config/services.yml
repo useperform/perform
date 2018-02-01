@@ -34,15 +34,15 @@ services:
         class: Perform\MediaBundle\Url\SimpleFileUrlGenerator
         arguments: ["/uploads"]
 
-    perform_media.plugin.other:
-        class: Perform\MediaBundle\Plugin\OtherPlugin
+    perform_media.media_type.other:
+        class: Perform\MediaBundle\MediaType\OtherType
         arguments:
             - "@oneup_flysystem.main_filesystem"
         tags:
             - {name: perform_media.file_plugin, pluginName: other}
 
-    perform_media.plugin.pdf:
-        class: Perform\MediaBundle\Plugin\PdfPlugin
+    perform_media.media_type.pdf:
+        class: Perform\MediaBundle\MediaType\PdfType
         arguments:
             - "@oneup_flysystem.main_filesystem"
             - "@perform_media.url.simple"
@@ -52,16 +52,16 @@ services:
     perform_media.imagine:
         class: Imagine\Gd\Imagine
 
-    perform_media.plugin.image:
+    perform_media.media_type.image:
         class: Perform\MediaBundle\MediaType\ImageType
         arguments:
             - "@perform_media.imagine"
-            - [50, 200, 1024]
+            - [100, 400, 1024]
         tags:
             - {name: perform_media.file_plugin, pluginName: image}
 
-    perform_media.plugin.audio:
-        class: Perform\MediaBundle\Plugin\AudioPlugin
+    perform_media.media_type.audio:
+        class: Perform\MediaBundle\MediaType\AudioType
         arguments:
             - "@oneup_flysystem.main_filesystem"
         tags:
