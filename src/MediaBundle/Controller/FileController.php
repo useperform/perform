@@ -24,15 +24,16 @@ class FileController extends Controller
     {
         $files = $this->getDoctrine()->getRepository('PerformMediaBundle:File')
                ->findPage($request->query->get('page', 1));
-        $registry = $this->get('perform_media.plugin.registry');
+        $manager = $this->get('perform_media.importer.file');
         $data = [];
         foreach ($files as $file) {
+            // each type may want to define how it serializes the file
             $data[] = [
                 'id' => $file->getId(),
                 'name' => $file->getName(),
-                'filename' => $file->getFilename(),
+                'url' => $manager->getUrl($file),
+                'thumbnail' => $manager->getSuitableUrl($file, ['width' => 100]),
                 'type' => $file->getType(),
-                'humanType' => $registry->getListingType($file),
             ];
         }
 
