@@ -3,25 +3,24 @@
 namespace Perform\MediaBundle\Twig\Extension;
 
 use Perform\MediaBundle\Entity\File;
-use Perform\MediaBundle\Plugin\PluginRegistry;
+use Perform\MediaBundle\Importer\FileImporter;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class FileExtension extends \Twig_Extension
 {
-    protected $registry;
+    protected $mediaManager;
 
-    public function __construct(PluginRegistry $registry)
+    public function __construct(FileImporter $mediaManager)
     {
-        $this->registry = $registry;
+        $this->mediaManager = $mediaManager;
     }
 
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('perform_file_listing_type', [$this->registry, 'getListingType']),
-            new \Twig_SimpleFunction('perform_file_url', [$this->registry, 'getUrl']),
+            new \Twig_SimpleFunction('perform_media_url', [$this->mediaManager, 'getSuitableUrl']),
             new \Twig_SimpleFunction('perform_media_preview', [$this, 'getPreview'], ['is_safe' => ['html'], 'needs_environment' => true]),
         ];
     }
@@ -31,7 +30,8 @@ class FileExtension extends \Twig_Extension
         $data = $file ? [
             'id' => $file->getId(),
             'name' => $file->getName(),
-            'filename' => $file->getFilename(),
+            'url' => $this->mediaManager->getUrl($file),
+            'thumbnail' => $this->mediaManager->getSuitableUrl($file, ['width' => 400]),
             'type' => $file->getType(),
         ] : [];
 

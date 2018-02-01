@@ -25,7 +25,8 @@ services:
 
     perform_media.twig.file:
         class: Perform\MediaBundle\Twig\Extension\FileExtension
-        arguments: ["@perform_media.plugin.registry"]
+        arguments:
+            - "@perform_media.importer.file"
         tags:
             - {name: twig.extension}
 
