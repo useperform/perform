@@ -39,6 +39,7 @@ class ImageType implements MediaTypeInterface
     {
         $image = $this->imagine->read(fopen($resource->getPath(), 'r'));
         $box = $image->getSize();
+        $thumbnailData = [];
 
         foreach ($this->thumbnailWidths as $width) {
             if ($box->getWidth() < $width) {
@@ -49,13 +50,43 @@ class ImageType implements MediaTypeInterface
             rewind($thumbnailStream);
 
             $thumbnailLocation = Location::file(sprintf('thumbs/%s/%s.%s', $width, sha1($file->getId()), $this->getSaveFormat($file->getMimeType())));
-            $file->setTypeOptions([
-                'thumbnails' => [
-                    ['w' => $width, 'path' => $thumbnailLocation->getPath()],
-                ],
-            ]);
+            $thumbnailData[] = ['width' => $width, 'path' => $thumbnailLocation->getPath()];
             $bucket->save($thumbnailLocation, $thumbnailStream);
         }
+
+        $file->setTypeOptions([
+            'width' => $box->getWidth(),
+            'thumbnails' => $thumbnailData,
+        ]);
+    }
+
+    public function getSuitableLocation(File $file, array $criteria)
+    {
+        $defaultOptions = [
+            'width' => INF,
+            'thumbnails' => [],
+        ];
+        $typeOptions = array_merge($defaultOptions, $file->getTypeOptions());
+        if (!isset($criteria['width'])) {
+            return $file->getLocation();
+        }
+
+        $closest = null;
+        foreach ($typeOptions['thumbnails'] as $thumbnail) {
+            if (!isset($thumbnail['width'])) {
+                continue;
+            }
+
+            if (!$closest || abs($criteria['width'] - $thumbnail['width']) < abs($closest - $criteria['width'])) {
+                $closest = $thumbnail['width'];
+            }
+        }
+
+        if (!$closest) {
+            return $file->getLocation();
+        }
+
+        return Location::file(sprintf('thumbs/%s/%s.%s', $closest, sha1($file->getId()), $this->getSaveFormat($file->getMimeType())));
     }
 
     protected function getSaveFormat($mime_type)
