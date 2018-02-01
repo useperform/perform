@@ -5,12 +5,12 @@ namespace Perform\MediaBundle\Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Perform\BaseBundle\Type\AbstractType;
-use Perform\MediaBundle\Plugin\PluginRegistry;
 use Perform\MediaBundle\Entity\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Perform\MediaBundle\Exception\PluginNotFoundException;
 use Perform\BaseBundle\Asset\AssetContainer;
 use Perform\BaseBundle\Form\Type\HiddenEntityType;
+use Perform\MediaBundle\MediaType\MediaTypeRegistry;
 
 /**
  * Use the ``media`` type to link to a file in the media library.
@@ -36,7 +36,7 @@ class MediaType extends AbstractType
     protected $registry;
     protected $assets;
 
-    public function __construct(PluginRegistry $registry, AssetContainer $assets)
+    public function __construct(MediaTypeRegistry $registry, AssetContainer $assets)
     {
         $this->registry = $registry;
         $this->assets = $assets;
