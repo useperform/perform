@@ -19,6 +19,7 @@ services:
             - "main"
             - "@oneup_flysystem.main_filesystem"
             - "@perform_media.url.simple"
+            - ['image', 'other']
 
     perform_media.media_type_registry:
         class: Perform\MediaBundle\MediaType\MediaTypeRegistry
@@ -31,7 +32,7 @@ services:
             - {name: twig.extension}
 
     perform_media.url.simple:
-        class: Perform\MediaBundle\Url\SimpleFileUrlGenerator
+        class: Perform\MediaBundle\Url\SimpleUrlGenerator
         arguments: ["/uploads"]
 
     perform_media.media_type.other:
