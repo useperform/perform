@@ -7,7 +7,7 @@ export default {
   props: ['file'],
   computed: {
     url() {
-      return '/uploads/thumbs/'+this.file.filename;
+      return this.file.thumbnail;
     }
   }
 }
