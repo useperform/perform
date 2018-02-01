@@ -37,7 +37,7 @@ class FileImportCommand extends ContainerAwareCommand
         $extensions = $input->getOption('extension');
         foreach ($input->getArgument('paths') as $path) {
             if (is_dir($path)) {
-                $importer->importDirectory($path, $extensions);
+                $importer->importDirectory($path, null, null, $extensions);
             } elseif (is_file($path)) {
                 $importer->importFile($path);
             } else {
