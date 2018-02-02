@@ -109,13 +109,13 @@ export default {
   methods: {
     upload(file) {
       const taskId = Perform.base.tasks.add('Uploading '+file.name, 0, 100);
-      const store = this.$store;
+      const that = this;
       upload(file, {
         progress(progress) {
           Perform.base.tasks.setProgress(taskId, progress);
         },
         complete() {
-          this.fetchData();
+          that.fetchData();
         },
         error(response) {
           Perform.base.showError(response.data.message);
