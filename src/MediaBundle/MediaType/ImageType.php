@@ -46,8 +46,10 @@ class ImageType implements MediaTypeInterface
                 continue;
             }
             $thumbnailStream = fopen('php://temp', 'r+');
-            fwrite($thumbnailStream, $image->resize($box->widen($width))->get($this->getSaveFormat($file->getMimeType())));
+            $thumbnailImage = $image->copy();
+            fwrite($thumbnailStream, $thumbnailImage->resize($box->widen($width))->get($this->getSaveFormat($file->getMimeType())));
             rewind($thumbnailStream);
+            unset($thumbnailImage);
 
             $thumbnailLocation = Location::file(sprintf('thumbs/%s/%s.%s', $width, sha1($file->getId()), $this->getSaveFormat($file->getMimeType())));
             $thumbnailData[] = ['width' => $width, 'path' => $thumbnailLocation->getPath()];
