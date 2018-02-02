@@ -63,8 +63,13 @@
 
 .p-comp-media-preview {
   img {
-    height: 2em;
     max-height: 100%;
     max-width: 100%;
+  }
+}
+
+.table-crud .p-comp-media-preview {
+  img {
+    height: 4em;
   }
 }
