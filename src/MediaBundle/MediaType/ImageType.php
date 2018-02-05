@@ -74,6 +74,7 @@ class ImageType implements MediaTypeInterface
         }
 
         $closest = null;
+        $closestPath = null;
         foreach ($typeOptions['thumbnails'] as $thumbnail) {
             if (!isset($thumbnail['width'])) {
                 continue;
@@ -81,14 +82,15 @@ class ImageType implements MediaTypeInterface
 
             if (!$closest || abs($criteria['width'] - $thumbnail['width']) < abs($closest - $criteria['width'])) {
                 $closest = $thumbnail['width'];
+                $closestPath = $thumbnail['path'];
             }
         }
 
-        if (!$closest) {
+        if (!$closestPath) {
             return $file->getLocation();
         }
 
-        return Location::file(sprintf('thumbs/%s/%s.%s', $closest, sha1($file->getId()), $this->getSaveFormat($file->getMimeType())));
+        return Location::file($closestPath);
     }
 
     protected function getSaveFormat($mime_type)
