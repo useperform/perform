@@ -14,6 +14,7 @@ class MediaResource
     protected $path;
     protected $name;
     protected $owner;
+    protected $deleteAfterProcess = false;
 
     public function __construct($path, $name = null, User $owner = null)
     {
@@ -52,5 +53,27 @@ class MediaResource
     public function isFile()
     {
         return file_exists($this->path);
+    }
+
+    public function deleteAfterProcess($delete = true)
+    {
+        $this->deleteAfterProcess = $delete;
+    }
+
+    /**
+     * Delete this resource, but only if it has been marked to be
+     * deleted after processing.
+     *
+     * Use deleteAfterProcess() to mark this resource for deletion.
+     *
+     * Nothing will happen if the resource is not a file.
+     */
+    public function delete()
+    {
+        if (!$this->deleteAfterProcess || !$this->isFile()) {
+            return;
+        }
+
+        @unlink($this->path);
     }
 }
