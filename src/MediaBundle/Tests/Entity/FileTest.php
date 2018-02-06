@@ -3,7 +3,7 @@
 namespace Perform\MediaBundle\Tests\Entity;
 
 use Perform\MediaBundle\Entity\File;
-use Perform\MediaBundle\Location\Location;
+use Perform\MediaBundle\Entity\Location;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -21,7 +21,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
     public function testGetAndSetLocation()
     {
         $file = new File();
-        $location = Location::file('uh_oh.txt');
+        $location = Location::file('uh_oh.txt', ['foo' => 'bar']);
         $this->assertSame($file, $file->setLocation($location));
         $this->assertEquals($location, $file->getLocation());
     }

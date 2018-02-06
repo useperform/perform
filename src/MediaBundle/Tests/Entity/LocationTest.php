@@ -1,8 +1,8 @@
 <?php
 
-namespace Perform\MediaBundle\Tests\Location;
+namespace Perform\MediaBundle\Tests\Entity;
 
-use Perform\MediaBundle\Location\Location;
+use Perform\MediaBundle\Entity\Location;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>

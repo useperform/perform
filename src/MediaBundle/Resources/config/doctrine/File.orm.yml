@@ -19,7 +19,7 @@ Perform\MediaBundle\Entity\File:
             type: string
         locationType:
             type: smallint
-        typeOptions:
+        locationAttributes:
             type: json_array
         mimeType:
             type: string
@@ -35,6 +35,13 @@ Perform\MediaBundle\Entity\File:
             gedmo:
                 timestampable:
                     on: update
+    oneToMany:
+        extraLocations:
+            targetEntity: Perform\MediaBundle\Entity\Location
+            mappedBy: file
+            cascade:
+                - persist
+                - remove
     manyToOne:
         owner:
             targetEntity: Perform\UserBundle\Entity\User

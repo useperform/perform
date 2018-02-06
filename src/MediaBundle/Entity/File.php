@@ -3,8 +3,8 @@
 namespace Perform\MediaBundle\Entity;
 
 use Perform\UserBundle\Entity\User;
-use Perform\MediaBundle\Location\Location;
 use Perform\MediaBundle\MediaResource;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -24,16 +24,6 @@ class File
     /**
      * @var string
      */
-    protected $locationPath;
-
-    /**
-     * @var int
-     */
-    protected $locationType;
-
-    /**
-     * @var string
-     */
     protected $bucketName;
 
     /**
@@ -42,9 +32,19 @@ class File
     protected $type;
 
     /**
+     * @var string
+     */
+    protected $locationPath;
+
+    /**
+     * @var int
+     */
+    protected $locationType;
+
+    /**
      * @var array
      */
-    protected $typeOptions = [];
+    protected $locationAttributes = [];
 
     /**
      * @var string
@@ -70,6 +70,16 @@ class File
      * @var User
      */
     protected $owner;
+
+    /**
+     * @var Collection
+     */
+    protected $extraLocations;
+
+    public function __construct()
+    {
+        $this->extraLocations = new ArrayCollection();
+    }
 
     public static function fromResource(MediaResource $resource)
     {
@@ -123,12 +133,13 @@ class File
     /**
      * @param Location $location
      *
-     * @return File
+     * @return static
      */
     public function setLocation(Location $location)
     {
         $this->locationPath = $location->getPath();
         $this->locationType = $location->getType();
+        $this->locationAttributes = $location->getAttributes();
 
         return $this;
     }
@@ -138,7 +149,43 @@ class File
      */
     public function getLocation()
     {
-        return new Location($this->locationPath, $this->locationType);
+        return new Location($this->locationPath, $this->locationType, $this->locationAttributes);
+    }
+
+    /**
+     * @param string $name
+     * @param mixed $value
+     *
+     * @return static
+     */
+    public function setLocationAttribute($name, $value)
+    {
+        $this->locationAttributes[$name] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @param Location $location
+     *
+     * @return static
+     */
+    public function addExtraLocation(Location $location)
+    {
+        if (!$this->extraLocations->contains($location)) {
+            $this->extraLocations[] = $location;
+            $location->setFile($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getExtraLocations()
+    {
+        return $this->extraLocations;
     }
 
     /**
@@ -184,26 +231,6 @@ class File
     public function hasType()
     {
         return !!$this->type;
-    }
-
-    /**
-     * @param array $typeOptions
-     *
-     * @return File
-     */
-    public function setTypeOptions(array $typeOptions)
-    {
-        $this->typeOptions = $typeOptions;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getTypeOptions()
-    {
-        return $this->typeOptions;
     }
 
     /**
