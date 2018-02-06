@@ -59,8 +59,15 @@ class Bucket implements BucketInterface
 
     public function save(Location $location, $dataStream)
     {
-        if ($location->isFile()) {
+        if ($location->isFile() && !$this->storage->has($location->getPath())) {
             $this->storage->writeStream($location->getPath(), $dataStream);
+        }
+    }
+
+    public function read(Location $location)
+    {
+        if ($location->isFile()) {
+            return $this->storage->readStream($location->getPath());
         }
     }
 

@@ -42,6 +42,15 @@ interface BucketInterface
     public function save(Location $location, $dataStream);
 
     /**
+     * Read a file as a stream.
+     *
+     * If the supplied location is a URL, return null.
+     *
+     * @return resource
+     */
+    public function read(Location $location);
+
+    /**
      * Check if a file exists in storage.
      *
      * If the supplied location is a URL, return false.
