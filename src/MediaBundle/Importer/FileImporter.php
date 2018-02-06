@@ -158,6 +158,34 @@ class FileImporter
     }
 
     /**
+     * Fetch the file from storage and reprocess it again.
+     */
+    public function reprocess(File $file)
+    {
+        $location = $file->getLocation();
+        $bucket = $this->bucketRegistry->getForFile($file);
+        if ($location->isFile()) {
+            $downloadedFile = tempnam(sys_get_temp_dir(), 'perform-media');
+            stream_copy_to_stream($bucket->read($location), fopen($downloadedFile, 'r+'));
+        }
+
+        $resource = new MediaResource(
+            $location->isFile() ? $downloadedFile : $location->getPath(),
+            $file->getName(),
+            $file->getOwner()
+        );
+        $resource->deleteAfterProcess();
+
+        foreach ($file->getExtraLocations() as $location) {
+            $bucket->delete($location);
+            $this->entityManager->remove($location);
+        }
+        $this->entityManager->flush();
+
+        return $this->process($file, $resource);
+    }
+
+    /**
      * Remove a file from the database and delete it from its bucket.
      *
      * @param File $file
