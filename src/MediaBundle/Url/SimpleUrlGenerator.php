@@ -2,7 +2,7 @@
 
 namespace Perform\MediaBundle\Url;
 
-use Perform\MediaBundle\Location\Location;
+use Perform\MediaBundle\Entity\Location;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>

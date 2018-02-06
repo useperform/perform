@@ -12,7 +12,7 @@ use Perform\MediaBundle\Event\FileEvent;
 use Perform\UserBundle\Entity\User;
 use Perform\MediaBundle\Bucket\BucketInterface;
 use Perform\MediaBundle\Bucket\BucketRegistryInterface;
-use Perform\MediaBundle\Location\Location;
+use Perform\MediaBundle\Entity\Location;
 use Perform\MediaBundle\MediaType\MediaTypeRegistry;
 use Perform\MediaBundle\MediaType\MediaTypeInterface;
 
@@ -28,6 +28,7 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
     protected $conn;
     protected $dispatcher;
     protected $importer;
+    protected $vfs;
 
     public function setUp()
     {

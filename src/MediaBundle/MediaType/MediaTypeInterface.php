@@ -5,6 +5,7 @@ namespace Perform\MediaBundle\MediaType;
 use Perform\MediaBundle\Entity\File;
 use Perform\MediaBundle\Bucket\BucketInterface;
 use Perform\MediaBundle\MediaResource;
+use Perform\MediaBundle\Entity\Location;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>

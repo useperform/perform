@@ -7,7 +7,7 @@ use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
 use Perform\MediaBundle\Bucket\BucketInterface;
 use Perform\MediaBundle\Entity\File;
-use Perform\MediaBundle\Location\Location;
+use Perform\MediaBundle\Entity\Location;
 use Perform\MediaBundle\MediaResource;
 use Perform\MediaBundle\MediaType\ImageType;
 use VirtualFileSystem\FileSystem;
@@ -66,4 +66,15 @@ class ImageTypeTest extends \PHPUnit_Framework_TestCase
         $type = new ImageType($this->imagine, [200]);
         $type->process($file, $resource, $bucket);
     }
+
+    // public function testGetSuitableLocation()
+    // {
+    //     $type = new ImageType($this->imagine, [100, 500, 1200]);
+    //     $file = new File();
+    //     // mock location hasher here
+    //     $criteria = ['width' => $desiredWidth];
+
+    //     $location = $type->getSuitableLocation($file, $criteria);
+    //     $this->assertSame($expectedWidth, $location->getPath());
+    // }
 }

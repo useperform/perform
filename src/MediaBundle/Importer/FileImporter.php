@@ -10,7 +10,7 @@ use Perform\MediaBundle\Event\FileEvent;
 use Mimey\MimeTypes;
 use Symfony\Component\Finder\Finder;
 use Perform\MediaBundle\Bucket\BucketRegistryInterface;
-use Perform\MediaBundle\Location\Location;
+use Perform\MediaBundle\Entity\Location;
 use Perform\MediaBundle\Exception\InvalidFileSizeException;
 use Perform\MediaBundle\Bucket\BucketInterface;
 use Perform\MediaBundle\MediaResource;

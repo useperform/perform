@@ -3,7 +3,7 @@
 namespace MediaBundle\Tests\Url;
 
 use Perform\MediaBundle\Url\SimpleUrlGenerator;
-use Perform\MediaBundle\Location\Location;
+use Perform\MediaBundle\Entity\Location;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>

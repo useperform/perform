@@ -2,7 +2,7 @@
 
 namespace Perform\MediaBundle\Bucket;
 
-use Perform\MediaBundle\Location\Location;
+use Perform\MediaBundle\Entity\Location;
 use Perform\MediaBundle\Url\UrlGeneratorInterface;
 
 /**
