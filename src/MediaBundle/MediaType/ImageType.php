@@ -6,7 +6,7 @@ use Perform\MediaBundle\Entity\File;
 use Imagine\Image\ImagineInterface;
 use Perform\MediaBundle\MediaResource;
 use Perform\MediaBundle\Bucket\BucketInterface;
-use Perform\MediaBundle\Location\Location;
+use Perform\MediaBundle\Entity\Location;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -39,7 +39,8 @@ class ImageType implements MediaTypeInterface
     {
         $image = $this->imagine->read(fopen($resource->getPath(), 'r'));
         $box = $image->getSize();
-        $thumbnailData = [];
+        $file->setLocationAttribute('width', $box->getWidth());
+        $file->setLocationAttribute('height', $box->getHeight());
 
         foreach ($this->thumbnailWidths as $width) {
             if ($box->getWidth() < $width) {
@@ -49,48 +50,43 @@ class ImageType implements MediaTypeInterface
             $thumbnailImage = $image->copy();
             fwrite($thumbnailStream, $thumbnailImage->resize($box->widen($width))->get($this->getSaveFormat($file->getMimeType())));
             rewind($thumbnailStream);
+
+            $thumbnailLocation = Location::file(
+                sprintf('thumbs/%s/%s.%s', $width, sha1($file->getId()), $this->getSaveFormat($file->getMimeType())),
+                [
+                    'width' => $width,
+                    'height' => $thumbnailImage->getSize()->getHeight(),
+                ]
+            );
             unset($thumbnailImage);
-
-            $thumbnailLocation = Location::file(sprintf('thumbs/%s/%s.%s', $width, sha1($file->getId()), $this->getSaveFormat($file->getMimeType())));
-            $thumbnailData[] = ['width' => $width, 'path' => $thumbnailLocation->getPath()];
             $bucket->save($thumbnailLocation, $thumbnailStream);
+            $file->addExtraLocation($thumbnailLocation);
         }
-
-        $file->setTypeOptions([
-            'width' => $box->getWidth(),
-            'thumbnails' => $thumbnailData,
-        ]);
     }
 
     public function getSuitableLocation(File $file, array $criteria)
     {
-        $defaultOptions = [
-            'width' => INF,
-            'thumbnails' => [],
-        ];
-        $typeOptions = array_merge($defaultOptions, $file->getTypeOptions());
+        $location = $file->getLocation();
         if (!isset($criteria['width'])) {
-            return $file->getLocation();
+            return $location;
         }
 
-        $closest = null;
-        $closestPath = null;
-        foreach ($typeOptions['thumbnails'] as $thumbnail) {
-            if (!isset($thumbnail['width'])) {
+        $closestDifference = INF;
+        $bestMatch = $location;
+        foreach ($file->getExtraLocations() as $thumbnail) {
+            $thumbnailWidth = $thumbnail->getAttribute('width');
+            if (!$thumbnailWidth) {
                 continue;
             }
 
-            if (!$closest || abs($criteria['width'] - $thumbnail['width']) < abs($closest - $criteria['width'])) {
-                $closest = $thumbnail['width'];
-                $closestPath = $thumbnail['path'];
+            $difference = $thumbnailWidth - $criteria['width'];
+            if (($difference >= 0 && $difference < $closestDifference)) {
+                $closestDifference = $difference;
+                $bestMatch = $thumbnail;
             }
         }
 
-        if (!$closestPath) {
-            return $file->getLocation();
-        }
-
-        return Location::file($closestPath);
+        return $bestMatch;
     }
 
     protected function getSaveFormat($mime_type)

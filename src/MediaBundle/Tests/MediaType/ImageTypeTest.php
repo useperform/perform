@@ -27,28 +27,60 @@ class ImageTypeTest extends \PHPUnit_Framework_TestCase
         $this->vfs = new FileSystem();
     }
 
-    public function testProcessCreatesThumbnail()
+    private function expectRead(ImageInterface $image)
+    {
+        $this->imagine->expects($this->once())
+            ->method('read')
+            ->with($this->callback(function ($file) {
+                return is_resource($file);
+            }))
+            ->will($this->returnValue($image));
+    }
+
+    private function mockImage($width, $height)
     {
         $image = $this->getMock(ImageInterface::class);
+        $image->expects($this->any())
+            ->method('getSize')
+            ->will($this->returnValue(new Box($width, $height)));
+
+        return $image;
+    }
+
+    public function testProcessSetSizeAttributes()
+    {
         $file = new File();
         $this->vfs->createFile('/some_image.jpg', 'Image binary content');
         $resource = new MediaResource($this->vfs->path('/some_image.jpg'));
         $bucket = $this->getMock(BucketInterface::class);
+        $type = new ImageType($this->imagine);
 
-        $this->imagine->expects($this->once())
-            ->method('read')
-            ->with($this->callback(function ($image) {
-                return is_resource($image);
-            }))
-            ->will($this->returnValue($image));
-        $image->expects($this->any())
-            ->method('getSize')
-            ->will($this->returnValue(new Box(1200, 600)));
+        $this->expectRead($this->mockImage(1200, 600));
+        $type->process($file, $resource, $bucket);
+        $this->assertSame(1200, $file->getLocation()->getAttribute('width'));
+        $this->assertSame(600, $file->getLocation()->getAttribute('height'));
+    }
+
+    public function testProcessCreatesThumbnail()
+    {
+        $file = new File();
+        $this->vfs->createFile('/some_image.jpg', 'Image binary content');
+        $resource = new MediaResource($this->vfs->path('/some_image.jpg'));
+        $bucket = $this->getMock(BucketInterface::class);
+        $type = new ImageType($this->imagine, [200]);
+
+
+        $image = $this->mockImage(1200, 600);
+        $this->expectRead($image);
+        $thumbnail = $this->mockImage(1200, 600);
         $image->expects($this->once())
+            ->method('copy')
+            ->will($this->returnValue($thumbnail));
+        $thumbnail->expects($this->once())
             ->method('resize')
             ->with(new Box(200, 100))
             ->will($this->returnSelf());
-        $image->expects($this->once())
+        $thumbnail->expects($this->once())
             ->method('get')
             ->with('jpeg')
             ->will($this->returnValue('thumbnail binary content'));
@@ -58,23 +90,32 @@ class ImageTypeTest extends \PHPUnit_Framework_TestCase
                 $this->callback(function ($location) {
                     return $location instanceof Location;
                 }),
-                $this->callback(function ($thumbnail) {
-                    return is_resource($thumbnail);
+                $this->callback(function ($thumbnailFile) {
+                    return is_resource($thumbnailFile);
                 })
             );
 
-        $type = new ImageType($this->imagine, [200]);
         $type->process($file, $resource, $bucket);
     }
 
-    // public function testGetSuitableLocation()
-    // {
-    //     $type = new ImageType($this->imagine, [100, 500, 1200]);
-    //     $file = new File();
-    //     // mock location hasher here
-    //     $criteria = ['width' => $desiredWidth];
+    public function testGetSuitableLocation()
+    {
+        $type = new ImageType($this->imagine, [100, 500, 1200]);
+        $file = new File();
+        $file->setLocation(Location::file('foo.jpg', ['width' => 2000]));
+        $med = Location::file('foo_md.jpg', ['width' => 500]);
+        $file->addExtraLocation($med);
+        $small = Location::file('foo_sm.jpg', ['width' => 100]);
+        $file->addExtraLocation($small);
+        $large = Location::file('foo_lg.jpg', ['width' => 1200]);
+        $file->addExtraLocation($large);
 
-    //     $location = $type->getSuitableLocation($file, $criteria);
-    //     $this->assertSame($expectedWidth, $location->getPath());
-    // }
+        $this->assertSame($small, $type->getSuitableLocation($file, ['width' => 50]));
+        $this->assertSame($small, $type->getSuitableLocation($file, ['width' => 100]));
+        $this->assertSame($med, $type->getSuitableLocation($file, ['width' => 400]));
+        $this->assertSame($med, $type->getSuitableLocation($file, ['width' => 500]));
+        $this->assertSame($large, $type->getSuitableLocation($file, ['width' => 501]));
+        $this->assertSame($large, $type->getSuitableLocation($file, ['width' => 1200]));
+        $this->assertEquals($file->getLocation(), $type->getSuitableLocation($file, ['width' => 1300]));
+    }
 }
