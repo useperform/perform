@@ -4,6 +4,7 @@ namespace Perform\MediaBundle\Bucket;
 
 use Perform\MediaBundle\Entity\Location;
 use Perform\MediaBundle\Url\UrlGeneratorInterface;
+use Perform\MediaBundle\Entity\File;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -63,6 +64,11 @@ interface BucketInterface
      * If the supplied location is a URL, don't do anything.
      */
     public function delete(Location $location);
+
+    /**
+     * Delete a file and all extra locations from storage.
+     */
+    public function deleteFile(File $file);
 
     /**
      * @return UrlGeneratorInterface

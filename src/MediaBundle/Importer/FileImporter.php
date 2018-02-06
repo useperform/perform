@@ -168,7 +168,7 @@ class FileImporter
             $this->entityManager->remove($file);
             $this->entityManager->flush();
             $this->dispatcher->dispatch(FileEvent::DELETE, new FileEvent($file));
-            $bucket->delete($file->getLocation());
+            $bucket->deleteFile($file);
             $this->entityManager->commit();
         } catch (\Exception $e) {
             $this->entityManager->rollback();

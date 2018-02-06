@@ -129,8 +129,6 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
     public function testDelete()
     {
         $file = new File();
-        $location = Location::file('file.bin');
-        $file->setLocation($location);
         $bucket = $this->expectBucket('binaries');
 
         $this->em->expects($this->once())
@@ -139,8 +137,8 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
         $this->em->expects($this->once())
             ->method('flush');
         $bucket->expects($this->once())
-            ->method('delete')
-            ->with($location);
+            ->method('deleteFile')
+            ->with($file);
         $this->dispatcher->expects($this->once())
             ->method('dispatch')
             ->with(FileEvent::DELETE, new FileEvent($file));

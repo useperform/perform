@@ -92,7 +92,7 @@ class Bucket implements BucketInterface
     /**
      * Delete all locations linked to a media item from storage.
      */
-    public function deleteRecord(File $file)
+    public function deleteFile(File $file)
     {
         $this->delete($file->getLocation());
         foreach ($file->getExtraLocations() as $location) {
