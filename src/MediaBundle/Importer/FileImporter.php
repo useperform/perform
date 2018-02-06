@@ -153,6 +153,8 @@ class FileImporter
 
         $this->entityManager->persist($file);
         $this->entityManager->flush();
+
+        $resource->delete();
     }
 
     /**
