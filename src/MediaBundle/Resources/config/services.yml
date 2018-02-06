@@ -80,3 +80,9 @@ services:
             - "@perform_base.asset_container"
         tags:
             - { name: perform_base.type, alias: media }
+
+    Perform\MediaBundle\Command\:
+        resource: '../../Command'
+        public: false
+        autowire: true
+        autoconfigure: true
