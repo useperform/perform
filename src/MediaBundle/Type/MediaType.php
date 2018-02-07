@@ -7,10 +7,10 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Perform\BaseBundle\Type\AbstractType;
 use Perform\MediaBundle\Entity\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Perform\MediaBundle\Exception\PluginNotFoundException;
 use Perform\BaseBundle\Asset\AssetContainer;
 use Perform\BaseBundle\Form\Type\HiddenEntityType;
-use Perform\MediaBundle\MediaType\MediaTypeRegistry;
+use Perform\MediaBundle\Bucket\BucketRegistryInterface;
+use Perform\MediaBundle\Exception\MediaTypeException;
 
 /**
  * Use the ``media`` type to link to a file in the media library.
@@ -36,7 +36,7 @@ class MediaType extends AbstractType
     protected $registry;
     protected $assets;
 
-    public function __construct(MediaTypeRegistry $registry, AssetContainer $assets)
+    public function __construct(BucketRegistryInterface $registry, AssetContainer $assets)
     {
         $this->registry = $registry;
         $this->assets = $assets;
@@ -50,6 +50,7 @@ class MediaType extends AbstractType
             $this->assets->addJs('/bundles/performmedia/editor.js');
             $builder->add($field, HiddenEntityType::class, [
                 'class' => 'PerformMediaBundle:File',
+                // validate the file is allowed to be added
             ]);
 
             return [
@@ -58,12 +59,12 @@ class MediaType extends AbstractType
             ];
         }
 
-        $availableTypes = $this->registry->getPluginNames();
+        $availableTypes = array_keys($this->registry->getDefault()->getMediaTypes());
         $types = empty($options['types']) ? $availableTypes : $options['types'];
 
         $unknownTypes = array_values(array_diff($types, $availableTypes));
         if (!empty($unknownTypes)) {
-            throw new PluginNotFoundException(sprintf('Unknown media plugin "%s"', $unknownTypes[0]));
+            throw new MediaTypeException(sprintf('Unknown media type "%s"', $unknownTypes[0]));
         }
 
         $builder->add($field, EntityType::class, [
