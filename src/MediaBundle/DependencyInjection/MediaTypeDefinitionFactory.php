@@ -33,7 +33,7 @@ class MediaTypeDefinitionFactory
         case 'other':
             return new Definition(OtherType::class);
         default:
-            throw new MediaTypeException(sprintf('Unknown media type "%s" requested.', $config['type']));
+            throw new MediaTypeException(sprintf('Unknown media type "%s" requested. Available types are "image", "audio", "pdf", and "other".', $config['type']));
         }
     }
 }

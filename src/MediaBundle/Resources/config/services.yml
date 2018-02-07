@@ -9,8 +9,6 @@ services:
 
     perform_media.bucket_registry:
         class: Perform\MediaBundle\Bucket\BucketRegistry
-        arguments:
-            - "@perform_media.bucket_locator"
 
     perform_media.media_type_registry:
         class: Perform\MediaBundle\MediaType\MediaTypeRegistry
