@@ -10,9 +10,6 @@ services:
     perform_media.bucket_registry:
         class: Perform\MediaBundle\Bucket\BucketRegistry
 
-    perform_media.media_type_registry:
-        class: Perform\MediaBundle\MediaType\MediaTypeRegistry
-
     perform_media.twig.file:
         class: Perform\MediaBundle\Twig\Extension\FileExtension
         arguments:
