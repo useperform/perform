@@ -81,10 +81,14 @@ class RegisterBucketsPass implements CompilerPassInterface
         try {
             if (isset($typeConfig['service'])) {
                 // the reason for this compiler pass
-                $definition = $container->getDefinition($typeConfig['service']);
-                $class = $definition->getClass();
+                $service = $typeConfig['service'];
+                $class = $container->getDefinition($service)->getClass();
+                $typeName = $class::getName();
 
-                return [$class::getName(), new Reference($typeConfig['service'])];
+                $alias = sprintf('perform_media.media_type.%s.%s', $bucketName, $typeName);
+                $container->setAlias($alias, $service);
+
+                return [$typeName, new Reference($alias)];
             }
 
             $factory = new MediaTypeDefinitionFactory();
