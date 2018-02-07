@@ -20,39 +20,6 @@ services:
         class: Perform\MediaBundle\Url\SimpleUrlGenerator
         arguments: ["/uploads"]
 
-    perform_media.media_type.other:
-        class: Perform\MediaBundle\MediaType\OtherType
-        arguments:
-            - "@oneup_flysystem.main_filesystem"
-        tags:
-            - {name: perform_media.file_plugin, pluginName: other}
-
-    perform_media.media_type.pdf:
-        class: Perform\MediaBundle\MediaType\PdfType
-        arguments:
-            - "@oneup_flysystem.main_filesystem"
-            - "@perform_media.url.simple"
-        tags:
-            - {name: perform_media.file_plugin, pluginName: pdf}
-
-    perform_media.imagine:
-        class: Imagine\Gd\Imagine
-
-    perform_media.media_type.image:
-        class: Perform\MediaBundle\MediaType\ImageType
-        arguments:
-            - "@perform_media.imagine"
-            - [100, 400, 1024]
-        tags:
-            - {name: perform_media.file_plugin, pluginName: image}
-
-    perform_media.media_type.audio:
-        class: Perform\MediaBundle\MediaType\AudioType
-        arguments:
-            - "@oneup_flysystem.main_filesystem"
-        tags:
-            - {name: perform_media.file_plugin, pluginName: audio}
-
     perform_media.menu_link.media:
         class: Perform\MediaBundle\Menu\MediaLinkProvider
         tags:
