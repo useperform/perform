@@ -13,7 +13,6 @@ use Perform\UserBundle\Entity\User;
 use Perform\MediaBundle\Bucket\BucketInterface;
 use Perform\MediaBundle\Bucket\BucketRegistryInterface;
 use Perform\MediaBundle\Entity\Location;
-use Perform\MediaBundle\MediaType\MediaTypeRegistry;
 use Perform\MediaBundle\MediaType\MediaTypeInterface;
 
 /**
@@ -41,13 +40,7 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
             ->method('getConnection')
             ->will($this->returnValue($this->conn));
         $this->dispatcher = $this->getMock(EventDispatcherInterface::class);
-        $this->mediaTypeRegistry = $this->getMockBuilder(MediaTypeRegistry::class)
-                                 ->disableOriginalConstructor()
-                                 ->getMock();
-        $this->mediaTypeRegistry->expects($this->any())
-            ->method('get')
-            ->will($this->returnValue($this->getMock(MediaTypeInterface::class)));
-        $this->importer = new FileImporter($this->bucketRegistry, $this->em, $this->mediaTypeRegistry, $this->dispatcher);
+        $this->importer = new FileImporter($this->bucketRegistry, $this->em, $this->dispatcher);
         $this->vfs = new FileSystem();
     }
 
@@ -93,6 +86,9 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
         $bucket->expects($this->any())
             ->method('getMediaTypes')
             ->will($this->returnValue([]));
+        $bucket->expects($this->any())
+            ->method('getMediaType')
+            ->will($this->returnValue($this->getMock(MediaTypeInterface::class)));
 
         return $bucket;
     }

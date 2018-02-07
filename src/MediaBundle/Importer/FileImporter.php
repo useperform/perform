@@ -14,7 +14,6 @@ use Perform\MediaBundle\Entity\Location;
 use Perform\MediaBundle\Exception\InvalidFileSizeException;
 use Perform\MediaBundle\Bucket\BucketInterface;
 use Perform\MediaBundle\MediaResource;
-use Perform\MediaBundle\MediaType\MediaTypeRegistry;
 
 /**
  * Add files to the media library.
@@ -25,15 +24,13 @@ class FileImporter
 {
     protected $bucketRegistry;
     protected $entityManager;
-    protected $mediaTypeRegistry;
     protected $dispatcher;
     protected $mimes;
 
-    public function __construct(BucketRegistryInterface $bucketRegistry, EntityManagerInterface $entityManager, MediaTypeRegistry $mediaTypeRegistry, EventDispatcherInterface $dispatcher)
+    public function __construct(BucketRegistryInterface $bucketRegistry, EntityManagerInterface $entityManager, EventDispatcherInterface $dispatcher)
     {
         $this->bucketRegistry = $bucketRegistry;
         $this->entityManager = $entityManager;
-        $this->mediaTypeRegistry = $mediaTypeRegistry;
         $this->dispatcher = $dispatcher;
         $this->mimes = new MimeTypes();
     }
@@ -147,8 +144,7 @@ class FileImporter
             $bucket->save($file->getLocation(), fopen($resource->getPath(), 'r'));
         }
 
-        $this->mediaTypeRegistry->get($file->getType())
-            ->process($file, $resource, $bucket);
+        $bucket->getMediaType($file->getType())->process($file, $resource, $bucket);
         $this->dispatcher->dispatch(FileEvent::PROCESS, new FileEvent($file));
 
         $this->entityManager->persist($file);
@@ -269,7 +265,7 @@ class FileImporter
     public function getSuitableUrl(File $file, array $criteria = [])
     {
         $bucket = $this->bucketRegistry->getForFile($file);
-        $type = $this->mediaTypeRegistry->get($file->getType());
+        $type = $bucket->getMediaType($file->getType());
         $location = $type->getSuitableLocation($file, $criteria);
 
         return $bucket->getUrlGenerator()->generate($location);
@@ -315,8 +311,7 @@ class FileImporter
     protected function findType(File $file, MediaResource $resource)
     {
         $bucket = $this->bucketRegistry->getForFile($file);
-        foreach ($bucket->getMediaTypes() as $name) {
-            $type = $this->mediaTypeRegistry->get($name);
+        foreach ($bucket->getMediaTypes() as $name => $type) {
             if ($type->supports($file, $resource)) {
                 return $name;
             }
