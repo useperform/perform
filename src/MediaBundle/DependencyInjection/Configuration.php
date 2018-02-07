@@ -16,9 +16,14 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('perform_media');
 
         $rootNode
+            ->fixXmlConfig('bucket')
             ->children()
-                ->arrayNode('plugins')
-                        ->prototype('scalar')->end()
+                ->arrayNode('buckets')
+                    ->useAttributeAsKey('name')
+                    ->prototype('array')
+                    ->children()
+                        ->scalarNode('flysystem')->isRequired()->end()
+                        ->scalarNode('url_generator')->isRequired()->end()
                     ->end()
                 ->end()
             ->end();
