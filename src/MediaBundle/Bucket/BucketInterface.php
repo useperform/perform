@@ -17,7 +17,12 @@ interface BucketInterface
     public function getName();
 
     /**
-     * @return array
+     * @return MediaTypeInterface
+     */
+    public function getMediaType($name);
+
+    /**
+     * @return MediaTypeInterface[]
      */
     public function getMediaTypes();
 

@@ -7,6 +7,7 @@ use League\Flysystem\FilesystemInterface;
 use League\Flysystem\FileNotFoundException;
 use Perform\MediaBundle\Entity\File;
 use Perform\MediaBundle\Entity\Location;
+use Perform\MediaBundle\Exception\MediaTypeException;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -21,7 +22,10 @@ class Bucket implements BucketInterface
     protected $urlGenerator;
     protected $mediaTypes = [];
 
-    public function __construct($name, FilesystemInterface $storage, UrlGeneratorInterface $urlGenerator, array $mediaTypes = [])
+    /**
+     * @param MediaTypeInterface[] $mediaTypes
+     */
+    public function __construct($name, FilesystemInterface $storage, UrlGeneratorInterface $urlGenerator, array $mediaTypes)
     {
         $this->name = $name;
         $this->storage = $storage;
@@ -50,6 +54,15 @@ class Bucket implements BucketInterface
     public function getMaxSize()
     {
         return INF;
+    }
+
+    public function getMediaType($name)
+    {
+        if (!isset($this->mediaTypes[$name])) {
+            throw new MediaTypeException(sprintf('Media type "%s" is not available.', $name));
+        }
+
+        return $this->mediaTypes[$name];
     }
 
     public function getMediaTypes()

@@ -56,7 +56,7 @@ class PerformMediaExtension extends Extension
                         $name,
                         new Reference($config['flysystem']),
                         new Reference($config['url_generator']),
-                        ['image', 'other'],
+                        []
                     ]);
 
         return $service;
