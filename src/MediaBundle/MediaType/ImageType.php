@@ -22,6 +22,11 @@ class ImageType implements MediaTypeInterface
         $this->thumbnailWidths = $thumbnailWidths;
     }
 
+    public static function getName()
+    {
+        return 'image';
+    }
+
     public function supports(File $file, MediaResource $resource)
     {
         if (!$resource->isFile()) {

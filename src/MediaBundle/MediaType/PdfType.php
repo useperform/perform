@@ -11,6 +11,11 @@ use Perform\MediaBundle\Bucket\BucketInterface;
  **/
 class PdfType implements MediaTypeInterface
 {
+    public static function getName()
+    {
+        return 'pdf';
+    }
+
     public function supports(File $file, MediaResource $resource)
     {
         return $file->getMimeType() === 'application/pdf';

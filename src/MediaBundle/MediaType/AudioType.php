@@ -11,6 +11,11 @@ use Perform\MediaBundle\Bucket\BucketInterface;
  **/
 class AudioType implements MediaTypeInterface
 {
+    public static function getName()
+    {
+        return 'audio';
+    }
+
     public function supports(File $file, MediaResource $resource)
     {
         if (!$resource->isFile()) {

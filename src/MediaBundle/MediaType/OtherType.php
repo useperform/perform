@@ -11,6 +11,11 @@ use Perform\MediaBundle\Bucket\BucketInterface;
  **/
 class OtherType implements MediaTypeInterface
 {
+    public static function getName()
+    {
+        return 'other';
+    }
+
     public function supports(File $file, MediaResource $resource)
     {
         return $resource->isFile();
