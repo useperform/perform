@@ -7,13 +7,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Perform\MediaBundle\Entity\File;
 use Perform\UserBundle\Entity\User;
 use Perform\MediaBundle\Event\FileEvent;
-use Mimey\MimeTypes;
 use Symfony\Component\Finder\Finder;
 use Perform\MediaBundle\Bucket\BucketRegistryInterface;
 use Perform\MediaBundle\Entity\Location;
 use Perform\MediaBundle\Exception\InvalidFileSizeException;
 use Perform\MediaBundle\Bucket\BucketInterface;
 use Perform\MediaBundle\MediaResource;
+use Perform\MediaBundle\File\FinfoParser;
 
 /**
  * Add files to the media library.
@@ -25,14 +25,14 @@ class FileImporter
     protected $bucketRegistry;
     protected $entityManager;
     protected $dispatcher;
-    protected $mimes;
+    protected $parser;
 
     public function __construct(BucketRegistryInterface $bucketRegistry, EntityManagerInterface $entityManager, EventDispatcherInterface $dispatcher)
     {
         $this->bucketRegistry = $bucketRegistry;
         $this->entityManager = $entityManager;
         $this->dispatcher = $dispatcher;
-        $this->mimes = new MimeTypes();
+        $this->parser = new FinfoParser();
     }
 
     /**
@@ -56,13 +56,12 @@ class FileImporter
         if ($resource->isFile()) {
             $pathname = $resource->getPath();
             $this->validateFileSize($bucket, $pathname);
-            $extension = pathinfo($pathname, PATHINFO_EXTENSION);
 
-            list($mimeType, $charset) = $this->getContentType($pathname, $extension);
+            list($mimeType, $charset, $extension) = $this->parser->parse($pathname);
             $file->setMimeType($mimeType);
             $file->setCharset($charset);
 
-            $file->setLocation(Location::file(sprintf('%s.%s', sha1($file->getId()), $this->getSuitableExtension($mimeType, $extension))));
+            $file->setLocation(Location::file(sprintf('%s.%s', sha1($file->getId()), $extension)));
         } else {
             $file->setMimeType('');
             $file->setCharset('');
@@ -200,51 +199,6 @@ class FileImporter
             $this->entityManager->rollback();
             throw $e;
         }
-    }
-
-    /**
-     * Get the mimetype and charset for a file.
-     *
-     * @param string $filename
-     * @param string $extension
-     */
-    protected function getContentType($filename, $extension)
-    {
-        $finfo = new \Finfo(FILEINFO_MIME);
-        $guess = explode('; charset=', @$finfo->file($filename));
-
-        if (count($guess) === 2) {
-            return $guess;
-        }
-
-        // best effort detection of mimetype and charset
-        $mime = $extension ? $this->mimes->getMimeType($extension) : null;
-        // getMimeType can return null, default to application/octet-stream
-        if (!$mime) {
-            $mime = 'application/octet-stream';
-        }
-
-        return [
-            $mime,
-            $this->defaultCharset($mime),
-        ];
-    }
-
-    /**
-     * Get a suitable extension for a file with the given mime type.
-     *
-     * @param string $mimeType  The mime type of the supplied file
-     * @param string $extension The extension of the supplied file
-     */
-    public function getSuitableExtension($mimeType, $extension)
-    {
-        $validExtensions = $this->mimes->getAllExtensions($mimeType);
-
-        if (in_array($extension, $validExtensions) || !isset($validExtensions[0])) {
-            return $extension;
-        }
-
-        return $validExtensions[0];
     }
 
     /**
