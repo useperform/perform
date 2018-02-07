@@ -34,6 +34,7 @@ class FileController extends Controller
                 'url' => $manager->getUrl($file),
                 'thumbnail' => $manager->getSuitableUrl($file, ['width' => 100]),
                 'type' => $file->getType(),
+                'humanType' => ucfirst($file->getType()),
             ];
         }
 
