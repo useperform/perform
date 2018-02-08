@@ -46,8 +46,28 @@ class FileImporter
         $bucket = $bucketName ?
                 $this->bucketRegistry->get($bucketName) :
                 $this->bucketRegistry->getDefault();
+        try {
+            $this->entityManager->beginTransaction();
+            $file = $this->createAndSaveEntity($resource, $bucket);
+            if ($resource->isFile()) {
+                $bucket->save($file->getLocation(), fopen($resource->getPath(), 'r'));
+            }
+            $this->entityManager->commit();
+        } catch (\Exception $e) {
+            $this->entityManager->rollback();
+            throw $e;
+        }
 
+        // run this in the background
+        $this->process($file, $resource);
+
+        return $file;
+    }
+
+    protected function createAndSaveEntity(MediaResource $resource, BucketInterface $bucket)
+    {
         $file = File::fromResource($resource);
+        $file->setStatus(File::STATUS_NEW);
         $file->setBucketName($bucket->getName());
 
         // set guid manually so a location can be created before saving to the database
@@ -60,7 +80,6 @@ class FileImporter
             list($mimeType, $charset, $extension) = $this->parser->parse($pathname);
             $file->setMimeType($mimeType);
             $file->setCharset($charset);
-
             $file->setLocation(Location::file(sprintf('%s.%s', sha1($file->getId()), $extension)));
         } else {
             $file->setMimeType('');
@@ -72,9 +91,6 @@ class FileImporter
         $this->dispatcher->dispatch(FileEvent::CREATE, new FileEvent($file));
         $this->entityManager->persist($file);
         $this->entityManager->flush();
-
-        // run this in the background
-        $this->process($file, $resource);
 
         return $file;
     }
@@ -139,17 +155,20 @@ class FileImporter
     public function process(File $file, MediaResource $resource)
     {
         $bucket = $this->bucketRegistry->getForFile($file);
-        if ($resource->isFile()) {
-            $bucket->save($file->getLocation(), fopen($resource->getPath(), 'r'));
+        try {
+            $bucket->getMediaType($file->getType())->process($file, $resource, $bucket);
+            $this->dispatcher->dispatch(FileEvent::PROCESS, new FileEvent($file));
+
+            $file->setStatus(FILE::STATUS_OK);
+            $this->entityManager->persist($file);
+            $this->entityManager->flush();
+            $resource->delete();
+        } catch (\Exception $e) {
+            $file->setStatus(FILE::STATUS_ERROR);
+            $this->entityManager->persist($file);
+            $this->entityManager->flush();
+            throw $e;
         }
-
-        $bucket->getMediaType($file->getType())->process($file, $resource, $bucket);
-        $this->dispatcher->dispatch(FileEvent::PROCESS, new FileEvent($file));
-
-        $this->entityManager->persist($file);
-        $this->entityManager->flush();
-
-        $resource->delete();
     }
 
     /**
@@ -238,15 +257,6 @@ class FileImporter
         $sql = 'SELECT '.$connection->getDatabasePlatform()->getGuidExpression();
 
         return $connection->query($sql)->fetchColumn(0);
-    }
-
-    protected function defaultCharset($mimeType)
-    {
-        if (substr($mimeType, 0, 5) === 'text/') {
-            return 'us-ascii';
-        }
-
-        return 'binary';
     }
 
     protected function validateFileSize(BucketInterface $bucket, $pathname)
