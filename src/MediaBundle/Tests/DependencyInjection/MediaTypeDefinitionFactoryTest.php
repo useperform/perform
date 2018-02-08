@@ -24,6 +24,7 @@ class MediaTypeDefinitionFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $def = $this->factory->create([
             'type' => 'image',
+            'engine' => 'gd',
             'widths' => [],
         ]);
 

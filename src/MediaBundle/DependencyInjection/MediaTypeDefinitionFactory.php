@@ -2,7 +2,9 @@
 
 namespace Perform\MediaBundle\DependencyInjection;
 
-use Imagine\Gd\Imagine;
+use Imagine\Gd\Imagine as GdImagine;
+use Imagine\Imagick\Imagine as ImagickImagine;
+use Imagine\Gmagick\Imagine as GmagickImagine;
 use Perform\MediaBundle\Exception\MediaTypeException;
 use Perform\MediaBundle\MediaType\AudioType;
 use Perform\MediaBundle\MediaType\ImageType;
@@ -15,13 +17,19 @@ use Symfony\Component\DependencyInjection\Definition;
  **/
 class MediaTypeDefinitionFactory
 {
+    protected static $imagineEngines = [
+        'gd' => GdImagine::class,
+        'imagick' => ImagickImagine::class,
+        'gmagick' => GmagickImagine::class,
+    ];
+
     public function create(array $config)
     {
         switch ($config['type']) {
         case 'image':
             $definition = new Definition(ImageType::class);
             $definition->setArguments([
-                new Definition(Imagine::class),
+                new Definition(static::$imagineEngines[$config['engine']]),
                 $config['widths'],
             ]);
 
