@@ -32,6 +32,20 @@ class File
     protected $type;
 
     /**
+     * @var int
+     */
+    protected $status;
+
+    // newly added, not processed yet
+    const STATUS_NEW = 0;
+
+    // processed successfully
+    const STATUS_OK = 1;
+
+    // processing had errors, reprocess is required
+    const STATUS_ERROR = 2;
+
+    /**
      * @var string
      */
     protected $locationPath;
@@ -231,6 +245,26 @@ class File
     public function hasType()
     {
         return !!$this->type;
+    }
+
+    /**
+     * @param int $status
+     *
+     * @return File
+     */
+    public function setStatus($status)
+    {
+        $this->status = (int) $status;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 
     /**

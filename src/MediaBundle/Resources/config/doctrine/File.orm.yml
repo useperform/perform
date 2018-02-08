@@ -15,6 +15,8 @@ Perform\MediaBundle\Entity\File:
             type: string
         type:
             type: string
+        status:
+            type: smallint
         locationPath:
             type: string
         locationType:
