@@ -31,6 +31,7 @@ class FileController extends Controller
             $data[] = [
                 'id' => $file->getId(),
                 'name' => $file->getName(),
+                'status' => $file->getStatus(),
                 'url' => $manager->getUrl($file),
                 'thumbnail' => $manager->getSuitableUrl($file, ['width' => 100]),
                 'type' => $file->getType(),
