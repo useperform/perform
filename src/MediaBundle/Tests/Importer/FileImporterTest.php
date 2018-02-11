@@ -98,8 +98,8 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
         $this->expectDefaultBucket();
         $file = $this->importer->importFile(__FILE__);
         $this->assertSame(36, strlen($file->getId()));
-        $this->assertSame('text/x-php', $file->getMimeType());
-        $this->assertSame('us-ascii', $file->getCharset());
+        $this->assertSame('text/x-php', $file->getPrimaryLocation()->getMimeType());
+        $this->assertSame('us-ascii', $file->getPrimaryLocation()->getCharset());
     }
 
     public function testImportFileFailedMimeGuess()
@@ -108,8 +108,8 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
         $this->expectDefaultBucket();
         $file = $this->importer->importFile($this->vfs->path('/file.txt'));
         $this->assertSame(36, strlen($file->getId()));
-        $this->assertSame('text/plain', $file->getMimeType());
-        $this->assertSame('us-ascii', $file->getCharset());
+        $this->assertSame('text/plain', $file->getPrimaryLocation()->getMimeType());
+        $this->assertSame('us-ascii', $file->getPrimaryLocation()->getCharset());
     }
 
     public function testImportFileSuccessfulMimeGuessNoExtension()
@@ -117,8 +117,8 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
         $this->expectDefaultBucket();
         $file = $this->importer->importFile(__DIR__.'/../fixtures/binary_no_extension');
         $this->assertSame(36, strlen($file->getId()));
-        $this->assertSame('application/octet-stream', $file->getMimeType());
-        $this->assertSame('binary', $file->getCharset());
+        $this->assertSame('application/octet-stream', $file->getPrimaryLocation()->getMimeType());
+        $this->assertSame('binary', $file->getPrimaryLocation()->getCharset());
         $this->assertSame('.bin', substr($file->getPrimaryLocation()->getPath(), -4));
     }
 

@@ -46,16 +46,6 @@ class File
     const STATUS_ERROR = 2;
 
     /**
-     * @var string
-     */
-    protected $mimeType;
-
-    /**
-     * @var string
-     */
-    protected $charset;
-
-    /**
      * @var \DateTime
      */
     protected $createdAt;
@@ -254,46 +244,6 @@ class File
     public function getStatus()
     {
         return $this->status;
-    }
-
-    /**
-     * @param string $mimeType
-     *
-     * @return File
-     */
-    public function setMimeType($mimeType)
-    {
-        $this->mimeType = $mimeType;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMimeType()
-    {
-        return $this->mimeType;
-    }
-
-    /**
-     * @param string $charset
-     *
-     * @return File
-     */
-    public function setCharset($charset)
-    {
-        $this->charset = $charset;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCharset()
-    {
-        return $this->charset;
     }
 
     /**

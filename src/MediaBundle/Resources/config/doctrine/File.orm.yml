@@ -17,10 +17,6 @@ Perform\MediaBundle\Entity\File:
             type: string
         status:
             type: smallint
-        mimeType:
-            type: string
-        charset:
-            type: string
         createdAt:
             type: datetime
             gedmo:

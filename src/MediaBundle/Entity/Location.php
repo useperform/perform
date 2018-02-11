@@ -47,6 +47,16 @@ class Location
     protected $file;
 
     /**
+     * @var string
+     */
+    protected $mimeType;
+
+    /**
+     * @var string
+     */
+    protected $charset;
+
+    /**
      * @param string $path
      * @param int $type
      */
@@ -191,4 +201,45 @@ class Location
     {
         return $this->file;
     }
+
+    /**
+     * @param string $mimeType
+     *
+     * @return File
+     */
+    public function setMimeType($mimeType)
+    {
+        $this->mimeType = $mimeType;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMimeType()
+    {
+        return $this->mimeType;
+    }
+
+    /**
+     * @param string $charset
+     *
+     * @return File
+     */
+    public function setCharset($charset)
+    {
+        $this->charset = $charset;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCharset()
+    {
+        return $this->charset;
+    }
+
 }

@@ -33,11 +33,12 @@ class ImageType implements MediaTypeInterface
             return false;
         }
 
-        if (substr($file->getMimeType(), 0, 6) !== 'image/') {
+        $mimeType = $file->getPrimaryLocation()->getMimeType();
+        if (substr($mimeType, 0, 6) !== 'image/') {
             return false;
         }
         //no support for icon files for now - GD blows up
-        return $file->getMimeType() !== 'image/x-icon';
+        return $mimeType !== 'image/x-icon';
     }
 
     public function process(File $file, MediaResource $resource, BucketInterface $bucket)
@@ -54,16 +55,19 @@ class ImageType implements MediaTypeInterface
             }
             $thumbnailStream = fopen('php://temp', 'r+');
             $thumbnailImage = $image->copy();
-            fwrite($thumbnailStream, $thumbnailImage->resize($box->widen($width))->get($this->getSaveFormat($file->getMimeType())));
+            $format = $this->getSaveFormat($file->getPrimaryLocation()->getMimeType());
+            fwrite($thumbnailStream, $thumbnailImage->resize($box->widen($width))->get($format));
             rewind($thumbnailStream);
 
             $thumbnailLocation = Location::file(
-                sprintf('thumbs/%s/%s.%s', $width, sha1($file->getId()), $this->getSaveFormat($file->getMimeType())),
+                sprintf('thumbs/%s/%s.%s', $width, sha1($file->getId()), $format),
                 [
                     'width' => $width,
                     'height' => $thumbnailImage->getSize()->getHeight(),
                 ]
             );
+            $thumbnailLocation->setMimeType('image/'.$format);
+            $thumbnailLocation->setCharset('binary');
             unset($thumbnailImage);
             $bucket->save($thumbnailLocation, $thumbnailStream);
             $file->addLocation($thumbnailLocation);

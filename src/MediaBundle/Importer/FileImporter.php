@@ -78,14 +78,13 @@ class FileImporter
             $this->validateFileSize($bucket, $pathname);
 
             list($mimeType, $charset, $extension) = $this->parser->parse($pathname);
-            $file->setMimeType($mimeType);
-            $file->setCharset($charset);
-            $file->setPrimaryLocation(Location::file(sprintf('%s.%s', sha1($file->getId()), $extension)));
+            $location = Location::file(sprintf('%s.%s', sha1($file->getId()), $extension));
+            $location->setMimeType($mimeType);
+            $location->setCharset($charset);
         } else {
-            $file->setMimeType('');
-            $file->setCharset('');
-            $file->setPrimaryLocation(Location::url($resource->getPath()));
+            $location = Location::url($resource->getPath());
         }
+        $file->setPrimaryLocation($location);
 
         $file->setType($this->findType($file, $resource));
         $this->dispatcher->dispatch(FileEvent::CREATE, new FileEvent($file));
