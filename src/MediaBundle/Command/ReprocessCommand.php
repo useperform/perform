@@ -7,6 +7,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Perform\MediaBundle\Importer\FileImporter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -27,12 +28,25 @@ class ReprocessCommand extends Command
     {
         $this->setName('perform:media:reprocess')
             ->setDescription('Fetch media and process it again')
+            ->addArgument('file_id', InputArgument::OPTIONAL)
             ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $media = $this->em->getRepository('PerformMediaBundle:File')->findAll();
+        $repo = $this->em->getRepository('PerformMediaBundle:File');
+        $fileId = $input->getArgument('file_id');
+        if ($fileId) {
+            $file = $repo->find($fileId);
+            if (!$file) {
+                throw new \Exception(sprintf('File with id "%s" was not found.', $fileId));
+            }
+
+            $media = [$file];
+        } else {
+            $media = $repo->findAll();
+        }
+
         $count = 0;
         foreach ($media as $file) {
             $output->writeln(sprintf('Processing <info>%s</info>', $file->getName()));
