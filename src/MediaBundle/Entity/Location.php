@@ -37,6 +37,11 @@ class Location
     protected $attributes = [];
 
     /**
+     * @var bool
+     */
+    protected $isPrimary = false;
+
+    /**
      * @var File
      */
     protected $file;
@@ -147,6 +152,24 @@ class Location
     public function getAttribute($name, $default = null)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : $default;
+    }
+
+    /**
+     * @var bool $isPrimary
+     */
+    public function setPrimary($isPrimary)
+    {
+        $this->isPrimary = (bool) $isPrimary;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPrimary()
+    {
+        return $this->isPrimary;
     }
 
     /**

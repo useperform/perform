@@ -119,7 +119,7 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(36, strlen($file->getId()));
         $this->assertSame('application/octet-stream', $file->getMimeType());
         $this->assertSame('binary', $file->getCharset());
-        $this->assertSame('.bin', substr($file->getLocation()->getPath(), -4));
+        $this->assertSame('.bin', substr($file->getPrimaryLocation()->getPath(), -4));
     }
 
     public function testDelete()

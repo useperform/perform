@@ -48,21 +48,6 @@ class File
     /**
      * @var string
      */
-    protected $locationPath;
-
-    /**
-     * @var int
-     */
-    protected $locationType;
-
-    /**
-     * @var array
-     */
-    protected $locationAttributes = [];
-
-    /**
-     * @var string
-     */
     protected $mimeType;
 
     /**
@@ -88,11 +73,11 @@ class File
     /**
      * @var Collection
      */
-    protected $extraLocations;
+    protected $locations;
 
     public function __construct()
     {
-        $this->extraLocations = new ArrayCollection();
+        $this->locations = new ArrayCollection();
     }
 
     public static function fromResource(MediaResource $resource)
@@ -149,11 +134,10 @@ class File
      *
      * @return static
      */
-    public function setLocation(Location $location)
+    public function setPrimaryLocation(Location $location)
     {
-        $this->locationPath = $location->getPath();
-        $this->locationType = $location->getType();
-        $this->locationAttributes = $location->getAttributes();
+        $location->setPrimary(true);
+        $this->addLocation($location);
 
         return $this;
     }
@@ -161,22 +145,17 @@ class File
     /**
      * @return Location
      */
-    public function getLocation()
+    public function getPrimaryLocation()
     {
-        return new Location($this->locationPath, $this->locationType, $this->locationAttributes);
-    }
+        foreach ($this->locations as $location) {
+            if ($location->isPrimary()) {
+                return $location;
+            }
+        }
 
-    /**
-     * @param string $name
-     * @param mixed $value
-     *
-     * @return static
-     */
-    public function setLocationAttribute($name, $value)
-    {
-        $this->locationAttributes[$name] = $value;
-
-        return $this;
+        // getting to this stage suggests the location table is out of sync
+        // always return a Location object to prevent things blowing up
+        return Location::url('');
     }
 
     /**
@@ -184,10 +163,10 @@ class File
      *
      * @return static
      */
-    public function addExtraLocation(Location $location)
+    public function addLocation(Location $location)
     {
-        if (!$this->extraLocations->contains($location)) {
-            $this->extraLocations[] = $location;
+        if (!$this->locations->contains($location)) {
+            $this->locations[] = $location;
             $location->setFile($this);
         }
 
@@ -197,9 +176,19 @@ class File
     /**
      * @return Collection
      */
+    public function getLocations()
+    {
+        return $this->locations;
+    }
+
+    /**
+     * @return Collection
+     */
     public function getExtraLocations()
     {
-        return $this->extraLocations;
+        return $this->locations->filter(function($location) {
+            return !$location->isPrimary();
+        });
     }
 
     /**

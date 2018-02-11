@@ -50,7 +50,7 @@ class FileImporter
             $this->entityManager->beginTransaction();
             $file = $this->createAndSaveEntity($resource, $bucket);
             if ($resource->isFile()) {
-                $bucket->save($file->getLocation(), fopen($resource->getPath(), 'r'));
+                $bucket->save($file->getPrimaryLocation(), fopen($resource->getPath(), 'r'));
             }
             $this->entityManager->commit();
         } catch (\Exception $e) {
@@ -80,11 +80,11 @@ class FileImporter
             list($mimeType, $charset, $extension) = $this->parser->parse($pathname);
             $file->setMimeType($mimeType);
             $file->setCharset($charset);
-            $file->setLocation(Location::file(sprintf('%s.%s', sha1($file->getId()), $extension)));
+            $file->setPrimaryLocation(Location::file(sprintf('%s.%s', sha1($file->getId()), $extension)));
         } else {
             $file->setMimeType('');
             $file->setCharset('');
-            $file->setLocation(Location::url($resource->getPath()));
+            $file->setPrimaryLocation(Location::url($resource->getPath()));
         }
 
         $file->setType($this->findType($file, $resource));
@@ -176,7 +176,7 @@ class FileImporter
      */
     public function reprocess(File $file)
     {
-        $location = $file->getLocation();
+        $location = $file->getPrimaryLocation();
         $bucket = $this->bucketRegistry->getForFile($file);
         if ($location->isFile()) {
             $downloadedFile = tempnam(sys_get_temp_dir(), 'perform-media');
@@ -232,7 +232,7 @@ class FileImporter
     {
         $bucket = $this->bucketRegistry->getForFile($file);
 
-        return $bucket->getUrlGenerator()->generate($file->getLocation());
+        return $bucket->getUrlGenerator()->generate($file->getPrimaryLocation());
     }
 
     public function getSuitableUrl(File $file, array $criteria = [])

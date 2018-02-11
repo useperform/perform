@@ -27,6 +27,6 @@ class OtherType implements MediaTypeInterface
 
     public function getSuitableLocation(File $file, array $criteria)
     {
-        return $file->getLocation();
+        return $file->getPrimaryLocation();
     }
 }

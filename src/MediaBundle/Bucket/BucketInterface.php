@@ -71,7 +71,7 @@ interface BucketInterface
     public function delete(Location $location);
 
     /**
-     * Delete a file and all extra locations from storage.
+     * Delete a file and all locations from storage.
      */
     public function deleteFile(File $file);
 

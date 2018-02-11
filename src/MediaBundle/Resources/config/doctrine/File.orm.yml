@@ -17,12 +17,6 @@ Perform\MediaBundle\Entity\File:
             type: string
         status:
             type: smallint
-        locationPath:
-            type: string
-        locationType:
-            type: smallint
-        locationAttributes:
-            type: json_array
         mimeType:
             type: string
         charset:
@@ -38,7 +32,7 @@ Perform\MediaBundle\Entity\File:
                 timestampable:
                     on: update
     oneToMany:
-        extraLocations:
+        locations:
             targetEntity: Perform\MediaBundle\Entity\Location
             mappedBy: file
             cascade:

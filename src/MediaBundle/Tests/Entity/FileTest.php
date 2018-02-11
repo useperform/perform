@@ -18,11 +18,18 @@ class FileTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($file->hasType());
     }
 
-    public function testGetAndSetLocation()
+    public function testGetAndSetPrimaryLocation()
     {
         $file = new File();
         $location = Location::file('uh_oh.txt', ['foo' => 'bar']);
-        $this->assertSame($file, $file->setLocation($location));
-        $this->assertEquals($location, $file->getLocation());
+        $this->assertSame($file, $file->setPrimaryLocation($location));
+        $this->assertEquals($location, $file->getPrimaryLocation());
+        $this->assertSame(1, $file->getLocations()->count());
     }
+
+    public function testGetPrimaryLocationHasAFallback()
+    {
+        $this->assertInstanceOf(Location::class, (new File)->getPrimaryLocation());
+    }
+
 }

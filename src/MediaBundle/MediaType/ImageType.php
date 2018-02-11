@@ -44,8 +44,9 @@ class ImageType implements MediaTypeInterface
     {
         $image = $this->imagine->read(fopen($resource->getPath(), 'r'));
         $box = $image->getSize();
-        $file->setLocationAttribute('width', $box->getWidth());
-        $file->setLocationAttribute('height', $box->getHeight());
+        $location = $file->getPrimaryLocation();
+        $location->setAttribute('width', $box->getWidth());
+        $location->setAttribute('height', $box->getHeight());
 
         foreach ($this->thumbnailWidths as $width) {
             if ($box->getWidth() < $width) {
@@ -65,13 +66,13 @@ class ImageType implements MediaTypeInterface
             );
             unset($thumbnailImage);
             $bucket->save($thumbnailLocation, $thumbnailStream);
-            $file->addExtraLocation($thumbnailLocation);
+            $file->addLocation($thumbnailLocation);
         }
     }
 
     public function getSuitableLocation(File $file, array $criteria)
     {
-        $location = $file->getLocation();
+        $location = $file->getPrimaryLocation();
         if (!isset($criteria['width'])) {
             return $location;
         }

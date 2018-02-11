@@ -1,6 +1,6 @@
 Perform\MediaBundle\Entity\Location:
     type: entity
-    table: perform_media_extra_location
+    table: perform_media_location
     id:
         id:
             type: guid
@@ -14,9 +14,11 @@ Perform\MediaBundle\Entity\Location:
             type: smallint
         attributes:
             type: json_array
+        isPrimary:
+            type: boolean
     manyToOne:
         file:
             targetEntity: Perform\MediaBundle\Entity\File
-            inversedBy: extraLocations
+            inversedBy: locations
             joinColumn:
                 nullable: false

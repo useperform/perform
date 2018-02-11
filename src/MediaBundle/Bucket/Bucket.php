@@ -107,8 +107,7 @@ class Bucket implements BucketInterface
      */
     public function deleteFile(File $file)
     {
-        $this->delete($file->getLocation());
-        foreach ($file->getExtraLocations() as $location) {
+        foreach ($file->getLocations() as $location) {
             $this->delete($location);
         }
     }
