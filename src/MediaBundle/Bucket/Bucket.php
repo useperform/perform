@@ -59,7 +59,7 @@ class Bucket implements BucketInterface
     public function getMediaType($name)
     {
         if (!isset($this->mediaTypes[$name])) {
-            throw new MediaTypeException(sprintf('Media type "%s" is not available.', $name));
+            throw new MediaTypeException(sprintf('Media type "%s" is not available in the "%s" bucket.', $name, $this->name));
         }
 
         return $this->mediaTypes[$name];
