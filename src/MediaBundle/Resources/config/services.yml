@@ -25,6 +25,12 @@ services:
         tags:
             - { name: perform_base.link_provider, alias: media }
 
+    perform_media.listener.download_url:
+        class: Perform\MediaBundle\EventListener\DownloadUrlListener
+        public: false
+        tags:
+            - { name: kernel.event_listener, event: perform_media.import_url, method: onImport, priority: -100 }
+
     perform_media.type.media:
         class: Perform\MediaBundle\Type\MediaType
         arguments:

@@ -14,6 +14,8 @@ use Perform\MediaBundle\Exception\InvalidFileSizeException;
 use Perform\MediaBundle\Bucket\BucketInterface;
 use Perform\MediaBundle\MediaResource;
 use Perform\MediaBundle\File\FinfoParser;
+use Perform\MediaBundle\Event\ImportUrlEvent;
+use Perform\MediaBundle\Event\Events;
 
 /**
  * Add files to the media library.
@@ -142,13 +144,11 @@ class FileImporter
      */
     public function importUrl($url, $name = null, User $owner = null, $bucketName = null)
     {
-        $local = tempnam(sys_get_temp_dir(), 'perform-media');
-        copy($url, $local);
-        if (!$name) {
-            $name = basename(parse_url($url, PHP_URL_PATH));
+        $event = new ImportUrlEvent($url, $name, $owner, $bucketName);
+        $this->dispatcher->dispatch(Events::IMPORT_URL, $event);
+        foreach ($event->getResources() as $resource) {
+            $this->import($resource, $bucketName);
         }
-        $this->import(new MediaResource($local, $name, $owner), $bucketName);
-        unlink($local);
     }
 
     public function process(File $file, MediaResource $resource)
