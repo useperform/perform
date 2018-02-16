@@ -7,6 +7,7 @@ use DrewM\MailChimp\MailChimp;
 use Psr\Log\LoggerInterface;
 use Perform\MailingListBundle\Exception\ListNotFoundException;
 use Perform\MailingListBundle\Exception\ConnectorException;
+use Perform\MailingListBundle\SubscriberFields;
 
 /**
  * Add subscribers to a MailChimp list.
@@ -22,6 +23,10 @@ class MailChimpConnector implements ConnectorInterface
     {
         $this->mailChimp = $mailChimp;
         $this->logger = $logger;
+        $this->attributeMap = [
+            SubscriberFields::FIRST_NAME => 'FNAME',
+            SubscriberFields::LAST_NAME => 'LNAME',
+        ];
     }
 
     public function subscribe(Subscriber $subscriber)
@@ -30,6 +35,7 @@ class MailChimpConnector implements ConnectorInterface
         $params = [
             'email_address' => $subscriber->getEmail(),
             'status' => 'subscribed',
+            'merge_fields' => $this->createMergeFields($subscriber),
         ];
         $result = $this->mailChimp->put($url, $params);
         $this->logger->debug('MailChimp: PUT '.$url, $params);
@@ -43,5 +49,17 @@ class MailChimpConnector implements ConnectorInterface
         default:
             throw new ConnectorException(isset($result['detail']) ? $result['detail'] : '', __CLASS__);
         }
+    }
+
+    public function createMergeFields(Subscriber $subscriber)
+    {
+        $fields = [];
+        foreach ($this->attributeMap as $subscriberField => $mailchimpField) {
+            if ($subscriber->hasAttribute($subscriberField)) {
+                $fields[$mailchimpField] = $subscriber->getAttribute($subscriberField);
+            }
+        }
+
+        return $fields;
     }
 }

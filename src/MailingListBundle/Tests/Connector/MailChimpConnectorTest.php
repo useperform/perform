@@ -8,6 +8,7 @@ use DrewM\MailChimp\MailChimp;
 use Perform\MailingListBundle\Entity\Subscriber;
 use Perform\MailingListBundle\Exception\ListNotFoundException;
 use Perform\MailingListBundle\Exception\ConnectorException;
+use Perform\MailingListBundle\SubscriberFields;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -29,6 +30,10 @@ class MailChimpConnectorTest extends \PHPUnit_Framework_TestCase
         $subscriber = new Subscriber();
         $subscriber->setEmail('test@example.com')
             ->setList('some-mailchimp-list');
+        $subscriber->setAttributes([
+            SubscriberFields::FIRST_NAME => 'Test',
+            SubscriberFields::LAST_NAME => 'User',
+        ]);
         $hash = md5('test@example.com');
 
         $this->mc->expects($this->once())
@@ -36,6 +41,10 @@ class MailChimpConnectorTest extends \PHPUnit_Framework_TestCase
             ->with('lists/some-mailchimp-list/members/'.$hash, [
                 'email_address' => 'test@example.com',
                 'status' => 'subscribed',
+                'merge_fields' => [
+                    'FNAME' => 'Test',
+                    'LNAME' => 'User',
+                ],
             ])
             ->will($this->returnValue(['status' => 'subscribed']));
 
@@ -54,6 +63,7 @@ class MailChimpConnectorTest extends \PHPUnit_Framework_TestCase
             ->with('lists/some-unknown-list/members/'.$hash, [
                 'email_address' => 'test@example.com',
                 'status' => 'subscribed',
+                'merge_fields' => [],
             ])
             ->will($this->returnValue(['status' => 404]));
 
@@ -73,10 +83,23 @@ class MailChimpConnectorTest extends \PHPUnit_Framework_TestCase
             ->with('lists/some-mailchimp-list/members/'.$hash, [
                 'email_address' => 'test@example.com',
                 'status' => 'subscribed',
+                'merge_fields' => [],
             ])
             ->will($this->returnValue(['status' => 401]));
 
         $this->setExpectedException(ConnectorException::class);
         $this->connector->subscribe($subscriber);
+    }
+
+    public function testMergeFieldsAreParsed()
+    {
+        $subscriber = new Subscriber();
+        $this->assertSame([], $this->connector->createMergeFields($subscriber));
+
+        $subscriber->setAttribute(SubscriberFields::FIRST_NAME, 'Test');
+        $this->assertSame(['FNAME' => 'Test'], $this->connector->createMergeFields($subscriber));
+
+        $subscriber->setAttribute(SubscriberFields::LAST_NAME, 'User');
+        $this->assertSame(['FNAME' => 'Test', 'LNAME' => 'User'], $this->connector->createMergeFields($subscriber));
     }
 }
