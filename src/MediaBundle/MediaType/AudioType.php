@@ -16,14 +16,14 @@ class AudioType implements MediaTypeInterface
         return 'audio';
     }
 
-    public function supports(File $file, MediaResource $resource)
+    public function supports(MediaResource $resource)
     {
         if (!$resource->isFile()) {
             return false;
         }
 
         //mp3 support only just now
-        return $file->getPrimaryLocation()->getMimeType() == 'audio/mpeg';
+        return $resource->getParseResult()->getMimeType() === 'audio/mpeg';
     }
 
     public function process(File $file, MediaResource $resource, BucketInterface $bucket)

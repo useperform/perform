@@ -17,7 +17,7 @@ class YoutubeType implements MediaTypeInterface
         return 'youtube';
     }
 
-    public function supports(File $file, MediaResource $resource)
+    public function supports(MediaResource $resource)
     {
         if ($resource->isFile() || !preg_match("`^youtube:(\w+)$`", $resource->getPath(), $matches)) {
             return false;

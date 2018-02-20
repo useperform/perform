@@ -79,7 +79,7 @@ class FileImporter
             $pathname = $resource->getPath();
             $this->validateFileSize($bucket, $pathname);
 
-            $parseResult = $this->parser->parse($pathname);
+            $resource->setParseResult($this->parser->parse($pathname));
         }
 
         // detect the media type before creating the primary location,
@@ -87,6 +87,7 @@ class FileImporter
         $file->setType($this->findType($file, $resource));
 
         if ($resource->isFile()) {
+            $parseResult = $resource->getParseResult();
             $location = Location::file(sprintf('%s.%s', sha1($file->getId()), $parseResult->getExtension()));
             $location->setMimeType($parseResult->getMimeType());
             $location->setCharset($parseResult->getCharset());
@@ -281,7 +282,7 @@ class FileImporter
     {
         $bucket = $this->bucketRegistry->getForFile($file);
         foreach ($bucket->getMediaTypes() as $name => $type) {
-            if ($type->supports($file, $resource)) {
+            if ($type->supports($resource)) {
                 return $name;
             }
         }

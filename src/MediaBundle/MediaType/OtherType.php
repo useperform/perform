@@ -16,7 +16,7 @@ class OtherType implements MediaTypeInterface
         return 'other';
     }
 
-    public function supports(File $file, MediaResource $resource)
+    public function supports(MediaResource $resource)
     {
         return $resource->isFile();
     }

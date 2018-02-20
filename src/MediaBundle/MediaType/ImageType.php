@@ -27,13 +27,13 @@ class ImageType implements MediaTypeInterface
         return 'image';
     }
 
-    public function supports(File $file, MediaResource $resource)
+    public function supports(MediaResource $resource)
     {
         if (!$resource->isFile()) {
             return false;
         }
 
-        $mimeType = $file->getPrimaryLocation()->getMimeType();
+        $mimeType = $resource->getParseResult()->getMimeType();
         if (substr($mimeType, 0, 6) !== 'image/') {
             return false;
         }

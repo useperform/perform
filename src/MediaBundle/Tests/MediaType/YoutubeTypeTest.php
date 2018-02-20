@@ -3,7 +3,6 @@
 namespace Perform\MediaBundle\Tests\MediaType;
 
 use Perform\MediaBundle\MediaType\YoutubeType;
-use Perform\MediaBundle\Entity\File;
 use Perform\MediaBundle\MediaResource;
 use Perform\MediaBundle\Event\ImportUrlEvent;
 
@@ -44,11 +43,10 @@ class YoutubeTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testSupports()
     {
-        $file = new File();
         $id = 'dQw4w9WgXcQ';
         $resource = new MediaResource('youtube:'.$id);
 
-        $this->assertTrue($this->type->supports($file, $resource));
+        $this->assertTrue($this->type->supports($resource));
         $this->assertSame($id, $resource->getPath());
     }
 }

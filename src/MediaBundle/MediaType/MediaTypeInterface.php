@@ -20,7 +20,7 @@ interface MediaTypeInterface
     /**
      * @return bool
      */
-    public function supports(File $file, MediaResource $resource);
+    public function supports(MediaResource $resource);
 
     /**
      * @param File $file

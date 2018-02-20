@@ -16,9 +16,9 @@ class PdfType implements MediaTypeInterface
         return 'pdf';
     }
 
-    public function supports(File $file, MediaResource $resource)
+    public function supports(MediaResource $resource)
     {
-        return $file->getPrimaryLocation()->getMimeType() === 'application/pdf';
+        return $resource->isFile() && $resource->getParseResult()->getMimeType() === 'application/pdf';
     }
 
     public function process(File $file, MediaResource $resource, BucketInterface $bucket)
