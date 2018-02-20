@@ -2,6 +2,7 @@ vendor/
 composer.lock
 
 src/*/node_modules
+src/*/Resources/node_modules
 src/*/Resources/public/vendor
 src/*/Resources/public/css
 src/*/vendor

@@ -7,9 +7,10 @@ use Perform\MediaBundle\Upload\UploadHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Perform\MediaBundle\Upload\UploadResult;
+use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 
 /**
- * UploadHandlerTest
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class UploadHandlerTest extends \PHPUnit_Framework_TestCase
@@ -46,81 +47,63 @@ class UploadHandlerTest extends \PHPUnit_Framework_TestCase
     public function testProcessWhole()
     {
         $request = new Request();
-        $this->uh->process($request, $this->newFile('foo'));
+        $result = $this->uh->process($request, $this->newFile('foo'));
 
-        $file = new File($this->temp->getPathname('foo.txt'));
-        $this->assertSame('foo', file_get_contents($file->getPathname()));
+        $this->assertSame(UploadResult::WHOLE, $result->getChunkStatus());
+        $this->assertSame($this->temp->getPathname('foo.txt'), $result->getFile()->getPathname());
+    }
 
-        $this->assertEquals(['foo.txt' => $file], $this->uh->getUploadedFiles());
-        $this->assertEquals(['foo.txt' => $file], $this->uh->getCompletedFiles());
-        $this->assertSame([], $this->uh->getPartialFiles());
+    protected function uploadChunk($content, $header)
+    {
+        $file = $this->newFile($content);
+        $request = new Request();
+        $request->server->set('HTTP_CONTENT_RANGE', $header);
+
+        return $this->uh->process($request, $file);
     }
 
     public function testProcessChunkStart()
     {
-        $file = $this->newFile('hello');
-        $request = new Request();
-        $request->server->set('HTTP_CONTENT_RANGE', 'bytes 0-50000/1000000');
-        $this->assertTrue($this->temp->exists('foo.txt'));
+        $result = $this->uploadChunk('hello', 'bytes 0-4/10');
 
-        $this->uh->process($request, $file);
-
-        //chunk file should exist
-        $chunk = new File($this->uh->getChunkPath($file));
-        $this->assertSame('hello', file_get_contents($chunk->getPathname()));
+        $this->assertSame(UploadResult::CHUNK_START, $result->getChunkStatus());
+        $this->assertSame($this->temp->getPathname('chunk-'.md5('foo.txt')), $result->getFile()->getPathname());
+        $this->assertSame('hello', file_get_contents($result->getFile()->getPathname()));
         //original upload should have been deleted
         $this->assertFalse($this->temp->exists('foo.txt'));
-
-        $this->assertEquals(['foo.txt' => $chunk], $this->uh->getUploadedFiles());
-        $this->assertSame([], $this->uh->getCompletedFiles());
-        $this->assertEquals(['foo.txt' => $chunk], $this->uh->getPartialFiles());
     }
 
     public function testProcessChunkPartial()
     {
         //upload the start
-        $this->testProcessChunkStart();
-
+        $this->uploadChunk('hello', 'bytes 0-4/3000');
         //upload the middle
-        $file = $this->newFile(' world');
-        $request = new Request();
-        $request->server->set('HTTP_CONTENT_RANGE', 'bytes 50000-100000/1000000');
-        $this->assertTrue($this->temp->exists('foo.txt'));
+        $result = $this->uploadChunk(' world', 'bytes 5-10/3000');
 
-        $this->uh->process($request, $file);
-
-        //chunk file should exist
-        $chunk = new File($this->uh->getChunkPath($file));
-        $this->assertSame('hello world', file_get_contents($chunk->getPathname()));
+        $this->assertSame(UploadResult::CHUNK_PARTIAL, $result->getChunkStatus());
+        $this->assertSame('hello world', file_get_contents($result->getFile()->getPathname()));
         //original upload should have been deleted
         $this->assertFalse($this->temp->exists('foo.txt'));
-
-        $this->assertEquals(['foo.txt' => $chunk], $this->uh->getUploadedFiles());
-        $this->assertSame([], $this->uh->getCompletedFiles());
-        $this->assertEquals(['foo.txt' => $chunk], $this->uh->getPartialFiles());
     }
 
     public function testProcessChunkEnd()
     {
         //upload the start and middle
-        $this->testProcessChunkPartial();
+        $this->uploadChunk('hello', 'bytes 0-4/40');
+        $this->uploadChunk(' world', 'bytes 4-10/40');
+        // upload the end
+        $result = $this->uploadChunk(', test transmission!', 'bytes 11-30/31');
 
-        //upload the end
-        $file = $this->newFile(', test transmission!');
-        $request = new Request();
-        $request->server->set('HTTP_CONTENT_RANGE', 'bytes 950000-999999/1000000');
-        $this->assertTrue($this->temp->exists('foo.txt'));
+        $this->assertSame(UploadResult::CHUNK_END, $result->getChunkStatus());
+        $this->assertSame('hello world, test transmission!', file_get_contents($result->getFile()->getPathname()));
+        //chunk file should have been renamed to the name of this upload
+        $this->assertFileNotExists($this->temp->getPathname('chunk-'.md5('foo.txt')));
+    }
 
-        $this->uh->process($request, $file);
-
-        //chunk file should have been renamed to the name of this last upload
-        $completed = new File($this->temp->getPathname('foo.txt'));
-        $this->assertSame('hello world, test transmission!', file_get_contents($completed->getPathname()));
-        $this->assertFileNotExists($this->uh->getChunkPath($file));
-
-        $this->assertEquals(['foo.txt' => $completed], $this->uh->getUploadedFiles());
-        $this->assertEquals(['foo.txt' => $completed], $this->uh->getCompletedFiles());
-        $this->assertSame([], $this->uh->getPartialFiles());
+    public function testProcessBadContentHeader()
+    {
+        $this->setExpectedException(UploadException::class);
+        $this->uploadChunk('hello', 'bytes 0-5/6');
     }
 
     public function testProcessInvalidFile()
@@ -128,8 +111,7 @@ class UploadHandlerTest extends \PHPUnit_Framework_TestCase
         $this->temp->create('foo.txt');
         $file = new UploadedFile($this->temp->getPathname('foo.txt'), 'foo.txt', null, null, UPLOAD_ERR_INI_SIZE, true);
 
-        $this->setExpectedException('Symfony\Component\HttpFoundation\File\Exception\UploadException');
+        $this->setExpectedException(UploadException::class);
         $this->uh->process(new Request(), $file);
     }
-
 }

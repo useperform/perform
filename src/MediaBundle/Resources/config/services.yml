@@ -2,73 +2,45 @@ services:
     perform_media.importer.file:
         class: Perform\MediaBundle\Importer\FileImporter
         arguments:
-            - "@oneup_flysystem.main_filesystem"
+            - "@perform_media.bucket_registry"
             - "@doctrine.orm.entity_manager"
             - "@event_dispatcher"
 
-    perform_media.plugin.registry:
-        class: Perform\MediaBundle\Plugin\PluginRegistry
-        arguments:
-            - "@perform_media.url.simple"
-
-    perform_media.listener.file_plugin:
-        class: Perform\MediaBundle\EventListener\FilePluginListener
-        arguments: ["@perform_media.plugin.registry"]
-        tags:
-            - {name: kernel.event_subscriber}
+    perform_media.bucket_registry:
+        class: Perform\MediaBundle\Bucket\BucketRegistry
 
     perform_media.twig.file:
         class: Perform\MediaBundle\Twig\Extension\FileExtension
-        arguments: ["@perform_media.plugin.registry"]
+        arguments:
+            - "@perform_media.importer.file"
         tags:
             - {name: twig.extension}
 
     perform_media.url.simple:
-        class: Perform\MediaBundle\Url\SimpleFileUrlGenerator
+        class: Perform\MediaBundle\Url\SimpleUrlGenerator
         arguments: ["/uploads"]
-
-    perform_media.plugin.other:
-        class: Perform\MediaBundle\Plugin\OtherPlugin
-        arguments:
-            - "@oneup_flysystem.main_filesystem"
-        tags:
-            - {name: perform_media.file_plugin, pluginName: other}
-
-    perform_media.plugin.pdf:
-        class: Perform\MediaBundle\Plugin\PdfPlugin
-        arguments:
-            - "@oneup_flysystem.main_filesystem"
-            - "@perform_media.url.simple"
-        tags:
-            - {name: perform_media.file_plugin, pluginName: pdf}
-
-    perform_media.imagine:
-        class: Imagine\Gd\Imagine
-
-    perform_media.plugin.image:
-        class: Perform\MediaBundle\Plugin\ImagePlugin
-        arguments:
-            - "@oneup_flysystem.main_filesystem"
-            - "@perform_media.url.simple"
-            - "@perform_media.imagine"
-        tags:
-            - {name: perform_media.file_plugin, pluginName: image}
-
-    perform_media.plugin.audio:
-        class: Perform\MediaBundle\Plugin\AudioPlugin
-        arguments:
-            - "@oneup_flysystem.main_filesystem"
-        tags:
-            - {name: perform_media.file_plugin, pluginName: audio}
 
     perform_media.menu_link.media:
         class: Perform\MediaBundle\Menu\MediaLinkProvider
         tags:
             - { name: perform_base.link_provider, alias: media }
 
+    perform_media.listener.download_url:
+        class: Perform\MediaBundle\EventListener\DownloadUrlListener
+        public: false
+        tags:
+            - { name: kernel.event_listener, event: perform_media.import_url, method: onImport, priority: -100 }
+
     perform_media.type.media:
         class: Perform\MediaBundle\Type\MediaType
         arguments:
-            - "@perform_media.plugin.registry"
+            - '@perform_media.bucket_registry'
+            - '@perform_base.asset_container'
         tags:
             - { name: perform_base.type, alias: media }
+
+    Perform\MediaBundle\Command\:
+        resource: '../../Command'
+        public: false
+        autowire: true
+        autoconfigure: true

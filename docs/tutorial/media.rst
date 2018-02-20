@@ -156,7 +156,7 @@ Update ``src/AppBundle/Resources/views/home.html.twig`` to show images alongside
             <div class="col-md-12">
               {% for bike in bikes %}
               <h2>{{bike.title}}</h2>
-    +         {{perform_file_preview(bike.image, {size: 'small', attr: {class: 'img-responsive'}})}}
+    +         <img src="{{perform_media_url(bike.image, {width: 300})}}" class="img-responsive" />
               <p>
                 {{bike.description | nl2br}}
               </p>
@@ -167,8 +167,8 @@ Update ``src/AppBundle/Resources/views/home.html.twig`` to show images alongside
       {% endblock %}
 
 
-The ``perform_file_preview`` twig function is an easy way to display a preview of a file.
-Note that we've requested a ``small`` version of the image, and added the bootstrap class ``img-responsive``.
+The ``perform_media_url`` twig function is an easy way to get the url of a file.
+Note that we've requested an image that has a width closest to 300px.
 
 Again, you can read more about how that works in the :doc:`media bundle documentation <../bundles/media/index>`.
 
