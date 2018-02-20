@@ -13,7 +13,8 @@ use Perform\NotificationBundle\Notification;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * ContactFormHandler.
+ * Handle contact form submissions, save the message, detect spam, and
+ * send notifications.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
@@ -65,6 +66,20 @@ class ContactFormHandler
             return static::RESULT_SPAM;
         }
 
+        if ($this->logger) {
+            $this->logger->info(sprintf('Contact message submitted from %s at %s', $message->getEmail(), $message->getCreatedAt()->format('Y/m/d H:i:s')));
+        }
+
+        $this->sendNotifications($message);
+
+        return static::RESULT_OK;
+    }
+
+    /**
+     * @param Message $message
+     */
+    public function sendNotifications(Message $message)
+    {
         $recipients = $this->recipientProvider->getRecipients([
             'setting' => 'perform_contact_notify_address',
         ]);
@@ -74,11 +89,5 @@ class ContactFormHandler
             'message' => $message,
         ]);
         $this->notifier->send($notification, ['email']);
-
-        if ($this->logger) {
-            $this->logger->info(sprintf('Contact message submitted from %s at %s', $message->getEmail(), $message->getCreatedAt()->format('Y/m/d H:i:s')));
-        }
-
-        return static::RESULT_OK;
     }
 }
