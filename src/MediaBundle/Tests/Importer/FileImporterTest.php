@@ -14,6 +14,8 @@ use Perform\MediaBundle\Bucket\BucketInterface;
 use Perform\MediaBundle\Bucket\BucketRegistryInterface;
 use Perform\MediaBundle\Entity\Location;
 use Perform\MediaBundle\MediaType\MediaTypeInterface;
+use Perform\MediaBundle\Event\Events;
+use Perform\MediaBundle\Event\ImportUrlEvent;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -184,5 +186,16 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(1, count($files));
         $this->assertSame($owner, $files[0]->getOwner());
         $this->assertSame('file.txt', $files[0]->getName());
+    }
+
+    public function testImportUrl()
+    {
+        $this->dispatcher->expects($this->once())
+            ->method('dispatch')
+            ->with(Events::IMPORT_URL, $this->callback(function($event) {
+                return $event instanceof ImportUrlEvent && $event->getUrl() === 'http://example.com/some_file';
+            }));
+
+        $this->importer->importUrl('http://example.com/some_file');
     }
 }
