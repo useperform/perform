@@ -25,21 +25,21 @@ class FinfoParser implements FileParserInterface
         $guess = explode('; charset=', @$finfo->file($pathname));
 
         if (count($guess) === 2) {
-            return [
+            return new ParseResult(
                 $guess[0],
                 $guess[1],
-                $this->validateExtension($guess[0], $extension),
-            ];
+                $this->validateExtension($guess[0], $extension)
+            );
         }
 
         // detection failed, so treat the file as binary
         $mime = 'application/octet-stream';
 
-        return [
+        return new ParseResult(
             $mime,
             'binary',
-            $extension ?: $this->validateExtension($mime),
-        ];
+            $extension ?: $this->validateExtension($mime)
+        );
     }
 
     /**

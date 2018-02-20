@@ -74,17 +74,22 @@ class FileImporter
 
         // set guid manually so a location can be created before saving to the database
         $file->setId($this->generateUuid());
-        // detect the media type early, the resource may be modified by the supporting media type
-        $file->setType($this->findType($file, $resource));
 
         if ($resource->isFile()) {
             $pathname = $resource->getPath();
             $this->validateFileSize($bucket, $pathname);
 
-            list($mimeType, $charset, $extension) = $this->parser->parse($pathname);
-            $location = Location::file(sprintf('%s.%s', sha1($file->getId()), $extension));
-            $location->setMimeType($mimeType);
-            $location->setCharset($charset);
+            $parseResult = $this->parser->parse($pathname);
+        }
+
+        // detect the media type before creating the primary location,
+        // the resource may be modified by the supporting media type
+        $file->setType($this->findType($file, $resource));
+
+        if ($resource->isFile()) {
+            $location = Location::file(sprintf('%s.%s', sha1($file->getId()), $parseResult->getExtension()));
+            $location->setMimeType($parseResult->getMimeType());
+            $location->setCharset($parseResult->getCharset());
         } else {
             $location = new Location($resource->getPath());
         }

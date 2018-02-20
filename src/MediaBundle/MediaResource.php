@@ -3,6 +3,7 @@
 namespace Perform\MediaBundle;
 
 use Perform\UserBundle\Entity\User;
+use Perform\MediaBundle\File\ParseResult;
 
 /**
  * A resource to be imported into the media library.
@@ -15,6 +16,7 @@ class MediaResource
     protected $name;
     protected $owner;
     protected $deleteAfterProcess = false;
+    protected $parseResult;
 
     public function __construct($path, $name = null, User $owner = null)
     {
@@ -87,5 +89,25 @@ class MediaResource
         }
 
         @unlink($this->path);
+    }
+
+    /**
+     * @param ParseResult $parseResult
+     *
+     * @return MediaResource
+     */
+    public function setParseResult(ParseResult $parseResult)
+    {
+        $this->parseResult = $parseResult;
+
+        return $this;
+    }
+
+    /**
+     * @return ParseResult
+     */
+    public function getParseResult()
+    {
+        return $this->parseResult ?: new ParseResult('', '', '');
     }
 }

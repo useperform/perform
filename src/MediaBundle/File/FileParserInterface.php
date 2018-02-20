@@ -12,7 +12,7 @@ interface FileParserInterface
      *
      * @param string $pathname
      *
-     * @return array A list containing the charset, mimetype, and extension
+     * @return ParseResult A result containing the charset, mimetype, and extension
      */
     public function parse($pathname);
 }

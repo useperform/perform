@@ -4,6 +4,7 @@ namespace Perform\MediaBundle\Tests\File;
 
 use Perform\MediaBundle\File\FinfoParser;
 use VirtualFileSystem\FileSystem;
+use Perform\MediaBundle\File\ParseResult;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -21,53 +22,53 @@ class FinfoParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParseTextWithExtension()
     {
-        $expected = [
+        $expected = new ParseResult(
             'text/x-php',
             'us-ascii',
-            'php',
-        ];
-        $this->assertSame($expected, $this->parser->parse(__FILE__));
+            'php'
+        );
+        $this->assertEquals($expected, $this->parser->parse(__FILE__));
     }
 
     public function testParseTextWithBadExtension()
     {
         $this->vfs->createFile('/file.jpg', 'Hello world');
-        $expected = [
+        $expected = new ParseResult(
             'text/plain',
             'us-ascii',
             'txt'
-        ];
-        $this->assertSame($expected, $this->parser->parse($this->vfs->path('/file.jpg')));
+        );
+        $this->assertEquals($expected, $this->parser->parse($this->vfs->path('/file.jpg')));
     }
 
     public function testPlainTextExtensionsArePreserved()
     {
         $this->vfs->createFile('/config.yml', 'foo: bar');
-        $expected = [
+        $expected = new ParseResult(
             'text/plain',
             'us-ascii',
             'yml'
-        ];
-        $this->assertSame($expected, $this->parser->parse($this->vfs->path('/config.yml')));
+        );
+        $this->assertEquals($expected, $this->parser->parse($this->vfs->path('/config.yml')));
     }
 
     public function testParseImageWithoutExtension()
     {
-        $expected = [
+        $expected = new ParseResult(
             'image/png',
             'binary',
-            'png',
-        ];
-        $this->assertSame($expected, $this->parser->parse(__DIR__.'/../fixtures/image_no_extension'));
+            'png'
+        );
+        $this->assertEquals($expected, $this->parser->parse(__DIR__.'/../fixtures/image_no_extension'));
     }
 
     public function testParseBinaryWithoutExtension()
     {
-        $expected = [
+        $expected = new ParseResult(
             'application/octet-stream',
             'binary',
-            'bin',
-        ];
-        $this->assertSame($expected, $this->parser->parse(__DIR__.'/../fixtures/binary_no_extension'));
+            'bin'
+        );
+        $this->assertEquals($expected, $this->parser->parse(__DIR__.'/../fixtures/binary_no_extension'));
     }
 }
