@@ -45,6 +45,12 @@ services:
         class: Perform\BaseBundle\Doctrine\EntityResolver
         arguments: ['%perform_base.entity_aliases%', '%perform_base.extended_entities%']
 
+    perform_base.doctrine.repository_resolver:
+        class: Perform\BaseBundle\Doctrine\RepositoryResolver
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@perform_base.doctrine.entity_resolver'
+
     perform_base.admin_collector:
         class: Perform\BaseBundle\DataCollector\AdminsDataCollector
         public: false
