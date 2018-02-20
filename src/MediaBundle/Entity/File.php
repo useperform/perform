@@ -176,9 +176,12 @@ class File
      */
     public function getExtraLocations()
     {
-        return $this->locations->filter(function($location) {
-            return !$location->isPrimary();
-        });
+        // return the locations 0 indexed, so don't use collection->filter()
+        return new ArrayCollection(array_values(
+            array_filter($this->locations->toArray(), function($location) {
+                return !$location->isPrimary();
+            })
+        ));
     }
 
     /**
