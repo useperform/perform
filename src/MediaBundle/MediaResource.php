@@ -24,6 +24,18 @@ class MediaResource
     }
 
     /**
+     * @var string $path
+     *
+     * @return static
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getPath()

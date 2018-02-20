@@ -39,4 +39,14 @@ class MediaResourceTest extends \PHPUnit_Framework_TestCase
         $resource->delete();
         $this->assertFileNotExists($this->vfs->path('/file.txt'));
     }
+
+    public function testGetSetPath()
+    {
+        $resource = new MediaResource('foo.txt');
+        $this->assertSame('foo.txt', $resource->getPath());
+
+        $this->assertSame($resource, $resource->setPath('bar.txt'));
+        $this->assertSame('bar.txt', $resource->getPath());
+    }
+
 }

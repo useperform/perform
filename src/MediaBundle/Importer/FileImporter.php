@@ -74,6 +74,8 @@ class FileImporter
 
         // set guid manually so a location can be created before saving to the database
         $file->setId($this->generateUuid());
+        // detect the media type early, the resource may be modified by the supporting media type
+        $file->setType($this->findType($file, $resource));
 
         if ($resource->isFile()) {
             $pathname = $resource->getPath();
@@ -88,7 +90,6 @@ class FileImporter
         }
         $file->setPrimaryLocation($location);
 
-        $file->setType($this->findType($file, $resource));
         $this->dispatcher->dispatch(FileEvent::CREATE, new FileEvent($file));
         $this->entityManager->persist($file);
         $this->entityManager->flush();
