@@ -13,6 +13,7 @@ use Perform\MediaBundle\File\ParseResult;
 class MediaResource
 {
     protected $path;
+    protected $isFile = false;
     protected $name;
     protected $owner;
     protected $deleteAfterProcess = false;
@@ -23,6 +24,17 @@ class MediaResource
         $this->path = $path;
         $this->name = $name ?: basename($path);
         $this->owner = $owner;
+    }
+
+    /**
+     * Create a new resource, marking it as a file.
+     */
+    public static function file($path, $name = null, User $owner = null)
+    {
+        $resource = new self($path, $name, $owner);
+        $resource->setFile(true);
+
+        return $resource;
     }
 
     /**
@@ -62,11 +74,25 @@ class MediaResource
     }
 
     /**
+     * Mark this resource as a file.
+     *
+     * @param bool $isFile
+     *
+     * @return static
+     */
+    public function setFile($isFile)
+    {
+        $this->isFile = (bool) $isFile;
+
+        return $this;
+    }
+
+    /**
      * @return bool
      */
     public function isFile()
     {
-        return file_exists($this->path);
+        return $this->isFile;
     }
 
     public function deleteAfterProcess($delete = true)

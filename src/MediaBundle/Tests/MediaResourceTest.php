@@ -17,7 +17,7 @@ class MediaResourceTest extends \PHPUnit_Framework_TestCase
         $this->vfs = new FileSystem();
     }
 
-    public function testDeleteDoesNothingForUrls()
+    public function testDeleteDoesNothingWhenNotAFile()
     {
         $resource = new MediaResource('http://some_url');
         $resource->delete();
@@ -26,7 +26,7 @@ class MediaResourceTest extends \PHPUnit_Framework_TestCase
     public function testDeleteDoesNothingWithoutBeingMarked()
     {
         $this->vfs->createFile('/file.txt', '');
-        $resource = new MediaResource($this->vfs->path('/file.txt'));
+        $resource = MediaResource::file($this->vfs->path('/file.txt'));
         $resource->delete();
         $this->assertFileExists($this->vfs->path('/file.txt'));
     }
@@ -34,7 +34,7 @@ class MediaResourceTest extends \PHPUnit_Framework_TestCase
     public function testDeleteWhenMarked()
     {
         $this->vfs->createFile('/file.txt', '');
-        $resource = new MediaResource($this->vfs->path('/file.txt'));
+        $resource = MediaResource::file($this->vfs->path('/file.txt'));
         $resource->deleteAfterProcess();
         $resource->delete();
         $this->assertFileNotExists($this->vfs->path('/file.txt'));

@@ -113,7 +113,7 @@ class FileImporter
      */
     public function importFile($pathname, $name = null, User $owner = null, $bucketName = null)
     {
-        return $this->import(new MediaResource($pathname, $name, $owner), $bucketName);
+        return $this->import(MediaResource::file($pathname, $name, $owner), $bucketName);
     }
 
     /**
@@ -135,7 +135,7 @@ class FileImporter
         $files = [];
 
         foreach ($finder as $file) {
-            $files[] = $this->import(new MediaResource($file->getPathname(), null, $owner), $bucketName);
+            $files[] = $this->import(MediaResource::file($file->getPathname(), null, $owner), $bucketName);
         }
 
         return $files;
