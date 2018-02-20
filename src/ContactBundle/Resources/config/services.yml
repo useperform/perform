@@ -71,3 +71,9 @@ services:
             - "@doctrine.orm.entity_manager"
         tags:
             - { name: perform_base.action, alias: perform_contact_spam, entity: 'PerformContactBundle:Message' }
+
+    Perform\ContactBundle\Command\:
+        resource: '../../Command'
+        public: false
+        autowire: true
+        autoconfigure: true
