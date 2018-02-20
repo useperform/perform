@@ -26,7 +26,7 @@ class Location
     /**
      * @var bool
      */
-    protected $isFile;
+    protected $isFile = false;
 
     /**
      * @var array
@@ -112,7 +112,7 @@ class Location
      */
     public function isFile()
     {
-        return (bool) $this->isFile;
+        return $this->isFile;
     }
 
     /**
