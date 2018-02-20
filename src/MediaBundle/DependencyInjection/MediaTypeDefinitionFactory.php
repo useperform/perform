@@ -11,6 +11,8 @@ use Perform\MediaBundle\MediaType\ImageType;
 use Perform\MediaBundle\MediaType\OtherType;
 use Perform\MediaBundle\MediaType\PdfType;
 use Symfony\Component\DependencyInjection\Definition;
+use Perform\MediaBundle\MediaType\YoutubeType;
+use Perform\MediaBundle\Event\Events;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -38,10 +40,17 @@ class MediaTypeDefinitionFactory
             return new Definition(PdfType::class);
         case 'audio':
             return new Definition(AudioType::class);
+        case 'youtube':
+            $definition = new Definition(YoutubeType::class);
+            $definition->addTag('kernel.event_listener', [
+                'event' => Events::IMPORT_URL,
+                'method' => 'onUrlImport',
+            ]);
+            return $definition;
         case 'other':
             return new Definition(OtherType::class);
         default:
-            throw new MediaTypeException(sprintf('Unknown media type "%s" requested. Available types are "image", "audio", "pdf", and "other".', $config['type']));
+            throw new MediaTypeException(sprintf('Unknown media type "%s" requested. Available types are "image", "audio", "pdf", "youtube", and "other".', $config['type']));
         }
     }
 }

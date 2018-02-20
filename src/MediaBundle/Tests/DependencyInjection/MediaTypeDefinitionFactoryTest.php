@@ -9,6 +9,7 @@ use Perform\MediaBundle\MediaType\OtherType;
 use Perform\MediaBundle\MediaType\PdfType;
 use Perform\MediaBundle\DependencyInjection\MediaTypeDefinitionFactory;
 use Perform\MediaBundle\Exception\MediaTypeException;
+use Perform\MediaBundle\MediaType\YoutubeType;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -60,6 +61,17 @@ class MediaTypeDefinitionFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(Definition::class, $def);
         $this->assertSame(OtherType::class, $def->getClass());
+    }
+
+    public function testCreateDefaultYoutube()
+    {
+        $def = $this->factory->create([
+            'type' => 'youtube',
+        ]);
+
+        $this->assertInstanceOf(Definition::class, $def);
+        $this->assertSame(YoutubeType::class, $def->getClass());
+        $this->assertSame(['kernel.event_listener'], array_keys($def->getTags()));
     }
 
     public function testUnknownType()
