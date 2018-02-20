@@ -145,7 +145,7 @@ class File
 
         // getting to this stage suggests the location table is out of sync
         // always return a Location object to prevent things blowing up
-        return Location::url('');
+        return new Location('');
     }
 
     /**

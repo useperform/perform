@@ -86,7 +86,7 @@ class FileImporter
             $location->setMimeType($mimeType);
             $location->setCharset($charset);
         } else {
-            $location = Location::url($resource->getPath());
+            $location = new Location($resource->getPath());
         }
         $file->setPrimaryLocation($location);
 

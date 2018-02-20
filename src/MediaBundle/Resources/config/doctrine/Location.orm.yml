@@ -10,8 +10,8 @@ Perform\MediaBundle\Entity\Location:
     fields:
         path:
             type: string
-        type:
-            type: smallint
+        isFile:
+            type: boolean
         attributes:
             type: json_array
         isPrimary:

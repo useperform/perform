@@ -23,13 +23,10 @@ class Location
      */
     protected $path;
 
-    const TYPE_FILE = 0;
-    const TYPE_URL = 1;
-
     /**
-     * @var int
+     * @var bool
      */
-    protected $type;
+    protected $isFile;
 
     /**
      * @var array
@@ -58,12 +55,11 @@ class Location
 
     /**
      * @param string $path
-     * @param int $type
+     * @param array $attributes
      */
-    public function __construct($path, $type, array $attributes = [])
+    public function __construct($path, array $attributes = [])
     {
         $this->path = $path;
-        $this->type = (int) $type;
         $this->attributes = $attributes;
     }
 
@@ -72,15 +68,10 @@ class Location
      */
     public static function file($path, array $attributes = [])
     {
-        return new self($path, self::TYPE_FILE, $attributes);
-    }
+        $location = new self($path, $attributes);
+        $location->isFile = true;
 
-    /**
-     * @param string $url
-     */
-    public static function url($url, array $attributes = [])
-    {
-        return new self($url, self::TYPE_URL, $attributes);
+        return $location;
     }
 
     /**
@@ -100,27 +91,28 @@ class Location
     }
 
     /**
-     * @return int
+     * Mark this location as referencing a file in the bucket.
+     *
+     * @param bool $isFile
+     *
+     * @return static
      */
-    public function getType()
-    {
-        return $this->type;
-    }
+    // public function setFile($isFile)
+    // {
+    //     $this->isFile = (bool) $isFile;
+
+    //     return $this;
+    // }
 
     /**
+     * Return true if this location is a file (and should be stored in
+     * the bucket).
+     *
      * @return bool
      */
     public function isFile()
     {
-        return $this->type === self::TYPE_FILE;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isUrl()
-    {
-        return $this->type === self::TYPE_URL;
+        return (bool) $this->isFile;
     }
 
     /**
