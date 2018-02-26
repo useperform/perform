@@ -28,7 +28,7 @@ class BlockTypeWarmer implements CacheWarmerInterface
 
         $types = $this->registry->all();
         ksort($types);
-        file_put_contents($file, $this->twig->render('PerformRichContentBundle::blocktypes.js.twig', [
+        file_put_contents($file, $this->twig->render('@PerformRichContent/blocktypes.js.twig', [
             'types' => $types,
         ]));
     }
