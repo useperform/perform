@@ -4,7 +4,7 @@ namespace Perform\BlogBundle\DataFixtures\ORM;
 
 use Faker;
 use Doctrine\Common\Persistence\ObjectManager;
-use Perform\BlogBundle\Entity\Post;
+use Perform\BlogBundle\Entity\MarkdownPost;
 use Perform\BaseBundle\DataFixtures\ORM\EntityDeclaringFixtureInterface;
 use Perform\BaseBundle\Entity\Tag;
 
@@ -31,11 +31,12 @@ class LoadPostData implements EntityDeclaringFixtureInterface
         }
 
         for ($i = 0; $i < 10; ++$i) {
-            $post = new Post();
+            $post = new MarkdownPost();
             $post->setTitle($faker->sentence);
+            $post->setSlug(strtolower(str_replace(' ', '-', $post->getTitle())));
             $post->setPublishDate($faker->dateTimeThisYear);
-            $post->setContent(implode("\n\n", $faker->paragraphs(5)));
-            $post->setEnabled(rand(0, 2) ? true : false);
+            $post->setMarkdown(implode("\n\n", $faker->paragraphs(5)));
+            $post->setStatus(MarkdownPost::STATUS_PUBLISHED);
             $tagAmount = rand(0, 5);
             for ($j = 0; $j < $tagAmount; $j++) {
                 $post->addTag($tags[array_rand($tags)]);
@@ -54,7 +55,7 @@ class LoadPostData implements EntityDeclaringFixtureInterface
     public function getEntityClasses()
     {
         return [
-            Post::class,
+            MarkdownPost::class,
             Tag::class,
         ];
     }
