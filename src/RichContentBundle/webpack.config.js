@@ -14,15 +14,12 @@ var config = {
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader',
+        test: /\.vue$/,
+        loader: 'vue-loader',
         options: {
-          cacheDirectory: true,
-          presets: [
-            'es2015',
-            'react'
-          ],
+          loaders: {
+          }
+          // other vue-loader options go here
         }
       },
       {
@@ -36,19 +33,36 @@ var config = {
     ],
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.scss'],
-    modules: [
-      path.join(__dirname, 'node_modules'),
-    ],
+    alias: {
+      'vue$': 'vue/dist/vue.esm.js'
+    },
+    extensions: ['*', '.js', '.vue', '.json']
   },
   plugins: [
     new extractTextPlugin('editor.css'),
-  ]
+  ],
+  devtool: '#eval-source-map'
 };
 
 if (process.env.NODE_ENV === 'production') {
-} else {
-  config.devtool = 'cheap-eval-source-map';
+  config.devtool = '#source-map';
+  // http://vue-loader.vuejs.org/en/workflow/production.html
+  config.plugins = (module.exports.plugins || []).concat([
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: '"production"'
+      }
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      sourceMap: true,
+      compress: {
+        warnings: false
+      }
+    }),
+    new webpack.LoaderOptionsPlugin({
+      minimize: true
+    })
+  ]);
 }
 
 module.exports = config;
