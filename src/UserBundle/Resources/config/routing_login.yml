@@ -1,0 +1,7 @@
+perform_user_login:
+    path: /login
+    defaults:
+        _controller: PerformUserBundle:Login:login
+
+perform_user_logout:
+    path: /logout

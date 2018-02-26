@@ -1,0 +1,17 @@
+<div class="card">
+  <div class="card-header">
+    <i class="fa fa-users fa-fw"></i> New Mailing List Subscribers
+  </div>
+  <div class="card-body">
+    <div class="list-group">
+      {% for subscriber in subscribers %}
+        <a href="{{path('perform_mailing_list_local_subscriber_view', {id: subscriber.id})}}" class="list-group-item">
+          {{subscriber.email}}
+        </a>
+      {% else %}
+        No subscribers
+      {% endfor %}
+    </div>
+    <a href="{{path('perform_mailing_list_local_subscriber_list')}}" class="btn btn-light btn-block">View All</a>
+  </div>
+</div>

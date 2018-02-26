@@ -27,7 +27,12 @@ class EntitySelector
         $this->store = $store;
     }
 
-    public function listContext(AdminRequest $request, $entityName)
+    public function getQueryBuilder(AdminRequest $request, $entityName)
+    {
+        return $this->getQueryBuilderInternal($request, $entityName)[0];
+    }
+
+    private function getQueryBuilderInternal(AdminRequest $request, $entityName)
     {
         $qb = $this->entityManager->createQueryBuilder()
             ->select('e')
@@ -56,6 +61,12 @@ class EntitySelector
             throw new \UnexpectedValueException(sprintf('The filter function "%s" for %s must return an instance of Doctrine\ORM\QueryBuilder.', $filterName, $entityName));
         }
 
+        return [$qb, $orderField, $direction];
+    }
+
+    public function listContext(AdminRequest $request, $entityName)
+    {
+        list($qb, $orderField, $direction) = $this->getQueryBuilderInternal($request, $entityName);
         $this->assignFilterCounts($entityName);
 
         $paginator = new Pagerfanta(new DoctrineORMAdapter($qb));

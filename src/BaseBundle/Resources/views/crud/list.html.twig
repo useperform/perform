@@ -1,0 +1,36 @@
+{% extends '@PerformBase/base.html.twig' %}
+
+{% set title = 'crud.title.list'|trans({'%entity_name%': labelConfig.getEntityNamePlural()}, 'PerformBaseBundle') %}
+{% block page_title %}
+  {{title}} | {{parent()}}
+{% endblock %}
+
+{% block workspace %}
+  <h3><i class="fa fa-angle-right"></i> {{title}}</h3>
+  {% block actions %}
+    {% if perform_crud_route_exists(entityClass, 'create') %}
+      <a href="{{perform_crud_route(entityClass, 'create')}}" class="btn btn-primary">Create</a>
+    {% endif %}
+  {% endblock %}
+  <div class="row mt">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          {% include '@PerformBase/crud/_table.html.twig' %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% block batchActions %}
+    {% include '@PerformBase/action/_batch.html.twig' %}
+  {% endblock %}
+
+  {% block paginator %}
+    {% include '@PerformBase/crud/_paginator.html.twig' %}
+  {% endblock %}
+{% endblock %}
+
+{% block extras %}
+  {% include '@PerformBase/action/_confirm_modal.html.twig' %}
+{% endblock %}

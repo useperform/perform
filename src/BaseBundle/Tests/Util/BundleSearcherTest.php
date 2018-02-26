@@ -45,7 +45,7 @@ class BundleSearcherTest extends \PHPUnit_Framework_TestCase
             'FooBundle' => $foo,
             'BarBundle' => $bar,
         ];
-        $this->assertSame($expected, $this->searcher->getBundles(['FooBundle', 'BarBundle']));
+        $this->assertSame($expected, $this->searcher->getBundles([]));
     }
 
     public function testGetOneBundle()
@@ -58,6 +58,16 @@ class BundleSearcherTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $this->searcher->getBundles(['FooBundle']));
     }
 
+    public function testGetOneBundleFromInstance()
+    {
+        $foo = $this->bundle('FooBundle');
+        $bar = $this->bundle('BarBundle');
+        $expected = [
+            'FooBundle' => $foo,
+        ];
+        $this->assertSame($expected, $this->searcher->getBundles([$foo]));
+    }
+
     public function testGetManyBundles()
     {
         $foo = $this->bundle('FooBundle');
@@ -68,6 +78,30 @@ class BundleSearcherTest extends \PHPUnit_Framework_TestCase
             'BazBundle' => $baz,
         ];
         $this->assertSame($expected, $this->searcher->getBundles(['FooBundle', 'BazBundle']));
+    }
+
+    public function testGetManyBundlesFromInstances()
+    {
+        $foo = $this->bundle('FooBundle');
+        $bar = $this->bundle('BarBundle');
+        $baz = $this->bundle('BazBundle');
+        $expected = [
+            'FooBundle' => $foo,
+            'BazBundle' => $baz,
+        ];
+        $this->assertSame($expected, $this->searcher->getBundles([$foo, $baz]));
+    }
+
+    public function testGetManyBundlesFromNameAndInstance()
+    {
+        $foo = $this->bundle('FooBundle');
+        $bar = $this->bundle('BarBundle');
+        $baz = $this->bundle('BazBundle');
+        $expected = [
+            'FooBundle' => $foo,
+            'BazBundle' => $baz,
+        ];
+        $this->assertSame($expected, $this->searcher->getBundles([$foo, 'BazBundle']));
     }
 
     public function testFindResourcesAllBundles()

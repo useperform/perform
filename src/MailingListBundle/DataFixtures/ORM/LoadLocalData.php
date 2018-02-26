@@ -9,8 +9,6 @@ use Perform\MailingListBundle\Entity\LocalSubscriber;
 use Perform\MailingListBundle\Entity\LocalList;
 
 /**
- * LoadLocalData.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class LoadLocalData implements EntityDeclaringFixtureInterface
@@ -19,22 +17,28 @@ class LoadLocalData implements EntityDeclaringFixtureInterface
     {
         $faker = Faker\Factory::create('en_GB');
 
+        $lists = [];
         for ($i = 1; $i < 6; $i++) {
             $list = new LocalList();
             $list->setName('Test list '.$i);
             $list->setSlug('test-list-'.$i);
             $manager->persist($list);
+            $lists[] = $list;
+        }
 
-            for ($j = 0; $j < 10; ++$j) {
-                $subscriber = new LocalSubscriber();
-                if (rand(0, 1)) {
-                    $subscriber->setFirstName($faker->firstName);
-                }
-
-                $subscriber->setEmail($faker->safeEmail);
-                $subscriber->setList($list);
-                $manager->persist($subscriber);
+        for ($i = 0; $i < 10; ++$i) {
+            $subscriber = new LocalSubscriber();
+            if (rand(0, 1)) {
+                $subscriber->setFirstName($faker->firstName);
             }
+
+            $subscriber->setEmail($faker->safeEmail);
+            $listsToAdd = rand(0, count($lists));
+            for ($j = 0; $j < $listsToAdd; $j++) {
+                $subscriber->addList($lists[array_rand($lists)]);
+            }
+
+            $manager->persist($subscriber);
         }
 
         $manager->flush();

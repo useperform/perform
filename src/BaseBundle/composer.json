@@ -9,24 +9,35 @@
         }
     ],
     "require": {
-        "symfony/symfony": "^3.0",
-        "symfony/framework-bundle": "^3.0",
-        "sensio/framework-extra-bundle": "^3.0",
-        "sensio/distribution-bundle": "^5.0",
-        "symfony/monolog-bundle": "^2.11",
-        "doctrine/orm": "^2.5",
         "doctrine/doctrine-bundle": "^1.6",
-        "doctrine/data-fixtures": "^1.2",
-        "stof/doctrine-extensions-bundle": "^1.2",
-        "knplabs/knp-menu-bundle": "^2.1",
+        "doctrine/orm": "^2.5",
+        "knplabs/knp-menu-bundle": "^2.2.1",
         "nesbot/carbon": "^1.21",
+        "pagerfanta/pagerfanta": "^1.0",
+        "sensio/framework-extra-bundle": "^5.0",
+        "stof/doctrine-extensions-bundle": "^1.2",
+        "symfony/asset": "^3.4",
+        "symfony/form": "^3.4",
+        "symfony/framework-bundle": "^3.4",
+        "symfony/monolog-bundle": "^2.11",
+        "symfony/security-bundle": "^3.4",
         "symfony/swiftmailer-bundle": "^2.3",
-        "twig/twig": "^1.24",
-        "fzaninotto/faker": "^1.5",
-        "pagerfanta/pagerfanta": "^1.0"
+        "symfony/twig-bundle": "^3.4",
+        "symfony/validator": "^3.4",
+        "symfony/yaml": "^3.4"
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.8"
+        "doctrine/data-fixtures": "^1.2",
+        "fzaninotto/faker": "^1.5",
+        "league/commonmark": "^0.17.0",
+        "phpunit/phpunit": "^4.8",
+        "sonata-project/exporter": "^1.7"
+    },
+    "suggest": {
+        "doctrine/data-fixtures": "Use database fixtures",
+        "fzaninotto/faker": "Use database fixtures",
+        "league/commonmark": "Use the markdown type",
+        "sonata-project/exporter": "Export entities to a variety of formats"
     },
     "autoload": {
         "psr-4": {

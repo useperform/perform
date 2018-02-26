@@ -6,30 +6,24 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * FileImportCommand.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  */
 class FileImportCommand extends ContainerAwareCommand
 {
-    protected $name = 'perform:media:import';
-    protected $description = 'Add files to the media library.';
-
     protected function configure()
     {
-        $this->setName($this->name)
-             ->setDescription($this->description)
-             ->addArgument(
-                 'paths',
-                 InputArgument::IS_ARRAY,
-                 'The paths to files or directories'
-             )
+        $this->setName('perform:media:import')
+            ->setDescription('Add files to the media library.')
+            ->addArgument(
+                'paths',
+                InputArgument::IS_ARRAY,
+                'The paths to files or directories'
+            )
             ->addOption(
-                'ext',
+                'extension',
                 '',
                 InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
                 'Only the given extensions'
@@ -40,40 +34,17 @@ class FileImportCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $importer = $this->getContainer()->get('perform_media.importer.file');
-        foreach ($this->getFiles($input->getArgument('paths'), $input->getOption('ext')) as $path) {
-            $importer->import($path);
-            $output->writeln(sprintf('Imported <info>%s</info>', $path));
-        }
-    }
-
-    protected function getFiles(array $paths, array $extensions)
-    {
-        $files = [];
-        $finder = new Finder();
-        $found = [];
-        $dirs = 0;
-
-        foreach ($extensions as $extension) {
-            $finder->name('*.'.$extension);
-        }
-
-        foreach ($paths as $path) {
-            if (is_file($path)) {
-                $files[] = $path;
-                continue;
+        $extensions = $input->getOption('extension');
+        foreach ($input->getArgument('paths') as $path) {
+            if (is_dir($path)) {
+                $importer->importDirectory($path, null, null, $extensions);
+            } elseif (is_file($path)) {
+                $importer->importFile($path);
+            } else {
+                $importer->importUrl($path);
             }
 
-            $finder->in($path);
-            $dirs++;
+            $output->writeln(sprintf('Imported <info>%s</info>.', $path));
         }
-
-        //finder will error out if in() hasn't been called
-        if ($dirs > 0) {
-            $found = array_map(function ($file) {
-                return $file->getRealPath();
-            }, array_values(iterator_to_array($finder->files())));
-        }
-
-        return array_unique(array_merge($files, $found));
     }
 }

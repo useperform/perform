@@ -14,6 +14,7 @@ class ActionResponse
     const REDIRECT_ROUTE = 'route';
     const REDIRECT_PREVIOUS = 'previous';
     const REDIRECT_CURRENT = 'current';
+    const REDIRECT_ENTITY_DEFAULT = 'entity_default';
 
     protected $redirect = 'none';
     protected $message;

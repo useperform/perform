@@ -6,8 +6,6 @@ use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
 /**
- * DocKernel.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class DocKernel extends Kernel
@@ -17,6 +15,8 @@ class DocKernel extends Kernel
     public function __construct($dir)
     {
         $this->dir = $dir;
+        $this->rootDir = $dir;
+        parent::__construct('docs', true);
     }
 
     public function registerBundles()
@@ -29,7 +29,6 @@ class DocKernel extends Kernel
             new \Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new \Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new \Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle(),
-            new \Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new \Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new \Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new \Oneup\FlysystemBundle\OneupFlysystemBundle(),

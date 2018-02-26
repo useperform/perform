@@ -2,9 +2,9 @@
 
 namespace Perform\MailingListBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
- * LocalSubscriber
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class LocalSubscriber
@@ -35,9 +35,14 @@ class LocalSubscriber
     protected $updatedAt;
 
     /**
-     * @var LocalList
+     * @var Collection
      */
-    protected $list;
+    protected $lists;
+
+    public function __construct()
+    {
+        $this->lists = new ArrayCollection();
+    }
 
     /**
      * @return uuid
@@ -132,9 +137,23 @@ class LocalSubscriber
      *
      * @return LocalSubscriber
      */
-    public function setList(LocalList $list)
+    public function addList(LocalList $list)
     {
-        $this->list = $list;
+        if (!$this->lists->contains($list)) {
+            $this->lists[] = $list;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param LocalList $list
+     *
+     * @return LocalSubscriber
+     */
+    public function removeList(LocalList $list)
+    {
+        $this->lists->removeElement($list);
 
         return $this;
     }
@@ -142,8 +161,8 @@ class LocalSubscriber
     /**
      * @return LocalList
      */
-    public function getList()
+    public function getLists()
     {
-        return $this->list;
+        return $this->lists;
     }
 }

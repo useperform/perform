@@ -1,6 +1,5 @@
 imports:
     - { resource: services_actions.yml }
-    - { resource: services_user.yml }
 
 services:
     perform_base.admin.registry:
@@ -16,6 +15,15 @@ services:
             - '@perform_base.admin.registry'
             - '@perform_base.type_registry'
             - '@perform_base.action_registry'
+            - '@security.authorization_checker'
+
+    perform_base.voter.crud:
+        class: Perform\BaseBundle\Security\CrudVoter
+        arguments:
+            - '@perform_base.admin.registry'
+            - '@perform_base.routing.crud_url'
+        tags:
+            - security.voter
 
     perform_base.form.type.admin:
         class: Perform\BaseBundle\Form\Type\AdminType
@@ -26,9 +34,22 @@ services:
         tags:
             - {name: form.type}
 
+    perform_base.form.type.datepicker:
+        class: Perform\BaseBundle\Form\Type\DatePickerType
+        arguments:
+            - "@perform_base.asset_container"
+        tags:
+            - {name: form.type}
+
     perform_base.doctrine.entity_resolver:
         class: Perform\BaseBundle\Doctrine\EntityResolver
         arguments: ['%perform_base.entity_aliases%', '%perform_base.extended_entities%']
+
+    perform_base.doctrine.repository_resolver:
+        class: Perform\BaseBundle\Doctrine\RepositoryResolver
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@perform_base.doctrine.entity_resolver'
 
     perform_base.admin_collector:
         class: Perform\BaseBundle\DataCollector\AdminsDataCollector
@@ -36,11 +57,12 @@ services:
         arguments:
             - '@perform_base.admin.registry'
             - '@perform_base.config_store'
+            - '@security.access.decision_manager'
             - '%perform_base.extended_entities%'
         tags:
             -
                 name: data_collector
-                template: 'PerformBaseBundle:data_collector:admins.html.twig'
+                template: '@PerformBase/data_collector/admins.html.twig'
                 id: 'perform_base.admins'
 
     perform_base.asset_container:
@@ -72,9 +94,18 @@ services:
         tags:
             - {name: kernel.event_subscriber}
 
+    perform_base.context_renderer:
+        class: Perform\BaseBundle\Admin\ContextRenderer
+        arguments:
+            - '@perform_base.type_registry'
+            - '@twig'
+
     perform_base.twig.crud:
         class: Perform\BaseBundle\Twig\Extension\CrudExtension
-        arguments: ['@perform_base.routing.crud_url', '@perform_base.type_registry', '@perform_base.admin.registry']
+        arguments:
+            - '@perform_base.context_renderer'
+            - '@perform_base.routing.crud_url'
+            - '@request_stack'
         tags:
             - {name: twig.extension}
 
@@ -82,15 +113,26 @@ services:
         class: Perform\BaseBundle\Twig\Extension\ActionExtension
         arguments:
             - "@router"
+            - "@perform_base.routing.crud_url"
             - "@perform_base.action_registry"
             - "@perform_base.config_store"
         tags:
             - {name: twig.extension}
 
+    perform_base.twig.export:
+        class: Perform\BaseBundle\Twig\Extension\ExportExtension
+        arguments:
+            - "@router"
+            - "@perform_base.config_store"
+        tags:
+            - {name: twig.extension}
+            - {name: kernel.event_listener, method: onKernelRequest, event: kernel.request}
+
     perform_base.twig.util:
         class: Perform\BaseBundle\Twig\Extension\UtilExtension
         arguments:
             - "@router"
+            - '@perform_base.config_store'
         tags:
             - {name: twig.extension}
 
@@ -104,7 +146,7 @@ services:
         class: Perform\BaseBundle\Menu\MenuBuilder
         arguments: ["@knp_menu.factory"]
         tags:
-            - { name: knp_menu.menu_builder, method: createMainMenu, alias: main }
+            - { name: knp_menu.menu_builder, method: createSidebar, alias: perform_sidebar }
 
     perform_base.menu_extension:
         class: Perform\BaseBundle\Menu\Extension\EntityExtension
@@ -117,11 +159,11 @@ services:
         class: Knp\Menu\Renderer\TwigRenderer
         arguments:
             - '@twig'
-            - 'PerformBaseBundle::menu.html.twig'
+            - '@@PerformBase/_menu.html.twig'
             - '@knp_menu.matcher'
             - { currentClass: 'active' }
         tags:
-            - { name: knp_menu.renderer, alias: perform_admin }
+            - { name: knp_menu.renderer, alias: perform_sidebar }
 
     perform_base.menu_link.dashboard:
         class: Perform\BaseBundle\Menu\DashboardLinkProvider
@@ -149,6 +191,13 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@perform_base.config_store"
+
+    perform_base.entity_manager:
+        class: Perform\BaseBundle\Manager\EntityManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@event_dispatcher"
+            - "@logger"
 
     perform_base.asset_strategy:
         class: Symfony\Component\Asset\VersionStrategy\StaticVersionStrategy
@@ -178,6 +227,11 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
 
+    perform_base.type.tag:
+        class: Perform\BaseBundle\Type\TagType
+        arguments:
+            - "@doctrine.orm.entity_manager"
+
     perform_base.type.collection:
         class: Perform\BaseBundle\Type\CollectionType
         arguments:
@@ -185,16 +239,24 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@perform_base.asset_container"
 
+    perform_base.type.slug:
+        class: Perform\BaseBundle\Type\SlugType
+        arguments:
+            - "@perform_base.asset_container"
+
+    perform_base.markdown:
+        class: League\CommonMark\CommonMarkConverter
+
+    perform_base.type.markdown:
+        class: Perform\BaseBundle\Type\MarkdownType
+        arguments:
+            - "@perform_base.markdown"
+            - "@perform_base.asset_container"
+
     perform_base.bundle_searcher:
         class: Perform\BaseBundle\Util\BundleSearcher
         arguments:
             - "@kernel"
-
-    perform_base.reset_token_manager:
-        class: Perform\BaseBundle\Security\ResetTokenManager
-        arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@perform_notification.notifier"
 
     perform_base.form.type.hidden_entity:
         class: Perform\BaseBundle\Form\Type\HiddenEntityType
@@ -202,3 +264,24 @@ services:
             - "@doctrine.orm.entity_manager"
         tags:
             - {name: form.type}
+
+    perform_base.export.writer_factory:
+        class: Perform\BaseBundle\Exporter\WriterFactory
+
+    perform_base.exporter:
+        class: Perform\BaseBundle\Exporter\Exporter
+        arguments:
+            - '@perform_base.config_store'
+            - '@perform_base.selector.entity'
+            - '@perform_base.type_registry'
+            - '@perform_base.export.writer_factory'
+
+    perform_base.warmer.sass:
+        class: Perform\BaseBundle\CacheWarmer\SassWarmer
+        arguments:
+            - '@perform_base.bundle_searcher'
+            - '@filesystem'
+            - '%perform_base.theme%'
+            - '%perform_base.extra_sass%'
+        tags:
+            - {name: kernel.cache_warmer}

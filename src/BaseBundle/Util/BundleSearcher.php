@@ -4,6 +4,7 @@ namespace Perform\BaseBundle\Util;
 
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
  * Find classes and resources in bundles.
@@ -20,25 +21,24 @@ class BundleSearcher
     }
 
     /**
-     * Get the named bundle instances.
+     * Get a filtered array of registered bundles that are in the $bundles array.
      *
-     * @param array $bundleNames
+     * $bundles may be an array of bundle names or an array of BundleInterface instances.
+     *
+     * @param array|BundleInterface[] $bundles An array of bundles to use. If empty, use all bundles
      *
      * @return BundleInterface[]
      */
-    public function getBundles(array $bundleNames)
+    public function getBundles(array $bundles)
     {
-        $bundles = $this->kernel->getBundles();
-        if (empty($bundleNames)) {
-            return $bundles;
+        $availableBundles = $this->kernel->getBundles();
+        if (empty($bundles)) {
+            return $availableBundles;
         }
 
-        return array_filter(
-            $bundles,
-            function ($bundleName) use ($bundleNames) {
-                return in_array($bundleName, $bundleNames);
-            },
-            ARRAY_FILTER_USE_KEY);
+        return array_filter($availableBundles, function ($bundle) use ($bundles) {
+            return in_array($bundle->getName(), $bundles) || in_array($bundle, $bundles, true);
+        });
     }
 
     /**
@@ -50,16 +50,18 @@ class BundleSearcher
      *
      * If the mapper function returns false, skip that classname entirely from the array.
      *
+     * $bundles may be an array of bundle names or an array of BundleInterface instances.
+     *
      * @param string       $namespaceSegment The sub-namespace within a bundle, e.g. 'Entity' or 'Form\Type'
      * @param Closure|null $mapper           An optional mapper function taking the classname, classBasename, and bundle instance
-     * @param array        $bundleNames      An array of bundle names to use. If empty, use all bundles
+     * @param array|BundleInterface[] $bundles An array of bundles to use. If empty, use all bundles
      */
-    public function findClassesWithNamespaceSegment($namespaceSegment, \Closure $mapper = null, array $bundleNames = [])
+    public function findClassesWithNamespaceSegment($namespaceSegment, \Closure $mapper = null, array $bundles = [])
     {
         $namespaceSegment = trim($namespaceSegment, '/\\');
         $classes = [];
 
-        foreach ($this->getBundles($bundleNames) as $bundle) {
+        foreach ($this->getBundles($bundles) as $bundle) {
             $dirname = $bundle->getPath();
             $namespace = $bundle->getNamespace().'\\'.$namespaceSegment.'\\';
 
@@ -89,25 +91,34 @@ class BundleSearcher
     }
 
     /**
+     * Get an iterator of file objects located at the given path with Resources/ of the given bundles.
+     *
+     * $bundles may be an array of bundle names or an array of BundleInterface instances.
+     *
      * @param string $path        The path within Resources/, e.g. 'config/settings.yml'
-     * @param array  $bundleNames An array of bundle names to use. If empty, use all bundles.
+     * @param array|BundleInterface[] $bundles An array of bundles to use. If empty, use all bundles
      *
      * @return Finder
      */
-    public function findResourcesAtPath($path, array $bundleNames = [])
+    public function findResourcesAtPath($path, array $bundles = [])
     {
-        $bundles = $this->getBundles($bundleNames);
         $path = trim($path, '/');
 
         $finder = Finder::create()
                 ->files()
                 ->name(basename($path));
 
-        foreach ($bundles as $bundle) {
+        $dirFound = false;
+        foreach ($this->getBundles($bundles) as $bundle) {
             $dir = $bundle->getPath().'/Resources/'.dirname($path);
             if (is_dir($dir)) {
                 $finder->in($dir);
+                $dirFound = true;
             }
+        }
+
+        if (!$dirFound) {
+            throw new \LogicException(sprintf('The "Resources/%s" directory was not found in any of the given bundles.', dirname($path)));
         }
 
         return $finder;

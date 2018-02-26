@@ -1,6 +1,7 @@
 Perform\MediaBundle\Entity\File:
     type: entity
     table: perform_media_file
+    repositoryClass: Perform\MediaBundle\Repository\FileRepository
     id:
         id:
             type: guid
@@ -10,16 +11,12 @@ Perform\MediaBundle\Entity\File:
     fields:
         name:
             type: string
-        filename:
+        bucketName:
             type: string
         type:
             type: string
-        typeOptions:
-            type: json_array
-        mimeType:
-            type: string
-        charset:
-            type: string
+        status:
+            type: smallint
         createdAt:
             type: datetime
             gedmo:
@@ -30,8 +27,15 @@ Perform\MediaBundle\Entity\File:
             gedmo:
                 timestampable:
                     on: update
+    oneToMany:
+        locations:
+            targetEntity: Perform\MediaBundle\Entity\Location
+            mappedBy: file
+            cascade:
+                - persist
+                - remove
     manyToOne:
         owner:
-            targetEntity: Perform\BaseBundle\Entity\User
+            targetEntity: Perform\UserBundle\Entity\User
             joinColumn:
                 nullable: true

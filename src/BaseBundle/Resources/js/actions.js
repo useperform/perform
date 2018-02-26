@@ -1,9 +1,9 @@
 $(function () {
-  var runAction = function(href, entityClass, ids, button) {
+  var runAction = function(href, action, button) {
     if (!href) {
       return console.error('Missing action href');
     }
-    if (ids.length < 1) {
+    if (action.ids.length < 1) {
       return;
     }
     button.attr('disabled', true);
@@ -11,8 +11,11 @@ $(function () {
       url: href,
       type: 'post',
       data: {
-        entityClass: entityClass,
-        ids: ids,
+        entityClass: action.entityClass,
+        ids: action.ids,
+        options: {
+          context: action.context
+        }
       },
       success: function (data) {
         if (!data.redirectType) {
@@ -38,16 +41,20 @@ $(function () {
       },
       error: function (data) {
         var error;
-        switch (data.status) {
-        case 403:
-          error = 'This action is not allowed.';
-          break;
-        case 404:
-          error = 'One or more items were not found.';
-          break;
-        default:
-          error = 'An error occurred.'
-          break;
+        if (data.responseJSON && data.responseJSON.message) {
+          error = data.responseJSON.message;
+        } else {
+          switch (data.status) {
+          case 403:
+            error = 'This action is not allowed.';
+            break;
+          case 404:
+            error = 'One or more items were not found.';
+            break;
+          default:
+            error = 'An error occurred.'
+            break;
+          }
         }
         $('#modal-action-confirm').modal('hide');
         app.func.showError(error);
@@ -71,7 +78,7 @@ $(function () {
       .text(label)
       .data('action', action)
       .attr('href', href)
-      .removeClass('btn-default btn-primary btn-info btn-warning btn-danger')
+      .removeClass('btn-light btn-primary btn-info btn-warning btn-danger')
       .addClass(action.buttonStyle);
 
     modal.modal('show');
@@ -84,7 +91,10 @@ $(function () {
     if (action.confirm) {
       return confirmAction(href, action);
     }
-    runAction($(this).attr('href'), action.entityClass, action.ids, $(this));
+    if (action.link) {
+      return window.location = href;
+    }
+    runAction(href, action, $(this));
   });
 
   $('.batch-action-button').click(function(e) {
@@ -101,6 +111,6 @@ $(function () {
     if (action.confirm) {
       return confirmAction(href, action);
     }
-    runAction(href, action.entityClass, action.ids, $(this));
+    runAction(href, action, $(this));
   });
 });

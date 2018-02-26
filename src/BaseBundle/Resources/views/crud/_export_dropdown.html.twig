@@ -1,0 +1,13 @@
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="perform-export" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    {{label|trans({}, 'PerformBaseBundle')}}
+    <span class="caret"></span>
+  </button>
+  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="perform-export">
+    {% for format in formats %}
+      <a href="{{perform_export_route(entityClass, format)}}" class="dropdown-item">
+        {{('export.format.'~format)|trans({}, 'PerformBaseBundle')}}
+      </a>
+    {% endfor %}
+  </div>
+</div>

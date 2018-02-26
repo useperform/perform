@@ -1,0 +1,15 @@
+<script type="text/template" id="template-flash-message">
+  <div id="flash-message-<%- id %>" class="alert alert-<%- type %> message">
+    <%- message %>
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+  </div>
+</script>
+<script>
+ $(function() {
+   {% for class, messages in app.session.flashbag.all %}
+   {% for message in messages %}
+   Perform.base.showMessage('{{class}}', '{{message}}');
+   {% endfor %}
+   {% endfor %}
+ });
+</script>

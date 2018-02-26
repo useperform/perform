@@ -1,0 +1,30 @@
+Perform\MediaBundle\Entity\Location:
+    type: entity
+    table: perform_media_location
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        path:
+            type: string
+        isFile:
+            type: boolean
+        attributes:
+            type: json_array
+        isPrimary:
+            type: boolean
+        mimeType:
+            type: string
+            nullable: true
+        charset:
+            type: string
+            nullable: true
+    manyToOne:
+        file:
+            targetEntity: Perform\MediaBundle\Entity\File
+            inversedBy: locations
+            joinColumn:
+                nullable: false

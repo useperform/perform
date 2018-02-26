@@ -42,6 +42,25 @@ class AdminRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('FooBundle:Foo', $req->getEntity());
     }
 
+    public function testSetEntity()
+    {
+        $r = new Request();
+        $req = new AdminRequest($r, TypeConfig::CONTEXT_CREATE);
+        $req->setEntity('BarBundle:Bar');
+
+        $this->assertSame('BarBundle:Bar', $req->getEntity());
+    }
+
+    public function testSetEntityOverridesRequestAttribute()
+    {
+        $r = new Request();
+        $r->attributes->set('_entity', 'FooBundle:Foo');
+        $req = new AdminRequest($r, TypeConfig::CONTEXT_CREATE);
+        $req->setEntity('BarBundle:Bar');
+
+        $this->assertSame('BarBundle:Bar', $req->getEntity());
+    }
+
     public function testGetDefaultPage()
     {
         $req = $this->newRequest();

@@ -9,7 +9,7 @@ use Perform\BaseBundle\Action\ActionInterface;
 use Perform\BaseBundle\Admin\AdminRequest;
 
 /**
- * SpamAction.
+ * Mark a message as spam.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
@@ -37,20 +37,16 @@ class SpamAction implements ActionInterface
         return $response;
     }
 
-    public function isGranted($message)
-    {
-        return $message->getStatus() !== Message::STATUS_SPAM;
-    }
-
-    public function isAvailable(AdminRequest $request)
-    {
-        return $request->getFilter('new') !== 'spam';
-    }
-
     public function getDefaultConfig()
     {
         return [
             'label' => 'Flag as spam',
+            'isGranted' => function($message) {
+                return $message->getStatus() !== Message::STATUS_SPAM;
+            },
+            'isBatchOptionAvailable' => function($request) {
+                return $request->getFilter('new') !== 'spam';
+            }
         ];
     }
 }

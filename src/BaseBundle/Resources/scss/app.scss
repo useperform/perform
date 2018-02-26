@@ -1,22 +1,71 @@
+@import "../../node_modules/bootstrap/scss/functions";
+@import "theme_variables";
 @import "variables";
 @import "bootstrap";
-@import "admin";
 @import "font-awesome";
-@import "../../node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min";
 @import "../../node_modules/select2/dist/css/select2";
+@import "header";
+@import "sidebar";
+@import "dashboard";
+@import "types";
+@import "components";
 
-.panel {
+@import url($base-font-url);
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background: #f2f2f2;
+  font-family: $base-font, sans-serif;
+  padding: 0px;
+  margin: 0px;
+  font-size:13px;
+}
+
+a, a:hover, a:focus {
+  text-decoration: none;
+  outline: none;
+}
+
+::selection {
+  background: theme-color("info");
+  color: #fff;
+}
+
+::-moz-selection {
+  background: theme-color("info");
+  color: #fff;
+}
+
+.wrapper {
+  min-height: 95%;
+
+  #workspace {
+    padding-top: 70px;
+    padding-left: $p-sidebar-width + 15px;
+  }
+
+  &.sidebar-closed #workspace {
+    padding-left: 15px;
+  }
+}
+
+.site-footer {
+  background: $p-footer-bg;
+  color: $p-footer-color;
+  padding: 10px 0;
+}
+
+.card {
   box-shadow: 0px 3px 2px #aab2bd;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .modal-content {
   border: none;
-}
-
-.media-listing {
-  img {
-    max-width: 200px;
-  }
 }
 
 .pagination {
@@ -26,6 +75,7 @@
 .pagination-counter {
   p {
     font-weight: bold;
+    padding-top: 15px;
   }
 }
 
@@ -42,3 +92,35 @@ tbody {
     word-break: break-word;
   }
 }
+
+// transitions
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0
+}
+
+// ::-webkit-input-placeholder {
+//   font-style: italic;
+//   color: $placeholder-color;
+// }
+// :-moz-placeholder {
+//   font-style: italic;
+//   color: $placeholder-color;
+// }
+// ::-moz-placeholder {
+//   font-style: italic;
+//   color: $placeholder-color;
+// }
+// :-ms-input-placeholder {
+//   font-style: italic;
+//   color: $placeholder-color;
+// }
+// ::placeholder {
+//   font-style: italic;
+//   color: $placeholder-color;
+// }
+
+@import "extras";
+@import "theme";

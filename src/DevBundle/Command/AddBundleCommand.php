@@ -12,7 +12,6 @@ use Perform\DevBundle\File\KernelModifier;
 use Symfony\Component\Process\Process;
 use Perform\DevBundle\File\YamlModifier;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\ArrayInput;
 
 /**
  * AddBundleCommand.
@@ -27,7 +26,6 @@ class AddBundleCommand extends ContainerAwareCommand
             ->setDescription('Add and configure one or many perform bundles.')
             ->addArgument('bundles', InputArgument::IS_ARRAY, 'The bundles to add')
             ->addOption('no-install', '', InputOption::VALUE_NONE, "Don't run perform:install after adding the bundles");
-            ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -47,11 +45,12 @@ class AddBundleCommand extends ContainerAwareCommand
         $this->addConfigs($output, $resolved);
 
         if (!$input->getOption('no-install')) {
-            $this->install($output);
+            $this->install($output, $resolved);
         }
 
         $this->runComposerScripts($output);
 
+        $output->writeln('');
         foreach ($parents as $resource) {
             $output->writeln(sprintf('Added <info>%s</info>.', $resource->getBundleName()));
         }
@@ -113,7 +112,7 @@ class AddBundleCommand extends ContainerAwareCommand
     }
 
     /**
-     * @param InputInterface           $input
+     * @param InputInterface            $input
      * @param OutputInterface           $output
      * @param ParentResourceInterface[] $resources
      */
@@ -275,12 +274,18 @@ class AddBundleCommand extends ContainerAwareCommand
         return $unusedBundles;
     }
 
-    protected function install(OutputInterface $output)
+    protected function install(OutputInterface $output, array $resources)
     {
-        $output->writeln(['Running perform:install...', '']);
+        $output->writeln(['Running perform:install for newly added bundles...', '']);
 
-        $cmd = $this->getApplication()->find('perform:install');
-        $cmd->run(new ArrayInput([]), $output);
+        $bundleFlags = '';
+        foreach ($resources as $resource) {
+            $bundleFlags .= ' --only-bundles '.$resource->getBundleName();
+        }
+
+        $proc = new Process(sprintf('%s perform:install %s', $_SERVER['PHP_SELF'], $bundleFlags));
+        $proc->setTty(true);
+        $this->getHelper('process')->mustRun($output, $proc, null, null, $output->getVerbosity());
     }
 
     protected function runComposerScripts(OutputInterface $output)

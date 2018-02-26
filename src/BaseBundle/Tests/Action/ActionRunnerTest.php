@@ -10,6 +10,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Perform\BaseBundle\Config\ActionConfig;
 use Perform\BaseBundle\Action\ConfiguredAction;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * ActionRunnerTest.
@@ -40,8 +41,9 @@ class ActionRunnerTest extends \PHPUnit_Framework_TestCase
                         ->disableOriginalConstructor()
                         ->getMock();
         $this->store = $this->getMock(ConfigStoreInterface::class);
+        $this->authChecker = $this->getMock(AuthorizationCheckerInterface::class);
 
-        $this->runner = new ActionRunner($this->em, $this->store);
+        $this->runner = new ActionRunner($this->em, $this->store, $this->authChecker);
     }
 
     public function testRun()
@@ -63,14 +65,18 @@ class ActionRunnerTest extends \PHPUnit_Framework_TestCase
         $response = new ActionResponse('success');
         $this->action->expects($this->once())
             ->method('isGranted')
-            ->with($entity)
+            ->with($entity, $this->authChecker)
             ->will($this->returnValue(true));
+        $options = [
+            'some_option' => true,
+            'other_options' => false,
+        ];
         $this->action->expects($this->once())
             ->method('run')
-            ->with([$entity])
+            ->with([$entity], $options)
             ->will($this->returnValue($response));
 
-        $this->assertSame($response, $this->runner->run($actionName, 'FooBundle\\Foo', ['some-id'], []));
+        $this->assertSame($response, $this->runner->run($actionName, 'FooBundle\\Foo', ['some-id'], $options));
     }
 
     public function testRunNotGranted()

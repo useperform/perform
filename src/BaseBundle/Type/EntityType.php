@@ -16,6 +16,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * You would use the ``entity`` type on the ``owner`` property to
  * give a pet an owner.
  *
+ * Collections of entities can be managed too - set the ``multiple``
+ * option to ``true``.
+ *
  * Note that sorting will not work out of the box.
  * You'll need to define a :ref:`custom sort function <type_sorting>`
  * if you want to sort by this field.
@@ -24,7 +27,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * $config->add('owner', [
  *     'type' => 'entity',
  *     'options' => [
- *         'class' => 'PerformBaseBundle:User',
+ *         'class' => 'PerformUserBundle:User',
  *         'display_field' => 'email',
  *     ],
  *     'sort' => false,
@@ -48,6 +51,7 @@ class EntityType extends AbstractType
             'class' => $options['class'],
             'choice_label' => $options['display_field'],
             'label' => $options['label'],
+            'multiple' => $options['multiple'],
         ]);
     }
 
@@ -55,6 +59,7 @@ class EntityType extends AbstractType
      * @doc class The related entity class
      * @doc display_field The property to use to display the related entity
      * @doc link_to If true, display a link to view the related entity
+     * @doc multiple If true, assume the relation is a doctrine collection
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -64,11 +69,14 @@ class EntityType extends AbstractType
         $resolver->setAllowedTypes('class', 'string');
         $resolver->setDefault('link_to', true);
         $resolver->setAllowedTypes('link_to', 'boolean');
+        $resolver->setDefault('multiple', false);
+        $resolver->setAllowedTypes('multiple', 'boolean');
     }
 
     public function getDefaultConfig()
     {
         return [
+            'template' => '@PerformBase/type/entity.html.twig',
             'sort' => false,
         ];
     }
@@ -83,21 +91,29 @@ class EntityType extends AbstractType
         }
 
         return [
-            'value' => $this->accessor->getValue($relatedEntity, $options['display_field']),
-            'related_entity' => $relatedEntity,
+            'value' => $relatedEntity,
+            'display_field' => $options['display_field'],
             'link_to' => $options['link_to'],
+            'multiple' => $options['multiple'],
         ];
     }
 
-    public function getTemplate()
+    public function exportContext($entity, $field, array $options = [])
     {
-        return 'PerformBaseBundle:types:entity.html.twig';
+        $relatedEntity = $this->accessor->getValue($entity, $field);
+        $this->ensureEntity($field, $relatedEntity);
+
+        if (!$relatedEntity) {
+            return '';
+        }
+
+        return $this->accessor->getValue($relatedEntity, $options['display_field']);
     }
 
     protected function ensureEntity($field, $value)
     {
         if (!is_object($value) && !is_null($value)) {
-            throw new InvalidTypeException(sprintf('The entity field "%s" passed to %s must be a doctrine entity, or null.', $field, __CLASS__));
+            throw new InvalidTypeException(sprintf('The entity field "%s" passed to %s must be a doctrine entity, a doctrine collection, or null.', $field, __CLASS__));
         }
     }
 }

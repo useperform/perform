@@ -4,12 +4,10 @@ namespace Perform\BaseBundle\Tests\Type;
 
 use Perform\BaseBundle\Type\EntityType;
 use Doctrine\ORM\EntityManagerInterface;
-use Perform\BaseBundle\Entity\User;
+use Perform\UserBundle\Entity\User;
 use Perform\BaseBundle\Exception\InvalidTypeException;
 
 /**
- * EntityTypeTest.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class EntityTypeTest extends \PHPUnit_Framework_TestCase
@@ -31,15 +29,17 @@ class EntityTypeTest extends \PHPUnit_Framework_TestCase
         $entity->user = $user;
 
         $options = [
-            'class' => 'PerformBaseBundle:User',
+            'class' => 'PerformUserBundle:User',
             'display_field' => 'email',
             'link_to' => false,
+            'multiple' => false,
         ];
 
         $expected = [
-            'value' => 'user@example.com',
-            'related_entity' => $user,
+            'value' => $user,
+            'display_field' => 'email',
             'link_to' => false,
+            'multiple' => false,
         ];
         $this->assertSame($expected, $this->type->listContext($entity, 'user', $options));
     }
@@ -50,8 +50,9 @@ class EntityTypeTest extends \PHPUnit_Framework_TestCase
         $entity->user = null;
 
         $options = [
-            'class' => 'PerformBaseBundle:User',
+            'class' => 'PerformUserBundle:User',
             'display_field' => 'email',
+            'multiple' => false,
         ];
 
         $this->assertSame('', $this->type->listContext($entity, 'user', $options));
@@ -63,7 +64,7 @@ class EntityTypeTest extends \PHPUnit_Framework_TestCase
         $entity->user = 100;
 
         $options = [
-            'class' => 'PerformBaseBundle:User',
+            'class' => 'PerformUserBundle:User',
             'display_field' => 'email',
         ];
 

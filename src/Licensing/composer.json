@@ -1,0 +1,16 @@
+{
+    "name": "perform/licensing",
+    "description": "Code used by the bundles to validate your project license.",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Glynn Forrest",
+            "email": "me@glynnforrest.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Perform\\Licensing\\": ""
+        }
+    }
+}

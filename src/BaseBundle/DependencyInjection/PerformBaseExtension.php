@@ -8,13 +8,11 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Config\Resource\FileResource;
-use Symfony\Component\Config\Resource\DirectoryResource;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Perform\BaseBundle\Doctrine\EntityResolver;
+use Perform\Licensing\Licensing;
 
 /**
- * PerformBaseExtension.
+ * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class PerformBaseExtension extends Extension
 {
@@ -23,6 +21,7 @@ class PerformBaseExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
+        Licensing::validateProject($container);
         // $this->ensureUTC();
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
@@ -34,14 +33,13 @@ class PerformBaseExtension extends Extension
         $container->setParameter('perform_base.panels.right', $config['panels']['right']);
         $container->setParameter('perform_base.menu_order', $config['menu']['order']);
         $container->setParameter('perform_base.auto_asset_version', uniqid());
+        $container->setParameter('perform_base.theme', $config['assets']['theme']);
+        self::addExtraSass($container, $config['assets']['extra_sass']);
         $this->configureTypeRegistry($container);
         $this->configureMailer($config, $container);
         $this->findExtendedEntities($container, $config);
         $this->processAdminConfig($container, $config);
         $this->createSimpleMenus($container, $config['menu']['simple']);
-
-        $tokenManager = $container->getDefinition('perform_base.reset_token_manager');
-        $tokenManager->addArgument($config['security']['reset_token_expiry']);
     }
 
     protected function configureTypeRegistry(ContainerBuilder $container)
@@ -59,14 +57,19 @@ class PerformBaseExtension extends Extension
         $definition->addMethodCall('addType', ['duration', 'Perform\BaseBundle\Type\DurationType']);
         $definition->addMethodCall('addType', ['email', 'Perform\BaseBundle\Type\EmailType']);
         $definition->addMethodCall('addType', ['choice', 'Perform\BaseBundle\Type\ChoiceType']);
+        $definition->addMethodCall('addType', ['country', 'Perform\BaseBundle\Type\CountryType']);
         $definition->addMethodCall('addTypeService', ['entity', 'perform_base.type.entity']);
+        $definition->addMethodCall('addTypeService', ['tag', 'perform_base.type.tag']);
         $definition->addMethodCall('addTypeService', ['collection', 'perform_base.type.collection']);
+        $definition->addMethodCall('addTypeService', ['slug', 'perform_base.type.slug']);
+        $definition->addMethodCall('addTypeService', ['markdown', 'perform_base.type.markdown']);
     }
 
     protected function configureMailer(array $config, ContainerBuilder $container)
     {
         if (!isset($config['mailer']['from_address'])) {
             $container->removeDefinition('perform_base.email.mailer');
+
             return;
         }
 
@@ -77,6 +80,7 @@ class PerformBaseExtension extends Extension
         }
 
         $definition = $container->getDefinition('perform_base.email.mailer');
+        // test each composer.json requires licensing
         $definition->addMethodCall('setExcludedDomains', [$config['mailer']['excluded_domains']]);
     }
 
@@ -120,7 +124,7 @@ class PerformBaseExtension extends Extension
     {
         // can't use BundleSearcher here because kernel service isn't available
         $bundles = $container->getParameter('kernel.bundles');
-        $entities = [];
+        $aliases = [];
 
         foreach ($bundles as $bundleClass) {
             $reflection = new \ReflectionClass($bundleClass);
@@ -159,5 +163,21 @@ class PerformBaseExtension extends Extension
         }
 
         $container->setParameter('perform_base.admins', $admins);
+    }
+
+    /**
+     * Add extra files to be included in the sass build.
+     *
+     * This method is available to other bundles so they don't have to
+     * implement PrependExtensionInterface to add extra sass files.
+     *
+     * @param ContainerBuilder $container
+     * @param array            $files
+     */
+    public static function addExtraSass(ContainerBuilder $container, array $files)
+    {
+        $param = 'perform_base.extra_sass';
+        $existing = $container->hasParameter($param) ? $container->getParameter($param) : [];
+        $container->setParameter($param, array_merge($existing, $files));
     }
 }

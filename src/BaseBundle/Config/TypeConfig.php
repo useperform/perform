@@ -19,12 +19,14 @@ class TypeConfig
     const CONTEXT_VIEW = 'view';
     const CONTEXT_CREATE = 'create';
     const CONTEXT_EDIT = 'edit';
+    const CONTEXT_EXPORT = 'export';
 
     protected static $optionKeys = [
         'listOptions',
         'viewOptions',
         'createOptions',
         'editOptions',
+        'exportOptions',
     ];
 
     protected $resolver;
@@ -49,10 +51,13 @@ class TypeConfig
                     static::CONTEXT_VIEW,
                     static::CONTEXT_CREATE,
                     static::CONTEXT_EDIT,
+                    static::CONTEXT_EXPORT,
                 ],
                 'sort' => true,
             ])
             ->setAllowedTypes('contexts', 'array')
+            ->setDefault('template', '@PerformBase/type/simple.html.twig')
+            ->setAllowedTypes('template', 'string')
             ->setDefined(static::$optionKeys);
         foreach (static::$optionKeys as $key) {
             $this->resolver->setAllowedTypes($key, 'array');

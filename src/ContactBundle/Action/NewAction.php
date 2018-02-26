@@ -9,7 +9,7 @@ use Perform\BaseBundle\Action\ActionInterface;
 use Perform\BaseBundle\Admin\AdminRequest;
 
 /**
- * NewAction.
+ * Mark a message as new.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
@@ -37,16 +37,6 @@ class NewAction implements ActionInterface
         return $response;
     }
 
-    public function isGranted($message)
-    {
-        return $message->getStatus() !== Message::STATUS_NEW;
-    }
-
-    public function isAvailable(AdminRequest $request)
-    {
-        return $request->getFilter('new') !== 'new';
-    }
-
     public function getDefaultConfig()
     {
         return [
@@ -64,6 +54,12 @@ class NewAction implements ActionInterface
 
                 return 'Mark as new';
             },
+            'isGranted' => function($message) {
+                return $message->getStatus() !== Message::STATUS_NEW;
+            },
+            'isBatchOptionAvailable' => function($request) {
+                return $request->getFilter('new') !== 'new';
+            }
         ];
     }
 }

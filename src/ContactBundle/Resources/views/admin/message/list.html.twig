@@ -1,0 +1,41 @@
+{% extends '@PerformBase/crud/list.html.twig' %}
+
+{% block workspace %}
+  {% set currentFilter = null %}
+  {% for filter in filters %}
+    {% if filter.isActive() %}
+      {% set currentFilter = filter %}
+    {% endif %}
+  {% endfor %}
+
+
+  <h3><i class="fa fa-angle-right"></i>
+    {% if currentFilter is not null %}
+      {{currentFilter.config.label}} -
+    {% endif %}
+    Contact Form Messages
+  </h3>
+  <div class="row mt">
+    <div class="col-lg-2">
+      <div class="card">
+        <div class="card-body">
+          {% include '@PerformBase/crud/_named_filters.html.twig' %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-10">
+      <div class="card">
+        <div class="card-body">
+          {% include '@PerformBase/crud/_table.html.twig' %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% block batchActions %}
+    {% include '@PerformBase/action/_batch.html.twig' %}
+  {% endblock %}
+  {% block paginator %}
+    {% include '@PerformBase/crud/_paginator.html.twig' %}
+  {% endblock %}
+{% endblock %}

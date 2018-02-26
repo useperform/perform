@@ -4,10 +4,9 @@ namespace Perform\MediaPlayerBundle\Admin;
 
 use Perform\BaseBundle\Admin\AbstractAdmin;
 use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Config\LabelConfig;
 
 /**
- * PlaylistItemAdmin
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class PlaylistItemAdmin extends AbstractAdmin
@@ -30,8 +29,11 @@ class PlaylistItemAdmin extends AbstractAdmin
             ;
     }
 
-    public function getNameForEntity($entity)
+    public function configureLabels(LabelConfig $config)
     {
-        return $entity->getFile()->getName();
+        $config->setEntityName('Playlist Track')
+            ->setEntityLabel(function ($entity) {
+                return $entity->getTitle();
+            });
     }
 }

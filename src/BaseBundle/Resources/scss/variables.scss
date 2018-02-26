@@ -1,22 +1,70 @@
-$border-radius-base: 0;
-$border-radius-small: 0;
-$border-radius-large: 0;
-$panel-border-radius: 0;
-$input-border-radius: 0;
-$alert-border-radius: 0;
-$btn-border-radius-base: 0;
-$nav-pills-border-radius: 0;
-$navbar-border-radius: 0;
-$navbar-height: 60px;
-$navbar-default-bg: #a5d777;
-$navbar-default-brand-color: #ffffff;
-$navbar-default-brand-hover-color: darken(#ffffff, 2);
-$navbar-default-link-color: #ffffff;
-$navbar-default-link-hover-color: darken(#ffffff, 2);
+// perform variables
+// must be !default so themes can override them
+$placeholder-color: #cdcdcd !default;
+$base-font-url: 'https://fonts.googleapis.com/css?family=Ruda:400,700,900' !default;
+$base-font: 'Ruda' !default;
 
-$brand-info: #68dff0;
+/*
+Background color of the footer.
+*/
+$p-footer-bg: gray("700") !default;
 
-//relative to css/app.css
-$icon-font-path: '../fonts/';
+/*
+Color of the text in the footer.
+*/
+$p-footer-color: $white !default;
 
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables";
+/*
+Background color of the header.
+*/
+$p-header-bg: $light !default;
+
+/*
+Background color of the sidebar menu.
+*/
+$p-sidebar-bg: $secondary !default;
+
+/*
+Color of the text in the sidebar.
+*/
+$p-sidebar-color: $white !default;
+
+/*
+Color of the highlighted menu items in the sidebar.
+*/
+$p-sidebar-highlight: $gray-500 !default;
+
+/*
+Width of the sidebar.
+*/
+$p-sidebar-width: 210px !default;
+
+/*
+Color of hovered datepicker cells.
+*/
+$p-comp-datepicker-cell-hover-color: $body-color !default;
+
+/*
+Background color of hovered datepicker cells.
+*/
+$p-comp-datepicker-cell-hover-bg: gray('200') !default;
+
+/*
+Color of datepicker cells not in the current range.
+*/
+$p-comp-datepicker-othercell-color: gray('400') !default;
+
+/*
+Color of hovered datepicker cells not in the current range.
+*/
+$p-comp-datepicker-othercell-hover-bg: gray('200') !default;
+
+/*
+Background color of hovered datepicker cells not in the current range.
+*/
+$p-comp-datepicker-othercell-hover-color: gray('500') !default;
+
+/*
+Border radius of datepicker cells.
+*/
+$p-comp-datepicker-cell-border-radius: 4em !default;

@@ -5,47 +5,45 @@ namespace NotificationBundle\Tests\Publisher;
 use Perform\NotificationBundle\Publisher\LocalPublisher;
 use Perform\NotificationBundle\Notification;
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\Templating\EngineInterface;
 use Perform\NotificationBundle\Recipient\RecipientInterface;
+use Perform\NotificationBundle\Renderer\RendererInterface;
 
 /**
- * LocalPublisherTest
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class LocalPublisherTest extends \PHPUnit_Framework_TestCase
 {
     protected $entityManager;
-    protected $templating;
+    protected $renderer;
     protected $publisher;
 
     public function setUp()
     {
         $this->entityManager = $this->getMock(ObjectManager::class);
-        $this->templating = $this->getMock(EngineInterface::class);
-        $this->publisher = new LocalPublisher($this->entityManager, $this->templating);
-    }
-
-    protected function newNotification($type)
-    {
-        return new Notification($this->getMock(RecipientInterface::class), $type);
+        $this->renderer = $this->getMock(RendererInterface::class);
+        $this->publisher = new LocalPublisher($this->entityManager, $this->renderer);
     }
 
     public function testSend()
     {
-        $this->templating->expects($this->once())
-            ->method('render')
-            ->with('PerformNotificationBundle:test:local.html.twig');
+        $recipient1 = $this->getMock(RecipientInterface::class);
+        $recipient2 = $this->getMock(RecipientInterface::class);
+        $notification = new Notification([$recipient1, $recipient2], 'foo');
+        $this->renderer->expects($this->once())
+            ->method('getTemplateName')
+            ->with('local', $notification)
+            ->will($this->returnValue('some_template'));
+        $this->renderer->expects($this->exactly(2))
+            ->method('renderTemplate')
+            ->withConsecutive(
+                ['some_template', $notification, $recipient1],
+                ['some_template', $notification, $recipient2]
+            );
+        $this->entityManager->expects($this->exactly(2))
+            ->method('persist');
+        $this->entityManager->expects($this->once())
+            ->method('flush');
 
-        $this->publisher->send($this->newNotification('test'));
-    }
-
-    public function testSendWithNamespacing()
-    {
-        $this->templating->expects($this->once())
-            ->method('render')
-            ->with('PerformBaseBundle:notifications:crud_update/local.html.twig');
-
-        $this->publisher->send($this->newNotification('PerformBaseBundle:crud_update'));
+        $this->publisher->send($notification);
     }
 }

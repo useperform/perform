@@ -3,11 +3,14 @@
 namespace Perform\BaseBundle\Action;
 
 use Perform\BaseBundle\Admin\AdminRequest;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Perform\BaseBundle\Routing\CrudUrlGeneratorInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Represents an action configured with options from admin classes.
  *
- * This class shouldn't need to be constructed manually; get one from
+ * This class shouldn't be constructed manually; get one from
  * ActionConfig instead.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -40,20 +43,67 @@ class ConfiguredAction
         return call_user_func($this->options['batchLabel'], $request);
     }
 
-    public function isGranted($entity)
+    /**
+     * Return true if this action is allowed to be run on the given entity.
+     *
+     * @param object $entity
+     *
+     * @return bool
+     */
+    public function isGranted($entity, AuthorizationCheckerInterface $authChecker)
     {
-        //also check with any custom code passed in
-        return $this->action->isGranted($entity);
+        return (bool) $this->options['isGranted']($entity, $authChecker);
     }
 
-    public function isAvailable(AdminRequest $request)
+    /**
+     * Return true if the button for this action should be shown for this entity.
+     * Note that this does not guarantee the action will be allowed on the entity.
+     * The result of isGranted() will be used for that.
+     *
+     * @param object       $entity
+     * @param AdminRequest $request
+     *
+     * @return bool
+     */
+    public function isButtonAvailable($entity, AdminRequest $request)
     {
-        return $this->action->isAvailable($request);
+        return (bool) $this->options['isButtonAvailable']($entity, $request);
+    }
+
+    public function isBatchOptionAvailable(AdminRequest $request)
+    {
+        return (bool) $this->options['isBatchOptionAvailable']($request);
     }
 
     public function isConfirmationRequired()
     {
         return (bool) $this->options['confirmationRequired']();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLink()
+    {
+        return isset($this->options['link']);
+    }
+
+    /**
+     * Get the URL of the link.
+     *
+     * The URL may change depending on the entity, and may be
+     * generated from the supplied $crudUrlGenerator and
+     * $urlGenerator.
+     *
+     * @param object                    $entity
+     * @param CrudUrlGeneratorInterface $crudUrlGenerator
+     * @param UrlGeneratorInterface     $urlGenerator
+     *
+     * @return string
+     */
+    public function getLink($entity, CrudUrlGeneratorInterface $crudUrlGenerator, UrlGeneratorInterface $urlGenerator)
+    {
+        return $this->isLink() ? $this->options['link']($entity, $crudUrlGenerator, $urlGenerator) : '';
     }
 
     public function getConfirmationMessage(AdminRequest $request, $entity)
@@ -66,10 +116,8 @@ class ConfiguredAction
         return $this->options['buttonStyle'];
     }
 
-    public function run($entities)
+    public function run($entities, array $options = [])
     {
-        //any other configured options passed into this class
-        $options = [];
         return $this->action->run($entities, $options);
     }
 }

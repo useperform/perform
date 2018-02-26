@@ -26,6 +26,11 @@ class EmailType extends AbstractType
         ];
     }
 
+    public function exportContext($entity, $field, array $options = [])
+    {
+        return $this->accessor->getValue($entity, $field);
+    }
+
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
@@ -33,8 +38,10 @@ class EmailType extends AbstractType
             ->setAllowedTypes('link', 'boolean');
     }
 
-    public function getTemplate()
+    public function getDefaultConfig()
     {
-        return 'PerformBaseBundle:types:email.html.twig';
+        return [
+            'template' => '@PerformBase/type/email.html.twig',
+        ];
     }
 }

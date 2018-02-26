@@ -9,8 +9,6 @@ use Symfony\Component\Form\FormInterface;
 use Perform\BaseBundle\Settings\SettingsManager;
 
 /**
- * ContactFormPanel
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class ContactFormPanel implements SettingsPanelInterface
@@ -33,7 +31,7 @@ class ContactFormPanel implements SettingsPanelInterface
 
     public function getTemplate()
     {
-        return 'PerformContactBundle:Settings:contactForm.html.twig';
+        return '@PerformContact/settings_panel/contact_form.html.twig';
     }
 
     public function getTemplateVars()

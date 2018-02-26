@@ -24,7 +24,7 @@ class MenuBuilder
         $this->providers[] = $linkProvider;
     }
 
-    public function createMainMenu(array $options)
+    public function createSidebar(array $options)
     {
         $menu = $this->factory->createItem('root');
         foreach ($this->providers as $provider) {

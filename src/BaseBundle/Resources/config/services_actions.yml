@@ -10,6 +10,7 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@perform_base.config_store"
+            - "@security.authorization_checker"
 
     perform_base.action.delete:
         class: Perform\BaseBundle\Action\DeleteAction
@@ -17,10 +18,3 @@ services:
             - "@doctrine.orm.entity_manager"
         tags:
             - { name: perform_base.action, alias: perform_base_delete }
-
-    perform_base.action.create_reset_token:
-        class: Perform\BaseBundle\Action\CreateResetTokenAction
-        arguments:
-            - "@perform_base.reset_token_manager"
-        tags:
-            - { name: perform_base.action, alias: perform_base_create_reset_token }

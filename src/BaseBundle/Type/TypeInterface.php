@@ -6,8 +6,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * TypeInterface
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 interface TypeInterface
@@ -16,15 +14,25 @@ interface TypeInterface
 
     public function viewContext($entity, $field, array $options = []);
 
+    /**
+     * Format an entity property suitable for exporting, e.g. to json or csv.
+     *
+     * @param object $entity
+     * @param string $field
+     * @param array  $options
+     *
+     * @return mixed
+     */
+    public function exportContext($entity, $field, array $options = []);
+
     public function createContext(FormBuilderInterface $builder, $field, array $options = []);
 
     public function editContext(FormBuilderInterface $builder, $field, array $options = []);
 
     /**
-     * @return array The default config array passed to TypeConfig#add().
+     * @return array the default config array passed to TypeConfig#add()
      */
     public function getDefaultConfig();
-
 
     /**
      * Define the options this type can accept.
@@ -34,9 +42,4 @@ interface TypeInterface
      * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver);
-
-    /**
-     * @return string The name of template to render this field type.
-     */
-    public function getTemplate();
 }

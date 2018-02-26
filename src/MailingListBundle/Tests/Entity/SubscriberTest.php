@@ -51,4 +51,21 @@ class SubscriberTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(MissingAttributeException::class);
         $s->getAttribute('unknown');
     }
+
+    public function testHasAttribute()
+    {
+        $s = new Subscriber();
+        $this->assertFalse($s->hasAttribute('foo'));
+        $s->setAttribute('foo', 'value');
+        $this->assertTrue($s->hasAttribute('foo'));
+    }
+
+    public function testSetAttributeIfUnset()
+    {
+        $s = new Subscriber();
+        $s->setAttribute('bar', 'bar_value');
+        $s->setAttributeIfUnset('bar', 'new_bar_value');
+        $s->setAttributeIfUnset('foo', 'new_foo_value');
+        $this->assertSame(['bar' => 'bar_value', 'foo' => 'new_foo_value'], $s->getAttributes());
+    }
 }

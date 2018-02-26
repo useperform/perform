@@ -8,27 +8,29 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 
 /**
- * UploadHandler
+ * Handles files that have been uploaded in chunks, indicated with the
+ * CONTENT_RANGE header.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  */
 class UploadHandler
 {
-    protected $completed = [];
-    protected $chunks = [];
-    protected $request;
-
-    const CHUNK_START = 1;
-    const CHUNK_PARTIAL = 2;
-    const CHUNK_END = 3;
-    const WHOLE = 4;
-
     /**
-     * Examine an uploaded file. If the file is a chunk of a bigger
-     * file, either create a new file or append it onto the file.
+     * Process an uploaded file and return a result referencing the uploaded file.
+     *
+     * If the upload is complete, return a reference to the file.
+     *
+     * If the upload is a chunk of a bigger file, concatenate it with
+     * other chunks in a temporary file and return a reference the temporary file.
+     *
+     * If the upload is the final chunk of a bigger file, rename the
+     * entire file to the name of the upload and return a reference to
+     * it.
      *
      * @param Request
      * @param UploadedFile
+     *
+     * @return UploadResult
      */
     public function process(Request $request, UploadedFile $file)
     {
@@ -36,43 +38,40 @@ class UploadHandler
             throw new UploadException($file->getErrorMessage());
         }
 
-        $status = $this->chunkStatus($request, $file);
+        $result = $this->newResult($request, $file);
 
-        if ($status === self::WHOLE) {
-            $this->completed[$file->getClientOriginalName()] = new File($file->getPathname());
+        switch ($result->getChunkStatus()) {
+        case UploadResult::CHUNK_START:
+            // start of a file, create a new chunk file
+            $chunkPath = $this->getChunkPath($file);
+            $chunkFile = $file->move(dirname($chunkPath), basename($chunkPath));
+            $result->setFile($chunkFile);
+            break;
 
-            return;
+        case UploadResult::CHUNK_PARTIAL:
+            // middle of a file, append to an existing chunk file
+            $uploadPath = $file->getPathname();
+            $chunkPath = $this->getChunkPath($file);
+            file_put_contents($chunkPath, fopen($uploadPath, 'r'), FILE_APPEND);
+            unlink($uploadPath);
+            $result->setFile(new File($chunkPath));
+            break;
+
+        case UploadResult::CHUNK_END:
+            // end of a file, append to an existing chunk file and rename the entire file to the target file name
+            $uploadPath = $file->getPathname();
+            $chunkPath = $this->getChunkPath($file);
+            file_put_contents($chunkPath, fopen($uploadPath, 'r'), FILE_APPEND);
+            rename($chunkPath, $uploadPath);
+            $result->setFile(new File($uploadPath));
+            break;
+        default:
+            // entire file supplied
+            $result->setFile($file);
+            break;
         }
 
-        if ($status === self::CHUNK_START) {
-            $path = $this->getChunkPath($file);
-            $this->chunks[$file->getClientOriginalName()] =  $file->move(dirname($path), basename($path));
-
-            return;
-        }
-
-        if ($status === self::CHUNK_PARTIAL) {
-            $chunk = $this->getChunkPath($file);
-            $upload = $file->getPathname();
-            file_put_contents($chunk, fopen($upload, 'r'), FILE_APPEND);
-
-            unlink($upload);
-            $this->chunks[$file->getClientOriginalName()] = new File($chunk);
-
-            return;
-        }
-
-        if ($status === self::CHUNK_END) {
-            $chunk = $this->getChunkPath($file);
-            $upload = $file->getPathname();
-            file_put_contents($chunk, fopen($upload, 'r'), FILE_APPEND);
-
-            rename($chunk, $upload);
-            $this->completed[$file->getClientOriginalName()] = new File($upload);
-            unset($this->chunks[$file->getClientOriginalName()]);
-
-            return;
-        }
+        return $result;
     }
 
     /**
@@ -83,20 +82,21 @@ class UploadHandler
         return dirname($file->getPathname()).'/'.'chunk-'.md5($file->getClientOriginalName());
     }
 
-    /**
-     * Decide whether the uploaded file is a complete file or the
-     * beginning, middle or end of a chunked upload.
-     */
-    protected function chunkStatus(Request $request)
+    protected function newResult(Request $request, UploadedFile $file)
     {
         //look at the Content-Range header for signs of a chunked
         //upload
         $header = $request->server->get('HTTP_CONTENT_RANGE');
         if (!$header) {
-            return self::WHOLE;
+            return new UploadResult($file->getClientOriginalName(), 0, $file->getSize() - 1, $file->getSize());
         }
 
-        //Content-Range: bytes 0-50000/1000000
+        // start
+        // Content-Range: bytes 0-50000/1000000
+        // mid
+        // Content-Range: bytes 50001-90000/1000000
+        // end
+        // Content-Range: bytes 90001-99999/1000000
         $pieces = preg_split('/[^0-9]+/', $header);
         // [
         //     '',
@@ -111,42 +111,6 @@ class UploadHandler
             }
         }
 
-        $chunk_size = $pieces[2] - $pieces[1];
-        $total_size = $pieces[3];
-        if ($chunk_size === $total_size) {
-            return self::WHOLE;
-        }
-        if ((int) $pieces[1] === 0) {
-            return self::CHUNK_START;
-        }
-        if ((int) $pieces[2] + 1 === (int) $pieces[3]) {
-            return self::CHUNK_END;
-        }
-
-        return self::CHUNK_PARTIAL;
-    }
-
-    /**
-     * Get all files that were successfully processed.
-     */
-    public function getUploadedFiles()
-    {
-        return array_merge($this->completed, $this->chunks);
-    }
-
-    /**
-     * Get all files that have only partially uploaded.
-     */
-    public function getPartialFiles()
-    {
-        return $this->chunks;
-    }
-
-    /**
-     * Get all files that have uploaded completely.
-     */
-    public function getCompletedFiles()
-    {
-        return $this->completed;
+        return new UploadResult($file->getClientOriginalName(), $pieces[1], $pieces[2], $pieces[3]);
     }
 }

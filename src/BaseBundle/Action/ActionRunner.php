@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Doctrine\ORM\EntityNotFoundException;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * ActionRunner.
@@ -16,14 +17,16 @@ class ActionRunner
 {
     protected $entityManager;
     protected $store;
+    protected $authChecker;
 
-    public function __construct(EntityManagerInterface $entityManager, ConfigStoreInterface $store)
+    public function __construct(EntityManagerInterface $entityManager, ConfigStoreInterface $store, AuthorizationCheckerInterface $authChecker)
     {
         $this->entityManager = $entityManager;
         $this->store = $store;
+        $this->authChecker = $authChecker;
     }
 
-    public function run($actionName, $entityClass, array $entityIds)
+    public function run($actionName, $entityClass, array $entityIds, array $options = [])
     {
         $action = $this->store->getActionConfig($entityClass)->get($actionName);
 
@@ -34,13 +37,13 @@ class ActionRunner
                 throw new EntityNotFoundException(sprintf('Required entity "%s" for action "%s" was not found.', $id, $actionName));
             }
 
-            if (!$action->isGranted($entity)) {
+            if (!$action->isGranted($entity, $this->authChecker)) {
                 throw new AccessDeniedException(sprintf('Action "%s" is not allowed to run on this entity.', $actionName));
             }
 
             $entities[] = $entity;
         }
 
-        return $action->run($entities);
+        return $action->run($entities, $options);
     }
 }

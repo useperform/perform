@@ -3,163 +3,288 @@
 namespace Perform\MediaBundle\Importer;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Dflydev\ApacheMimeTypes\PhpRepository as MimeTypesRepository;
-use League\Flysystem\FilesystemInterface;
-use League\Flysystem\FileNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Perform\MediaBundle\Entity\File;
-use Doctrine\ORM\Id\UuidGenerator;
-use Perform\AppBundle\Entity\User;
+use Perform\UserBundle\Entity\User;
 use Perform\MediaBundle\Event\FileEvent;
+use Symfony\Component\Finder\Finder;
+use Perform\MediaBundle\Bucket\BucketRegistryInterface;
+use Perform\MediaBundle\Entity\Location;
+use Perform\MediaBundle\Exception\InvalidFileSizeException;
+use Perform\MediaBundle\Bucket\BucketInterface;
+use Perform\MediaBundle\MediaResource;
+use Perform\MediaBundle\File\FinfoParser;
+use Perform\MediaBundle\Event\ImportUrlEvent;
+use Perform\MediaBundle\Event\Events;
 
 /**
  * Add files to the media library.
+ *
+ * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class FileImporter
 {
-    protected $storage;
+    protected $bucketRegistry;
     protected $entityManager;
-    protected $repository;
     protected $dispatcher;
+    protected $parser;
 
-    public function __construct(FilesystemInterface $storage, EntityManagerInterface $entityManager, EventDispatcherInterface $dispatcher)
+    public function __construct(BucketRegistryInterface $bucketRegistry, EntityManagerInterface $entityManager, EventDispatcherInterface $dispatcher)
     {
-        $this->storage = $storage;
+        $this->bucketRegistry = $bucketRegistry;
         $this->entityManager = $entityManager;
-        $this->repository = $entityManager->getRepository('PerformMediaBundle:File');
         $this->dispatcher = $dispatcher;
+        $this->parser = new FinfoParser();
     }
 
     /**
-     * @return FilesystemInterface
-     */
-    public function getFilesystem()
-    {
-        return $this->storage;
-    }
-
-    /**
-     * Get an upload error suitable for displaying to a user.
+     * Import a new resource into the media library.
      *
-     * @return string
+     * @param MediaResource $resource
+     * @param string|null   $bucketName The name of the bucket to store the imported file
      */
-    public function getUserFacingUploadError(UploadedFile $file)
+    public function import(MediaResource $resource, $bucketName = null)
     {
-        static $errors = [
-            UPLOAD_ERR_INI_SIZE => 'The file "%s" is too large.',
-            UPLOAD_ERR_FORM_SIZE => 'The file "%s" is too large.',
-            UPLOAD_ERR_PARTIAL => 'The file "%s" was only partially uploaded.',
-            UPLOAD_ERR_NO_FILE => 'No file was uploaded.',
-            // UPLOAD_ERR_CANT_WRITE
-            // UPLOAD_ERR_NO_TMP_DIR
-            // UPLOAD_ERR_EXTENSION
-            // all default to error below
-        ];
+        $bucket = $bucketName ?
+                $this->bucketRegistry->get($bucketName) :
+                $this->bucketRegistry->getDefault();
+        try {
+            $this->entityManager->beginTransaction();
+            $file = $this->createAndSaveEntity($resource, $bucket);
+            if ($resource->isFile()) {
+                $bucket->save($file->getPrimaryLocation(), fopen($resource->getPath(), 'r'));
+            }
+            $this->entityManager->commit();
+        } catch (\Exception $e) {
+            $this->entityManager->rollback();
+            throw $e;
+        }
 
-        $errorCode = $file->getError();
-        $message = isset($errors[$errorCode]) ? $errors[$errorCode] : 'The file "%s" could not be uploaded';
+        // run this in the background
+        $this->process($file, $resource);
 
-        return sprintf($message, $file->getClientOriginalName());
+        return $file;
+    }
+
+    protected function createAndSaveEntity(MediaResource $resource, BucketInterface $bucket)
+    {
+        $file = File::fromResource($resource);
+        $file->setStatus(File::STATUS_NEW);
+        $file->setBucketName($bucket->getName());
+
+        // set guid manually so a location can be created before saving to the database
+        $file->setId($this->generateUuid());
+
+        if ($resource->isFile()) {
+            $pathname = $resource->getPath();
+            $this->validateFileSize($bucket, $pathname);
+
+            $resource->setParseResult($this->parser->parse($pathname));
+        }
+
+        // detect the media type before creating the primary location,
+        // the resource may be modified by the supporting media type
+        $file->setType($this->findType($file, $resource));
+
+        if ($resource->isFile()) {
+            $parseResult = $resource->getParseResult();
+            $location = Location::file(sprintf('%s.%s', sha1($file->getId()), $parseResult->getExtension()));
+            $location->setMimeType($parseResult->getMimeType());
+            $location->setCharset($parseResult->getCharset());
+        } else {
+            $location = new Location($resource->getPath());
+        }
+        $file->setPrimaryLocation($location);
+
+        $this->dispatcher->dispatch(FileEvent::CREATE, new FileEvent($file));
+        $this->entityManager->persist($file);
+        $this->entityManager->flush();
+
+        return $file;
     }
 
     /**
      * Import a file into the media library.
      *
-     * @param string      $pathname The location of the file
-     * @param string|null $name     Optionally, the name to give the file
-     * @param User        $user     The optional owner of the file
+     * @param string      $pathname   The location of the file or directory
+     * @param string|null $name       Optionally, the name to give the media
+     * @param User|null   $owner      The optional owner of the files
+     * @param string|null $bucketName The name of the bucket to store the imported files
      */
-    public function import($pathname, $name = null, User $owner = null)
+    public function importFile($pathname, $name = null, User $owner = null, $bucketName = null)
     {
-        if (!file_exists($pathname)) {
-            throw new \InvalidArgumentException("$pathname does not exist.");
+        return $this->import(MediaResource::file($pathname, $name, $owner), $bucketName);
+    }
+
+    /**
+     * Import a directory of files into the media library.
+     *
+     * @param string      $pathname   The location of the directory
+     * @param User|null   $owner      The optional owner of the files
+     * @param string|null $bucketName The name of the bucket to store the imported files
+     * @param array       $extensions Only import the files with the given extensions
+     */
+    public function importDirectory($pathname, User $owner = null, $bucketName = null, array $extensions = [])
+    {
+        $finder = Finder::create()
+                ->files()
+                ->in($pathname);
+        foreach ($extensions as $ext) {
+            $finder->name(sprintf('/\\.%s$/i', trim($ext, '.')));
         }
-        $name = $name ?: basename($pathname);
-        $file = new File();
+        $files = [];
+
+        foreach ($finder as $file) {
+            $files[] = $this->import(MediaResource::file($file->getPathname(), null, $owner), $bucketName);
+        }
+
+        return $files;
+    }
+
+    /**
+     * Import the URL of a file into the media library.
+     *
+     * @param string      $url        The URL of the file
+     * @param string|null $name       The name to give the file. If null, use the filename.
+     * @param User|null   $owner      The optional owner of the file
+     * @param string|null $bucketName The name of the bucket to store the imported files
+     */
+    public function importUrl($url, $name = null, User $owner = null, $bucketName = null)
+    {
+        $event = new ImportUrlEvent($url, $name, $owner, $bucketName);
+        $this->dispatcher->dispatch(Events::IMPORT_URL, $event);
+        foreach ($event->getResources() as $resource) {
+            $this->import($resource, $bucketName);
+        }
+    }
+
+    public function process(File $file, MediaResource $resource)
+    {
+        $bucket = $this->bucketRegistry->getForFile($file);
         try {
-            $connection = $this->entityManager->getConnection();
-            $connection->beginTransaction();
-
-            //set guid manually to have it available for hashed filename before insert
-
-            $uuid = new UuidGenerator();
-            $file->setId($uuid->generate($this->entityManager, $file));
-
-            $this->setMimeType($file, $pathname);
-            $file->setName($name);
-            $extension = $this->getExtension($file, $pathname);
-            $file->setFilename(sprintf('%s.%s', sha1($file->getId()), $extension));
-            if ($owner) {
-                $file->setOwner($owner);
-            }
-
-            $this->dispatcher->dispatch(FileEvent::CREATE, new FileEvent($file));
-            $this->storage->writeStream($file->getFilename(), fopen($pathname, 'r'));
+            $bucket->getMediaType($file->getType())->process($file, $resource, $bucket);
             $this->dispatcher->dispatch(FileEvent::PROCESS, new FileEvent($file));
+
+            $file->setStatus(FILE::STATUS_OK);
             $this->entityManager->persist($file);
             $this->entityManager->flush();
-
-            $connection->commit();
-
-            return $file;
+            $resource->delete();
         } catch (\Exception $e) {
-            if ($file->getFilename() && $this->storage->has($file->getFilename())) {
-                $this->storage->delete($file->getFilename());
-            }
-
-            $connection->rollback();
+            $file->setStatus(FILE::STATUS_ERROR);
+            $this->entityManager->persist($file);
+            $this->entityManager->flush();
             throw $e;
         }
     }
 
     /**
-     * Remove a file from the database, delete it and perform any cleanup operations.
+     * Fetch the file from storage and reprocess it again.
+     */
+    public function reprocess(File $file)
+    {
+        $location = $file->getPrimaryLocation();
+        $bucket = $this->bucketRegistry->getForFile($file);
+        if ($location->isFile()) {
+            $downloadedFile = tempnam(sys_get_temp_dir(), 'perform-media');
+            stream_copy_to_stream($bucket->read($location), fopen($downloadedFile, 'r+'));
+        }
+
+        $resource = new MediaResource(
+            $location->isFile() ? $downloadedFile : $location->getPath(),
+            $file->getName(),
+            $file->getOwner()
+        );
+        $resource->deleteAfterProcess();
+
+        foreach ($file->getExtraLocations() as $location) {
+            $bucket->delete($location);
+            $this->entityManager->remove($location);
+        }
+        $this->entityManager->flush();
+
+        return $this->process($file, $resource);
+    }
+
+    /**
+     * Remove a file from the database and delete it from its bucket.
      *
      * @param File $file
      */
     public function delete(File $file)
     {
-        $connection = $this->entityManager->getConnection();
-        $connection->transactional(function($connection) use ($file) {
+        $bucket = $this->bucketRegistry->getForFile($file);
+        $this->entityManager->beginTransaction();
+        try {
             $this->entityManager->remove($file);
             $this->entityManager->flush();
-
-            try {
-                $this->storage->delete($file->getFilename());
-            } catch (FileNotFoundException $e) {
-            }
-
             $this->dispatcher->dispatch(FileEvent::DELETE, new FileEvent($file));
-        });
+            $bucket->deleteFile($file);
+            $this->entityManager->commit();
+        } catch (\Exception $e) {
+            $this->entityManager->rollback();
+            throw $e;
+        }
     }
 
-    protected function setMimeType(File $file, $filename)
+    /**
+     * Get the canonical URL of a media item.
+     * The URL may not be public.
+     *
+     * @param File $file
+     *
+     * @return string
+     */
+    public function getUrl(File $file)
     {
-        $finfo = new \Finfo(FILEINFO_MIME);
-        $info = explode('; charset=', $finfo->file($filename));
-        if (count($info) !== 2) {
-            throw new \Exception("Could not read mime type of $filename");
-        }
-        $file->setMimeType($info[0]);
-        $file->setCharset($info[1]);
+        $bucket = $this->bucketRegistry->getForFile($file);
+
+        return $bucket->getUrlGenerator()->generate($file->getPrimaryLocation());
     }
 
-    protected function getExtension(File $file, $filename)
+    public function getSuitableUrl(File $file, array $criteria = [])
     {
-        $suppliedExtension = pathinfo($filename, PATHINFO_EXTENSION);
-        if ($suppliedExtension) {
-            return $suppliedExtension;
+        $bucket = $this->bucketRegistry->getForFile($file);
+        $type = $bucket->getMediaType($file->getType());
+        $location = $type->getSuitableLocation($file, $criteria);
+
+        return $bucket->getUrlGenerator()->generate($location);
+    }
+
+    /**
+     * Can't use UuidGenerator, since it depends on EntityManager, not EntityManagerInterface.
+     *
+     * The UuidGenerator can replace this method when upgrading to doctrine 3.
+     *
+     * See https://github.com/doctrine/doctrine2/pull/6599
+     */
+    protected function generateUuid()
+    {
+        $connection = $this->entityManager->getConnection();
+        $sql = 'SELECT '.$connection->getDatabasePlatform()->getGuidExpression();
+
+        return $connection->query($sql)->fetchColumn(0);
+    }
+
+    protected function validateFileSize(BucketInterface $bucket, $pathname)
+    {
+        $filesize = filesize($pathname);
+        if ($filesize < $bucket->getMinSize() || $filesize > $bucket->getMaxSize()) {
+            throw new InvalidFileSizeException(sprintf(
+                'Files added to the "%s" bucket must be between %s and %s bytes, the supplied file is %s bytes.',
+                $bucket->getName(),
+                $bucket->getMinSize(),
+                $bucket->getMaxSize(),
+                $filesize));
         }
+    }
 
-        $mimeType = $file->getMimeType();
-        $mimes = new MimeTypesRepository();
-        $availableExtensions = $mimes->findExtensions($mimeType);
-
-        if (isset($availableExtensions[0])) {
-            return $availableExtensions[0];
+    protected function findType(File $file, MediaResource $resource)
+    {
+        $bucket = $this->bucketRegistry->getForFile($file);
+        foreach ($bucket->getMediaTypes() as $name => $type) {
+            if ($type->supports($resource)) {
+                return $name;
+            }
         }
-
-        throw new \Exception(sprintf('Unable to parse mime type %s and no extension supplied', $mimeType));
     }
 }

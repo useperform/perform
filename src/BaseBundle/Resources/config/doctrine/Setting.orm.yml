@@ -26,6 +26,6 @@ Perform\BaseBundle\Entity\Setting:
             type: boolean
     manyToOne:
         user:
-            targetEntity: Perform\BaseBundle\Entity\User
+            targetEntity: Perform\UserBundle\Entity\User
             joinColumn:
                 nullable: true

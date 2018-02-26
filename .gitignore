@@ -2,11 +2,15 @@ vendor/
 composer.lock
 
 src/*/node_modules
+src/*/Resources/node_modules
 src/*/Resources/public/vendor
 src/*/Resources/public/css
 src/*/vendor
 src/*/composer.lock
 src/BaseBundle/Resources/public
+src/BaseBundle/Resources/scss/_theme.scss
+src/BaseBundle/Resources/scss/_theme_variables.scss
+src/BaseBundle/Resources/scss/_extras.scss
 src/CmsBundle/Resources/public/js
 src/CmsBundle/gulp-sources.js
 src/MediaBundle/Resources/public
@@ -20,3 +24,4 @@ Dockerfile
 docs/_build
 docs/reference/types
 !docs/reference/types/index.rst
+docs/reference/sass.rst

@@ -32,15 +32,13 @@ class LocalConnector implements ConnectorInterface
         }
 
         $subRepo = $this->em->getRepository('PerformMailingListBundle:LocalSubscriber');
-        $existing = $subRepo->findOneBy(['email' => $subscriber->getEmail(), 'list' => $list]);
-        if ($existing) {
-            return;
+        $localSub = $subRepo->findOneBy(['email' => $subscriber->getEmail()]);
+        if (!$localSub) {
+            $localSub = new LocalSubscriber();
+            $localSub->setEmail($subscriber->getEmail());
         }
-
-        $localSub = new LocalSubscriber();
-        $localSub->setEmail($subscriber->getEmail());
-        $localSub->setList($list);
         $localSub->setFirstName($subscriber->getOptionalAttribute(SubscriberFields::FIRST_NAME));
+        $localSub->addList($list);
 
         $this->em->persist($localSub);
         $this->em->flush();

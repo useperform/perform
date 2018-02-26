@@ -19,4 +19,5 @@ namespace Perform\MailingListBundle;
 final class SubscriberFields
 {
     const FIRST_NAME = 'first_name';
+    const LAST_NAME = 'last_name';
 }

@@ -51,7 +51,7 @@ Update ``src/AppBundle/Resources/views/home.html.twig``:
         <div class="col-md-12">
     -        {% for bike in bikes %}
     -          <h2>{{bike.title}}</h2>
-    -          {{perform_file_preview(bike.image, {size: 'small', attr: {class: 'img-responsive'}})}}
+    -          <img src="{{perform_media_url(bike.image, {width: 300})}}" class="img-responsive" />
     -          <p>
     -            {{bike.description | nl2br}}
     -          </p>
@@ -67,7 +67,7 @@ Update ``src/AppBundle/Resources/views/home.html.twig``:
     +
     +            {% for bike in bikes %}
     +              <div class="item{% if loop.first %} active{% endif %}">
-    +                {{perform_file_preview(bike.image, {attr: {alt: bike.title}})}}
+    +                <img src="{{perform_media_url(bike.image)}}" class="img-responsive" alt="{{bike.title}}" />
     +                <div class="carousel-caption">
     +                  <h2>{{bike.title}}</h2>
     +                  <p>

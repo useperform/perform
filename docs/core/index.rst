@@ -17,5 +17,7 @@ tools to build administration areas rapdily:
    ./types
    ./filters
    ./actions
+   ./exporting
    ./menu
+   ./styling
    ./email

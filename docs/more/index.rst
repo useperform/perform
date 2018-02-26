@@ -9,4 +9,7 @@ Further Reading
    ./entity-collections
    ./extending-entities
    ./working-with-dates
+   ./crud-events
+   ./tags
+   ./security
    ./settings

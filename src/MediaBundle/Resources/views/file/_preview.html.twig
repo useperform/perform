@@ -1,0 +1,7 @@
+{% if not file %}
+  <div class="p-comp-media-preview">
+  </div>
+{% else %}
+  <div class="p-comp-media-preview" {% for name, value in data %}data-{{name}}="{{value}}"{% endfor %}>
+  </div>
+{% endif %}

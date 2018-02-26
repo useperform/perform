@@ -1,0 +1,56 @@
+#sidebar {
+  width: $p-sidebar-width;
+  height: 100%;
+  position: fixed;
+  background: $p-sidebar-bg;
+  overflow: scroll;
+  padding: 75px 0;
+
+  ul {
+    padding-left: 20px;
+  }
+
+  li {
+    list-style-type: none;
+  }
+
+  > ul {
+    padding: 0;
+    margin: 0;
+
+    li {
+      line-height: 15px;
+      position: relative;
+      margin: 0 10px;
+
+      a {
+        padding: 10px 32px;
+        color: $p-sidebar-color;
+        text-decoration: none;
+        display: block;
+        padding: 15px 0 15px 10px;
+        font-size: 12px;
+        outline: none;
+        -webkit-transition: all 0.3s ease;
+        -moz-transition: all 0.3s ease;
+        -o-transition: all 0.3s ease;
+        -ms-transition: all 0.3s ease;
+        transition: all 0.3s ease;
+
+        .fa {
+          font-size: 15px;
+          padding-right: 6px;
+        }
+      }
+
+      &.active a {
+        color: lighten($p-sidebar-highlight, 10%);
+      }
+
+      a:hover {
+        background: $p-sidebar-highlight;
+        color: $p-sidebar-color;
+      }
+    }
+  }
+}

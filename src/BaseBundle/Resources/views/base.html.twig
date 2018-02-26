@@ -3,7 +3,11 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Site Administration</title>
+    <title>
+      {% block page_title %}
+        {{'header.title'|trans({}, 'PerformBaseBundle')}}
+      {% endblock %}
+    </title>
     {% block css %}
       <link rel="stylesheet" type="text/css" href="{{asset('bundles/performbase/css/app.css')}}" />
       {% for css in perform_asset_css() %}
@@ -13,42 +17,24 @@
   </head>
   <body>
     {% block body %}
-      <nav class="navbar navbar-default navbar-top">
-        <div class="navbar-header">
-          <div class="sidebar-toggle-box">
-            <div class="fa fa-minus-square-o" id="menu-toggle" data-toggle="tooltip" data-placement="right" title="Toggle Navigation"></div>
-          </div>
-          <a href="{{path('perform_base_dashboard_index')}}" class="navbar-brand">
-            Site Administration
-          </a>
-        </div>
-
-        <div class="navbar-right">
-          <a class="btn btn-info navbar-btn" href="{{path('perform_base_logout')}}">Logout</a>
-        </div>
-      </nav>
+      {% include '@PerformBase/_header.html.twig' %}
 
       <div class="admin-flash-messages">
       </div>
 
-      <aside>
-        <div id="sidebar" class="nav-collapse">
-          {{ knp_menu_render('main', {}, 'perform_admin') }}
+      <div class="wrapper">
+        <div id="sidebar" class="col-md-3">
+          {{ knp_menu_render('perform_sidebar', {}, 'perform_sidebar') }}
         </div>
-      </aside>
 
-      <section id="main-content">
-        <section class="wrapper site-min-height">
-
+        <div id="workspace" class="container-fluid">
           {% block workspace %}
           {% endblock %}
-        </section>
-      </section>
-
-      <footer class="site-footer">
-        <div class="text-center">
-          A <a target="_blank" href="//glynnforrest.com">glynnforrest.com</a> project.
         </div>
+      </div>
+
+      <footer class="site-footer text-center">
+        {{'footer' | trans({}, 'PerformBaseBundle') | raw}}
       </footer>
 
     {% endblock %}
@@ -56,11 +42,9 @@
     {% block extras %}
     {% endblock %}
 
-    {% block baseJs %}
-      {% include 'PerformBaseBundle::scripts.html.twig' %}
-      {% include 'PerformBaseBundle::flash_messages.html.twig' %}
-    {% endblock %}
     {% block js %}
+      {% include '@PerformBase/_scripts.html.twig' %}
+      {% include '@PerformBase/_flash_messages.html.twig' %}
       {% for js in perform_asset_js() %}
         <script type="text/javascript" src="{{asset(js)}}"></script>
       {% endfor %}

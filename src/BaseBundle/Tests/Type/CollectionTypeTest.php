@@ -2,12 +2,14 @@
 
 namespace Perform\BaseBundle\Tests\Type;
 
-use Perform\BaseBundle\Entity\User;
+use Perform\UserBundle\Entity\User;
 use Perform\BaseBundle\Type\CollectionType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Perform\BaseBundle\Admin\AdminRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\BaseBundle\Asset\AssetContainer;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType as CollectionFormType;
 
 /**
  * CollectionTypeTest
@@ -65,5 +67,21 @@ class CollectionTypeTest extends \PHPUnit_Framework_TestCase
 
         $entity->items = new ArrayCollection([1, 2, 3, 4]);
         $this->assertSame('4 things (a lot)', $this->type->listContext($entity, 'items', ['itemLabel' => ['thing', 'things (a lot)']]));
+    }
+
+    public function testCreateContext()
+    {
+        $entity = new \stdClass();
+        $entity->items = new ArrayCollection();
+        $builder = $this->getMock(FormBuilderInterface::class);
+        $builder->expects($this->any())
+            ->method('getData')
+            ->will($this->returnValue($entity));
+
+        $builder->expects($this->once())
+            ->method('add')
+            ->with('items', CollectionFormType::class);
+
+        $this->type->createContext($builder, 'items', ['entity' => 'SomeRelation', 'sortField' => false]);
     }
 }

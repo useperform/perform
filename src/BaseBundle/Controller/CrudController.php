@@ -54,6 +54,12 @@ class CrudController extends Controller
             ->getActionConfig($this->entity);
     }
 
+    protected function getLabelConfig()
+    {
+        return $this->get('perform_base.config_store')
+            ->getLabelConfig($this->entity);
+    }
+
     protected function newEntity()
     {
         $className = $this->getDoctrine()
@@ -90,7 +96,7 @@ class CrudController extends Controller
     {
         $this->get('twig')
             ->getExtension(FormExtension::class)
-            ->renderer->setTheme($formView, 'PerformBaseBundle::form_theme.html.twig');
+            ->renderer->setTheme($formView, '@PerformBase/form_theme.html.twig');
     }
 
     public function listAction(Request $request)
@@ -104,7 +110,8 @@ class CrudController extends Controller
         return [
             'fields' => $this->getTypeConfig()->getTypes($request->getContext()),
             'filters' => $this->getFilterConfig()->getFilters(),
-            'actions' => $this->getActionConfig()->forRequest($request),
+            'batchActions' => $this->getActionConfig()->getBatchOptionsForRequest($request),
+            'labelConfig' => $this->getLabelConfig(),
             'orderBy' => $orderBy,
             'routePrefix' => $admin->getRoutePrefix(),
             'paginator' => $paginator,
@@ -116,10 +123,13 @@ class CrudController extends Controller
     {
         $request = new AdminRequest($request, TypeConfig::CONTEXT_VIEW);
         $this->initialize($request);
+        $entity = $this->findEntity($id);
+        $this->denyAccessUnlessGranted('VIEW', $entity);
 
         return [
             'fields' => $this->getTypeConfig()->getTypes($request->getContext()),
-            'entity' => $this->findEntity($id),
+            'entity' => $entity,
+            'labelConfig' => $this->getLabelConfig(),
         ];
     }
 
@@ -144,12 +154,14 @@ class CrudController extends Controller
         $form->handleRequest($request->getRequest());
 
         if ($form->isValid()) {
-            $manager = $this->getDoctrine()->getManager();
-            $manager->persist($entity);
-            $manager->flush();
-            $this->addFlash('success', 'Item created successfully.');
+            try {
+                $this->get('perform_base.entity_manager')->create($entity);
+                $this->addFlash('success', 'Item created successfully.');
 
-            return $this->redirect($this->get('perform_base.routing.crud_url')->generate($entity, 'list'));
+                return $this->redirect($this->get('perform_base.routing.crud_url')->generateDefaultEntityRoute($entity));
+            } catch (\Exception $e) {
+                $this->addFlash('danger', 'An error occurred.');
+            }
         }
 
         $formView = $form->createView();
@@ -158,6 +170,7 @@ class CrudController extends Controller
         return [
             'entity' => $entity,
             'form' => $formView,
+            'labelConfig' => $this->getLabelConfig(),
         ];
     }
 
@@ -166,6 +179,7 @@ class CrudController extends Controller
         $request = new AdminRequest($request, TypeConfig::CONTEXT_EDIT);
         $this->initialize($request);
         $entity = $this->findEntity($id);
+        $this->denyAccessUnlessGranted('EDIT', $entity);
         $admin = $this->getAdmin();
         $form = $this->createForm($admin->getFormType(), $entity, [
             'entity' => $this->entity,
@@ -175,17 +189,14 @@ class CrudController extends Controller
         $form->handleRequest($request->getRequest());
 
         if ($form->isValid()) {
-            $manager = $this->getDoctrine()->getManager();
-            $manager->persist($entity);
-            $manager->flush();
-            $this->addFlash('success', 'Item updated successfully.');
+            try {
+                $this->get('perform_base.entity_manager')->update($entity);
+                $this->addFlash('success', 'Item updated successfully.');
 
-            $urlGenerator = $this->get('perform_base.routing.crud_url');
-            $url = $urlGenerator->routeExists($entity, 'viewDefault') ?
-                 $urlGenerator->generate($entity, 'viewDefault') :
-                 $urlGenerator->generate($entity, 'list');
-
-            return $this->redirect($url);
+                return $this->redirect($this->get('perform_base.routing.crud_url')->generateDefaultEntityRoute($entity));
+            } catch (\Exception $e) {
+                $this->addFlash('danger', 'An error occurred.');
+            }
         }
 
         $formView = $form->createView();
@@ -194,6 +205,7 @@ class CrudController extends Controller
         return [
             'entity' => $entity,
             'form' => $formView,
+            'labelConfig' => $this->getLabelConfig(),
         ];
     }
 

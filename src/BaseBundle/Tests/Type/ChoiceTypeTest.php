@@ -2,7 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Type;
 
-use Perform\BaseBundle\Entity\User;
+use Perform\UserBundle\Entity\User;
 use Perform\BaseBundle\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType as ChoiceFormType;

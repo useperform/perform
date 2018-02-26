@@ -3,6 +3,7 @@
 namespace Perform\BaseBundle\Tests\Entity;
 
 use Perform\BaseBundle\Entity\Setting;
+use Perform\UserBundle\Entity\User;
 
 /**
  * SettingTest.
@@ -124,5 +125,13 @@ class SettingTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\InvalidArgumentException');
         new Setting($key);
+    }
+
+    public function testSetUser()
+    {
+        $user = new User();
+        $setting = new Setting('key');
+        $this->assertSame($setting, $setting->setUser($user));
+        $this->assertSame($user, $setting->getUser());
     }
 }

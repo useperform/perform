@@ -4,16 +4,17 @@ parameters:
 
 security:
     encoders:
-        Perform\BaseBundle\Entity\User:
+        Perform\UserBundle\Entity\User:
             algorithm: bcrypt
     providers:
         perform_bundles:
             entity:
-                class: Perform\BaseBundle\Entity\User
+                class: Perform\UserBundle\Entity\User
                 property: email
     firewalls:
         main:
             anonymous: ~
+            logout_on_user_change: true
 
 framework:
     secret:          "%secret%"
@@ -24,11 +25,9 @@ framework:
     form:            ~
     csrf_protection: ~
     validation:      true
-    templating:
-        engines: ['twig']
+    templating: false
     default_locale:  "%locale%"
     trusted_hosts:   ~
-    trusted_proxies: ~
     session:
         handler_id:  null
     fragments:       ~

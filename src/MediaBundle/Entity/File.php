@@ -2,10 +2,12 @@
 
 namespace Perform\MediaBundle\Entity;
 
-use Perform\BaseBundle\Entity\User;
+use Perform\UserBundle\Entity\User;
+use Perform\MediaBundle\MediaResource;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * File
+ * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class File
 {
@@ -22,7 +24,7 @@ class File
     /**
      * @var string
      */
-    protected $filename;
+    protected $bucketName;
 
     /**
      * @var string
@@ -30,19 +32,18 @@ class File
     protected $type;
 
     /**
-     * @var array
+     * @var int
      */
-    protected $typeOptions = [];
+    protected $status;
 
-    /**
-     * @var string
-     */
-    protected $mimeType;
+    // newly added, not processed yet
+    const STATUS_NEW = 0;
 
-    /**
-     * @var string
-     */
-    protected $charset;
+    // processed successfully
+    const STATUS_OK = 1;
+
+    // processing had errors, reprocess is required
+    const STATUS_ERROR = 2;
 
     /**
      * @var \DateTime
@@ -58,6 +59,25 @@ class File
      * @var User
      */
     protected $owner;
+
+    /**
+     * @var Collection
+     */
+    protected $locations;
+
+    public function __construct()
+    {
+        $this->locations = new ArrayCollection();
+    }
+
+    public static function fromResource(MediaResource $resource)
+    {
+        $file = new self();
+        $file->setName($resource->getName());
+        $file->setOwner($resource->getOwner());
+
+        return $file;
+    }
 
     /**
      * @param guid $id
@@ -100,13 +120,78 @@ class File
     }
 
     /**
-     * @param string $filename
+     * @param Location $location
+     *
+     * @return static
+     */
+    public function setPrimaryLocation(Location $location)
+    {
+        $location->setPrimary(true);
+        $this->addLocation($location);
+
+        return $this;
+    }
+
+    /**
+     * @return Location
+     */
+    public function getPrimaryLocation()
+    {
+        foreach ($this->locations as $location) {
+            if ($location->isPrimary()) {
+                return $location;
+            }
+        }
+
+        // getting to this stage suggests the location table is out of sync
+        // always return a Location object to prevent things blowing up
+        return new Location('');
+    }
+
+    /**
+     * @param Location $location
+     *
+     * @return static
+     */
+    public function addLocation(Location $location)
+    {
+        if (!$this->locations->contains($location)) {
+            $this->locations[] = $location;
+            $location->setFile($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getLocations()
+    {
+        return $this->locations;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getExtraLocations()
+    {
+        // return the locations 0 indexed, so don't use collection->filter()
+        return new ArrayCollection(array_values(
+            array_filter($this->locations->toArray(), function($location) {
+                return !$location->isPrimary();
+            })
+        ));
+    }
+
+    /**
+     * @param string $bucketName
      *
      * @return File
      */
-    public function setFilename($filename)
+    public function setBucketName($bucketName)
     {
-        $this->filename = $filename;
+        $this->bucketName = $bucketName;
 
         return $this;
     }
@@ -114,9 +199,9 @@ class File
     /**
      * @return string
      */
-    public function getFilename()
+    public function getBucketName()
     {
-        return $this->filename;
+        return $this->bucketName;
     }
 
     /**
@@ -145,63 +230,23 @@ class File
     }
 
     /**
-     * @param array $typeOptions
+     * @param int $status
      *
      * @return File
      */
-    public function setTypeOptions(array $typeOptions)
+    public function setStatus($status)
     {
-        $this->typeOptions = $typeOptions;
+        $this->status = (int) $status;
 
         return $this;
     }
 
     /**
-     * @return array
+     * @return int
      */
-    public function getTypeOptions()
+    public function getStatus()
     {
-        return $this->typeOptions;
-    }
-
-    /**
-     * @param string $mimeType
-     *
-     * @return File
-     */
-    public function setMimeType($mimeType)
-    {
-        $this->mimeType = $mimeType;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMimeType()
-    {
-        return $this->mimeType;
-    }
-
-    /**
-     * @param string $charset
-     *
-     * @return File
-     */
-    public function setCharset($charset)
-    {
-        $this->charset = $charset;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCharset()
-    {
-        return $this->charset;
+        return $this->status;
     }
 
     /**
@@ -225,7 +270,7 @@ class File
      *
      * @return File
      */
-    public function setOwner(User $owner)
+    public function setOwner(User $owner = null)
     {
         $this->owner = $owner;
 

@@ -13,6 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\BaseBundle\Asset\AssetContainer;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Perform\BaseBundle\Config\TypeConfig;
 
 /**
  * CollectionType.
@@ -83,9 +84,16 @@ class CollectionType extends AbstractType
     {
         return [
             'sort' => false,
+            'template' => '@PerformBase/type/collection.html.twig',
         ];
     }
 
+    /**
+     * @doc itemLabel The word to use when referring to one or many of the
+     * entities. Defaults to 'item' or 'items'. Use a string and the
+     * plural word will be guessed, or an array of two strings to
+     * define the plural word explicitly.
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setRequired('entity');
@@ -134,10 +142,5 @@ class CollectionType extends AbstractType
         if (!$value instanceof Collection) {
             throw new InvalidTypeException(sprintf('The entity field "%s" passed to %s must be an instance of %s', $field, __CLASS__, Collection::class));
         }
-    }
-
-    public function getTemplate()
-    {
-        return 'PerformBaseBundle:types:collection.html.twig';
     }
 }

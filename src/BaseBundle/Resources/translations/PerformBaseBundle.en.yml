@@ -1,3 +1,25 @@
+header:
+    title: 'Site Administration'
+    links:
+        logout: 'Logout'
+        home: 'Go to site homepage'
+
+footer: 'A <a target="_blank" href="https://useperform.com">Perform</a> project.'
+
+crud:
+    title:
+        list: "%entity_name%"
+        view: "%entity_label%"
+        create: "New %entity_name%"
+        edit: "Editing %entity_label%"
+
+export:
+    dropdown: 'Download'
+    format:
+        json: 'Json'
+        csv: 'CSV'
+        xls: 'Excel'
+
 menu:
     dashboard: Dashboard
     users: Users

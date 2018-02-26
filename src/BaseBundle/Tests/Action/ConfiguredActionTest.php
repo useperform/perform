@@ -5,6 +5,8 @@ namespace Perform\BaseBundle\Tests\Action;
 use Perform\BaseBundle\Action\ActionInterface;
 use Perform\BaseBundle\Action\ConfiguredAction;
 use Perform\BaseBundle\Admin\AdminRequest;
+use Perform\BaseBundle\Routing\CrudUrlGeneratorInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * ConfiguredActionTest
@@ -13,6 +15,8 @@ use Perform\BaseBundle\Admin\AdminRequest;
  **/
 class ConfiguredActionTest extends \PHPUnit_Framework_TestCase
 {
+    protected $action;
+
     public function setUp()
     {
         $this->action = $this->getMock(ActionInterface::class);
@@ -80,5 +84,34 @@ class ConfiguredActionTest extends \PHPUnit_Framework_TestCase
             'buttonStyle' => 'btn-danger'
         ]);
         $this->assertSame('btn-danger', $ca->getButtonStyle());
+    }
+
+    public function testLink()
+    {
+        $ca = new ConfiguredAction('something', $this->action, [
+            'link' => function($entity) { return $entity->title; }
+        ]);
+        $entity = new \stdClass();
+        $entity->title = 'hello';
+        $this->assertSame('hello', $ca->getLink($entity, $this->getMock(CrudUrlGeneratorInterface::class), $this->getMock(UrlGeneratorInterface::class)));
+    }
+
+    public function testNotLink()
+    {
+        $ca = new ConfiguredAction('something', $this->action, []);
+        $this->assertSame('', $ca->getLink(new \stdClass, $this->getMock(CrudUrlGeneratorInterface::class), $this->getMock(UrlGeneratorInterface::class)));
+    }
+
+    public function testRun()
+    {
+        $entities = [new \stdClass];
+        $options = ['options'];
+        $ca = new ConfiguredAction('foo', $this->action, []);
+
+        $this->action->expects($this->once())
+            ->method('run')
+            ->with($entities, $options);
+
+        $ca->run($entities, $options);
     }
 }
