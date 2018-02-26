@@ -8,8 +8,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Perform\BaseBundle\DataFixtures\ORM\EntityDeclaringFixtureInterface;
 
 /**
- * LoadMessageData.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class LoadMessageData implements EntityDeclaringFixtureInterface
@@ -42,6 +40,7 @@ class LoadMessageData implements EntityDeclaringFixtureInterface
     public function getEntityClasses()
     {
         return [
+            SpamReport::class,
             Message::class,
         ];
     }
