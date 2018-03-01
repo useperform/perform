@@ -46,8 +46,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Perform'
-copyright = u'2017, Glynn Forrest'
-author = u'Glynn Forrest'
+copyright = u'2018 Backbeat Technologies'
+author = u'Backbeat Technologies'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -225,7 +225,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'Perform.tex', u'Perform Documentation',
-     u'Glynn Forrest', 'manual'),
+     u'Backbeat Technologies', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -269,7 +269,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'Perform', u'Perform Documentation',
-     author, 'Perform', 'One line description of project.',
+     author, 'Perform', 'Documentation for the Perform application toolkit.',
      'Miscellaneous'),
 ]
 
