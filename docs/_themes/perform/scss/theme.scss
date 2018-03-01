@@ -21,6 +21,7 @@ $headings-font-family: 'PT Sans', sans-serif;
     padding-left: 0;
 
     li > ul {
+      padding-left: 1em;
       font-size: 0.8em;
       color: $gray-600;
     }
@@ -36,5 +37,28 @@ footer {
     font-size: 0.8em;
     color: $text-muted;
     margin-top: $spacer;
+  }
+}
+
+h1, h2, h3, h4, h5, h6, dl dt, p.caption, table > caption {
+  .headerlink {
+    visibility: hidden;
+    font-size: 1em;
+    &:after {
+      content: "#";
+      display: inline-block;
+      margin-left: -0.2em;
+    }
+  }
+  &:hover .headerlink:after {
+    visibility: visible;
+  }
+}
+
+.highlight {
+  pre {
+    font-size: 0.8em;
+    padding: 1em;
+    background-color: #f9f9f9;
   }
 }
