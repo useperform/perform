@@ -1,0 +1,40 @@
+$primary: #38a745;
+$secondary: #001B2C;
+$child-nav-bg: #153345;
+$dark: #464e46;
+$body-bg: #fff;
+
+$headings-font-family: 'PT Sans', sans-serif;
+
+@import "node_modules/bootstrap/scss/bootstrap";
+
+.child-nav {
+  background-color: $gray-100;
+  overflow-x: scroll;
+
+  li {
+    word-break: break-all;
+  }
+
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+
+    li > ul {
+      font-size: 0.8em;
+      color: $gray-600;
+    }
+  }
+}
+
+footer {
+  margin-top: $spacer;
+
+  .contentinfo {
+    clear: both;
+    text-align: center;
+    font-size: 0.8em;
+    color: $text-muted;
+    margin-top: $spacer;
+  }
+}
