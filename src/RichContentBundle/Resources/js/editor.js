@@ -1,19 +1,17 @@
 import Editor from './components/Editor';
-import ReactDOM from 'react-dom';
-import React from 'react';
+import Vue from 'vue';
 
-import {loadContent} from './actions';
-import {newStore, addEditor} from './store';
-
-const store = newStore();
-
-store.subscribe(() => {
-  console.debug('New state: ', store.getState());
-});
+import store from './store';
 
 const init = function(element, config) {
-  const editorIndex = addEditor(store, config.contentId);
-  ReactDOM.render(<Editor store={store} editorIndex={editorIndex} />, element);
+  store.commit('EDITOR_ADD', config.contentId);
+  const editorIndex = store.state.editors.length - 1;
+
+  new Vue({
+    el: element,
+    render: h => h(Editor, {props: {editorIndex}}),
+    store
+  });
 
   if (config.onChange) {
     store.subscribe(() => {
@@ -21,13 +19,18 @@ const init = function(element, config) {
     });
   }
   if (config.contentId) {
-    store.dispatch(loadContent(editorIndex, config.contentId));
+    store.dispatch('loadContent', {
+      contentId: config.contentId,
+      editorIndex
+    });
   }
 };
 
-window.Perform = {
-  richContent: {
-    init,
-    store
-  }
+if (!window.Perform) {
+  window.Perform = {};
+}
+
+window.Perform.richContent = {
+  init,
+  store
 }
