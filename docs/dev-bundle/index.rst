@@ -1,5 +1,5 @@
-PerformDevBundle
-================
+Dev Bundle
+==========
 
 Build applications faster than ever with the PerformDevBundle.
 

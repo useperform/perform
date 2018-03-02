@@ -1,7 +1,7 @@
-PerformMediaBundle
-==================
+Media Bundle
+============
 
-Including this bundle gives you a complete media management solution.
+Including the *PerformMediaBundle* gives you a complete media management solution.
 
 The media imported into the library can then be linked to various pieces of data throughout your application.
 
