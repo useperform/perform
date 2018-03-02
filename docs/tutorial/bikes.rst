@@ -79,7 +79,7 @@ This tells the admin to manage the ``title`` and ``description`` properties of `
 
 .. note::
 
-   For an in-depth look at what admin classes can do, see the :doc:`admins documentation <../core/admins>`.
+   For an in-depth look at what admin classes can do, see the :doc:`admins documentation <../base-bundle/admins>`.
 
 Create routes
 -------------

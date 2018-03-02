@@ -19,7 +19,7 @@ Topic index
 .. toctree::
    :caption: Bundle reference
 
-   core/index
+   base-bundle/index
    contact-bundle/index
    dev-bundle/index
    media-bundle/index

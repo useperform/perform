@@ -390,7 +390,7 @@ Here we override the template, but only for the ``view`` context. All other cont
 
 .. note::
 
-   See the :doc:`admins documentation <../core/admins>` for more information on overriding templates.
+   See the :doc:`admins documentation <../base-bundle/admins>` for more information on overriding templates.
 
 Create the file ``src/AppBundle/Resources/views/admin/contact_message/view.html.twig`` for this new view and insert the following:
 

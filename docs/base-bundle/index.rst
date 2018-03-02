@@ -1,8 +1,8 @@
-Core Perform
-============
+Base Bundle
+===========
 
-The ``PeformBaseBundle`` is the core of Perform, and gives you various
-tools to build administration areas rapdily:
+The *PeformBaseBundle* is the core of Perform, and gives you various
+tools to build applications rapdily:
 
 * User management and logins
 * A highly configurable CRUD foundation for managing content
