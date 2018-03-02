@@ -94,7 +94,7 @@ This will look familiar if you've used forms in a Symfony controller action befo
 We create a new form with ``Perform\ContactBundle\Form\Type\MessageType``, redirecting with a flash message on success, and showing an error message on failure.
 However, instead of handling the form submission ourselves, we get the ``perform_contact.form.handler.contact`` service to handle it for us.
 This service checks the form submission, saves a new message to the database, checks for spam, and sends notifications when configured.
-See the :doc:`PerformContactBundle documentation <../bundles/contact/index>` for more information on how this works.
+See the :doc:`PerformContactBundle documentation <../contact-bundle/index>` for more information on how this works.
 
 Now update ``contact.html.twig``:
 

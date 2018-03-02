@@ -17,5 +17,3 @@ Add the required bundles to ``composer.json``, run ``composer update``
 then add the bundles to your project's ``AppKernel``.
 
 You may also want to add some of the bundles routing files.
-
-See the :doc:`documentation for each bundle <../bundles/index>` for more details.

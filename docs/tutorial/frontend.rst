@@ -41,7 +41,7 @@ Now run the ``perform:install`` command, which will download and build the new a
 
    Other frontends are available; use the ``perform-dev:debug:frontends`` command to see them.
 
-   You can create your own frontends too. See :doc:`the documentation for the DevBundle <../bundles/dev/frontends>`.
+   You can create your own frontends too. See :doc:`the documentation for the DevBundle <../dev-bundle/frontends>`.
 
 Add a route
 -----------
