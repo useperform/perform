@@ -28,4 +28,4 @@ clean_bundles:
 .PHONY: docs
 docs:
 	./bin/gendocs.php
-	(cd docs; make html)
+	(cd docs/_themes/perform && yarn install && npm run build)
