@@ -55,19 +55,21 @@
     {%- endfor %}
     <script type="text/javascript" src="{{ pathto('_static/bootstrap.min.js', 1) }}"></script>
     {% endif %}
+    {% block extrahead %}
+    {% endblock %}
   </head>
 
   <body>
     {% include 'nav.html' %}
     <div class="container-fluid">
       <div class="row">
-        <div class="col-12 col-md-4 col-xl-2 child-nav">
+        <div class="col-12 col-md-4 col-xl-3 sidebar">
           {%- include 'searchbox.html' %}
-          <div class="mt-4">
-            {{ toctree() }}
+          <div class="mt-4 child-nav">
+            {{ toctree(titles_only=True) }}
           </div>
         </div>
-        <div class="col-12 col-md-8 col-xl-10 pl-md-4 pt-4">
+        <div class="col-12 col-md-8 col-xl-9 pl-md-4 pt-4">
           {% block body %}{% endblock %}
           {%- include 'footer.html' %}
         </div>
