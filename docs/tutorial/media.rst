@@ -100,7 +100,7 @@ Click on the media tab to show the media library, then click 'upload' to add som
 
 You can upload multiple images at once, and any large files will be split into chunks to get around PHP's maximum upload size.
 
-Find out more in the :doc:`media bundle documentation <../bundles/media/index>`.
+Find out more in the :doc:`media bundle documentation <../media-bundle/index>`.
 
 Enforcing schema correctness
 ----------------------------
@@ -170,6 +170,6 @@ Update ``src/AppBundle/Resources/views/home.html.twig`` to show images alongside
 The ``perform_media_url`` twig function is an easy way to get the url of a file.
 Note that we've requested an image that has a width closest to 300px.
 
-Again, you can read more about how that works in the :doc:`media bundle documentation <../bundles/media/index>`.
+Again, you can read more about how that works in the :doc:`media bundle documentation <../media-bundle/index>`.
 
 Refresh the home page again to see a list of bikes in the database, with images displayed under the titles.

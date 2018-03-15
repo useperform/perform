@@ -1,0 +1,161 @@
+$primary: #38a745;
+$secondary: #001B2C;
+$child-nav-bg: #153345;
+$dark: #464e46;
+$body-bg: #fff;
+$headings-font-family: 'PT Sans', sans-serif;
+$child-nav-spacer: 1em;
+
+@import "node_modules/bootstrap/scss/bootstrap";
+
+.sidebar {
+  background-color: $child-nav-bg;
+  padding: 0;
+
+  #searchbox {
+    padding: 0 1em;
+    .highlight-link {
+      a {
+        @extend .btn;
+        @extend .btn-outline-light;
+        @extend .btn-sm;
+      }
+    }
+  }
+
+  a {
+    text-decoration: none;
+    display: block;
+    color: $gray-200;
+    padding: 0.2em 0;
+  }
+}
+
+.child-nav {
+  overflow-x: scroll;
+  padding: 0;
+  font-size: 0.9em;
+
+  li {
+    word-break: break-all;
+  }
+
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+
+    li > ul {
+      font-size: 0.9em;
+    }
+  }
+
+  li.toctree-l1 {
+    &> a {
+      padding-left: $child-nav-spacer;
+    }
+    &:hover {
+      background-color: lighten($child-nav-bg, 10);
+    }
+    &.current {
+      background-color: lighten($child-nav-bg, 20);
+    }
+  }
+
+  li.toctree-l2 {
+    background-color: $gray-900;
+    &> a {
+      padding-left: $child-nav-spacer * 2;
+    }
+    &:hover {
+      background-color: lighten($child-nav-bg, 5);
+    }
+    &.current {
+      background-color: lighten($child-nav-bg, 10);
+    }
+  }
+
+  li.toctree-l3 {
+    background-color: darken($child-nav-bg, 10);
+    &> a {
+      padding-left: $child-nav-spacer * 3;
+    }
+    &:hover {
+      background-color: lighten($child-nav-bg, 0);
+    }
+    &.current {
+      background-color: lighten($child-nav-bg, 5);
+    }
+  }
+
+  .caption {
+    padding-left: $child-nav-spacer;
+    margin: 1.2em 0 .3em;
+    color: $gray-500;
+    font-size: 1em;
+    text-transform: uppercase;
+  }
+}
+
+.toctree-wrapper .caption {
+  font-size: 1.8em;
+}
+
+footer {
+  margin-top: $spacer;
+
+  .contentinfo {
+    clear: both;
+    text-align: center;
+    font-size: 0.8em;
+    color: $text-muted;
+    margin-top: $spacer;
+  }
+}
+
+h1, h2, h3, h4, h5, h6, dl dt, p.caption, table > caption {
+  .headerlink {
+    visibility: hidden;
+    font-size: 1em;
+    &:after {
+      content: "#";
+      display: inline-block;
+      margin-left: -0.2em;
+    }
+  }
+  &:hover .headerlink:after {
+    visibility: visible;
+  }
+}
+
+.highlight {
+  pre {
+    font-size: 0.8em;
+    padding: 1em;
+    background-color: #f9f9f9;
+  }
+}
+
+.highlighted {
+  background-color: $yellow;
+  font-style: italic;
+}
+
+.admonition {
+  @extend .alert;
+  padding: 0;
+  p {
+    padding: .5em 1em;
+  }
+  .admonition-title {
+    padding: .3em 1em;
+  }
+}
+
+.admonition.note {
+  @extend .alert-info;
+
+  .admonition-title {
+    background-color: darken($info, 10);
+    color: $gray-100;
+  }
+}

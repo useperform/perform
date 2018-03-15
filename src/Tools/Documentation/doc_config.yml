@@ -72,13 +72,6 @@ doctrine_cache:
             namespace: admin-sandbox
             file_system: []
 
-perform_media:
-    plugins:
-        - image
-        - pdf
-        - audio
-        - other
-
 perform_base:
     panels:
         left: []

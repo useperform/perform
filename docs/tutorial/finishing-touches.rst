@@ -126,9 +126,9 @@ Having learned the basics, you should now dive into the topics that
 interest you most.
 
 For a more in-depth understanding of the topics we've covered in this
-tutorial, have a read through the :doc:`core chapter <../core/index>`.
+tutorial, have a read through the :doc:`base bundle documentation <../base-bundle/index>`.
 
-Visit :doc:`the bundles index <../bundles/index>` to get an idea of the different bundles available.
+Alernatively, have a browse through the documentation for the other bundles.
 There are bundles for many functions; everything from media libraries and galleries to page editors and social media integration.
 
 :doc:`../more/index` covers advanced Perform use cases that integrate

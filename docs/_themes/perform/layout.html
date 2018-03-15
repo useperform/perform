@@ -1,0 +1,79 @@
+{%- if not embedded and docstitle %}
+{%- set titlesuffix = " &mdash; "|safe + docstitle|e %}
+{%- else %}
+{%- set titlesuffix = "" %}
+{%- endif %}
+{%- set lang = 'en' if language == None else (language | replace('_', '-')) %}
+
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{ metatags }}
+    {% block htmltitle %}
+    <title>{{ title|striptags|e }}{{ titlesuffix }}</title>
+    {% endblock %}
+
+    {% if favicon %}
+    <link rel="shortcut icon" href="{{ pathto('_static/' + favicon, 1) }}"/>
+    {% endif %}
+    <link rel="canonical" href="{{ theme_canonical_url }}{{ pagename }}.html"/>
+
+    <link rel="stylesheet" href="{{ pathto('_static/theme.css', 1) }}" type="text/css" />
+    <link rel="stylesheet" href="{{ pathto('_static/pygments.css', 1) }}" type="text/css" />
+
+    {%- block linktags %}
+    {%- if hasdoc('genindex') %}
+    <link rel="index" title="{{ _('Index') }}" href="{{ pathto('genindex') }}" />
+    {%- endif %}
+    {%- if hasdoc('search') %}
+    <link rel="search" title="{{ _('Search') }}" href="{{ pathto('search') }}" />
+    {%- endif %}
+    {%- if next %}
+    <link rel="next" title="{{ next.title|striptags|e }}" href="{{ next.link|e }}" />
+    {%- endif %}
+    {%- if prev %}
+    <link rel="prev" title="{{ prev.title|striptags|e }}" href="{{ prev.link|e }}" />
+    {%- endif %}
+    {%- endblock %}
+
+    {% if not embedded %}
+    <script>
+     var DOCUMENTATION_OPTIONS = {
+       URL_ROOT: '{{ url_root }}',
+       VERSION: '{{ release|e }}',
+       LANGUAGE: '{{ language }}',
+       COLLAPSE_INDEX: false,
+       FILE_SUFFIX: '{{ '' if no_search_suffix else file_suffix }}',
+       HAS_SOURCE: {{ has_source|lower }},
+       SOURCELINK_SUFFIX: '{{ sourcelink_suffix }}'
+     };
+    </script>
+    {%- for scriptfile in script_files %}
+    <script type="text/javascript" src="{{ pathto(scriptfile, 1) }}"></script>
+    {%- endfor %}
+    <script type="text/javascript" src="{{ pathto('_static/bootstrap.min.js', 1) }}"></script>
+    {% endif %}
+    {% block extrahead %}
+    {% endblock %}
+  </head>
+
+  <body>
+    {% include 'nav.html' %}
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12 col-md-4 col-xl-3 sidebar">
+          {%- include 'searchbox.html' %}
+          <div class="mt-4 child-nav">
+            {{ toctree(titles_only=True) }}
+          </div>
+        </div>
+        <div class="col-12 col-md-8 col-xl-9 pl-md-4 pt-4">
+          {% block body %}{% endblock %}
+          {%- include 'footer.html' %}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

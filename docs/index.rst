@@ -1,27 +1,33 @@
-Perform documentation
-=====================
+Welcome
+=======
 
-* :doc:`core/index`
-* :doc:`bundles/index`
-* :doc:`more/index`
-* :doc:`tools/index`
-* :doc:`reference/index`
+New users
+---------
 
-Just getting started?
 Read the :doc:`overview <start/overview>`, check the :doc:`requirements <start/requirements>`, then follow the :doc:`installation guide <start/install>`.
 
 After that, take the :doc:`Hipster Bikes tutorial <tutorial/index>`.
 
-Contents
---------
+Topic index
+-----------
 
 .. toctree::
-   :maxdepth: 2
 
    start/index
    tutorial/index
-   core/index
-   bundles/index
+
+.. toctree::
+   :caption: Bundle reference
+
+   base-bundle/index
+   contact-bundle/index
+   dev-bundle/index
+   media-bundle/index
+   mailing-list-bundle/index
+
+.. toctree::
+   :caption: Further reading
+
    more/index
    tools/index
    reference/index

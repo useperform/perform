@@ -1,0 +1,55 @@
+{%- extends "layout.html" %}
+{% set title = _('Search') %}
+{% set script_files = script_files + ['_static/searchtools.js'] %}
+
+{% block extrahead %}
+<script type="text/javascript">
+ jQuery(function() { Search.loadIndex("{{ pathto('searchindex.js', 1) }}"); });
+</script>
+{# this is used when loading the search index using $.ajax fails,
+such as on Chrome for documents on localhost #}
+<script type="text/javascript" id="searchindexloader"></script>
+{{ super() }}
+{% endblock %}
+
+{% block body %}
+<h1 id="search-documentation">{{ _('Search') }}</h1>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6">
+      <form action="" method="get" id="search-form" style="display: none;">
+        <div class="row">
+          <div class="col-8">
+            <input type="text" class="form-control" name="q" value="" />
+          </div>
+          <div class="col">
+            <input type="submit" class="btn btn-primary" value="{{ _('Search') }}" />
+          </div>
+        </div>
+        <span id="search-progress" style="padding-left: 10px"></span>
+      </form>
+      <div id="fallback" class="alert alert-danger">
+        <script type="text/javascript">
+         $('#search-form').show();
+         $('#fallback').hide();
+        </script>
+        <p>
+          {% trans %}Please activate JavaScript to enable the search
+          functionality.{% endtrans %}
+        </p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="alert alert-info">
+        From here you can search these documents. Enter your search
+        words into the box below and click "search". Note that the search
+        function will automatically search for all of the words. Pages
+        containing fewer words won't appear in the result list.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="search-results">
+</div>
+{% endblock %}
