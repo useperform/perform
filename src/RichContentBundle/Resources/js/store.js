@@ -159,8 +159,59 @@ export default new Vuex.Store({
     },
 
     BLOCK_UPDATE: function(state, payload) {
-      console.log(state, payload);
       state.blocks[payload.id].value = payload.value;
+    },
+
+    BLOCK_MOVE: function(state, payload) {
+      const pos = payload.from;
+      const newPos = payload.to;
+      const newIndex = newPos[1] < 0 ? 0 : newPos[1];
+
+      let blocks = Object.assign({}, state.blocks);
+      let editors = state.editors.map(editor => Object.assign({}, editor));
+      let sourceOrder = editors[pos[0]].order.slice();
+      let destOrder = newPos[0] === pos[0] ? sourceOrder : editors[newPos[0]].order.slice();
+      // blockRef is an array of [block-id, key-id]
+      let blockRef = sourceOrder[pos[1]];
+      if (!blockRef) {
+        return;
+      }
+      const blockId = blockRef[0];
+      const block = blocks[blockId];
+
+      sourceOrder.splice(pos[1], 1);
+      editors[pos[0]].order = sourceOrder;
+
+      // if the block is not used anywhere else, give it a new id, marking it as new.
+      // saving the source editor before the destination editor will
+      // delete the block from the database, so it needs to be marked as
+      // new to allow saving it again.
+      if (pos[0] !== newPos[0] && !editorsUseBlock(editors, blockId)) {
+        delete blocks[blockId];
+        blockRef = ['_'+newId(), blockRef[1]];
+        blocks[blockRef[0]] = block;
+      }
+
+      destOrder.splice(newIndex, 0, blockRef);
+      editors[newPos[0]].order = destOrder;
+
+      state.blocks = blocks;
+      state.editors = editors;
+    },
+
+    BLOCK_REMOVE: function(state, payload) {
+      const {position, editorIndex} = payload;
+      const blockId = state.editors[editorIndex].order[position][0];
+
+      let order = state.editors[editorIndex].order;
+      state.editors[editorIndex].order = [
+        ...order.slice(0, position),
+        ...order.slice(position + 1),
+      ];
+
+      if (!editorsUseBlock(state.editors, blockId)) {
+        delete state.blocks[blockId];
+      }
     },
   },
 
@@ -203,20 +254,5 @@ export default new Vuex.Store({
           onError(error);
         });
     },
-
-    removeBlock(position) {
-      return {
-        type: 'BLOCK_REMOVE',
-        position
-      }
-    },
-
-    moveBlock(currentPosition, newPosition) {
-      return {
-        type: 'BLOCK_MOVE',
-        currentPosition,
-        newPosition,
-      }
-    }
   },
 });
