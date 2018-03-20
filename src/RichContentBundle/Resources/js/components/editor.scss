@@ -1,7 +1,7 @@
 $base-bg: #eee;
 $toolbar-bg: #3e3e3e;
 
-.editor {
+.p-rich-editor {
   background-color: $base-bg;
 
   :global .toolbar {
@@ -73,4 +73,7 @@ $toolbar-bg: #3e3e3e;
       }
     }
   }
+
+  @import "~medium-editor/dist/css/medium-editor.css";
+  @import "~medium-editor/dist/css/themes/bootstrap.css";
 }

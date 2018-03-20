@@ -1,33 +1,63 @@
 <template>
-  <div>
-    <p v-if="this.editing">
-      {{this.value.content}}
-    </p>
-    <div v-else>
-      <textarea v-model="content" rows="10" cols="80"></textarea>
-      <a href="#" className="btn btn-info" :click.prevent="finishEdit">Done</a>
-    </div>
-  </div>
+  <div ref="content"></div>
 </template>
 
 <script>
- export default {
-   props: ['value', 'setBlockValue'],
+ import MediumEditor from 'medium-editor';
+ import debounce from 'lodash.debounce';
 
-   created() {
-     this.content = this.value.content;
-   },
+ export default {
+   props: [
+     'value',
+   ],
+
    data() {
      return {
-       editing: true,
-     }
+       options: {
+         toolbar: {
+           buttons: [
+             'bold',
+             'italic',
+             'underline',
+             'anchor',
+             'h2',
+             'h3',
+             'quote',
+             'unorderedlist',
+           ],
+         }
+       }
+     };
    },
-   methods: {
-     finishEdit(e) {
-       this.setBlockValue({
-         content: this.content
-       });
+
+   components: {
+     MediumEditor,
+   },
+
+   mounted() {
+     this.editor = new MediumEditor(this.$refs.content, this.options);
+     if (this.value.content) {
+       this.editor.setContent(this.value.content);
      }
-   }
+
+     let that = this;
+     this.editHandler = debounce(function(event) {
+       // medium editor occasionally sends bad events
+       if (event.srcElement === undefined) {
+         return;
+       }
+       const value = event.srcElement.innerHTML;
+       if (!value) {
+         return;
+       }
+       that.$emit('update', {content: value});
+     }, 2000);
+     this.editor.subscribe('editableInput', this.editHandler);
+   },
+
+   beforeDestroy () {
+     this.editor.unsubscribe('editableInput', this.editHandler);
+     this.editor.destroy();
+   },
  }
 </script>

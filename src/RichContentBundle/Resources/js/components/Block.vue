@@ -14,7 +14,7 @@
         <i class="fa fa-trash"></i>
       </a>
     </div>
-    <component :is="blockType" :value="block.value" :setBlockValue="setBlockValue" />
+    <component :is="blockType" :value="block.value" @update="setBlockValue" />
   </div>
 </template>
 

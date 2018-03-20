@@ -29,7 +29,7 @@ class TextBlockType implements BlockTypeInterface
     public function getDefaults()
     {
         return [
-            'content' => 'Text content',
+            'content' => '',
         ];
     }
 }

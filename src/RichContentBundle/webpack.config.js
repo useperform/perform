@@ -23,11 +23,11 @@ var config = {
         }
       },
       {
-        test: /\.scss$/,
+        test: /\.scss$|\.css$/,
         exclude: /node-modules/,
         use: extractTextPlugin.extract({
           // use modules=1 for css modules scoped to each component
-          use: ['css-loader?modules=1', 'sass-loader'],
+          use: ['css-loader', 'sass-loader'],
         }),
       }
     ],

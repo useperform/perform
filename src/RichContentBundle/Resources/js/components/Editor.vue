@@ -1,5 +1,5 @@
 <template>
-  <div :class="css.editor">
+  <div class="p-rich-editor">
     <Toolbar :editorIndex="editorIndex" />
     <BlockList :editorIndex="editorIndex" />
   </div>
@@ -15,7 +15,6 @@
 
    data() {
      return {
-       css
      }
    },
 
