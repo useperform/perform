@@ -20,5 +20,8 @@ services:
     perform_rich_content.block.image:
         public: false
         class: Perform\RichContentBundle\BlockType\ImageBlockType
+        arguments:
+            - '@perform_media.importer.file'
+            - '@perform_media.repo.file'
         tags:
             - {name: perform_rich_content.block_type, type: image}
