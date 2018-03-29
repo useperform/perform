@@ -1,6 +1,6 @@
 <template>
   <div class="block-list">
-    <Block v-for="block, i in sortedBlocks" :key="block.id" :block="block" :id="block.id" :position="i" :editorIndex="editorIndex" />
+    <Block v-for="block, i in sortedBlocks" :key="block.id" :block="block" :position="i" :editorIndex="editorIndex" />
   </div>
 </template>
 

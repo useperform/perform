@@ -51,25 +51,19 @@ $toolbar-bg: #3e3e3e;
     padding: 20px 0;
 
     .block {
-      padding-left: 100px;
-
-      .actions {
+      .controls {
         position: absolute;
-        margin-left: -95px;
-        display: none;
-        width: 90px;
+        margin-top: -4em;
 
         .btn {
-          border: none;
-          height: 30px;
-          vertical-align: middle;
-          padding-left: 9px;
-          width: 30px;
+          cursor: pointer;
         }
       }
 
-      &:hover .actions {
-        display: block;
+      .p-rich-text {
+        &:focus {
+          outline: 0;
+        }
       }
     }
   }
