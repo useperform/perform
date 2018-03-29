@@ -7,7 +7,7 @@ $(function () {
     window.Perform.richContent.init(editor, {
       contentId: hiddenInput.val(),
       onChange: function(store, editorIndex) {
-        hiddenInput.val(store.getState().editors[editorIndex].contentId);
+        hiddenInput.val(store.state.editors[editorIndex].contentId);
       },
     });
   });

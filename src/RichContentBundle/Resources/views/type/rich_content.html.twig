@@ -1,9 +1,12 @@
-{% extends 'PerformBaseBundle:types:simple.html.twig' %}
+{% extends '@PerformBase/type/simple.html.twig' %}
 
 {% block list %}
 {% endblock %}
 
 {% block view %}
+  {% if value %}
+    {{perform_rich_content(value)}}
+  {% endif %}
 {% endblock %}
 
 {% block create %}

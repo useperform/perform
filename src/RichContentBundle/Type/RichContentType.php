@@ -31,6 +31,7 @@ class RichContentType extends AbstractType
 
     public function __construct(AssetContainer $assets)
     {
+        parent::__construct();
         $this->assets = $assets;
     }
 
@@ -58,15 +59,7 @@ class RichContentType extends AbstractType
                 TypeConfig::CONTEXT_EDIT,
             ],
             'sort' => false,
+            'template' => '@PerformRichContent/type/rich_content.html.twig',
         ];
-    }
-
-    public function listContext($entity, $field, array $options = [])
-    {
-    }
-
-    public function getTemplate()
-    {
-        return 'PerformRichContentBundle:types:rich_content.html.twig';
     }
 }
