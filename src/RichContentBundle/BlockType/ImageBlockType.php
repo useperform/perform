@@ -29,7 +29,7 @@ class ImageBlockType implements BlockTypeInterface
     public function getDefaults()
     {
         return [
-            'src' => '/favicon.ico',
+            'src' => null,
         ];
     }
 }
