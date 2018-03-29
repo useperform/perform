@@ -1,18 +1,25 @@
 <template>
-  <div ref="content"></div>
+  <div ref="container">
+    <block-controls v-if="active" :position="position" :editorIndex="editorIndex" />
+    <div class="p-rich-text" ref="content"></div>
+  </div>
 </template>
 
 <script>
  import MediumEditor from 'medium-editor';
+ import BlockControls from '../BlockControls.vue';
  import debounce from 'lodash.debounce';
 
  export default {
    props: [
      'value',
+     'position',
+     'editorIndex',
    ],
 
    data() {
      return {
+       active: false,
        options: {
          toolbar: {
            buttons: [
@@ -31,6 +38,7 @@
    },
 
    components: {
+     BlockControls,
      MediumEditor,
    },
 
@@ -53,6 +61,16 @@
        that.$emit('update', {content: value});
      }, 2000);
      this.editor.subscribe('editableInput', this.editHandler);
+     this.editor.subscribe('focus', (event) => {
+       that.active = true;
+     });
+
+     this.editor.subscribe('externalInteraction', (event) => {
+       // hide the controls when clicking away from the editor or block controls
+       if (!this.$refs.container.contains(event.target)) {
+         that.active = false;
+       }
+     });
    },
 
    beforeDestroy () {
