@@ -32,4 +32,9 @@ class TextBlockType implements BlockTypeInterface
             'content' => '',
         ];
     }
+
+    public function getComponentInfo(Block $block)
+    {
+        return [];
+    }
 }

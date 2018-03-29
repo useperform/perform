@@ -31,4 +31,15 @@ interface BlockTypeInterface
      * @return array
      */
     public function getDefaults();
+
+    /**
+     * Get an array of information to pass to the editor vue component for this block.
+     *
+     * This information is not stored with the block in the database and computed per-request.
+     *
+     * For example, an image block may generate a URL from a media id stored with the block.
+     * The image editor component can then use this URL to display the image.
+     * The base URL of images may change, but blocks in the database will not need to be updated.
+     */
+    public function getComponentInfo(Block $block);
 }

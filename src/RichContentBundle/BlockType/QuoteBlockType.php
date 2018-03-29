@@ -32,4 +32,9 @@ class QuoteBlockType implements BlockTypeInterface
             'cite' => '',
         ];
     }
+
+    public function getComponentInfo(Block $block)
+    {
+        return [];
+    }
 }

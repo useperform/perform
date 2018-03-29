@@ -35,4 +35,9 @@ class VideoBlockType implements BlockTypeInterface
     {
         return [];
     }
+
+    public function getComponentInfo(Block $block)
+    {
+        return [];
+    }
 }
