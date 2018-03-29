@@ -19,9 +19,10 @@ class EditorController extends Controller
      */
     public function getContentAction(Content $content)
     {
+        $serializer = $this->get('perform_rich_content.serializer');
         $blockData = [];
         foreach ($content->getBlocks() as $block) {
-            $blockData[$block->getId()] = $block->toArray();
+            $blockData[$block->getId()] = $serializer->serialize($block);
         }
 
         return new JsonResponse([

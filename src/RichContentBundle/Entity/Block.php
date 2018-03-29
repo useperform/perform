@@ -211,15 +211,4 @@ class Block
     {
         return $this->updatedAt;
     }
-
-    /**
-     * Get this block as an array.
-     */
-    public function toArray()
-    {
-        return [
-            'type' => $this->type,
-            'value' => $this->value,
-        ];
-    }
 }

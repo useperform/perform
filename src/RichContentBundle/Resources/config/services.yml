@@ -14,6 +14,11 @@ services:
         arguments:
             - "@perform_rich_content.block_type_registry"
 
+    perform_rich_content.serializer:
+        class: Perform\RichContentBundle\Serializer
+        arguments:
+            - "@perform_rich_content.block_type_registry"
+
     perform_rich_content.persister:
         class: Perform\RichContentBundle\Persister\Persister
         arguments:
