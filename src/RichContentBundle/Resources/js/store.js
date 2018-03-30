@@ -149,6 +149,7 @@ export default new Vuex.Store({
         id,
         type: blockType,
         value: blockTypes[blockType].defaults,
+        component_info: {},
       };
       state.blocks = blocks;
 
@@ -160,6 +161,9 @@ export default new Vuex.Store({
 
     BLOCK_UPDATE: function(state, payload) {
       state.blocks[payload.id].value = payload.value;
+      if (payload.info) {
+        state.blocks[payload.id].component_info = payload.info;
+      }
     },
 
     BLOCK_MOVE: function(state, payload) {
