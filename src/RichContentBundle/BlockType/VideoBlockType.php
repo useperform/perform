@@ -21,6 +21,8 @@ class VideoBlockType implements BlockTypeInterface
         switch ($value['type']) {
         case 'youtube':
             return sprintf('<iframe src="https://www.youtube.com/embed/%s" frameBorder="0" allowFullScreen></iframe>', $value['id']);
+        case 'vimeo':
+            return sprintf('<iframe src="https://player.vimeo.com/video/%s" frameBorder="0" allowFullScreen></iframe>', $value['id']);
         default:
             return '';
         }

@@ -1,46 +1,53 @@
 <template>
-  <div>
-    <div>
-      <input type="text" class="form-control" @input="onInputChange" />
-    </div>
+  <div ref="container">
+    <block-controls v-if="active" :position="position" :editorIndex="editorIndex" />
+    <input type="text" class="form-control" @input="inputHandler" @focus="onFocus" @blur="onBlur"/>
     <div v-html="embed"></div>
   </div>
 </template>
 
 <script>
+ import BlockControls from '../BlockControls.vue';
  import getVideoId from 'get-video-id';
  import debounce from 'lodash.debounce';
 
  export default {
-   props: ['value', 'setBlockValue'],
-   methods: {
-     onInputChange(e) {
-       this.updateUrl(e.currentTarget.value);
-     },
+   props: [
+     'value',
+     'position',
+     'editorIndex',
+   ],
 
-     /* updateUrl: debounce(url => {*/
-     /* const res = getVideoId(url);*/
-     /* if (!res) {*/
-     /* this.updateValue(false, false);*/
-     /* return;*/
-     /* }*/
-     /* this.updateValue(res.service, res.id);*/
-     /* }, 300),*/
-     updateUrl(url) {
-       const res = getVideoId(url);
+   data() {
+     return {
+       active: false,
+     };
+   },
+
+   components: {
+     BlockControls,
+   },
+
+   methods: {
+     onFocus() {
+       this.active = true;
+     },
+     onBlur() {
+       if (!this.$refs.container.contains(event.target)) {
+         this.active = false;
+       }
+     },
+     inputHandler: debounce(function(event) {
+       const res = getVideoId(event.target.value);
        if (!res) {
-         this.updateValue(false, false);
+         this.$emit('update', {});
          return;
        }
-       this.updateValue(res.service, res.id);
-     },
-
-     updateValue(type, id) {
-       this.setBlockValue({
-         type,
-         id
+       this.$emit('update', {
+         type: res.service,
+         id: res.id,
        });
-     }
+     }, 500),
    },
 
    computed: {
