@@ -7,7 +7,11 @@
         </button>
       </template>
     </block-controls>
-    <img v-if="hasImage" :src="value.src" @click.prevent="onClick" style="max-width: 100%;"/>
+    <img v-if="hasImage" :src="componentInfo.src" @click.prevent="onClick" style="max-width: 100%;"/>
+    <a href="#" v-if="missingImage" @click.prevent="onClick">
+      <i class="fa fa-exclamation-triangle"></i>
+      Missing image
+    </a>
   </div>
 </template>
 
@@ -18,12 +22,15 @@
  export default {
    props: [
      'value',
+     'isNew',
+     'componentInfo',
      'position',
      'editorIndex',
    ],
    data() {
      return {
        active: false,
+       missing: false,
      }
    },
    mixins: [
@@ -33,9 +40,18 @@
      BlockControls,
    },
    created() {
-     if (!this.hasImage()) {
+     if (!this.hasImage && this.isNew) {
        this.selectImage();
      }
+   },
+   computed: {
+     hasImage() {
+       return !!this.componentInfo.src;
+     },
+     // when an image id has been set, but it has been moved or deleted
+     missingImage() {
+       return !!this.componentInfo.missing;
+     },
    },
    methods: {
      onClick() {
@@ -44,15 +60,16 @@
      onAway() {
        this.active = false;
      },
-     hasImage() {
-       return !!this.value.src;
-     },
      selectImage() {
-       var that = this;
+       const that = this;
        Perform.media.selectFile({
          onSelect(files) {
+           const file = files[0];
            that.$emit('update', {
-             src: files[0].url,
+             id: file.id,
+           }, {
+             src: file.url,
+             missing: false,
            });
          }
        });

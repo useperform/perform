@@ -39,9 +39,7 @@ class ImageBlockType implements BlockTypeInterface
 
     public function getDefaults()
     {
-        return [
-            'src' => null,
-        ];
+        return [];
     }
 
     private function getFile(Block $block)
@@ -58,7 +56,9 @@ class ImageBlockType implements BlockTypeInterface
     {
         $file = $this->getFile($block);
         if (!$file) {
-            return [];
+            return [
+                'missing' => true,
+            ];
         }
 
         return [
