@@ -52,8 +52,6 @@ class Content
     }
 
     /**
-     * Set id.
-     *
      * @param guid $id
      *
      * @return Content
@@ -66,8 +64,6 @@ class Content
     }
 
     /**
-     * Get id.
-     *
      * @return guid
      */
     public function getId()
@@ -76,8 +72,6 @@ class Content
     }
 
     /**
-     * Set title.
-     *
      * @param string $title
      *
      * @return Content
@@ -90,8 +84,6 @@ class Content
     }
 
     /**
-     * Get title.
-     *
      * @return string
      */
     public function getTitle()
@@ -100,8 +92,6 @@ class Content
     }
 
     /**
-     * Set createdAt.
-     *
      * @param \DateTime $createdAt
      *
      * @return Content
@@ -114,8 +104,6 @@ class Content
     }
 
     /**
-     * Get createdAt.
-     *
      * @return \DateTime
      */
     public function getCreatedAt()
@@ -124,8 +112,6 @@ class Content
     }
 
     /**
-     * Set updatedAt.
-     *
      * @param \DateTime $updatedAt
      *
      * @return Content
@@ -138,8 +124,6 @@ class Content
     }
 
     /**
-     * Get updatedAt.
-     *
      * @return \DateTime
      */
     public function getUpdatedAt()

@@ -22,7 +22,7 @@ class Block
     /**
      * @var array
      */
-    protected $value;
+    protected $value = [];
 
     /**
      * @var bool
@@ -45,8 +45,6 @@ class Block
     protected $updatedAt;
 
     /**
-     * Set id.
-     *
      * @param guid $id
      *
      * @return Block
@@ -59,8 +57,6 @@ class Block
     }
 
     /**
-     * Get id.
-     *
      * @return guid
      */
     public function getId()
@@ -69,8 +65,6 @@ class Block
     }
 
     /**
-     * Set type.
-     *
      * @param string $type
      *
      * @return Block
@@ -83,8 +77,6 @@ class Block
     }
 
     /**
-     * Get type.
-     *
      * @return string
      */
     public function getType()
@@ -93,13 +85,11 @@ class Block
     }
 
     /**
-     * Set value.
-     *
      * @param array $value
      *
      * @return Block
      */
-    public function setValue($value)
+    public function setValue(array $value)
     {
         $this->value = $value;
 
@@ -107,8 +97,6 @@ class Block
     }
 
     /**
-     * Get value.
-     *
      * @return array
      */
     public function getValue()
@@ -117,8 +105,6 @@ class Block
     }
 
     /**
-     * Set shared.
-     *
      * @param bool $shared
      *
      * @return Block
@@ -131,8 +117,6 @@ class Block
     }
 
     /**
-     * Get shared.
-     *
      * @return bool
      */
     public function getShared()
@@ -141,8 +125,6 @@ class Block
     }
 
     /**
-     * Set title.
-     *
      * @param string $title
      *
      * @return Block
@@ -155,8 +137,6 @@ class Block
     }
 
     /**
-     * Get title.
-     *
      * @return string
      */
     public function getTitle()
@@ -165,13 +145,11 @@ class Block
     }
 
     /**
-     * Set createdAt.
-     *
      * @param \DateTime $createdAt
      *
      * @return Block
      */
-    public function setCreatedAt($createdAt)
+    public function setCreatedAt(\DateTime $createdAt)
     {
         $this->createdAt = $createdAt;
 
@@ -179,8 +157,6 @@ class Block
     }
 
     /**
-     * Get createdAt.
-     *
      * @return \DateTime
      */
     public function getCreatedAt()
@@ -189,13 +165,11 @@ class Block
     }
 
     /**
-     * Set updatedAt.
-     *
      * @param \DateTime $updatedAt
      *
      * @return Block
      */
-    public function setUpdatedAt($updatedAt)
+    public function setUpdatedAt(\DateTime $updatedAt)
     {
         $this->updatedAt = $updatedAt;
 
@@ -203,8 +177,6 @@ class Block
     }
 
     /**
-     * Get updatedAt.
-     *
      * @return \DateTime
      */
     public function getUpdatedAt()
