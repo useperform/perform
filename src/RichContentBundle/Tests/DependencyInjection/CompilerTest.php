@@ -14,7 +14,8 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
     private function configure($extraConfig = null)
     {
         $this->kernel = new TestKernel([
-            new \Perform\RichContentBundle\PerformRichContentBundle()
+            new \Perform\RichContentBundle\PerformRichContentBundle(),
+            new \Perform\MediaBundle\PerformMediaBundle()
         ], $extraConfig);
         $this->kernel->boot();
     }
