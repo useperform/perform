@@ -17,8 +17,12 @@ class Renderer implements RendererInterface
         $this->registry = $registry;
     }
 
-    public function render(Content $content)
+    public function render(Content $content = null)
     {
+        if (!$content) {
+            return '';
+        }
+
         $html = '';
         foreach ($content->getOrderedBlocks() as $block) {
             $html .= $this->registry->get($block->getType())->render($block);

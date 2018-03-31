@@ -5,8 +5,6 @@ namespace Perform\RichContentBundle\Renderer;
 use Perform\RichContentBundle\Entity\Content;
 
 /**
- * RendererInterface
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 interface RendererInterface
@@ -18,5 +16,5 @@ interface RendererInterface
      *
      * @return string
      */
-    public function render(Content $content);
+    public function render(Content $content = null);
 }
