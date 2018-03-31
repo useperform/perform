@@ -1,28 +1,26 @@
 <?php
 
-namespace Perform\CmsBundle\EventListener;
+namespace Perform\PageEditorBundle\EventListener;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Perform\PageEditorBundle\Annotation\Page;
+use Perform\PageEditorBundle\Twig\Extension\ContentExtension;
+use Perform\RichContentBundle\BlockType\BlockTypeRegistry;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpFoundation\Request;
-use Perform\CmsBundle\Twig\Extension\ContentExtension;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
-use Doctrine\ORM\EntityManagerInterface;
-use Perform\CmsBundle\Annotation\Page;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Perform\CmsBundle\Block\BlockTypeRegistry;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * ToolbarListener.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class ToolbarListener implements EventSubscriberInterface
 {
-    const SESSION_KEY = 'cms_toolbar';
+    const SESSION_KEY = 'perform_page_editor_toolbar';
 
     protected $twig;
     protected $extension;
@@ -107,7 +105,7 @@ class ToolbarListener implements EventSubscriberInterface
             return;
         }
 
-        $html = $this->twig->render('@PerformCms/stylesheets.html.twig', []);
+        $html = $this->twig->render('@PerformPageEditor/stylesheets.html.twig', []);
         $content = substr($content, 0, $pos).$html.substr($content, $pos);
         $response->setContent($content);
     }
@@ -123,12 +121,12 @@ class ToolbarListener implements EventSubscriberInterface
 
         $pageAvailable = $this->page && !empty($this->sections);
 
-        $repo = $this->entityManager->getRepository('PerformCmsBundle:Version');
+        $repo = $this->entityManager->getRepository('PerformPageEditorBundle:Version');
         $versions = $pageAvailable ? $repo->findByPage($this->page) : [];
         $current = $pageAvailable ? $repo->findCurrentVersion($this->page) : null;
 
         $html = $this->twig->render(
-            '@PerformCms/toolbar.html.twig',
+            '@PerformPageEditor/toolbar.html.twig',
             [
                 'versions' => $versions,
                 'currentVersion' => $current,
@@ -145,7 +143,7 @@ class ToolbarListener implements EventSubscriberInterface
             KernelEvents::REQUEST => ['onKernelRequest', -128],
             KernelEvents::CONTROLLER => ['onKernelController', -128],
             //just before the profiler listener, to make sure resources used by
-            //the toolbar are included
+            //the toolbar are included in the profiler
             KernelEvents::RESPONSE => ['onKernelResponse', -99],
         ];
     }

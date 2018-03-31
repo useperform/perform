@@ -1,6 +1,6 @@
 <?php
 
-namespace Perform\CmsBundle\Annotation;
+namespace Perform\PageEditorBundle\Annotation;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface;
 
