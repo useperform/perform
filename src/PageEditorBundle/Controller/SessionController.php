@@ -1,15 +1,13 @@
 <?php
 
-namespace Perform\CmsBundle\Controller;
+namespace Perform\PageEditorBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Perform\CmsBundle\EventListener\ToolbarListener;
+use Perform\PageEditorBundle\EventListener\ToolbarListener;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
- * SessionController.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class SessionController extends Controller
