@@ -1,0 +1,34 @@
+services:
+    perform_page_editor.listener.toolbar:
+        class: Perform\PageEditorBundle\EventListener\ToolbarListener
+        arguments:
+            - "@twig"
+            - "@perform_page_editor.twig.content"
+            - "@doctrine.orm.entity_manager"
+            - "@perform_rich_content.block_type_registry"
+        calls:
+            - [setExcludedUrlRegexes, ["%perform_page_editor.toolbar.excluded_urls%"]]
+        tags:
+            - {name: kernel.event_subscriber}
+
+    perform_page_editor.menu.page_editor:
+        class: Perform\PageEditorBundle\Menu\PageEditorLinkProvider
+        tags:
+            - {name: perform_base.link_provider, alias: page_editor}
+
+    perform_page_editor.twig.content:
+        class: Perform\PageEditorBundle\Twig\Extension\ContentExtension
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@twig"
+            - "@perform_rich_content.renderer"
+        tags:
+            - {name: twig.extension}
+
+    perform_page_editor.repo.version:
+        class: Perform\PageEditorBundle\Repository\VersionRepository
+        factory:
+            - "@doctrine.orm.entity_manager"
+            - "getRepository"
+        arguments:
+            - "PerformPageEditorBundle:Version"

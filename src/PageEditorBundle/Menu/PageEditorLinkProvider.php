@@ -1,21 +1,19 @@
 <?php
 
-namespace Perform\CmsBundle\Menu;
+namespace Perform\PageEditorBundle\Menu;
 
 use Knp\Menu\ItemInterface;
 use Perform\BaseBundle\Menu\LinkProviderInterface;
 
 /**
- * CmsLinkProvider.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class CmsLinkProvider implements LinkProviderInterface
+class PageEditorLinkProvider implements LinkProviderInterface
 {
     public function addLinks(ItemInterface $menu)
     {
-        $menu->addChild('cms', [
-            'route' => 'perform_cms_session_begin',
+        $menu->addChild('page_editor', [
+            'route' => 'perform_pageeditor_session_begin',
         ])->setExtra('icon', 'pencil');
     }
 }
