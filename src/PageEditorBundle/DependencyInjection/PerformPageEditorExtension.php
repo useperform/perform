@@ -1,6 +1,6 @@
 <?php
 
-namespace Perform\CmsBundle\DependencyInjection;
+namespace Perform\PageEditorBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -11,7 +11,7 @@ use Perform\Licensing\Licensing;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class PerformCmsExtension extends Extension
+class PerformPageEditorExtension extends Extension
 {
     /**
      * {@inheritdoc}
@@ -25,7 +25,6 @@ class PerformCmsExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $container->setParameter('perform_cms.block_types', $config['block_types']);
-        $container->setParameter('perform_cms.toolbar.excluded_urls', $config['toolbar']['excluded_urls']);
+        $container->setParameter('perform_page_editor.toolbar.excluded_urls', $config['toolbar']['excluded_urls']);
     }
 }

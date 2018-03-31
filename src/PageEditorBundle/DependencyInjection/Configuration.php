@@ -1,13 +1,11 @@
 <?php
 
-namespace Perform\CmsBundle\DependencyInjection;
+namespace Perform\PageEditorBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 
 /**
- * Configuration
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class Configuration implements ConfigurationInterface
@@ -15,7 +13,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('perform_cms');
+        $rootNode = $treeBuilder->root('perform_page_editor');
 
         $rootNode
             ->children()
