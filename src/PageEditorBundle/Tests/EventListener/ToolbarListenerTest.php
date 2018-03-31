@@ -1,17 +1,19 @@
 <?php
 
-namespace Perform\CmsBundle\Tests\EventListener;
+namespace Perform\PageEditorBundle\Tests\EventListener;
 
-use Perform\CmsBundle\EventListener\ToolbarListener;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Doctrine\ORM\EntityManagerInterface;
+use Perform\PageEditorBundle\EventListener\ToolbarListener;
+use Perform\PageEditorBundle\Twig\Extension\ContentExtension;
+use Perform\RichContentBundle\BlockType\BlockTypeRegistry;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Perform\CmsBundle\Twig\Extension\ContentExtension;
-use Perform\CmsBundle\Block\BlockTypeRegistry;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -28,25 +30,25 @@ class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
         $this->twig = $this->getMockBuilder(\Twig_Environment::class)
                     ->disableOriginalConstructor()
                     ->getMock();
-        $this->contentExtension = $this->getMockBuilder('Perform\CmsBundle\Twig\Extension\ContentExtension')
+        $this->contentExtension = $this->getMockBuilder(ContentExtension::class)
                                 ->disableOriginalConstructor()
                                 ->getMock();
-        $repo = $this->getMockBuilder('Perform\CmsBundle\Repository\VersionRepository')
+        $repo = $this->getMockBuilder(VersionRepository::class)
               ->disableOriginalConstructor()
               ->getMock();
-        $entityManager = $this->getMock('Doctrine\ORM\EntityManagerInterface');
+        $entityManager = $this->getMock(EntityManagerInterface::class);
         $entityManager->expects($this->any())
             ->method('getRepository')
             ->will($this->returnValue($repo));
         $registry = new BlockTypeRegistry($this->twig);
 
         $this->listener = new ToolbarListener($this->twig, $this->contentExtension, $entityManager, $registry);
-        $this->kernel = $this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface');
+        $this->kernel = $this->getMock(HttpKernelInterface::class);
     }
 
     public function testEventSubscriber()
     {
-        $this->assertInstanceOf('Symfony\Component\EventDispatcher\EventSubscriberInterface', $this->listener);
+        $this->assertInstanceOf(EventSubscriberInterface::class, $this->listener);
         $this->assertSame(
             [
                 KernelEvents::REQUEST => ['onKernelRequest', -128],
@@ -60,7 +62,7 @@ class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
     {
         $request = Request::create($url);
         if ($withSession) {
-            $session = $this->getMock('Symfony\Component\HttpFoundation\Session\SessionInterface');
+            $session = $this->getMock(SessionInterface::class);
             $session->expects($this->any())
                 ->method('get')
                 ->with(ToolbarListener::SESSION_KEY)
@@ -86,8 +88,8 @@ class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
         $this->twig->expects($this->exactly(2))
             ->method('render')
             ->withConsecutive(
-                $this->equalTo('@PerformCms/stylesheets.html.twig'),
-                $this->equalTo('@PerformCms/toolbar.html.twig'))
+                $this->equalTo('@PerformPageEditor/stylesheets.html.twig'),
+                $this->equalTo('@PerformPageEditor/toolbar.html.twig'))
             ->willReturnOnConsecutiveCalls('<link/>', '<div>TOOLBAR</div>');
 
         $event = $this->createEvent('<head></head><body><div>Hello</div></body>');
