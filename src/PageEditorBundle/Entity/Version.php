@@ -189,21 +189,4 @@ class Version
             }
         }
     }
-
-    /**
-     * Return an array representation of this version, child sections, and child
-     * blocks of those sections.
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        $data = [];
-        foreach ($this->sections as $section) {
-            $name = $section->getName();
-            $data[$name] = $section->toArray();
-        }
-
-        return $data;
-    }
 }
