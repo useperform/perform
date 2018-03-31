@@ -1,7 +1,7 @@
-Perform\CmsBundle\Entity\Version:
+Perform\PageEditorBundle\Entity\Version:
     type: entity
-    repositoryClass: Perform\CmsBundle\Repository\VersionRepository
-    table: perform_cms_version
+    repositoryClass: Perform\PageEditorBundle\Repository\VersionRepository
+    table: perform_page_editor_version
     id:
         id:
             type: guid

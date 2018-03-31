@@ -1,6 +1,6 @@
-Perform\CmsBundle\Entity\Section:
+Perform\PageEditorBundle\Entity\Section:
     type: entity
-    table: perform_cms_section
+    table: perform_page_editor_section
     id:
         id:
             type: guid
@@ -14,8 +14,9 @@ Perform\CmsBundle\Entity\Section:
         version:
             targetEntity: Version
             inversedBy: sections
-    oneToMany:
-        blocks:
-            targetEntity: Block
-            mappedBy: section
-            cascade: ['persist']
+            joinColumn:
+                nullable: false
+        content:
+            targetEntity: Perform\RichContentBundle\Entity\Content
+            joinColumn:
+                nullable: false

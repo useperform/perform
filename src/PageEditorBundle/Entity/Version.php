@@ -1,12 +1,10 @@
 <?php
 
-namespace Perform\CmsBundle\Entity;
+namespace Perform\PageEditorBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Version.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class Version
@@ -180,19 +178,16 @@ class Version
         return $this->sections;
     }
 
-    public function getOrCreateSection($name)
+    /**
+     * @return Section|null
+     */
+    public function getSection($name)
     {
         foreach ($this->sections as $section) {
             if ($section->getName() === $name) {
                 return $section;
             }
         }
-
-        $section = new Section();
-        $section->setName($name);
-        $this->addSection($section);
-
-        return $section;
     }
 
     /**

@@ -1,12 +1,10 @@
 <?php
 
-namespace Perform\CmsBundle\Entity;
+namespace Perform\PageEditorBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Perform\RichContentBundle\Entity\Content;
 
 /**
- * Section.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class Section
@@ -27,14 +25,9 @@ class Section
     protected $version;
 
     /**
-     * @var Collection
+     * @var Content
      */
-    protected $blocks;
-
-    public function __construct()
-    {
-        $this->blocks = new ArrayCollection();
-    }
+    protected $content;
 
     /**
      * @return uuid
@@ -85,43 +78,22 @@ class Section
     }
 
     /**
-     * @param Block $block
-     * @param int|null $index
+     * @param Content $content
      *
      * @return Section
      */
-    public function addBlock(Block $block, $index = null)
+    public function setContent(Content $content)
     {
-        $this->blocks[$index] = $block;
-        $block->setSortOrder($this->blocks->indexOf($block));
-        $block->setSection($this);
+        $this->content = $content;
 
         return $this;
     }
 
     /**
-     * @return Collection
+     * @return Content
      */
-    public function getBlocks()
+    public function getContent()
     {
-        return $this->blocks;
-    }
-
-    /**
-     * Return an array representation of this section and child blocks.
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        $data = [];
-        foreach ($this->blocks as $block) {
-            $data[] = [
-                'type' => $block->getType(),
-                'value' => $block->getValue(),
-            ];
-        }
-
-        return $data;
+        return $this->content;
     }
 }
