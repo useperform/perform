@@ -1,0 +1,11 @@
+.p--local {
+  .p-comp-page-editor-toolbar {
+    // import required bootstrap segments
+    width: 100%;
+    height: 40px;
+    position: fixed;
+    top: 0;
+    z-index: 1100;
+    background-color: #111;
+  }
+}
