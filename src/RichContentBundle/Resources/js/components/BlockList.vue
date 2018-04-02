@@ -1,28 +1,20 @@
 <template>
   <div class="block-list">
     <Block v-for="block, i in sortedBlocks" :key="block.id" :block="block" :position="i" :editorIndex="editorIndex" />
+    <AddButton :editorIndex="editorIndex" />
   </div>
 </template>
 
 <script>
  import Block from './Block';
+ import AddButton from './AddButton';
 
  export default {
    props: ['editorIndex'],
 
-   created() {
-     /* const { store } = this.context;*/
-     /* this.unsubscribe = store.subscribe(() => {*/
-     /* this.forceUpdate();*/
-     /* });*/
-   },
-
-   beforeDestroy() {
-     /* this.unsubscribe();*/
-   },
-
    components: {
-     Block
+     Block,
+     AddButton,
    },
 
    computed: {
