@@ -34,21 +34,13 @@ class ConfigureManagerPass implements CompilerPassInterface
         }
 
         $container->getDefinition('perform_mailing_list.manager')
-            ->setArgument(1, $this->createLocator($connectors));
+            ->setArgument(1, LoopableServiceLocator::createDefinition($connectors));
 
         $enrichers = [];
         foreach ($container->findTaggedServiceIds('perform_mailing_list.enricher') as $service => $tag) {
             $enrichers[] = new Reference($service);
         }
         $container->getDefinition('perform_mailing_list.manager')
-            ->setArgument(2, $this->createLocator($enrichers));
-    }
-
-    protected function createLocator(array $factories)
-    {
-        return (new Definition(LoopableServiceLocator::class))
-            ->setPublic(false)
-            ->addTag('container.service_locator')
-            ->setArgument(0, $factories);
+            ->setArgument(2, LoopableServiceLocator::createDefinition($enrichers));
     }
 }
