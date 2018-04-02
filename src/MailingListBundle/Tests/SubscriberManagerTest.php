@@ -7,6 +7,7 @@ use Perform\MailingListBundle\Connector\ConnectorInterface;
 use Perform\MailingListBundle\Enricher\EnricherInterface;
 use Perform\MailingListBundle\SubscriberManager;
 use Perform\MailingListBundle\Entity\Subscriber;
+use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -27,13 +28,18 @@ class SubscriberManagerTest extends \PHPUnit_Framework_TestCase
         $this->em = $this->getMock(EntityManagerInterface::class);
         $this->connector1 = $this->getMock(ConnectorInterface::class);
         $this->connector2 = $this->getMock(ConnectorInterface::class);
+        $connectors = new LoopableServiceLocator([
+            'one' => function() { return $this->connector1; },
+            'two' => function() { return $this->connector2; },
+        ]);
         $this->enricher1 = $this->getMock(EnricherInterface::class);
         $this->enricher2 = $this->getMock(EnricherInterface::class);
+        $enrichers = new LoopableServiceLocator([
+            function() { return $this->enricher1; },
+            function() { return $this->enricher2; },
+        ]);
         $this->logger = $this->getMock(LoggerInterface::class);
-        $this->manager = new SubscriberManager($this->em, [
-            'one' => $this->connector1,
-            'two' => $this->connector2,
-        ], [$this->enricher1, $this->enricher2], $this->logger);
+        $this->manager = new SubscriberManager($this->em, $connectors, $enrichers, $this->logger);
     }
 
     public function testNewSubscriberIsSaved()

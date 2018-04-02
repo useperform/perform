@@ -5,6 +5,7 @@ namespace Perform\MailingListBundle;
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\MailingListBundle\Connector\ConnectorInterface;
 use Perform\MailingListBundle\Enricher\EnricherInterface;
+use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
 use Perform\MailingListBundle\Entity\Subscriber;
 use Perform\MailingListBundle\Exception\ConnectorNotFoundException;
 use Psr\Log\LoggerInterface;
@@ -15,18 +16,18 @@ use Psr\Log\LoggerInterface;
 class SubscriberManager
 {
     protected $em;
-    protected $connectors = [];
-    protected $enrichers = [];
+    protected $connectors;
+    protected $enrichers;
     protected $logger;
     protected $signups = [];
 
     /**
      * @param EntityManagerInterface $em
-     * @param ConnectorInterface[]   $connectors
-     * @param EnricherInterface[]    $enrichers
+     * @param LoopableServiceLocator $connectors
+     * @param LoopableServiceLocator $enrichers
      * @param LoggerInterface        $logger
      */
-    public function __construct(EntityManagerInterface $em, array $connectors, array $enrichers, LoggerInterface $logger)
+    public function __construct(EntityManagerInterface $em, LoopableServiceLocator $connectors, LoopableServiceLocator $enrichers, LoggerInterface $logger)
     {
         $this->em = $em;
         $this->connectors = $connectors;
@@ -39,11 +40,11 @@ class SubscriberManager
      */
     public function getDefaultConnectorName()
     {
-        if (empty($this->connectors)) {
+        if (empty($names = $this->connectors->getNames())) {
             throw new ConnectorNotFoundException('No mailing list connectors are registered.');
         }
 
-        return array_keys($this->connectors)[0];
+        return $names[0];
     }
 
     /**
@@ -59,11 +60,11 @@ class SubscriberManager
             $name = $this->getDefaultConnectorName();
         }
 
-        if (!isset($this->connectors[$name])) {
+        if (!$this->connectors->has($name)) {
             throw new ConnectorNotFoundException(sprintf('The mailing list connector "%s" was not found.', $name));
         }
 
-        return $this->connectors[$name];
+        return $this->connectors->get($name);
     }
 
     public function addSubscriber(Subscriber $subscriber)

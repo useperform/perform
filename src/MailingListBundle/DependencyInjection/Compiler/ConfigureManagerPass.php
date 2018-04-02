@@ -2,10 +2,12 @@
 
 namespace Perform\MailingListBundle\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
 use Perform\MailingListBundle\Enricher\UserEnricher;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Find connectors and enrichers to add to the subscriber manager.
@@ -30,14 +32,23 @@ class ConfigureManagerPass implements CompilerPassInterface
 
             $connectors[$tag[0]['alias']] = new Reference($service);
         }
+
         $container->getDefinition('perform_mailing_list.manager')
-            ->setArgument(1, $connectors);
+            ->setArgument(1, $this->createLocator($connectors));
 
         $enrichers = [];
         foreach ($container->findTaggedServiceIds('perform_mailing_list.enricher') as $service => $tag) {
             $enrichers[] = new Reference($service);
         }
         $container->getDefinition('perform_mailing_list.manager')
-            ->setArgument(2, $enrichers);
+            ->setArgument(2, $this->createLocator($enrichers));
+    }
+
+    protected function createLocator(array $factories)
+    {
+        return (new Definition(LoopableServiceLocator::class))
+            ->setPublic(false)
+            ->addTag('container.service_locator')
+            ->setArgument(0, $factories);
     }
 }
