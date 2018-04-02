@@ -3,6 +3,7 @@
 namespace Perform\BaseBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ServiceLocator;
+use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * An extension of ServiceLocator to enumerate all the available services it holds.
@@ -35,5 +36,19 @@ class LoopableServiceLocator extends ServiceLocator implements \IteratorAggregat
         foreach ($this->names as $name) {
             yield $name => $this->get($name);
         }
+    }
+
+    /**
+     * Create a new service LoopableServiceLocator service definition,
+     * configured with the correct tag.
+     *
+     * @return Definition
+     */
+    public static function createDefinition(array $factories)
+    {
+        return (new Definition(self::class))
+            ->setPublic(false)
+            ->addTag('container.service_locator')
+            ->setArgument(0, $factories);
     }
 }
