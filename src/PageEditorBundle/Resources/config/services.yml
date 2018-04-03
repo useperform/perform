@@ -1,15 +1,35 @@
 services:
+    perform_page_editor.page_manager:
+        class: Perform\PageEditorBundle\PageManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@twig"
+            - "@perform_rich_content.renderer"
+
+    perform_page_editor.session_manager:
+        class: Perform\PageEditorBundle\SessionManager
+        arguments:
+            - "%perform_page_editor.toolbar.excluded_urls%"
+
+    perform_page_editor.listener.page_manager:
+        class: Perform\PageEditorBundle\EventListener\PageManagerListener
+        arguments:
+            - '@perform_page_editor.page_manager'
+            - '@perform_page_editor.session_manager'
+        tags:
+            - {name: kernel.event_listener, event: kernel.request, priority: -128}
+            - {name: kernel.event_listener, event: kernel.controller, priority: -128}
+
     perform_page_editor.listener.toolbar:
         class: Perform\PageEditorBundle\EventListener\ToolbarListener
         arguments:
+            - '@perform_page_editor.page_manager'
             - "@twig"
-            - "@perform_page_editor.twig.content"
-            - "@doctrine.orm.entity_manager"
-            - "@perform_rich_content.block_type_registry"
-        calls:
-            - [setExcludedUrlRegexes, ["%perform_page_editor.toolbar.excluded_urls%"]]
         tags:
-            - {name: kernel.event_subscriber}
+            # set priority to -99, just before the profiler listener, to make
+            # sure resources used by the toolbar are included in the
+            # profiler
+            - {name: kernel.event_listener, event: kernel.response, priority: -99}
 
     perform_page_editor.menu.page_editor:
         class: Perform\PageEditorBundle\Menu\PageEditorLinkProvider
@@ -19,9 +39,7 @@ services:
     perform_page_editor.twig.content:
         class: Perform\PageEditorBundle\Twig\Extension\ContentExtension
         arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@twig"
-            - "@perform_rich_content.renderer"
+            - '@perform_page_editor.page_manager'
         tags:
             - {name: twig.extension}
 
