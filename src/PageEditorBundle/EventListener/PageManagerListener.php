@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
  *
  * If the SessionManager detects an editing session for the current request, enable edit mode.
  *
- * If the @Page annotation was detected on the controller action, set the page name.
+ * If the @Page annotation is applied to the controller action, set the page name.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/

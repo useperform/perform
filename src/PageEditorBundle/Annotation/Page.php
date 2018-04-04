@@ -5,7 +5,8 @@ namespace Perform\PageEditorBundle\Annotation;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface;
 
 /**
- * Page
+ * Annotate controller actions with @Page("page_name") to set the
+ * current page on the PageManager.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  * @Annotation
