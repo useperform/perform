@@ -1,4 +1,9 @@
 services:
+    Perform\PageEditorBundle\Controller\:
+        resource: '../../Controller'
+        autowire: true
+        autoconfigure: true
+
     perform_page_editor.page_manager:
         class: Perform\PageEditorBundle\PageManager
         arguments:
