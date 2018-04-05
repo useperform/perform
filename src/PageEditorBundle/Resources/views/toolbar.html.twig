@@ -1,17 +1,9 @@
-{# PageEditor injects vue component #}
-<div class="p--local">
-  <div class="p-comp-page-editor-toolbar">
-  </div>
-</div>
-
 <script src="{{asset('/bundles/performmedia/app.js')}}"></script>
 <script src="{{asset('/bundles/performrichcontent/editor.js')}}"></script>
+<script src="{{asset('/bundles/performpageeditor/app.js')}}"></script>
+
 <script>
  (function() {
-   $('.perform-page-editor-section').each(function() {
-     Perform.richContent.init(this, {
-       contentId: this.getAttribute('data-content'),
-     });
-   });
+   Perform.pageEditor.editPage();
  })();
 </script>
