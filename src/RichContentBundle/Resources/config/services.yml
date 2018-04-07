@@ -56,3 +56,8 @@ services:
             - "@perform_base.asset_container"
         tags:
             - {name: perform_base.type, alias: rich_content}
+
+    perform_rich_content.fixture_profile_registry:
+        class: Perform\RichContentBundle\DataFixtures\Profile\ProfileRegistry
+        arguments:
+            - []
