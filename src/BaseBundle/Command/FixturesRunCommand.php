@@ -75,9 +75,12 @@ class FixturesRunCommand extends ContainerAwareCommand
             if (!$r->isSubclassOf(FixtureInterface::class) || $r->isAbstract()) {
                 return false;
             }
+            if ($this->getContainer()->has($class)) {
+                return $this->getContainer()->get($class);
+            }
             $fixture = $r->newInstance();
             $usedExcludedEntities = $r->isSubclassOf(EntityDeclaringFixtureInterface::class) ?
-                                  array_intersect($fixture->getEntityClasses(), $this->excludedEntities) : [];
+                                  array_values(array_intersect($fixture->getEntityClasses(), $this->excludedEntities)) : [];
             if (count($usedExcludedEntities) > 0) {
                 if ($output->isVerbose()) {
                     $output->writeln(sprintf(
