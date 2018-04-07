@@ -29,3 +29,6 @@ Perform\PageEditorBundle\Entity\Version:
         sections:
             targetEntity: Section
             mappedBy: version
+            cascade:
+                - 'persist'
+                - 'remove'

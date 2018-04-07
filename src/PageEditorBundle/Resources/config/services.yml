@@ -55,3 +55,9 @@ services:
             - "getRepository"
         arguments:
             - "PerformPageEditorBundle:Version"
+
+    Perform\PageEditorBundle\DataFixtures\ORM\LoadVersionData:
+        class: Perform\PageEditorBundle\DataFixtures\ORM\LoadVersionData
+        arguments:
+            - "@perform_rich_content.fixture_manager"
+            - "%perform_page_editor.fixture_definitions%"
