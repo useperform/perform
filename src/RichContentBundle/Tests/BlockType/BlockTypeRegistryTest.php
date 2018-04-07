@@ -48,4 +48,11 @@ class BlockTypeRegistryTest extends \PHPUnit_Framework_TestCase
         ];
         $this->assertSame($expected, $this->registry->all());
     }
+
+    public function testHas()
+    {
+        $this->registry->add('foo', $this->getMock(BlockTypeInterface::class));
+        $this->assertTrue($this->registry->has('foo'));
+        $this->assertFalse($this->registry->has('bar'));
+    }
 }

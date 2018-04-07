@@ -18,6 +18,16 @@ class BlockTypeRegistry
         $this->types[$name] = $type;
     }
 
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function has($name)
+    {
+        return isset($this->types[$name]);
+    }
+
     public function get($name)
     {
         if (!isset($this->types[$name])) {

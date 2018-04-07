@@ -61,3 +61,10 @@ services:
         class: Perform\RichContentBundle\DataFixtures\Profile\ProfileRegistry
         arguments:
             - []
+
+    perform_rich_content.fixture_manager:
+        class: Perform\RichContentBundle\DataFixtures\FixtureManager
+        arguments:
+            - "@perform_rich_content.fixture_profile_registry"
+            - "@perform_rich_content.block_type_registry"
+            - "@doctrine.orm.entity_manager"
