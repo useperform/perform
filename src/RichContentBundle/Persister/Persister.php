@@ -26,57 +26,65 @@ class Persister
     }
 
     /**
-     * Update content using data sent from the frontend editor.
+     * Create or update content using data from the frontend editor.
      *
      * @return Block[] An array of newly created blocks, indexed by
      * the stub ids that were passed in.
      */
-    public function saveFromEditor(Content $content, array $blockDefinitions, array $newBlockDefinitions, array $blockOrder)
+    public function save(OperationInterface $operation)
     {
-        $result = $this->em->transactional(function () use ($content, $blockDefinitions, $newBlockDefinitions, $blockOrder) {
-            $newBlocks = $this->blockRepo->createFromDefinitions($newBlockDefinitions);
-            $currentBlocks = $this->blockRepo->updateFromDefinitions($blockDefinitions);
-            $blocks = array_merge(array_values($newBlocks), $currentBlocks);
+        $this->em->beginTransaction();
+        try {
+            $result = $this->doSave($operation);
+            $this->em->commit();
 
-            // replace stub ids (from new definitions) with newly
-            // acquired database ids
-            // e.g. _983983498234 => some-guid-238498-230993
-            foreach ($blockOrder as $position => $id) {
-                if (isset($newBlocks[$id])) {
-                    $blockOrder[$position] = $newBlocks[$id]->getId();
-                }
-            }
-
-            $this->contentRepo->setBlocks($content, $blocks);
-            $content->setBlockOrder($blockOrder);
-
-            $this->em->persist($content);
-            $this->em->flush();
-
-            return $newBlocks;
-        });
-
-        //transactional will return true if the callback returns a
-        //falsy result (i.e. an empty array of new blocks)
-        return is_array($result) ? $result : [];
+            return $result;
+        } catch (\Exception $e) {
+            $this->em->rollback();
+            throw $e;
+        }
     }
 
-    /**
-     * Create content using data sent from the frontend editor.
-     *
-     * @return array An array containing the new Content entity and
-     * and array of newly created blocks, indexed by the stub ids that
-     * were passed in.
-     */
-    public function createFromEditor(array $newBlockDefinitions, array $blockOrder)
+    public function saveMany(array $operations)
     {
-        return $this->em->transactional(function () use ($newBlockDefinitions, $blockOrder) {
-            $content = new Content();
-            $content->setTitle('Untitled');
+        $this->em->beginTransaction();
+        try {
+            foreach ($operations as $operation) {
+                $this->doSave($operation);
+                $this->em->commit();
+            }
+        } catch (\Exception $e) {
+            $this->em->rollback();
+            throw $e;
+        }
+    }
 
-            $newBlocks = $this->saveFromEditor($content, [], $newBlockDefinitions, $blockOrder);
+    private function doSave(OperationInterface $operation)
+    {
+        $newBlocks = $this->blockRepo->createFromDefinitions($operation->getNewBlockDefinitions());
+        $newIds = [];
+        foreach ($newBlocks as $stubId => $block) {
+            $newIds[$stubId] = $block->getId();
+        }
+        $currentBlocks = $this->blockRepo->updateFromDefinitions($operation->getBlockDefinitions());
+        $blocks = array_merge(array_values($newBlocks), $currentBlocks);
 
-            return [$content, $newBlocks];
-        });
+        // replace stub ids from new definitions in the block order
+        // with newly acquired database ids
+        // e.g. _983983498234 => some-guid-238498-230993
+        $blockOrder = $operation->getBlockOrder();
+        foreach ($blockOrder as $position => $id) {
+            if (isset($newBlocks[$id])) {
+                $blockOrder[$position] = $newBlocks[$id]->getId();
+            }
+        }
+
+        $content = $operation->getContent();
+        $this->contentRepo->setBlocks($content, $blocks);
+        $content->setBlockOrder($blockOrder);
+        $this->em->persist($content);
+        $this->em->flush();
+
+        return new OperationResult($content, $newIds);
     }
 }

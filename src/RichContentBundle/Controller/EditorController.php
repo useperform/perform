@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Perform\RichContentBundle\Entity\Content;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
+use Perform\RichContentBundle\Persister\CreateOperation;
+use Perform\RichContentBundle\Persister\UpdateOperation;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -38,10 +40,11 @@ class EditorController extends Controller
     public function saveContentAction(Request $request, Content $content)
     {
         $body = json_decode($request->getContent(), true);
-        $newBlocks = $this->get('perform_rich_content.persister')
-                   ->saveFromEditor($content, $body['blocks'], $body['newBlocks'], $body['order']);
+        $operation = new UpdateOperation($content, $body['blocks'], $body['newBlocks'], $body['order']);
+        $result = $this->get('perform_rich_content.persister')
+                ->save($operation);
 
-        return $this->saveResponse($content, $newBlocks, JsonResponse::HTTP_OK);
+        return $result->toJsonResponse(JsonResponse::HTTP_OK);
     }
 
     /**
@@ -51,22 +54,10 @@ class EditorController extends Controller
     public function saveNewContentAction(Request $request)
     {
         $body = json_decode($request->getContent(), true);
-        list($content, $newBlocks) = $this->get('perform_rich_content.persister')
-                                   ->createFromEditor($body['newBlocks'], $body['order']);
+        $operation = new CreateOperation($body['newBlocks'], $body['order']);
+        $result = $this->get('perform_rich_content.persister')
+                ->save($operation);
 
-        return $this->saveResponse($content, $newBlocks, JsonResponse::HTTP_CREATED);
-    }
-
-    private function saveResponse(Content $content, array $newBlocks, $status)
-    {
-        $newIds = [];
-        foreach ($newBlocks as $tempId => $block) {
-            $newIds[$tempId] = $block->getId();
-        }
-
-        return new JsonResponse([
-            'id' => $content->getId(),
-            'newBlocks' => $newIds,
-        ], $status);
+        return $result->toJsonResponse(JsonResponse::HTTP_CREATED);
     }
 }

@@ -8,6 +8,8 @@ use Perform\RichContentBundle\Repository\ContentRepository;
 use Perform\RichContentBundle\Persister\Persister;
 use Perform\RichContentBundle\Entity\Content;
 use Perform\RichContentBundle\Entity\Block;
+use Perform\RichContentBundle\Persister\UpdateOperation;
+use Perform\RichContentBundle\Persister\CreateOperation;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -42,7 +44,7 @@ class PersisterTest extends \PHPUnit_Framework_TestCase
         return $b;
     }
 
-    public function testSaveFromEditor()
+    public function testSaveWithUpdate()
     {
         $content = new Content();
         $currentBlock = $this->block('current1');
@@ -69,18 +71,15 @@ class PersisterTest extends \PHPUnit_Framework_TestCase
             ->with($content);
         $this->em->expects($this->once())
             ->method('flush');
-        $this->em->expects($this->any())
-            ->method('transactional')
-            ->will($this->returnCallback(function ($transactionClosure) {
-                return $transactionClosure();
-            }));
 
-        $newBlocks = $this->persister->saveFromEditor($content, ['current_defs'], ['new_defs'], ['_new_id', 'current1']);
-        $this->assertSame(['_new_id' => $newBlock], $newBlocks);
+        $operation = new UpdateOperation($content, ['current_defs'], ['new_defs'], ['_new_id', 'current1']);
+        $result = $this->persister->save($operation);
+        $this->assertSame(['_new_id' => 'new1'], $result->getNewIds());
+        $this->assertSame($content, $result->getContent());
         $this->assertSame(['new1', 'current1'], $content->getBlockOrder());
     }
 
-    public function testCreateFromEditor()
+    public function testSaveWithCreate()
     {
         $b1 = $this->block('new1');
         $b2 = $this->block('new2');
@@ -110,18 +109,14 @@ class PersisterTest extends \PHPUnit_Framework_TestCase
             }));
         $this->em->expects($this->once())
             ->method('flush');
-        $this->em->expects($this->any())
-            ->method('transactional')
-            ->will($this->returnCallback(function ($transactionClosure) {
-                return $transactionClosure();
-            }));
 
-        list($content, $newBlocks) = $this->persister->createFromEditor(['new_defs'], ['_new_1', '_new_2']);
-        $this->assertInstanceOf(Content::class, $content);
-        $this->assertSame(['_new_1' => $b1, '_new_2' => $b2], $newBlocks);
+        $operation = new CreateOperation(['new_defs'], ['_new_1', '_new_2']);
+        $result = $this->persister->save($operation);
+        $this->assertInstanceOf(Content::class, $result->getContent());
+        $this->assertSame(['_new_1' => 'new1', '_new_2' => 'new2'], $result->getNewIds());
     }
 
-    public function testSaveFromEditorWithNoNewBlocks()
+    public function testSaveWithNoNewBlocks()
     {
         $content = new Content();
         $this->blockRepo->expects($this->once())
@@ -130,12 +125,10 @@ class PersisterTest extends \PHPUnit_Framework_TestCase
         $this->blockRepo->expects($this->once())
             ->method('updateFromDefinitions')
             ->will($this->returnValue([]));
-        $this->em->expects($this->any())
-            ->method('transactional')
-            ->will($this->returnCallback(function ($transactionClosure) {
-                return $transactionClosure();
-            }));
 
-        $this->assertSame([], $this->persister->saveFromEditor($content, [], [], []));
+        $operation = new UpdateOperation($content, [], [], []);
+        $result = $this->persister->save($operation);
+        $this->assertSame([], $result->getNewIds());
+        $this->assertSame($content, $result->getContent());
     }
 }
