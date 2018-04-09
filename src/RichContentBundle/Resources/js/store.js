@@ -91,7 +91,7 @@ export default new Vuex.Store({
       // This will be used for the key on the block component to keep
       // track of DOM nodes, since we can't use the position in the
       // order array.
-      const order = data.order.map(id => {
+      const order = data.blockOrder.map(id => {
         return [id, newId()];
       });
       const editors = state.editors || [];
@@ -101,7 +101,11 @@ export default new Vuex.Store({
         loaded: true
       });
 
-      state.blocks = Object.assign({}, state.blocks, data.blocks);
+      const blocks = {};
+      data.blocks.forEach(block => {
+        blocks[block.id] = block;
+      });
+      state.blocks = Object.assign({}, state.blocks, blocks);
       state.editors = editors;
     },
 

@@ -2,6 +2,10 @@ imports:
     - { resource: services_blocks.yml }
 
 services:
+    Perform\RichContentBundle\Controller\:
+        resource: '../../Controller'
+        autoconfigure: true
+
     perform_rich_content.twig.content:
         class: Perform\RichContentBundle\Twig\Extension\ContentExtension
         arguments:
@@ -14,10 +18,12 @@ services:
         arguments:
             - "@perform_rich_content.block_type_registry"
 
-    perform_rich_content.serializer:
-        class: Perform\RichContentBundle\Serializer
+    perform_rich_content.normalizer.block:
+        class: Perform\RichContentBundle\Serializer\BlockNormalizer
         arguments:
             - "@perform_rich_content.block_type_registry"
+        tags:
+            - serializer.normalizer
 
     perform_rich_content.persister:
         class: Perform\RichContentBundle\Persister\Persister

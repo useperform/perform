@@ -1,0 +1,14 @@
+Perform\RichContentBundle\Entity\Content:
+    attributes:
+        id:
+            groups: ['default']
+        title:
+            groups: ['default']
+        blockOrder:
+            groups: ['default']
+        createdAt:
+            groups: ['default']
+        updatedAt:
+            groups: ['default']
+        blocks:
+            groups: ['default']

@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Perform\RichContentBundle\Persister\CreateOperation;
 use Perform\RichContentBundle\Persister\UpdateOperation;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -19,18 +20,9 @@ class EditorController extends Controller
     /**
      * @Route("/content/get/{id}")
      */
-    public function getContentAction(Content $content)
+    public function getContentAction(NormalizerInterface $normalizer, Content $content)
     {
-        $serializer = $this->get('perform_rich_content.serializer');
-        $blockData = [];
-        foreach ($content->getBlocks() as $block) {
-            $blockData[$block->getId()] = $serializer->serialize($block);
-        }
-
-        return new JsonResponse([
-            'blocks' => $blockData,
-            'order' => $content->getBlockOrder(),
-        ]);
+        return new JsonResponse($normalizer->normalize($content));
     }
 
     /**
