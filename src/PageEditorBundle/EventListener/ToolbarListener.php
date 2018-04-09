@@ -58,7 +58,9 @@ class ToolbarListener
             return;
         }
 
-        $html = $this->twig->render('@PerformPageEditor/toolbar.html.twig');
+        $html = $this->twig->render('@PerformPageEditor/toolbar.html.twig', [
+            'version' => $this->pageManager->getCurrentVersion(),
+        ]);
         $content = substr($content, 0, $pos).$html.substr($content, $pos);
         $response->setContent($content);
     }
