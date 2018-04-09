@@ -59,11 +59,11 @@ class VersionRepository extends EntityRepository
     }
 
     /**
-     * Find the current version for a page - either the published version, or
+     * Find the default version for a page - either the published version, or
      * the most recent version if no version has been published yet. A new
      * version will be created if none exist.
      */
-    public function findCurrentVersion($page)
+    public function findDefaultVersion($page)
     {
         $published = $this->findOneBy(['published' => true, 'page' => $page]);
         if ($published) {
