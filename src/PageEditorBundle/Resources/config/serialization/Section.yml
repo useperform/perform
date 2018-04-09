@@ -1,0 +1,8 @@
+Perform\PageEditorBundle\Entity\Section:
+    attributes:
+        id:
+            groups: ['default']
+        name:
+            groups: ['default']
+        content:
+            groups: ['default']

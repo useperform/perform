@@ -1,0 +1,14 @@
+Perform\PageEditorBundle\Entity\Version:
+    attributes:
+        id:
+            groups: ['default']
+        page:
+            groups: ['default']
+        published:
+            groups: ['default']
+        createdAt:
+            groups: ['default']
+        updatedAt:
+            groups: ['default']
+        sections:
+            groups: ['default']
