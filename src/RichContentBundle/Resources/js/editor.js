@@ -3,8 +3,11 @@ import Vue from 'vue';
 
 import store from './store';
 
+// change to edit
 const init = function(element, config) {
-  store.commit('EDITOR_ADD', config.contentId);
+  store.commit('EDITOR_ADD', {
+    contentId: config.contentId,
+  });
   const editorIndex = store.state.editors.length - 1;
   const showToolbar = !!config.showToolbar;
 
@@ -19,12 +22,26 @@ const init = function(element, config) {
       config.onChange(store, editorIndex);
     });
   }
-  if (config.contentId) {
+  if (config.contentId && !config.noLoad) {
     store.dispatch('loadContent', {
       contentId: config.contentId,
       editorIndex
     });
   }
+
+  return editorIndex;
+};
+
+const setContent = function(editorIndex, data) {
+  if (editorIndex == undefined) {
+    console.error('Unknown rich content editor ', editorIndex);
+    return;
+  }
+
+  store.commit('CONTENT_SET_DATA', {
+    editorIndex,
+    data,
+  });
 };
 
 if (!window.Perform) {
@@ -33,5 +50,6 @@ if (!window.Perform) {
 
 window.Perform.richContent = {
   init,
-  store
+  store,
+  setContent,
 }

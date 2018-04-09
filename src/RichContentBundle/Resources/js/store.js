@@ -68,24 +68,27 @@ export default new Vuex.Store({
   },
 
   mutations: {
-    EDITOR_ADD (state, payload) {
+    EDITOR_ADD(state, payload) {
       state.editors.push({
         contentId: payload.contentId,
+        loading: false,
         loaded: false,
         order: [],
       });
     },
 
-    CONTENT_LOAD(state, payload) {
-      const {contentId, editorIndex, status, data} = payload;
-      if (!contentId) {
-        return;
-      }
+    CONTENT_LOADING(state, payload) {
+      const {editorIndex} = payload;
+      state.editors[editorIndex].loading = true;
+    },
 
-      if (!status) {
-        //show loading state
-        return;
-      }
+    CONTENT_LOADED(state, payload) {
+      const {editorIndex} = payload;
+      state.editors[editorIndex].loading = false;
+    },
+
+    CONTENT_SET_DATA(state, payload) {
+      const {contentId, editorIndex, data} = payload;
 
       // Associate each ordered block with a random id.
       // This will be used for the key on the block component to keep
@@ -94,19 +97,14 @@ export default new Vuex.Store({
       const order = data.blockOrder.map(id => {
         return [id, newId()];
       });
-      const editors = state.editors || [];
-      editors[editorIndex] = Object.assign(editors[editorIndex] || {}, {
-        order: order,
-        contentId,
-        loaded: true
-      });
+      state.editors[editorIndex].order = order;
+      state.editors[editorIndex].loaded = true;
 
       const blocks = {};
       data.blocks.forEach(block => {
         blocks[block.id] = block;
       });
       state.blocks = Object.assign({}, state.blocks, blocks);
-      state.editors = editors;
     },
 
     CONTENT_SAVE: function(state, payload) {
@@ -226,14 +224,19 @@ export default new Vuex.Store({
   actions: {
     loadContent({commit}, data) {
       const {editorIndex, contentId} = data;
+      commit('CONTENT_LOADING', {
+        editorIndex
+      });
       const url = '/admin/_editor/content/get/' + contentId;
       axios.get(url)
         .then(json => {
-          commit('CONTENT_LOAD', {
+          commit('CONTENT_SET_DATA', {
             editorIndex,
             contentId,
-            status: true,
             data: json.data,
+          });
+          commit('CONTENT_LOADED', {
+            editorIndex
           });
         });
     },
