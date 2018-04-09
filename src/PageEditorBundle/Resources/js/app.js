@@ -1,7 +1,8 @@
 import Toolbar from './components/Toolbar';
 import Vue from 'vue';
+import store from './store';
 
-const editPage = function() {
+const editPage = function(versionId) {
   const parent = document.createElement('div');
   document.body.appendChild(parent);
 
@@ -16,10 +17,18 @@ const editPage = function() {
   // disrupting indexes
   for (var i=sections.length; i--;) {
     var section = sections[i];
-    Perform.richContent.init(section, {
-      contentId: section.getAttribute('data-content-id'),
+    var editorIndex = Perform.richContent.init(section, {
+      noLoad: true,
+    });
+    store.commit('addSection', {
+      name: section.getAttribute('data-section-name'),
+      editorIndex,
     });
   }
+
+  store.dispatch('loadVersion', {
+    versionId,
+  });
 };
 
 if (!window.Perform) {
