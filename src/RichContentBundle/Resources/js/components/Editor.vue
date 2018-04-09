@@ -1,6 +1,6 @@
 <template>
   <div class="p-rich-editor">
-    <Toolbar :editorIndex="editorIndex" />
+    <Toolbar :editorIndex="editorIndex" v-if="showToolbar" />
     <BlockList :editorIndex="editorIndex" />
   </div>
 </template>
@@ -11,7 +11,10 @@
  import css from './editor.scss';
 
  export default {
-   props: ['editorIndex'],
+   props: [
+     'editorIndex',
+     'showToolbar',
+   ],
 
    data() {
      return {

@@ -6,6 +6,7 @@ $(function () {
 
     window.Perform.richContent.init(editor, {
       contentId: hiddenInput.val(),
+      showToolbar: true,
       onChange: function(store, editorIndex) {
         hiddenInput.val(store.state.editors[editorIndex].contentId);
       },

@@ -6,10 +6,11 @@ import store from './store';
 const init = function(element, config) {
   store.commit('EDITOR_ADD', config.contentId);
   const editorIndex = store.state.editors.length - 1;
+  const showToolbar = !!config.showToolbar;
 
   new Vue({
     el: element,
-    render: h => h(Editor, {props: {editorIndex}}),
+    render: h => h(Editor, {props: {editorIndex, showToolbar}}),
     store
   });
 
