@@ -41,10 +41,33 @@ export default new Vuex.Store({
           });
           json.data.sections.forEach(section => {
             const editorIndex = context.state.sections[section.name];
-            window.Perform.richContent.setContent(editorIndex, section.content);
+            Perform.richContent.store.commit('CONTENT_SET_DATA', {
+              editorIndex,
+              data: section.content,
+            });
+            Perform.richContent.store.commit('CONTENT_SET_ID', {
+              editorIndex,
+              contentId: section.content.id
+            });
           });
           // commit loaded
         });
     },
+
+    save(context) {
+      // commit saving
+      const url = '/admin/_page_editor/save/' + context.state.versionId;
+      const data = Perform.richContent.store.getters.allSaveOperations;
+      axios.post(url, data)
+        .then(json => {
+          json.data.updates.forEach(update => {
+            const editorIndex = Perform.richContent.store.getters.editorIndexesWithContentId(update.contentId)[0];
+            Perform.richContent.store.commit('CONTENT_HANDLE_NEW_BLOCKS', {
+              editorIndex,
+              newBlockIds: update.newBlockIds,
+            });
+          });
+        });
+    }
   }
 });

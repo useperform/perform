@@ -8,7 +8,8 @@ use Perform\PageEditorBundle\Entity\Version;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Serializer;
+use Perform\RichContentBundle\Persister\Persister;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -18,17 +19,25 @@ class EditorController extends Controller
     /**
      * @Route("/load/{id}")
      */
-    public function loadVersionAction(NormalizerInterface $normalizer, Version $version)
+    public function loadVersionAction(Serializer $serializer, Version $version)
     {
-        return new JsonResponse($normalizer->normalize($version, null, ['groups' => ['default']]));
+        return new JsonResponse($serializer->normalize($version, null, ['groups' => ['default']]));
     }
 
     /**
      * @Route("/save/{id}")
      * @Method("POST")
      */
-    public function saveVersionAction(Request $request, Version $version)
+    public function saveVersionAction(Serializer $serializer, Persister $persister, Request $request, Version $version)
     {
+        $operations = $serializer->deserialize($request->getContent(), 'Perform\RichContentBundle\Persister\OperationInterface[]', 'json');
+        // check if the content entities are actually linked to the version using an updater service
+
+        $results = $persister->saveMany($operations);
+
+        return new JsonResponse([
+            'updates' => $results,
+        ]);
     }
 
     /**

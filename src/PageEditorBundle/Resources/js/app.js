@@ -8,7 +8,8 @@ const editPage = function(versionId) {
 
   new Vue({
     el: parent,
-    render: h => h(Toolbar)
+    render: h => h(Toolbar, {props: {finishUrl: '/admin/_page_editor/end'}}),
+    store,
   });
 
   var sections = document.getElementsByClassName('perform-page-editor-section');
