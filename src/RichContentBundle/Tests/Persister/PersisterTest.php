@@ -10,6 +10,7 @@ use Perform\RichContentBundle\Entity\Content;
 use Perform\RichContentBundle\Entity\Block;
 use Perform\RichContentBundle\Persister\UpdateOperation;
 use Perform\RichContentBundle\Persister\CreateOperation;
+use Perform\RichContentBundle\Persister\OperationResult;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -130,5 +131,30 @@ class PersisterTest extends \PHPUnit_Framework_TestCase
         $result = $this->persister->save($operation);
         $this->assertSame([], $result->getNewIds());
         $this->assertSame($content, $result->getContent());
+    }
+
+    public function testSaveMany()
+    {
+        $content = new Content();
+        $op1 = new UpdateOperation($content, [], [], []);
+        $op2 = new UpdateOperation($content, [], [], []);
+        $op3 = new UpdateOperation($content, [], [], []);
+        $this->blockRepo->expects($this->any())
+            ->method('createFromDefinitions')
+            ->will($this->returnValue([]));
+        $this->blockRepo->expects($this->any())
+            ->method('updateFromDefinitions')
+            ->will($this->returnValue([]));
+        $this->em->expects($this->once())
+            ->method('beginTransaction');
+        $this->em->expects($this->once())
+            ->method('commit');
+
+
+        $results = $this->persister->saveMany([$op1, $op2, $op3]);
+        $this->assertSame(3, count($results));
+        $this->assertInstanceOf(OperationResult::class, $results[0]);
+        $this->assertInstanceOf(OperationResult::class, $results[1]);
+        $this->assertInstanceOf(OperationResult::class, $results[2]);
     }
 }

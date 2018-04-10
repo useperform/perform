@@ -26,10 +26,9 @@ class Persister
     }
 
     /**
-     * Create or update content using data from the frontend editor.
+     * Create or update content.
      *
-     * @return Block[] An array of newly created blocks, indexed by
-     * the stub ids that were passed in.
+     * @return OperationResult
      */
     public function save(OperationInterface $operation)
     {
@@ -45,14 +44,22 @@ class Persister
         }
     }
 
+    /**
+     * Create or update content in batch.
+     *
+     * @return OperationResult[]
+     */
     public function saveMany(array $operations)
     {
         $this->em->beginTransaction();
         try {
+            $results = [];
             foreach ($operations as $operation) {
-                $this->doSave($operation);
-                $this->em->commit();
+                $results[] = $this->doSave($operation);
             }
+            $this->em->commit();
+
+            return $results;
         } catch (\Exception $e) {
             $this->em->rollback();
             throw $e;
