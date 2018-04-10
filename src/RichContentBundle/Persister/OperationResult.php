@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class OperationResult
+class OperationResult implements \JsonSerializable
 {
     protected $content;
     protected $newIds = [];
@@ -29,11 +29,11 @@ class OperationResult
         return $this->newIds;
     }
 
-    public function toJsonResponse($statusCode)
+    public function jsonSerialize()
     {
-        return new JsonResponse([
+        return [
             'id' => $this->content->getId(),
             'newBlocks' => $this->newIds,
-        ], $statusCode);
+        ];
     }
 }

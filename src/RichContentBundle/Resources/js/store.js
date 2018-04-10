@@ -255,10 +255,7 @@ export default new Vuex.Store({
         editorIndex,
         status: false
       });
-      const contentId = context.state.editors[editorIndex].contentId;
-      const url = contentId ? '/admin/_editor/content/save/' + contentId
-              : '/admin/_editor/content/save-new';
-
+      const url = '/admin/_editor/content/save';
       axios.post(url, context.getters.editorSaveOperation(editorIndex))
         .then(json => {
           context.commit('CONTENT_SAVE', {

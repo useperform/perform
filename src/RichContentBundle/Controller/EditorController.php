@@ -2,15 +2,15 @@
 
 namespace Perform\RichContentBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Perform\RichContentBundle\Entity\Content;
+use Perform\RichContentBundle\Persister\OperationInterface;
+use Perform\RichContentBundle\Persister\Persister;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Perform\RichContentBundle\Persister\CreateOperation;
-use Perform\RichContentBundle\Persister\UpdateOperation;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -20,36 +20,21 @@ class EditorController extends Controller
     /**
      * @Route("/content/get/{id}")
      */
-    public function getContentAction(NormalizerInterface $normalizer, Content $content)
+    public function getContentAction(Serializer $serializer, Content $content)
     {
-        return new JsonResponse($normalizer->normalize($content, null, ['groups' => ['default']]));
+        return new JsonResponse($serializer->normalize($content, null, ['groups' => ['default']]));
     }
 
     /**
-     * @Route("/content/save/{id}")
+     * @Route("/content/save")
      * @Method("POST")
      */
-    public function saveContentAction(Request $request, Content $content)
+    public function saveContentAction(Serializer $serializer, Persister $persister, Request $request)
     {
-        $body = json_decode($request->getContent(), true);
-        $operation = new UpdateOperation($content, $body['blocks'], $body['newBlocks'], $body['order']);
-        $result = $this->get('perform_rich_content.persister')
-                ->save($operation);
+        $operation = $serializer->deserialize($request->getContent(), OperationInterface::class, 'json');
+        $result = $persister->save($operation);
 
-        return $result->toJsonResponse(JsonResponse::HTTP_OK);
-    }
-
-    /**
-     * @Route("/content/save-new")
-     * @Method("POST")
-     */
-    public function saveNewContentAction(Request $request)
-    {
-        $body = json_decode($request->getContent(), true);
-        $operation = new CreateOperation($body['newBlocks'], $body['order']);
-        $result = $this->get('perform_rich_content.persister')
-                ->save($operation);
-
-        return $result->toJsonResponse(JsonResponse::HTTP_CREATED);
+        return new JsonResponse($serializer->normalize($result));
+        // JsonResponse::HTTP_CREATED;
     }
 }
