@@ -5,34 +5,6 @@ import blockTypes from './components/blocktypes';
 
 Vue.use(Vuex);
 
-// convert a editor state into a request body for the save endpoint
-const getPostBody = function(state, editorIndex) {
-  let currentBlocks = {};
-  let newBlocks = {};
-  let order = [];
-  const blockIds = Object.keys(state.blocks);
-
-  state.editors[editorIndex].order.forEach(item => {
-    let id = item[0];
-    let block = state.blocks[id];
-    order.push(item[0]);
-
-    // new blocks have a stub id starting with _
-    if (id.substring(0, 1) === '_') {
-      newBlocks[id] = block;
-      return;
-    }
-    currentBlocks[id] = block;
-  });
-
-  return {
-    blocks: currentBlocks,
-    newBlocks,
-    order,
-  };
-};
-
-
 const newId = function() {
   return Math.random().toString().substring(2);
 }
@@ -65,6 +37,42 @@ export default new Vuex.Store({
   },
 
   getters: {
+    // convert an editor state into a request body for saving
+    editorSaveOperation: (state) => (editorIndex) => {
+      let currentBlocks = {};
+      let newBlocks = {};
+      let order = [];
+      const blockIds = Object.keys(state.blocks);
+
+      state.editors[editorIndex].order.forEach(item => {
+        let id = item[0];
+        let block = state.blocks[id];
+        order.push(item[0]);
+
+        // new blocks have a stub id starting with _
+        if (id.substring(0, 1) === '_') {
+          newBlocks[id] = block;
+          return;
+        }
+        currentBlocks[id] = block;
+      });
+
+      return {
+        contentId: state.editors[editorIndex].contentId,
+        blocks: currentBlocks,
+        newBlocks,
+        order,
+      };
+    },
+
+    allSaveOperations(state, getters) {
+      let operations = [];
+      for (let i=0; i < state.editors.length; i++) {
+        operations.push(getters.editorSaveOperation(i));
+      }
+
+      return operations;
+    }
   },
 
   mutations: {
@@ -251,7 +259,7 @@ export default new Vuex.Store({
       const url = contentId ? '/admin/_editor/content/save/' + contentId
               : '/admin/_editor/content/save-new';
 
-      axios.post(url, getPostBody(context.state, editorIndex))
+      axios.post(url, context.getters.editorSaveOperation(editorIndex))
         .then(json => {
           context.commit('CONTENT_SAVE', {
             editorIndex: editorIndex,
