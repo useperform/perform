@@ -32,32 +32,11 @@ const init = function(element, config) {
   return editorIndex;
 };
 
-const setContent = function(editorIndex, data) {
-  if (editorIndex == undefined) {
-    console.error('Unknown rich content editor ', editorIndex);
-    return;
-  }
-
-  store.commit('CONTENT_SET_DATA', {
-    editorIndex,
-    data,
-  });
-};
-
-const setContentId = function(editorIndex, contentId) {
-  store.commit('CONTENT_SET_ID', {
-    editorIndex,
-    contentId,
-  });
-};
-
 if (!window.Perform) {
   window.Perform = {};
 }
 
 window.Perform.richContent = {
   init,
-  store,
-  setContent,
-  setContentId,
+  store
 }
