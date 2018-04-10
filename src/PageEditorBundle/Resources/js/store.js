@@ -7,6 +7,9 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     versionId: null,
+    versionTitle: '',
+    // array of available version objects
+    versions: [],
     // richContent editor indexes, page names as keys
     // {
     //   main: 0,
@@ -17,8 +20,13 @@ export default new Vuex.Store({
   },
 
   mutations: {
-    setVersionId(state, payload) {
-      state.versionId = payload.versionId;
+    setCurrentVersion(state, payload) {
+      const {title, id} = payload;
+      state.versionTitle = title;
+      state.versionId = id;
+    },
+    setVersions(state, payload) {
+      state.versions = payload.versions;
     },
     addSection(state, payload) {
       const {name, editorIndex} = payload;
@@ -36,10 +44,17 @@ export default new Vuex.Store({
       const url = '/admin/_page_editor/load/' + versionId;
       axios.get(url)
         .then(json => {
-          context.commit('setVersionId', {
-            versionId,
+          context.commit('setCurrentVersion', {
+            id: versionId,
+            title: json.data.version.title
           });
-          json.data.sections.forEach(section => {
+          context.commit('setVersions', {
+            versions: json.data.availableVersions,
+          });
+
+          // reset blocks in rich content to prevent memory leaks
+
+          json.data.version.sections.forEach(section => {
             const editorIndex = context.state.sections[section.name];
             Perform.richContent.store.commit('CONTENT_SET_DATA', {
               editorIndex,
