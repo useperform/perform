@@ -80,6 +80,7 @@ export default new Vuex.Store({
       state.editors.push({
         contentId: payload.contentId,
         loading: false,
+        saving: false,
         loaded: false,
         order: [],
       });
@@ -95,8 +96,13 @@ export default new Vuex.Store({
       state.editors[editorIndex].loading = false;
     },
 
+    CONTENT_SET_ID(state, payload) {
+      const {editorIndex, contentId} = payload;
+      state.editors[editorIndex].contentId = contentId;
+    },
+
     CONTENT_SET_DATA(state, payload) {
-      const {contentId, editorIndex, data} = payload;
+      const {editorIndex, data} = payload;
 
       // Associate each ordered block with a random id.
       // This will be used for the key on the block component to keep
@@ -115,17 +121,22 @@ export default new Vuex.Store({
       state.blocks = Object.assign({}, state.blocks, blocks);
     },
 
-    CONTENT_SAVE: function(state, payload) {
-      const {json, editorIndex, status} = payload;
+    CONTENT_SAVING: function(state, payload) {
+      const {editorIndex} = payload;
+      state.editors[editorIndex].saving = true;
+    },
 
-      if (!status) {
-        //show loading state
-        return;
-      }
+    CONTENT_SAVED(state, payload) {
+      const {editorIndex} = payload;
+      state.editors[editorIndex].saving = false;
+    },
+
+    CONTENT_HANDLE_NEW_BLOCKS: function(state, payload) {
+      const {newBlockIds, editorIndex} = payload;
 
       // replace stub ids in blocks with new database ids
       let blocks = Object.assign({}, state.blocks);
-      const newIds = Object.entries(json.newBlocks);
+      const newIds = Object.entries(newBlockIds);
       for (let i=0; i < newIds.length; i++) {
         const stubId = newIds[i][0];
         const dbId = newIds[i][1];
@@ -135,15 +146,14 @@ export default new Vuex.Store({
       // replace stub ids in the order with new database ids
       const editors = state.editors.map(editor => Object.assign({}, editor));
       const order = editors[editorIndex].order.map(item => {
-        const dbId = json.newBlocks[item[0]];
+        const dbId = newBlockIds[item[0]];
         if (dbId) {
           return [dbId, item[1]];
         }
 
-        return item
+        return item;
       });
       editors[editorIndex].order = order;
-      editors[editorIndex].contentId = json.id;
 
       state.blocks = blocks;
       state.editors = editors;
@@ -251,22 +261,24 @@ export default new Vuex.Store({
 
     save(context, payload) {
       const {editorIndex, onSuccess, onError} = payload;
-      context.commit('CONTENT_SAVE', {
-        editorIndex,
-        status: false
-      });
+      context.commit('CONTENT_SAVING', {editorIndex});
       const url = '/admin/_editor/content/save';
       axios.post(url, context.getters.editorSaveOperation(editorIndex))
         .then(json => {
-          context.commit('CONTENT_SAVE', {
-            editorIndex: editorIndex,
-            status: true,
-            json: json.data
+          context.commit('CONTENT_HANDLE_NEW_BLOCKS', {
+            editorIndex,
+            newBlockIds: json.data.newBlockIds
           });
+          context.commit('CONTENT_SET_ID', {
+            editorIndex,
+            contentId: json.data.contentId
+          });
+          context.commit('CONTENT_SAVED', {editorIndex});
           onSuccess(json);
         })
         .catch(error => {
-          Perform.base.showError(error);
+          Perform.base.showError('An error occurred.');
+          console.error(error);
           onError(error);
         });
     },

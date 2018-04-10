@@ -86,7 +86,6 @@
      },
 
      onAway() {
-       console.log('away');
        this.choosing = false;
      },
 

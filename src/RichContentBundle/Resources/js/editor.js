@@ -44,6 +44,13 @@ const setContent = function(editorIndex, data) {
   });
 };
 
+const setContentId = function(editorIndex, contentId) {
+  store.commit('CONTENT_SET_ID', {
+    editorIndex,
+    contentId,
+  });
+};
+
 if (!window.Perform) {
   window.Perform = {};
 }
@@ -52,4 +59,5 @@ window.Perform.richContent = {
   init,
   store,
   setContent,
+  setContentId,
 }

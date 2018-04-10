@@ -32,8 +32,8 @@ class OperationResult implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'id' => $this->content->getId(),
-            'newBlocks' => $this->newIds,
+            'contentId' => $this->content->getId(),
+            'newBlockIds' => $this->newIds,
         ];
     }
 }
