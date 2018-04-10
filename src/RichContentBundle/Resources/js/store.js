@@ -72,6 +72,17 @@ export default new Vuex.Store({
       }
 
       return operations;
+    },
+
+    editorIndexesWithContentId: (state) => (contentId) => {
+      let indexes = [];
+      for (let i=0; i < state.editors.length; i++) {
+        if (state.editors[i].contentId === contentId) {
+          indexes.push(i);
+        }
+      }
+
+      return indexes;
     }
   },
 
