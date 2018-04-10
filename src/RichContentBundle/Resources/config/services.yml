@@ -25,6 +25,13 @@ services:
         tags:
             - serializer.normalizer
 
+    perform_rich_content.denormalizer.operation:
+        class: Perform\RichContentBundle\Serializer\OperationDenormalizer
+        arguments:
+            - "@perform_rich_content.repo.content"
+        tags:
+            - serializer.normalizer
+
     perform_rich_content.persister:
         class: Perform\RichContentBundle\Persister\Persister
         arguments:
