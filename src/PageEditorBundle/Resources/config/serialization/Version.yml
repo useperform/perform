@@ -1,7 +1,9 @@
 Perform\PageEditorBundle\Entity\Version:
     attributes:
         id:
-            groups: ['default']
+            groups: ['default', 'summary']
+        title:
+            groups: ['default', 'summary']
         page:
             groups: ['default']
         published:

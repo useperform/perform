@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Serializer;
 use Perform\RichContentBundle\Persister\Persister;
+use Perform\PageEditorBundle\Repository\VersionRepository;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -19,9 +20,14 @@ class EditorController extends Controller
     /**
      * @Route("/load/{id}")
      */
-    public function loadVersionAction(Serializer $serializer, Version $version)
+    public function loadVersionAction(VersionRepository $repo, Serializer $serializer, Version $version)
     {
-        return new JsonResponse($serializer->normalize($version, null, ['groups' => ['default']]));
+        $availableVersions = $repo->findRelated($version);
+
+        return new JsonResponse([
+            'version' => $serializer->normalize($version, null, ['groups' => ['default']]),
+            'availableVersions' => $serializer->normalize($availableVersions, null, ['groups' => ['summary']]),
+        ]);
     }
 
     /**

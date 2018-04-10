@@ -84,4 +84,16 @@ class VersionRepository extends EntityRepository
 
         return $firstVersion;
     }
+
+    /**
+     * Find versions for the same page as the given version.
+     */
+    public function findRelated(Version $version)
+    {
+        return $this->findBy([
+            'page' => $version->getPage(),
+        ], [
+            'updatedAt' => 'DESC',
+        ]);
+    }
 }
