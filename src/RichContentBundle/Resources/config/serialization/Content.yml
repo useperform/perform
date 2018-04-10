@@ -4,11 +4,11 @@ Perform\RichContentBundle\Entity\Content:
             groups: ['default']
         title:
             groups: ['default']
-        blockOrder:
-            groups: ['default']
         createdAt:
             groups: ['default']
         updatedAt:
+            groups: ['default']
+        blockOrder:
             groups: ['default']
         blocks:
             groups: ['default']

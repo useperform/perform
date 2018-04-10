@@ -22,7 +22,7 @@ class EditorController extends Controller
      */
     public function getContentAction(NormalizerInterface $normalizer, Content $content)
     {
-        return new JsonResponse($normalizer->normalize($content));
+        return new JsonResponse($normalizer->normalize($content, null, ['groups' => ['default']]));
     }
 
     /**
