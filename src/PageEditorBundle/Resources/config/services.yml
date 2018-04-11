@@ -61,6 +61,12 @@ services:
         arguments:
             - "PerformPageEditorBundle:Version"
 
+    perform_page_editor.persister:
+        class: Perform\PageEditorBundle\Persister\Persister
+        arguments:
+            - "@perform_rich_content.persister"
+            - "@doctrine.orm.entity_manager"
+
     Perform\PageEditorBundle\DataFixtures\ORM\LoadVersionData:
         class: Perform\PageEditorBundle\DataFixtures\ORM\LoadVersionData
         arguments:
