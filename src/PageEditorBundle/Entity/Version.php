@@ -189,4 +189,22 @@ class Version
             }
         }
     }
+
+    /**
+     * Return all the rich content entities from this version's sections.
+     *
+     * @return Content[]
+     */
+    public function getAllContent()
+    {
+        $entities = [];
+        foreach ($this->sections as $section) {
+            $content = $section->getContent();
+            if ($content && !in_array($content, $entities, true)) {
+                $entities[] = $content;
+            }
+        }
+
+        return $entities;
+    }
 }
