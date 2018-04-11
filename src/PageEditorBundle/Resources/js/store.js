@@ -52,7 +52,11 @@ export default new Vuex.Store({
             versions: json.data.availableVersions,
           });
 
+          Perform.richContent.store.commit('EDITORS_CLEAR', {
+            editorIndexes: Object.values(context.state.sections),
+          });
           // reset blocks in rich content to prevent memory leaks
+          // Perform.richContent.store.commit('BLOCKS_CLEAR');
 
           json.data.version.sections.forEach(section => {
             const editorIndex = context.state.sections[section.name];
@@ -71,12 +75,24 @@ export default new Vuex.Store({
 
     save(context) {
       // commit saving
-      const url = '/admin/_page_editor/save/' + context.state.versionId;
-      const data = Perform.richContent.store.getters.allSaveOperations;
+      const url = '/admin/_page_editor/save';
+      let data = {
+        versionId: context.state.versionId,
+        sections: {},
+      };
+      Object.keys(context.state.sections).forEach(sectionName => {
+        data.sections[sectionName] = Perform.richContent.store.getters.editorSaveOperation(context.state.sections[sectionName]);
+      });
       axios.post(url, data)
         .then(json => {
-          json.data.updates.forEach(update => {
-            const editorIndex = Perform.richContent.store.getters.editorIndexesWithContentId(update.contentId)[0];
+          let updates = json.data.updates;
+          Object.keys(updates).forEach(sectionName => {
+            let editorIndex = context.state.sections[sectionName];
+            let update = updates[sectionName];
+            Perform.richContent.store.commit('CONTENT_SET_ID', {
+              editorIndex,
+              contentId: update.contentId,
+            });
             Perform.richContent.store.commit('CONTENT_HANDLE_NEW_BLOCKS', {
               editorIndex,
               newBlockIds: update.newBlockIds,
