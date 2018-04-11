@@ -39,6 +39,12 @@ services:
         tags:
             - { name: perform_base.type, alias: media }
 
+    perform_media.repo.file:
+        class: Perform\MediaBundle\Repository\FileRepository
+        factory: ["@doctrine.orm.entity_manager", "getRepository"]
+        arguments:
+            - "PerformMediaBundle:File"
+
     Perform\MediaBundle\Command\:
         resource: '../../Command'
         public: false

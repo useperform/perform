@@ -1,0 +1,9 @@
+<script src="{{asset('/bundles/performrichcontent/editor.js')}}"></script>
+<script src="{{asset('/bundles/performmedia/app.js')}}"></script>
+<script src="{{asset('/bundles/performpageeditor/app.js')}}"></script>
+
+<script>
+ (function() {
+   Perform.pageEditor.editPage('{{version.id}}');
+ })();
+</script>

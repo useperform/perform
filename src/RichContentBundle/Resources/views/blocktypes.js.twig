@@ -1,0 +1,14 @@
+{%- for name, type in types %}
+import {{name|capitalize}} from './types/{{name|capitalize}}';
+{% endfor %}
+
+export default {
+{%- for name, type in types %}
+  {{name}}: {
+    class: {{name|capitalize}},
+    name: '{{name|capitalize}}',
+    description: '{{type.description|raw}}',
+    defaults: {{type.defaults|json_encode|raw}},
+  },
+{% endfor %}
+}

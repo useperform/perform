@@ -24,6 +24,7 @@
         "symfony/framework-bundle": "^3.4",
         "symfony/monolog-bundle": "^2.11",
         "symfony/security-bundle": "^3.4",
+        "symfony/serializer": "^3.4",
         "symfony/swiftmailer-bundle": "^2.3",
         "symfony/twig-bundle": "^3.4",
         "symfony/validator": "^3.4",
@@ -60,6 +61,7 @@
         "perform/mailing-list-bundle": "self.version",
         "perform/media-bundle": "self.version",
         "perform/notification-bundle": "self.version",
+        "perform/rich-content-bundle": "self.version",
         "perform/user-bundle": "self.version"
     },
     "autoload": {

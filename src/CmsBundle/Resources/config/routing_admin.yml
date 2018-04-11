@@ -1,9 +1,0 @@
-sessions:
-    resource: "@PerformCmsBundle/Controller/SessionController.php"
-    type:     annotation
-    prefix: session
-
-editor:
-    resource: "@PerformCmsBundle/Controller/EditorController.php"
-    type:     annotation
-    prefix: editor

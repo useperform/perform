@@ -1,0 +1,83 @@
+imports:
+    - { resource: services_blocks.yml }
+
+services:
+    Perform\RichContentBundle\Controller\:
+        resource: '../../Controller'
+        autoconfigure: true
+
+    perform_rich_content.twig.content:
+        class: Perform\RichContentBundle\Twig\Extension\ContentExtension
+        arguments:
+            - "@perform_rich_content.renderer"
+        tags:
+            - {name: twig.extension}
+
+    perform_rich_content.renderer:
+        class: Perform\RichContentBundle\Renderer\Renderer
+        arguments:
+            - "@perform_rich_content.block_type_registry"
+
+    perform_rich_content.normalizer.block:
+        class: Perform\RichContentBundle\Serializer\BlockNormalizer
+        arguments:
+            - "@perform_rich_content.block_type_registry"
+        tags:
+            - serializer.normalizer
+
+    perform_rich_content.denormalizer.operation:
+        class: Perform\RichContentBundle\Serializer\OperationDenormalizer
+        arguments:
+            - "@perform_rich_content.repo.content"
+        tags:
+            - serializer.normalizer
+
+    perform_rich_content.persister:
+        class: Perform\RichContentBundle\Persister\Persister
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@perform_rich_content.repo.content"
+            - "@perform_rich_content.repo.block"
+
+    perform_rich_content.repo.content:
+        class: Perform\RichContentBundle\Repository\ContentRepository
+        factory: ["@doctrine.orm.entity_manager", "getRepository"]
+        arguments:
+            - "PerformRichContentBundle:Content"
+
+    perform_rich_content.repo.block:
+        class: Perform\RichBlockBundle\Repository\BlockRepository
+        factory: ["@doctrine.orm.entity_manager", "getRepository"]
+        arguments:
+            - "PerformRichContentBundle:Block"
+
+    perform_rich_content.block_type_registry:
+        class: Perform\RichContentBundle\BlockType\BlockTypeRegistry
+
+    perform_rich_content.warmer.block_type:
+        class: Perform\RichContentBundle\CacheWarmer\BlockTypeWarmer
+        arguments:
+            - "@perform_rich_content.block_type_registry"
+            - "@twig"
+        tags:
+            - {name: kernel.cache_warmer}
+
+
+    perform_rich_content.type:
+        class: Perform\RichContentBundle\Type\RichContentType
+        arguments:
+            - "@perform_base.asset_container"
+        tags:
+            - {name: perform_base.type, alias: rich_content}
+
+    perform_rich_content.fixture_profile_registry:
+        class: Perform\RichContentBundle\DataFixtures\Profile\ProfileRegistry
+        arguments:
+            - []
+
+    perform_rich_content.fixture_manager:
+        class: Perform\RichContentBundle\DataFixtures\FixtureManager
+        arguments:
+            - "@perform_rich_content.fixture_profile_registry"
+            - "@perform_rich_content.block_type_registry"
+            - "@doctrine.orm.entity_manager"

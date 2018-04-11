@@ -36,7 +36,7 @@ class TestKernel extends Kernel
             new Perform\EventsBundle\PerformEventsBundle(),
             new Perform\AnalyticsBundle\PerformAnalyticsBundle(),
             new Perform\MailingListBundle\PerformMailingListBundle(),
-            new Perform\CmsBundle\PerformCmsBundle(),
+            new Perform\PageEditorBundle\PerformPageEditorBundle(),
             new Perform\MusicBundle\PerformMusicBundle(),
             new Perform\MediaPlayerBundle\PerformMediaPlayerBundle(),
 

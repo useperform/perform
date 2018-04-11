@@ -1,0 +1,22 @@
+Perform\PageEditorBundle\Entity\Section:
+    type: entity
+    table: perform_page_editor_section
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        name:
+            type: string
+    manyToOne:
+        version:
+            targetEntity: Version
+            inversedBy: sections
+            joinColumn:
+                nullable: false
+        content:
+            targetEntity: Perform\RichContentBundle\Entity\Content
+            joinColumn:
+                nullable: false
