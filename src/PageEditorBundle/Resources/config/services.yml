@@ -67,6 +67,13 @@ services:
             - "@perform_rich_content.persister"
             - "@doctrine.orm.entity_manager"
 
+    perform_page_editor.denormalizer.version_update:
+        class: Perform\PageEditorBundle\Serializer\VersionUpdateDenormalizer
+        arguments:
+            - "@perform_page_editor.repo.version"
+        tags:
+            - serializer.normalizer
+
     Perform\PageEditorBundle\DataFixtures\ORM\LoadVersionData:
         class: Perform\PageEditorBundle\DataFixtures\ORM\LoadVersionData
         arguments:
