@@ -102,34 +102,16 @@ class PageManager
 
         if (!$section) {
             // throw exception for debug, recover gracefully for prod
-            $section = $this->createBlankSection($version, $sectionName);
+            return '';
         }
 
         return $this->renderer->render($section->getContent());
     }
 
-    protected function createBlankSection(Version $version, $name)
-    {
-        $section = new Section();
-        $section->setName($name);
-        $content = new Content();
-        $content->setTitle('');
-        $section->setContent($content);
-        $section->setVersion($version);
-        $this->entityManager->persist($content);
-        $this->entityManager->persist($section);
-        $this->entityManager->flush();
-
-        return $section;
-    }
-
     protected function renderEditorSection($sectionName)
     {
-        $version = $this->getCurrentVersion();
-        $section = $version->getSection($sectionName) ?: $this->createBlankSection($version, $sectionName);
-
         return $this->twig->render('@PerformPageEditor/section.html.twig', [
-            'section' => $section,
+            'sectionName' => $sectionName,
         ]);
     }
 }
