@@ -30,7 +30,9 @@ class VersionRepository extends EntityRepository
     }
 
     /**
-     * Get the names of all pages.
+     * Get the names of pages with at least one version.
+     *
+     * @return array
      */
     public function getPageNames()
     {
@@ -40,21 +42,6 @@ class VersionRepository extends EntityRepository
 
         return array_map(function($result) {
             return $result['page'];
-        }, $query->getScalarResult());
-    }
-
-    /**
-     * Get all version titles for a page.
-     */
-    public function getTitlesForPage($page)
-    {
-        $query = $this->_em->createQuery(
-            'SELECT v.title FROM PerformPageEditorBundle:Version v WHERE v.page = :page'
-        );
-        $query->setParameter('page', $page);
-
-        return array_map(function($result) {
-            return $result['title'];
         }, $query->getScalarResult());
     }
 

@@ -4,6 +4,11 @@ services:
         autowire: true
         autoconfigure: true
 
+    Perform\PageEditorBundle\Command\:
+        resource: '../../Command'
+        autowire: true
+        autoconfigure: true
+
     perform_page_editor.page_manager:
         class: Perform\PageEditorBundle\PageManager
         arguments:
