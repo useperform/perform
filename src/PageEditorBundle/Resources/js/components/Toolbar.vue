@@ -49,6 +49,7 @@
      },
 
      publish() {
+       this.$store.dispatch('publish');
      },
 
      loadVersion(versionId) {

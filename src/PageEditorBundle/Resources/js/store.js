@@ -82,6 +82,15 @@ export default new Vuex.Store({
               newBlockIds: update.newBlockIds,
             });
           });
+          alert('Version saved.');
+        });
+    },
+
+    publish(context) {
+      const url = '/admin/_page_editor/publish/'+context.state.versionId;
+      axios.post(url)
+        .then(json => {
+          alert('Version published.');
         });
     }
   }

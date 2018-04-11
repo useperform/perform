@@ -50,7 +50,10 @@ class EditorController extends Controller
      * @Route("/publish/{id}")
      * @Method("POST")
      */
-    public function publishVersionAction(Version $version)
+    public function publishVersionAction(VersionRepository $repo, Version $version)
     {
+        $repo->markPublished($version);
+
+        return new JsonResponse([]);
     }
 }
