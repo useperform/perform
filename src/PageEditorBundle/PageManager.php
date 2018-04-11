@@ -83,7 +83,7 @@ class PageManager
             throw new \Exception(sprintf('The current page name must declared to render content.'));
         }
 
-        return $this->entityManager
+        return $this->currentVersion = $this->entityManager
             ->getRepository('PerformPageEditorBundle:Version')
             ->findDefaultVersion($this->currentPage);
     }
