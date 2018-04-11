@@ -97,6 +97,17 @@ export default new Vuex.Store({
       });
     },
 
+    EDITORS_CLEAR(state, payload) {
+      const {editorIndexes} = payload;
+      editorIndexes.forEach(i => {
+        if (!state.editors[i]) {
+          return;
+        }
+        state.editors[i].contentId = undefined;
+        state.editors[i].order = [];
+      });
+    },
+
     CONTENT_LOADING(state, payload) {
       const {editorIndex} = payload;
       state.editors[editorIndex].loading = true;
