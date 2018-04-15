@@ -1,14 +1,4 @@
 var gulp = require('gulp');
-var sass = require('gulp-sass');
-
-gulp.task('sass', function (cb) {
-  return gulp.src('Resources/scss/app.scss')
-    .pipe(sass({
-      includePaths: ['node_modules']
-    }))
-    .on('error', sass.logError)
-    .pipe(gulp.dest('Resources/public/css'));
-});
 
 gulp.task('js', function () {
   return gulp.src([
@@ -23,19 +13,12 @@ gulp.task('js', function () {
   ]).pipe(gulp.dest('Resources/public/js/'));
 });
 
-gulp.task('fonts', function () {
-  return gulp.src([
-    'node_modules/font-awesome/fonts/fontawesome-webfont.*',
-  ]).pipe(gulp.dest('Resources/public/fonts/'));
-});
-
 gulp.task('watch', function () {
-  gulp.watch('Resources/scss/**/*.scss', ['sass']);
   gulp.watch([
     'Resources/js/*.js',
     'Resources/js/types/*.js',
   ], ['js']);
 });
 
-gulp.task('build', ['sass', 'js', 'fonts']);
+gulp.task('build', ['js']);
 gulp.task('dev', ['build', 'watch']);

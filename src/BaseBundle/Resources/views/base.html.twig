@@ -9,7 +9,7 @@
       {% endblock %}
     </title>
     {% block css %}
-      <link rel="stylesheet" type="text/css" href="{{asset('bundles/performbase/css/app.css')}}" />
+      <link rel="stylesheet" type="text/css" href="{{asset('bundles/performbase/app.css')}}" />
       {% for css in perform_asset_css() %}
         <link rel="stylesheet" type="text/css" href="{{asset(css)}}" />
       {% endfor %}
