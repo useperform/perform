@@ -11,6 +11,7 @@ module.exports = {
   entry: {
     components: './Resources/src/components.js',
     app: ['./Resources/scss/app.scss'],
+    perform: ['./Resources/src/perform.js'],
   },
   output: {
     path: path.resolve(__dirname, './Resources/public'),
@@ -61,7 +62,8 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.esm.js'
+      'vue$': 'vue/dist/vue.esm.js',
+      'perform-base': path.resolve(__dirname, 'Resources/src/'),
     },
     extensions: ['*', '.js', '.vue', '.json']
   },
