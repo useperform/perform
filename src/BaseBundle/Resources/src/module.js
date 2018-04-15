@@ -1,3 +1,6 @@
+import {renderCounter, renderDropdown, add, get, getUnfinished, setProgress, cancel} from 'perform-base/tasks';
+import {datepicker, markdown} from 'perform-base/form';
+
 let messages = [];
 
 export default {
@@ -29,4 +32,18 @@ export default {
   showSuccess(message) {
     return this.showMessage('success', message);
   },
+
+  tasks: {
+    renderCounter,
+    renderDropdown,
+    add,
+    get,
+    getUnfinished,
+    setProgress,
+    cancel,
+  },
+  form: {
+    datepicker,
+    markdown
+  }
 };

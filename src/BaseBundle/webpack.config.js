@@ -9,7 +9,6 @@ var extractSass = new ExtractTextPlugin({
 
 module.exports = {
   entry: {
-    components: './Resources/src/components.js',
     app: ['./Resources/scss/app.scss'],
     perform: ['./Resources/src/perform.js'],
   },
