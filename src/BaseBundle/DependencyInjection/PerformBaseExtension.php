@@ -34,12 +34,12 @@ class PerformBaseExtension extends Extension
         $container->setParameter('perform_base.menu_order', $config['menu']['order']);
         $container->setParameter('perform_base.auto_asset_version', uniqid());
         $container->setParameter('perform_base.theme', $config['assets']['theme']);
-        self::addExtraSass($container, $config['assets']['extra_sass']);
         $this->configureTypeRegistry($container);
         $this->configureMailer($config, $container);
         $this->findExtendedEntities($container, $config);
         $this->processAdminConfig($container, $config);
         $this->createSimpleMenus($container, $config['menu']['simple']);
+        $this->configureAssets($container, $config['assets']);
     }
 
     protected function configureTypeRegistry(ContainerBuilder $container)
@@ -153,6 +153,11 @@ class PerformBaseExtension extends Extension
             $definition->setArguments([$alias, $options['entity'], $options['route'], $options['icon']]);
             $definition->addTag('perform_base.link_provider', ['alias' => $alias]);
         }
+    }
+
+    protected function configureAssets(ContainerBuilder $container, array $config)
+    {
+        self::addExtraSass($container, $config['extra_sass']);
     }
 
     public function processAdminConfig(ContainerBuilder $container, array $config)
