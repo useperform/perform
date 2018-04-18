@@ -1,14 +1,8 @@
-import jquery from 'jquery';
-
-window.jQuery = window.$ = jquery;
-
-let perform = {};
-
-import base from 'perform-base/module';
-
-perform.base = base;
-
+import perform from './modules';
 window.Perform = perform;
+
+import jquery from 'jquery';
+window.jQuery = window.$ = jquery;
 
 import {renderDropdown, renderCounter, getUnfinished} from 'perform-base/tasks';
 

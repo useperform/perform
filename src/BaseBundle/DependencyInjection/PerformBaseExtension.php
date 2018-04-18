@@ -159,6 +159,7 @@ class PerformBaseExtension extends Extension
     {
         self::addExtraSass($container, $config['extra_sass']);
         Assets::addNamespace($container, 'perform-base', __DIR__.'/../Resources/src');
+        Assets::addJavascriptModule($container, 'base', 'perform-base/module');
     }
 
     public function processAdminConfig(ContainerBuilder $container, array $config)
