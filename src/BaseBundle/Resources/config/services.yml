@@ -290,3 +290,11 @@ services:
             - '%perform_base.extra_sass%'
         tags:
             - {name: kernel.cache_warmer}
+
+    perform_base.warmer.assets:
+        class: Perform\BaseBundle\CacheWarmer\AssetsWarmer
+        arguments:
+            - '@filesystem'
+            - '%perform_base.assets.namespaces%'
+        tags:
+            - {name: kernel.cache_warmer}

@@ -62,7 +62,6 @@ module.exports = {
   resolve: {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
-      'perform-base': path.resolve(__dirname, 'Resources/src/'),
     },
     extensions: ['*', '.js', '.vue', '.json']
   },
@@ -74,6 +73,9 @@ module.exports = {
     extractSass
   ]
 }
+
+var aliases = require('./namespaces.js');
+Object.assign(module.exports.resolve.alias, aliases);
 
 if (process.env.NODE_ENV === 'production') {
   module.exports.devtool = '#source-map'
