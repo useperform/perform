@@ -10,6 +10,8 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Finder\Finder;
 use Perform\BaseBundle\Doctrine\EntityResolver;
 use Perform\Licensing\Licensing;
+use Perform\BaseBundle\Type\TypeInterface;
+use Perform\BaseBundle\Type\TypeRegistry;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -44,26 +46,9 @@ class PerformBaseExtension extends Extension
 
     protected function configureTypeRegistry(ContainerBuilder $container)
     {
-        $definition = $container->register('perform_base.type_registry', 'Perform\BaseBundle\Type\TypeRegistry');
-        $definition->addArgument(new Reference('service_container'));
-        $definition->addMethodCall('addType', ['string', 'Perform\BaseBundle\Type\StringType']);
-        $definition->addMethodCall('addType', ['text', 'Perform\BaseBundle\Type\TextType']);
-        $definition->addMethodCall('addType', ['password', 'Perform\BaseBundle\Type\PasswordType']);
-        $definition->addMethodCall('addType', ['date', 'Perform\BaseBundle\Type\DateType']);
-        $definition->addMethodCall('addType', ['datetime', 'Perform\BaseBundle\Type\DateTimeType']);
-        $definition->addMethodCall('addType', ['boolean', 'Perform\BaseBundle\Type\BooleanType']);
-        $definition->addMethodCall('addType', ['integer', 'Perform\BaseBundle\Type\IntegerType']);
-        $definition->addMethodCall('addType', ['hidden', 'Perform\BaseBundle\Type\HiddenType']);
-        $definition->addMethodCall('addType', ['duration', 'Perform\BaseBundle\Type\DurationType']);
-        $definition->addMethodCall('addType', ['email', 'Perform\BaseBundle\Type\EmailType']);
-        $definition->addMethodCall('addType', ['choice', 'Perform\BaseBundle\Type\ChoiceType']);
-        $definition->addMethodCall('addType', ['country', 'Perform\BaseBundle\Type\CountryType']);
-        $definition->addMethodCall('addTypeService', ['entity', 'perform_base.type.entity']);
-        $definition->addMethodCall('addTypeService', ['tag', 'perform_base.type.tag']);
-        $definition->addMethodCall('addTypeService', ['collection', 'perform_base.type.collection']);
-        $definition->addMethodCall('addTypeService', ['slug', 'perform_base.type.slug']);
-        $definition->addMethodCall('addTypeService', ['markdown', 'perform_base.type.markdown']);
-        $definition->addMethodCall('addTypeService', ['html', 'perform_base.type.html']);
+        $container->register('perform_base.type_registry', TypeRegistry::class);
+        $container->registerForAutoconfiguration(TypeInterface::class)
+            ->addTag('perform_base.type');
     }
 
     protected function configureMailer(array $config, ContainerBuilder $container)
