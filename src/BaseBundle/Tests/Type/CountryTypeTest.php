@@ -13,9 +13,11 @@ class CountryTypeTest extends TypeTestCase
 {
     use WhitespaceAssertions;
 
-    protected function configure()
+    protected function registerTypes()
     {
-        $this->typeRegistry->addType('country', CountryType::class);
+        return [
+            'country' => new CountryType(),
+        ];
     }
 
     public function testListContext()

@@ -15,11 +15,11 @@ class MarkdownTypeTest extends TypeTestCase
 {
     use WhitespaceAssertions;
 
-    protected function configure()
+    protected function registerTypes()
     {
-        $type = new MarkdownType(new CommonMarkConverter(), new AssetContainer());
-        $this->mockService('md_service', $type);
-        $this->typeRegistry->addTypeService('md', 'md_service');
+        return [
+            'md' => new MarkdownType(new CommonMarkConverter(), new AssetContainer()),
+        ];
     }
 
     public function testListContext()
