@@ -2,28 +2,21 @@
 
 namespace Perform\BaseBundle\Tests\Type;
 
-use Perform\BaseBundle\Type\TypeRegistry;
 use Perform\BaseBundle\Type\TypeInterface;
 use Perform\BaseBundle\Exception\TypeNotFoundException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
+use Perform\BaseBundle\Test\Services;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class TypeRegistryTest extends \PHPUnit_Framework_TestCase
 {
-    protected $container;
     protected $registry;
 
     protected function register(array $services)
     {
-        $factories = [];
-        foreach ($services as $alias => $service) {
-            $factories[$alias] = function () use ($service) { return $service; };
-        }
-        $locator = new LoopableServiceLocator($factories);
-        $this->registry = new TypeRegistry($locator);
+        $this->registry = Services::typeRegistry($services);
     }
 
     public function testGetType()
