@@ -8,6 +8,7 @@ use Perform\DevBundle\File\KernelModifier;
  * KernelModifierTest
  *
  * @author Glynn Forrest <me@glynnforrest.com>
+ * @group kernel
  **/
 class KernelModifierTest extends \PHPUnit_Framework_TestCase
 {

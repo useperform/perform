@@ -8,6 +8,7 @@ use Perform\BaseBundle\Test\WhitespaceAssertions;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
+ * @group kernel
  **/
 class CountryTypeTest extends TypeTestCase
 {

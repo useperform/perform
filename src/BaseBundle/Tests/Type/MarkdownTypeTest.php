@@ -10,6 +10,7 @@ use Perform\BaseBundle\Asset\AssetContainer;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
+ * @group kernel
  **/
 class MarkdownTypeTest extends TypeTestCase
 {

@@ -14,6 +14,7 @@ use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\YamlChildBundle\Entity\XmlI
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
+ * @group kernel
  **/
 class ExtendEntitiesTest extends \PHPUnit_Framework_TestCase
 {
