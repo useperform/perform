@@ -11,6 +11,7 @@ use Perform\BaseBundle\Type\DateTimeType;
 use Perform\BaseBundle\Type\BooleanType;
 use Perform\BaseBundle\Exception\InvalidTypeException;
 use Symfony\Component\OptionsResolver\Exception\ExceptionInterface;
+use Perform\BaseBundle\Test\Services;
 
 /**
  * TypeConfigTest.
@@ -25,19 +26,12 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $container = $this->getMock(ContainerInterface::class);
-        $this->typeRegistry = new TypeRegistry($container);
-        $this->typeRegistry->addType('string', StringType::class);
-        $this->typeRegistry->addType('datetime', DateTimeType::class);
-        $this->typeRegistry->addType('boolean', BooleanType::class);
-        $this->stubType = $this->getMock(TypeInterface::class);
-        $container->expects($this->any())
-            ->method('get')
-            ->with('stub_service')
-            ->will($this->returnValue($this->stubType));
-
-        $this->typeRegistry->addTypeService('stub', 'stub_service');
-
+        $this->typeRegistry = Services::typeRegistry([
+            'string' => new StringType(),
+            'datetime' => new DateTimeType(),
+            'boolean' => new BooleanType(),
+            'stub' => $this->stubType = $this->getMock(TypeInterface::class),
+        ]);
         $this->config = new TypeConfig($this->typeRegistry);
     }
 

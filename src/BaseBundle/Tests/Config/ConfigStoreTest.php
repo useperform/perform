@@ -16,10 +16,9 @@ use Perform\BaseBundle\Config\ActionConfig;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Perform\BaseBundle\Config\ExportConfig;
+use Perform\BaseBundle\Test\Services;
 
 /**
- * ConfigStoreTest.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class ConfigStoreTest extends \PHPUnit_Framework_TestCase
@@ -35,8 +34,9 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
         $this->adminRegistry = $this->getMockBuilder(AdminRegistry::class)
                              ->disableOriginalConstructor()
                              ->getMock();
-        $this->typeRegistry = new TypeRegistry($this->getMock(ContainerInterface::class));
-        $this->typeRegistry->addType('string', StringType::class);
+        $this->typeRegistry = Services::typeRegistry([
+            'string' => new StringType(),
+        ]);
         $this->actionRegistry = $this->getMockBuilder(ActionRegistry::class)
                       ->disableOriginalConstructor()
                       ->getMock();

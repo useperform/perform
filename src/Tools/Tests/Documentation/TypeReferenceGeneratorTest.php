@@ -5,7 +5,7 @@ namespace Perform\Tools\Tests\Documentation;
 use Perform\Tools\Documentation\TypeReferenceGenerator;
 use Temping\Temping;
 use Perform\BaseBundle\Type\TypeRegistry;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Perform\BaseBundle\Test\Services;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -25,9 +25,9 @@ class TypeReferenceGeneratorTest extends \PHPUnit_Framework_TestCase
         ];
         $twig = new \Twig_Environment($loader = new \Twig_Loader_Filesystem(__DIR__.'/../../Documentation'));
 
-        $registry = new TypeRegistry($this->getMock(ContainerInterface::class));
-        $registry->addType('doctest', DocTestType::class);
-
+        $registry = Services::typeRegistry([
+            'doctest' => new DocTestType(),
+        ]);
         $this->gen = new TypeReferenceGenerator($twig, $registry);
     }
 
