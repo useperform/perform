@@ -2,7 +2,7 @@
 
 namespace Perform\BaseBundle\Type;
 
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Perform\BaseBundle\Asset\AssetContainer;
 
@@ -26,7 +26,7 @@ class HtmlType extends AbstractType
         $this->assets->addCss('https://cdn.quilljs.com/1.3.5/quill.snow.css');
         $this->assets->addJs('https://cdn.quilljs.com/1.3.5/quill.js');
         $this->assets->addJs('/bundles/performbase/js/types/html.js');
-        $builder->add($field, HiddenType::class);
+        $builder->add($field, FormType::class);
 
         return [
             'html' => $this->accessor->getValue($builder->getData(), $field),
