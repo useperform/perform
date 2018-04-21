@@ -48,10 +48,28 @@ class StringUtil
      */
     public static function adminClassToEntityName($class)
     {
-        $pieces = explode('\\', $class);
         //EntityNameAdmin -> Entity Name
+        return trim(preg_replace('/([A-Z][a-z])/', ' \1', self::classBasename($class, 'Admin')));
+    }
 
-        return trim(preg_replace('/([A-Z][a-z])/', ' \1', substr(end($pieces), 0, -5)));
+    /**
+     * Get the basename of a class, optionally removing a suffix.
+     *
+     * @param string $class
+     * @param string $suffix
+     *
+     * @return string
+     */
+    public static function classBasename($class, $suffix = '')
+    {
+        $pieces = explode('\\', $class);
+        $end = end($pieces);
+
+        if (!$suffix) {
+            return $end;
+        }
+
+        return substr($end, 0 - strlen($suffix)) === $suffix ? substr($end, 0, 0 - strlen($suffix))  : $end;
     }
 
     /**

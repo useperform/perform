@@ -52,6 +52,7 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
             ['AppBundle\Admin\TestAdmin', 'Test'],
             ['AppBundle\Admin\MySuperEntityAdmin', 'My Super Entity'],
             ['AppBundle\Admin\HTMLEntityAdmin', 'HTML Entity'],
+            ['AppBundle\Admin\AdminNamedDifferently', 'Admin Named Differently'],
         ];
     }
 
@@ -61,6 +62,43 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
     public function testAdminClassToEntityName($class, $expected)
     {
         $this->assertSame($expected, StringUtil::adminClassToEntityName($class));
+    }
+
+    public function basenameProvider()
+    {
+        return [
+            ['Foo', 'Foo'],
+            ['AppBundle\Some\Long\Namespace\Service', 'Service'],
+            ['AppBundle\MyService', 'MyService'],
+        ];
+    }
+
+    /**
+     * @dataProvider basenameProvider()
+     */
+    public function testClassBasename($class, $expected)
+    {
+        $this->assertSame($expected, StringUtil::classBasename($class));
+    }
+
+    public function basenameWithSuffixProvider()
+    {
+        return [
+            ['FooBar', 'Bar', 'Foo'],
+            ['AppBundle\Some\Long\Namespace\ServiceName', 'Name', 'Service'],
+            ['AppBundle\MyService', 'Service', 'My'],
+            // suffix not found
+            ['AppBundle\MyService', 'Foo', 'MyService'],
+            ['AppBundle\MyService', 'My', 'MyService'],
+        ];
+    }
+
+    /**
+     * @dataProvider basenameWithSuffixProvider()
+     */
+    public function testClassBasenameWithSuffix($class, $suffix, $expected)
+    {
+        $this->assertSame($expected, StringUtil::classBasename($class, $suffix));
     }
 
     public function crudTemplateProvider()
