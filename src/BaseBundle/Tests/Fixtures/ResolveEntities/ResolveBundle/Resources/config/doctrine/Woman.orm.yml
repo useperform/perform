@@ -1,0 +1,11 @@
+Perform\BaseBundle\Tests\Fixtures\ResolveEntities\ResolveBundle\Entity\Woman:
+    type: entity
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    oneToOne:
+        pet:
+            targetEntity: Perform\BaseBundle\Tests\Fixtures\ResolveEntities\ResolveBundle\Entity\AnimalInterface

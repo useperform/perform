@@ -1,0 +1,11 @@
+Perform\BaseBundle\Tests\Fixtures\ResolveEntities\ResolveBundle\Entity\Dog:
+    type: entity
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        isLoud:
+            type: boolean

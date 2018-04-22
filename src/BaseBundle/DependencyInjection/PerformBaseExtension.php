@@ -40,6 +40,7 @@ class PerformBaseExtension extends Extension
         $this->configureTypeRegistry($container);
         $this->configureMailer($config, $container);
         $this->findExtendedEntities($container, $config);
+        $this->configureResolvedEntities($container, $config);
         $this->processAdminConfig($container, $config);
         $this->createSimpleMenus($container, $config['menu']['simple']);
     }
@@ -78,6 +79,25 @@ class PerformBaseExtension extends Extension
         if ('UTC' !== $timezone = date_default_timezone_get()) {
             throw new \Exception(sprintf('The server timezone must be set to UTC, it is currently "%s".', $timezone));
         }
+    }
+
+    protected function configureResolvedEntities(ContainerBuilder $container, array $config)
+    {
+        $baseError = ' Make sure the configuration of perform_base:doctrine:resolve contains valid class and interface names.';
+        foreach ($config['doctrine']['resolve'] as $interface => $value) {
+            if (!interface_exists($interface)) {
+                throw new \InvalidArgumentException(sprintf('Entity interface "%s" does not exist.', $interface).$baseError);
+            }
+            $classes = is_string($value) ? [$value] : array_merge(array_keys($value), array_values($value));
+            foreach ($classes as $class) {
+                if (!class_exists($class)) {
+                    throw new \InvalidArgumentException(sprintf('Entity class "%s" does not exist.', $class).$baseError);
+                }
+            }
+        }
+
+        $container->getDefinition('perform_base.doctrine.resolve_listener')
+            ->setArgument(0, $config['doctrine']['resolve']);
     }
 
     protected function findExtendedEntities(ContainerBuilder $container, array $config)

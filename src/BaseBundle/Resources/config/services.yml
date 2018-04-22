@@ -187,6 +187,11 @@ services:
         tags:
             - { name: doctrine.event_subscriber }
 
+    perform_base.doctrine.resolve_listener:
+        class: Perform\BaseBundle\Doctrine\ResolveEntitiesListener
+        tags:
+            - { name: doctrine.event_subscriber }
+
     perform_base.selector.entity:
         class: Perform\BaseBundle\Selector\EntitySelector
         arguments:

@@ -1,0 +1,11 @@
+Perform\BaseBundle\Tests\Fixtures\ResolveEntities\ResolveBundle\Entity\Cat:
+    type: entity
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        isFriendly:
+            type: boolean
