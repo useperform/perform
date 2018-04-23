@@ -9,8 +9,6 @@ Perform\NotificationBundle\Entity\NotificationLog:
             generator:
                 strategy: UUID
     fields:
-        recipientId:
-            type: guid
         type:
             type: string
         content:
@@ -27,3 +25,8 @@ Perform\NotificationBundle\Entity\NotificationLog:
             gedmo:
                 timestampable:
                     on: update
+    manyToOne:
+        recipient:
+            targetEntity: Symfony\Component\Security\Core\User\UserInterface
+            joinColumn:
+                nullable: true

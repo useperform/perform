@@ -3,22 +3,18 @@
 namespace Perform\NotificationBundle\Tests\Entity;
 
 use Perform\NotificationBundle\Entity\NotificationLog;
-use Perform\NotificationBundle\Recipient\RecipientInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * NotificationLogTest
+ * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class NotificationLogTest extends \PHPUnit_Framework_TestCase
 {
     public function testSetRecipient()
     {
-        $recipient = $this->getMock(RecipientInterface::class);
-        $recipient->expects($this->once())
-            ->method('getId')
-            ->will($this->returnValue('some_guid'));
-
+        $recipient = $this->getMock(UserInterface::class);
         $log = new NotificationLog();
         $this->assertSame($log, $log->setRecipient($recipient));
-        $this->assertSame('some_guid', $log->getRecipientId());
+        $this->assertSame($recipient, $log->getRecipient());
     }
 }
