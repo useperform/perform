@@ -96,8 +96,7 @@ class PerformBaseExtension extends Extension
             }
         }
 
-        $container->getDefinition('perform_base.doctrine.resolve_listener')
-            ->setArgument(0, $config['doctrine']['resolve']);
+        $container->setParameter(Doctrine::PARAM_RESOLVED_CONFIG, $config['doctrine']['resolve']);
     }
 
     protected function findExtendedEntities(ContainerBuilder $container, array $config)

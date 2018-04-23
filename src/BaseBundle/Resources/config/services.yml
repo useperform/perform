@@ -189,6 +189,8 @@ services:
 
     perform_base.doctrine.resolve_listener:
         class: Perform\BaseBundle\Doctrine\ResolveEntitiesListener
+        arguments:
+            - "%perform_base.resolved_entities%"
         tags:
             - { name: doctrine.event_subscriber }
 
