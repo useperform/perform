@@ -33,6 +33,6 @@ class IntegerToDurationTransformer implements DataTransformerInterface
      */
     public function reverseTransform($value)
     {
-        return DurationUtil::toDuration($value);
+        return DurationUtil::fromHuman($value);
     }
 }

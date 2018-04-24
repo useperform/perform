@@ -29,6 +29,23 @@ class DurationUtil
     }
 
     /**
+     * Transform a human readable string into seconds.
+     *
+     * @param string The duration, e.g. 3d 5h 30m
+     *
+     * @return int
+     */
+    public static function fromHuman($string)
+    {
+        $days = preg_match('`(\d+)d`', $string, $matches) ? (int) $matches[0] : 0;
+        $hours = preg_match('`(\d+)h`', $string, $matches) ? (int) $matches[0] : 0;
+        $minutes = preg_match('`(\d+)m`', $string, $matches) ? (int) $matches[0] : 0;
+        $seconds = preg_match('`(\d+)s`', $string, $matches) ? (int) $matches[0] : 0;
+
+        return ($days * 86400) + ($hours * 3600) + ($minutes * 60) + $seconds;
+    }
+
+    /**
      * Transform seconds into a verbose human readable string.
      *
      * @param int $duration
@@ -95,18 +112,5 @@ class DurationUtil
             'm' => (int) floor(($duration % 3600) / 60),
             's' => (int) $duration % 60,
         ];
-    }
-
-    /**
-     * @return int
-     */
-    public static function toDuration($string)
-    {
-        $days = preg_match('`(\d+)d`', $string, $matches) ? (int) $matches[0] : 0;
-        $hours = preg_match('`(\d+)h`', $string, $matches) ? (int) $matches[0] : 0;
-        $minutes = preg_match('`(\d+)m`', $string, $matches) ? (int) $matches[0] : 0;
-        $seconds = preg_match('`(\d+)s`', $string, $matches) ? (int) $matches[0] : 0;
-
-        return ($days * 86400) + ($hours * 3600) + ($minutes * 60) + $seconds;
     }
 }
