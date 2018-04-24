@@ -42,11 +42,6 @@ services:
         tags:
             - {name: form.type}
 
-    perform_base.form.type.money:
-        class: Perform\BaseBundle\Form\Type\MoneyType
-        tags:
-            - {name: form.type}
-
     perform_base.doctrine.entity_resolver:
         class: Perform\BaseBundle\Doctrine\EntityResolver
         arguments: ['%perform_base.entity_aliases%', '%perform_base.extended_entities%']

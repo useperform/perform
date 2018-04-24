@@ -1,0 +1,23 @@
+services:
+    perform_base.form.type.money:
+        class: Perform\BaseBundle\Form\Type\MoneyType
+        tags:
+            - {name: form.type}
+
+    perform_base.twig.money:
+        class: Perform\BaseBundle\Twig\Extension\MoneyExtension
+        arguments:
+            - "@perform_base.money_formatter"
+        tags:
+            - {name: twig.extension}
+
+    perform_base.money_formatter:
+        class: Money\Formatter\IntlMoneyFormatter
+        arguments:
+            - !service
+                class: \NumberFormatter
+                arguments:
+                    - '%locale%'
+                    - !php/const \NumberFormatter::CURRENCY
+            - !service
+                class: Money\Currencies\ISOCurrencies

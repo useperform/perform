@@ -12,6 +12,7 @@ use Perform\BaseBundle\Doctrine\EntityResolver;
 use Perform\Licensing\Licensing;
 use Perform\BaseBundle\Type\TypeInterface;
 use Perform\BaseBundle\Type\TypeRegistry;
+use Money\Money;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -30,6 +31,10 @@ class PerformBaseExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+
+        if (class_exists(Money::class)) {
+            $loader->load('services/money.yml');
+        }
 
         $container->setParameter('perform_base.panels.left', $config['panels']['left']);
         $container->setParameter('perform_base.panels.right', $config['panels']['right']);
