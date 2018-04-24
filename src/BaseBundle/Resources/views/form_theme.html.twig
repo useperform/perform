@@ -34,3 +34,20 @@
     {{block('datetime_widget')}}
   </div>
 {%- endblock %}
+
+{% block perform_money_widget -%}
+  <div class="input-group">
+    {{form_widget(form.currency)}}
+    <div class="input-group-addon{% if not form.vars.valid %} text-danger border-right-0 border-danger{% endif %}">
+      <div class="input-group-text">
+        {% set currency_code = form.currency.vars.data is not null ? form.currency.vars.data : default_currency %}
+        {% if currency_classes[currency_code] is defined %}
+          <span class="fa {{currency_classes[form.currency.vars.data]}}"></span>
+        {% else %}
+          {{currency_code}}
+        {% endif %}
+      </div>
+    </div>
+    {{form_widget(form.amount)}}
+  </div>
+{%- endblock %}
