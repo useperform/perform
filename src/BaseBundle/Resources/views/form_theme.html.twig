@@ -19,6 +19,11 @@
   {{- parent() -}}
 {%- endblock %}
 
+{% block duration_widget %}
+  {{form_widget(form)}}
+  <small class="form-text text-muted">e.g. 2m 3s, 1h30m, 3d 40m 2h 30s</small>
+{% endblock %}
+
 {% block datepicker_widget -%}
   {# just a skeleton - the vue component will replace the elements in the div #}
   <div class="input-group p-form-datepicker"
