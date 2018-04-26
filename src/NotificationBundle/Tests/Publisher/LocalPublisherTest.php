@@ -7,6 +7,7 @@ use Perform\NotificationBundle\Notification;
 use Doctrine\Common\Persistence\ObjectManager;
 use Perform\NotificationBundle\Recipient\RecipientInterface;
 use Perform\NotificationBundle\Renderer\RendererInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -26,8 +27,8 @@ class LocalPublisherTest extends \PHPUnit_Framework_TestCase
 
     public function testSend()
     {
-        $recipient1 = $this->getMock(RecipientInterface::class);
-        $recipient2 = $this->getMock(RecipientInterface::class);
+        $recipient1 = $this->getMockBuilder([RecipientInterface::class, UserInterface::class])->getMock();
+        $recipient2 = $this->getMockBuilder([RecipientInterface::class, UserInterface::class])->getMock();
         $notification = new Notification([$recipient1, $recipient2], 'foo');
         $this->renderer->expects($this->once())
             ->method('getTemplateName')
@@ -43,6 +44,20 @@ class LocalPublisherTest extends \PHPUnit_Framework_TestCase
             ->method('persist');
         $this->entityManager->expects($this->once())
             ->method('flush');
+
+        $this->publisher->send($notification);
+    }
+
+    public function testNonUsersAreIgnored()
+    {
+        $recipient = $this->getMock(RecipientInterface::class);
+        $notification = new Notification([$recipient], 'foo');
+        $this->renderer->expects($this->once())
+            ->method('getTemplateName')
+            ->with('local', $notification)
+            ->will($this->returnValue('some_template'));
+        $this->entityManager->expects($this->never())
+            ->method('persist');
 
         $this->publisher->send($notification);
     }

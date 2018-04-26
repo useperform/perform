@@ -165,3 +165,42 @@ For example, here we tell the ``datetime`` type to show a human friendly date di
 
 Creating a new type
 -------------------
+
+Create a service that implements ``Perform\Base\Type\TypeInterface``, either through autowiring or manually.
+
+If the service is autoconfigured, the type will be added to the registry automatically.
+
+If the service is not autoconfigured, give the service the ``perform_base.type`` tag.
+
+The name of the type will be guessed from the class name, or you can set it manually with the ``alias`` tag option.
+
+.. code-block:: yaml
+
+    # configured automatically
+    MyApp\Type\AutoType
+        autoconfigure: true
+
+    # configured manually
+    MyApp\Type\ManualType
+        tags:
+            - {name: perform_base.type}
+
+    # configured manually, setting the type name explicitly
+    MyApp\Type\AnotherType
+        tags:
+            - {name: perform_base.type, alias: app_another}
+
+
+Then run the ``perform:debug:types`` command to view your new types:
+
+.. code-block:: bash
+
+   $ ./bin/console perform:debug:types
+
+   +-------------+-------------------------+
+   | Type        | Class                   |
+   +-------------+-------------------------+
+   | auto        | MyApp\Type\AutoType     |
+   | manual      | MyApp\Type\ManualType   |
+   | app_another | MyApp\Type\AnotherType  |
+   ...

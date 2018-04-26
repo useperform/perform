@@ -3,10 +3,12 @@
 namespace Perform\NotificationBundle\Entity;
 
 use Perform\NotificationBundle\Notification;
-use Perform\NotificationBundle\Recipient\RecipientInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Used by the local publisher to publish notifications
+ * A notification for a user.
+ *
+ * @author Glynn Forrest <me@glynnforrest.com>
  */
 class NotificationLog
 {
@@ -19,9 +21,9 @@ class NotificationLog
     private $id;
 
     /**
-     * @var guid
+     * @var UserInterface
      */
-    private $recipientId;
+    private $recipient;
 
     /**
      * @var \DateTime
@@ -34,7 +36,7 @@ class NotificationLog
     private $updatedAt;
 
     /**
-     * @var integer
+     * @var int
      */
     private $status = self::STATUS_UNREAD;
 
@@ -49,8 +51,6 @@ class NotificationLog
     private $content;
 
     /**
-     * Get id
-     *
      * @return guid
      */
     public function getId()
@@ -59,42 +59,26 @@ class NotificationLog
     }
 
     /**
-     * Set recipient
-     *
-     * @param RecipientInterface $recipient
+     * @param UserInterface $recipient
      *
      * @return NotificationLog
      */
-    public function setRecipient(RecipientInterface $recipient)
+    public function setRecipient(UserInterface $recipient)
     {
-        $this->recipientId = $recipient->getId();
+        $this->recipient = $recipient;
 
         return $this;
     }
 
     /**
-     * @param guid $recipientId
-     *
-     * @return NotificationLog
+     * @return UserInterface
      */
-    public function setRecipientId($recipientId)
+    public function getRecipient()
     {
-        $this->recipientId = $recipientId;
-
-        return $this;
+        return $this->recipient;
     }
 
     /**
-     * @return guid
-     */
-    public function getRecipientId()
-    {
-        return $this->recipientId;
-    }
-
-    /**
-     * Set createdAt
-     *
      * @param \DateTime $createdAt
      *
      * @return NotificationLog
@@ -107,8 +91,6 @@ class NotificationLog
     }
 
     /**
-     * Get createdAt
-     *
      * @return \DateTime
      */
     public function getCreatedAt()
@@ -117,8 +99,6 @@ class NotificationLog
     }
 
     /**
-     * Set updatedAt
-     *
      * @param \DateTime $updatedAt
      *
      * @return NotificationLog
@@ -131,8 +111,6 @@ class NotificationLog
     }
 
     /**
-     * Get updatedAt
-     *
      * @return \DateTime
      */
     public function getUpdatedAt()
@@ -141,9 +119,7 @@ class NotificationLog
     }
 
     /**
-     * Set status
-     *
-     * @param integer $status
+     * @param int $status
      *
      * @return NotificationLog
      */
@@ -155,9 +131,7 @@ class NotificationLog
     }
 
     /**
-     * Get status
-     *
-     * @return integer
+     * @return int
      */
     public function getStatus()
     {
@@ -165,8 +139,6 @@ class NotificationLog
     }
 
     /**
-     * Set type
-     *
      * @param string $type
      *
      * @return NotificationLog
@@ -179,8 +151,6 @@ class NotificationLog
     }
 
     /**
-     * Get type
-     *
      * @return string
      */
     public function getType()
@@ -189,8 +159,6 @@ class NotificationLog
     }
 
     /**
-     * Set content
-     *
      * @param string $content
      *
      * @return NotificationLog
@@ -203,8 +171,6 @@ class NotificationLog
     }
 
     /**
-     * Get content
-     *
      * @return string
      */
     public function getContent()

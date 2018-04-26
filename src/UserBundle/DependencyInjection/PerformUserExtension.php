@@ -7,6 +7,9 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 use Perform\Licensing\Licensing;
+use Perform\BaseBundle\DependencyInjection\Doctrine;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Perform\UserBundle\Entity\User;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -27,5 +30,7 @@ class PerformUserExtension extends Extension
 
         $tokenManager = $container->getDefinition('perform_user.reset_token_manager');
         $tokenManager->addArgument($config['reset_token_expiry']);
+
+        Doctrine::registerDefaultImplementation($container, UserInterface::class, User::class);
     }
 }

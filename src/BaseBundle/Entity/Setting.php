@@ -2,7 +2,7 @@
 
 namespace Perform\BaseBundle\Entity;
 
-use Perform\UserBundle\Entity\User;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -45,7 +45,7 @@ class Setting
     protected $global = true;
 
     /**
-     * @var User|null
+     * @var UserInterface|null
      */
     protected $user;
 
@@ -182,11 +182,11 @@ class Setting
     }
 
     /**
-     * @param User $user
+     * @param UserInterface $user
      *
      * @return Setting
      */
-    public function setUser(User $user = null)
+    public function setUser(UserInterface $user = null)
     {
         $this->user = $user;
 
@@ -194,7 +194,7 @@ class Setting
     }
 
     /**
-     * @return User
+     * @return UserInterface
      */
     public function getUser()
     {

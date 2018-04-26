@@ -10,6 +10,9 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Finder\Finder;
 use Perform\BaseBundle\Doctrine\EntityResolver;
 use Perform\Licensing\Licensing;
+use Perform\BaseBundle\Type\TypeInterface;
+use Perform\BaseBundle\Type\TypeRegistry;
+use Money\Money;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -29,6 +32,10 @@ class PerformBaseExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
+        if (class_exists(Money::class)) {
+            $loader->load('services/money.yml');
+        }
+
         $container->setParameter('perform_base.panels.left', $config['panels']['left']);
         $container->setParameter('perform_base.panels.right', $config['panels']['right']);
         $container->setParameter('perform_base.menu_order', $config['menu']['order']);
@@ -37,6 +44,7 @@ class PerformBaseExtension extends Extension
         $this->configureTypeRegistry($container);
         $this->configureMailer($config, $container);
         $this->findExtendedEntities($container, $config);
+        $this->configureResolvedEntities($container, $config);
         $this->processAdminConfig($container, $config);
         $this->createSimpleMenus($container, $config['menu']['simple']);
         $this->configureAssets($container, $config['assets']);
@@ -44,26 +52,9 @@ class PerformBaseExtension extends Extension
 
     protected function configureTypeRegistry(ContainerBuilder $container)
     {
-        $definition = $container->register('perform_base.type_registry', 'Perform\BaseBundle\Type\TypeRegistry');
-        $definition->addArgument(new Reference('service_container'));
-        $definition->addMethodCall('addType', ['string', 'Perform\BaseBundle\Type\StringType']);
-        $definition->addMethodCall('addType', ['text', 'Perform\BaseBundle\Type\TextType']);
-        $definition->addMethodCall('addType', ['password', 'Perform\BaseBundle\Type\PasswordType']);
-        $definition->addMethodCall('addType', ['date', 'Perform\BaseBundle\Type\DateType']);
-        $definition->addMethodCall('addType', ['datetime', 'Perform\BaseBundle\Type\DateTimeType']);
-        $definition->addMethodCall('addType', ['boolean', 'Perform\BaseBundle\Type\BooleanType']);
-        $definition->addMethodCall('addType', ['integer', 'Perform\BaseBundle\Type\IntegerType']);
-        $definition->addMethodCall('addType', ['hidden', 'Perform\BaseBundle\Type\HiddenType']);
-        $definition->addMethodCall('addType', ['duration', 'Perform\BaseBundle\Type\DurationType']);
-        $definition->addMethodCall('addType', ['email', 'Perform\BaseBundle\Type\EmailType']);
-        $definition->addMethodCall('addType', ['choice', 'Perform\BaseBundle\Type\ChoiceType']);
-        $definition->addMethodCall('addType', ['country', 'Perform\BaseBundle\Type\CountryType']);
-        $definition->addMethodCall('addTypeService', ['entity', 'perform_base.type.entity']);
-        $definition->addMethodCall('addTypeService', ['tag', 'perform_base.type.tag']);
-        $definition->addMethodCall('addTypeService', ['collection', 'perform_base.type.collection']);
-        $definition->addMethodCall('addTypeService', ['slug', 'perform_base.type.slug']);
-        $definition->addMethodCall('addTypeService', ['markdown', 'perform_base.type.markdown']);
-        $definition->addMethodCall('addTypeService', ['html', 'perform_base.type.html']);
+        $container->register('perform_base.type_registry', TypeRegistry::class);
+        $container->registerForAutoconfiguration(TypeInterface::class)
+            ->addTag('perform_base.type');
     }
 
     protected function configureMailer(array $config, ContainerBuilder $container)
@@ -93,6 +84,24 @@ class PerformBaseExtension extends Extension
         if ('UTC' !== $timezone = date_default_timezone_get()) {
             throw new \Exception(sprintf('The server timezone must be set to UTC, it is currently "%s".', $timezone));
         }
+    }
+
+    protected function configureResolvedEntities(ContainerBuilder $container, array $config)
+    {
+        $baseError = ' Make sure the configuration of perform_base:doctrine:resolve contains valid class and interface names.';
+        foreach ($config['doctrine']['resolve'] as $interface => $value) {
+            if (!interface_exists($interface)) {
+                throw new \InvalidArgumentException(sprintf('Entity interface "%s" does not exist.', $interface).$baseError);
+            }
+            $classes = is_string($value) ? [$value] : array_merge(array_keys($value), array_values($value));
+            foreach ($classes as $class) {
+                if (!class_exists($class)) {
+                    throw new \InvalidArgumentException(sprintf('Entity class "%s" does not exist.', $class).$baseError);
+                }
+            }
+        }
+
+        $container->setParameter(Doctrine::PARAM_RESOLVED_CONFIG, $config['doctrine']['resolve']);
     }
 
     protected function findExtendedEntities(ContainerBuilder $container, array $config)

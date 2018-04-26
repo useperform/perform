@@ -10,26 +10,27 @@ use Perform\BaseBundle\Config\FilterConfig;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Perform\BaseBundle\Type\StringType;
 use Perform\BaseBundle\Admin\AdminRequest;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Perform\BaseBundle\Type\BooleanType;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
+use Perform\BaseBundle\Test\Services;
 
 /**
- * EntitySelectorTest.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class EntitySelectorTest extends \PHPUnit_Framework_TestCase
 {
     protected $entityManager;
-    protected $selector;
-    protected $store;
     protected $qb;
+    protected $typeRegistry;
+    protected $store;
+    protected $selector;
 
     public function setUp()
     {
-        $this->entityManager = $this->getMock('Doctrine\ORM\EntityManagerInterface');
-        $this->qb = $this->getMockBuilder('Doctrine\ORM\QueryBuilder')
+        $this->entityManager = $this->getMock(EntityManagerInterface::class);
+        $this->qb = $this->getMockBuilder(QueryBuilder::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -37,10 +38,10 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
             ->method('createQueryBuilder')
             ->will($this->returnValue($this->qb));
 
-        $container = $this->getMock(ContainerInterface::class);
-        $this->typeRegistry = new TypeRegistry($container);
-        $this->typeRegistry->addType('string', StringType::class);
-        $this->typeRegistry->addType('boolean', BooleanType::class);
+        $this->typeRegistry = Services::typeRegistry([
+            'string' => new StringType(),
+            'boolean' => new BooleanType(),
+        ]);
         $this->store = $this->getMock(ConfigStoreInterface::class);
         $this->store->expects($this->any())
             ->method('getFilterConfig')

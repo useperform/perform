@@ -6,6 +6,7 @@ use Perform\BaseBundle\Test\TestKernel;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
+ * @group kernel
  **/
 class CompilerTest extends \PHPUnit_Framework_TestCase
 {

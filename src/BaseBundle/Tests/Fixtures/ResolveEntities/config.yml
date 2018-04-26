@@ -1,0 +1,6 @@
+perform_base:
+    doctrine:
+        resolve:
+            Perform\BaseBundle\Tests\Fixtures\ResolveEntities\ResolveBundle\Entity\AnimalInterface:
+                Perform\BaseBundle\Tests\Fixtures\ResolveEntities\ResolveBundle\Entity\Man: Perform\BaseBundle\Tests\Fixtures\ResolveEntities\ResolveBundle\Entity\Dog
+                Perform\BaseBundle\Tests\Fixtures\ResolveEntities\ResolveBundle\Entity\Woman: Perform\BaseBundle\Tests\Fixtures\ResolveEntities\ResolveBundle\Entity\Cat

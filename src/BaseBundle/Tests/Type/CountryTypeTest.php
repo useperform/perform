@@ -8,14 +8,17 @@ use Perform\BaseBundle\Test\WhitespaceAssertions;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
+ * @group kernel
  **/
 class CountryTypeTest extends TypeTestCase
 {
     use WhitespaceAssertions;
 
-    protected function configure()
+    protected function registerTypes()
     {
-        $this->typeRegistry->addType('country', CountryType::class);
+        return [
+            'country' => new CountryType(),
+        ];
     }
 
     public function testListContext()

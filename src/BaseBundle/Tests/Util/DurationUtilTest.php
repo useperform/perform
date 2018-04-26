@@ -5,13 +5,11 @@ namespace Perform\BaseBundle\Tests\Util;
 use Perform\BaseBundle\Util\DurationUtil;
 
 /**
- * DurationUtilTest
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class DurationUtilTest extends \PHPUnit_Framework_TestCase
 {
-    public function toHumanProvider()
+    public function humanProvider()
     {
         return [
             [30, '30s'],
@@ -35,7 +33,7 @@ class DurationUtilTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider toHumanProvider
+     * @dataProvider humanProvider
      */
     public function testToHuman($value, $expected)
     {
@@ -43,16 +41,16 @@ class DurationUtilTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider toHumanProvider
+     * @dataProvider humanProvider
      */
-    public function testToDuration($expected, $value)
+    public function testFromHuman($expected, $value)
     {
-        $this->assertSame($expected, DurationUtil::toDuration($value));
+        $this->assertSame($expected, DurationUtil::fromHuman($value));
         //and without spaces
-        $this->assertSame($expected, DurationUtil::toDuration(str_replace(' ', '', $value)));
+        $this->assertSame($expected, DurationUtil::fromHuman(str_replace(' ', '', $value)));
     }
 
-    public function toDigitalProvider()
+    public function digitalProvider()
     {
         return [
             [30, '00:00:30'],
@@ -76,14 +74,14 @@ class DurationUtilTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider toDigitalProvider
+     * @dataProvider digitalProvider
      */
     public function testToDigital($value, $expected)
     {
         $this->assertSame($expected, DurationUtil::toDigital($value));
     }
 
-    public function toVerboseProvider()
+    public function verboseProvider()
     {
         return [
             [30, '30 seconds'],
@@ -107,7 +105,7 @@ class DurationUtilTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider toVerboseProvider
+     * @dataProvider verboseProvider
      */
     public function testToVerbose($value, $expected)
     {

@@ -4,10 +4,9 @@ namespace Perform\BaseBundle\Tests\DependencyInjection;
 
 use Perform\BaseBundle\DependencyInjection\Configuration;
 use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
 /**
- * ConfigurationTest.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class ConfigurationTest extends \PHPUnit_Framework_TestCase
@@ -46,11 +45,70 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         ];
         $config = $this->process([
             'perform_base' => [
-                'extended_entities' => $entities
-            ]
+                'extended_entities' => $entities,
+            ],
         ]);
 
         $this->assertSame($entities, $config['extended_entities']);
+    }
+
+    public function testResolveEntities()
+    {
+        $config = $this->process([]);
+        $this->assertSame([], $config['doctrine']['resolve']);
+
+        $entities = [
+            'AppBundle\Entity\UserInterface' => 'AppBundle\Entity\User',
+            'AppBundle\Entity\AuthorInterface' => [
+                'AppBundle\Entity\BlogPost' => 'AppBundle\Entity\User',
+                'AppBundle\Entity\Comment' => 'AppBundle\Entity\Visitor',
+            ],
+        ];
+        $config = $this->process([
+            'perform_base' => [
+                'doctrine' => [
+                    'resolve' => $entities,
+                ],
+            ],
+        ]);
+
+        $this->assertSame($entities, $config['doctrine']['resolve']);
+    }
+
+    public function invalidResolveProvider()
+    {
+        return [
+            [[
+                'AppBundle\Entity\UserInterface' => true,
+            ]],
+            [[
+                'AppBundle\Entity\UserInterface' => [],
+            ]],
+            [[
+                'AppBundle\Entity\UserInterface' => ['SomeClass', 'OtherClass'],
+            ]],
+            [[
+                'AppBundle\Entity\UserInterface' => [
+                    'AppBundle\Entity\Group' => 'AppBundle\Entity\User',
+                    'AppBundle\Entity\AdminUser',
+                ],
+            ]],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidResolveProvider
+     */
+    public function testInvalidResolveEntities($invalid)
+    {
+        $this->setExpectedException(InvalidConfigurationException::class);
+        $this->process([
+            'perform_base' => [
+                'doctrine' => [
+                    'resolve' => $invalid,
+                ],
+            ],
+        ]);
     }
 
     public function testAssetDefaults()

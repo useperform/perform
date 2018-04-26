@@ -2,9 +2,9 @@
 
 namespace Perform\MediaBundle\Entity;
 
-use Perform\UserBundle\Entity\User;
 use Perform\MediaBundle\MediaResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -56,7 +56,7 @@ class File
     protected $updatedAt;
 
     /**
-     * @var User
+     * @var UserInterface
      */
     protected $owner;
 
@@ -178,7 +178,7 @@ class File
     {
         // return the locations 0 indexed, so don't use collection->filter()
         return new ArrayCollection(array_values(
-            array_filter($this->locations->toArray(), function($location) {
+            array_filter($this->locations->toArray(), function ($location) {
                 return !$location->isPrimary();
             })
         ));
@@ -226,7 +226,7 @@ class File
 
     public function hasType()
     {
-        return !!$this->type;
+        return (bool) $this->type;
     }
 
     /**
@@ -266,11 +266,11 @@ class File
     }
 
     /**
-     * @param User|null $owner
+     * @param UserInterface|null $owner
      *
      * @return File
      */
-    public function setOwner(User $owner = null)
+    public function setOwner(UserInterface $owner = null)
     {
         $this->owner = $owner;
 
@@ -278,7 +278,7 @@ class File
     }
 
     /**
-     * @return User|null
+     * @return UserInterface|null
      */
     public function getOwner()
     {
@@ -290,6 +290,6 @@ class File
      */
     public function hasOwner()
     {
-        return $this->owner instanceof User;
+        return $this->owner instanceof UserInterface;
     }
 }

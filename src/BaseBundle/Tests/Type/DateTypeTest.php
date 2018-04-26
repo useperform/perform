@@ -3,21 +3,20 @@
 namespace Perform\BaseBundle\Tests\Type;
 
 use Perform\BaseBundle\Type\TypeRegistry;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Perform\BaseBundle\Type\DateType;
 use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Test\Services;
 
 /**
- * DateTypeTest.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class DateTypeTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->registry = new TypeRegistry($this->getMock(ContainerInterface::class));
-        $this->registry->addType('date', DateType::class);
+        $this->registry = Services::typeRegistry([
+            'date' => new DateType(),
+        ]);
         $this->config = new TypeConfig($this->registry);
     }
 

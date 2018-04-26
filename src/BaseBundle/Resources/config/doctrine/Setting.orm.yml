@@ -26,6 +26,6 @@ Perform\BaseBundle\Entity\Setting:
             type: boolean
     manyToOne:
         user:
-            targetEntity: Perform\UserBundle\Entity\User
+            targetEntity: Symfony\Component\Security\Core\User\UserInterface
             joinColumn:
                 nullable: true

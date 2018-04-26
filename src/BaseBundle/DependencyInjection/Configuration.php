@@ -49,6 +49,34 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('doctrine')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('resolve')
+                            ->useAttributeAsKey('interface')
+                            ->prototype('variable')
+                                ->validate()
+                                    ->ifTrue(function ($value) {
+                                        if (is_string($value)) {
+                                            return false;
+                                        }
+                                        if (!is_array($value) || empty($value)) {
+                                            return true;
+                                        }
+                                        foreach (array_merge(array_keys($value), array_values($value)) as $item) {
+                                            if (!is_string($item)) {
+                                                return true;
+                                            }
+                                        }
+
+                                        return false;
+                                    })
+                                    ->thenInvalid('Each resolved entity value must be either a class name, or an array of class names with the related entities as keys.')
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
                 ->arrayNode('extended_entities')
                     ->useAttributeAsKey('parent')
                     ->prototype('scalar')

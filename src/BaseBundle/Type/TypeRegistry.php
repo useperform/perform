@@ -2,55 +2,30 @@
 
 namespace Perform\BaseBundle\Type;
 
+use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
 use Perform\BaseBundle\Exception\TypeNotFoundException;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * TypeRegistry.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class TypeRegistry
 {
-    protected $container;
-    protected $classes = [];
-    protected $instances = [];
-    protected $services = [];
+    protected $locator;
     protected $resolvers = [];
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(LoopableServiceLocator $locator)
     {
-        $this->container = $container;
-    }
-
-    public function addType($name, $classname)
-    {
-        $this->classes[$name] = $classname;
-    }
-
-    public function addTypeService($name, $service)
-    {
-        $this->services[$name] = $service;
+        $this->locator = $locator;
     }
 
     public function getType($name)
     {
-        //services have priority
-        if (isset($this->services[$name])) {
-            return $this->container->get($this->services[$name]);
-        }
-
-        if (!isset($this->classes[$name])) {
+        if (!$this->locator->has($name)) {
             throw new TypeNotFoundException(sprintf('Entity field type not found: "%s"', $name));
         }
 
-        $classname = $this->classes[$name];
-        if (!isset($this->instances[$name])) {
-            $this->instances[$name] = new $classname();
-        }
-
-        return $this->instances[$name];
+        return $this->locator->get($name);
     }
 
     /**
@@ -72,13 +47,16 @@ class TypeRegistry
         return $this->resolvers[$name];
     }
 
+    /**
+     * Get all available types, indexed by their aliases.
+     *
+     * @return TypeInterface[]
+     */
     public function getAll()
     {
         $types = [];
-        $keys = array_keys(array_merge($this->classes, $this->services));
-
-        foreach ($keys as $key) {
-            $types[$key] = $this->getType($key);
+        foreach ($this->locator as $alias => $type) {
+            $types[$alias] = $type;
         }
 
         return $types;

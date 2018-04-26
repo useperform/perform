@@ -41,7 +41,8 @@
         "phpdocumentor/reflection-docblock": "^3.1",
         "phpunit/phpunit": "^4.8",
         "sonata-project/exporter": "^1.7",
-        "symfony/phpunit-bridge": "^4.0"
+        "symfony/phpunit-bridge": "^4.0",
+        "moneyphp/money": "^3.1"
     },
     "suggest": {
         "doctrine/data-fixtures": "Use database fixtures",
@@ -49,7 +50,8 @@
         "fzaninotto/faker": "Use database fixtures",
         "imagine/imagine": "Use the image media plugin",
         "league/commonmark": "Use the markdown type in the base bundle",
-        "sonata-project/exporter": "Export entities to a variety of formats"
+        "sonata-project/exporter": "Export entities to a variety of formats",
+        "moneyphp/money": "To use the money type"
     },
     "replace": {
         "perform/analytics-bundle": "self.version",

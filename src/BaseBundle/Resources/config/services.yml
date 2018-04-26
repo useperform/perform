@@ -1,5 +1,6 @@
 imports:
     - { resource: services_actions.yml }
+    - { resource: services_types.yml }
 
 services:
     perform_base.admin.registry:
@@ -186,6 +187,13 @@ services:
         tags:
             - { name: doctrine.event_subscriber }
 
+    perform_base.doctrine.resolve_listener:
+        class: Perform\BaseBundle\Doctrine\ResolveEntitiesListener
+        arguments:
+            - "%perform_base.resolved_entities%"
+        tags:
+            - { name: doctrine.event_subscriber }
+
     perform_base.selector.entity:
         class: Perform\BaseBundle\Selector\EntitySelector
         arguments:
@@ -222,41 +230,8 @@ services:
         tags:
             - { name: perform_base.settings_panel, alias: account }
 
-    perform_base.type.entity:
-        class: Perform\BaseBundle\Type\EntityType
-        arguments:
-            - "@doctrine.orm.entity_manager"
-
-    perform_base.type.tag:
-        class: Perform\BaseBundle\Type\TagType
-        arguments:
-            - "@doctrine.orm.entity_manager"
-
-    perform_base.type.collection:
-        class: Perform\BaseBundle\Type\CollectionType
-        arguments:
-            - "@perform_base.admin.registry"
-            - "@doctrine.orm.entity_manager"
-            - "@perform_base.asset_container"
-
-    perform_base.type.slug:
-        class: Perform\BaseBundle\Type\SlugType
-        arguments:
-            - "@perform_base.asset_container"
-
     perform_base.markdown:
         class: League\CommonMark\CommonMarkConverter
-
-    perform_base.type.markdown:
-        class: Perform\BaseBundle\Type\MarkdownType
-        arguments:
-            - "@perform_base.markdown"
-            - "@perform_base.asset_container"
-
-    perform_base.type.html:
-        class: Perform\BaseBundle\Type\HtmlType
-        arguments:
-            - "@perform_base.asset_container"
 
     perform_base.bundle_searcher:
         class: Perform\BaseBundle\Util\BundleSearcher

@@ -36,6 +36,6 @@ Perform\MediaBundle\Entity\File:
                 - remove
     manyToOne:
         owner:
-            targetEntity: Perform\UserBundle\Entity\User
+            targetEntity: Symfony\Component\Security\Core\User\UserInterface
             joinColumn:
                 nullable: true
