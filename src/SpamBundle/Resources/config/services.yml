@@ -8,3 +8,11 @@ services:
             - "@event_dispatcher"
         tags:
             - {name: form.type}
+
+    perform_spam.checker.honeypot:
+        class: Perform\SpamBundle\Checker\HoneypotChecker
+        arguments:
+            - "@request_stack"
+        tags:
+            - {name: kernel.event_listener, event: perform_spam.honeypot_caught, method: onHoneypotCaught}
+            - perform_spam.form_checker
