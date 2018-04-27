@@ -1,3 +1,10 @@
 services:
     perform_spam.manager:
         class: Perform\SpamBundle\SpamManager
+
+    perform_spam.form.type.honeypot:
+        class: Perform\SpamBundle\Form\Type\HoneypotType
+        arguments:
+            - "@event_dispatcher"
+        tags:
+            - {name: form.type}
