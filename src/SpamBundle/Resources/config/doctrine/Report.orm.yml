@@ -1,0 +1,23 @@
+Perform\SpamBundle\Entity\Report:
+    type: entity
+    table: perform_spam_report
+    id:
+        id:
+            type: guid
+            id: true
+            generator:
+                strategy: UUID
+    fields:
+        type:
+            type: string
+        ip:
+            type: string
+            nullable: true
+        userAgent:
+            type: string
+            nullable: true
+        createdAt:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: create
