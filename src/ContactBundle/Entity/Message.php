@@ -3,13 +3,15 @@
 namespace Perform\ContactBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Perform\SpamBundle\Entity\Report;
+use Perform\SpamBundle\Entity\ReportableTrait;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class Message
 {
+    use ReportableTrait;
+
     const STATUS_NEW = 0;
     const STATUS_ARCHIVE = 1;
     const STATUS_SPAM = 2;
@@ -48,8 +50,6 @@ class Message
      * @var int
      */
     protected $status;
-
-    protected $spamReports;
 
     public function __construct()
     {
@@ -190,25 +190,5 @@ class Message
     public function isSpam()
     {
         return $this->status === static::STATUS_SPAM;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getSpamReports()
-    {
-        return $this->spamReports;
-    }
-
-    /**
-     * @param Report $spamReport
-     *
-     * @return Message
-     */
-    public function addSpamReport(Report $spamReport)
-    {
-        $this->spamReports[] = $spamReport;
-
-        return $this;
     }
 }
