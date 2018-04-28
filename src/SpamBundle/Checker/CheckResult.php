@@ -27,4 +27,18 @@ class CheckResult
     {
         return count($this->reports) > 0;
     }
+
+    /**
+     * Merge the reports from another check result into this one.
+     *
+     * @param CheckResult $checkResult
+     *
+     * @return self
+     */
+    public function mergeReports(CheckResult $checkResult)
+    {
+        $this->reports = array_merge($this->reports, $checkResult->getReports());
+
+        return $this;
+    }
 }
