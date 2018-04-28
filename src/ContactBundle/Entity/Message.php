@@ -3,10 +3,9 @@
 namespace Perform\ContactBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Perform\SpamBundle\Entity\Report;
 
 /**
- * Message
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class Message
@@ -202,11 +201,11 @@ class Message
     }
 
     /**
-     * @param SpamReport $spamReport
+     * @param Report $spamReport
      *
      * @return Message
      */
-    public function addSpamReport(SpamReport $spamReport)
+    public function addSpamReport(Report $spamReport)
     {
         $this->spamReports[] = $spamReport;
 
