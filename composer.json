@@ -64,6 +64,7 @@
         "perform/media-bundle": "self.version",
         "perform/notification-bundle": "self.version",
         "perform/rich-content-bundle": "self.version",
+        "perform/spam-bundle": "self.version",
         "perform/user-bundle": "self.version"
     },
     "autoload": {
