@@ -168,6 +168,8 @@ class PerformBaseExtension extends Extension
     {
         self::addExtraSass($container, $config['extra_sass']);
         Assets::addNamespace($container, 'perform-base', __DIR__.'/../Resources/src');
+        Assets::addEntryPoint($container, 'app', [__DIR__.'/../Resources/scss/app.scss']);
+        Assets::addEntryPoint($container, 'perform', [__DIR__.'/../Resources/src/perform.js']);
         Assets::addJavascriptModule($container, 'base', 'perform-base/module');
     }
 

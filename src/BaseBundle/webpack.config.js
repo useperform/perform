@@ -8,10 +8,6 @@ var extractSass = new ExtractTextPlugin({
 });
 
 module.exports = {
-  entry: {
-    app: ['./Resources/scss/app.scss'],
-    perform: ['./Resources/src/perform.js'],
-  },
   output: {
     path: path.resolve(__dirname, './Resources/public'),
     filename: '[name].js'
@@ -74,8 +70,9 @@ module.exports = {
   ]
 }
 
-var aliases = require('./namespaces.js');
-Object.assign(module.exports.resolve.alias, aliases);
+var paths = require('./webpack-paths.js');
+Object.assign(module.exports.resolve.alias, paths.alias);
+module.exports.entry = paths.entry;
 
 if (process.env.NODE_ENV === 'production') {
   module.exports.devtool = '#source-map'

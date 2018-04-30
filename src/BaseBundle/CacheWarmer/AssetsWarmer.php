@@ -17,35 +17,43 @@ class AssetsWarmer implements CacheWarmerInterface
 {
     protected $fs;
     protected $namespaces = [];
+    protected $entrypoints = [];
     protected $javascriptModules = [];
 
     const BUNDLE_DIR = __DIR__.'/..';
 
-    public function __construct(Filesystem $fs, array $namespaces, array $javascriptModules)
+    public function __construct(Filesystem $fs, array $namespaces, array $entrypoints, array $javascriptModules)
     {
         $this->fs = $fs;
         $this->namespaces = $namespaces;
+        $this->entrypoints = $entrypoints;
         $this->javascriptModules = $javascriptModules;
     }
 
     public function warmUp($cacheDir)
     {
-        $this->dumpNamespaces();
+        $this->dumpWebpackConfig();
         $this->dumpJavascriptModules();
     }
 
     /**
-     * Dump namespaces.js, used by webpack for resolve.alias
+     * Dump webpack-paths.js, used by webpack for resolve.alias and entrypoints
      */
-    public function dumpNamespaces()
+    public function dumpWebpackConfig()
     {
-        $content = 'module.exports = {';
-        foreach ($this->namespaces as $name => $path) {
-            $content .= sprintf("'%s': '%s',", $name, rtrim($path, '/').'/');
+        $data = [
+            'entry' => [],
+            'alias' => [],
+        ];
+        foreach ($this->entrypoints as $name => $entry) {
+            $data['entry'][$name] = $entry;
         }
-        $content = rtrim($content, ',').'};';
+        foreach ($this->namespaces as $name => $path) {
+            $data['alias'][$name] = rtrim($path, '/').'/';
+        }
+        $content = sprintf('module.exports = %s', json_encode($data));
 
-        $this->fs->dumpFile(self::BUNDLE_DIR.'/namespaces.js', $content);
+        $this->fs->dumpFile(self::BUNDLE_DIR.'/webpack-paths.js', $content);
     }
 
     /**

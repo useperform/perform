@@ -271,6 +271,7 @@ services:
         arguments:
             - '@filesystem'
             - '%perform_base.assets.namespaces%'
+            - '%perform_base.assets.entrypoints%'
             - '%perform_base.assets.js_modules%'
         tags:
             - {name: kernel.cache_warmer}
