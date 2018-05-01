@@ -266,12 +266,18 @@ services:
         tags:
             - {name: kernel.cache_warmer}
 
-    perform_base.warmer.assets:
-        class: Perform\BaseBundle\CacheWarmer\AssetsWarmer
+    perform_base.asset.path_dumper:
+        class: Perform\BaseBundle\Asset\Dumper\PathDumper
         arguments:
             - '@filesystem'
             - '%perform_base.assets.namespaces%'
             - '%perform_base.assets.entrypoints%'
+
+    perform_base.warmer.assets:
+        class: Perform\BaseBundle\CacheWarmer\AssetsWarmer
+        arguments:
+            - '@perform_base.asset.path_dumper'
+            - '%kernel.project_dir%/asset-paths.js'
             - '%perform_base.assets.js_modules%'
         tags:
             - {name: kernel.cache_warmer}
