@@ -184,20 +184,4 @@ class PerformBaseExtension extends Extension
 
         $container->setParameter('perform_base.admins', $admins);
     }
-
-    /**
-     * Add extra files to be included in the sass build.
-     *
-     * This method is available to other bundles so they don't have to
-     * implement PrependExtensionInterface to add extra sass files.
-     *
-     * @param ContainerBuilder $container
-     * @param array            $files
-     */
-    public static function addExtraSass(ContainerBuilder $container, array $files)
-    {
-        $param = 'perform_base.extra_sass';
-        $existing = $container->hasParameter($param) ? $container->getParameter($param) : [];
-        $container->setParameter($param, array_merge($existing, $files));
-    }
 }
