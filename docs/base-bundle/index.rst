@@ -2,16 +2,17 @@ Base Bundle
 ===========
 
 The *PeformBaseBundle* is the core of Perform, and gives you various
-tools to build applications rapdily:
+tools to build applications rapidly:
 
-* User management and logins
-* A highly configurable CRUD foundation for managing content
+* Modular user interface based on bootstrap 4
+* Highly configurable CRUD foundation for managing database entities
 * Filters to categorise types of content
 * Actions to run different operations on content
 
 .. toctree::
    :maxdepth: 2
 
+   ./ui/index
    ./users
    ./admins
    ./types
