@@ -3,7 +3,7 @@
 @import "variables";
 @import "bootstrap";
 @import "font-awesome";
-@import "../../node_modules/select2/dist/css/select2";
+@import "~select2/src/scss/core";
 @import "header";
 @import "sidebar";
 @import "dashboard";

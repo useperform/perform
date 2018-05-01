@@ -20,6 +20,7 @@ class Assets
     const PARAM_NAMESPACES = 'perform_base.assets.namespaces';
     const PARAM_JS_MODULES = 'perform_base.assets.js_modules';
     const PARAM_ENTRYPOINTS = 'perform_base.assets.entrypoints';
+    const PARAM_EXTRA_SASS = 'perform_base.assets.extra_sass';
 
     /**
      * Add an asset namespace to be used for `resolve.alias` in the webpack builds.
@@ -77,5 +78,20 @@ class Assets
         $container->setParameter(self::PARAM_ENTRYPOINTS, array_merge($existing, [
             $name => $path,
         ]));
+    }
+
+    /**
+     * Add extra files to be included in the main sass build.
+     *
+     * You'll most likely want to prefix the files with a tilde (~) to
+     * import from a namespace.
+     *
+     * @param ContainerBuilder $container
+     * @param array            $files
+     */
+    public static function addExtraSass(ContainerBuilder $container, array $files)
+    {
+        $existing = $container->hasParameter(self::PARAM_EXTRA_SASS) ? $container->getParameter(self::PARAM_EXTRA_SASS) : [];
+        $container->setParameter(self::PARAM_EXTRA_SASS, array_merge($existing, $files));
     }
 }

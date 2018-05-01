@@ -22,7 +22,7 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('theme')
-                            ->defaultValue('PerformBaseBundle:default')
+                            ->defaultValue('~perform-base-styles/themes/default')
                         ->end()
                         ->arrayNode('extra_sass')
                             ->prototype('scalar')->end()

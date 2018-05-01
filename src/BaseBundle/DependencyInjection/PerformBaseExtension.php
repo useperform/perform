@@ -40,7 +40,7 @@ class PerformBaseExtension extends Extension
         $container->setParameter('perform_base.panels.right', $config['panels']['right']);
         $container->setParameter('perform_base.menu_order', $config['menu']['order']);
         $container->setParameter('perform_base.auto_asset_version', uniqid());
-        $container->setParameter('perform_base.theme', $config['assets']['theme']);
+        $container->setParameter('perform_base.assets.theme', $config['assets']['theme']);
         $this->configureTypeRegistry($container);
         $this->configureMailer($config, $container);
         $this->findExtendedEntities($container, $config);
@@ -166,10 +166,11 @@ class PerformBaseExtension extends Extension
 
     protected function configureAssets(ContainerBuilder $container, array $config)
     {
-        self::addExtraSass($container, $config['extra_sass']);
         Assets::addNamespace($container, 'perform-base', __DIR__.'/../Resources/src');
+        Assets::addNamespace($container, 'perform-base-styles', __DIR__.'/../Resources/scss');
         Assets::addEntryPoint($container, 'app', [__DIR__.'/../Resources/scss/app.scss']);
         Assets::addEntryPoint($container, 'perform', [__DIR__.'/../Resources/src/perform.js']);
+        Assets::addExtraSass($container, $config['extra_sass']);
         Assets::addJavascriptModule($container, 'base', 'perform-base/module');
     }
 

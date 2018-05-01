@@ -256,16 +256,6 @@ services:
             - '@perform_base.type_registry'
             - '@perform_base.export.writer_factory'
 
-    perform_base.warmer.sass:
-        class: Perform\BaseBundle\CacheWarmer\SassWarmer
-        arguments:
-            - '@perform_base.bundle_searcher'
-            - '@filesystem'
-            - '%perform_base.theme%'
-            - '%perform_base.extra_sass%'
-        tags:
-            - {name: kernel.cache_warmer}
-
     perform_base.asset.path_dumper:
         class: Perform\BaseBundle\Asset\Dumper\PathDumper
         arguments:
@@ -279,9 +269,17 @@ services:
             - '@filesystem'
             - '%perform_base.assets.js_modules%'
 
+    perform_base.asset.sass_dumper:
+        class: Perform\BaseBundle\Asset\Dumper\SassDumper
+        arguments:
+            - '@filesystem'
+            - '%perform_base.assets.theme%'
+            - '%perform_base.assets.extra_sass%'
+
     perform_base.warmer.assets:
         class: Perform\BaseBundle\CacheWarmer\AssetsWarmer
         arguments:
+            - '@perform_base.asset.sass_dumper'
             - '@perform_base.asset.js_dumper'
             - '@perform_base.asset.path_dumper'
             - '%kernel.project_dir%/asset-paths.js'
