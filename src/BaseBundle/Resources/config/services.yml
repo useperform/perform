@@ -273,11 +273,17 @@ services:
             - '%perform_base.assets.namespaces%'
             - '%perform_base.assets.entrypoints%'
 
+    perform_base.asset.js_dumper:
+        class: Perform\BaseBundle\Asset\Dumper\JavascriptDumper
+        arguments:
+            - '@filesystem'
+            - '%perform_base.assets.js_modules%'
+
     perform_base.warmer.assets:
         class: Perform\BaseBundle\CacheWarmer\AssetsWarmer
         arguments:
+            - '@perform_base.asset.js_dumper'
             - '@perform_base.asset.path_dumper'
             - '%kernel.project_dir%/asset-paths.js'
-            - '%perform_base.assets.js_modules%'
         tags:
             - {name: kernel.cache_warmer}
