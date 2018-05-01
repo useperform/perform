@@ -8,6 +8,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 use Perform\BaseBundle\DependencyInjection\PerformBaseExtension;
 use Perform\Licensing\Licensing;
+use Perform\BaseBundle\DependencyInjection\Assets;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -26,8 +27,9 @@ class PerformMediaExtension extends Extension
         $loader->load('services.yml');
         $container->setParameter('perform_media.bucket_configs', $config['buckets']);
 
-        if (class_exists(PerformBaseExtension::class)) {
-            PerformBaseExtension::addExtraSass($container, ['PerformMediaBundle:media.scss']);
+        if (class_exists(Assets::class)) {
+            Assets::addNamespace($container, 'perform-media', __DIR__.'/../Resources');
+            Assets::addExtraSass($container, ['~perform-media/scss/media.scss']);
         }
     }
 }

@@ -7,7 +7,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 use Perform\Licensing\Licensing;
-use Perform\BaseBundle\DependencyInjection\PerformBaseExtension;
+use Perform\BaseBundle\DependencyInjection\Assets;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -29,8 +29,9 @@ class PerformPageEditorExtension extends Extension
 
         $container->setParameter('perform_page_editor.toolbar.excluded_urls', $config['toolbar']['excluded_urls']);
 
-        if (class_exists(PerformBaseExtension::class)) {
-            PerformBaseExtension::addExtraSass($container, ['PerformPageEditorBundle:toolbar.scss']);
+        if (class_exists(Assets::class)) {
+            Assets::addNamespace($container, 'perform-page-editor', __DIR__.'/../Resources');
+            Assets::addExtraSass($container, ['~perform-page-editor/scss/toolbar.scss']);
             // define a new entrypoint to use page editor standalone on the frontend
         }
     }
