@@ -47,7 +47,7 @@
       <div class="input-group-text">
         {% set currency_code = form.currency.vars.data is not null ? form.currency.vars.data : default_currency %}
         {% if currency_classes[currency_code] is defined %}
-          <span class="fa {{currency_classes[form.currency.vars.data]}}"></span>
+          <span class="fa {{currency_classes[currency_code]}}"></span>
         {% else %}
           {{currency_code}}
         {% endif %}
