@@ -1,0 +1,22 @@
+{
+    "name": "perform/page-editor-bundle",
+    "description": "Live page editing for websites",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Glynn Forrest",
+            "email": "me@glynnforrest.com"
+        }
+    ],
+    "require": {
+        "symfony/serializer": "^3.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Perform\\PageEditorBundle\\": ""
+        }
+    }
+}
