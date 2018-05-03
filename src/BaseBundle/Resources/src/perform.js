@@ -4,7 +4,7 @@ window.Perform = perform;
 import jquery from 'jquery';
 window.jQuery = window.$ = jquery;
 
-import {renderDropdown, renderCounter, getUnfinished} from 'perform-base/tasks';
+import {renderDropdown, renderCounter, getUnfinished} from './tasks';
 
 $(function () {
   renderDropdown('#perform-tasks-dropdown');

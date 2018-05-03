@@ -115,7 +115,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     {
         $config = $this->process([]);
         $expected = [
-            'theme' => 'PerformBaseBundle:default',
+            'theme' => '~perform-base/scss/themes/default',
             'extra_sass' => [],
         ];
 

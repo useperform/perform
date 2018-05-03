@@ -1,5 +1,5 @@
-import {renderCounter, renderDropdown, add, get, getUnfinished, setProgress, cancel} from 'perform-base/tasks';
-import {datepicker, markdown} from 'perform-base/form';
+import {renderCounter, renderDropdown, add, get, getUnfinished, setProgress, cancel} from './tasks';
+import {datepicker, markdown} from './form';
 
 let messages = [];
 

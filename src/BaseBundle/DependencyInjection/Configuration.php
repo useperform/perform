@@ -22,7 +22,7 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('theme')
-                            ->defaultValue('~perform-base-styles/themes/default')
+                            ->defaultValue('~perform-base/scss/themes/default')
                         ->end()
                         ->arrayNode('extra_sass')
                             ->prototype('scalar')->end()
