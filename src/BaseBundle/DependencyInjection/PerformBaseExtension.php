@@ -172,6 +172,7 @@ class PerformBaseExtension extends Extension
         Assets::addEntryPoint($container, 'perform', [__DIR__.'/../Resources/src/perform.js']);
         Assets::addExtraSass($container, $config['extra_sass']);
         Assets::addJavascriptModule($container, 'base', 'perform-base/module');
+        Assets::addNpmConfig($container, __DIR__.'/../package.json');
     }
 
     public function processAdminConfig(ContainerBuilder $container, array $config)

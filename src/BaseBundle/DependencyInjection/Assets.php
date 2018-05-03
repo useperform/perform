@@ -21,6 +21,7 @@ class Assets
     const PARAM_JS_MODULES = 'perform_base.assets.js_modules';
     const PARAM_ENTRYPOINTS = 'perform_base.assets.entrypoints';
     const PARAM_EXTRA_SASS = 'perform_base.assets.extra_sass';
+    const PARAM_NPM_CONFIGS = 'perform_base.assets.npm_configs';
 
     /**
      * Add an asset namespace to be used for `resolve.alias` in the webpack builds.
@@ -93,5 +94,17 @@ class Assets
     {
         $existing = $container->hasParameter(self::PARAM_EXTRA_SASS) ? $container->getParameter(self::PARAM_EXTRA_SASS) : [];
         $container->setParameter(self::PARAM_EXTRA_SASS, array_merge($existing, $files));
+    }
+
+    /**
+     * Add a package.json file to the list of npm dependencies to be merged.
+     *
+     * @param ContainerBuilder $container
+     * @param string            $file
+     */
+    public static function addNpmConfig(ContainerBuilder $container, $file)
+    {
+        $existing = $container->hasParameter(self::PARAM_NPM_CONFIGS) ? $container->getParameter(self::PARAM_NPM_CONFIGS) : [];
+        $container->setParameter(self::PARAM_NPM_CONFIGS, array_merge($existing, [$file]));
     }
 }
