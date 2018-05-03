@@ -26,6 +26,13 @@ services:
         tags:
             - {name: perform_dev.frontend}
 
+    Perform\DevBundle\Command\CreateThemeCommand:
+        class: Perform\DevBundle\Command\CreateThemeCommand
+        arguments:
+            - '@perform_dev.file_creator'
+        tags:
+            - console.command
+
     Perform\DevBundle\Command\CreateAssetConfigCommand:
         class: Perform\DevBundle\Command\CreateAssetConfigCommand
         arguments:
