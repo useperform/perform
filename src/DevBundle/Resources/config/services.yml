@@ -25,3 +25,11 @@ services:
         class: Perform\DevBundle\Frontend\Bootstrap3Frontend
         tags:
             - {name: perform_dev.frontend}
+
+    Perform\DevBundle\Command\MergeNpmPackagesCommand:
+        class: Perform\DevBundle\Command\MergeNpmPackagesCommand
+        arguments:
+            - '%kernel.project_dir%'
+            - '%perform_base.assets.npm_configs%'
+        tags:
+            - console.command
