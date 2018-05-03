@@ -18,11 +18,6 @@ class NpmMergeResult
         $this->unresolvedRequirements = $unresolvedRequirements;
     }
 
-    public function isValid()
-    {
-        return empty($this->unresolvedRequirements);
-    }
-
     public function getResolvedRequirements()
     {
         return $this->resolvedRequirements;

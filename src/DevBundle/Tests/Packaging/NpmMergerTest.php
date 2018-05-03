@@ -40,6 +40,10 @@ class NpmMergerTest extends \PHPUnit_Framework_TestCase
                 [
                     'some-dep' => '^3.6.0',
                     'some-other-dep' => '^0.1',
+                ],
+                //expected new
+                [
+                    'some-other-dep' => [null, '^0.1'],
                 ]
             ],
 
@@ -52,31 +56,38 @@ class NpmMergerTest extends \PHPUnit_Framework_TestCase
                 ],
                 [
                     'some-dep' => '^3.6.0',
+                ],
+                [
+                ],
+            ],
+
+            [
+                [
+                    'some-dep' => '^3.6.0',
+                ],
+                [
+                    'some-dep' => '^3.7.0',
+                ],
+                [
+                    'some-dep' => '^3.7.0',
+                ],
+                [
+                    'some-dep' => ['^3.6.0', '^3.7.0'],
+                ],
+            ],
+
+            [
+                [
+                    'some-dep' => '^3.7.0',
+                ],
+                [
+                    'some-dep' => '^3.6.0',
+                ],
+                [
+                    'some-dep' => '^3.7.0',
+                ],
+                [
                 ]
-            ],
-
-            [
-                [
-                    'some-dep' => '^3.6.0',
-                ],
-                [
-                    'some-dep' => '^3.7.0',
-                ],
-                [
-                    'some-dep' => '^3.7.0',
-                ],
-            ],
-
-            [
-                [
-                    'some-dep' => '^3.7.0',
-                ],
-                [
-                    'some-dep' => '^3.6.0',
-                ],
-                [
-                    'some-dep' => '^3.7.0',
-                ],
             ],
         ];
     }
@@ -84,11 +95,49 @@ class NpmMergerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider validProvider
      */
-    public function testMergeWithValidConstraints($existing, $new, $expected)
+    public function testMergeWithValidConstraints($existing, $new, $expected, $expectedNew)
     {
         $result = $this->merger->mergeRequirements($existing, $new);
-        $this->assertTrue($result->isValid());
         $this->assertSame($expected, $result->getResolvedRequirements());
-        // $this->assertSame($expectedNew, $result->getNewRequirements());
+        $this->assertSame($expectedNew, $result->getNewRequirements());
+        $this->assertEmpty($result->getUnresolvedRequirements());
+    }
+
+    public function invalidProvider()
+    {
+        return [
+            [
+                //existing
+                [
+                    'some-dep' => '^3.1.0',
+                    'one-dep' => '^1.1.0',
+                ],
+                //new
+                [
+                    'some-dep' => '^4.1',
+                    'two-dep' => '4.2.9-beta',
+                ],
+                //expected
+                [
+                    'some-dep' => '^3.1.0',
+                    'one-dep' => '^1.1.0',
+                    'two-dep' => '4.2.9-beta',
+                ],
+                //expected unresolved
+                [
+                    'some-dep' => ['^3.1.0', '^4.1'],
+                ]
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidProvider
+     */
+    public function testMergeWithInvalidConstraints($existing, $new, $expected, $expectedUnresolved)
+    {
+        $result = $this->merger->mergeRequirements($existing, $new);
+        $this->assertSame($expected, $result->getResolvedRequirements());
+        $this->assertSame($expectedUnresolved, $result->getUnresolvedRequirements());
     }
 }

@@ -27,24 +27,37 @@ class NpmMerger
     public function mergeRequirements(array $existingRequirements, array $newRequirements)
     {
         $resolved = $existingRequirements;
+        // array of package names => [old-version, new-version]
+        $new = [];
+        // array of package names => [version-conflict1, version-conflict2]
+        $unresolved = [];
 
         foreach ($newRequirements as $package => $version) {
             if (!isset($resolved[$package])) {
+                $new[$package] = [null, $version];
                 $resolved[$package] = $version;
                 continue;
             }
 
-            $existingConstraint = $this->parser->parseConstraints($resolved[$package]);
-            $newConstraint = $this->parser->parseConstraints($version);
+            try {
+                $existingConstraint = $this->parser->parseConstraints($resolved[$package]);
+                $newConstraint = $this->parser->parseConstraints($version);
+            } catch (\Exception $e) {
+                $unresolved[$package] = [$resolved[$package], $version];
+            }
+
+            // if the two constraints are compatible, use the greater version
             if ($newConstraint->matches($existingConstraint)) {
-                // if the two constraints are compatible, use the greater version
-                $resolved[$package] = Comparator::greaterThan($version, $resolved[$package]) ?
-                                    $version : $resolved[$package];
+                if (Comparator::greaterThan($version, $resolved[$package])) {
+                    $new[$package] = [$resolved[$package], $version];
+                    $resolved[$package] = $version;
+                }
                 continue;
             }
+            $unresolved[$package] = [$resolved[$package], $version];
         }
 
-        return new NpmMergeResult($resolved, [], []);
+        return new NpmMergeResult($resolved, $new, $unresolved);
     }
 
     /**
@@ -73,7 +86,7 @@ class NpmMerger
         $json['dependencies'] = $requirements;
 
         $pretty = json_encode($json, JSON_PRETTY_PRINT);
-        file_put_contents($file, str_replace('    ', '  ', $pretty));
+        file_put_contents($file, str_replace('    ', '  ', $pretty).PHP_EOL);
     }
 
     private function parseJsonFile($file)
