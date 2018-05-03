@@ -26,6 +26,14 @@ services:
         tags:
             - {name: perform_dev.frontend}
 
+    Perform\DevBundle\Command\CreateAssetConfigCommand:
+        class: Perform\DevBundle\Command\CreateAssetConfigCommand
+        arguments:
+            - '@perform_dev.file_creator'
+            - '%kernel.project_dir%'
+        tags:
+            - console.command
+
     Perform\DevBundle\Command\MergeNpmPackagesCommand:
         class: Perform\DevBundle\Command\MergeNpmPackagesCommand
         arguments:
