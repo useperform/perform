@@ -1,17 +1,3 @@
-@import "~bootstrap/scss/functions";
-@import "theme_variables";
-@import "variables";
-@import "bootstrap";
-@import "font-awesome";
-@import "~select2/src/scss/core";
-@import "header";
-@import "sidebar";
-@import "dashboard";
-@import "types";
-@import "components";
-
-@import url($base-font-url);
-
 html, body {
   height: 100%;
 }
@@ -121,6 +107,3 @@ tbody {
 //   font-style: italic;
 //   color: $placeholder-color;
 // }
-
-@import "extras";
-@import "theme";
