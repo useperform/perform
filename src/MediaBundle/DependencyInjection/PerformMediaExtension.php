@@ -30,6 +30,8 @@ class PerformMediaExtension extends Extension
         if (class_exists(Assets::class)) {
             Assets::addNamespace($container, 'perform-media', __DIR__.'/../Resources');
             Assets::addExtraSass($container, ['~perform-media/scss/media.scss']);
+            Assets::addNpmConfig($container, __DIR__.'/../package.json');
+            Assets::addJavascriptModule($container, 'media', __DIR__.'/../Resources/src/module.js');
         }
     }
 }
