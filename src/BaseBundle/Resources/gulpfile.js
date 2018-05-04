@@ -4,6 +4,7 @@ var gulp = require('gulp');
 
 gulp.task('build', function () {
   return gulp.src([
+    'node_modules/jquery/dist/jquery.min.js',
     'node_modules/jquery.cookie/jquery.cookie.js',
     'node_modules/popper.js/dist/umd/popper.min.js',
     'node_modules/bootstrap/dist/js/bootstrap.min.js',

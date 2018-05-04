@@ -1,4 +1,7 @@
 $(function () {
+  var showSuccess = window.Perform.base.showSuccess;
+  var showError = window.Perform.base.showError;
+
   var runAction = function(href, action, button) {
     if (!href) {
       return console.error('Missing action href');
@@ -23,7 +26,7 @@ $(function () {
           return button.attr('disabled', false);
         }
         if (data.redirectType === 'none') {
-          app.func.showSuccess(data.message);
+          showSuccess(data.message);
           $('#modal-action-confirm').modal('hide');
         }
         //url or route redirect
@@ -57,7 +60,7 @@ $(function () {
           }
         }
         $('#modal-action-confirm').modal('hide');
-        app.func.showError(error);
+        showError(error);
         button.attr('disabled', false);
       }
     });
