@@ -13,10 +13,9 @@ class AssetsInstaller implements InstallerInterface
 {
     public function install(ContainerInterface $container, LoggerInterface $logger)
     {
-        $dir = __DIR__.'/..';
+        $dir = __DIR__.'/../Resources';
         NpmHelper::install($dir, $logger);
         ProcessHelper::run('npm run build', $logger, $dir);
-        ProcessHelper::run('npm run components_build', $logger, $dir);
     }
 
     public function requiresConfiguration()
