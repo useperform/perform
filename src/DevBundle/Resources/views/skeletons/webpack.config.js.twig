@@ -12,6 +12,24 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 // Use this to get entrypoints and asset namespaces (resolve.alias).
 var assetPaths = require('./asset-paths.js');
 
+// babel options need to be passed to both the babel-loader and vue-loader.
+// vue-loader v15 will remove this requirement, and will handle
+// javascript like any other .js$ file.
+var babelOptions = {
+  presets: [
+    // explicitly resolve babel presets to prevent it
+    // looking for them in entrypoint directories
+    [require.resolve('babel-preset-env'), {
+      "targets": {
+        "browsers": ['last 2 versions', '> 1%'],
+        "uglify": true
+      },
+      "modules": false
+    }],
+  ],
+  babelrc: false,
+};
+
 module.exports = {
   entry: assetPaths.entrypoints,
   output: {
@@ -25,13 +43,20 @@ module.exports = {
         loader: 'vue-loader',
         options: {
           loaders: {
+            js: {
+              loader: 'babel-loader',
+              options: babelOptions,
+            }
           }
         }
       },
       {
         test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: babelOptions,
+        }
       },
       {
         test: /\.scss$/,
@@ -62,10 +87,21 @@ module.exports = {
     ]
   },
   resolve: {
+    // tell webpack to look for npm deps in this directory, not in the
+    // entrypoint directories
+    modules: [
+      path.resolve(__dirname, 'node_modules')
+    ],
     alias: Object.assign({
       'vue$': 'vue/dist/vue.esm.js',
     }, assetPaths.namespaces),
     extensions: ['*', '.js', '.vue', '.json']
+  },
+  resolveLoader: {
+    // also tell webpack to look for loaders in this directory
+    modules: [
+      path.resolve(__dirname, 'node_modules')
+    ],
   },
   performance: {
     hints: false
