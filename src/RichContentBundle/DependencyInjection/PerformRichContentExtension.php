@@ -31,6 +31,7 @@ class PerformRichContentExtension extends Extension
         if (class_exists(Assets::class)) {
             Assets::addNamespace($container, 'perform-rich-content', __DIR__.'/../Resources');
             Assets::addNpmConfig($container, __DIR__.'/../package.json');
+            Assets::addExtraSass($container, ['~perform-rich-content/scss/components.scss']);
             Assets::addJavascriptModule($container, 'richContent', __DIR__.'/../Resources/js/module.js');
         }
         FormTemplatesPass::addTemplate($container, '@PerformRichContent/form_types.html.twig');

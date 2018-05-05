@@ -1,5 +1,5 @@
 <template>
-  <div class="block-list">
+  <div>
     <Block v-for="block, i in sortedBlocks" :key="block.id" :block="block" :position="i" :editorIndex="editorIndex" />
     <AddButton :editorIndex="editorIndex" />
   </div>

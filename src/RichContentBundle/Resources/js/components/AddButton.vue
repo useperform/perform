@@ -1,21 +1,23 @@
 <template>
-  <div v-on-clickaway="onAway" class="add-button">
-    <a class="add" href="#" @click.prevent="toggleChoosing" :title="linkDescription">
-      <i v-if="!this.choosing" class="fa fa-plus"></i>
-      <i v-if="this.choosing" class="fa fa-minus"></i>
-    </a>
-    <div class="type-tooltip" v-if="this.choosing">
-      <input type="text" v-model="filterText" ref="inputFilter"/>
-      <ul>
-        <li v-for="type, typeName in filteredBlockTypes" @click.prevent="addBlock(typeName)" @mouseenter="onHoverStart(typeName)" @mouseleave="onHoverStop" :key="typeName">
-          <div class="name">
-            {{type.name}}
-          </div>
-          <p class="description">
-            {{type.description}}
-          </p>
-        </li>
-      </ul>
+  <div class="p--local">
+    <div v-on-clickaway="onAway" class="p-comp-rich-content-add-button">
+      <a class="add" href="#" @click.prevent="toggleChoosing" :title="linkDescription">
+        <i v-if="!this.choosing" class="fa fa-plus"></i>
+        <i v-if="this.choosing" class="fa fa-minus"></i>
+      </a>
+      <div class="type-tooltip" v-if="this.choosing">
+        <input type="text" v-model="filterText" ref="inputFilter"/>
+        <ul>
+          <li v-for="type, typeName in filteredBlockTypes" @click.prevent="addBlock(typeName)" @mouseenter="onHoverStart(typeName)" @mouseleave="onHoverStop" :key="typeName">
+            <div class="name">
+              {{type.name}}
+            </div>
+            <p class="description">
+              {{type.description}}
+            </p>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>

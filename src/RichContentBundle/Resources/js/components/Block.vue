@@ -1,15 +1,13 @@
 <template>
-  <div class="block">
-    <component
-      :is="blockType"
-      :value="block.value"
-      :componentInfo="block.component_info"
-      :editorIndex="editorIndex"
-      :position="position"
-      :isNew="isNew"
-      @update="setBlockValue"
-    />
-  </div>
+  <component
+    :is="blockType"
+    :value="block.value"
+    :componentInfo="block.component_info"
+    :editorIndex="editorIndex"
+    :position="position"
+    :isNew="isNew"
+    @update="setBlockValue"
+  />
 </template>
 
 <script>

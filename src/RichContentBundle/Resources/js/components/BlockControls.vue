@@ -1,18 +1,20 @@
 <template>
-  <div class="controls btn-group" role="group" aria-label="Block controls">
-    <button type="button" class="btn btn-default">
-      <i class="fa fa-arrows"></i>
-    </button>
-    <button type="button" class="btn btn-default" @click.prevent="clickUp">
-      <i class="fa fa-arrow-up"></i>
-    </button>
-    <button type="button" class="btn btn-default" @click.prevent="clickDown">
-      <i class="fa fa-arrow-down"></i>
-    </button>
-    <button type="button" class="btn btn-default" @click.prevent="clickRemove">
-      <i class="fa fa-trash"></i>
-    </button>
-    <slot name="extra-buttons"></slot>
+  <div class="p--local">
+    <div class="p-comp-rich-content-controls btn-group" role="group" aria-label="Block controls">
+      <button type="button" class="btn btn-default">
+        <i class="fa fa-arrows"></i>
+      </button>
+      <button type="button" class="btn btn-default" @click.prevent="clickUp">
+        <i class="fa fa-arrow-up"></i>
+      </button>
+      <button type="button" class="btn btn-default" @click.prevent="clickDown">
+        <i class="fa fa-arrow-down"></i>
+      </button>
+      <button type="button" class="btn btn-default" @click.prevent="clickRemove">
+        <i class="fa fa-trash"></i>
+      </button>
+      <slot name="extra-buttons"></slot>
+    </div>
   </div>
 </template>
 

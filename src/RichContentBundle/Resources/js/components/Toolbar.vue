@@ -1,8 +1,10 @@
 <template>
-  <div class="toolbar">
-    <a class="btn btn-primary btn-xs" href="#" @click.prevent="save" :disabled="saving">
-      Save
-    </a>
+  <div class="p--local">
+    <div class="p-comp-rich-content-toolbar">
+      <a class="btn btn-primary btn-xs" href="#" @click.prevent="save" :disabled="saving">
+        Save
+      </a>
+    </div>
   </div>
 </template>
 

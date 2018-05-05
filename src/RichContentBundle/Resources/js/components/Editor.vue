@@ -1,7 +1,9 @@
 <template>
-  <div class="p-rich-editor">
+  <div>
     <Toolbar :editorIndex="editorIndex" v-if="showToolbar" />
-    <i class="fa fa-2x fa-spin fa-spinner" v-if="loading"></i>
+    <div class="p--local">
+      <i class="fa fa-2x fa-spin fa-spinner" v-if="loading"></i>
+    </div>
     <BlockList :editorIndex="editorIndex" />
   </div>
 </template>
@@ -9,7 +11,6 @@
 <script>
  import BlockList from './BlockList';
  import Toolbar from './Toolbar';
- import css from './editor.scss';
 
  export default {
    props: [
