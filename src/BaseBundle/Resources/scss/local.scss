@@ -1,0 +1,37 @@
+/*
+All scss entrypoints working with .p--local should import this file,
+followed by any additional stylesheets they need.
+
+For example:
+
+@import "~perform-base/scss/local";
+
+.p--local {
+  @import "~bundle/scss/styles";
+  @import "~bundle2/scss/styles";
+}
+*/
+
+@import "~bootstrap/scss/functions";
+@import "~perform-base/scss/theme_variables";
+@import "~perform-base/scss/variables";
+
+/*
+Selected styles normally applied to <html> and <body>
+since they can't be children of a .p--local tag.
+*/
+.p--local {
+  box-sizing: border-box;
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -ms-overflow-style: scrollbar;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  margin: 0;
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  font-weight: $font-weight-base;
+  line-height: $line-height-base;
+  color: $body-color;
+  text-align: left;
+}
