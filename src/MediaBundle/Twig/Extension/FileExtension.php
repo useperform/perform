@@ -4,6 +4,8 @@ namespace Perform\MediaBundle\Twig\Extension;
 
 use Perform\MediaBundle\Entity\File;
 use Perform\MediaBundle\Importer\FileImporter;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Perform\BaseBundle\Asset\AssetContainer;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -11,10 +13,14 @@ use Perform\MediaBundle\Importer\FileImporter;
 class FileExtension extends \Twig_Extension
 {
     protected $mediaManager;
+    protected $normalizer;
+    protected $assets;
 
-    public function __construct(FileImporter $mediaManager)
+    public function __construct(FileImporter $mediaManager, NormalizerInterface $normalizer, AssetContainer $assets)
     {
         $this->mediaManager = $mediaManager;
+        $this->normalizer = $normalizer;
+        $this->assets = $assets;
     }
 
     public function getFunctions()
@@ -27,17 +33,19 @@ class FileExtension extends \Twig_Extension
 
     public function getPreview(\Twig_Environment $twig, File $file = null)
     {
-        $data = $file ? [
-            'id' => $file->getId(),
-            'name' => $file->getName(),
-            'url' => $this->mediaManager->getUrl($file),
-            'thumbnail' => $this->mediaManager->getSuitableUrl($file, ['width' => 400]),
-            'type' => $file->getType(),
-        ] : [];
+        if (!$file) {
+            return '';
+        }
+
+        $data = json_encode($this->normalizer->normalize($file));
+        $id = sprintf('media-preview-%s-%s', $file->getId(), uniqid());
+        $js = <<<EOF
+Perform.media.preview("#{$id}", {$data});
+EOF;
+        $this->assets->addInlineJs($js);
 
         return $twig->render('@PerformMedia/file/_preview.html.twig', [
-            'file' => $file,
-            'data' => $data,
+            'id' => $id,
         ]);
     }
 }

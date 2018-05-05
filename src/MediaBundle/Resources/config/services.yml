@@ -13,6 +13,8 @@ services:
         class: Perform\MediaBundle\Twig\Extension\FileExtension
         arguments:
             - "@perform_media.importer.file"
+            - "@perform_media.normalizer.file"
+            - "@perform_base.asset_container"
         tags:
             - {name: twig.extension}
 

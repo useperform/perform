@@ -1,19 +1,15 @@
 import Vue from 'vue';
 import FilePreview from './components/FilePreview';
 
-export default function preview(element, file) {
+export default function(el, file) {
   //if file is not an object, fetch via ajax
   if (!file.id) {
     return;
   }
   new Vue({
-    el: element,
-    data: {
+    el,
+    render: h => h(FilePreview, {props: {
       file
-    },
-    components: {
-      FilePreview,
-    },
-    template: '<FilePreview :file="file" />'
+    }}),
   });
 };

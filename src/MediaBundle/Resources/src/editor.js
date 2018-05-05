@@ -15,8 +15,4 @@ $(function() {
       }
     });
   });
-
-  $('.p-comp-media-preview').each(function(e) {
-    Perform.media.preview(this, $(this).data());
-  });
 });
