@@ -37,7 +37,6 @@ services:
         class: Perform\MediaBundle\Type\MediaType
         arguments:
             - '@perform_media.bucket_registry'
-            - '@perform_base.asset_container'
         tags:
             - { name: perform_base.type, alias: media }
 

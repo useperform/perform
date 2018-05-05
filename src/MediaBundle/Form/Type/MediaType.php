@@ -35,6 +35,7 @@ class MediaType extends AbstractType
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
+        // validate the file is allowed to be added
         $id = $view->vars['id'];
         $file = $view->vars['data'];
         $fileJs = $file instanceof File ?

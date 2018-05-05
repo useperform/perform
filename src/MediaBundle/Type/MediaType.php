@@ -7,8 +7,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Perform\BaseBundle\Type\AbstractType;
 use Perform\MediaBundle\Entity\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Perform\BaseBundle\Asset\AssetContainer;
-use Perform\BaseBundle\Form\Type\HiddenEntityType;
+use Perform\MediaBundle\Form\Type\MediaType as SelectorFormType;
 use Perform\MediaBundle\Bucket\BucketRegistryInterface;
 use Perform\MediaBundle\Exception\MediaTypeException;
 
@@ -34,29 +33,19 @@ use Perform\MediaBundle\Exception\MediaTypeException;
 class MediaType extends AbstractType
 {
     protected $registry;
-    protected $assets;
 
-    public function __construct(BucketRegistryInterface $registry, AssetContainer $assets)
+    public function __construct(BucketRegistryInterface $registry)
     {
         $this->registry = $registry;
-        $this->assets = $assets;
         parent::__construct();
     }
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
         if ($options['use_selector']) {
-            $this->assets->addJs('/bundles/performmedia/app.js');
-            $this->assets->addJs('/bundles/performmedia/editor.js');
-            $builder->add($field, HiddenEntityType::class, [
-                'class' => 'PerformMediaBundle:File',
-                // validate the file is allowed to be added
-            ]);
+            $builder->add($field, SelectorFormType::class);
 
-            return [
-                'use_selector' => true,
-                'file' => $this->accessor->getValue($builder->getData(), $field),
-            ];
+            return [];
         }
 
         $availableTypes = array_keys($this->registry->getDefault()->getMediaTypes());
@@ -79,16 +68,10 @@ class MediaType extends AbstractType
                     ->setParameter('types', $types);
             },
         ]);
-
-        return [
-            'use_selector' => false,
-        ];
     }
 
     public function listContext($entity, $field, array $options = [])
     {
-        $this->assets->addJs('/bundles/performmedia/app.js');
-        $this->assets->addJs('/bundles/performmedia/editor.js');
         $file = $this->accessor->getValue($entity, $field);
 
         if ($file && !$file instanceof File) {
