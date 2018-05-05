@@ -1,7 +1,7 @@
 <template>
   <div ref="container">
     <block-controls v-if="active" :position="position" :editorIndex="editorIndex" />
-    <div class="p-rich-text" ref="content"></div>
+    <div ref="content" style="outline: 0;"></div>
   </div>
 </template>
 

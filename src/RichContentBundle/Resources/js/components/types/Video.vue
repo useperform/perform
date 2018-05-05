@@ -1,7 +1,9 @@
 <template>
   <div ref="container">
     <block-controls v-if="active" :position="position" :editorIndex="editorIndex" />
-    <input type="text" class="form-control" @input="inputHandler" @focus="onFocus" @blur="onBlur"/>
+    <div class="p--local">
+      <input type="text" class="form-control" placeholder="Video URL" @input="inputHandler" @focus="onFocus" @blur="onBlur"/>
+    </div>
     <div v-html="embed"></div>
   </div>
 </template>

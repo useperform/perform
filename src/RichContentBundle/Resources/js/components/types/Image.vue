@@ -8,10 +8,14 @@
       </template>
     </block-controls>
     <img v-if="hasImage" :src="componentInfo.src" @click.prevent="onClick" style="max-width: 100%;"/>
-    <a href="#" v-if="missingImage" @click.prevent="onClick">
-      <i class="fa fa-exclamation-triangle"></i>
-      Missing image
-    </a>
+    <div class="p--local" v-if="missingImage">
+      <div class="alert alert-danger">
+        <i class="fa fa-exclamation-triangle"></i>
+        <a href="#" class="alert-link" @click.prevent="onClick">
+          Missing image
+        </a>
+      </div>
+    </div>
   </div>
 </template>
 

@@ -7,10 +7,24 @@
         </button>
       </template>
     </block-controls>
-    <div v-if="editing">
-      <textarea v-model="text" class="form-control"></textarea>
-      <input type="text" placeholder="author" v-model="cite" class="form-control" />
-      <a class="btn btn-primary" href="#" @click="update">OK</a>
+    <div class="p--local">
+      <div v-if="editing">
+        <div class="form-group row">
+          <label for="quote" class="col-sm-2 offset-sm-1 col-form-label">Quote</label>
+          <div class="col-sm-8">
+            <textarea v-model="text" class="form-control"></textarea>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="author" class="col-sm-2 offset-sm-1 col-form-label">
+            Author
+          </label>
+          <div class="col-sm-8">
+            <input type="text" v-model="cite" class="form-control" />
+          </div>
+        </div>
+        <a class="btn btn-primary" href="#" @click.prevent="update">Update</a>
+      </div>
     </div>
     <blockquote @click="onClick" v-if="!editing">
       <p v-if="text">
