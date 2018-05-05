@@ -36,6 +36,21 @@ class AssetContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(['/js/foo.js', '/js/bar.js'], $this->assets->getJs());
     }
 
+    public function testInlineJs()
+    {
+        $this->assets->addInlineJs('alert("hello")');
+
+        $this->assertSame(['alert("hello")'], $this->assets->getInlineJs());
+    }
+
+    public function testDuplicateInlineJsIsNotDetected()
+    {
+        $this->assets->addInlineJs('alert("hello")');
+        $this->assets->addInlineJs('alert("hello")');
+
+        $this->assertSame(['alert("hello")', 'alert("hello")'], $this->assets->getInlineJs());
+    }
+
     public function testCss()
     {
         $this->assets->addCss('/css/foo.css');

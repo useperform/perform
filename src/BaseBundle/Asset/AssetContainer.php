@@ -12,6 +12,7 @@ namespace Perform\BaseBundle\Asset;
 class AssetContainer
 {
     protected $js = [];
+    protected $inlineJs;
     protected $css = [];
 
     public function addJs($src)
@@ -24,6 +25,16 @@ class AssetContainer
     public function getJs()
     {
         return $this->js;
+    }
+
+    public function addInlineJs($js)
+    {
+        $this->inlineJs[] = $js;
+    }
+
+    public function getInlineJs()
+    {
+        return $this->inlineJs;
     }
 
     public function addCss($src)

@@ -48,6 +48,11 @@
       {% for js in perform_asset_js() %}
         <script type="text/javascript" src="{{asset(js)}}"></script>
       {% endfor %}
+      <script>
+       {% for js in perform_asset_inline_js() %}
+       {{js|raw}}
+       {% endfor %}
+      </script>
     {% endblock %}
   </body>
 </html>

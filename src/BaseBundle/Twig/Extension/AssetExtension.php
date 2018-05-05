@@ -20,6 +20,7 @@ class AssetExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFunction('perform_asset_js', [$this->assets, 'getJs']),
+            new \Twig_SimpleFunction('perform_asset_inline_js', [$this->assets, 'getInlineJs']),
             new \Twig_SimpleFunction('perform_asset_css', [$this->assets, 'getCss']),
         ];
     }
