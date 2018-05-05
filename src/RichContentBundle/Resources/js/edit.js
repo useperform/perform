@@ -1,10 +1,8 @@
 import Editor from './components/Editor';
 import Vue from 'vue';
-
 import store from './store';
 
-// change to edit
-const init = function(element, config) {
+export default function(element, config) {
   store.commit('EDITOR_ADD', {
     contentId: config.contentId,
   });
@@ -31,12 +29,3 @@ const init = function(element, config) {
 
   return editorIndex;
 };
-
-if (!window.Perform) {
-  window.Perform = {};
-}
-
-window.Perform.richContent = {
-  init,
-  store
-}

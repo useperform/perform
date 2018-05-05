@@ -18,6 +18,7 @@
 <script>
  import { mixin as clickaway } from 'vue-clickaway';
  import BlockControls from '../BlockControls.vue';
+ import {selectFile} from 'perform-media/src/selector';
 
  export default {
    props: [
@@ -62,7 +63,7 @@
      },
      selectImage() {
        const that = this;
-       Perform.media.selectFile({
+       selectFile({
          onSelect(files) {
            const file = files[0];
            that.$emit('update', {
