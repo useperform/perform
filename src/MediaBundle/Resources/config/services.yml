@@ -45,6 +45,18 @@ services:
         arguments:
             - "PerformMediaBundle:File"
 
+    perform_media.normalizer.file:
+        class: Perform\MediaBundle\Serializer\FileNormalizer
+        arguments:
+            - "@perform_media.importer.file"
+        tags:
+            - serializer.normalizer
+
+    Perform\MediaBundle\Controller\:
+        resource: '../../Controller'
+        public: false
+        autoconfigure: true
+
     Perform\MediaBundle\Command\:
         resource: '../../Command'
         public: false

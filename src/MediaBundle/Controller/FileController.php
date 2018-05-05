@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Perform\MediaBundle\Entity\File;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
+use Perform\MediaBundle\Repository\FileRepository;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -20,26 +22,11 @@ class FileController extends Controller
     /**
      * @Route("/find")
      */
-    public function findAction(Request $request)
+    public function findAction(Request $request, FileRepository $repo, NormalizerInterface $normalizer)
     {
-        $files = $this->getDoctrine()->getRepository('PerformMediaBundle:File')
-               ->findPage($request->query->get('page', 1));
-        $manager = $this->get('perform_media.importer.file');
-        $data = [];
-        foreach ($files as $file) {
-            // each type may want to define how it serializes the file
-            $data[] = [
-                'id' => $file->getId(),
-                'name' => $file->getName(),
-                'status' => $file->getStatus(),
-                'url' => $manager->getUrl($file),
-                'thumbnail' => $manager->getSuitableUrl($file, ['width' => 100]),
-                'type' => $file->getType(),
-                'humanType' => ucfirst($file->getType()),
-            ];
-        }
+        $files = $repo->findPage($request->query->get('page', 1));
 
-        return $this->json($data);
+        return $this->json($normalizer->normalize($files));
     }
 
     /**
