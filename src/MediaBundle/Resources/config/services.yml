@@ -64,3 +64,11 @@ services:
         public: false
         autowire: true
         autoconfigure: true
+
+    perform_media.form.type.media:
+        class: Perform\MediaBundle\Form\Type\MediaType
+        arguments:
+            - "@perform_base.asset_container"
+            - "@perform_media.normalizer.file"
+        tags:
+            - {name: form.type}
