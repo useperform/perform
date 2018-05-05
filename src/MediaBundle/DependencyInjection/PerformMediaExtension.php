@@ -9,6 +9,7 @@ use Symfony\Component\DependencyInjection\Loader;
 use Perform\BaseBundle\DependencyInjection\PerformBaseExtension;
 use Perform\Licensing\Licensing;
 use Perform\BaseBundle\DependencyInjection\Assets;
+use Perform\BaseBundle\DependencyInjection\Compiler\FormTemplatesPass;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -33,5 +34,6 @@ class PerformMediaExtension extends Extension
             Assets::addNpmConfig($container, __DIR__.'/../package.json');
             Assets::addJavascriptModule($container, 'media', __DIR__.'/../Resources/src/module.js');
         }
+        FormTemplatesPass::addTemplate($container, '@PerformMedia/form_types.html.twig');
     }
 }
