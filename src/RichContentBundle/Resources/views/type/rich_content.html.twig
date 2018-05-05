@@ -8,16 +8,3 @@
     {{perform_rich_content(value)}}
   {% endif %}
 {% endblock %}
-
-{% block create %}
-  <div class="perform-rich-content-type">
-    {{form_widget(form[field], {attr: {class: 'content-id'}})}}
-    <div class="form-group">
-      <label class="col-sm-2" for="{{field}}">
-        {{label}}
-      </label>
-      <div class="editor col-sm-10">
-      </div>
-    </div>
-  </div>
-{% endblock %}

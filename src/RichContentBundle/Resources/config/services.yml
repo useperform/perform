@@ -65,8 +65,6 @@ services:
 
     perform_rich_content.type:
         class: Perform\RichContentBundle\Type\RichContentType
-        arguments:
-            - "@perform_base.asset_container"
         tags:
             - {name: perform_base.type, alias: rich_content}
 

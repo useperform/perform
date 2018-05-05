@@ -5,8 +5,7 @@ namespace Perform\RichContentBundle\Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Perform\BaseBundle\Type\AbstractType;
-use Perform\BaseBundle\Asset\AssetContainer;
-use Perform\BaseBundle\Form\Type\HiddenEntityType;
+use Perform\RichContentBundle\Form\Type\RichContentType as FormType;
 use Perform\BaseBundle\Config\TypeConfig;
 
 /**
@@ -27,23 +26,9 @@ use Perform\BaseBundle\Config\TypeConfig;
  **/
 class RichContentType extends AbstractType
 {
-    protected $assets;
-
-    public function __construct(AssetContainer $assets)
-    {
-        parent::__construct();
-        $this->assets = $assets;
-    }
-
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
-        $this->assets->addCss('/bundles/performrichcontent/editor.css');
-        $this->assets->addJs('/bundles/performrichcontent/editor.js');
-        $this->assets->addJs('/bundles/performrichcontent/type.js');
-
-        $builder->add($field, HiddenEntityType::class, [
-            'class' => 'PerformRichContentBundle:Content',
-        ]);
+        $builder->add($field, FormType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
