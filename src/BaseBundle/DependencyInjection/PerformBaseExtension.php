@@ -166,8 +166,16 @@ class PerformBaseExtension extends Extension
 
     protected function configureAssets(ContainerBuilder $container, array $config)
     {
+        foreach ($config['namespaces'] as $name => $path) {
+            Assets::addNamespace($container, $name, $path);
+        }
         Assets::addNamespace($container, 'perform-base', __DIR__.'/../Resources');
+
+        foreach ($config['entrypoints'] as $name => $path) {
+            Assets::addEntryPoint($container, $name, $path);
+        }
         Assets::addEntryPoint($container, 'perform', [__DIR__.'/../Resources/src/perform.js', __DIR__.'/../Resources/scss/perform.scss']);
+
         Assets::addExtraSass($container, $config['extra_sass']);
         Assets::addJavascriptModule($container, 'base', 'perform-base/src/module');
         Assets::addNpmConfig($container, __DIR__.'/../package.json');
