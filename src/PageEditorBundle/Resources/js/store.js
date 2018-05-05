@@ -2,6 +2,8 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
 
+import richContentStore from 'perform-rich-content/js/store';
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -52,19 +54,19 @@ export default new Vuex.Store({
             versions: json.data.availableVersions,
           });
 
-          Perform.richContent.store.commit('EDITORS_CLEAR', {
+          richContentStore.commit('EDITORS_CLEAR', {
             editorIndexes: Object.values(context.state.sections),
           });
           // reset blocks in rich content to prevent memory leaks
-          // Perform.richContent.store.commit('BLOCKS_CLEAR');
+          // richContentStore.commit('BLOCKS_CLEAR');
 
           json.data.version.sections.forEach(section => {
             const editorIndex = context.state.sections[section.name];
-            Perform.richContent.store.commit('CONTENT_SET_DATA', {
+            richContentStore.commit('CONTENT_SET_DATA', {
               editorIndex,
               data: section.content,
             });
-            Perform.richContent.store.commit('CONTENT_SET_ID', {
+            richContentStore.commit('CONTENT_SET_ID', {
               editorIndex,
               contentId: section.content.id
             });
@@ -81,7 +83,7 @@ export default new Vuex.Store({
         sections: {},
       };
       Object.keys(context.state.sections).forEach(sectionName => {
-        data.sections[sectionName] = Perform.richContent.store.getters.editorSaveOperation(context.state.sections[sectionName]);
+        data.sections[sectionName] = richContentStore.getters.editorSaveOperation(context.state.sections[sectionName]);
       });
       axios.post(url, data)
         .then(json => {
@@ -89,11 +91,11 @@ export default new Vuex.Store({
           Object.keys(updates).forEach(sectionName => {
             let editorIndex = context.state.sections[sectionName];
             let update = updates[sectionName];
-            Perform.richContent.store.commit('CONTENT_SET_ID', {
+            richContentStore.commit('CONTENT_SET_ID', {
               editorIndex,
               contentId: update.contentId,
             });
-            Perform.richContent.store.commit('CONTENT_HANDLE_NEW_BLOCKS', {
+            richContentStore.commit('CONTENT_HANDLE_NEW_BLOCKS', {
               editorIndex,
               newBlockIds: update.newBlockIds,
             });

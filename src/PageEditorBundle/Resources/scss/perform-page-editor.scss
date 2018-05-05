@@ -1,0 +1,11 @@
+/* an entrypoint that includes all required styles to edit a page */
+@import "~perform-base/scss/local";
+
+@import "~perform-base/scss/font-awesome/local";
+
+.p--local {
+  @import "~bootstrap/scss/bootstrap";
+  @import "~perform-rich-content/scss/components.scss";
+  @import "~perform-media/scss/media";
+  @import "~perform-page-editor/scss/toolbar";
+}

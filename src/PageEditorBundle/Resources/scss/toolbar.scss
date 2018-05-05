@@ -1,41 +1,53 @@
-.p--local {
-  .p-comp-page-editor-toolbar {
-    // import required bootstrap segments
-    width: 100%;
-    height: 40px;
-    position: fixed;
-    padding: 0 100px;
-    top: 0;
-    z-index: 1100;
-    background-color: #111;
+$p-page-editor-toolbar-height: 50px;
+
+.p-comp-page-editor-toolbar {
+  height: $p-page-editor-toolbar-height;
+  font-size: 14px;
+  font-family: 'Helvetica', 'Arial', sans-serif;
+  position: fixed;
+  padding: 0 100px;
+  margin: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1100;
+  background-color: #111;
+  color: #ddd;
+
+  .block {
+    display: inline-block;
+    line-height: $p-page-editor-toolbar-height;
+    vertical-align: center;
+    width: auto;
     color: #ddd;
 
     a {
-      display: inline-block;
-      cursor: pointer;
-      padding: 10px 15px;
-      height: 100%;
       color: #ddd;
+      padding: 0 10px;
+      display: block;
+      text-decoration: none;
+      cursor: pointer;
       &:hover {
         color: #fff;
         background-color: #444;
       }
     }
+  }
 
-    ul.version-menu {
-      position: absolute;
-      top: 40px;
-      background-color: #111;
-      padding: 0;
-      list-style-type: none;
+  ul.version-menu {
+    position: absolute;
+    top: $p-page-editor-toolbar-height;
+    background-color: #111;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
 
-      li {
-        padding: 5px 15px;
-        cursor: pointer;
-        &:hover {
-          color: #fff;
-          background-color: #444;
-        }
+    li {
+      padding: 5px 10px;
+      cursor: pointer;
+      &:hover {
+        color: #fff;
+        background-color: #444;
       }
     }
   }

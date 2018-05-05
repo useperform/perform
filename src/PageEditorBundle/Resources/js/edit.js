@@ -1,8 +1,9 @@
 import Toolbar from './components/Toolbar';
 import Vue from 'vue';
 import store from './store';
+import edit from 'perform-rich-content/js/edit';
 
-const editPage = function(versionId) {
+export default function(versionId) {
   const parent = document.createElement('div');
   document.body.appendChild(parent);
 
@@ -18,7 +19,7 @@ const editPage = function(versionId) {
   // disrupting indexes
   for (var i=sections.length; i--;) {
     var section = sections[i];
-    var editorIndex = Perform.richContent.init(section, {
+    var editorIndex = edit(section, {
       noLoad: true,
     });
     store.commit('addSection', {
@@ -30,12 +31,4 @@ const editPage = function(versionId) {
   store.dispatch('loadVersion', {
     versionId,
   });
-};
-
-if (!window.Perform) {
-  window.Perform = {};
-}
-
-window.Perform.pageEditor = {
-  editPage,
 };
