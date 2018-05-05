@@ -10,6 +10,7 @@ use Perform\BaseBundle\DependencyInjection\Compiler\ConfigureSettingsPass;
 use Perform\BaseBundle\DependencyInjection\Compiler\ConfigureActionsPass;
 use Perform\BaseBundle\DependencyInjection\Compiler\ConfigureTypesPass;
 use Perform\BaseBundle\DependencyInjection\Compiler\DoctrinePass;
+use Perform\BaseBundle\DependencyInjection\Compiler\FormTemplatesPass;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -25,5 +26,6 @@ class PerformBaseBundle extends Bundle
         $container->addCompilerPass(new ConfigureActionsPass());
         $container->addCompilerPass(new ConfigureTypesPass());
         $container->addCompilerPass(new DoctrinePass());
+        $container->addCompilerPass(new FormTemplatesPass());
     }
 }
