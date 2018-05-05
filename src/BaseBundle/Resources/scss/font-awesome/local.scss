@@ -1,0 +1,8 @@
+/*
+Font awesome, only available under .p--local elements
+*/
+@import "variables";
+@import "~font-awesome/scss/path";
+.p--local {
+  @import "base";
+}

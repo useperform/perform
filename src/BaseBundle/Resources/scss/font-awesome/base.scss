@@ -1,19 +1,4 @@
-/*
- * Font awesome, tweaked a bit for our usage
- */
-
-@import "~font-awesome/scss/variables";
-
-$fa-font-path:        "~font-awesome/fonts";
-$fa-font-size-base:   14px;
-$fa-line-height-base: 1;
-$fa-css-prefix:       fa;
-$fa-border-color:     #eee;
-$fa-inverse:          #fff;
-$fa-li-width:         (30em / 14);
-
 @import "~font-awesome/scss/mixins";
-@import "~font-awesome/scss/path";
 @import "~font-awesome/scss/core";
 @import "~font-awesome/scss/larger";
 @import "~font-awesome/scss/fixed-width";
