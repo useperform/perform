@@ -67,6 +67,14 @@ class PageManager
         return $this->currentPage;
     }
 
+    /**
+     * @return bool
+     */
+    public function hasCurrentPage()
+    {
+        return (bool) $this->currentPage;
+    }
+
     public function setCurrentVersion(Version $version)
     {
         $this->currentVersion = $version;

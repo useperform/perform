@@ -26,7 +26,7 @@ class ToolbarListener
 
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if (!$this->pageManager->inEditMode()) {
+        if (!$this->pageManager->inEditMode() || !$this->pageManager->hasCurrentPage()) {
             return;
         }
 
