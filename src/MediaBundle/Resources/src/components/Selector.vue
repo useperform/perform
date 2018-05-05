@@ -1,23 +1,25 @@
 <template>
-<bModal :title="title" size="lg" ref="modal" @hide="$refs.listing.reset()">
-  <Listing
-     v-bind:allowUpload="false"
-     v-bind:initialLayout="1"
-     v-bind:lockLayout="true"
-     v-bind:allowSelect="true"
-     :allowMultipleSelect="multiple"
-     :selectLimit="limit"
-     ref="listing"
-     />
-  <div slot="modal-footer" class="w-100">
-    <bBtn size="sm" variant="secondary" @click="cancel">
-      Cancel
-    </bBtn>
-    <bBtn size="sm" variant="primary" @click="select">
-      Select
-    </bBtn>
+  <div class="p--local">
+    <bModal :title="title" size="lg" ref="modal" @hide="$refs.listing.reset()">
+      <Listing
+        v-bind:allowUpload="false"
+        v-bind:initialLayout="1"
+        v-bind:lockLayout="true"
+        v-bind:allowSelect="true"
+        :allowMultipleSelect="multiple"
+        :selectLimit="limit"
+        ref="listing"
+      />
+      <div slot="modal-footer" class="w-100">
+        <bBtn size="sm" variant="secondary" @click="cancel">
+          Cancel
+        </bBtn>
+        <bBtn size="sm" variant="primary" @click="select">
+          Select
+        </bBtn>
+      </div>
+    </bModal>
   </div>
-</bModal>
 </template>
 
 <script>
