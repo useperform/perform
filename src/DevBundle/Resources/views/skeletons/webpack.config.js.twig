@@ -63,7 +63,14 @@ module.exports = {
         use: ExtractTextPlugin.extract({
           use: [
             'css-loader',
-            'sass-loader',
+            {
+              loader: 'sass-loader',
+              options: {
+                // sass loader options
+                // compact output is often useful for scanning the output for errors
+                outputStyle: 'compact',
+              }
+            }
           ]
         })
       },
