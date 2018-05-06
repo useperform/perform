@@ -5,36 +5,34 @@ namespace Perform\BaseBundle\Asset\Dumper;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Dump modules.js, added to the window.Perform object.
+ * Generate dynamic javascript imports.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class JavascriptDumper
 {
     protected $fs;
-    protected $javascriptModules = [];
 
-    public function __construct(Filesystem $fs, array $javascriptModules)
+    public function __construct(Filesystem $fs)
     {
         $this->fs = $fs;
-        $this->javascriptModules = $javascriptModules;
     }
 
     /**
-     * @param string $filepath The path of the generated file.
+     * @param JavascriptTarget $target
      */
-    public function dump($filepath)
+    public function dump(JavascriptTarget $target)
     {
         $content = '';
-        foreach ($this->javascriptModules as $name => $import) {
+        foreach ($target->getImports() as $name => $import) {
             $content .= sprintf("import %s from '%s';".PHP_EOL, $name, $import);
         }
         $content .= 'export default {'.PHP_EOL;
-        foreach (array_keys($this->javascriptModules) as $name) {
+        foreach (array_keys($target->getImports()) as $name) {
             $content .= sprintf('%s,'.PHP_EOL, $name);
         }
         $content .= '}';
 
-        $this->fs->dumpFile($filepath, $content);
+        $this->fs->dumpFile($target->getFilename(), $content);
     }
 }

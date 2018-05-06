@@ -5,40 +5,36 @@ namespace Perform\BaseBundle\Asset\Dumper;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Generates asset-paths.js
+ * Generate asset-paths.js.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class PathDumper
 {
     protected $fs;
-    protected $namespaces = [];
-    protected $entrypoints = [];
 
-    public function __construct(Filesystem $fs, array $namespaces, array $entrypoints)
+    public function __construct(Filesystem $fs)
     {
         $this->fs = $fs;
-        $this->namespaces = $namespaces;
-        $this->entrypoints = $entrypoints;
     }
 
     /**
-     * @param string $filepath The path of the generated file.
+     * @param PathTarget $target
      */
-    public function dump($filepath)
+    public function dump(PathTarget $target)
     {
         $data = [
             'entrypoints' => [],
             'namespaces' => [],
         ];
-        foreach ($this->entrypoints as $name => $entry) {
+        foreach ($target->getEntrypoints() as $name => $entry) {
             $data['entrypoints'][$name] = $entry;
         }
-        foreach ($this->namespaces as $name => $path) {
+        foreach ($target->getNamespaces() as $name => $path) {
             $data['namespaces'][$name] = rtrim($path, '/').'/';
         }
         $content = sprintf('module.exports = %s', json_encode($data, JSON_PRETTY_PRINT));
 
-        $this->fs->dumpFile($filepath, $content);
+        $this->fs->dumpFile($target->getFilename(), $content);
     }
 }

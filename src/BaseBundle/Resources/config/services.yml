@@ -260,28 +260,35 @@ services:
         class: Perform\BaseBundle\Asset\Dumper\PathDumper
         arguments:
             - '@filesystem'
-            - '%perform_base.assets.namespaces%'
-            - '%perform_base.assets.entrypoints%'
-
-    perform_base.asset.js_dumper:
-        class: Perform\BaseBundle\Asset\Dumper\JavascriptDumper
-        arguments:
-            - '@filesystem'
-            - '%perform_base.assets.js_modules%'
 
     perform_base.asset.sass_dumper:
         class: Perform\BaseBundle\Asset\Dumper\SassDumper
         arguments:
             - '@filesystem'
-            - '%perform_base.assets.theme%'
-            - '%perform_base.assets.extra_sass%'
+
+    perform_base.asset.js_dumper:
+        class: Perform\BaseBundle\Asset\Dumper\JavascriptDumper
+        arguments:
+            - '@filesystem'
 
     perform_base.warmer.assets:
         class: Perform\BaseBundle\CacheWarmer\AssetsWarmer
         arguments:
+            - '@event_dispatcher'
+            - '@perform_base.asset.path_dumper'
             - '@perform_base.asset.sass_dumper'
             - '@perform_base.asset.js_dumper'
-            - '@perform_base.asset.path_dumper'
-            - '%kernel.project_dir%/asset-paths.js'
         tags:
             - {name: kernel.cache_warmer}
+
+    perform_base.listener.assets:
+        class: Perform\BaseBundle\EventListener\AssetsListener
+        arguments:
+            - '%kernel.project_dir%/asset-paths.js'
+            - '%perform_base.assets.namespaces%'
+            - '%perform_base.assets.entrypoints%'
+            - '%perform_base.assets.extra_sass%'
+            - '%perform_base.assets.js_modules%'
+            - '%perform_base.assets.theme%'
+        tags:
+            - {name: kernel.event_listener, event: perform_base.asset_dump.add, method: onAddAssets}
