@@ -3,9 +3,11 @@
 namespace Perform\BaseBundle\Asset\Dumper;
 
 /**
+ * Target implementation for asset-paths.js.
+ *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class PathTarget
+class PathTarget implements TargetInterface
 {
     protected $filename;
     protected $namespaces = [];
@@ -18,30 +20,24 @@ class PathTarget
         $this->entrypoints = $entrypoints;
     }
 
-    /**
-     * @return string The absolute path of the target file
-     */
     public function getFilename()
     {
         return $this->filename;
     }
 
-    /**
-     * @return array An array of namespaces, where the keys are
-     * namespace names and values are absolute paths to file
-     * directories.
-     */
-    public function getNamespaces()
+    public function getContents()
     {
-        return $this->namespaces;
-    }
+        $data = [
+            'entrypoints' => [],
+            'namespaces' => [],
+        ];
+        foreach ($this->entrypoints as $name => $entry) {
+            $data['entrypoints'][$name] = $entry;
+        }
+        foreach ($this->namespaces as $name => $path) {
+            $data['namespaces'][$name] = rtrim($path, '/').'/';
+        }
 
-    /**
-     * @return array An array of entrypoints, where the keys are
-     * asset names and values are arrays of absolute file paths.
-     */
-    public function getEntrypoints()
-    {
-        return $this->entrypoints;
+        return sprintf('module.exports = %s', json_encode($data, JSON_PRETTY_PRINT));
     }
 }

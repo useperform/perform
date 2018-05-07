@@ -5,7 +5,7 @@ namespace Perform\BaseBundle\Asset\Dumper;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class SassTarget
+class SassTarget implements TargetInterface
 {
     protected $filename;
     protected $paths = [];
@@ -16,19 +16,18 @@ class SassTarget
         $this->paths = $paths;
     }
 
-    /**
-     * @return string The absolute path of the target file
-     */
     public function getFilename()
     {
         return $this->filename;
     }
 
-    /**
-     * @return array An array of scss files to be imported into the file
-     */
-    public function getPaths()
+    public function getContents()
     {
-        return $this->paths;
+        $content = '';
+        foreach ($this->paths as $path) {
+            $content .= sprintf('@import "%s";'.PHP_EOL, $path);
+        }
+
+        return $content;
     }
 }

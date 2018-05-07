@@ -3,9 +3,7 @@
 namespace Perform\BaseBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
-use Perform\BaseBundle\Asset\Dumper\PathTarget;
-use Perform\BaseBundle\Asset\Dumper\SassTarget;
-use Perform\BaseBundle\Asset\Dumper\JavascriptTarget;
+use Perform\BaseBundle\Asset\Dumper\TargetInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -15,37 +13,15 @@ class AssetDumpEvent extends Event
     const ADD = 'perform_base.asset_dump.add';
     const REMOVE = 'perform_base.asset_dump.remove';
 
-    protected $pathTargets = [];
-    protected $sassTargets = [];
-    protected $javascriptTargets = [];
+    protected $targets = [];
 
-    public function addPathTarget(PathTarget $target)
+    public function addTarget(TargetInterface $target)
     {
-        $this->pathTargets[] = $target;
+        $this->targets[] = $target;
     }
 
-    public function getPathTargets()
+    public function getTargets()
     {
-        return $this->pathTargets;
-    }
-
-    public function addSassTarget(SassTarget $target)
-    {
-        $this->sassTargets[] = $target;
-    }
-
-    public function getSassTargets()
-    {
-        return $this->sassTargets;
-    }
-
-    public function addJavascriptTarget(JavascriptTarget $target)
-    {
-        $this->javascriptTargets[] = $target;
-    }
-
-    public function getJavascriptTargets()
-    {
-        return $this->javascriptTargets;
+        return $this->targets;
     }
 }

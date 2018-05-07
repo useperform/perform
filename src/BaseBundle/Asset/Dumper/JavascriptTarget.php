@@ -5,7 +5,7 @@ namespace Perform\BaseBundle\Asset\Dumper;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class JavascriptTarget
+class JavascriptTarget implements TargetInterface
 {
     protected $filename;
     protected $imports = [];
@@ -16,21 +16,23 @@ class JavascriptTarget
         $this->imports = $imports;
     }
 
-    /**
-     * @return string The absolute path of the target file
-     */
     public function getFilename()
     {
         return $this->filename;
     }
 
-    /**
-     * @return array An array of javascript imports, where the values
-     * are the import paths, and keys are the names of the exposed
-     * import variables.
-     */
-    public function getImports()
+    public function getContents()
     {
-        return $this->imports;
+        $content = '';
+        foreach ($this->imports as $name => $import) {
+            $content .= sprintf("import %s from '%s';".PHP_EOL, $name, $import);
+        }
+        $content .= 'export default {'.PHP_EOL;
+        foreach (array_keys($this->imports) as $name) {
+            $content .= sprintf('%s,'.PHP_EOL, $name);
+        }
+        $content .= '}';
+
+        return $content;
     }
 }

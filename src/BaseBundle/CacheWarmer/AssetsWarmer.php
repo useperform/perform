@@ -3,11 +3,9 @@
 namespace Perform\BaseBundle\CacheWarmer;
 
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
-use Perform\BaseBundle\Asset\Dumper\PathDumper;
-use Perform\BaseBundle\Asset\Dumper\SassDumper;
-use Perform\BaseBundle\Asset\Dumper\JavascriptDumper;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Perform\BaseBundle\Event\AssetDumpEvent;
+use Perform\BaseBundle\Asset\Dumper\Dumper;
 
 /**
  * Dumps various files needed for asset compilation.
@@ -17,16 +15,12 @@ use Perform\BaseBundle\Event\AssetDumpEvent;
 class AssetsWarmer implements CacheWarmerInterface
 {
     protected $dispatcher;
-    protected $pathDumper;
-    protected $sassDumper;
-    protected $jsDumper;
+    protected $dumper;
 
-    public function __construct(EventDispatcherInterface $dispatcher, PathDumper $pathDumper, SassDumper $sassDumper, JavascriptDumper $jsDumper)
+    public function __construct(EventDispatcherInterface $dispatcher, Dumper $dumper)
     {
         $this->dispatcher = $dispatcher;
-        $this->pathDumper = $pathDumper;
-        $this->sassDumper = $sassDumper;
-        $this->jsDumper = $jsDumper;
+        $this->dumper = $dumper;
     }
 
     public function warmUp($cacheDir)
@@ -35,14 +29,8 @@ class AssetsWarmer implements CacheWarmerInterface
         $this->dispatcher->dispatch(AssetDumpEvent::ADD, $event);
         $this->dispatcher->dispatch(AssetDumpEvent::REMOVE, $event);
 
-        foreach ($event->getPathTargets() as $target) {
-            $this->pathDumper->dump($target);
-        }
-        foreach ($event->getSassTargets() as $target) {
-            $this->sassDumper->dump($target);
-        }
-        foreach ($event->getJavascriptTargets() as $target) {
-            $this->jsDumper->dump($target);
+        foreach ($event->getTargets() as $target) {
+            $this->dumper->dump($target);
         }
     }
 

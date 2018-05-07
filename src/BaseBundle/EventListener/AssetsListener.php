@@ -33,10 +33,10 @@ class AssetsListener
 
     public function onAddAssets(AssetDumpEvent $event)
     {
-        $event->addPathTarget(new PathTarget($this->pathFile, $this->namespaces, $this->entrypoints));
-        $event->addSassTarget(new SassTarget(self::BUNDLE_DIR.'/Resources/scss/_extras.scss', $this->extraSass));
-        $event->addSassTarget(new SassTarget(self::BUNDLE_DIR.'/Resources/scss/_theme.scss', [$this->theme.'/theme.scss']));
-        $event->addSassTarget(new SassTarget(self::BUNDLE_DIR.'/Resources/scss/_theme_variables.scss', [$this->theme.'/variables.scss']));
-        $event->addJavascriptTarget(new JavascriptTarget(self::BUNDLE_DIR.'/Resources/src/modules.js', $this->jsModules));
+        $event->addTarget(new PathTarget($this->pathFile, $this->namespaces, $this->entrypoints));
+        $event->addTarget(new SassTarget(self::BUNDLE_DIR.'/Resources/scss/_extras.scss', $this->extraSass));
+        $event->addTarget(new SassTarget(self::BUNDLE_DIR.'/Resources/scss/_theme.scss', [$this->theme.'/theme.scss']));
+        $event->addTarget(new SassTarget(self::BUNDLE_DIR.'/Resources/scss/_theme_variables.scss', [$this->theme.'/variables.scss']));
+        $event->addTarget(new JavascriptTarget(self::BUNDLE_DIR.'/Resources/src/modules.js', $this->jsModules));
     }
 }
