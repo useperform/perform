@@ -54,15 +54,6 @@ services:
     perform_rich_content.block_type_registry:
         class: Perform\RichContentBundle\BlockType\BlockTypeRegistry
 
-    perform_rich_content.warmer.block_type:
-        class: Perform\RichContentBundle\CacheWarmer\BlockTypeWarmer
-        arguments:
-            - "@perform_rich_content.block_type_registry"
-            - "@twig"
-        tags:
-            - {name: kernel.cache_warmer}
-
-
     perform_rich_content.type:
         class: Perform\RichContentBundle\Type\RichContentType
         tags:
@@ -86,3 +77,11 @@ services:
             - "@perform_base.asset_container"
         tags:
             - {name: form.type}
+
+    perform_rich_content.listener.assets:
+        class: Perform\RichContentBundle\EventListener\AssetsListener
+        arguments:
+            - '@perform_rich_content.block_type_registry'
+            - '@twig'
+        tags:
+            - {name: kernel.event_listener, event: perform_base.asset_dump.add, method: onAddAssets}
