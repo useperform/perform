@@ -31,7 +31,7 @@ class PerformMediaExtension extends Extension
         Assets::addNamespace($container, 'perform-media', __DIR__.'/../Resources');
         Assets::addNpmConfig($container, __DIR__.'/../package.json');
         Assets::addExtraSass($container, '~perform-media/scss/media.scss');
-        Assets::addJavascriptModule($container, 'media', 'perform-media/src/module.js');
+        Assets::addExtraJavascript($container, 'media', 'perform-media/src/module.js');
 
         FormTemplatesPass::addTemplate($container, '@PerformMedia/form_types.html.twig');
     }

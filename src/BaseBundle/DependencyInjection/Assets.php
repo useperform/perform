@@ -40,30 +40,7 @@ class Assets
     }
 
     /**
-     * Add a javascript module. Exported functions in the imported
-     * file will be added to the global window.Perform object under
-     * the supplied name.
-     *
-     * e.g. 'myApp' becomes 'Perform.myApp'
-     *
-     * @param string $name   The name of the module
-     * @param string $import The file to import. It should export a javascript object containing the Perform module
-     */
-    public static function addJavascriptModule(ContainerBuilder $container, $name, $import)
-    {
-        $existing = $container->hasParameter(self::PARAM_JS_MODULES) ? $container->getParameter(self::PARAM_JS_MODULES) : [];
-
-        if (isset($existing[$name])) {
-            throw new \Exception(sprintf('The javascript module "%s" has already been registered.', $name));
-        }
-
-        $container->setParameter(self::PARAM_JS_MODULES, array_merge($existing, [
-            $name => $import,
-        ]));
-    }
-
-    /**
-     * Add a standalone asset entrypoint.
+     * Add a standalone asset entry point.
      *
      * @param string|array $path
      */
@@ -73,11 +50,35 @@ class Assets
         $existing = $container->hasParameter(self::PARAM_ENTRYPOINTS) ? $container->getParameter(self::PARAM_ENTRYPOINTS) : [];
 
         if (isset($existing[$name])) {
-            throw new \Exception(sprintf('The asset entrypoint "%s" has already been registered.', $name));
+            throw new \Exception(sprintf('The asset entry point "%s" has already been registered.', $name));
         }
 
         $container->setParameter(self::PARAM_ENTRYPOINTS, array_merge($existing, [
             $name => $path,
+        ]));
+    }
+
+    /**
+     * Add a file to include in the perform.js build.
+     *
+     * Exported functions from the imported file will be added to the
+     * global window.Perform object under the supplied name.
+     *
+     * e.g. 'myApp' becomes 'Perform.myApp'
+     *
+     * @param string $name   The name of the module
+     * @param string $import The file to import. It should export a javascript object containing functions to expose.
+     */
+    public static function addExtraJavascript(ContainerBuilder $container, $name, $import)
+    {
+        $existing = $container->hasParameter(self::PARAM_JS_MODULES) ? $container->getParameter(self::PARAM_JS_MODULES) : [];
+
+        if (isset($existing[$name])) {
+            throw new \Exception(sprintf('The javascript module "%s" has already been registered.', $name));
+        }
+
+        $container->setParameter(self::PARAM_JS_MODULES, array_merge($existing, [
+            $name => $import,
         ]));
     }
 
