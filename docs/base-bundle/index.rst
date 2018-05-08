@@ -13,6 +13,7 @@ tools to build applications rapidly:
    :maxdepth: 2
 
    ./ui/index
+   ./assets/index
    ./users
    ./admins
    ./types

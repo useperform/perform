@@ -12,6 +12,4 @@ deeply customised to suit your needs.
 .. toctree::
    :maxdepth: 2
 
-   ./assets
-   ./themes
    ./customise
