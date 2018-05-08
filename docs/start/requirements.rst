@@ -16,7 +16,7 @@ Recommendations
 
 .. note::
 
-   If you have the :doc:`cli tool <../tools/cli>` installed, the
+   If you have the :doc:`cli tool <../more/cli>` installed, the
    ``perform requirements`` command can be used to check if your system meets
    the requirements.
 
@@ -25,10 +25,6 @@ Quickstart for common operating systems
 
 Here are some basic commands to install the requirements.
 They're not particularly robust or secure, but can help get you get started quickly.
-
-.. note::
-
-   For a robust development environment configured with everything you need, check out the :doc:`vagrant box <../tools/vagrant>`.
 
 Ubuntu 16.04 LTS
 ~~~~~~~~~~~~~~~~

@@ -1,2 +1,0 @@
-Vagrant development box
-=======================

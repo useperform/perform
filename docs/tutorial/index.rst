@@ -15,8 +15,7 @@ We can put this together in no time with Perform.
 
 .. note::
 
-   Make sure you have :doc:`installed Perform <../start/install>` and have run
-   ``perform requirements`` before you begin.
+   Make sure you run ``perform requirements`` before you begin.
 
    Revisit the :doc:`requirements guide <../start/requirements>` if you get any errors.
 
