@@ -1,25 +1,16 @@
 vendor/
 composer.lock
 
-src/*/node_modules
-src/*/Resources/node_modules
-src/*/Resources/public/vendor
-src/*/Resources/public/css
 src/*/vendor
 src/*/composer.lock
+src/BaseBundle/Resources/node_modules
 src/BaseBundle/Resources/public
+src/BaseBundle/Resources/scss/_extras.scss
 src/BaseBundle/Resources/scss/_theme.scss
 src/BaseBundle/Resources/scss/_theme_variables.scss
-src/BaseBundle/Resources/scss/_extras.scss
-src/BaseBundle/webpack-paths.js
 src/BaseBundle/Resources/src/modules.js
-src/CmsBundle/Resources/public/js
-src/CmsBundle/gulp-sources.js
-src/MediaBundle/Resources/public
 src/MediaPlayerBundle/Resources/public
-src/RichContentBundle/Resources/public
 src/RichContentBundle/Resources/js/components/blocktypes.js
-src/PageEditorBundle/Resources/public
 
 test_results.xml
 Dockerfile
