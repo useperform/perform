@@ -3,7 +3,6 @@
 namespace Perform\ContactBundle\Form\Handler;
 
 use Symfony\Component\HttpFoundation\Request;
-use Perform\ContactBundle\SpamChecker\SpamCheckerInterface;
 use Psr\Log\LoggerInterface;
 use Perform\NotificationBundle\Notifier\Notifier;
 use Symfony\Component\Form\FormInterface;
@@ -11,6 +10,7 @@ use Perform\ContactBundle\Entity\Message;
 use Perform\NotificationBundle\RecipientProvider\RecipientProviderInterface;
 use Perform\NotificationBundle\Notification;
 use Doctrine\ORM\EntityManagerInterface;
+use Perform\SpamBundle\SpamManager;
 
 /**
  * Handle contact form submissions, save the message, detect spam, and
@@ -26,20 +26,21 @@ class ContactFormHandler
     protected $entityManager;
     protected $notifier;
     protected $recipientProvider;
+    protected $spamManager;
     protected $logger;
-    protected $spamCheckers = [];
 
-    public function __construct(EntityManagerInterface $entityManager, Notifier $notifier, RecipientProviderInterface $recipientProvider, LoggerInterface $logger = null)
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        Notifier $notifier,
+        RecipientProviderInterface $recipientProvider,
+        SpamManager $spamManager,
+        LoggerInterface $logger = null)
     {
         $this->entityManager = $entityManager;
         $this->notifier = $notifier;
         $this->recipientProvider = $recipientProvider;
+        $this->spamManager = $spamManager;
         $this->logger = $logger;
-    }
-
-    public function addSpamChecker(SpamCheckerInterface $checker)
-    {
-        $this->spamCheckers[] = $checker;
     }
 
     /**
@@ -48,20 +49,27 @@ class ContactFormHandler
     public function handleRequest(Request $request, FormInterface $form)
     {
         $form->handleRequest($request);
-        if (!$form->isValid()) {
+        if (!$form->isSubmitted() || !$form->isValid()) {
             return false;
         }
         $message = $form->getData();
-        $message->setStatus(Message::STATUS_NEW);
-        $this->entityManager->persist($message);
 
-        foreach ($this->spamCheckers as $checker) {
-            $checker->check($message, $form, $request);
+        $result = $this->spamManager->checkForm($form);
+        $result->mergeReports($this->spamManager->checkText($message->getMessage()));
+
+        if ($result->isSpam()) {
+            $message->setStatus(Message::STATUS_SPAM);
+            foreach ($result->getReports() as $report) {
+                $message->addSpamReport($report);
+            }
+        } else {
+            $message->setStatus(Message::STATUS_NEW);
         }
 
+        $this->entityManager->persist($message);
         $this->entityManager->flush();
 
-        if ($message->isSpam()) {
+        if ($result->isSpam()) {
             //don't notify on spam
             return static::RESULT_SPAM;
         }

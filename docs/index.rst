@@ -24,6 +24,7 @@ Topic index
    dev-bundle/index
    media-bundle/index
    mailing-list-bundle/index
+   spam-bundle/index
 
 .. toctree::
    :caption: Further reading

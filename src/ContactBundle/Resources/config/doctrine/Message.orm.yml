@@ -26,7 +26,10 @@ Perform\ContactBundle\Entity\Message:
             gedmo:
                 timestampable:
                     on: update
-    oneToMany:
+    manyToMany:
         spamReports:
-            targetEntity: Perform\ContactBundle\Entity\SpamReport
-            mappedBy: message
+            targetEntity: Perform\SpamBundle\Entity\Report
+            joinTable:
+                name: perform_contact_message_spam_reports
+            cascade:
+                - persist

@@ -1,6 +1,6 @@
 <?php
 
-namespace Perform\ContactBundle\Form\Type;
+namespace Perform\SpamBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -9,11 +9,9 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormError;
-use Perform\ContactBundle\Event\HoneypotEvent;
+use Perform\SpamBundle\Event\HoneypotEvent;
 
 /**
- * HoneypotType.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class HoneypotType extends AbstractType
@@ -32,10 +30,9 @@ class HoneypotType extends AbstractType
             }
             $this->dispatcher->dispatch(HoneypotEvent::CAUGHT, new HoneypotEvent($form));
 
-            if (!$options['prevent_submission']) {
-                return;
+            if ($options['prevent_submission']) {
+                $form->addError(new FormError($options['error_message']));
             }
-            $form->addError(new FormError($options['error_message']));
         });
     }
 
@@ -44,7 +41,7 @@ class HoneypotType extends AbstractType
         $resolver->setDefaults([
             'required' => false,
             'mapped' => false,
-            'prevent_submission' => true,
+            'prevent_submission' => false,
             'error_message' => 'An error occurred.',
             'attr' => [
                 'autocomplete' => 'off',
@@ -56,7 +53,6 @@ class HoneypotType extends AbstractType
 
     public function getParent()
     {
-        //required so the form is not compound, even though we implement buildForm()
         return TextType::class;
     }
 }

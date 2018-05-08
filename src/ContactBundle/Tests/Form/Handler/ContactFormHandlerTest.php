@@ -10,10 +10,11 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Perform\ContactBundle\Entity\Message;
 use Perform\ContactBundle\Form\Handler\ContactFormHandler;
+use Perform\SpamBundle\SpamManager;
+use Perform\SpamBundle\Checker\CheckResult;
+use Perform\SpamBundle\Entity\Report;
 
 /**
- * ContactFormHandlerTest
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class ContactFormHandlerTest extends \PHPUnit_Framework_TestCase
@@ -21,6 +22,7 @@ class ContactFormHandlerTest extends \PHPUnit_Framework_TestCase
     protected $entityManager;
     protected $notifier;
     protected $recipientProvider;
+    protected $spamManager;
     protected $handler;
 
     public function setUp()
@@ -28,17 +30,22 @@ class ContactFormHandlerTest extends \PHPUnit_Framework_TestCase
         $this->entityManager = $this->getMock(EntityManagerInterface::class);
         $this->notifier = $this->getMock(Notifier::class);
         $this->recipientProvider = $this->getMock(RecipientProviderInterface::class);
-        $this->handler = new ContactFormHandler($this->entityManager, $this->notifier, $this->recipientProvider);
+        $this->spamManager = $this->getMockBuilder(SpamManager::class)
+                           ->disableOriginalConstructor()
+                           ->getMock();
+        $this->handler = new ContactFormHandler($this->entityManager, $this->notifier, $this->recipientProvider, $this->spamManager);
     }
 
-    public function testSpamCheckersAreCalled()
+    public function testHandleSpam()
     {
-        $checker = $this->getMock(SpamCheckerInterface::class);
-        $this->handler->addSpamChecker($checker);
         $message = new Message();
+        $message->setMessage('Spam text');
         $form = $this->getMock(FormInterface::class);
         $form->expects($this->any())
             ->method('isValid')
+            ->will($this->returnValue(true));
+        $form->expects($this->any())
+            ->method('isSubmitted')
             ->will($this->returnValue(true));
         $form->expects($this->any())
             ->method('getData')
@@ -47,12 +54,21 @@ class ContactFormHandlerTest extends \PHPUnit_Framework_TestCase
             ->method('getRecipients')
             ->will($this->returnValue([]));
 
-        $request = new Request();
+        $formResult = new CheckResult();
+        $formResult->addReport($r1 = new Report());
+        $this->spamManager->expects($this->once())
+            ->method('checkForm')
+            ->with($form)
+            ->will($this->returnValue($formResult));
+        $textResult = new CheckResult();
+        $textResult->addReport($r2 = new Report());
+        $this->spamManager->expects($this->once())
+            ->method('checkText')
+            ->with('Spam text')
+            ->will($this->returnValue($textResult));
 
-        $checker->expects($this->once())
-            ->method('check')
-            ->with($message, $form, $request);
-
-        $this->handler->handleRequest($request, $form);
+        $this->assertSame(ContactFormHandler::RESULT_SPAM, $this->handler->handleRequest(new Request(), $form));
+        $this->assertSame(Message::STATUS_SPAM, $message->getStatus());
+        $this->assertSame([$r1, $r2], $message->getSpamReports()->toArray());
     }
 }

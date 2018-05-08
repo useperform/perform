@@ -3,10 +3,9 @@
 namespace Perform\ContactBundle\Tests\Entity;
 
 use Perform\ContactBundle\Entity\Message;
+use Perform\SpamBundle\Entity\Report;
 
 /**
- * MessageTest
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class MessageTest extends \PHPUnit_Framework_TestCase
@@ -21,5 +20,15 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($m->isSpam());
         $m->setStatus(Message::STATUS_SPAM);
         $this->assertTrue($m->isSpam());
+    }
+
+    public function testAddAndRemoveSpamReports()
+    {
+        $m = new Message();
+        $m->addSpamReport($r1 = new Report());
+        $m->addSpamReport($r2 = new Report());
+        $m->removeSpamReport($r1);
+
+        $this->assertSame([$r2], array_values($m->getSpamReports()->toArray()));
     }
 }

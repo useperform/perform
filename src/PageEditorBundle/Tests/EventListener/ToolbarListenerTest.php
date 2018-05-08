@@ -44,6 +44,9 @@ class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
         $this->pageManager->expects($this->any())
             ->method('inEditMode')
             ->will($this->returnValue(true));
+        $this->pageManager->expects($this->any())
+            ->method('hasCurrentPage')
+            ->will($this->returnValue(true));
 
         $this->twig->expects($this->exactly(2))
             ->method('render')

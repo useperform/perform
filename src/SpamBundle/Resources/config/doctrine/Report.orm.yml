@@ -1,6 +1,6 @@
-Perform\ContactBundle\Entity\SpamReport:
+Perform\SpamBundle\Entity\Report:
     type: entity
-    table: perform_contact_spam_report
+    table: perform_spam_report
     id:
         id:
             type: guid
@@ -12,17 +12,12 @@ Perform\ContactBundle\Entity\SpamReport:
             type: string
         ip:
             type: string
+            nullable: true
         userAgent:
             type: string
+            nullable: true
         createdAt:
             type: datetime
             gedmo:
                 timestampable:
                     on: create
-    manyToOne:
-        message:
-            targetEntity: Perform\ContactBundle\Entity\Message
-            inversedBy: spamReports
-            joinColumn:
-                nullable: false
-            

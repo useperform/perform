@@ -14,12 +14,16 @@ class Services
 {
     public static function typeRegistry(array $services)
     {
+        return new TypeRegistry(self::serviceLocator($services));
+    }
+
+    public static function serviceLocator(array $services)
+    {
         $factories = [];
         foreach ($services as $alias => $service) {
             $factories[$alias] = function () use ($service) { return $service; };
         }
-        $locator = new LoopableServiceLocator($factories);
 
-        return new TypeRegistry($locator);
+        return new LoopableServiceLocator($factories);
     }
 }
