@@ -10,6 +10,7 @@ use Perform\Licensing\Licensing;
 use Perform\SpamBundle\Checker\TextCheckerInterface;
 use Perform\SpamBundle\Checker\FormCheckerInterface;
 use Perform\SpamBundle\Checker\RequestCheckerInterface;
+use Perform\BaseBundle\DependencyInjection\Compiler\FormTemplatesPass;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -29,5 +30,7 @@ class PerformSpamExtension extends Extension
             ->addTag('perform_spam.form_checker');
         $container->registerForAutoconfiguration(RequestCheckerInterface::class)
             ->addTag('perform_spam.request_checker');
+
+        FormTemplatesPass::addTemplate($container, '@PerformSpam/form_types.html.twig');
     }
 }

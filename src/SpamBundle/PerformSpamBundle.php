@@ -4,7 +4,6 @@ namespace Perform\SpamBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Perform\SpamBundle\DependencyInjection\Compiler\CheckersPass;
-use Perform\SpamBundle\DependencyInjection\Compiler\FormTemplatesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -16,6 +15,5 @@ class PerformSpamBundle extends Bundle
     {
         parent::build($container);
         $container->addCompilerPass(new CheckersPass());
-        $container->addCompilerPass(new FormTemplatesPass());
     }
 }
