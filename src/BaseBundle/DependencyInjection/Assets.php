@@ -18,9 +18,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class Assets
 {
     const PARAM_NAMESPACES = 'perform_base.assets.namespaces';
-    const PARAM_JS_MODULES = 'perform_base.assets.js_modules';
     const PARAM_ENTRYPOINTS = 'perform_base.assets.entrypoints';
     const PARAM_EXTRA_SASS = 'perform_base.assets.extra_sass';
+    const PARAM_EXTRA_JS = 'perform_base.assets.extra_js';
     const PARAM_NPM_CONFIGS = 'perform_base.assets.npm_configs';
 
     /**
@@ -66,18 +66,18 @@ class Assets
      *
      * e.g. 'myApp' becomes 'Perform.myApp'
      *
-     * @param string $name   The name of the module
+     * @param string $name   The name to expose the functions under
      * @param string $import The file to import. It should export a javascript object containing functions to expose.
      */
     public static function addExtraJavascript(ContainerBuilder $container, $name, $import)
     {
-        $existing = $container->hasParameter(self::PARAM_JS_MODULES) ? $container->getParameter(self::PARAM_JS_MODULES) : [];
+        $existing = $container->hasParameter(self::PARAM_EXTRA_JS) ? $container->getParameter(self::PARAM_EXTRA_JS) : [];
 
         if (isset($existing[$name])) {
-            throw new \Exception(sprintf('The javascript module "%s" has already been registered.', $name));
+            throw new \Exception(sprintf('Extra javascript has already been registered under the "%s" name.', $name));
         }
 
-        $container->setParameter(self::PARAM_JS_MODULES, array_merge($existing, [
+        $container->setParameter(self::PARAM_EXTRA_JS, array_merge($existing, [
             $name => $import,
         ]));
     }

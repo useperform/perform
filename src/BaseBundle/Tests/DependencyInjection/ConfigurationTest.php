@@ -115,10 +115,11 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     {
         $config = $this->process([]);
         $expected = [
-            'namespaces' => [],
             'entrypoints' => [],
-            'theme' => '~perform-base/scss/themes/default',
+            'namespaces' => [],
+            'extra_js' => [],
             'extra_sass' => [],
+            'theme' => '~perform-base/scss/themes/default',
         ];
 
         $this->assertSame($expected, $config['assets']);

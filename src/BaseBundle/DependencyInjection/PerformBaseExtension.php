@@ -183,6 +183,10 @@ class PerformBaseExtension extends Extension
         foreach ($config['extra_sass'] as $path) {
             Assets::addExtraSass($container, $path);
         }
+        // if no sass has been added, ensure that the extra_sass parameter will still be created
+        if (!$container->hasParameter(Assets::PARAM_EXTRA_SASS)) {
+            $container->setParameter(Assets::PARAM_EXTRA_SASS, []);
+        }
     }
 
     public function processAdminConfig(ContainerBuilder $container, array $config)

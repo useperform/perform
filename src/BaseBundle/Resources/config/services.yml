@@ -276,7 +276,7 @@ services:
             - '%perform_base.assets.namespaces%'
             - '%perform_base.assets.entrypoints%'
             - '%perform_base.assets.extra_sass%'
-            - '%perform_base.assets.js_modules%'
+            - '%perform_base.assets.extra_js%'
             - '%perform_base.assets.theme%'
         tags:
             - {name: kernel.event_listener, event: perform_base.asset_dump.add, method: onAddAssets}
