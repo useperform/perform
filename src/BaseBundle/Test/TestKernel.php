@@ -38,6 +38,11 @@ class TestKernel extends Kernel
         return 'Test'.uniqid().'Container';
     }
 
+    public function getProjectDir()
+    {
+        return $this->rootDir;
+    }
+
     public function registerBundles()
     {
         return array_merge([
