@@ -1,11 +1,17 @@
-Installing perform
-==================
+Access the private code repositories
+====================================
 
-All perform code is stored in private git repositories.
-To get the code, you need to add your ssh key to your account and
-tell composer how to access these repos.
+.. warning::
 
-Make sure your computer meets the :doc:`requirements <requirements>` before proceeding.
+   You need a Bespoke license to gain access to the private git repositories.
+
+Most of Perform's code is available on `github <https://github.com/useperform>`_, however some experimental features are developed in private.
+
+Customers with *Bespoke* licenses can access these repositories to test out upcoming features.
+Additionally, any custom patches for out-of-support releases are published in these private repositories.
+
+To get access, you need to add public ssh keys to your account and
+configure composer to connect to this repo.
 
 Add your ssh key
 ----------------
@@ -50,21 +56,3 @@ Composer will now have access to the perform packages!
 
    View the `composer documentation <https://getcomposer.org/doc/05-repositories.md>`_ for more information on how repositories work.
 
-
-Get the cli tool
-----------------
-
-You can now install the perform command line tool with composer:
-
-.. code-block:: bash
-
-   composer global require perform/cli dev-master
-
-Make sure the composer bin directory is on your ``$PATH``.
-For example, if using bash, you could add the following to your ``.bashrc``:
-
-.. code-block:: bash
-
-   PATH+=:~/.composer/vendor/bin
-
-Then run ``perform`` to check the cli is installed, and ``perform requirements`` to check your system is configured properly.
