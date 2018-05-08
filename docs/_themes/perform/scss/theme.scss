@@ -3,17 +3,32 @@ $secondary: #001B2C;
 $child-nav-bg: #153345;
 $dark: #464e46;
 $body-bg: #fff;
+$footer-color: #ddd;
 $headings-font-family: 'PT Sans', sans-serif;
 $child-nav-spacer: 1em;
+$font-size-base: 0.9rem;
 
 @import "node_modules/bootstrap/scss/bootstrap";
+$footer-bg: gray('800');
 
 .sidebar {
-  background-color: $child-nav-bg;
+  &:before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: -100vw;
+    content: "";
+    display: block;
+    background-color: $child-nav-bg;
+    z-index: -1;
+  }
+
   padding: 0;
+  font-size: 1rem;
 
   #searchbox {
-    padding: 0 1em;
+    margin: $child-nav-spacer;
     .highlight-link {
       a {
         @extend .btn;
@@ -100,8 +115,8 @@ $child-nav-spacer: 1em;
   font-size: 1.8em;
 }
 
-footer {
-  margin-top: $spacer;
+.content-footer {
+  margin: $spacer 0 $spacer*4;
 
   .contentinfo {
     clear: both;
@@ -110,6 +125,13 @@ footer {
     color: $text-muted;
     margin-top: $spacer;
   }
+}
+
+footer {
+  padding: $spacer * 2;
+  background-color: $footer-bg;
+  color: $footer-color;
+  font-size: 0.8em;
 }
 
 h1, h2, h3, h4, h5, h6, dl dt, p.caption, table > caption {
@@ -125,6 +147,20 @@ h1, h2, h3, h4, h5, h6, dl dt, p.caption, table > caption {
   &:hover .headerlink:after {
     visibility: visible;
   }
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-top: $spacer*2;
+}
+
+h2 {
+  margin-top: $spacer*2.5;
+}
+
+h3 {
+  margin-top: $spacer*2.8;
+  font-size: 1.2rem;
 }
 
 .highlight {

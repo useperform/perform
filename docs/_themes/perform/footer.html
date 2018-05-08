@@ -1,4 +1,4 @@
-<footer>
+<div class="content-footer">
   {% if (next or prev) %}
   <div role="navigation" aria-label="footer navigation">
     {% if prev %}
@@ -13,14 +13,5 @@
     {% endif %}
   </div>
   {% endif %}
-
-  <div class="contentinfo" role="contentinfo">
-    <p>
-      &copy; Copyright {{ copyright }}.
-    </p>
-    <span class="commit">
-      Revision <code>{{ commit }}</code> generated at {{ last_updated }}.
-    </span>
-    This documentation was generated with <a href="http://sphinx-doc.org/">Sphinx</a>.
-  </div>
-</footer>
+</div>
+<div class="clearfix"></div>

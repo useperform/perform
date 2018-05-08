@@ -61,7 +61,7 @@
 
   <body>
     {% include 'nav.html' %}
-    <div class="container-fluid">
+    <div class="container">
       <div class="row">
         <div class="col-12 col-md-4 col-xl-3 sidebar">
           {%- include 'searchbox.html' %}
@@ -69,11 +69,36 @@
             {{ toctree(titles_only=True) }}
           </div>
         </div>
-        <div class="col-12 col-md-8 col-xl-9 pl-md-4 pt-4">
+        <div class="col-12 col-md-8 col-xl-9 pl-md-4">
           {% block body %}{% endblock %}
           {%- include 'footer.html' %}
         </div>
       </div>
     </div>
+    <footer>
+      <div class="contentinfo" role="contentinfo">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4">
+              <p>
+                &copy; Copyright {{ copyright }}.
+              </p>
+            </div>
+            <div class="col-md-4 text-center">
+              <p>
+                <span class="commit">
+                  Revision <code>{{ commit }}</code> generated at {{ last_updated }}.
+                </span>
+              </p>
+              <p>
+                Created with the brilliant <a href="http://sphinx-doc.org/">Sphinx documentation generator</a>.
+              </p>
+            </div>
+            <div class="col-md-4">
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>
