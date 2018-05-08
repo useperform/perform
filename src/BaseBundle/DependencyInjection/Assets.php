@@ -82,25 +82,25 @@ class Assets
     }
 
     /**
-     * Add extra files to be included in the main sass build.
+     * Add a file to include in the perform.scss build.
      *
-     * You'll most likely want to prefix the files with a tilde (~) to
+     * You'll most likely want to prefix the path with a tilde (~) to
      * import from a namespace.
      *
      * @param ContainerBuilder $container
-     * @param array            $files
+     * @param string           $path      e.g. '~my-namespace/custom.scss'
      */
-    public static function addExtraSass(ContainerBuilder $container, array $files)
+    public static function addExtraSass(ContainerBuilder $container, $path)
     {
         $existing = $container->hasParameter(self::PARAM_EXTRA_SASS) ? $container->getParameter(self::PARAM_EXTRA_SASS) : [];
-        $container->setParameter(self::PARAM_EXTRA_SASS, array_merge($existing, $files));
+        $container->setParameter(self::PARAM_EXTRA_SASS, array_merge($existing, [$path]));
     }
 
     /**
      * Add a package.json file to the list of npm dependencies to be merged.
      *
      * @param ContainerBuilder $container
-     * @param string            $file
+     * @param string           $file
      */
     public static function addNpmConfig(ContainerBuilder $container, $file)
     {
