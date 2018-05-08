@@ -29,13 +29,11 @@ class PerformPageEditorExtension extends Extension
 
         $container->setParameter('perform_page_editor.toolbar.excluded_urls', $config['toolbar']['excluded_urls']);
 
-        if (class_exists(Assets::class)) {
-            Assets::addNamespace($container, 'perform-page-editor', __DIR__.'/../Resources');
-            Assets::addNpmConfig($container, __DIR__.'/../package.json');
-            Assets::addEntryPoint($container, 'perform-page-editor', [
-                __DIR__.'/../Resources/scss/perform-page-editor.scss',
-                __DIR__.'/../Resources/js/perform-page-editor.js'
-            ]);
-        }
+        Assets::addNamespace($container, 'perform-page-editor', __DIR__.'/../Resources');
+        Assets::addNpmConfig($container, __DIR__.'/../package.json');
+        Assets::addEntryPoint($container, 'perform-page-editor', [
+            __DIR__.'/../Resources/scss/perform-page-editor.scss',
+            __DIR__.'/../Resources/js/perform-page-editor.js'
+        ]);
     }
 }

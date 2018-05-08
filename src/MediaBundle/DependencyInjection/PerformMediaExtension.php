@@ -28,12 +28,11 @@ class PerformMediaExtension extends Extension
         $loader->load('services.yml');
         $container->setParameter('perform_media.bucket_configs', $config['buckets']);
 
-        if (class_exists(Assets::class)) {
-            Assets::addNamespace($container, 'perform-media', __DIR__.'/../Resources');
-            Assets::addExtraSass($container, ['~perform-media/scss/media.scss']);
-            Assets::addNpmConfig($container, __DIR__.'/../package.json');
-            Assets::addJavascriptModule($container, 'media', __DIR__.'/../Resources/src/module.js');
-        }
+        Assets::addNamespace($container, 'perform-media', __DIR__.'/../Resources');
+        Assets::addNpmConfig($container, __DIR__.'/../package.json');
+        Assets::addExtraSass($container, ['~perform-media/scss/media.scss']);
+        Assets::addJavascriptModule($container, 'media', 'perform-media/src/module.js');
+
         FormTemplatesPass::addTemplate($container, '@PerformMedia/form_types.html.twig');
     }
 }

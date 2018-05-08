@@ -28,12 +28,10 @@ class PerformRichContentExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
         $container->registerForAutoconfiguration(ProfileInterface::class)->addTag('perform_rich_content.fixture_profile');
-        if (class_exists(Assets::class)) {
-            Assets::addNamespace($container, 'perform-rich-content', __DIR__.'/../Resources');
-            Assets::addNpmConfig($container, __DIR__.'/../package.json');
-            Assets::addExtraSass($container, ['~perform-rich-content/scss/components.scss']);
-            Assets::addJavascriptModule($container, 'richContent', __DIR__.'/../Resources/js/module.js');
-        }
+        Assets::addNamespace($container, 'perform-rich-content', __DIR__.'/../Resources');
+        Assets::addNpmConfig($container, __DIR__.'/../package.json');
+        Assets::addExtraSass($container, ['~perform-rich-content/scss/components.scss']);
+        Assets::addJavascriptModule($container, 'richContent', __DIR__.'/../Resources/js/module.js');
         FormTemplatesPass::addTemplate($container, '@PerformRichContent/form_types.html.twig');
     }
 }
