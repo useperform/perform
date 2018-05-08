@@ -94,7 +94,7 @@ class RegisterBucketsPass implements CompilerPassInterface
             $factory = new MediaTypeDefinitionFactory();
             $definition = $factory->create($typeConfig);
         } catch (\Exception $e) {
-            $msg = sprintf('An error occurred creating a type for the "%s" bucket: %s To register a custom media type, create a service implementing %s and reference it in the "types" node of the bucket configuration: ', $bucketName, $e->getMessage(), MediaTypeInterface::class);
+            $msg = sprintf('An exception occurred creating a type for the "%s" media bucket: %s To register a custom media type, create a service implementing %s and reference it in the "types" node of the bucket configuration: ', $bucketName, $e->getMessage(), MediaTypeInterface::class);
             $msg .= <<<EOF
 
 
