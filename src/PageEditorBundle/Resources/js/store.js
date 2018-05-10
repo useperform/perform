@@ -8,8 +8,10 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    versionId: null,
-    versionTitle: '',
+    currentVersion: {
+      id: null,
+      title: '',
+    },
     // array of available version objects
     versions: [],
     // richContent editor indexes, page names as keys
@@ -23,9 +25,7 @@ export default new Vuex.Store({
 
   mutations: {
     setCurrentVersion(state, payload) {
-      const {title, id} = payload;
-      state.versionTitle = title;
-      state.versionId = id;
+      state.currentVersion = payload;
     },
     setVersions(state, payload) {
       state.versions = payload.versions;
@@ -46,10 +46,7 @@ export default new Vuex.Store({
       const url = '/admin/_page_editor/load/' + versionId;
       axios.get(url)
         .then(json => {
-          context.commit('setCurrentVersion', {
-            id: versionId,
-            title: json.data.version.title
-          });
+          context.commit('setCurrentVersion', json.data.version);
           context.commit('setVersions', {
             versions: json.data.availableVersions,
           });
@@ -79,7 +76,7 @@ export default new Vuex.Store({
       // commit saving
       const url = '/admin/_page_editor/save';
       let data = {
-        versionId: context.state.versionId,
+        versionId: context.state.currentVersion.id,
         sections: {},
       };
       Object.keys(context.state.sections).forEach(sectionName => {
@@ -105,7 +102,7 @@ export default new Vuex.Store({
     },
 
     publish(context) {
-      const url = '/admin/_page_editor/publish/'+context.state.versionId;
+      const url = '/admin/_page_editor/publish/'+context.state.currentVersion.id;
       axios.post(url)
         .then(json => {
           alert('Version published.');

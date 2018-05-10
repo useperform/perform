@@ -1,54 +1,113 @@
-$p-page-editor-toolbar-height: 50px;
+$p-page-editor-toolbar-width: 250px;
+$p-page-editor-icon-size: 16px;
+$p-page-editor-toolbar-bg: #333;
+$p-page-editor-toolbar-color: #eee;
+
+.p-comp-page-editor-icon {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 30px;
+  width: 30px;
+  padding: 5px;
+  font-size: $p-page-editor-icon-size;
+  background: $p-page-editor-toolbar-bg;
+  color: $p-page-editor-toolbar-color;
+  text-align: center;
+  line-height: 20px;
+  cursor: pointer;
+  &:hover {
+    text-decoration: none;
+    color: lighten($p-page-editor-toolbar-color, 20%);
+    background-color: lighten($p-page-editor-toolbar-bg, 10%);
+  }
+}
 
 .p-comp-page-editor-toolbar {
-  height: $p-page-editor-toolbar-height;
-  font-size: 14px;
-  font-family: 'Helvetica', 'Arial', sans-serif;
+  width: $p-page-editor-toolbar-width;
+  font-size: 12px;
+  font-family: $font-family-base;
+  border-right: 1px solid lighten($p-page-editor-toolbar-bg, 30%);
   position: fixed;
-  padding: 0 100px;
+  padding: 0;
   margin: 0;
   top: 0;
   left: 0;
-  right: 0;
+  bottom: 0;
   z-index: 1100;
-  background-color: #111;
-  color: #ddd;
+  background: $p-page-editor-toolbar-bg;
+  color: $p-page-editor-toolbar-color;
 
-  .block {
-    display: inline-block;
-    line-height: $p-page-editor-toolbar-height;
-    vertical-align: center;
-    width: auto;
-    color: #ddd;
-
-    a {
-      color: #ddd;
-      padding: 0 10px;
-      display: block;
+  a {
+    cursor: pointer;
+    color: $p-page-editor-toolbar-color;
+    &.active, &:hover {
+      background-color: lighten($p-page-editor-toolbar-bg, 10%);
       text-decoration: none;
-      cursor: pointer;
-      &:hover {
-        color: #fff;
-        background-color: #444;
-      }
     }
   }
 
-  ul.version-menu {
+  .minimize {
+    display: block;
+    height: 30px;
+    width: 30px;
+    text-align: center;
+    line-height: 20px;
+    padding: 5px;
+    font-size: $p-page-editor-icon-size;
+    color: darken($p-page-editor-toolbar-color, 20%);
+    &:hover {
+      color: lighten($p-page-editor-toolbar-color, 20%);
+    }
+  }
+
+  .version-title {
+    font-family: $headings-font-family;
+    display: block;
+    font-size: 1.5em;
+    padding: 20px;
+    &:hover ::after {
+      content: "foo";
+      width: 100px;
+      height: 100px;
+    }
+  }
+  .version-info {
+    padding: 20px;
+    font-size: 0.7rem;
+    span {
+      float: right;
+    }
+  }
+
+  .actions {
+    a {
+      text-align: center;
+      padding: 10px 10px;
+      display: block;
+      text-decoration: none;
+    }
+  }
+
+  .version-menu {
     position: absolute;
-    top: $p-page-editor-toolbar-height;
-    background-color: #111;
+    left: $p-page-editor-toolbar-width;
+    top: 50px;
+    height: 100px;
+    overflow-y: auto;
+    z-index: 1101;
+    background: $p-page-editor-toolbar-bg;
+    color: $p-page-editor-toolbar-color;
+    width: $p-page-editor-toolbar-width;
     padding: 0;
     margin: 0;
+    border: 1px solid lighten($p-page-editor-toolbar-bg, 30%);
+    border-left: none;
     list-style-type: none;
 
-    li {
+    a {
+      display: block;
       padding: 5px 10px;
-      cursor: pointer;
-      &:hover {
-        color: #fff;
-        background-color: #444;
-      }
     }
   }
 }
