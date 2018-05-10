@@ -1,13 +1,16 @@
 <template>
   <div class="p--local">
-    <a v-if="!visible" class="p-comp-page-editor-icon" href="#" @click.prevent="show">
+    <a v-if="!visible" class="p-comp-page-editor-icon" :class="positionClasses" href="#" @click.prevent="show">
       <i class="fa fa-pencil"></i>
     </a>
-    <div v-if="visible" class="p-comp-page-editor-toolbar">
-      <a @click.prevent="hide" class="minimize">
+    <div v-if="visible" class="p-comp-page-editor-toolbar" :class="positionClasses">
+      <a @click.prevent="hide" class="control">
         <i class="fa fa-times"></i>
       </a>
-      <a v-if="versionLoaded" :class="{'version-title': true, 'active': showingMenu}" @click.prevent="toggleVersionMenu">
+      <a @click.prevent="togglePullDirection" class="control">
+        <i class="fa fa-exchange"></i>
+      </a>
+      <a v-if="versionLoaded" class="version-title" :class="{'active': showingMenu}" @click.prevent="toggleVersionMenu">
         {{currentVersion.title}}
       </a>
       <div class="version-info">
@@ -53,6 +56,7 @@
    data() {
      return {
        visible: true,
+       pullRight: false,
        showingMenu: false,
      };
    },
@@ -66,6 +70,12 @@
      },
      versionLoaded() {
        return !!this.$store.state.currentVersion.id;
+     },
+     positionClasses() {
+       return {
+         left: !this.pullRight,
+         right: this.pullRight,
+       };
      }
    },
 
@@ -95,6 +105,10 @@
 
      toggleVersionMenu() {
        this.showingMenu = !this.showingMenu;
+     },
+
+     togglePullDirection() {
+       this.pullRight = !this.pullRight;
      },
 
      formatDateTime(date) {

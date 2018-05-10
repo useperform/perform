@@ -5,7 +5,6 @@ $p-page-editor-toolbar-color: #eee;
 
 .p-comp-page-editor-icon {
   position: fixed;
-  left: 0;
   top: 0;
   height: 30px;
   width: 30px;
@@ -27,12 +26,10 @@ $p-page-editor-toolbar-color: #eee;
   width: $p-page-editor-toolbar-width;
   font-size: 12px;
   font-family: $font-family-base;
-  border-right: 1px solid lighten($p-page-editor-toolbar-bg, 30%);
   position: fixed;
   padding: 0;
   margin: 0;
   top: 0;
-  left: 0;
   bottom: 0;
   z-index: 1100;
   background: $p-page-editor-toolbar-bg;
@@ -47,8 +44,8 @@ $p-page-editor-toolbar-color: #eee;
     }
   }
 
-  .minimize {
-    display: block;
+  .control {
+    display: inline-block;
     height: 30px;
     width: 30px;
     text-align: center;
@@ -91,9 +88,8 @@ $p-page-editor-toolbar-color: #eee;
 
   .version-menu {
     position: absolute;
-    left: $p-page-editor-toolbar-width;
     top: 50px;
-    height: 100px;
+    max-height: 200px;
     overflow-y: auto;
     z-index: 1101;
     background: $p-page-editor-toolbar-bg;
@@ -102,12 +98,39 @@ $p-page-editor-toolbar-color: #eee;
     padding: 0;
     margin: 0;
     border: 1px solid lighten($p-page-editor-toolbar-bg, 30%);
-    border-left: none;
     list-style-type: none;
 
     a {
       display: block;
       padding: 5px 10px;
     }
+  }
+}
+
+.p-comp-page-editor-icon.left {
+  left: 0;
+}
+
+.p-comp-page-editor-toolbar.left {
+  left: 0;
+  border-right: 1px solid lighten($p-page-editor-toolbar-bg, 30%);
+
+  .version-menu {
+    left: $p-page-editor-toolbar-width;
+    border-left: none;
+  }
+}
+
+.p-comp-page-editor-icon.right {
+  right: 0;
+}
+
+.p-comp-page-editor-toolbar.right {
+  right: 0;
+  border-left: 1px solid lighten($p-page-editor-toolbar-bg, 30%);
+
+  .version-menu {
+    right: $p-page-editor-toolbar-width;
+    border-right: none;
   }
 }
