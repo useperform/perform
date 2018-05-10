@@ -6,7 +6,7 @@
         <i v-if="this.choosing" class="fa fa-minus"></i>
       </a>
       <div class="type-tooltip" v-if="this.choosing">
-        <input type="text" v-model="filterText" ref="inputFilter"/>
+        <input type="text" v-model="filterText" ref="inputFilter" @keyup="onInputKey" />
         <ul>
           <li v-for="type, typeName in filteredBlockTypes" @click.prevent="addBlock(typeName)" @mouseenter="onHoverStart(typeName)" @mouseleave="onHoverStop" :key="typeName">
             <div class="name">
@@ -75,6 +75,7 @@
          blockType: type,
          editorIndex: this.editorIndex
        });
+       this.filterText = '';
      },
 
      toggleChoosing() {
@@ -97,6 +98,18 @@
 
      onHoverStop() {
        this.blockChoice = false;
+     },
+
+     onInputKey(e) {
+       // if one block is left, allow selecting it with the enter key
+       if (e.keyCode !== 13) {
+         return;
+       }
+
+       const typeNames = Object.keys(this.filteredBlockTypes);
+       if (typeNames.length === 1) {
+         this.addBlock(typeNames[0]);
+       }
      }
    }
  }
