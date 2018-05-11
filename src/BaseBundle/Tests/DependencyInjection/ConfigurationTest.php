@@ -124,4 +124,43 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($expected, $config['assets']);
     }
+
+    public function testValidAssetEntrypoints()
+    {
+        $config = $this->process([
+            'perform_base' => [
+                'assets' => [
+                    'entrypoints' => [
+                        'site' => 'site.js',
+                    ],
+                ],
+            ],
+        ]);
+        $this->assertSame('site.js', $config['assets']['entrypoints']['site']);
+
+        $config = $this->process([
+            'perform_base' => [
+                'assets' => [
+                    'entrypoints' => [
+                        'site' => ['site.js', 'site.scss'],
+                    ],
+                ],
+            ],
+        ]);
+        $this->assertSame(['site.js', 'site.scss'], $config['assets']['entrypoints']['site']);
+    }
+
+    public function testInvalidAssetEntrypoints()
+    {
+        $this->setExpectedException(InvalidConfigurationException::class);
+        $this->process([
+            'perform_base' => [
+                'assets' => [
+                    'entrypoints' => [
+                        'site' => ['site.js', []],
+                    ],
+                ],
+            ],
+        ]);
+    }
 }

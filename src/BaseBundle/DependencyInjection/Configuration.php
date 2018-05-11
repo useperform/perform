@@ -23,7 +23,26 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->arrayNode('entrypoints')
                             ->useAttributeAsKey('name')
-                            ->prototype('scalar')->end()
+                            ->prototype('variable')
+                                ->validate()
+                                    ->ifTrue(function ($value) {
+                                        if (is_string($value)) {
+                                            return false;
+                                        }
+                                        if (!is_array($value) || empty($value)) {
+                                            return true;
+                                        }
+                                        foreach ($value as $path) {
+                                            if (!is_string($path)) {
+                                                return true;
+                                            }
+                                        }
+
+                                        return false;
+                                    })
+                                    ->thenInvalid('Each asset entrypoint must be a filename or an array of filenames.')
+                                ->end()
+                            ->end()
                         ->end()
                         ->arrayNode('namespaces')
                             ->useAttributeAsKey('name')
