@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Perform\NotificationBundle\Notifier\Notifier;
 use Perform\BaseBundle\Doctrine\EntityResolver;
+use Perform\UserBundle\Security\UserManager;
 
 /**
  * ResetTokenManagerTest.
@@ -23,6 +24,9 @@ class ResetTokenManagerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->em = $this->getMock(EntityManagerInterface::class);
+        $this->userManager = $this->getMockBuilder(UserManager::class)
+                           ->disableOriginalConstructor()
+                           ->getMock();
         $this->resolver = $this->getMock(EntityResolver::class);
         $this->repo = $this->getMock(ObjectRepository::class);
 
@@ -37,7 +41,7 @@ class ResetTokenManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->notifier = $this->getMock(Notifier::class);
 
-        $this->manager = new ResetTokenManager($this->em, $this->resolver, $this->notifier, 1800);
+        $this->manager = new ResetTokenManager($this->em, $this->userManager, $this->resolver, $this->notifier, 1800);
     }
 
     public function testCreateToken()
@@ -80,9 +84,10 @@ class ResetTokenManagerTest extends \PHPUnit_Framework_TestCase
         $user = new User();
         $token->setUser($user);
 
-        $this->em->expects($this->once())
-            ->method('persist')
-            ->with($user);
+        $this->userManager->expects($this->once())
+            ->method('updatePassword')
+            ->with($user, 'hunter2');
+
         $this->em->expects($this->once())
             ->method('remove')
             ->with($token);
@@ -90,12 +95,11 @@ class ResetTokenManagerTest extends \PHPUnit_Framework_TestCase
             ->method('flush');
 
         $this->manager->updatePassword($token, 'hunter2');
-        $this->assertSame('hunter2', $user->getPlainPassword());
     }
 
     public function testExpiryTimeCanBeConfigured()
     {
-        $manager = new ResetTokenManager($this->em, $this->resolver, $this->notifier, 3600);
+        $manager = new ResetTokenManager($this->em, $this->userManager, $this->resolver, $this->notifier, 3600);
         $user = new User();
         $token = $manager->createToken($user);
         $this->assertInstanceOf(\DateTime::class, $token->getExpiresAt());
