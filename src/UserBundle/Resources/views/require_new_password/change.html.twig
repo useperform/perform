@@ -1,0 +1,17 @@
+{% extends '@PerformUser/dialog_base.html.twig' %}
+
+{% block title %}
+  Change your password
+{% endblock %}
+
+{% block card_body %}
+  <div class="alert alert-warning">
+    <p>
+      Please choose a new password for your account.
+    </p>
+  </div>
+  {{form_start(form)}}
+    {{form_row(form.password)}}
+    <button type="submit" class="btn btn-primary">Update password</button>
+  {{form_end(form)}}
+{% endblock %}
