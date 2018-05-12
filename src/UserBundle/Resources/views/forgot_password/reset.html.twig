@@ -1,4 +1,4 @@
-{% extends '@PerformUser/login/login.html.twig' %}
+{% extends '@PerformUser/dialog_base.html.twig' %}
 
 {% block title %}
   {% if error is defined %}
@@ -8,7 +8,7 @@
   {% endif %}
 {% endblock %}
 
-{% block panel_body %}
+{% block card_body %}
   {% if form is defined and form is not null %}
     <div class="alert alert-warning">
       <p>
@@ -17,7 +17,7 @@
     </div>
     {{form_start(form)}}
     {{form_row(form.password)}}
-    <button type="submit" class="btn btn-info">Reset password</button>
+    <button type="submit" class="btn btn-primary">Reset password</button>
     {{form_end(form)}}
   {% else %}
     <div class="alert alert-danger">

@@ -1,10 +1,10 @@
-{% extends '@PerformUser/login/login.html.twig' %}
+{% extends '@PerformUser/dialog_base.html.twig' %}
 
 {% block title %}
   Reset your password
 {% endblock %}
 
-{% block panel_body %}
+{% block card_body %}
   <div class="alert alert-warning">
     <p>
       Enter your email address to be sent a link to reset your password.
@@ -12,6 +12,6 @@
   </div>
   {{form_start(form)}}
   {{form_row(form.email)}}
-  <button type="submit" class="btn btn-info">Send password reset email</button>
+  <button type="submit" class="btn btn-primary">Send password reset email</button>
   {{form_end(form)}}
 {% endblock %}

@@ -49,3 +49,9 @@ services:
             - "@perform_user.reset_token_manager"
         tags:
             - { name: perform_base.action, alias: perform_user_create_reset_token }
+
+    Perform\UserBundle\Controller\:
+        resource: '../../Controller'
+        autoconfigure: true
+        tags:
+            - controller.service_arguments

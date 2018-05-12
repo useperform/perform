@@ -10,22 +10,48 @@ use Perform\UserBundle\Form\Type\ForgotPasswordType;
 use Perform\UserBundle\Form\Type\ResetPasswordType;
 use Symfony\Component\Form\FormError;
 use Perform\UserBundle\Security\ResetTokenException;
+use Perform\UserBundle\Security\ResetTokenManager;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class PasswordController extends Controller
+class ForgotPasswordController extends Controller
 {
     /**
      * @Template()
      */
-    public function resetPasswordAction(Request $request)
+    public function forgot(ResetTokenManager $manager, Request $request)
+    {
+        $form = $this->createForm(ForgotPasswordType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $token = $manager->createAndSaveToken($form->get('email')->getData());
+                $manager->sendNotification($token);
+
+                $this->addFlash('perform_password_success', 'You should receive an email with a link to reset your password shortly.');
+
+                return $this->redirectToRoute('perform_user_forgot_password_success');
+            } catch (ResetTokenException $e) {
+                $form->get('email')->addError(new FormError($e->getMessage()));
+            }
+        }
+
+        return [
+            'form' => $form->createView(),
+        ];
+    }
+
+    /**
+     * @Template()
+     */
+    public function reset(Request $request)
     {
         try {
             $manager = $this->get('perform_user.reset_token_manager');
             $token = $manager->findAndValidateToken(
-                $request->attributes->get('id'),
-                $request->attributes->get('secret')
+                $request->query->get('id'),
+                $request->query->get('secret')
             );
 
             $user = $token->getUser();
@@ -36,7 +62,7 @@ class PasswordController extends Controller
 
                 $this->addFlash('perform_password_success', 'Your password has been reset.');
 
-                return $this->redirectToRoute('perform_user_password_success');
+                return $this->redirectToRoute('perform_user_forgot_password_success');
             }
 
             return [
@@ -53,7 +79,7 @@ class PasswordController extends Controller
     /**
      * @Template
      */
-    public function successAction(Request $request)
+    public function success(Request $request)
     {
         $flashes = $request->getSession()->getFlashBag()->get('perform_password_success', []);
         if (!isset($flashes[0])) {
@@ -62,32 +88,6 @@ class PasswordController extends Controller
 
         return [
             'message' => $flashes[0],
-        ];
-    }
-
-    /**
-     * @Template()
-     */
-    public function forgotPasswordAction(Request $request)
-    {
-        $form = $this->createForm(ForgotPasswordType::class);
-        $form->handleRequest($request);
-        if ($form->isValid()) {
-            try {
-                $manager = $this->get('perform_user.reset_token_manager');
-                $token = $manager->createAndSaveToken($form->get('email')->getData());
-                $manager->sendNotification($token);
-
-                $this->addFlash('perform_password_success', 'You should receive an email with a link to reset your password shortly.');
-
-                return $this->redirectToRoute('perform_user_password_success');
-            } catch (ResetTokenException $e) {
-                $form->get('email')->addError(new FormError($e->getMessage()));
-            }
-        }
-
-        return [
-            'form' => $form->createView(),
         ];
     }
 }

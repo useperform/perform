@@ -1,0 +1,10 @@
+{% extends '@PerformUser/dialog_base.html.twig' %}
+
+{% block title %}
+  Thank you
+{% endblock %}
+
+{% block card_body %}
+  <p>{{message}}</p>
+  <a class="btn btn-primary" href="{{path('perform_user_login')}}">Login</a>
+{% endblock %}

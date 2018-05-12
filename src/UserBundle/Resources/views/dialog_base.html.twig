@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    {% block css %}
+      <link rel="stylesheet" type="text/css" href="{{asset('/perform.css')}}" />
+    {% endblock %}
+  </head>
+  <body>
+    <div class="container">
+      <div class="col-md-4 offset-md-4">
+        <div class="card mt-5">
+          <h4 class="card-header bg-primary">
+            {{block('title')}}
+          </h4>
+          <div class="card-body">
+            {% block card_body %}
+            {% endblock %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% block js %}
+    {% endblock %}
+  </body>
+</html>
