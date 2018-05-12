@@ -18,13 +18,15 @@ class ResetTokenManager
 {
     protected $em;
     protected $entityResolver;
+    protected $userManager;
     protected $notifier;
     protected $expirySeconds;
 
-    public function __construct(EntityManagerInterface $em, EntityResolver $entityResolver, Notifier $notifier, $expirySeconds)
+    public function __construct(EntityManagerInterface $em, UserManager $userManager, EntityResolver $entityResolver, Notifier $notifier, $expirySeconds)
     {
         $this->em = $em;
         $this->entityResolver = $entityResolver;
+        $this->userManager = $userManager;
         $this->expirySeconds = $expirySeconds;
         $this->notifier = $notifier;
     }
@@ -77,11 +79,16 @@ class ResetTokenManager
 
     public function updatePassword(ResetToken $token, $newPassword)
     {
-        $user = $token->getUser();
-        $user->setPlainPassword($newPassword);
-        $this->em->persist($user);
-        $this->em->remove($token);
-        $this->em->flush();
+        $this->em->beginTransaction();
+        try {
+            $this->userManager->updatePassword($token->getUser(), $newPassword);
+            $this->em->remove($token);
+            $this->em->flush();
+            $this->em->commit();
+        } catch (\Exception $e) {
+            $this->em->rollback();
+            throw $e;
+        }
     }
 
     public function sendNotification(ResetToken $token)
