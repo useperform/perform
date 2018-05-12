@@ -37,7 +37,10 @@ class CreateResetTokenAction implements ActionInterface
     public function getDefaultConfig()
     {
         return [
-            'label' => 'Reset Password',
+            'label' => 'Create reset token',
+            'isButtonAvailable' => function ($user, AdminRequest $request) {
+                return $request->getContext() === 'view';
+            },
             'buttonStyle' => 'btn-light',
         ];
     }
