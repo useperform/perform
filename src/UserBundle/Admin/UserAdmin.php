@@ -33,7 +33,6 @@ class UserAdmin extends AbstractAdmin
             ->add('passwordExpiresAt', [
                 'type' => 'datetime',
                 'contexts' => [
-                    TypeConfig::CONTEXT_CREATE,
                     TypeConfig::CONTEXT_EDIT,
                     TypeConfig::CONTEXT_VIEW,
                 ]
