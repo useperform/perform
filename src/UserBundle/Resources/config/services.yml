@@ -36,6 +36,13 @@ services:
         arguments: ['PerformUserBundle:User']
         factory: ['@doctrine.orm.entity_manager', 'getRepository']
 
+    perform_user.user_manager:
+        class: Perform\UserBundle\Security\UserManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            # in seconds, roughly 5 years
+            - 157680000
+
     perform_user.reset_token_manager:
         class: Perform\UserBundle\Security\ResetTokenManager
         arguments:
