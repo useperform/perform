@@ -37,6 +37,11 @@ class User implements UserInterface, RecipientInterface
     protected $plainPassword;
 
     /**
+     * @var \DateTime
+     */
+    public $passwordExpiresAt;
+
+    /**
      * @var string
      */
     protected $email;
@@ -187,6 +192,38 @@ class User implements UserInterface, RecipientInterface
     public function getPlainPassword()
     {
         return $this->plainPassword;
+    }
+
+    /**
+     * @param \DateTime $passwordExpiresAt
+     *
+     * @return User
+     */
+    public function setPasswordExpiresAt(\DateTime $passwordExpiresAt)
+    {
+        $this->passwordExpiresAt = $passwordExpiresAt;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getPasswordExpiresAt()
+    {
+        return $this->passwordExpiresAt;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPasswordExpired()
+    {
+        if (!$this->passwordExpiresAt) {
+            return true;
+        }
+
+        return $this->passwordExpiresAt < new \DateTime();
     }
 
     public function eraseCredentials()

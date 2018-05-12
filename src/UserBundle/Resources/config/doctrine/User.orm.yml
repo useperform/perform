@@ -15,6 +15,8 @@ Perform\UserBundle\Entity\User:
             type: string
         password:
             type: string
+        passwordExpiresAt:
+            type: datetime
         email:
             type: string
             unique: true

@@ -52,6 +52,11 @@ class UserListener implements EventSubscriber
             return;
         }
 
+        // set password expiry to right now if not explicitly set
+        if (!$user->getPasswordExpiresAt()) {
+            $user->setPasswordExpiresAt(new \DateTime());
+        }
+
         $this->updatePassword($user);
         if ($args instanceof PreUpdateEventArgs) {
             //update the change set when doing an update
