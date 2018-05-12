@@ -40,7 +40,7 @@ A sample ``security.yml``:
 
         access_control:
             - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-            - { path: ^/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+            - { path: ^/forgot-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
             - { path: ^/, role: ROLE_USER }
 
 Routing
@@ -52,7 +52,7 @@ The bundle includes 3 routing files for different functionality.
 * ``routing_password.yml`` for password resets when a user forgets their password
 * ``routing_admin.yml`` CRUD routes for the user entity
 
-For example, to use the login/logout form and enable password resets under the ``/reset-password`` URL prefix:
+For example, to use the login/logout form and enable password resets under the ``/forgot-password`` URL prefix:
 
 .. code-block:: yaml
 
@@ -60,5 +60,5 @@ For example, to use the login/logout form and enable password resets under the `
         resource: "@PerformUserBundle/Resources/config/routing_login.yml"
 
     perform_user_password:
-        resource: "@PerformUserBundle/Resources/config/routing_password.yml"
-        prefix: /reset-password
+        resource: "@PerformUserBundle/Resources/config/routing/forgot_password.yml"
+        prefix: /forgot-password
