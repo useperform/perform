@@ -105,7 +105,7 @@ abstract class AbstractAdmin implements AdminInterface
     public function getTemplate(Environment $twig, $entityName, $context)
     {
         //try a template in the entity bundle first, e.g.
-        //@PerformContact/message/view.html.twig
+        //@PerformContact/crud/message/view.html.twig
         $template = StringUtil::crudTemplateForEntity($entityName, $context);
 
         return $twig->getLoader()->exists($template) ? $template : sprintf('@PerformBase/crud/%s.html.twig', $context);

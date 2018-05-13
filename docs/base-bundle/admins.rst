@@ -165,9 +165,11 @@ return a custom template name.
 Place a file in a specific location
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The template ``@<Bundle>/admin/<entity>/<context>.html.twig`` will be used
+The template ``@<Bundle>/crud/<entity>/<context>.html.twig`` will be used
 automatically if available,
-e.g. ``@PerformContact/Message/view.html.twig``.
+e.g. ``@PerformContact/crud/message/view.html.twig``.
+
+Note that the entity class will be snake cased, so the entity ``BookPublisher`` in the ``AppBundle`` will search for ``@App/crud/book_publisher/list.html.twig`` in the ``list`` context.
 
 Default
 ~~~~~~~

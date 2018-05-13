@@ -88,6 +88,6 @@ class StringUtil
         $bundle = preg_replace('/Bundle$/', '', $pieces[0]);
         $entity = strtolower(preg_replace('/([a-z\d])([A-Z])/', '\\1_\\2', $pieces[1]));
 
-        return sprintf('@%s/admin/%s/%s.html.twig', $bundle, $entity, $context);
+        return sprintf('@%s/crud/%s/%s.html.twig', $bundle, $entity, $context);
     }
 }

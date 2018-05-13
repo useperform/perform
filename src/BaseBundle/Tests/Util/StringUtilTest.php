@@ -104,8 +104,8 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
     public function crudTemplateProvider()
     {
         return [
-            ['AppBundle:Foo', 'list', '@App/admin/foo/list.html.twig'],
-            ['SomeOtherAppBundle:UserProfile', 'view', '@SomeOtherApp/admin/user_profile/view.html.twig'],
+            ['AppBundle:Foo', 'list', '@App/crud/foo/list.html.twig'],
+            ['SomeOtherAppBundle:UserProfile', 'view', '@SomeOtherApp/crud/user_profile/view.html.twig'],
         ];
     }
 

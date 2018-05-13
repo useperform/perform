@@ -49,10 +49,10 @@ class AbstractAdminTest extends \PHPUnit_Framework_TestCase
     public function overrideTemplateProvider()
     {
         return [
-            ['list', '@Some/admin/some_entity/list.html.twig'],
-            ['view', '@Some/admin/some_entity/view.html.twig'],
-            ['create', '@Some/admin/some_entity/create.html.twig'],
-            ['edit', '@Some/admin/some_entity/edit.html.twig'],
+            ['list', '@Some/crud/some_entity/list.html.twig'],
+            ['view', '@Some/crud/some_entity/view.html.twig'],
+            ['create', '@Some/crud/some_entity/create.html.twig'],
+            ['edit', '@Some/crud/some_entity/edit.html.twig'],
         ];
     }
 
