@@ -10,6 +10,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Perform\BaseBundle\Admin\AdminRegistry;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
+use Perform\BaseBundle\Exception\AdminNotFoundException;
 
 /**
  * CrudUrlGeneratorTest.
@@ -201,6 +202,17 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($this->generator->routeExists('TestBundle:Something', 'view'));
         $this->assertFalse($this->generator->routeExists(new \stdClass(), 'view'));
+    }
+
+    public function testRouteExistsWithUnknownEntity()
+    {
+        $this->adminRegistry->expects($this->any())
+            ->method('getAdmin')
+            ->will($this->returnCallback(function() {
+                throw new AdminNotFoundException();
+            }));
+
+        $this->assertFalse($this->generator->routeExists('Unknown', 'view'));
     }
 
     public function testGetDefaultEntityRouteList()

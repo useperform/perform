@@ -6,6 +6,7 @@ use Perform\BaseBundle\Admin\AdminRegistry;
 use Perform\BaseBundle\Admin\AdminInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Routing\Route;
+use Perform\BaseBundle\Exception\AdminNotFoundException;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -31,9 +32,16 @@ class CrudUrlGenerator implements CrudUrlGeneratorInterface
         return $this->router->generate($this->createRouteName($admin, $action), $params);
     }
 
+    /**
+     * @return bool
+     */
     public function routeExists($entity, $action)
     {
-        $admin = $this->adminRegistry->getAdmin($entity);
+        try {
+            $admin = $this->adminRegistry->getAdmin($entity);
+        } catch (AdminNotFoundException $e) {
+            return false;
+        }
 
         if (!in_array($action, $admin->getActions())) {
             return false;
