@@ -73,3 +73,8 @@ services:
         autoconfigure: true
         tags:
             - controller.service_arguments
+
+    perform_user.auth.single_use:
+        class: Perform\UserBundle\Security\SingleUseAuthenticator
+        arguments:
+            - '@uri_signer'
