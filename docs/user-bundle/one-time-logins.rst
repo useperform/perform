@@ -6,6 +6,57 @@ to an application without a password.
 
 URLs like this could be added to invitation emails for new users so they can get started straight away.
 
+Enable the SingleUseAuthenticator
+---------------------------------
+
+The bundle includes a ``SingleUseAuthenticator``, with the service name ``perform_user.auth.single_use``, to add to your firewall configuration.
+
+Here's an example for a firewall also using form logins:
+
+.. code-block:: diff
+
+    firewalls:
+        main:
+            pattern: ^/
+    +       simple_preauth:
+    +           authenticator: perform_user.auth.single_use
+            form_login:
+                login_path: perform_user_login
+                check_path: perform_user_login
+                csrf_token_generator: security.csrf.token_manager
+            logout:
+                path: perform_user_logout
+                target: /
+            anonymous: true
+
+
+Users will now be able to login with a signed URL.
+
+Generate a signed URL
+---------------------
+
+Use the ``generateUrl()`` method of the authenticator, passing in the user and the destination URL.
+
+You can then use this URL in welcome emails, administration areas, or wherever else you require it.
+
+.. code-block:: php
+
+    <?php
+
+    /* @var Symfony\Component\Routing\Generator\UrlGeneratorInterface $urlGenerator */
+    $targetUrl = $urlGenerator->generate('app_index', [], UrlGeneratorInterface::ABSOLUTE_URL);
+    // https://example.com/
+
+    /* @var Perform\UserBundle\Entity\User $user */
+    /* @var Perform\UserBundle\Security\SingleUseAuthenticator $auth */
+    $signedUrl = $auth->generateUrl($user, $targetUrl);
+    // https://example.com/?_a=0000&_t=0000&_hash=0000
+
+.. note::
+
+    You'll likely want to use the router to generate the target URL, making sure the hostname is included, not just the path.
+
+
 Requiring a password reset after use
 ------------------------------------
 
