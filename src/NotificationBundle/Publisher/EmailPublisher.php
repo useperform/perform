@@ -2,22 +2,25 @@
 
 namespace Perform\NotificationBundle\Publisher;
 
-use Perform\BaseBundle\Email\Mailer;
 use Perform\NotificationBundle\Notification;
 use Perform\NotificationBundle\Renderer\RendererInterface;
 
 /**
- * EmailPublisher sends the notifications to the recipients via email.
+ * Send notifications to recipients via email.
+ *
+ * @author Glynn Forrest <me@glynnforrest.com>
  */
 class EmailPublisher implements PublisherInterface
 {
     protected $mailer;
     protected $renderer;
+    protected $defaultFrom;
 
-    public function __construct(Mailer $mailer, RendererInterface $renderer)
+    public function __construct(\Swift_Mailer $mailer, RendererInterface $renderer, array $defaultFrom)
     {
         $this->mailer = $mailer;
         $this->renderer = $renderer;
+        $this->defaultFrom = $defaultFrom;
     }
 
     public function send(Notification $notification)
@@ -30,26 +33,17 @@ class EmailPublisher implements PublisherInterface
         }
 
         foreach ($notification->getRecipients() as $recipient) {
-            //add useful context to the template
-            $context = array_merge($notification->getContext(), [
-                'notification' => $notification,
-                //all recipients are available in the template with
-                //notification.recipients, this is just the current
-                //recipient
-                'currentRecipient' => $recipient,
-            ]);
+            $message = \Swift_Message::newInstance()
+                     ->setSubject($context['subject'])
+                     ->setTo($recipient->getEmail())
+                     ->setFrom($this->defaultFrom)
+                     ->setBody($this->renderer->renderTemplate($template, $notification, $recipient));
 
-            $message = $this->mailer->createMessage(
-                $recipient->getEmail(),
-                $context['subject'],
-                $template,
-                $context
-            );
             if (isset($context['replyTo'])) {
                 $message->setReplyTo((array) $context['replyTo']);
             }
 
-            $this->mailer->sendMessage($message);
+            $this->mailer->send($message);
         }
     }
 

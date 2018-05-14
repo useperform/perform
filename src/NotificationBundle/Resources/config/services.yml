@@ -18,8 +18,9 @@ services:
     perform_notification.publisher.email:
         class: Perform\NotificationBundle\Publisher\EmailPublisher
         arguments:
-            - "@perform_base.email.mailer"
+            - "@swiftmailer.mailer"
             - "@perform_notification.renderer"
+            - '%perform_notification.email_default_from%'
         tags:
             - {name: perform_notification.publisher}
 

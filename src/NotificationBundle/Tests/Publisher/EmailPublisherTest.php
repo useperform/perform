@@ -5,7 +5,6 @@ namespace Perform\NotificationBundle\Tests\Publisher;
 use Perform\NotificationBundle\Publisher\EmailPublisher;
 use Perform\NotificationBundle\Notification;
 use Perform\NotificationBundle\Recipient\RecipientInterface;
-use Perform\BaseBundle\Email\Mailer;
 use Perform\NotificationBundle\Renderer\RendererInterface;
 
 /**
@@ -19,11 +18,11 @@ class EmailPublisherTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->mailer = $this->getMockBuilder(Mailer::class)
+        $this->mailer = $this->getMockBuilder(\Swift_Mailer::class)
                       ->disableOriginalConstructor()
                       ->getMock();
         $this->renderer = $this->getMock(RendererInterface::class);
-        $this->publisher = new EmailPublisher($this->mailer, $this->renderer);
+        $this->publisher = new EmailPublisher($this->mailer, $this->renderer, ['app@example.com' => 'Sender']);
     }
 
     public function testSend()
@@ -41,19 +40,34 @@ class EmailPublisherTest extends \PHPUnit_Framework_TestCase
             ->method('getTemplateName')
             ->with('email', $notification)
             ->will($this->returnValue('some_template'));
-        $message = new \Swift_Message();
-        $this->mailer->expects($this->exactly(2))
-            ->method('createMessage')
+        $this->renderer->expects($this->exactly(2))
+            ->method('renderTemplate')
             ->withConsecutive(
-                ['1@example.com', 'Test subject', 'some_template'],
-                ['2@example.com', 'Test subject', 'some_template']
+                ['some_template', $notification, $recipient1],
+                ['some_template', $notification, $recipient2]
             )
-            ->will($this->returnValue($message));
-
+            ->will($this->returnValue('Rendered email'));
+        $sent = [];
         $this->mailer->expects($this->exactly(2))
-            ->method('sendMessage')
-            ->with($message);
+            ->method('send')
+            ->with($this->callback(function ($message) use (&$sent) {
+                $sent[] = $message;
+
+                return true;
+            }));
 
         $this->publisher->send($notification);
+
+        $this->assertInstanceOf(\Swift_Message::class, $sent[0]);
+        $this->assertSame(['1@example.com'], array_keys($sent[0]->getTo()));
+        $this->assertSame(['app@example.com' => 'Sender'], $sent[0]->getFrom());
+        $this->assertSame('Test subject', $sent[0]->getSubject());
+        $this->assertSame('Rendered email', $sent[0]->getBody());
+
+        $this->assertInstanceOf(\Swift_Message::class, $sent[1]);
+        $this->assertSame(['2@example.com'], array_keys($sent[1]->getTo()));
+        $this->assertSame(['app@example.com' => 'Sender'], $sent[1]->getFrom());
+        $this->assertSame('Test subject', $sent[1]->getSubject());
+        $this->assertSame('Rendered email', $sent[1]->getBody());
     }
 }

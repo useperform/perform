@@ -29,6 +29,11 @@ class PerformNotificationExtension extends Extension
             $notifier->addMethodCall('setLogger', [new Reference('logger'), $level]);
         }
 
+        $container->setParameter(
+            'perform_notification.email_default_from',
+            isset($config['email']['default_from']) ? $config['email']['default_from'] : []
+        );
+
         if (isset($config['active_recipient_provider'])) {
             $twigExtension = $container->getDefinition('perform_notification.twig.notification');
             $twigExtension->replaceArgument(0, new Reference($config['active_recipient_provider']));

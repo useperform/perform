@@ -15,13 +15,7 @@ class RegisterPublishersPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('perform_base.email.mailer')) {
-            $msg = sprintf(
-                'Removing the %s publisher; the BaseBundle mailer has not been configured. Configure the perform_base.mailer node to use this publisher.',
-                EmailPublisher::class);
-            $container->log($this, $msg);
-            $container->removeDefinition('perform_notification.publisher.email');
-        }
+        $this->maybeRemoveEmailPublisher($container);
 
         $definition = $container->getDefinition('perform_notification.notifier');
 
@@ -33,5 +27,19 @@ class RegisterPublishersPass implements CompilerPassInterface
             $container->getDefinition('perform_notification.notifier')
                 ->setClass(TraceableNotifier::class);
         }
+    }
+
+    private function maybeRemoveEmailPublisher(ContainerBuilder $container)
+    {
+        $msg = sprintf('Removing the %s publisher; ', EmailPublisher::class);
+        if (!$container->hasDefinition('swiftmailer.mailer.default')) {
+            $msg .= 'swiftmailer has not been configured.';
+        } elseif (empty($container->getParameter('perform_notification.email_default_from'))) {
+            $msg .= 'the perform_notification.email.default_from configuration array is empty.';
+        } else {
+            return;
+        }
+        $container->log($this, $msg);
+        $container->removeDefinition('perform_notification.publisher.email');
     }
 }
