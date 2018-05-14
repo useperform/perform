@@ -4,7 +4,7 @@ namespace Perform\ContactBundle\Form\Handler;
 
 use Symfony\Component\HttpFoundation\Request;
 use Psr\Log\LoggerInterface;
-use Perform\NotificationBundle\Notifier\Notifier;
+use Perform\NotificationBundle\Notifier\NotifierInterface;
 use Symfony\Component\Form\FormInterface;
 use Perform\ContactBundle\Entity\Message;
 use Perform\NotificationBundle\RecipientProvider\RecipientProviderInterface;
@@ -31,7 +31,7 @@ class ContactFormHandler
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        Notifier $notifier,
+        NotifierInterface $notifier,
         RecipientProviderInterface $recipientProvider,
         SpamManager $spamManager,
         LoggerInterface $logger = null)

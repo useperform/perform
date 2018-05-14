@@ -2,7 +2,7 @@
 
 namespace Perform\ContactBundle\Tests\Form\Handler;
 
-use Perform\NotificationBundle\Notifier\Notifier;
+use Perform\NotificationBundle\Notifier\NotifierInterface;
 use Perform\NotificationBundle\RecipientProvider\RecipientProviderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\ContactBundle\SpamChecker\SpamCheckerInterface;
@@ -28,7 +28,7 @@ class ContactFormHandlerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->entityManager = $this->getMock(EntityManagerInterface::class);
-        $this->notifier = $this->getMock(Notifier::class);
+        $this->notifier = $this->getMock(NotifierInterface::class);
         $this->recipientProvider = $this->getMock(RecipientProviderInterface::class);
         $this->spamManager = $this->getMockBuilder(SpamManager::class)
                            ->disableOriginalConstructor()
