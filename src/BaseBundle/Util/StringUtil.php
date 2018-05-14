@@ -3,8 +3,6 @@
 namespace Perform\BaseBundle\Util;
 
 /**
- * StringUtil.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class StringUtil
@@ -53,7 +51,7 @@ class StringUtil
     }
 
     /**
-     * Get the basename of a class, optionally removing a suffix.
+     * Get the basename of a class, optionally removing a suffix if it exists.
      *
      * @param string $class
      * @param string $suffix

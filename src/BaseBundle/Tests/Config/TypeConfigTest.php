@@ -14,8 +14,6 @@ use Symfony\Component\OptionsResolver\Exception\ExceptionInterface;
 use Perform\BaseBundle\Test\Services;
 
 /**
- * TypeConfigTest.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class TypeConfigTest extends \PHPUnit_Framework_TestCase

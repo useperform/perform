@@ -3,8 +3,6 @@
 namespace Perform\BaseBundle\Util;
 
 /**
- * DurationUtil.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class DurationUtil

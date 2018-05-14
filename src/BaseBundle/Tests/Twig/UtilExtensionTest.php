@@ -9,8 +9,6 @@ use Symfony\Component\Routing\Route;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
 
 /**
- * UtilExtensionTest.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class UtilExtensionTest extends \PHPUnit_Framework_TestCase

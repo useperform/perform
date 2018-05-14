@@ -11,8 +11,6 @@ use Perform\BaseBundle\Admin\AdminRequest;
 use Perform\BaseBundle\Twig\Extension\ActionExtension;
 
 /**
- * CrudController.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class CrudController extends Controller

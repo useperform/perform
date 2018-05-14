@@ -10,8 +10,6 @@ use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\XmlChildBundle\Entity\XmlIt
 use Perform\BaseBundle\Exception\InvalidAdminException;
 
 /**
- * RegisterAdminsPassTest.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class RegisterAdminsPassTest extends \PHPUnit_Framework_TestCase
