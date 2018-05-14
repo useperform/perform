@@ -44,9 +44,4 @@ class LocalPublisher implements PublisherInterface
 
         $this->entityManager->flush();
     }
-
-    public function getName()
-    {
-        return 'local';
-    }
 }

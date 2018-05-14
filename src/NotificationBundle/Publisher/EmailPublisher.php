@@ -46,9 +46,4 @@ class EmailPublisher implements PublisherInterface
             $this->mailer->send($message);
         }
     }
-
-    public function getName()
-    {
-        return 'email';
-    }
 }

@@ -6,7 +6,10 @@ use Perform\NotificationBundle\Notification;
 
 interface PublisherInterface
 {
-    function send(Notification $notification);
-
-    function getName();
+    /**
+     * Send a notification.
+     *
+     * @param Notification $notification
+     */
+    public function send(Notification $notification);
 }
