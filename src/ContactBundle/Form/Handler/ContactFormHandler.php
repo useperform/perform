@@ -75,7 +75,7 @@ class ContactFormHandler
         }
 
         if ($this->logger) {
-            $this->logger->info(sprintf('Contact message submitted from %s at %s', $message->getEmail(), $message->getCreatedAt()->format('Y/m/d H:i:s')));
+            $this->logger->info(sprintf('Contact message submitted at %s', $message->getCreatedAt()->format('Y/m/d H:i:s')));
         }
 
         $this->sendNotifications($message);
