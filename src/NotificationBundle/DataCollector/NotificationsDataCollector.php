@@ -25,10 +25,7 @@ class NotificationsDataCollector extends DataCollector
     {
         $this->data['sent'] = $this->notifier->getSent();
         $this->data['sentCount'] = count($this->data['sent']);
-        $this->data['publishers'] = [];
-        foreach ($this->notifier->getPublishers() as $publisher) {
-            $this->data['publishers'][$publisher->getName()] = get_class($publisher);
-        }
+        $this->data['publishers'] = $this->notifier->getPublisherClasses();
     }
 
     public function getSent()

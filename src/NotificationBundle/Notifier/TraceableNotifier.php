@@ -5,8 +5,6 @@ namespace Perform\NotificationBundle\Notifier;
 use Perform\NotificationBundle\Notification;
 
 /**
- * TraceableNotifier.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class TraceableNotifier extends Notifier
@@ -14,11 +12,16 @@ class TraceableNotifier extends Notifier
     protected $sent = [];
 
     /**
-     * @return PublisherInterface[]
+     * @return array
      */
-    public function getPublishers()
+    public function getPublisherClasses()
     {
-        return $this->publishers;
+        $classes = [];
+        foreach ($this->publishers as $name => $publisher) {
+            $classes[$name] = get_class($publisher);
+        }
+
+        return $classes;
     }
 
     public function send(Notification $notification, array $publishers = [])

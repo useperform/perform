@@ -4,27 +4,28 @@ namespace Perform\NotificationBundle\Tests\Notifier;
 
 use Perform\NotificationBundle\Publisher\PublisherInterface;
 use Perform\NotificationBundle\Notifier\TraceableNotifier;
+use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
 
 /**
- * TraceableNotifierTest.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class TraceableNotifierTest extends \PHPUnit_Framework_TestCase
 {
+    protected $publisher;
+    protected $notifier;
+
     public function setUp()
     {
-        $this->notifier = new TraceableNotifier();
         $this->publisher = $this->getMock(PublisherInterface::class);
-        $this->publisher->expects($this->any())
-            ->method('getName')
-            ->will($this->returnValue('testPublisher'));
+        $locator = new LoopableServiceLocator([
+            'testPublisher' => function() { return $this->publisher; }
+        ]);
 
-        $this->notifier->addPublisher($this->publisher);
+        $this->notifier = new TraceableNotifier($locator);
     }
 
     public function testGetPublishers()
     {
-        $this->assertSame(['testPublisher' => $this->publisher], $this->notifier->getPublishers());
+        $this->assertSame(['testPublisher' => get_class($this->publisher)], $this->notifier->getPublisherClasses());
     }
 }

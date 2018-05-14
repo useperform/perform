@@ -33,8 +33,9 @@ class RegisterPublishersPass implements CompilerPassInterface
         $notifier->setArgument(0, LoopableServiceLocator::createDefinition($publishers));
 
         if ($container->hasDefinition('profiler')) {
-            $container->getDefinition('perform_notification.notifier')
-                ->setClass(TraceableNotifier::class);
+            $notifier->setClass(TraceableNotifier::class);
+        } else {
+            $container->removeDefinition('perform_notification.data_collector');
         }
     }
 
