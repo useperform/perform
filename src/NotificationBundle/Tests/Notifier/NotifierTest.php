@@ -8,9 +8,10 @@ use Perform\NotificationBundle\Publisher\PublisherInterface;
 use Perform\NotificationBundle\Recipient\RecipientInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
 
 /**
- * NotifierTest
+ * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class NotifierTest extends \PHPUnit_Framework_TestCase
 {
@@ -19,13 +20,12 @@ class NotifierTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->notifier = new Notifier();
         $this->publisher = $this->getMock(PublisherInterface::class);
-        $this->publisher->expects($this->any())
-            ->method('getName')
-            ->will($this->returnValue('testPublisher'));
+        $locator = new LoopableServiceLocator([
+            'testPublisher' => function() { return $this->publisher; }
+        ]);
 
-        $this->notifier->addPublisher($this->publisher);
+        $this->notifier = new Notifier($locator);
     }
 
     protected function newNotification()

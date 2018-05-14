@@ -7,6 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use Perform\NotificationBundle\Notifier\TraceableNotifier;
 use Perform\NotificationBundle\Publisher\EmailPublisher;
+use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
 
 /**
  * Register additional notification publishers automatically.
@@ -17,11 +18,19 @@ class RegisterPublishersPass implements CompilerPassInterface
     {
         $this->maybeRemoveEmailPublisher($container);
 
-        $definition = $container->getDefinition('perform_notification.notifier');
+        $notifier = $container->getDefinition('perform_notification.notifier');
 
+        $publishers = [];
         foreach ($container->findTaggedServiceIds('perform_notification.publisher') as $service => $tag) {
-            $definition->addMethodCall('addPublisher', [new Reference($service)]);
+            if (!isset($tag[0]['alias'])) {
+                throw new \InvalidArgumentException(sprintf('The service "%s" tagged with "perform_notification.publisher" must set the "alias" option in the tag.', $service));
+            }
+            $name = $tag[0]['alias'];
+
+            $publishers[$name] = new Reference($service);
         }
+
+        $notifier->setArgument(0, LoopableServiceLocator::createDefinition($publishers));
 
         if ($container->hasDefinition('profiler')) {
             $container->getDefinition('perform_notification.notifier')

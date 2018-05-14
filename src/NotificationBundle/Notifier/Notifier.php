@@ -2,10 +2,10 @@
 
 namespace Perform\NotificationBundle\Notifier;
 
-use Perform\NotificationBundle\Publisher\PublisherInterface;
 use Perform\NotificationBundle\Notification;
 use Psr\Log\LogLevel;
 use Psr\Log\LoggerInterface;
+use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
 
 class Notifier
 {
@@ -13,14 +13,14 @@ class Notifier
     protected $logger;
     protected $logLevel = LogLevel::INFO;
 
-    public function addPublisher(PublisherInterface $publisher)
+    public function __construct(LoopableServiceLocator $publishers)
     {
-        $this->publishers[$publisher->getName()] = $publisher;
+        $this->publishers = $publishers;
     }
 
     /**
      * @param LoggerInterface|null $logger
-     * @param string $logLevel
+     * @param string               $logLevel
      */
     public function setLogger(LoggerInterface $logger = null, $logLevel = LogLevel::INFO)
     {
@@ -32,16 +32,16 @@ class Notifier
      * Send a notification.
      *
      * @param Notification $notification
-     * @param array $publishers The publishers to use (leave blank to use default publishers)
+     * @param array        $publishers   The publishers to use
      */
-    public function send(Notification $notification, array $publishers = [])
+    public function send(Notification $notification, array $publishers)
     {
         foreach ($publishers as $name) {
-            if (!isset($this->publishers[$name])) {
-                throw new \Exception(sprintf('Unknown notification publisher "%s". Available publishers are "%s". You may need to set configuration to enable additional publishers.', $name, implode('", "', array_keys($this->publishers))));
+            if (!$this->publishers->has($name)) {
+                throw new \Exception(sprintf('Unknown notification publisher "%s". Available publishers are "%s". You may need to set configuration to enable additional publishers.', $name, implode('", "', $this->publishers->getNames())));
             }
 
-            $this->publishers[$name]->send($notification);
+            $this->publishers->get($name)->send($notification);
         }
 
         if ($this->logger) {

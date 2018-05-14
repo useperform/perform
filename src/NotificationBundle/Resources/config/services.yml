@@ -13,7 +13,7 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@perform_notification.renderer"
         tags:
-            - {name: perform_notification.publisher}
+            - {name: perform_notification.publisher, alias: local}
 
     perform_notification.publisher.email:
         class: Perform\NotificationBundle\Publisher\EmailPublisher
@@ -22,7 +22,7 @@ services:
             - "@perform_notification.renderer"
             - '%perform_notification.email_default_from%'
         tags:
-            - {name: perform_notification.publisher}
+            - {name: perform_notification.publisher, alias: email}
 
     perform_notification.repository.notification_log:
         class: Perform\NotificationBundle\Repository\NotificationLogRepository
