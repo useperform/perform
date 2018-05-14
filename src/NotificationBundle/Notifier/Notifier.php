@@ -45,8 +45,15 @@ class Notifier implements NotifierInterface
         }
 
         if ($this->logger) {
-            $this->logger->log($this->logLevel, sprintf('Sent notification of type "%s".', $notification->getType()), [
-                'recipients' => $notification->getRecipients(),
+            // don't log the recipients or context, as both may
+            // contain personally identifiable information.
+            // if you want to log this information, consider
+            // implementing NotifierInterface yourself.
+            $type = $notification->getType();
+            $recipientCount = count($notification->getRecipients());
+            $this->logger->log($this->logLevel, sprintf('Sent notification of type "%s" to %s %s.', $type, $recipientCount, $recipientCount === 1 ? 'recipient' : 'recipients'), [
+                'type' => $type,
+                'recipient_count' => $recipientCount,
                 'publishers' => $publishers,
             ]);
         }

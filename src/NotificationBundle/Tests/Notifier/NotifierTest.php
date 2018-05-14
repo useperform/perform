@@ -34,9 +34,15 @@ class NotifierTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(NotifierInterface::class, $this->notifier);
     }
 
-    protected function newNotification()
+    protected function newNotification($recipientCount = 1)
     {
-        return new Notification($this->getMock(RecipientInterface::class), 'test');
+        $recipients = [];
+        while ($recipientCount !== 0) {
+            $recipients[] = $this->getMock(RecipientInterface::class);
+            $recipientCount--;
+        }
+
+        return new Notification($recipients, 'test');
     }
 
     public function testSend()
@@ -55,8 +61,9 @@ class NotifierTest extends \PHPUnit_Framework_TestCase
         $this->notifier->setLogger($logger);
         $logger->expects($this->once())
             ->method('log')
-            ->with('info', 'Sent notification of type "test".', [
-                'recipients' => $n->getRecipients(),
+            ->with('info', 'Sent notification of type "test" to 1 recipient.', [
+                'type' => 'test',
+                'recipient_count' => 1,
                 'publishers' => ['testPublisher'],
             ]);
 
@@ -65,13 +72,14 @@ class NotifierTest extends \PHPUnit_Framework_TestCase
 
     public function testSendWithLogLevel()
     {
-        $n = $this->newNotification();
+        $n = $this->newNotification(2);
         $logger = $this->getMock(LoggerInterface::class);
         $this->notifier->setLogger($logger, LogLevel::DEBUG);
         $logger->expects($this->once())
             ->method('log')
-            ->with('debug', 'Sent notification of type "test".', [
-                'recipients' => $n->getRecipients(),
+            ->with('debug', 'Sent notification of type "test" to 2 recipients.', [
+                'type' => 'test',
+                'recipient_count' => 2,
                 'publishers' => ['testPublisher'],
             ]);
 
