@@ -4,7 +4,7 @@ namespace Perform\UserBundle\Security;
 
 use Perform\UserBundle\Entity\User;
 use Perform\UserBundle\Entity\ResetToken;
-use Perform\NotificationBundle\Notifier\Notifier;
+use Perform\NotificationBundle\Notifier\NotifierInterface;
 use Perform\NotificationBundle\Notification;
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\BaseBundle\Doctrine\EntityResolver;
@@ -22,7 +22,7 @@ class ResetTokenManager
     protected $notifier;
     protected $expirySeconds;
 
-    public function __construct(EntityManagerInterface $em, UserManager $userManager, EntityResolver $entityResolver, Notifier $notifier, $expirySeconds)
+    public function __construct(EntityManagerInterface $em, UserManager $userManager, EntityResolver $entityResolver, NotifierInterface $notifier, $expirySeconds)
     {
         $this->em = $em;
         $this->entityResolver = $entityResolver;

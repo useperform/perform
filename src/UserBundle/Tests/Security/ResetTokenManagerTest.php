@@ -7,7 +7,7 @@ use Perform\UserBundle\Entity\User;
 use Perform\UserBundle\Entity\ResetToken;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Persistence\ObjectRepository;
-use Perform\NotificationBundle\Notifier\Notifier;
+use Perform\NotificationBundle\Notifier\NotifierInterface;
 use Perform\BaseBundle\Doctrine\EntityResolver;
 use Perform\UserBundle\Security\UserManager;
 
@@ -39,7 +39,7 @@ class ResetTokenManagerTest extends \PHPUnit_Framework_TestCase
             ->with('Perform\UserBundle\Entity\User')
             ->will($this->returnValue($this->repo));
 
-        $this->notifier = $this->getMock(Notifier::class);
+        $this->notifier = $this->getMock(NotifierInterface::class);
 
         $this->manager = new ResetTokenManager($this->em, $this->userManager, $this->resolver, $this->notifier, 1800);
     }
