@@ -7,7 +7,7 @@ use Psr\Log\LogLevel;
 use Psr\Log\LoggerInterface;
 use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
 
-class Notifier
+class Notifier implements NotifierInterface
 {
     protected $publishers = [];
     protected $logger;

@@ -9,6 +9,7 @@ use Perform\NotificationBundle\Recipient\RecipientInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
+use Perform\NotificationBundle\Notifier\NotifierInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -26,6 +27,11 @@ class NotifierTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $this->notifier = new Notifier($locator);
+    }
+
+    public function testInterface()
+    {
+        $this->assertInstanceOf(NotifierInterface::class, $this->notifier);
     }
 
     protected function newNotification()

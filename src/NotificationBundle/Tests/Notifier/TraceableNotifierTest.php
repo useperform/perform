@@ -5,6 +5,7 @@ namespace Perform\NotificationBundle\Tests\Notifier;
 use Perform\NotificationBundle\Publisher\PublisherInterface;
 use Perform\NotificationBundle\Notifier\TraceableNotifier;
 use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
+use Perform\NotificationBundle\Notifier\NotifierInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -22,6 +23,11 @@ class TraceableNotifierTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $this->notifier = new TraceableNotifier($locator);
+    }
+
+    public function testInterface()
+    {
+        $this->assertInstanceOf(NotifierInterface::class, $this->notifier);
     }
 
     public function testGetPublishers()
