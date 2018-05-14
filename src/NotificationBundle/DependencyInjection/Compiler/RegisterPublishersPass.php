@@ -8,6 +8,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Perform\NotificationBundle\Notifier\TraceableNotifier;
 use Perform\NotificationBundle\Publisher\EmailPublisher;
 use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
+use Perform\BaseBundle\Util\StringUtil;
 
 /**
  * Register additional notification publishers automatically.
@@ -23,7 +24,13 @@ class RegisterPublishersPass implements CompilerPassInterface
         $publishers = [];
         foreach ($container->findTaggedServiceIds('perform_notification.publisher') as $service => $tag) {
             if (!isset($tag[0]['alias'])) {
-                throw new \InvalidArgumentException(sprintf('The service "%s" tagged with "perform_notification.publisher" must set the "alias" option in the tag.', $service));
+                $tag[0]['alias'] = $this->guessPublisherAlias($container, $service);
+                $msg = sprintf(
+                    'Auto generating the name "%s" for notification publisher service "%s". To set the name explicitly, make sure it has a "perform_notification.publisher" tag with the "alias" option set.',
+                    $tag[0]['alias'],
+                    $service
+                );
+                $container->log($this, $msg);
             }
             $name = $tag[0]['alias'];
 
@@ -51,5 +58,12 @@ class RegisterPublishersPass implements CompilerPassInterface
         }
         $container->log($this, $msg);
         $container->removeDefinition('perform_notification.publisher.email');
+    }
+
+    private function guessPublisherAlias(ContainerBuilder $container, $service)
+    {
+        $definition = $container->getDefinition($service);
+
+        return strtolower(StringUtil::classBasename($definition->getClass(), 'Publisher'));
     }
 }

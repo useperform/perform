@@ -9,6 +9,7 @@ use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Psr\Log\LogLevel;
 use Perform\Licensing\Licensing;
+use Perform\NotificationBundle\Publisher\PublisherInterface;
 
 class PerformNotificationExtension extends Extension
 {
@@ -38,6 +39,9 @@ class PerformNotificationExtension extends Extension
             $twigExtension = $container->getDefinition('perform_notification.twig.notification');
             $twigExtension->replaceArgument(0, new Reference($config['active_recipient_provider']));
         }
+
+        $container->registerForAutoconfiguration(PublisherInterface::class)
+            ->addTag('perform_notification.publisher');
     }
 
     public function getConfiguration(array $config, ContainerBuilder $container)
