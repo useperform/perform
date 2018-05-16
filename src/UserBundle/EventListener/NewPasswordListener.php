@@ -45,6 +45,12 @@ class NewPasswordListener
             return;
         }
 
+        foreach ($token->getRoles() as $role) {
+            if ($role->getRole() === 'ROLE_PREVIOUS_ADMIN') {
+                return;
+            }
+        }
+
         $user = $token->getUser();
         if (!$user instanceof User || !$user->isPasswordExpired()) {
             return;

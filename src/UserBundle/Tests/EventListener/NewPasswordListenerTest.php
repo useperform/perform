@@ -16,12 +16,14 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Twig\Environment;
+use Symfony\Component\Security\Core\Role\SwitchUserRole;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class NewPasswordListenerTest extends \PHPUnit_Framework_TestCase
 {
+    protected $token;
     protected $tokenStorage;
     protected $userManager;
     protected $form;
@@ -59,10 +61,14 @@ class NewPasswordListenerTest extends \PHPUnit_Framework_TestCase
         $this->listener = new NewPasswordListener($this->tokenStorage, $this->userManager, $formFactory, $this->twig);
     }
 
-    private function newEvent()
+    private function newEvent(array $roles = [])
     {
         $kernel = $this->getMock(HttpKernelInterface::class);
         $request = Request::create('/target-url');
+
+        $this->token->expects($this->any())
+            ->method('getRoles')
+            ->will($this->returnValue($roles));
 
         return new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
     }
@@ -134,5 +140,18 @@ class NewPasswordListenerTest extends \PHPUnit_Framework_TestCase
         $response = $event->getResponse();
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('/target-url', $response->getTargetUrl());
+    }
+
+    public function testImpersonatingUserIsSkipped()
+    {
+        $event = $this->newEvent([
+            new SwitchUserRole('ROLE_PREVIOUS_ADMIN', $this->token),
+        ]);
+        $user = new User();
+        $user->setPasswordExpiresAt(new \DateTime('-1 day'));
+        $this->setUser($user);
+
+        $this->listener->onKernelRequest($event);
+        $this->assertNull($event->getResponse());
     }
 }

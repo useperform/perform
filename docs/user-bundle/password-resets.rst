@@ -61,6 +61,9 @@ Set it to a date in the past to require the user to reset their password when th
     $em->persist($user);
     $em->flush();
 
+.. note::
+
+   A required password reset will not be enforced when impersonating a user, since you don't want the impersonator to set a new password that the actual user does not know.
 
 .. note::
 
