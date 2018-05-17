@@ -14,16 +14,14 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Perform\DevBundle\File\FileCreator;
 
 /**
- * CreateAdminCommand.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class CreateAdminCommand extends ContainerAwareCommand
+class CreateCrudCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('perform-dev:create:admin')
-            ->setDescription('Create a new admin class for an entity.')
+        $this->setName('perform-dev:create:crud')
+            ->setDescription('Create a new crud class for an entity.')
             ->addArgument('entity', InputArgument::OPTIONAL, 'The entity name');
         FileCreator::addInputOptions($this);
     }
@@ -31,13 +29,13 @@ class CreateAdminCommand extends ContainerAwareCommand
     public function execute(InputInterface $input, OutputInterface $output)
     {
         list($bundleName, $entityName) = $this->getEntity($input, $output);
-        $relativeClass = sprintf('Admin\\%sAdmin', $entityName);
+        $relativeClass = sprintf('Crud\\%sCrud', $entityName);
 
         $vars = $this->getTwigVars($input, $output, $bundleName, $entityName);
 
         $creator = $this->getContainer()->get('perform_dev.file_creator');
         $bundle = $this->getContainer()->get('kernel')->getBundle($bundleName);
-        $creator->createBundleClass($bundle, $relativeClass, 'Admin.php.twig', $vars);
+        $creator->createBundleClass($bundle, $relativeClass, 'Crud.php.twig', $vars);
 
         $this->addService($output, $bundle, $entityName, $bundle->getNamespace().'\\'.$relativeClass);
     }
@@ -91,7 +89,7 @@ class CreateAdminCommand extends ContainerAwareCommand
     protected function getTwigVars(InputInterface $input, OutputInterface $output, $bundleName, $entityName)
     {
         $basename = preg_replace('/Bundle$/', '', $bundleName);
-        $default = sprintf('%s_admin_%s_', Container::underscore($basename), Container::underscore($entityName));
+        $default = sprintf('%s_crud_%s_', Container::underscore($basename), Container::underscore($entityName));
         $question = new Question(sprintf('Route prefix (%s): ', $default), $default);
         $routePrefix = $this->getHelper('question')->ask($input, $output, $question);
 
@@ -100,13 +98,13 @@ class CreateAdminCommand extends ContainerAwareCommand
         ];
     }
 
-    protected function addService(OutputInterface $output, BundleInterface $bundle, $entityName, $adminClass)
+    protected function addService(OutputInterface $output, BundleInterface $bundle, $entityName, $crudClass)
     {
         $basename = preg_replace('/Bundle$/', '', $bundle->getName());
-        $service = sprintf('%s.admin.%s', Container::underscore($basename), Container::underscore($entityName));
+        $service = sprintf('%s.crud.%s', Container::underscore($basename), Container::underscore($entityName));
         $entity = $bundle->getName().':'.$entityName;
 
-        $yaml = $this->buildServiceYaml($service, $adminClass, $entity);
+        $yaml = $this->buildServiceYaml($service, $crudClass, $entity);
         $file = $this->getServiceFile($bundle);
 
         if (!$file) {
@@ -123,23 +121,23 @@ class CreateAdminCommand extends ContainerAwareCommand
         }
 
         $c = new YamlModifier($file->getPathname());
-        //only check for the service, e.g. app.admin.item:
+        //only check for the service, e.g. app.crud.item:
         $checkPattern = sprintf('/ +%s:/m', $service);
         $c->addConfig($yaml, $checkPattern);
 
         $output->writeln(sprintf('Added service definition <info>%s</info> to <info>%s</info>', $service, $file));
     }
 
-    protected function buildServiceYaml($service, $adminClass, $entity)
+    protected function buildServiceYaml($service, $crudClass, $entity)
     {
         $tmpl = '
     %s:
         class: %s
         tags:
-            - {name: perform_base.admin, entity: "%s"}
+            - {name: perform_base.crud, entity: "%s"}
 ';
 
-        return sprintf($tmpl, $service, $adminClass, $entity);
+        return sprintf($tmpl, $service, $crudClass, $entity);
     }
 
     protected function getServiceFile(BundleInterface $bundle)

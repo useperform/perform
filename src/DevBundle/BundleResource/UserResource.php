@@ -31,7 +31,7 @@ perform_user_password:
     prefix: /reset-password
 
 perform_user_admin:
-    resource: "@PerformUserBundle/Resources/config/routing_admin.yml"
+    resource: "@PerformUserBundle/Resources/config/routing_crud.yml"
     prefix: /admin/users
 ';
     }
