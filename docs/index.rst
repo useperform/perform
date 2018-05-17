@@ -12,8 +12,8 @@ The docs are split into 5 sections:
 * **Getting started** - How to install Perform, system requirements, licensing, etc
 * **Tutorials** - Step by step instructions to build applications from scratch.
 * **Bundle guides** - Detailed guides demonstrating Perform's features, grouped by bundle.
-* **Cookbook** - A collection of recipes combining various features.
-* **Reference** - Technical instructions for various Perform features such as CRUD types, form types, and sass variables.
+* **Further reading** - More tips on building applications, best practices, and troubleshooting.
+* **Reference** - Technical reference for various Perform features such as CRUD types, form types, and sass variables.
 
 As well as viewing online, you can download this manual in different formats:
 
@@ -64,7 +64,7 @@ Topic index
    user-bundle/index
 
 .. toctree::
-   :caption: Cookbook
+   :caption: Further reading
    :glob:
 
    more/*
