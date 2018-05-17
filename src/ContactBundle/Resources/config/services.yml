@@ -1,6 +1,6 @@
 services:
-    perform_contact.admin.message:
-        class: Perform\ContactBundle\Admin\MessageAdmin
+    perform_contact.crud.message:
+        class: Perform\ContactBundle\Crud\MessageCrud
         tags:
             - { name: perform_base.admin, entity: "PerformContactBundle:Message" }
 

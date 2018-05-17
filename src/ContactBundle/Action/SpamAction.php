@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Perform\ContactBundle\Entity\Message;
 use Perform\BaseBundle\Action\ActionResponse;
 use Perform\BaseBundle\Action\ActionInterface;
-use Perform\BaseBundle\Admin\AdminRequest;
+use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
  * Mark a message as spam.
@@ -41,10 +41,10 @@ class SpamAction implements ActionInterface
     {
         return [
             'label' => 'Flag as spam',
-            'isGranted' => function($message) {
+            'isGranted' => function(Message $message) {
                 return $message->getStatus() !== Message::STATUS_SPAM;
             },
-            'isBatchOptionAvailable' => function($request) {
+            'isBatchOptionAvailable' => function(CrudRequest $request) {
                 return $request->getFilter('new') !== 'spam';
             }
         ];

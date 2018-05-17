@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Perform\ContactBundle\Entity\Message;
 use Perform\BaseBundle\Action\ActionResponse;
 use Perform\BaseBundle\Action\ActionInterface;
-use Perform\BaseBundle\Admin\AdminRequest;
+use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
  * Mark a message as new.
@@ -40,14 +40,14 @@ class NewAction implements ActionInterface
     public function getDefaultConfig()
     {
         return [
-            'label' => function($request, $message) {
+            'label' => function(CrudRequest $request, Message $message) {
                 if ($message->getStatus() === Message::STATUS_SPAM) {
                     return 'Not spam';
                 }
 
                 return 'Mark as new';
             },
-            'batchLabel' => function($request) {
+            'batchLabel' => function(CrudRequest $request) {
                 if ($request->getFilter('new') === 'spam') {
                     return 'Not spam';
                 }
@@ -57,7 +57,7 @@ class NewAction implements ActionInterface
             'isGranted' => function($message) {
                 return $message->getStatus() !== Message::STATUS_NEW;
             },
-            'isBatchOptionAvailable' => function($request) {
+            'isBatchOptionAvailable' => function(CrudRequest $request) {
                 return $request->getFilter('new') !== 'new';
             }
         ];

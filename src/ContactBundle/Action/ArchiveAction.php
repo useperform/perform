@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Perform\ContactBundle\Entity\Message;
 use Perform\BaseBundle\Action\ActionResponse;
 use Perform\BaseBundle\Action\ActionInterface;
-use Perform\BaseBundle\Admin\AdminRequest;
+use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
  * Archive a message.
@@ -41,10 +41,10 @@ class ArchiveAction implements ActionInterface
     {
         return [
             'label' => 'Archive',
-            'isGranted' => function($message) {
+            'isGranted' => function(Message $message) {
                 return $message->getStatus() === Message::STATUS_NEW;
             },
-            'isBatchOptionAvailable' => function($request) {
+            'isBatchOptionAvailable' => function(CrudRequest $request) {
                 return $request->getFilter('new') === 'new';
             }
         ];
