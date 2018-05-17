@@ -5,12 +5,12 @@ namespace Perform\BaseBundle\Twig\Extension;
 use Perform\BaseBundle\Routing\CrudUrlGenerator;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Perform\BaseBundle\Config\TypeConfig;
-use Perform\BaseBundle\Admin\AdminRegistry;
+use Perform\BaseBundle\Crud\CrudRegistry;
 use Symfony\Component\Form\FormView;
 use Pagerfanta\View\TwitterBootstrap4View;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Perform\BaseBundle\Admin\ContextRenderer;
+use Perform\BaseBundle\Crud\ContextRenderer;
 
 /**
  * CrudExtension.
@@ -19,7 +19,7 @@ use Perform\BaseBundle\Admin\ContextRenderer;
  **/
 class CrudExtension extends \Twig_Extension
 {
-    protected $adminRegistry;
+    protected $crudRegistry;
     protected $requestStack;
 
     public function __construct(ContextRenderer $renderer, CrudUrlGenerator $urlGenerator, RequestStack $requestStack)

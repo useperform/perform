@@ -2,7 +2,7 @@
 
 namespace Perform\BaseBundle\Action;
 
-use Perform\BaseBundle\Admin\AdminRequest;
+use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
  * ActionInterface

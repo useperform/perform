@@ -6,7 +6,7 @@ use Perform\BaseBundle\Action\ActionRegistry;
 use Perform\BaseBundle\Config\ActionConfig;
 use Perform\BaseBundle\Action\ConfiguredAction;
 use Perform\BaseBundle\Action\ActionInterface;
-use Perform\BaseBundle\Admin\AdminRequest;
+use Perform\BaseBundle\Crud\CrudRequest;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Perform\BaseBundle\Routing\CrudUrlGeneratorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -29,7 +29,7 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
 
     protected function stubRequest()
     {
-        return $this->getMockBuilder(AdminRequest::class)
+        return $this->getMockBuilder(CrudRequest::class)
             ->disableOriginalConstructor()
             ->getMock();
     }
@@ -176,7 +176,7 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
         $entity = new \stdClass();
         $one = $this->stubAction([
             'isBatchOptionAvailable' => function ($request) {
-                return $request instanceof AdminRequest; //true
+                return $request instanceof CrudRequest; //true
             },
         ]);
         $two = $this->stubAction([

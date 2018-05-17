@@ -5,12 +5,12 @@ namespace Perform\BaseBundle\Routing;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
-use Perform\BaseBundle\Admin\AdminRegistry;
+use Perform\BaseBundle\Crud\CrudRegistry;
 use Symfony\Component\Config\Resource\FileResource;
-use Perform\BaseBundle\Admin\AdminInterface;
+use Perform\BaseBundle\Crud\CrudInterface;
 
 /**
- * CrudLoader creates crud routes dynamically for an entity admin.
+ * CrudLoader creates crud routes dynamically for an entity crud.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
@@ -18,15 +18,15 @@ class CrudLoader extends Loader
 {
     protected $registry;
 
-    public function __construct(AdminRegistry $registry)
+    public function __construct(CrudRegistry $registry)
     {
         $this->registry = $registry;
     }
 
     public function load($entity, $type = null)
     {
-        $admin = $this->registry->getAdmin($entity);
-        $class = $admin->getControllerName();
+        $crud = $this->registry->getCrud($entity);
+        $class = $crud->getControllerName();
         $refl = new \ReflectionClass($class);
 
         $crudClass = 'Perform\BaseBundle\Controller\CrudController';
@@ -35,15 +35,15 @@ class CrudLoader extends Loader
         }
 
         $collection = new RouteCollection();
-        foreach ($admin->getActions() as $path => $action) {
+        foreach ($crud->getActions() as $path => $action) {
             $route = new Route($path, [
                 '_controller' => $class.'::'.$action.'Action',
                 '_entity' => $entity,
             ]);
-            $collection->add($this->createRouteName($admin, $action), $route);
+            $collection->add($this->createRouteName($crud, $action), $route);
         }
-        $adminRefl = new \ReflectionClass($admin);
-        $filename = $adminRefl->getFileName();
+        $crudRefl = new \ReflectionClass($crud);
+        $filename = $crudRefl->getFileName();
         try {
             $collection->addResource(new FileResource($filename));
         } catch (\InvalidArgumentException $e) {
@@ -53,9 +53,9 @@ class CrudLoader extends Loader
         return $collection;
     }
 
-    protected function createRouteName(AdminInterface $admin, $action)
+    protected function createRouteName(CrudInterface $crud, $action)
     {
-        return $admin->getRoutePrefix().strtolower(preg_replace('/([A-Z])/', '_\1', $action));
+        return $crud->getRoutePrefix().strtolower(preg_replace('/([A-Z])/', '_\1', $action));
     }
 
     public function supports($resource, $type = null)

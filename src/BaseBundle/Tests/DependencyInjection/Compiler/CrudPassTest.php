@@ -2,26 +2,26 @@
 
 namespace BaseBundle\Tests\DependencyInjection\Compiler;
 
-use Perform\BaseBundle\DependencyInjection\Compiler\RegisterAdminsPass;
+use Perform\BaseBundle\DependencyInjection\Compiler\CrudPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\XmlParentBundle\Entity\Item;
 use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\XmlParentBundle\Entity\ItemLink;
 use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\XmlChildBundle\Entity\XmlItem;
-use Perform\BaseBundle\Exception\InvalidAdminException;
+use Perform\BaseBundle\Crud\InvalidCrudException;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class RegisterAdminsPassTest extends \PHPUnit_Framework_TestCase
+class CrudPassTest extends \PHPUnit_Framework_TestCase
 {
     protected $pass;
     protected $container;
 
     public function setUp()
     {
-        $this->pass = new RegisterAdminsPass();
+        $this->pass = new CrudPass();
         $this->container = new ContainerBuilder();
-        $this->registry = $this->container->register('perform_base.admin.registry', 'Perform\BaseBundle\Type\TypeRegistry');
+        $this->registry = $this->container->register('perform_base.crud.registry', 'Perform\BaseBundle\Type\TypeRegistry');
         $this->container->setParameter('perform_base.admins', []);
         $this->container->setParameter('perform_base.extended_entities', []);
     }
@@ -31,44 +31,44 @@ class RegisterAdminsPassTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface', $this->pass);
     }
 
-    public function testRegisterAdmins()
+    public function testRegisterCrud()
     {
         $this->container->setParameter('perform_base.entity_aliases', [
             'ParentBundle:Item' => Item::class,
             'ParentBundle:ItemLink' => ItemLink::class,
         ]);
-        $this->container->register('parent.admin.item', 'ParentBundle\Admin\ItemAdmin')
+        $this->container->register('parent.crud.item', 'ParentBundle\Crud\ItemCrud')
             ->addTag('perform_base.admin', ['entity' => 'ParentBundle:Item']);
-        $this->container->register('parent.admin.item_link', 'ParentBundle\Admin\ItemLinkAdmin')
+        $this->container->register('parent.crud.item_link', 'ParentBundle\Crud\ItemLinkCrud')
             ->addTag('perform_base.admin', ['entity' => 'ParentBundle:ItemLink']);
 
         $this->pass->process($this->container);
         $calls = [
             [
-                'addAdmin',
-                [Item::class, 'parent.admin.item'],
+                'addCrud',
+                [Item::class, 'parent.crud.item'],
             ],
             [
-                'addAdmin',
-                [ItemLink::class, 'parent.admin.item_link'],
+                'addCrud',
+                [ItemLink::class, 'parent.crud.item_link'],
             ],
         ];
         $this->assertSame($calls, $this->registry->getMethodCalls());
     }
 
-    public function testRegisterAdminWithClassname()
+    public function testRegisterCrudWithClassname()
     {
         $this->container->setParameter('perform_base.entity_aliases', [
             'ParentBundle:Item' => Item::class,
         ]);
-        $this->container->register('parent.admin.item', 'ParentBundle\Admin\ItemAdmin')
+        $this->container->register('parent.crud.item', 'ParentBundle\Crud\ItemCrud')
             ->addTag('perform_base.admin', ['entity' => Item::class]);
 
         $this->pass->process($this->container);
         $calls = [
             [
-                'addAdmin',
-                [Item::class, 'parent.admin.item'],
+                'addCrud',
+                [Item::class, 'parent.crud.item'],
             ],
         ];
         $this->assertSame($calls, $this->registry->getMethodCalls());
@@ -82,7 +82,7 @@ class RegisterAdminsPassTest extends \PHPUnit_Framework_TestCase
             'ParentBundle:Item' => Item::class,
             'ChildBundle:XmlItem' => XmlItem::class,
         ]);
-        $this->container->register('parent.admin.item', 'ParentBundle\Admin\ItemAdmin')
+        $this->container->register('parent.crud.item', 'ParentBundle\Crud\ItemCrud')
             ->addTag('perform_base.admin', ['entity' => 'ParentBundle:Item']);
         $this->container->setParameter('perform_base.extended_entities', [
             Item::class => XmlItem::class,
@@ -91,23 +91,23 @@ class RegisterAdminsPassTest extends \PHPUnit_Framework_TestCase
         $this->pass->process($this->container);
         $calls = [
             [
-                'addAdmin',
-                [XmlItem::class, 'parent.admin.item'],
+                'addCrud',
+                [XmlItem::class, 'parent.crud.item'],
             ],
         ];
         $this->assertSame($calls, $this->registry->getMethodCalls());
     }
 
-    public function testChildEntitiesUseNewAdmin()
+    public function testChildEntitiesUseNewCrud()
     {
         //an entity has been extended, and a new admin is being used.
         $this->container->setParameter('perform_base.entity_aliases', [
             'ParentBundle:Item' => Item::class,
             'ChildBundle:XmlItem' => XmlItem::class,
         ]);
-        $this->container->register('parent.admin.item', 'ParentBundle\Admin\ItemAdmin')
+        $this->container->register('parent.crud.item', 'ParentBundle\Crud\ItemCrud')
             ->addTag('perform_base.admin', ['entity' => 'ParentBundle:Item']);
-        $this->container->register('child.admin.xml_item', 'ChildBundle\Admin\XmlItemAdmin')
+        $this->container->register('child.crud.xml_item', 'ChildBundle\Crud\XmlItemCrud')
             ->addTag('perform_base.admin', ['entity' => 'ChildBundle:XmlItem']);
         $this->container->setParameter('perform_base.extended_entities', [
             Item::class => XmlItem::class,
@@ -116,8 +116,8 @@ class RegisterAdminsPassTest extends \PHPUnit_Framework_TestCase
         $this->pass->process($this->container);
         $calls = [
             [
-                'addAdmin',
-                [XmlItem::class, 'child.admin.xml_item'],
+                'addCrud',
+                [XmlItem::class, 'child.crud.xml_item'],
             ],
         ];
         $this->assertSame($calls, $this->registry->getMethodCalls());
@@ -126,10 +126,10 @@ class RegisterAdminsPassTest extends \PHPUnit_Framework_TestCase
     public function testUnknownClassThrowsException()
     {
         $this->container->setParameter('perform_base.entity_aliases', []);
-        $this->container->register('parent.admin.item', 'ParentBundle\Admin\ItemAdmin')
+        $this->container->register('parent.crud.item', 'ParentBundle\Crud\ItemCrud')
             ->addTag('perform_base.admin', ['entity' => 'ParentBundle:Item']);
 
-        $this->setExpectedException(InvalidAdminException::class);
+        $this->setExpectedException(InvalidCrudException::class);
         $this->pass->process($this->container);
     }
 }

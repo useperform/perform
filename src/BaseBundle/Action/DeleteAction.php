@@ -3,7 +3,7 @@
 namespace Perform\BaseBundle\Action;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Perform\BaseBundle\Admin\AdminRequest;
+use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Config\TypeConfig;
 
 /**

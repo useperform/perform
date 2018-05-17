@@ -3,8 +3,8 @@ imports:
     - { resource: services_types.yml }
 
 services:
-    perform_base.admin.registry:
-        class: Perform\BaseBundle\Admin\AdminRegistry
+    perform_base.crud.registry:
+        class: Perform\BaseBundle\Crud\CrudRegistry
         arguments:
             - '@service_container'
             - '@perform_base.doctrine.entity_resolver'
@@ -13,7 +13,7 @@ services:
         class: Perform\BaseBundle\Config\ConfigStore
         arguments:
             - '@perform_base.doctrine.entity_resolver'
-            - '@perform_base.admin.registry'
+            - '@perform_base.crud.registry'
             - '@perform_base.type_registry'
             - '@perform_base.action_registry'
             - '@security.authorization_checker'
@@ -21,13 +21,13 @@ services:
     perform_base.voter.crud:
         class: Perform\BaseBundle\Security\CrudVoter
         arguments:
-            - '@perform_base.admin.registry'
+            - '@perform_base.crud.registry'
             - '@perform_base.routing.crud_url'
         tags:
             - security.voter
 
-    perform_base.form.type.admin:
-        class: Perform\BaseBundle\Form\Type\AdminType
+    perform_base.form.type.crud:
+        class: Perform\BaseBundle\Form\Type\CrudType
         arguments:
             - '@perform_base.config_store'
             - '@perform_base.doctrine.entity_resolver'
@@ -52,19 +52,19 @@ services:
             - '@doctrine.orm.entity_manager'
             - '@perform_base.doctrine.entity_resolver'
 
-    perform_base.admin_collector:
-        class: Perform\BaseBundle\DataCollector\AdminsDataCollector
+    perform_base.data_collector.crud:
+        class: Perform\BaseBundle\DataCollector\CrudDataCollector
         public: false
         arguments:
-            - '@perform_base.admin.registry'
+            - '@perform_base.crud.registry'
             - '@perform_base.config_store'
             - '@security.access.decision_manager'
             - '%perform_base.extended_entities%'
         tags:
             -
                 name: data_collector
-                template: '@PerformBase/data_collector/admins.html.twig'
-                id: 'perform_base.admins'
+                template: '@PerformBase/data_collector/crud.html.twig'
+                id: 'perform_base.crud'
 
     perform_base.asset_container:
         class: Perform\BaseBundle\Asset\AssetContainer
@@ -72,13 +72,13 @@ services:
     perform_base.routing.crud:
         class: Perform\BaseBundle\Routing\CrudLoader
         public: false
-        arguments: ['@perform_base.admin.registry']
+        arguments: ['@perform_base.crud.registry']
         tags:
             - {name: routing.loader}
 
     perform_base.routing.crud_url:
         class: Perform\BaseBundle\Routing\CrudUrlGenerator
-        arguments: ['@perform_base.admin.registry', '@router']
+        arguments: ['@perform_base.crud.registry', '@router']
 
     perform_base.listener.crud_template:
         class: Perform\BaseBundle\EventListener\CrudTemplateListener
@@ -96,7 +96,7 @@ services:
             - {name: kernel.event_subscriber}
 
     perform_base.context_renderer:
-        class: Perform\BaseBundle\Admin\ContextRenderer
+        class: Perform\BaseBundle\Crud\ContextRenderer
         arguments:
             - '@perform_base.type_registry'
             - '@twig'

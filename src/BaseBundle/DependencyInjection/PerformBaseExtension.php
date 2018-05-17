@@ -45,7 +45,7 @@ class PerformBaseExtension extends Extension
         $this->configureMailer($config, $container);
         $this->findExtendedEntities($container, $config);
         $this->configureResolvedEntities($container, $config);
-        $this->processAdminConfig($container, $config);
+        $this->processCrudConfig($container, $config);
         $this->createSimpleMenus($container, $config['menu']['simple']);
         $this->configureAssets($container, $config['assets']);
     }
@@ -189,14 +189,14 @@ class PerformBaseExtension extends Extension
         }
     }
 
-    public function processAdminConfig(ContainerBuilder $container, array $config)
+    public function processCrudConfig(ContainerBuilder $container, array $config)
     {
-        $admins = [];
+        $cruds = [];
         $resolver = new EntityResolver($container->getParameter('perform_base.entity_aliases'));
         foreach ($config['admins'] as $entity => $configuration) {
-            $admins[$resolver->resolveNoExtend($entity)] = $configuration;
+            $cruds[$resolver->resolveNoExtend($entity)] = $configuration;
         }
 
-        $container->setParameter('perform_base.admins', $admins);
+        $container->setParameter('perform_base.admins', $cruds);
     }
 }

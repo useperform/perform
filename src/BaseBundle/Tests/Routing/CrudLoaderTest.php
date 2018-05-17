@@ -17,28 +17,28 @@ class CrudLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->registry = $this->getMockBuilder('Perform\BaseBundle\Admin\AdminRegistry')
+        $this->registry = $this->getMockBuilder('Perform\BaseBundle\Crud\CrudRegistry')
                                 ->disableOriginalConstructor()
                                 ->getMock();
         $this->loader = new CrudLoader($this->registry);
     }
 
-    protected function expectAdmin($controller, $routePrefix, array $actions)
+    protected function expectCrud($controller, $routePrefix, array $actions)
     {
-        $admin = $this->getMock('Perform\BaseBundle\Admin\AdminInterface');
-        $admin->expects($this->any())
+        $crud = $this->getMock('Perform\BaseBundle\Crud\CrudInterface');
+        $crud->expects($this->any())
             ->method('getControllerName')
             ->will($this->returnValue($controller));
-        $admin->expects($this->any())
+        $crud->expects($this->any())
             ->method('getRoutePrefix')
             ->will($this->returnValue($routePrefix));
-        $admin->expects($this->any())
+        $crud->expects($this->any())
             ->method('getActions')
             ->will($this->returnValue($actions));
 
         $this->registry->expects($this->any())
-            ->method('getAdmin')
-            ->will($this->returnValue($admin));
+            ->method('getCrud')
+            ->will($this->returnValue($crud));
     }
 
     public function testSupports()
@@ -58,7 +58,7 @@ class CrudLoaderTest extends \PHPUnit_Framework_TestCase
             '/create' => 'create',
             '/edit/{id}' => 'edit',
         ];
-        $this->expectAdmin($controller, $routePrefix, $routes);
+        $this->expectCrud($controller, $routePrefix, $routes);
 
         $collection = $this->loader->load('SomeBundle:Foo');
         $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
@@ -81,7 +81,7 @@ class CrudLoaderTest extends \PHPUnit_Framework_TestCase
             '/' => 'viewDefault',
             '/edit' => 'editDefault',
         ];
-        $this->expectAdmin($controller, $routePrefix, $routes);
+        $this->expectCrud($controller, $routePrefix, $routes);
 
         $collection = $this->loader->load('SomeBundle:Foo');
         $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);

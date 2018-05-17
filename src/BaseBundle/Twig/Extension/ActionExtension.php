@@ -5,7 +5,7 @@ namespace Perform\BaseBundle\Twig\Extension;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Perform\BaseBundle\Action\ActionRegistry;
 use Perform\BaseBundle\Action\ConfiguredAction;
-use Perform\BaseBundle\Admin\AdminRequest;
+use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Perform\BaseBundle\Routing\CrudUrlGeneratorInterface;
@@ -41,7 +41,7 @@ class ActionExtension extends \Twig_Extension
         ];
     }
 
-    public function setAdminRequest(AdminRequest $request)
+    public function setCrudRequest(CrudRequest $request)
     {
         $this->request = $request;
     }

@@ -3,7 +3,7 @@
 namespace Perform\BaseBundle\Tests\Config;
 
 use Perform\BaseBundle\Action\LinkAction;
-use Perform\BaseBundle\Admin\AdminRequest;
+use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Config\ActionConfig;
 use Perform\BaseBundle\Action\ActionRegistry;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -35,7 +35,7 @@ class LinkActionTest extends \PHPUnit_Framework_TestCase
 
     public function testBatchActionDisabled()
     {
-        $request = $this->getMockBuilder(AdminRequest::class)
+        $request = $this->getMockBuilder(CrudRequest::class)
                  ->disableOriginalConstructor()
                  ->getMock();
         $this->assertFalse($this->action->isBatchOptionAvailable($request));

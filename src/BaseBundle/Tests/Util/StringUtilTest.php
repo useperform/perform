@@ -49,17 +49,17 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
     public function adminClassProvider()
     {
         return [
-            ['AppBundle\Admin\TestAdmin', 'Test'],
-            ['AppBundle\Admin\MySuperEntityAdmin', 'My Super Entity'],
-            ['AppBundle\Admin\HTMLEntityAdmin', 'HTML Entity'],
-            ['AppBundle\Admin\AdminNamedDifferently', 'Admin Named Differently'],
+            ['AppBundle\Crud\TestCrud', 'Test'],
+            ['AppBundle\Crud\MySuperEntityCrud', 'My Super Entity'],
+            ['AppBundle\Crud\HTMLEntityCrud', 'HTML Entity'],
+            ['AppBundle\Crud\CrudNamedDifferently', 'Crud Named Differently'],
         ];
     }
 
     /**
      * @dataProvider adminClassProvider()
      */
-    public function testAdminClassToEntityName($class, $expected)
+    public function testCrudClassToEntityName($class, $expected)
     {
         $this->assertSame($expected, StringUtil::adminClassToEntityName($class));
     }

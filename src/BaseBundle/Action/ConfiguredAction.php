@@ -2,7 +2,7 @@
 
 namespace Perform\BaseBundle\Action;
 
-use Perform\BaseBundle\Admin\AdminRequest;
+use Perform\BaseBundle\Crud\CrudRequest;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Perform\BaseBundle\Routing\CrudUrlGeneratorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -33,12 +33,12 @@ class ConfiguredAction
         return $this->name;
     }
 
-    public function getLabel(AdminRequest $request, $entity)
+    public function getLabel(CrudRequest $request, $entity)
     {
         return call_user_func($this->options['label'], $request, $entity);
     }
 
-    public function getBatchLabel(AdminRequest $request)
+    public function getBatchLabel(CrudRequest $request)
     {
         return call_user_func($this->options['batchLabel'], $request);
     }
@@ -61,16 +61,16 @@ class ConfiguredAction
      * The result of isGranted() will be used for that.
      *
      * @param object       $entity
-     * @param AdminRequest $request
+     * @param CrudRequest $request
      *
      * @return bool
      */
-    public function isButtonAvailable($entity, AdminRequest $request)
+    public function isButtonAvailable($entity, CrudRequest $request)
     {
         return (bool) $this->options['isButtonAvailable']($entity, $request);
     }
 
-    public function isBatchOptionAvailable(AdminRequest $request)
+    public function isBatchOptionAvailable(CrudRequest $request)
     {
         return (bool) $this->options['isBatchOptionAvailable']($request);
     }
@@ -106,7 +106,7 @@ class ConfiguredAction
         return $this->isLink() ? $this->options['link']($entity, $crudUrlGenerator, $urlGenerator) : '';
     }
 
-    public function getConfirmationMessage(AdminRequest $request, $entity)
+    public function getConfirmationMessage(CrudRequest $request, $entity)
     {
         return $this->options['confirmationMessage']($entity, $this->getLabel($request, $entity));
     }

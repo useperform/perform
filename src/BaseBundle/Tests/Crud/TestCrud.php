@@ -1,16 +1,16 @@
 <?php
 
-namespace Perform\BaseBundle\Tests\Admin;
+namespace Perform\BaseBundle\Tests\Crud;
 
-use Perform\BaseBundle\Admin\AbstractAdmin;
+use Perform\BaseBundle\Crud\AbstractCrud;
 use Perform\BaseBundle\Config\TypeConfig;
 
 /**
- * TestAdmin
+ * TestCrud
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class TestAdmin extends AbstractAdmin
+class TestCrud extends AbstractCrud
 {
     public function configureTypes(TypeConfig $config)
     {

@@ -1,20 +1,20 @@
 <?php
 
-namespace Perform\BaseBundle\Admin;
+namespace Perform\BaseBundle\Crud;
 
-use Perform\BaseBundle\Exception\AdminNotFoundException;
+use Perform\BaseBundle\Crud\CrudNotFoundException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Perform\BaseBundle\Doctrine\EntityResolver;
 
 /**
- * AdminRegistry.
+ * CrudRegistry.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class AdminRegistry
+class CrudRegistry
 {
     protected $container;
-    protected $admins = [];
+    protected $cruds = [];
     protected $aliases = [];
     protected $resolver;
 
@@ -32,40 +32,40 @@ class AdminRegistry
      * @param string $entity  the fully qualified class name of the entity
      * @param string $service the name of the service in the container
      */
-    public function addAdmin($entity, $service)
+    public function addCrud($entity, $service)
     {
-        $this->admins[$entity] = $service;
+        $this->cruds[$entity] = $service;
     }
 
     /**
-     * Get the Admin instance for managing $entity.
+     * Get the Crud instance for managing $entity.
      *
      * @param string $entity the full class name of the entity
      */
-    public function getAdmin($entity)
+    public function getCrud($entity)
     {
         try {
             $class = $this->resolver->resolve($entity);
         } catch (\InvalidArgumentException $e) {
-            throw new AdminNotFoundException('Admin not found, invalid argument.', 1, $e);
+            throw new CrudNotFoundException('Crud not found, invalid argument.', 1, $e);
         }
 
-        if (isset($this->admins[$class])) {
-            return $this->container->get($this->admins[$class]);
+        if (isset($this->cruds[$class])) {
+            return $this->container->get($this->cruds[$class]);
         }
 
-        throw new AdminNotFoundException(sprintf('Admin not found for entity "%s"', $class));
+        throw new CrudNotFoundException(sprintf('Crud not found for entity "%s"', $class));
     }
 
     /**
-     * Return true if the given entity or class has an admin.
+     * Return true if the given entity or class has an crud.
      *
      * @return bool
      */
-    public function hasAdmin($entity)
+    public function hasCrud($entity)
     {
         try {
-            return isset($this->admins[$this->resolver->resolve($entity)]);
+            return isset($this->cruds[$this->resolver->resolve($entity)]);
         } catch (\InvalidArgumentException $e) {
             return false;
         }
@@ -74,8 +74,8 @@ class AdminRegistry
     /**
      * @return array
      */
-    public function getAdmins()
+    public function all()
     {
-        return $this->admins;
+        return $this->cruds;
     }
 }

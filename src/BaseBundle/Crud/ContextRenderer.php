@@ -1,6 +1,6 @@
 <?php
 
-namespace Perform\BaseBundle\Admin;
+namespace Perform\BaseBundle\Crud;
 
 use Perform\BaseBundle\Type\TypeRegistry;
 use Symfony\Component\Form\FormView;

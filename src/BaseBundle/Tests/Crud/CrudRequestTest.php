@@ -1,29 +1,29 @@
 <?php
 
-namespace Perform\BaseBundle\Tests\Admin;
+namespace Perform\BaseBundle\Tests\Crud;
 
 use Symfony\Component\HttpFoundation\Request;
-use Perform\BaseBundle\Admin\AdminRequest;
+use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Config\TypeConfig;
 
 /**
- * AdminRequestTest.
+ * CrudRequestTest.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class AdminRequestTest extends \PHPUnit_Framework_TestCase
+class CrudRequestTest extends \PHPUnit_Framework_TestCase
 {
     public function newRequest($query = [], $context = TypeConfig::CONTEXT_LIST)
     {
         $request = new Request($query);
 
-        return new AdminRequest($request, $context);
+        return new CrudRequest($request, $context);
     }
 
     public function testGetRequest()
     {
         $r = new Request();
-        $req = new AdminRequest($r, TypeConfig::CONTEXT_CREATE);
+        $req = new CrudRequest($r, TypeConfig::CONTEXT_CREATE);
 
         $this->assertSame($r, $req->getRequest());
     }
@@ -37,7 +37,7 @@ class AdminRequestTest extends \PHPUnit_Framework_TestCase
     {
         $r = new Request();
         $r->attributes->set('_entity', 'FooBundle:Foo');
-        $req = new AdminRequest($r, TypeConfig::CONTEXT_CREATE);
+        $req = new CrudRequest($r, TypeConfig::CONTEXT_CREATE);
 
         $this->assertSame('FooBundle:Foo', $req->getEntity());
     }
@@ -45,7 +45,7 @@ class AdminRequestTest extends \PHPUnit_Framework_TestCase
     public function testSetEntity()
     {
         $r = new Request();
-        $req = new AdminRequest($r, TypeConfig::CONTEXT_CREATE);
+        $req = new CrudRequest($r, TypeConfig::CONTEXT_CREATE);
         $req->setEntity('BarBundle:Bar');
 
         $this->assertSame('BarBundle:Bar', $req->getEntity());
@@ -55,7 +55,7 @@ class AdminRequestTest extends \PHPUnit_Framework_TestCase
     {
         $r = new Request();
         $r->attributes->set('_entity', 'FooBundle:Foo');
-        $req = new AdminRequest($r, TypeConfig::CONTEXT_CREATE);
+        $req = new CrudRequest($r, TypeConfig::CONTEXT_CREATE);
         $req->setEntity('BarBundle:Bar');
 
         $this->assertSame('BarBundle:Bar', $req->getEntity());

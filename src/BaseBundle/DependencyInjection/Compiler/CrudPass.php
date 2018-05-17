@@ -4,19 +4,21 @@ namespace Perform\BaseBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Perform\BaseBundle\Exception\InvalidAdminException;
+use Perform\BaseBundle\Crud\InvalidCrudException;
 
 /**
- * Register admins automatically.
+ * Register Crud services.
+ *
+ * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class RegisterAdminsPass implements CompilerPassInterface
+class CrudPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        $definition = $container->getDefinition('perform_base.admin.registry');
+        $definition = $container->getDefinition('perform_base.crud.registry');
         $entityAliases = $container->getParameter('perform_base.entity_aliases');
         $extendedEntities = $container->getParameter('perform_base.extended_entities');
-        $admins = [];
+        $cruds = [];
 
         foreach ($container->findTaggedServiceIds('perform_base.admin') as $service => $tag) {
             if (!isset($tag[0]['entity'])) {
@@ -25,21 +27,21 @@ class RegisterAdminsPass implements CompilerPassInterface
             $entityAlias = $tag[0]['entity'];
             $entityClass = isset($entityAliases[$entityAlias]) ? $entityAliases[$entityAlias] : $entityAlias;
             if (!class_exists($entityClass)) {
-                throw new InvalidAdminException(sprintf('The admin service "%s" references an unknown entity class "%s".', $service, $entityClass));
+                throw new InvalidCrudException(sprintf('The admin service "%s" references an unknown entity class "%s".', $service, $entityClass));
             }
 
-            $admins[$entityClass] = $service;
+            $cruds[$entityClass] = $service;
         }
 
-        foreach ($admins as $entityClass => $service) {
+        foreach ($cruds as $entityClass => $service) {
             //entity is extended, register the child instead
             if (isset($extendedEntities[$entityClass])) {
                 //if the child has no admin, register the parent admin
                 //if the child has an admin, register the child admin
                 $childClass = $extendedEntities[$entityClass];
-                $service = isset($admins[$childClass]) ? $admins[$childClass] : $service;
+                $service = isset($cruds[$childClass]) ? $cruds[$childClass] : $service;
 
-                $definition->addMethodCall('addAdmin', [$childClass, $service]);
+                $definition->addMethodCall('addCrud', [$childClass, $service]);
                 continue;
             }
 
@@ -49,7 +51,7 @@ class RegisterAdminsPass implements CompilerPassInterface
             }
 
             //normal entity
-            $definition->addMethodCall('addAdmin', [$entityClass, $service]);
+            $definition->addMethodCall('addCrud', [$entityClass, $service]);
         }
     }
 }

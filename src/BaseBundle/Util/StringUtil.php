@@ -46,8 +46,8 @@ class StringUtil
      */
     public static function adminClassToEntityName($class)
     {
-        //EntityNameAdmin -> Entity Name
-        return trim(preg_replace('/([A-Z][a-z])/', ' \1', self::classBasename($class, 'Admin')));
+        //EntityNameCrud -> Entity Name
+        return trim(preg_replace('/([A-Z][a-z])/', ' \1', self::classBasename($class, 'Crud')));
     }
 
     /**

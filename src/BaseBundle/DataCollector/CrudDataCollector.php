@@ -5,7 +5,7 @@ namespace Perform\BaseBundle\DataCollector;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Perform\BaseBundle\Admin\AdminRegistry;
+use Perform\BaseBundle\Crud\CrudRegistry;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\TraceableAccessDecisionManager;
@@ -13,14 +13,14 @@ use Symfony\Component\Security\Core\Authorization\TraceableAccessDecisionManager
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class AdminsDataCollector extends DataCollector
+class CrudDataCollector extends DataCollector
 {
     protected $registry;
     protected $store;
     protected $accessDecisionManager;
     protected $extendedEntities;
 
-    public function __construct(AdminRegistry $registry, ConfigStoreInterface $store, AccessDecisionManagerInterface $accessDecisionManager, array $extendedEntities)
+    public function __construct(CrudRegistry $registry, ConfigStoreInterface $store, AccessDecisionManagerInterface $accessDecisionManager, array $extendedEntities)
     {
         $this->registry = $registry;
         $this->store = $store;
@@ -30,17 +30,17 @@ class AdminsDataCollector extends DataCollector
 
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
-        $admins = $this->registry->getAdmins();
+        $crudServices = $this->registry->all();
 
-        ksort($admins);
+        ksort($crudServices);
         $this->data = [
-            'admins' => $admins,
+            'crud' => $crudServices,
             'extendedEntities' => $this->extendedEntities,
             'correctVoterStrategy' => $this->accessDecisionManager instanceof TraceableAccessDecisionManager ? $this->accessDecisionManager->getStrategy() === 'unanimous' : true,
         ];
         if ($request->attributes->has('_entity')) {
             $this->data['activeEntity'] = $request->attributes->get('_entity');
-            $this->data['activeAdmin'] = get_class($this->registry->getAdmin($this->data['activeEntity']));
+            $this->data['activeCrud'] = get_class($this->registry->getCrud($this->data['activeEntity']));
             $this->data['typeConfig'] = $this->store->getTypeConfig($this->data['activeEntity'])->getAllTypes();
             $this->sanitize($this->data['typeConfig']);
             $this->data['addedConfigs'] = $this->store->getTypeConfig($this->data['activeEntity'])->getAddedConfigs();
@@ -57,9 +57,9 @@ class AdminsDataCollector extends DataCollector
         });
     }
 
-    public function getAdmins()
+    public function getCrud()
     {
-        return $this->data['admins'];
+        return $this->data['crud'];
     }
 
     public function getActiveEntity()
@@ -67,15 +67,15 @@ class AdminsDataCollector extends DataCollector
         return isset($this->data['activeEntity']) ? $this->data['activeEntity'] : null;
     }
 
-    public function getActiveAdmin()
+    public function getActiveCrud()
     {
-        return isset($this->data['activeAdmin']) ? $this->data['activeAdmin'] : null;
+        return isset($this->data['activeCrud']) ? $this->data['activeCrud'] : null;
     }
 
     public function getActiveAlias()
     {
-        $admin = $this->getActiveAdmin();
-        $pieces = explode('\\', $this->getActiveAdmin());
+        $crud = $this->getActiveCrud();
+        $pieces = explode('\\', $this->getActiveCrud());
 
         return array_pop($pieces);
     }
@@ -102,6 +102,6 @@ class AdminsDataCollector extends DataCollector
 
     public function getName()
     {
-        return 'perform_base.admins';
+        return 'perform_base.crud';
     }
 }

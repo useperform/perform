@@ -1,8 +1,8 @@
 <?php
 
-namespace Perform\BaseBundle\Admin;
+namespace Perform\BaseBundle\Crud;
 
-use Perform\BaseBundle\Form\Type\AdminType;
+use Perform\BaseBundle\Form\Type\CrudType;
 use Perform\BaseBundle\Config\FilterConfig;
 use Perform\BaseBundle\Config\ActionConfig;
 use Perform\BaseBundle\Config\LabelConfig;
@@ -14,13 +14,13 @@ use Twig\Environment;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-abstract class AbstractAdmin implements AdminInterface
+abstract class AbstractCrud implements CrudInterface
 {
     protected $routePrefix;
 
     public function getFormType()
     {
-        return AdminType::class;
+        return CrudType::class;
     }
 
     public function getRoutePrefix()

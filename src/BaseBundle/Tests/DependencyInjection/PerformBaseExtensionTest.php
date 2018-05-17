@@ -17,7 +17,7 @@ class PerformBaseExtensionTest extends \PHPUnit_Framework_TestCase
         $this->ext = new PerformBaseExtension();
     }
 
-    public function testAdminAliasesAreResolved()
+    public function testCrudAliasesAreResolved()
     {
         $container = new ContainerBuilder();
         $config = [
@@ -32,7 +32,7 @@ class PerformBaseExtensionTest extends \PHPUnit_Framework_TestCase
         $container->setParameter('perform_base.entity_aliases', [
             'SomeBundle:Item' => 'SomeBundle\Entity\Item',
         ]);
-        $this->ext->processAdminConfig($container, $config);
+        $this->ext->processCrudConfig($container, $config);
         $expected = [
             'SomeBundle\Entity\Item' => [
                 'types' => [

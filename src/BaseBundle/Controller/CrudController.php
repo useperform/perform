@@ -7,7 +7,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Perform\BaseBundle\Config\TypeConfig;
-use Perform\BaseBundle\Admin\AdminRequest;
+use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Twig\Extension\ActionExtension;
 
 /**
@@ -17,21 +17,21 @@ class CrudController extends Controller
 {
     protected $entity;
 
-    protected function initialize(AdminRequest $request)
+    protected function initialize(CrudRequest $request)
     {
         $this->entity = $this->get('perform_base.doctrine.entity_resolver')->resolve($request->getEntity());
         $this->get('twig')
             ->getExtension(ActionExtension::class)
-            ->setAdminRequest($request);
+            ->setCrudRequest($request);
     }
 
     /**
-     * @return AdminInterface
+     * @return CrudInterface
      */
-    protected function getAdmin()
+    protected function getCrud()
     {
-        return $this->get('perform_base.admin.registry')
-            ->getAdmin($this->entity);
+        return $this->get('perform_base.crud.registry')
+            ->getCrud($this->entity);
     }
 
     protected function getTypeConfig()
@@ -99,9 +99,9 @@ class CrudController extends Controller
 
     public function listAction(Request $request)
     {
-        $request = new AdminRequest($request, TypeConfig::CONTEXT_LIST);
+        $request = new CrudRequest($request, TypeConfig::CONTEXT_LIST);
         $this->initialize($request);
-        $admin = $this->getAdmin();
+        $crud = $this->getCrud();
         $selector = $this->get('perform_base.selector.entity');
         list($paginator, $orderBy) = $selector->listContext($request, $this->entity);
 
@@ -111,7 +111,7 @@ class CrudController extends Controller
             'batchActions' => $this->getActionConfig()->getBatchOptionsForRequest($request),
             'labelConfig' => $this->getLabelConfig(),
             'orderBy' => $orderBy,
-            'routePrefix' => $admin->getRoutePrefix(),
+            'routePrefix' => $crud->getRoutePrefix(),
             'paginator' => $paginator,
             'entityClass' => $this->entity,
         ];
@@ -119,7 +119,7 @@ class CrudController extends Controller
 
     public function viewAction(Request $request, $id)
     {
-        $request = new AdminRequest($request, TypeConfig::CONTEXT_VIEW);
+        $request = new CrudRequest($request, TypeConfig::CONTEXT_VIEW);
         $this->initialize($request);
         $entity = $this->findEntity($id);
         $this->denyAccessUnlessGranted('VIEW', $entity);
@@ -133,18 +133,18 @@ class CrudController extends Controller
 
     public function viewDefaultAction(Request $request)
     {
-        $this->initialize(new AdminRequest($request, TypeConfig::CONTEXT_VIEW));
+        $this->initialize(new CrudRequest($request, TypeConfig::CONTEXT_VIEW));
 
         return $this->viewAction($request, $this->findDefaultEntity()->getId());
     }
 
     public function createAction(Request $request)
     {
-        $request = new AdminRequest($request, TypeConfig::CONTEXT_CREATE);
+        $request = new CrudRequest($request, TypeConfig::CONTEXT_CREATE);
         $this->initialize($request);
         $builder = $this->createFormBuilder($entity = $this->newEntity());
-        $admin = $this->getAdmin();
-        $form = $this->createForm($admin->getFormType(), $entity, [
+        $crud = $this->getCrud();
+        $form = $this->createForm($crud->getFormType(), $entity, [
             'entity' => $this->entity,
             'context' => $request->getContext(),
         ]);
@@ -174,12 +174,12 @@ class CrudController extends Controller
 
     public function editAction(Request $request, $id)
     {
-        $request = new AdminRequest($request, TypeConfig::CONTEXT_EDIT);
+        $request = new CrudRequest($request, TypeConfig::CONTEXT_EDIT);
         $this->initialize($request);
         $entity = $this->findEntity($id);
         $this->denyAccessUnlessGranted('EDIT', $entity);
-        $admin = $this->getAdmin();
-        $form = $this->createForm($admin->getFormType(), $entity, [
+        $crud = $this->getCrud();
+        $form = $this->createForm($crud->getFormType(), $entity, [
             'entity' => $this->entity,
             'context' => $request->getContext(),
         ]);
@@ -209,7 +209,7 @@ class CrudController extends Controller
 
     public function editDefaultAction(Request $request)
     {
-        $this->initialize(new AdminRequest($request, TypeConfig::CONTEXT_EDIT));
+        $this->initialize(new CrudRequest($request, TypeConfig::CONTEXT_EDIT));
 
         return $this->editAction($request, $this->findDefaultEntity()->getId());
     }

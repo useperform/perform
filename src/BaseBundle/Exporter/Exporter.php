@@ -6,7 +6,7 @@ use Perform\BaseBundle\Config\ConfigStoreInterface;
 use Perform\BaseBundle\Selector\EntitySelector;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Exporter\Exporter as BaseExporter;
-use Perform\BaseBundle\Admin\AdminRequest;
+use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BaseBundle\Config\ExportConfig;
 
@@ -31,13 +31,13 @@ class Exporter
     /**
      * @return StreamedResponse
      */
-    public function getResponse(AdminRequest $adminRequest, $format)
+    public function getResponse(CrudRequest $crudRequest, $format)
     {
-        $entity = $adminRequest->getEntity();
+        $entity = $crudRequest->getEntity();
         $exportConfig = $this->configStore->getExportConfig($entity);
         $exporter = new BaseExporter($this->getWritersFromConfig($exportConfig));
 
-        $query = $this->selector->getQueryBuilder($adminRequest, $entity)->getQuery();
+        $query = $this->selector->getQueryBuilder($crudRequest, $entity)->getQuery();
         $exportFields = $this->configStore->getTypeConfig($entity)->getTypes(TypeConfig::CONTEXT_EXPORT);
         $source = new TypedDoctrineORMQuerySourceIterator($this->typeRegistry, $query, $exportFields);
 

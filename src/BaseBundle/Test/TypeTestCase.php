@@ -3,7 +3,7 @@
 namespace Perform\BaseBundle\Test;
 
 use Perform\BaseBundle\Type\TypeRegistry;
-use Perform\BaseBundle\Admin\ContextRenderer;
+use Perform\BaseBundle\Crud\ContextRenderer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Twig\Environment;
 

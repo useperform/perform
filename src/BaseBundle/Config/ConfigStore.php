@@ -3,7 +3,7 @@
 namespace Perform\BaseBundle\Config;
 
 use Perform\BaseBundle\Doctrine\EntityResolver;
-use Perform\BaseBundle\Admin\AdminRegistry;
+use Perform\BaseBundle\Crud\CrudRegistry;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Perform\BaseBundle\Action\ActionRegistry;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -20,7 +20,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class ConfigStore implements ConfigStoreInterface
 {
     protected $resolver;
-    protected $adminRegistry;
+    protected $crudRegistry;
     protected $typeRegistry;
     protected $actionRegistry;
     protected $authChecker;
@@ -31,10 +31,10 @@ class ConfigStore implements ConfigStoreInterface
     protected $actionConfigs = [];
     protected $labelConfigs = [];
 
-    public function __construct(EntityResolver $resolver, AdminRegistry $adminRegistry, TypeRegistry $typeRegistry, ActionRegistry $actionRegistry, AuthorizationCheckerInterface $authChecker, array $override = [])
+    public function __construct(EntityResolver $resolver, CrudRegistry $crudRegistry, TypeRegistry $typeRegistry, ActionRegistry $actionRegistry, AuthorizationCheckerInterface $authChecker, array $override = [])
     {
         $this->resolver = $resolver;
-        $this->adminRegistry = $adminRegistry;
+        $this->crudRegistry = $crudRegistry;
         $this->typeRegistry = $typeRegistry;
         $this->actionRegistry = $actionRegistry;
         $this->authChecker = $authChecker;
@@ -46,7 +46,7 @@ class ConfigStore implements ConfigStoreInterface
         $class = $this->resolver->resolve($entity);
         if (!isset($this->typeConfigs[$class])) {
             $typeConfig = new TypeConfig($this->typeRegistry);
-            $this->adminRegistry->getAdmin($class)->configureTypes($typeConfig);
+            $this->crudRegistry->getCrud($class)->configureTypes($typeConfig);
 
             if (isset($this->override[$class]['types'])) {
                 foreach ($this->override[$class]['types'] as $field => $config) {
@@ -64,7 +64,7 @@ class ConfigStore implements ConfigStoreInterface
         $class = $this->resolver->resolve($entity);
         if (!isset($this->actionConfigs[$class])) {
             $this->actionConfigs[$class] = new ActionConfig($this->actionRegistry, $this->authChecker);
-            $this->adminRegistry->getAdmin($class)->configureActions($this->actionConfigs[$class]);
+            $this->crudRegistry->getCrud($class)->configureActions($this->actionConfigs[$class]);
         }
 
         return $this->actionConfigs[$class];
@@ -75,7 +75,7 @@ class ConfigStore implements ConfigStoreInterface
         $class = $this->resolver->resolve($entity);
         if (!isset($this->filterConfigs[$class])) {
             $this->filterConfigs[$class] = new FilterConfig();
-            $this->adminRegistry->getAdmin($class)->configureFilters($this->filterConfigs[$class]);
+            $this->crudRegistry->getCrud($class)->configureFilters($this->filterConfigs[$class]);
         }
 
         return $this->filterConfigs[$class];
@@ -86,7 +86,7 @@ class ConfigStore implements ConfigStoreInterface
         $class = $this->resolver->resolve($entity);
         if (!isset($this->labelConfigs[$class])) {
             $this->labelConfigs[$class] = new LabelConfig();
-            $this->adminRegistry->getAdmin($class)->configureLabels($this->labelConfigs[$class]);
+            $this->crudRegistry->getCrud($class)->configureLabels($this->labelConfigs[$class]);
         }
 
         return $this->labelConfigs[$class];
@@ -102,7 +102,7 @@ class ConfigStore implements ConfigStoreInterface
                 ExportConfig::FORMAT_CSV,
                 ExportConfig::FORMAT_XLS,
             ]);
-            $this->adminRegistry->getAdmin($class)->configureExports($this->exportConfigs[$class]);
+            $this->crudRegistry->getCrud($class)->configureExports($this->exportConfigs[$class]);
         }
 
         return $this->exportConfigs[$class];

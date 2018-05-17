@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BaseBundle\Config\FilterConfig;
-use Perform\BaseBundle\Admin\AdminRequest;
+use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
 
 /**
@@ -27,12 +27,12 @@ class EntitySelector
         $this->store = $store;
     }
 
-    public function getQueryBuilder(AdminRequest $request, $entityName)
+    public function getQueryBuilder(CrudRequest $request, $entityName)
     {
         return $this->getQueryBuilderInternal($request, $entityName)[0];
     }
 
-    private function getQueryBuilderInternal(AdminRequest $request, $entityName)
+    private function getQueryBuilderInternal(CrudRequest $request, $entityName)
     {
         $qb = $this->entityManager->createQueryBuilder()
             ->select('e')
@@ -64,7 +64,7 @@ class EntitySelector
         return [$qb, $orderField, $direction];
     }
 
-    public function listContext(AdminRequest $request, $entityName)
+    public function listContext(CrudRequest $request, $entityName)
     {
         list($qb, $orderField, $direction) = $this->getQueryBuilderInternal($request, $entityName);
         $this->assignFilterCounts($entityName);

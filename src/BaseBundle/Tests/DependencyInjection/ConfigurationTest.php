@@ -90,7 +90,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
             [[
                 'AppBundle\Entity\UserInterface' => [
                     'AppBundle\Entity\Group' => 'AppBundle\Entity\User',
-                    'AppBundle\Entity\AdminUser',
+                    'AppBundle\Entity\CrudUser',
                 ],
             ]],
         ];

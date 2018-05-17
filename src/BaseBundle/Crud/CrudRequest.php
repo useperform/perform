@@ -1,6 +1,6 @@
 <?php
 
-namespace Perform\BaseBundle\Admin;
+namespace Perform\BaseBundle\Crud;
 
 use Symfony\Component\HttpFoundation\Request;
 
@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class AdminRequest
+class CrudRequest
 {
     protected $request;
     protected $context;

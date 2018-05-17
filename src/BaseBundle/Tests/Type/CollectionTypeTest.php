@@ -5,7 +5,7 @@ namespace Perform\BaseBundle\Tests\Type;
 use Perform\UserBundle\Entity\User;
 use Perform\BaseBundle\Type\CollectionType;
 use Doctrine\Common\Collections\ArrayCollection;
-use Perform\BaseBundle\Admin\AdminRegistry;
+use Perform\BaseBundle\Crud\CrudRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\BaseBundle\Asset\AssetContainer;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -22,7 +22,7 @@ class CollectionTypeTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $registry = $this->getMockBuilder(AdminRegistry::class)
+        $registry = $this->getMockBuilder(CrudRegistry::class)
                   ->disableOriginalConstructor()
                   ->getMock();
         $entityManager = $this->getMock(EntityManagerInterface::class);

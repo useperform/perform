@@ -25,7 +25,7 @@ class SlugTypeTest extends \PHPUnit_Framework_TestCase
         $builder = $this->getMock(FormBuilderInterface::class);
         $builder->expects($this->any())
             ->method('getName')
-            ->will($this->returnValue('admin_form'));
+            ->will($this->returnValue('crud_form'));
         $config = [
             'label' => 'Slug',
             'target' => 'title',
@@ -33,7 +33,7 @@ class SlugTypeTest extends \PHPUnit_Framework_TestCase
         ];
         $expected = [
             'readonly' => true,
-            'target' => '#admin_form_title',
+            'target' => '#crud_form_title',
         ];
 
         $this->assertEquals($expected, $this->type->createContext($builder, 'slug', $config));
@@ -44,7 +44,7 @@ class SlugTypeTest extends \PHPUnit_Framework_TestCase
         $builder = $this->getMock(FormBuilderInterface::class);
         $builder->expects($this->any())
             ->method('getName')
-            ->will($this->returnValue('admin_form'));
+            ->will($this->returnValue('crud_form'));
         $config = [
             'label' => 'Slug',
             'target' => 'title',
@@ -52,7 +52,7 @@ class SlugTypeTest extends \PHPUnit_Framework_TestCase
         ];
         $expected = [
             'readonly' => true,
-            'target' => '#admin_form_title',
+            'target' => '#crud_form_title',
         ];
 
         $this->assertEquals($expected, $this->type->createContext($builder, 'slug', $config));

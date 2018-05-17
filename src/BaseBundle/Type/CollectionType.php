@@ -5,9 +5,9 @@ namespace Perform\BaseBundle\Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Doctrine\Common\Collections\Collection;
 use Perform\BaseBundle\Exception\InvalidTypeException;
-use Perform\BaseBundle\Form\Type\AdminType;
+use Perform\BaseBundle\Form\Type\CrudType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType as CollectionFormType;
-use Perform\BaseBundle\Admin\AdminRegistry;
+use Perform\BaseBundle\Crud\CrudRegistry;
 use Symfony\Component\Form\FormEvents;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,14 +22,14 @@ use Perform\BaseBundle\Config\TypeConfig;
  **/
 class CollectionType extends AbstractType
 {
-    protected $adminRegistry;
+    protected $crudRegistry;
     protected $entityManager;
     protected $assets;
 
-    public function __construct(AdminRegistry $adminRegistry, EntityManagerInterface $entityManager, AssetContainer $assets)
+    public function __construct(CrudRegistry $crudRegistry, EntityManagerInterface $entityManager, AssetContainer $assets)
     {
         parent::__construct();
-        $this->adminRegistry = $adminRegistry;
+        $this->crudRegistry = $crudRegistry;
         $this->entityManager = $entityManager;
         $this->assets = $assets;
     }
@@ -49,7 +49,7 @@ class CollectionType extends AbstractType
         $this->assets->addJs('/bundles/performbase/js/types/collection.js');
 
         $builder->add($field, CollectionFormType::class, [
-            'entry_type' => AdminType::class,
+            'entry_type' => CrudType::class,
             'entry_options' => [
                 'entity' => $options['entity'],
                 'context' => $context,
@@ -111,14 +111,14 @@ class CollectionType extends AbstractType
         $collection = $this->accessor->getValue($entity, $field);
         $this->ensureCollection($collection);
 
-        $admin = null;
+        $crud = null;
         if (isset($collection[0])) {
-            $admin = $this->adminRegistry->getAdmin($collection[0]);
+            $crud = $this->crudRegistry->getCrud($collection[0]);
         }
 
         return [
             'collection' => $collection,
-            'admin' => $admin,
+            'admin' => $crud,
         ];
     }
 

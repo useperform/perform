@@ -50,8 +50,8 @@ class CrudTemplateListener
         //remove Action
         $context = substr($controller[1], 0, -6);
 
-        $template = $this->container->get('perform_base.admin.registry')
-                  ->getAdmin($entity)
+        $template = $this->container->get('perform_base.crud.registry')
+                  ->getCrud($entity)
                   ->getTemplate($this->container->get('twig'), $entity, $context);
 
         $annotation = new Template([]);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Perform\BaseBundle\Admin;
+namespace Perform\BaseBundle\Crud;
 
 use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BaseBundle\Config\FilterConfig;
@@ -10,11 +10,9 @@ use Perform\BaseBundle\Config\ExportConfig;
 use Twig\Environment;
 
 /**
- * AdminInterface.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-interface AdminInterface
+interface CrudInterface
 {
     public function configureTypes(TypeConfig $config);
 

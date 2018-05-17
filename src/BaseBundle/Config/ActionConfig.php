@@ -4,7 +4,7 @@ namespace Perform\BaseBundle\Config;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Perform\BaseBundle\Util\StringUtil;
-use Perform\BaseBundle\Admin\AdminRequest;
+use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Action\ActionRegistry;
 use Perform\BaseBundle\Action\ConfiguredAction;
 use Perform\BaseBundle\Action\ActionNotFoundException;
@@ -174,11 +174,11 @@ class ActionConfig
      * doesn't guarantee the action will be granted for the entity.
      *
      * @param object       $entity
-     * @param AdminRequest $request
+     * @param CrudRequest $request
      *
      * @return ConfiguredAction[]
      */
-    public function getButtonsForEntity($entity, AdminRequest $request)
+    public function getButtonsForEntity($entity, CrudRequest $request)
     {
         $allowed = [];
         foreach ($this->actions as $action) {
@@ -196,11 +196,11 @@ class ActionConfig
      * This method is purely presentational; the presence of an option
      * doesn't guarantee the action will be granted.
      *
-     * @param AdminRequest $request
+     * @param CrudRequest $request
      *
      * @return ConfiguredAction[]
      */
-    public function getBatchOptionsForRequest(AdminRequest $request)
+    public function getBatchOptionsForRequest(CrudRequest $request)
     {
         $allowed = [];
         foreach ($this->actions as $action) {

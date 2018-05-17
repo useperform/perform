@@ -1,19 +1,19 @@
 <?php
 
-namespace Perform\BaseBundle\Tests\Admin;
+namespace Perform\BaseBundle\Tests\Crud;
 
 use Twig\Loader\ExistsLoaderInterface;
 use Twig\Environment;
-use Perform\BaseBundle\Admin\AdminInterface;
+use Perform\BaseBundle\Crud\CrudInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class AbstractAdminTest extends \PHPUnit_Framework_TestCase
+class AbstractCrudTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->admin = new TestAdmin();
+        $this->crud = new TestCrud();
         $this->twig = $this->getMockBuilder(Environment::class)
                     ->disableOriginalConstructor()
                     ->getMock();
@@ -23,9 +23,9 @@ class AbstractAdminTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($this->twigLoader));
     }
 
-    public function testIsAdmin()
+    public function testIsCrud()
     {
-        $this->assertInstanceOf(AdminInterface::class, $this->admin);
+        $this->assertInstanceOf(CrudInterface::class, $this->crud);
     }
 
     public function templateProvider()
@@ -43,7 +43,7 @@ class AbstractAdminTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetTemplate($context, $expected)
     {
-        $this->assertSame($expected, $this->admin->getTemplate($this->twig, 'SomeBundle:SomeEntity', $context));
+        $this->assertSame($expected, $this->crud->getTemplate($this->twig, 'SomeBundle:SomeEntity', $context));
     }
 
     public function overrideTemplateProvider()
@@ -66,6 +66,6 @@ class AbstractAdminTest extends \PHPUnit_Framework_TestCase
             ->with($expected)
             ->will($this->returnValue(true));
 
-        $this->assertSame($expected, $this->admin->getTemplate($this->twig, 'SomeBundle:SomeEntity', $context));
+        $this->assertSame($expected, $this->crud->getTemplate($this->twig, 'SomeBundle:SomeEntity', $context));
     }
 }

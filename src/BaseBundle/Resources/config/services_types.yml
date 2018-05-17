@@ -20,7 +20,7 @@ services:
 
     Perform\BaseBundle\Type\CollectionType:
         arguments:
-            - "@perform_base.admin.registry"
+            - "@perform_base.crud.registry"
             - "@doctrine.orm.entity_manager"
             - "@perform_base.asset_container"
 

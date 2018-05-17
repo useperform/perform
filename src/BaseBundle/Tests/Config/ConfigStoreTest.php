@@ -3,9 +3,9 @@
 namespace Perform\BaseBundle\Tests\Config;
 
 use Perform\BaseBundle\Config\ConfigStore;
-use Perform\BaseBundle\Admin\AdminInterface;
+use Perform\BaseBundle\Crud\CrudInterface;
 use Perform\BaseBundle\Doctrine\EntityResolver;
-use Perform\BaseBundle\Admin\AdminRegistry;
+use Perform\BaseBundle\Crud\CrudRegistry;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Perform\BaseBundle\Config\TypeConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -23,7 +23,7 @@ use Perform\BaseBundle\Test\Services;
  **/
 class ConfigStoreTest extends \PHPUnit_Framework_TestCase
 {
-    protected $adminRegistry;
+    protected $crudRegistry;
     protected $typeRegistry;
     protected $actionRegistry;
     protected $store;
@@ -31,7 +31,7 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->adminRegistry = $this->getMockBuilder(AdminRegistry::class)
+        $this->crudRegistry = $this->getMockBuilder(CrudRegistry::class)
                              ->disableOriginalConstructor()
                              ->getMock();
         $this->typeRegistry = Services::typeRegistry([
@@ -43,29 +43,29 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
         $this->authChecker = $this->getMock(AuthorizationCheckerInterface::class);
     }
 
-    private function configure($alias, $class, $admin, array $override = [])
+    private function configure($alias, $class, $crud, array $override = [])
     {
-        $this->adminRegistry->expects($this->any())
-            ->method('getAdmin')
+        $this->crudRegistry->expects($this->any())
+            ->method('getCrud')
             ->with($class)
-            ->will($this->returnValue($admin));
+            ->will($this->returnValue($crud));
         $resolver = new EntityResolver([
             $alias => $class,
         ]);
 
-        $this->store = new ConfigStore($resolver, $this->adminRegistry, $this->typeRegistry, $this->actionRegistry, $this->authChecker, $override);
+        $this->store = new ConfigStore($resolver, $this->crudRegistry, $this->typeRegistry, $this->actionRegistry, $this->authChecker, $override);
     }
 
     public function testInterface()
     {
-        $store = new ConfigStore(new EntityResolver(), $this->adminRegistry, $this->typeRegistry, $this->actionRegistry, $this->authChecker);
+        $store = new ConfigStore(new EntityResolver(), $this->crudRegistry, $this->typeRegistry, $this->actionRegistry, $this->authChecker);
         $this->assertInstanceOf(ConfigStoreInterface::class, $store);
     }
 
     public function testGetTypeConfig()
     {
-        $admin = $this->getMock(AdminInterface::class);
-        $admin->expects($this->once())
+        $crud = $this->getMock(CrudInterface::class);
+        $crud->expects($this->once())
             ->method('configureTypes')
             ->with($this->callback(function ($config) {
                 return $config instanceof TypeConfig;
@@ -73,7 +73,7 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
 
         $alias = 'SomeBundle:stdClass';
         $classname = \stdClass::class;
-        $this->configure($alias, $classname, $admin);
+        $this->configure($alias, $classname, $crud);
 
         $aliasConfig = $this->store->getTypeConfig($alias);
         $classConfig = $this->store->getTypeConfig($classname);
@@ -95,8 +95,8 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ];
-        $admin = $this->getMock(AdminInterface::class);
-        $this->configure('SomeBundle:stdClass', \stdClass::class, $admin, $override);
+        $crud = $this->getMock(CrudInterface::class);
+        $this->configure('SomeBundle:stdClass', \stdClass::class, $crud, $override);
 
         $config = $this->store->getTypeConfig(\stdClass::class);
         $this->assertArrayHasKey('slug', $config->getTypes(TypeConfig::CONTEXT_LIST));
@@ -104,8 +104,8 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
 
     public function testGetActionConfig()
     {
-        $admin = $this->getMock(AdminInterface::class);
-        $admin->expects($this->once())
+        $crud = $this->getMock(CrudInterface::class);
+        $crud->expects($this->once())
             ->method('configureActions')
             ->with($this->callback(function($config) {
                     return $config instanceof ActionConfig;
@@ -113,7 +113,7 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
 
         $alias = 'SomeBundle:stdClass';
         $classname = \stdClass::class;
-        $this->configure($alias, $classname, $admin);
+        $this->configure($alias, $classname, $crud);
 
         $aliasConfig = $this->store->getActionConfig($alias);
         $classConfig = $this->store->getActionConfig($classname);
@@ -128,8 +128,8 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFilterConfig()
     {
-        $admin = $this->getMock(AdminInterface::class);
-        $admin->expects($this->once())
+        $crud = $this->getMock(CrudInterface::class);
+        $crud->expects($this->once())
             ->method('configureFilters')
             ->with($this->callback(function($config) {
                     return $config instanceof FilterConfig;
@@ -137,7 +137,7 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
 
         $alias = 'SomeBundle:stdClass';
         $classname = \stdClass::class;
-        $this->configure($alias, $classname, $admin);
+        $this->configure($alias, $classname, $crud);
 
         $aliasConfig = $this->store->getFilterConfig($alias);
         $classConfig = $this->store->getFilterConfig($classname);
@@ -152,8 +152,8 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
 
     public function testGetExportConfig()
     {
-        $admin = $this->getMock(AdminInterface::class);
-        $admin->expects($this->once())
+        $crud = $this->getMock(CrudInterface::class);
+        $crud->expects($this->once())
             ->method('configureExports')
             ->with($this->callback(function($config) {
                     return $config instanceof ExportConfig;
@@ -161,7 +161,7 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
 
         $alias = 'SomeBundle:stdClass';
         $classname = \stdClass::class;
-        $this->configure($alias, $classname, $admin);
+        $this->configure($alias, $classname, $crud);
 
         $aliasConfig = $this->store->getExportConfig($alias);
         $classConfig = $this->store->getExportConfig($classname);

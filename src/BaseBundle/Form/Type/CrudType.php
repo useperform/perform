@@ -14,11 +14,9 @@ use Perform\BaseBundle\Doctrine\EntityResolver;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
 
 /**
- * AdminType.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class AdminType extends AbstractType
+class CrudType extends AbstractType
 {
     protected $store;
     protected $resolver;

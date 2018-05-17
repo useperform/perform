@@ -1,9 +1,9 @@
 {% extends '@WebProfiler/Profiler/layout.html.twig' %}
 
 {% block toolbar %}
-  {% if collector.activeAdmin is not null %}
+  {% if collector.activeCrud is not null %}
   {% set icon %}
-    <span class="icon">{{ include('@PerformBase/data_collector/admins.svg') }}</span>
+    <span class="icon">{{ include('@PerformBase/data_collector/crud.svg') }}</span>
     <span class="sf-toolbar-value">&nbsp;&nbsp;{{collector.activeAlias}}</span>
   {% endset %}
 
@@ -14,12 +14,12 @@
     </div>
   {% endif %}
   <div class="sf-toolbar-info-piece">
-    <b>Active Admin</b>
-    <span class="sf-toolbar-status">{{collector.activeAdmin}}</span>
+    <b>Active Crud</b>
+    <span class="sf-toolbar-status">{{collector.activeCrud}}</span>
   </div>
   <div class="sf-toolbar-info-piece">
-    <b>Loaded Admins</b>
-    <span class="sf-toolbar-status">{{ collector.admins | length }}</span>
+    <b>Loaded Crud</b>
+    <span class="sf-toolbar-status">{{ collector.crud | length }}</span>
   </div>
   <div class="sf-toolbar-info-piece">
     <b>Extended Entities</b>
@@ -32,9 +32,9 @@
 {% endblock %}
 
 {% block menu %}
-  <span class="label{{collector.activeAdmin is null ? ' disabled'}}">
-    <span class="icon">{{ include('@PerformBase/data_collector/admins.svg') }}</span>
-    <strong>Admins</strong>
+  <span class="label{{collector.activeCrud is null ? ' disabled'}}">
+    <span class="icon">{{ include('@PerformBase/data_collector/crud.svg') }}</span>
+    <strong>Crud</strong>
   </span>
 {% endblock %}
 
@@ -52,9 +52,9 @@ security:
       </pre>
     </div>
   {% endif %}
-  {% if collector.activeAdmin is not null %}
-    <h2>Active Admin</h2>
-    {{collector.activeAdmin}}
+  {% if collector.activeCrud is not null %}
+    <h2>Active Crud</h2>
+    {{collector.activeCrud}}
     {% if collector.typeConfig is not null %}
       <h2>Type Config</h2>
       <table>
@@ -82,19 +82,19 @@ security:
     {% endif %}
   {% endif %}
 
-  <h2>Loaded Admins</h2>
+  <h2>Loaded Crud</h2>
   <table>
     <thead>
       <tr>
         <th scope="col">Entity</th>
-        <th scope="col">Admin</th>
+        <th scope="col">Crud</th>
       </tr>
     </thead>
     <tbody>
-      {% for entity, admin in collector.admins %}
+      {% for entityClass, crudClass in collector.crud %}
         <tr>
-          <td>{{ entity }}</td>
-          <td class="font-normal">{{ admin }}</td>
+          <td>{{ entityClass }}</td>
+          <td class="font-normal">{{ crudClass }}</td>
         </tr>
       {% endfor %}
     </tbody>

@@ -9,7 +9,7 @@ use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BaseBundle\Config\FilterConfig;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Perform\BaseBundle\Type\StringType;
-use Perform\BaseBundle\Admin\AdminRequest;
+use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Type\BooleanType;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -79,7 +79,7 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectQueryBuilder('Bundle:SomeEntity');
         $this->expectTypeConfig('Bundle:SomeEntity', []);
-        $result = $this->selector->listContext(new AdminRequest(new Request(), TypeConfig::CONTEXT_LIST), 'Bundle:SomeEntity');
+        $result = $this->selector->listContext(new CrudRequest(new Request(), TypeConfig::CONTEXT_LIST), 'Bundle:SomeEntity');
 
         $this->assertInternalType('array', $result);
         $this->assertInstanceOf(Pagerfanta::class, $result[0]);
@@ -104,7 +104,7 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
             ->with('e.title', 'DESC')
             ->will($this->returnSelf());
 
-        $this->selector->listContext(new AdminRequest($request, TypeConfig::CONTEXT_LIST), 'Bundle:SomeEntity');
+        $this->selector->listContext(new CrudRequest($request, TypeConfig::CONTEXT_LIST), 'Bundle:SomeEntity');
     }
 
     public function testListContextWithDisabledSortField()
@@ -123,7 +123,7 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
         $this->qb->expects($this->never())
             ->method('orderBy');
 
-        $this->selector->listContext(new AdminRequest($request, TypeConfig::CONTEXT_LIST), 'Bundle:SomeEntity');
+        $this->selector->listContext(new CrudRequest($request, TypeConfig::CONTEXT_LIST), 'Bundle:SomeEntity');
     }
 
     public function testListContextWithCustomSorting()
@@ -151,7 +151,7 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
             ->with('e.surname', 'DESC')
             ->will($this->returnSelf());
 
-        $this->selector->listContext(new AdminRequest($request, TypeConfig::CONTEXT_LIST), 'Bundle:SomeEntity');
+        $this->selector->listContext(new CrudRequest($request, TypeConfig::CONTEXT_LIST), 'Bundle:SomeEntity');
     }
 
     public function testListContextWithCustomSortQueryBuilder()
@@ -175,7 +175,7 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
 
         $differentQb->expects($this->once())
             ->method('getQuery');
-        $this->selector->listContext(new AdminRequest($request, TypeConfig::CONTEXT_LIST), 'Bundle:SomeEntity');
+        $this->selector->listContext(new CrudRequest($request, TypeConfig::CONTEXT_LIST), 'Bundle:SomeEntity');
     }
 
     public function testInvalidSortFunctionThrowsException()
@@ -197,6 +197,6 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $this->setExpectedException('\UnexpectedValueException');
-        $this->selector->listContext(new AdminRequest($request, TypeConfig::CONTEXT_LIST), 'Bundle:SomeEntity');
+        $this->selector->listContext(new CrudRequest($request, TypeConfig::CONTEXT_LIST), 'Bundle:SomeEntity');
     }
 }

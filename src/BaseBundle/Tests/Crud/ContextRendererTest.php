@@ -1,9 +1,9 @@
 <?php
 
-namespace Perform\BaseBundle\Tests\Admin;
+namespace Perform\BaseBundle\Tests\Crud;
 
 use Perform\BaseBundle\Type\TypeRegistry;
-use Perform\BaseBundle\Admin\ContextRenderer;
+use Perform\BaseBundle\Crud\ContextRenderer;
 use Perform\BaseBundle\Type\TypeInterface;
 use Twig\Template;
 use Symfony\Component\Form\FormView;
