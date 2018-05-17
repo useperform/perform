@@ -1,17 +1,17 @@
 <?php
 
-namespace Perform\UserBundle\Admin;
+namespace Perform\UserBundle\Crud;
 
 use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BaseBundle\Config\ActionConfig;
 use Perform\BaseBundle\Config\LabelConfig;
 use Perform\UserBundle\Controller\UserController;
-use Perform\BaseBundle\Admin\AbstractAdmin;
+use Perform\BaseBundle\Crud\AbstractCrud;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class UserAdmin extends AbstractAdmin
+class UserCrud extends AbstractCrud
 {
     protected $routePrefix = 'perform_user_user_';
 

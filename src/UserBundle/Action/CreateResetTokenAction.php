@@ -3,7 +3,7 @@
 namespace Perform\UserBundle\Action;
 
 use Perform\UserBundle\Security\ResetTokenManager;
-use Perform\BaseBundle\Admin\AdminRequest;
+use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Action\ActionInterface;
 use Perform\BaseBundle\Action\ActionResponse;
 
@@ -38,7 +38,7 @@ class CreateResetTokenAction implements ActionInterface
     {
         return [
             'label' => 'Create reset token',
-            'isButtonAvailable' => function ($user, AdminRequest $request) {
+            'isButtonAvailable' => function ($user, CrudRequest $request) {
                 return $request->getContext() === 'view';
             },
             'buttonStyle' => 'btn-light',

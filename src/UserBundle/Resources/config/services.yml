@@ -16,8 +16,8 @@ services:
         tags:
             - {name: kernel.event_listener, event: kernel.request}
 
-    perform_user.admin.user:
-        class: Perform\UserBundle\Admin\UserAdmin
+    perform_user.crud.user:
+        class: Perform\UserBundle\Crud\UserCrud
         tags:
             - {name: perform_base.admin, entity: "PerformUserBundle:User"}
 
