@@ -2,7 +2,7 @@ services:
     perform_contact.crud.message:
         class: Perform\ContactBundle\Crud\MessageCrud
         tags:
-            - { name: perform_base.admin, entity: "PerformContactBundle:Message" }
+            - { name: perform_base.crud, entity: "PerformContactBundle:Message" }
 
     perform_contact.menu_link.contact:
         class: Perform\BaseBundle\Menu\SimpleLinkProvider

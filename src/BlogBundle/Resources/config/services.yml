@@ -2,7 +2,7 @@ services:
     perform_blog.crud.markdown_post:
         class: Perform\BlogBundle\Crud\MarkdownPostCrud
         tags:
-            - {name: perform_base.admin, entity: "PerformBlogBundle:MarkdownPost"}
+            - {name: perform_base.crud, entity: "PerformBlogBundle:MarkdownPost"}
 
     perform_blog.menu_link.blog:
         class: Perform\BlogBundle\Menu\BlogLinkProvider

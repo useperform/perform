@@ -2,12 +2,12 @@ services:
     perform_mailing_list.crud.local_subscriber:
         class: Perform\MailingListBundle\Crud\LocalSubscriberCrud
         tags:
-            - {name: perform_base.admin, entity: "PerformMailingListBundle:LocalSubscriber"}
+            - {name: perform_base.crud, entity: "PerformMailingListBundle:LocalSubscriber"}
 
     perform_mailing_list.crud.local_list:
         class: Perform\MailingListBundle\Crud\LocalListCrud
         tags:
-            - {name: perform_base.admin, entity: "PerformMailingListBundle:LocalList"}
+            - {name: perform_base.crud, entity: "PerformMailingListBundle:LocalList"}
 
     perform_mailing_list.menu.mailing_list:
         class: Perform\MailingListBundle\Menu\MailingListLinkProvider

@@ -22,7 +22,7 @@ class CrudPassTest extends \PHPUnit_Framework_TestCase
         $this->pass = new CrudPass();
         $this->container = new ContainerBuilder();
         $this->registry = $this->container->register('perform_base.crud.registry', 'Perform\BaseBundle\Type\TypeRegistry');
-        $this->container->setParameter('perform_base.admins', []);
+        $this->container->setParameter('perform_base.cruds', []);
         $this->container->setParameter('perform_base.extended_entities', []);
     }
 
@@ -38,9 +38,9 @@ class CrudPassTest extends \PHPUnit_Framework_TestCase
             'ParentBundle:ItemLink' => ItemLink::class,
         ]);
         $this->container->register('parent.crud.item', 'ParentBundle\Crud\ItemCrud')
-            ->addTag('perform_base.admin', ['entity' => 'ParentBundle:Item']);
+            ->addTag('perform_base.crud', ['entity' => 'ParentBundle:Item']);
         $this->container->register('parent.crud.item_link', 'ParentBundle\Crud\ItemLinkCrud')
-            ->addTag('perform_base.admin', ['entity' => 'ParentBundle:ItemLink']);
+            ->addTag('perform_base.crud', ['entity' => 'ParentBundle:ItemLink']);
 
         $this->pass->process($this->container);
         $calls = [
@@ -62,7 +62,7 @@ class CrudPassTest extends \PHPUnit_Framework_TestCase
             'ParentBundle:Item' => Item::class,
         ]);
         $this->container->register('parent.crud.item', 'ParentBundle\Crud\ItemCrud')
-            ->addTag('perform_base.admin', ['entity' => Item::class]);
+            ->addTag('perform_base.crud', ['entity' => Item::class]);
 
         $this->pass->process($this->container);
         $calls = [
@@ -83,7 +83,7 @@ class CrudPassTest extends \PHPUnit_Framework_TestCase
             'ChildBundle:XmlItem' => XmlItem::class,
         ]);
         $this->container->register('parent.crud.item', 'ParentBundle\Crud\ItemCrud')
-            ->addTag('perform_base.admin', ['entity' => 'ParentBundle:Item']);
+            ->addTag('perform_base.crud', ['entity' => 'ParentBundle:Item']);
         $this->container->setParameter('perform_base.extended_entities', [
             Item::class => XmlItem::class,
         ]);
@@ -106,9 +106,9 @@ class CrudPassTest extends \PHPUnit_Framework_TestCase
             'ChildBundle:XmlItem' => XmlItem::class,
         ]);
         $this->container->register('parent.crud.item', 'ParentBundle\Crud\ItemCrud')
-            ->addTag('perform_base.admin', ['entity' => 'ParentBundle:Item']);
+            ->addTag('perform_base.crud', ['entity' => 'ParentBundle:Item']);
         $this->container->register('child.crud.xml_item', 'ChildBundle\Crud\XmlItemCrud')
-            ->addTag('perform_base.admin', ['entity' => 'ChildBundle:XmlItem']);
+            ->addTag('perform_base.crud', ['entity' => 'ChildBundle:XmlItem']);
         $this->container->setParameter('perform_base.extended_entities', [
             Item::class => XmlItem::class,
         ]);
@@ -127,7 +127,7 @@ class CrudPassTest extends \PHPUnit_Framework_TestCase
     {
         $this->container->setParameter('perform_base.entity_aliases', []);
         $this->container->register('parent.crud.item', 'ParentBundle\Crud\ItemCrud')
-            ->addTag('perform_base.admin', ['entity' => 'ParentBundle:Item']);
+            ->addTag('perform_base.crud', ['entity' => 'ParentBundle:Item']);
 
         $this->setExpectedException(InvalidCrudException::class);
         $this->pass->process($this->container);

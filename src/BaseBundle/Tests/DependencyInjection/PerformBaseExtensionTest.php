@@ -41,6 +41,6 @@ class PerformBaseExtensionTest extends \PHPUnit_Framework_TestCase
             ]
         ];
 
-        $this->assertSame($expected, $container->getParameter('perform_base.admins'));
+        $this->assertSame($expected, $container->getParameter('perform_base.cruds'));
     }
 }

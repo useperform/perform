@@ -2,12 +2,12 @@ services:
     perform_media_player.crud.playlist:
         class: Perform\MediaPlayerBundle\Crud\PlaylistCrud
         tags:
-            - {name: perform_base.admin, entity: "PerformMediaPlayerBundle:Playlist"}
+            - {name: perform_base.crud, entity: "PerformMediaPlayerBundle:Playlist"}
 
     perform_media_player.crud.playlist_item:
         class: Perform\MediaPlayerBundle\Crud\PlaylistItemCrud
         tags:
-            - {name: perform_base.admin, entity: "PerformMediaPlayerBundle:PlaylistItem"}
+            - {name: perform_base.crud, entity: "PerformMediaPlayerBundle:PlaylistItem"}
 
     perform_media_player.menu_link.playlist:
         class: Perform\MediaPlayerBundle\Menu\PlaylistLinkProvider

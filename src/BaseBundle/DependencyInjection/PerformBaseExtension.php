@@ -197,6 +197,6 @@ class PerformBaseExtension extends Extension
             $cruds[$resolver->resolveNoExtend($entity)] = $configuration;
         }
 
-        $container->setParameter('perform_base.admins', $cruds);
+        $container->setParameter('perform_base.cruds', $cruds);
     }
 }
