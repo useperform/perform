@@ -40,11 +40,11 @@ class StringUtil
     }
 
     /**
-     * Create a suitable name for an entity managed by an admin class.
+     * Create a suitable name for an entity managed by a crud class.
      *
-     * @param string $class The classname of the admin
+     * @param string $class The crud classname
      */
-    public static function adminClassToEntityName($class)
+    public static function crudClassToEntityName($class)
     {
         //EntityNameCrud -> Entity Name
         return trim(preg_replace('/([A-Z][a-z])/', ' \1', self::classBasename($class, 'Crud')));
@@ -74,7 +74,7 @@ class StringUtil
      * Suggest a twig template location for an entity.
      *
      * @param string $entityName e.g. SomeBundle:SomeEntity
-     * @param string $context    The admin context
+     * @param string $context    The crud context
      */
     public static function crudTemplateForEntity($entityName, $context)
     {

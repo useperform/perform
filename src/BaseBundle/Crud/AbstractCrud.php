@@ -53,7 +53,7 @@ abstract class AbstractCrud implements CrudInterface
 
     public function configureExports(ExportConfig $config)
     {
-        $config->setFilename(str_replace(' ', '-', strtolower(Inflector::pluralize(StringUtil::adminClassToEntityName(static::class)))));
+        $config->setFilename(str_replace(' ', '-', strtolower(Inflector::pluralize(StringUtil::crudClassToEntityName(static::class)))));
     }
 
     public function configureActions(ActionConfig $config)
@@ -96,7 +96,7 @@ abstract class AbstractCrud implements CrudInterface
 
     public function configureLabels(LabelConfig $config)
     {
-        $config->setEntityName(StringUtil::adminClassToEntityName(static::class))
+        $config->setEntityName(StringUtil::crudClassToEntityName(static::class))
             ->setEntityLabel(function ($entity) {
                 return $entity->getId();
             });

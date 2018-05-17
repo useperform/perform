@@ -46,7 +46,7 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, StringUtil::preview($string));
     }
 
-    public function adminClassProvider()
+    public function crudClassProvider()
     {
         return [
             ['AppBundle\Crud\TestCrud', 'Test'],
@@ -57,11 +57,11 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider adminClassProvider()
+     * @dataProvider crudClassProvider()
      */
     public function testCrudClassToEntityName($class, $expected)
     {
-        $this->assertSame($expected, StringUtil::adminClassToEntityName($class));
+        $this->assertSame($expected, StringUtil::crudClassToEntityName($class));
     }
 
     public function basenameProvider()
