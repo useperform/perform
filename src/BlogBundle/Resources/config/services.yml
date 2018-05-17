@@ -1,6 +1,6 @@
 services:
-    perform_blog.admin.markdown_post:
-        class: Perform\BlogBundle\Admin\MarkdownPostAdmin
+    perform_blog.crud.markdown_post:
+        class: Perform\BlogBundle\Crud\MarkdownPostCrud
         tags:
             - {name: perform_base.admin, entity: "PerformBlogBundle:MarkdownPost"}
 

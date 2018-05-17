@@ -1,15 +1,15 @@
 <?php
 
-namespace Perform\BlogBundle\Admin;
+namespace Perform\BlogBundle\Crud;
 
-use Perform\BaseBundle\Admin\AbstractAdmin;
+use Perform\BaseBundle\Crud\AbstractCrud;
 use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BlogBundle\Entity\AbstractPost;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-abstract class AbstractPostAdmin extends AbstractAdmin
+abstract class AbstractPostCrud extends AbstractCrud
 {
     public function configureTypes(TypeConfig $config)
     {

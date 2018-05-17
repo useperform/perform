@@ -1,13 +1,13 @@
 <?php
 
-namespace Perform\BlogBundle\Admin;
+namespace Perform\BlogBundle\Crud;
 
 use Perform\BaseBundle\Config\TypeConfig;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class MarkdownPostAdmin extends AbstractPostAdmin
+class MarkdownPostCrud extends AbstractPostCrud
 {
     protected $routePrefix = 'perform_blog_markdown_post_';
 
