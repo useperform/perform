@@ -79,6 +79,7 @@ class TypeReferenceGenerator
         $options['label']['required'] = false;
         $options['label']['description'] = 'The label to use for form labels and table headings. If no label is provided, a sensible label will be created automatically.';
 
+        ksort($options);
         return $options;
     }
 

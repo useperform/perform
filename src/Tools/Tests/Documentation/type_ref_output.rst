@@ -12,13 +12,13 @@ Included in the **PerformTools**.
 Options
 -------
 
-label
-~~~~~
-The label to use for form labels and table headings. If no label is provided, a sensible label will be created automatically.
+bar
+~~~
+Is an array that you need to define.
 
-This option is *optional*.
+This option is *required*.
 
-**Allowed types**: ``string``
+**Allowed types**: ``array``
 
 **Defaults**:
 
@@ -46,13 +46,13 @@ This option is *optional*.
 * Edit context: ``false``
 
 
-bar
-~~~
-Is an array that you need to define.
+label
+~~~~~
+The label to use for form labels and table headings. If no label is provided, a sensible label will be created automatically.
 
-This option is *required*.
+This option is *optional*.
 
-**Allowed types**: ``array``
+**Allowed types**: ``string``
 
 **Defaults**:
 
