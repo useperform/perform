@@ -1,16 +1,14 @@
 <?php
 
-namespace Perform\MediaPlayerBundle\Admin;
+namespace Perform\MediaPlayerBundle\Crud;
 
-use Perform\BaseBundle\Admin\AbstractAdmin;
+use Perform\BaseBundle\Crud\AbstractCrud;
 use Perform\BaseBundle\Config\TypeConfig;
 
 /**
- * PlaylistAdmin
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class PlaylistAdmin extends AbstractAdmin
+class PlaylistCrud extends AbstractCrud
 {
     protected $routePrefix = 'perform_mediaplayer_playlist_';
 

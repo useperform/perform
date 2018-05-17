@@ -1,11 +1,11 @@
 services:
-    perform_media_player.admin.playlist:
-        class: Perform\MediaPlayerBundle\Admin\PlaylistAdmin
+    perform_media_player.crud.playlist:
+        class: Perform\MediaPlayerBundle\Crud\PlaylistCrud
         tags:
             - {name: perform_base.admin, entity: "PerformMediaPlayerBundle:Playlist"}
 
-    perform_media_player.admin.playlist_item:
-        class: Perform\MediaPlayerBundle\Admin\PlaylistItemAdmin
+    perform_media_player.crud.playlist_item:
+        class: Perform\MediaPlayerBundle\Crud\PlaylistItemCrud
         tags:
             - {name: perform_base.admin, entity: "PerformMediaPlayerBundle:PlaylistItem"}
 

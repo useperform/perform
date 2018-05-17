@@ -1,15 +1,15 @@
 <?php
 
-namespace Perform\MediaPlayerBundle\Admin;
+namespace Perform\MediaPlayerBundle\Crud;
 
-use Perform\BaseBundle\Admin\AbstractAdmin;
+use Perform\BaseBundle\Crud\AbstractCrud;
 use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BaseBundle\Config\LabelConfig;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class PlaylistItemAdmin extends AbstractAdmin
+class PlaylistItemCrud extends AbstractCrud
 {
     public function configureTypes(TypeConfig $config)
     {
@@ -18,6 +18,7 @@ class PlaylistItemAdmin extends AbstractAdmin
                 'type' => 'media',
                 'options' => [
                     'types' => 'audio',
+                    'use_selector' => false,
                 ],
             ])
             ->add('title', [
