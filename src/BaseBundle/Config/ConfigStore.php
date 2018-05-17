@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  * ConfigStore creates and stores a single instance of the different
  * config classes for each entity class.
  *
- * Config classes are configured by the entity admin, and may also be
+ * Config classes are configured by crud services, and may also be
  * overridden by configuration passed to the ConfigStore.
  *
  * @author Glynn Forrest <me@glynnforrest.com>

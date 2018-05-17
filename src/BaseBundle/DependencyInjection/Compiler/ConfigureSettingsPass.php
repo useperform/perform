@@ -7,7 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Setup the admin settings
+ * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class ConfigureSettingsPass implements CompilerPassInterface
 {

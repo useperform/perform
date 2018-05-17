@@ -8,7 +8,7 @@ use Perform\BaseBundle\Routing\CrudUrlGeneratorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * Represents an action configured with options from admin classes.
+ * Represents an action configured with options from crud classes.
  *
  * This class shouldn't be constructed manually; get one from
  * ActionConfig instead.

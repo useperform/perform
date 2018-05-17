@@ -25,7 +25,7 @@ class CrudRegistry
     }
 
     /**
-     * Register an admin service with the registry.
+     * Register a crud service with the registry.
      *
      * The service is fetched lazily from the container for performance reasons.
      *

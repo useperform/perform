@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormView;
 use Perform\BaseBundle\Config\TypeConfig;
 
 /**
- * Render data and forms for entities, using types and admins.
+ * Render data and forms for entities, using types and crud classes.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/

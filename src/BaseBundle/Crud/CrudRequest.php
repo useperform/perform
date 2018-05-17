@@ -5,7 +5,7 @@ namespace Perform\BaseBundle\Crud;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * A request that involves an admin for an entity.
+ * A request that involves a crud service.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/

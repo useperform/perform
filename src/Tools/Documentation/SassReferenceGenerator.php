@@ -7,7 +7,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
 /**
- * Document the available sass variables for admin themes.
+ * Document the available sass variables for perform stylesheets.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
