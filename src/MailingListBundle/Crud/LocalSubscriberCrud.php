@@ -1,14 +1,14 @@
 <?php
 
-namespace Perform\MailingListBundle\Admin;
+namespace Perform\MailingListBundle\Crud;
 
-use Perform\BaseBundle\Admin\AbstractAdmin;
+use Perform\BaseBundle\Crud\AbstractCrud;
 use Perform\BaseBundle\Config\TypeConfig;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class LocalSubscriberAdmin extends AbstractAdmin
+class LocalSubscriberCrud extends AbstractCrud
 {
     protected $routePrefix = 'perform_mailing_list_local_subscriber_';
 
