@@ -27,7 +27,7 @@ class DebugCrudCommand extends ContainerAwareCommand
         $table = new Table($output);
         $table->setHeaders(['Entity', 'Crud service', 'Crud class']);
         foreach ($cruds as $entity => $service) {
-            $crud = $registry->getCrud($entity);
+            $crud = $registry->get($entity);
             $table->addRow([$entity, $service, get_class($crud)]);
         }
 

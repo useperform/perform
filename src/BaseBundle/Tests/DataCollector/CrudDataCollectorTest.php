@@ -32,8 +32,8 @@ class CrudDataCollectorTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->will($this->returnValue($this->getMock(CrudInterface::class)));
 
-        $this->registry->addCrud('FooBundle\\Entity\\Foo', 'foo_service');
-        $this->registry->addCrud('FooBundle\\Entity\\Bar', 'bar_service');
+        $this->registry->add('FooBundle\\Entity\\Foo', 'foo_service');
+        $this->registry->add('FooBundle\\Entity\\Bar', 'bar_service');
         $this->collector->collect(new Request(), new Response());
         $sortedClasses = ['FooBundle\\Entity\\Bar', 'FooBundle\\Entity\\Foo'];
         $this->assertEquals($sortedClasses, array_keys($this->collector->getCrud()));

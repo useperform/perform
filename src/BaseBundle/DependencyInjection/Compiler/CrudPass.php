@@ -41,7 +41,7 @@ class CrudPass implements CompilerPassInterface
                 $childClass = $extendedEntities[$entityClass];
                 $service = isset($cruds[$childClass]) ? $cruds[$childClass] : $service;
 
-                $definition->addMethodCall('addCrud', [$childClass, $service]);
+                $definition->addMethodCall('add', [$childClass, $service]);
                 continue;
             }
 
@@ -51,7 +51,7 @@ class CrudPass implements CompilerPassInterface
             }
 
             //normal entity
-            $definition->addMethodCall('addCrud', [$entityClass, $service]);
+            $definition->addMethodCall('add', [$entityClass, $service]);
         }
     }
 }

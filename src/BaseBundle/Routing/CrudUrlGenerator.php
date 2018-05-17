@@ -27,7 +27,7 @@ class CrudUrlGenerator implements CrudUrlGeneratorInterface
         $params = in_array($action, ['view', 'edit']) ?
                 array_merge($params, ['id' => $entity->getId()]) :
                 $params;
-        $crud = $this->crudRegistry->getCrud($entity);
+        $crud = $this->crudRegistry->get($entity);
 
         return $this->router->generate($this->createRouteName($crud, $action), $params);
     }
@@ -38,7 +38,7 @@ class CrudUrlGenerator implements CrudUrlGeneratorInterface
     public function routeExists($entity, $action)
     {
         try {
-            $crud = $this->crudRegistry->getCrud($entity);
+            $crud = $this->crudRegistry->get($entity);
         } catch (CrudNotFoundException $e) {
             return false;
         }
@@ -62,7 +62,7 @@ class CrudUrlGenerator implements CrudUrlGeneratorInterface
 
     public function getDefaultEntityRoute($entity)
     {
-        $crud = $this->crudRegistry->getCrud($entity);
+        $crud = $this->crudRegistry->get($entity);
 
         $actions = $crud->getActions();
 

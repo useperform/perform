@@ -32,7 +32,7 @@ class CrudRegistry
      * @param string $entity  the fully qualified class name of the entity
      * @param string $service the name of the service in the container
      */
-    public function addCrud($entity, $service)
+    public function add($entity, $service)
     {
         $this->cruds[$entity] = $service;
     }
@@ -42,7 +42,7 @@ class CrudRegistry
      *
      * @param string $entity the full class name of the entity
      */
-    public function getCrud($entity)
+    public function get($entity)
     {
         try {
             $class = $this->resolver->resolve($entity);
@@ -58,11 +58,11 @@ class CrudRegistry
     }
 
     /**
-     * Return true if the given entity or class has an crud.
+     * Return true if the given entity or class has a crud service.
      *
      * @return bool
      */
-    public function hasCrud($entity)
+    public function has($entity)
     {
         try {
             return isset($this->cruds[$this->resolver->resolve($entity)]);

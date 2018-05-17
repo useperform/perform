@@ -42,7 +42,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $user = new User();
         $this->crudRegistry->expects($this->any())
-            ->method('getCrud')
+            ->method('get')
             ->with($user)
             ->will($this->returnValue(new UserCrud()));
         $this->router->expects($this->any())
@@ -56,7 +56,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
     public function testGenerateListWithString()
     {
         $this->crudRegistry->expects($this->any())
-            ->method('getCrud')
+            ->method('get')
             ->with('PerformUserBundle:User')
             ->will($this->returnValue(new UserCrud()));
         $this->router->expects($this->any())
@@ -70,7 +70,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
     public function testGenerateCreateWithString()
     {
         $this->crudRegistry->expects($this->any())
-            ->method('getCrud')
+            ->method('get')
             ->with('PerformUserBundle:User')
             ->will($this->returnValue(new UserCrud()));
         $this->router->expects($this->any())
@@ -88,7 +88,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->method('getId')
             ->will($this->returnValue(1));
         $this->crudRegistry->expects($this->any())
-            ->method('getCrud')
+            ->method('get')
             ->with($user)
             ->will($this->returnValue(new UserCrud()));
         $this->router->expects($this->any())
@@ -106,7 +106,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->method('getId')
             ->will($this->returnValue(1));
         $this->crudRegistry->expects($this->any())
-            ->method('getCrud')
+            ->method('get')
             ->with($user)
             ->will($this->returnValue(new UserCrud()));
         $this->router->expects($this->any())
@@ -125,7 +125,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->method('getId')
             ->will($this->returnValue(1));
         $this->crudRegistry->expects($this->any())
-            ->method('getCrud')
+            ->method('get')
             ->with($user)
             ->will($this->returnValue(new UserCrud()));
         $this->router->expects($this->any())
@@ -142,7 +142,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $user->expects($this->never())
             ->method('getId');
         $this->crudRegistry->expects($this->any())
-            ->method('getCrud')
+            ->method('get')
             ->with($user)
             ->will($this->returnValue(new UserCrud()));
         $this->router->expects($this->any())
@@ -172,7 +172,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->routeCollection->add('some_prefix_modify', new Route('/'));
 
         $this->crudRegistry->expects($this->any())
-            ->method('getCrud')
+            ->method('get')
             ->will($this->returnValue($crud));
 
         $this->assertTrue($this->generator->routeExists('TestBundle:Something', 'create'));
@@ -197,7 +197,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('some_prefix_'));
 
         $this->crudRegistry->expects($this->any())
-            ->method('getCrud')
+            ->method('get')
             ->will($this->returnValue($crud));
 
         $this->assertFalse($this->generator->routeExists('TestBundle:Something', 'view'));
@@ -207,7 +207,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
     public function testRouteExistsWithUnknownEntity()
     {
         $this->crudRegistry->expects($this->any())
-            ->method('getCrud')
+            ->method('get')
             ->will($this->returnCallback(function() {
                 throw new CrudNotFoundException();
             }));
@@ -228,7 +228,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('some_prefix_'));
 
         $this->crudRegistry->expects($this->any())
-            ->method('getCrud')
+            ->method('get')
             ->will($this->returnValue($crud));
 
         $this->assertSame('some_prefix_list', $this->generator->getDefaultEntityRoute('TestBundle:Something'));
@@ -248,7 +248,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('some_prefix_'));
 
         $this->crudRegistry->expects($this->any())
-            ->method('getCrud')
+            ->method('get')
             ->will($this->returnValue($crud));
 
         $this->assertSame('some_prefix_view_default', $this->generator->getDefaultEntityRoute('TestBundle:Something'));
@@ -268,7 +268,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('some_prefix_'));
 
         $this->crudRegistry->expects($this->any())
-            ->method('getCrud')
+            ->method('get')
             ->will($this->returnValue($crud));
 
         $this->setExpectedException(\Exception::class);
@@ -288,7 +288,7 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('some_prefix_'));
 
         $this->crudRegistry->expects($this->any())
-            ->method('getCrud')
+            ->method('get')
             ->will($this->returnValue($crud));
 
         $this->router->expects($this->any())

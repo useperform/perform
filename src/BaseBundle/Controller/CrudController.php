@@ -31,7 +31,7 @@ class CrudController extends Controller
     protected function getCrud()
     {
         return $this->get('perform_base.crud.registry')
-            ->getCrud($this->entity);
+            ->get($this->entity);
     }
 
     protected function getTypeConfig()

@@ -46,7 +46,7 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
     private function configure($alias, $class, $crud, array $override = [])
     {
         $this->crudRegistry->expects($this->any())
-            ->method('getCrud')
+            ->method('get')
             ->with($class)
             ->will($this->returnValue($crud));
         $resolver = new EntityResolver([

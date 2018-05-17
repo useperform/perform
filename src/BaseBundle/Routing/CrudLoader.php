@@ -25,7 +25,7 @@ class CrudLoader extends Loader
 
     public function load($entity, $type = null)
     {
-        $crud = $this->registry->getCrud($entity);
+        $crud = $this->registry->get($entity);
         $class = $crud->getControllerName();
         $refl = new \ReflectionClass($class);
 

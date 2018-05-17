@@ -45,11 +45,11 @@ class CrudPassTest extends \PHPUnit_Framework_TestCase
         $this->pass->process($this->container);
         $calls = [
             [
-                'addCrud',
+                'add',
                 [Item::class, 'parent.crud.item'],
             ],
             [
-                'addCrud',
+                'add',
                 [ItemLink::class, 'parent.crud.item_link'],
             ],
         ];
@@ -67,7 +67,7 @@ class CrudPassTest extends \PHPUnit_Framework_TestCase
         $this->pass->process($this->container);
         $calls = [
             [
-                'addCrud',
+                'add',
                 [Item::class, 'parent.crud.item'],
             ],
         ];
@@ -91,7 +91,7 @@ class CrudPassTest extends \PHPUnit_Framework_TestCase
         $this->pass->process($this->container);
         $calls = [
             [
-                'addCrud',
+                'add',
                 [XmlItem::class, 'parent.crud.item'],
             ],
         ];
@@ -116,7 +116,7 @@ class CrudPassTest extends \PHPUnit_Framework_TestCase
         $this->pass->process($this->container);
         $calls = [
             [
-                'addCrud',
+                'add',
                 [XmlItem::class, 'child.crud.xml_item'],
             ],
         ];

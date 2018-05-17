@@ -37,7 +37,7 @@ class CrudLoaderTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($actions));
 
         $this->registry->expects($this->any())
-            ->method('getCrud')
+            ->method('get')
             ->will($this->returnValue($crud));
     }
 

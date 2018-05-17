@@ -51,7 +51,7 @@ class CrudTemplateListener
         $context = substr($controller[1], 0, -6);
 
         $template = $this->container->get('perform_base.crud.registry')
-                  ->getCrud($entity)
+                  ->get($entity)
                   ->getTemplate($this->container->get('twig'), $entity, $context);
 
         $annotation = new Template([]);

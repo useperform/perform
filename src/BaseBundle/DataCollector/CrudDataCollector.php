@@ -40,7 +40,7 @@ class CrudDataCollector extends DataCollector
         ];
         if ($request->attributes->has('_entity')) {
             $this->data['activeEntity'] = $request->attributes->get('_entity');
-            $this->data['activeCrud'] = get_class($this->registry->getCrud($this->data['activeEntity']));
+            $this->data['activeCrud'] = get_class($this->registry->get($this->data['activeEntity']));
             $this->data['typeConfig'] = $this->store->getTypeConfig($this->data['activeEntity'])->getAllTypes();
             $this->sanitize($this->data['typeConfig']);
             $this->data['addedConfigs'] = $this->store->getTypeConfig($this->data['activeEntity'])->getAddedConfigs();

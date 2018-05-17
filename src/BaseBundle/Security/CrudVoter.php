@@ -25,7 +25,7 @@ class CrudVoter extends Voter
 
     public function supports($attribute, $subject)
     {
-        return $this->crudRegistry->hasCrud($subject);
+        return $this->crudRegistry->has($subject);
     }
 
     public function voteOnAttribute($attribute, $subject, TokenInterface $token)

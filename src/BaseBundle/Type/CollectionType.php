@@ -113,7 +113,7 @@ class CollectionType extends AbstractType
 
         $crud = null;
         if (isset($collection[0])) {
-            $crud = $this->crudRegistry->getCrud($collection[0]);
+            $crud = $this->crudRegistry->get($collection[0]);
         }
 
         return [

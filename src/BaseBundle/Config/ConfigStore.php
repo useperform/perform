@@ -46,7 +46,7 @@ class ConfigStore implements ConfigStoreInterface
         $class = $this->resolver->resolve($entity);
         if (!isset($this->typeConfigs[$class])) {
             $typeConfig = new TypeConfig($this->typeRegistry);
-            $this->crudRegistry->getCrud($class)->configureTypes($typeConfig);
+            $this->crudRegistry->get($class)->configureTypes($typeConfig);
 
             if (isset($this->override[$class]['types'])) {
                 foreach ($this->override[$class]['types'] as $field => $config) {
@@ -64,7 +64,7 @@ class ConfigStore implements ConfigStoreInterface
         $class = $this->resolver->resolve($entity);
         if (!isset($this->actionConfigs[$class])) {
             $this->actionConfigs[$class] = new ActionConfig($this->actionRegistry, $this->authChecker);
-            $this->crudRegistry->getCrud($class)->configureActions($this->actionConfigs[$class]);
+            $this->crudRegistry->get($class)->configureActions($this->actionConfigs[$class]);
         }
 
         return $this->actionConfigs[$class];
@@ -75,7 +75,7 @@ class ConfigStore implements ConfigStoreInterface
         $class = $this->resolver->resolve($entity);
         if (!isset($this->filterConfigs[$class])) {
             $this->filterConfigs[$class] = new FilterConfig();
-            $this->crudRegistry->getCrud($class)->configureFilters($this->filterConfigs[$class]);
+            $this->crudRegistry->get($class)->configureFilters($this->filterConfigs[$class]);
         }
 
         return $this->filterConfigs[$class];
@@ -86,7 +86,7 @@ class ConfigStore implements ConfigStoreInterface
         $class = $this->resolver->resolve($entity);
         if (!isset($this->labelConfigs[$class])) {
             $this->labelConfigs[$class] = new LabelConfig();
-            $this->crudRegistry->getCrud($class)->configureLabels($this->labelConfigs[$class]);
+            $this->crudRegistry->get($class)->configureLabels($this->labelConfigs[$class]);
         }
 
         return $this->labelConfigs[$class];
@@ -102,7 +102,7 @@ class ConfigStore implements ConfigStoreInterface
                 ExportConfig::FORMAT_CSV,
                 ExportConfig::FORMAT_XLS,
             ]);
-            $this->crudRegistry->getCrud($class)->configureExports($this->exportConfigs[$class]);
+            $this->crudRegistry->get($class)->configureExports($this->exportConfigs[$class]);
         }
 
         return $this->exportConfigs[$class];

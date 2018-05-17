@@ -30,56 +30,56 @@ class CrudRegistryTest extends \PHPUnit_Framework_TestCase
     public function testAddAndGetCrud()
     {
         $crud = $this->getMock(CrudInterface::class);
-        $this->registry->addCrud(User::class, 'crud.service');
+        $this->registry->add(User::class, 'crud.service');
         $this->container->expects($this->any())
             ->method('get')
             ->with('crud.service')
             ->will($this->returnValue($crud));
 
-        $this->assertSame($crud, $this->registry->getCrud('PerformUserBundle:User'));
+        $this->assertSame($crud, $this->registry->get('PerformUserBundle:User'));
     }
 
     public function testUnknownCrud()
     {
         $this->setExpectedException(CrudNotFoundException::class);
-        $this->registry->getCrud('PerformBaseBundle:Foo');
+        $this->registry->get('PerformBaseBundle:Foo');
     }
 
     public function testGetCrudInvalidArgument()
     {
         $this->setExpectedException(CrudNotFoundException::class);
-        $this->registry->getCrud(false);
+        $this->registry->get(false);
     }
 
     public function testGetCrudByClass()
     {
         $crud = $this->getMock(CrudInterface::class);
-        $this->registry->addCrud(User::class, 'crud.service');
+        $this->registry->add(User::class, 'crud.service');
         $this->container->expects($this->any())
             ->method('get')
             ->with('crud.service')
             ->will($this->returnValue($crud));
 
-        $this->assertSame($crud, $this->registry->getCrud(User::class));
+        $this->assertSame($crud, $this->registry->get(User::class));
     }
 
     public function testGetCrudForEntity()
     {
         $crud = $this->getMock(CrudInterface::class);
-        $this->registry->addCrud(User::class, 'crud.service');
+        $this->registry->add(User::class, 'crud.service');
         $this->container->expects($this->any())
             ->method('get')
             ->with('crud.service')
             ->will($this->returnValue($crud));
 
-        $this->assertSame($crud, $this->registry->getCrud(new User()));
+        $this->assertSame($crud, $this->registry->get(new User()));
     }
 
     public function testHasCrud()
     {
-        $this->registry->addCrud(\stdClass::class, 'crud.service');
-        $this->assertTrue($this->registry->hasCrud(\stdClass::class));
-        $this->assertFalse($this->registry->hasCrud('Perform\\UnknownClass'));
-        $this->assertFalse($this->registry->hasCrud(null));
+        $this->registry->add(\stdClass::class, 'crud.service');
+        $this->assertTrue($this->registry->has(\stdClass::class));
+        $this->assertFalse($this->registry->has('Perform\\UnknownClass'));
+        $this->assertFalse($this->registry->has(null));
     }
 }
