@@ -1,7 +1,7 @@
 Exporting
 =========
 
-In the admin list context, you can export entities to a variety of formats.
+In the crud list context, you can export entities to a variety of formats.
 
 Clicking the 'Download' button shows a list of available formats.
 Selecting one of these will download an export of these entities in the selected format.
@@ -24,7 +24,7 @@ Make sure to use a sensible prefix that won't conflict with any existing routes,
 Customizing exports
 -------------------
 
-Exporting options can be customized on a per-admin basis with the ``Perform\BaseBundle\Admin\AdminInterface#configureExports()`` method.
+Exporting options can be customized for each crud class with the ``Perform\BaseBundle\Crud\CrudInterface#configureExports()`` method.
 
 .. code-block:: php
 
@@ -90,7 +90,7 @@ It can be a string, or a function that takes the name of the format and returns 
         $config->setFilename(function($format) { return 'data_'.rand(1, 100).'.'.$format; });
     }
 
-By default, the filename will be a sensible suggestion for the current admin (e.g. ``UserAdmin`` would become ``users.json``).
+By default, the filename will be a sensible suggestion for the current crud class (e.g. ``UserCrud`` would become ``users.json``).
 
 Using export links elsewhere
 ----------------------------

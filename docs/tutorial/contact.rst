@@ -302,32 +302,32 @@ That's it!
 Refresh the contact page and you'll see the new form field.
 All contact form submissions will now be an instance of ``AppBundle\Entity\ContactMessage``, saving the ``favouriteBike`` field as well.
 
-Extending the message admin
+Extending the message crud
 ---------------------------
 
 There is just one piece missing.
 We can save form submissions with the new field, but it doesn't appear in the admin yet.
 
-Create a new admin class:
+Create a new crud class:
 
 .. code-block:: bash
 
-   ./bin/console perform-dev:create:admin AppBundle:ContactMessage
+   ./bin/console perform-dev:create:crud AppBundle:ContactMessage
 
 and make some modifications.
 
-First, extend the existing admin from the contact bundle:
+First, extend the existing crud from the contact bundle:
 
 .. code-block:: diff
 
-    - use Perform\BaseBundle\Admin\AbstractAdmin;
-    + use Perform\ContactBundle\Admin\MessageAdmin;
+    - use Perform\BaseBundle\Crud\AbstractCrud;
+    + use Perform\ContactBundle\Crud\MessageCrud;
       use Perform\BaseBundle\Config\TypeConfig;
       use Perform\BaseBundle\Config\FilterConfig;
       use Perform\BaseBundle\Config\ActionConfig;
 
-    - class ContactMessageAdmin extends AbstractAdmin
-    + class ContactMessageAdmin extends MessageAdmin
+    - class ContactMessageCrud extends AbstractCrud
+    + class ContactMessageCrud extends MessageCrud
 
 Then add the new field to ``configureTypes``, making sure to also call the parent method:
 
@@ -365,12 +365,12 @@ While the new field shows up in the list of messages, unfortunately it's not vis
 This is because the contact bundle has a different template for viewing message entities.
 Let's override that template with our own version that displays the visitor's favourite bike too.
 
-Override the ``getTemplate`` method of ``ContactMessageAdmin`` to the following:
+Override the ``getTemplate`` method of ``ContactMessageCrud`` to the following:
 
 .. code-block:: diff
 
       use Perform\BaseBundle\Config\ActionConfig;
-      use Perform\ContactBundle\Admin\MessageAdmin;
+      use Perform\ContactBundle\Crud\MessageCrud;
     + use Twig\Environment;
 
 .. code-block:: php
@@ -380,23 +380,23 @@ Override the ``getTemplate`` method of ``ContactMessageAdmin`` to the following:
     public function getTemplate(Environment $twig, $entityName, $context)
     {
         if ($context === TypeConfig::CONTEXT_VIEW) {
-            return '@App/admin/contact_message/view.html.twig';
+            return '@App/crud/contact_message/view.html.twig';
         }
 
         return parent::getTemplate($twig, $entityName, $context);
     }
 
-Here we override the template, but only for the ``view`` context. All other contexts fall back to the default behaviour of the parent admin class.
+Here we override the template, but only for the ``view`` context. All other contexts fall back to the default behaviour of the parent crud class.
 
 .. note::
 
-   See the :doc:`admins documentation <../base-bundle/admins>` for more information on overriding templates.
+   See the :doc:`crud documentation <../base-bundle/crud>` for more information on overriding templates.
 
-Create the file ``src/AppBundle/Resources/views/admin/contact_message/view.html.twig`` for this new view and insert the following:
+Create the file ``src/AppBundle/Resources/views/crud/contact_message/view.html.twig`` for this new view and insert the following:
 
 .. code-block:: html
 
-    {% extends '@PerformContact/admin/message/view.html.twig' %}
+    {% extends '@PerformContact/crud/message/view.html.twig' %}
 
     {% block extras %}
       {% if entity.favouriteBike is not null %}

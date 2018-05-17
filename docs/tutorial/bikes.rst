@@ -28,21 +28,21 @@ Now update the database schema to create a new table for the entity:
 Create an admin
 ---------------
 
-Run the ``perform-dev:create:admin`` command to create an admin class for the Bike entity:
+Run the ``perform-dev:create:crud`` command to create an admin class for the Bike entity:
 
 .. code-block:: bash
 
-   ./bin/console perform-dev:create:admin AppBundle:Bike
+   ./bin/console perform-dev:create:crud AppBundle:Bike
 
 The command will ask for a route prefix, which is used to name the generated routes for this entity.
-We'll just accept the default, ``app_admin_bikes_``.
+We'll just accept the default, ``app_crud_bikes_``.
 
-This will create ``src/AppBundle/Admin/BikeAdmin.php`` and add a service to ``app/config/services.yml``.
+This will create ``src/AppBundle/Crud/BikeCrud.php`` and add a service to ``app/config/services.yml``.
 
 Define type config
 ------------------
 
-Open up the newly generated ``BikeAdmin`` class, containing a few empty methods:
+Open up the newly generated ``BikeCrud`` class, containing a few empty methods:
 
 .. code-block:: php
 
@@ -79,7 +79,7 @@ This tells the admin to manage the ``title`` and ``description`` properties of `
 
 .. note::
 
-   For an in-depth look at what admin classes can do, see the :doc:`admins documentation <../base-bundle/admins>`.
+   For an in-depth look at what admin classes can do, see the :doc:`crud documentation <../base-bundle/crud>`.
 
 Create routes
 -------------
@@ -127,9 +127,9 @@ What we've created
 In only a few steps, we have successfully:
 
 * Created a new doctrine entity
-* Created an admin class and service definition for that entity
-* Defined admin routes for the admin class
-* Created a menu entry for those admin routes
+* Created a crud class and service definition for that entity
+* Added crud routes
+* Created a menu entry for those routes
 
 .. note::
    Rapid development is great, but what if the defaults don't work?

@@ -46,7 +46,7 @@ Make sure to use a sensible prefix that won't conflict with any existing routes,
 Using actions
 -------------
 
-Use the ``addInstance`` and ``add`` methods of the ``ActionConfig`` object in ``Perform\BaseBundle\Admin\AdminInterface#configureActions()`` to add actions for your entity.
+Use the ``addInstance`` and ``add`` methods of the ``ActionConfig`` object in ``Perform\BaseBundle\Crud\CrudInterface#configureActions()`` to add actions for your entity.
 
 ``addInstance`` requires an arbitrary action name (unique for this entity only) and an instance of ``Perform\BaseBundle\Action\ActionInterface``.
 However, you'll often find that actions require injected dependencies, such as the Doctrine entity manager to save entities.
@@ -182,8 +182,8 @@ Set this redirect by calling ``setRedirect()`` on the response before returning 
    $response->setRedirect(ActionResponse::REDIRECT_URL, ['url' => 'https://example.com']);
 
    //route requires the route name and params
-   $response->setRedirect(ActionResponse::REDIRECT_ROUTE, ['route' => 'admin_foo_list']);
-   $response->setRedirect(ActionResponse::REDIRECT_ROUTE, ['route' => 'admin_foo_view', 'params' => ['id' => 1]]);
+   $response->setRedirect(ActionResponse::REDIRECT_ROUTE, ['route' => 'crud_foo_list']);
+   $response->setRedirect(ActionResponse::REDIRECT_ROUTE, ['route' => 'crud_foo_view', 'params' => ['id' => 1]]);
 
    //default route of the current entity (usually the list context)
    $response->setRedirect(ActionResponse::REDIRECT_ENTITY_DEFAULT);
@@ -276,7 +276,7 @@ Labels can also be overridden when adding the action in an entity admin:
 
 Both options can also be a function, allowing for dynamic labels.
 They are passed the current instance of
-``Perform\BaseBundle\Admin\AdminRequest``, and the ``label`` function
+``Perform\BaseBundle\Crud\CrudRequest``, and the ``label`` function
 will also be passed the entity in question.
 
 .. code-block:: php
@@ -330,7 +330,7 @@ Use the ``isButtonAvailable`` and ``isBatchOptionAvailable`` options to decide w
 ``isButtonAvailable`` decides when to show a button next to an entity.
 
 The value can be a boolean or a function that returns a boolean.
-If a function, it is called with the entity in question and an ``AdminRequest`` instance.
+If a function, it is called with the entity in question and an ``CrudRequest`` instance.
 
 The default is ``true``.
 
@@ -342,7 +342,7 @@ The default is ``true``.
     {
         return [
             'label' => 'Archive',
-            'isButtonAvailable' => function($message, AdminRequest $request) {
+            'isButtonAvailable' => function($message, CrudRequest $request) {
                 return $message->getStatus() !== Message::STATUS_ARCHIVED;
             }
         ];
@@ -359,7 +359,7 @@ The default is ``true``.
 ``isBatchActionAvailable`` decides when to display a batch action option.
 
 This can also be a boolean or a function that returns a boolean.
-If a function, it is passed an ``AdminRequest`` instance.
+If a function, it is passed an ``CrudRequest`` instance.
 
 The default is ``true``.
 
@@ -371,7 +371,7 @@ The default is ``true``.
     {
         return [
             'label' => 'Archive',
-            'isBatchOptionAvailable' => function(AdminRequest $request) {
+            'isBatchOptionAvailable' => function(CrudRequest $request) {
                 // don't show the batch action when viewing the 'archived' filter
                 return $request->getFilter() !== 'archived';
 

@@ -1,31 +1,31 @@
-Admins
-======
+Crud
+====
 
 A common requirement in web applications is 'CRUD' operations on your entities, i.e. `create`, `read`, `update`, and `delete`.
 
-Perform introduces the concept of `admins`, classes that configure CRUD operations for different entities.
+Perform introduces the concept of `crud` classes that configure CRUD operations for different entities.
 
-Creating an admin
------------------
+Creating a crud class
+---------------------
 
-All admins must implement ``Perform\BaseBundle\Admin\AdminInterface``,
-and define services tagged with ``perform_base.admin``.
+All crud classes must implement ``Perform\BaseBundle\Crud\CrudInterface``,
+and define services tagged with ``perform_base.crud``.
 
-Implementing ``AdminInterface`` requires creating several methods.
-For many cases, extending ``Perform\BaseBundle\Admin\AbstractAdmin`` saves coding time.
+Implementing ``CrudInterface`` requires creating several methods.
+For many cases, extending ``Perform\BaseBundle\Crud\AbstractCrud`` saves coding time.
 The only required code is defining the ``$routePrefix`` property, and implementing ``configureTypes()``.
 
 Suppose we created the Doctrine entity ``AppBundle\Entity\Bike``, with the fields ``model`` (a string) and ``wheelCount`` (an integer).
 
-An example admin class could be:
+An example crud class could be:
 
 .. code-block:: php
 
    <?php
 
-    class BikeAdmin extends AbstractAdmin
+    class BikeCrud extends AbstractCrud
     {
-        protected $routePrefix = 'myapp_admin_bike_';
+        protected $routePrefix = 'myapp_crud_bike_';
 
         public function configureTypes(TypeConfig $config)
         {
@@ -40,41 +40,41 @@ An example admin class could be:
 
    What are `types` anyway? Read more in the :doc:`next chapter <types>`.
 
-Then define a service for the admin:
+Then define a service:
 
 .. code-block:: yaml
 
-    app.admin.bike:
-        class: AppBundle\Admin\BikeAdmin
+    app.crud.bike:
+        class: AppBundle\Crud\BikeCrud
         tags:
-            - {name: perform_base.admin, entity: "AppBundle:Bike"}
+            - {name: perform_base.crud, entity: "AppBundle:Bike"}
 
 Routing
 -------
 
-Perform provides a ``crud`` route loader, which will create routes for an entity admin.
+Perform provides a ``crud`` route loader, which will create routes for an entity crud.
 
 Define a new route resource in ``app/config/routing.yml``:
 
 .. code-block:: yaml
 
-    bike_admin:
+    bike_crud:
         resource: "AppBundle:Bike"
         type:     crud
         prefix:   "/admin/bikes"
 
 Be sure to include a ``prefix`` for the routes.
 
-Some routes have been created with the route prefix we defined in the admin:
+Some routes have been created with the route prefix we defined in the crud class:
 
 .. code-block:: bash
 
    $ ./bin/console debug:router | grep bike
 
-     myapp_admin_bike_list            ANY      ANY      ANY    /admin/bikes/
-     myapp_admin_bike_view            ANY      ANY      ANY    /admin/bikes/view/{id}
-     myapp_admin_bike_create          ANY      ANY      ANY    /admin/bikes/create
-     myapp_admin_bike_edit            ANY      ANY      ANY    /admin/bikes/edit/{id}
+     myapp_crud_bike_list            ANY      ANY      ANY    /admin/bikes/
+     myapp_crud_bike_view            ANY      ANY      ANY    /admin/bikes/view/{id}
+     myapp_crud_bike_create          ANY      ANY      ANY    /admin/bikes/create
+     myapp_crud_bike_edit            ANY      ANY      ANY    /admin/bikes/edit/{id}
 
 Now visit ``/admin/bikes`` in your browser. A complete CRUD interface is now available!
 
@@ -92,14 +92,14 @@ What about `delete`? See :doc:`actions`.
 
 .. note::
 
-   You'll learn more about contexts, and how to customise admins for each one, in :doc:`types`, :doc:`filters`, and :doc:`actions`.
+   You'll learn more about contexts, and how to customise each of them, in :doc:`types`, :doc:`filters`, and :doc:`actions`.
 
 Customising routing
 -------------------
 
-The `crud` loader uses the output of ``AdminInterface#getActions()`` to determine how to create routes.
+The `crud` loader uses the output of ``CrudInterface#getActions()`` to determine how to create routes.
 
-``AbstractAdmin`` defines some sensible defaults, but you can implement this method in an admin to override them.
+``AbstractCrud`` defines some sensible defaults, but you can implement this method in your own crud class to override them.
 It should return an array, where the keys are the url fragments, and the values are the context - `view`, `list`, `create`, or `edit`.
 
 .. code-block:: php
@@ -119,27 +119,27 @@ It should return an array, where the keys are the url fragments, and the values 
 
    $ ./bin/console debug:router | grep bike
 
-     myapp_admin_bike_list            ANY      ANY      ANY    /admin/bikes/
-     myapp_admin_bike_view            ANY      ANY      ANY    /admin/bikes/inspect/{id}
-     myapp_admin_bike_create          ANY      ANY      ANY    /admin/bikes/create
+     myapp_crud_bike_list            ANY      ANY      ANY    /admin/bikes/
+     myapp_crud_bike_view            ANY      ANY      ANY    /admin/bikes/inspect/{id}
+     myapp_crud_bike_create          ANY      ANY      ANY    /admin/bikes/create
 
 Debug bar
 ---------
 
-When visiting a route managed by an admin, you'll notice a new item on the debug bar:
+When visiting a route managed by a crud class, you'll notice a new item on the debug bar:
 
 .. image:: debug_bar.png
 
 Clicking on this data collector shows useful information about the
-active admin, as well as some general information about all loaded
-admins.
+active crud class, as well as some general information about all loaded
+crud classes.
 
 .. image:: data_collector.png
 
 Overriding templates
 --------------------
 
-The template used for an admin action can be overridden in many
+The template used for a crud context can be overridden in many
 different ways.
 
 Here are all the possible ways of overriding a template, in order of priority:
@@ -156,11 +156,11 @@ Use twig explicitly or with an annotation
 Use ``render()`` or the ``@Template`` annotation to
 explicitly render a template in the controller action.
 
-Implement getTemplate() in the admin
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Implement getTemplate() in the crud class
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-An admin class may implement ``AdminInterface#getTemplate()`` to
-return a custom template name.
+A crud class may implement ``CrudInterface#getTemplate()`` to return a
+custom template name.
 
 Place a file in a specific location
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

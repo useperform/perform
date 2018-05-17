@@ -72,7 +72,7 @@ Now update the database schema to create the new column in the bike table:
 Updating the admin
 ------------------
 
-The ``BikeAdmin`` class needs updated to manage the image property:
+The ``BikeCrud`` class needs updated to manage the image property:
 
 .. code-block:: diff
 

@@ -33,7 +33,7 @@ A `forgot your password?` link will also appear on the login form.
 
 A user can now request a password reset email using the new routes.
 
-Additionally, if ``routing_admin.yml`` is loaded, an administrator will be able
+Additionally, if ``routing_crud.yml`` is loaded, an administrator will be able
 to manage password reset tokens for all users.
 
 

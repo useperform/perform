@@ -111,21 +111,21 @@ In this case, because the entity has been extended, all calls will return ``AppB
 
 If it had not been extended, all calls would return ``Perform\UserBundle\Entity\User``.
 
-Admins for extended entities
+Crud for extended entities
 ----------------------------
 
-Exisiting admins for entities that have been extended will work for the child entities, although they won't be aware of the new fields and relationships.
+Exisiting crud classes for entities that have been extended will work for the child entities, although they won't be aware of the new fields and relationships.
 
-To define a new admin for the extended entity, create an admin class that extends the existing admin and register it as a service:
+To define a new crud class for the extended entity, create a new class that extends the existing class and register it as a service:
 
 .. code-block:: php
 
    <?php
 
-    use Perform\UserBundle\Admin\UserAdmin as BaseAdmin;
+    use Perform\UserBundle\Crud\UserCrud as BaseCrud;
     use Perform\BaseBundle\Config\TypeConfig;
 
-    class UserAdmin extends BaseAdmin
+    class UserCrud extends BaseCrud
     {
         public function configureTypes(TypeConfig $config)
         {
@@ -139,24 +139,24 @@ To define a new admin for the extended entity, create an admin class that extend
 
 .. code-block:: yaml
 
-    app.admin.user:
-        class: AppBundle\Admin\UserAdmin
+    app.crud.user:
+        class: AppBundle\Crud\UserCrud
         tags:
-            - {name: perform_base.admin, entity: "AppBundle:User"}
+            - {name: perform_base.crud, entity: "AppBundle:User"}
 
 
-The ``AdminRegistry`` uses the ``EntityResolver`` internally to fetch the correct admin, so calls like this:
+The ``CrudRegistry`` uses the ``EntityResolver`` internally to fetch the correct crud service, so calls like this:
 
 .. code-block:: php
 
    <?php
 
-   /* @var AdminRegistry $registry */
-   $registry->getAdmin('PerformUserBundle:User');
+   /* @var CrudRegistry $registry */
+   $registry->get('PerformUserBundle:User');
 
-will return an instance of ``AppBundle\Admin\UserAdmin`` because the entity has been extended.
+will return an instance of ``AppBundle\Crud\UserCrud`` because the entity has been extended.
 
-If it had not been extended, or no new admin had been created, it would return an instance of ``Perform\UserBundle\Admin\UserAdmin``.
+If it had not been extended, or no new crud class had been created, it would return an instance of ``Perform\UserBundle\Crud\UserCrud``.
 
 CRUD routing
 ------------
@@ -167,7 +167,7 @@ Loading a resource such as:
 
 .. code-block:: yaml
 
-    user_admin:
+    user_crud:
         resource: "PerformUserBundle:User"
         type: crud
         prefix: /admin/users

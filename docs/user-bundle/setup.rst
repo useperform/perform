@@ -50,7 +50,7 @@ The bundle includes 3 routing files for different functionality.
 
 * ``routing_login.yml`` for the login form and logout path
 * ``routing_password.yml`` for password resets when a user forgets their password
-* ``routing_admin.yml`` CRUD routes for the user entity
+* ``routing_crud.yml`` CRUD routes for the user entity
 
 For example, to use the login/logout form and enable password resets under the ``/forgot-password`` URL prefix:
 

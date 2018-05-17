@@ -8,9 +8,9 @@ Similar to Doctrine mappings or Symfony form types, their behaviour changes depe
 Usually types will show the underlying data in the `list` and `view` contexts, and present form fields for the `create` and `edit` contexts. For example, a ``password`` type might show asterisks for the `list` and `view` contexts, and show a password input for the `create` and `edit` contexts.
 
 Types can also include css and javascript for complex UI interactions, and also include types themselves!
-For example, the ``collection`` type can arbitrarily nest child admins and manage their ordering using a javascript helper.
+For example, the ``collection`` type can arbitrarily nest child crud classes and manage their ordering using a javascript helper.
 
-For every admin, the types are defined in the ``configureTypes()`` method.
+For every crud class, the types are defined in the ``configureTypes()`` method.
 
 Available types
 ---------------
@@ -38,7 +38,7 @@ You normally won't need to interact with this service directly.
 Using types
 -----------
 
-``AdminInterface#configureTypes()`` takes an instance of ``Perform\BaseBundle\Config\TypeConfig``, which is used as a builder to add types for a given entity.
+``CrudInterface#configureTypes()`` takes an instance of ``Perform\BaseBundle\Config\TypeConfig``, which is used as a builder to add types for a given entity.
 Add a new type with ``TypeConfig#add()``, which requires the name of the field and an array of configuration.
 
 The field name can be anything accessible by Symfony's `property access component <http://symfony.com/doc/current/components/property_access.html>`_.
