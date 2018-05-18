@@ -19,7 +19,7 @@ class CrudController extends Controller
 
     protected function initialize(CrudRequest $request)
     {
-        $this->entity = $this->get('perform_base.doctrine.entity_resolver')->resolve($request->getEntity());
+        $this->entity = $this->get('perform_base.doctrine.entity_resolver')->resolve($request->getEntityClass());
         $this->get('twig')
             ->getExtension(ActionExtension::class)
             ->setCrudRequest($request);
@@ -99,7 +99,7 @@ class CrudController extends Controller
 
     public function listAction(Request $request)
     {
-        $request = new CrudRequest($request, TypeConfig::CONTEXT_LIST);
+        $request = CrudRequest::fromRequest($request, TypeConfig::CONTEXT_LIST);
         $this->initialize($request);
         $crud = $this->getCrud();
         $selector = $this->get('perform_base.selector.entity');
@@ -119,7 +119,7 @@ class CrudController extends Controller
 
     public function viewAction(Request $request, $id)
     {
-        $request = new CrudRequest($request, TypeConfig::CONTEXT_VIEW);
+        $request = CrudRequest::fromRequest($request, TypeConfig::CONTEXT_VIEW);
         $this->initialize($request);
         $entity = $this->findEntity($id);
         $this->denyAccessUnlessGranted('VIEW', $entity);
@@ -133,23 +133,23 @@ class CrudController extends Controller
 
     public function viewDefaultAction(Request $request)
     {
-        $this->initialize(new CrudRequest($request, TypeConfig::CONTEXT_VIEW));
+        $this->initialize(CrudRequest::fromRequest($request, TypeConfig::CONTEXT_VIEW));
 
         return $this->viewAction($request, $this->findDefaultEntity()->getId());
     }
 
     public function createAction(Request $request)
     {
-        $request = new CrudRequest($request, TypeConfig::CONTEXT_CREATE);
-        $this->initialize($request);
+        $crudRequest = CrudRequest::fromRequest($request, TypeConfig::CONTEXT_CREATE);
+        $this->initialize($crudRequest);
         $builder = $this->createFormBuilder($entity = $this->newEntity());
         $crud = $this->getCrud();
         $form = $this->createForm($crud->getFormType(), $entity, [
             'entity' => $this->entity,
-            'context' => $request->getContext(),
+            'context' => $crudRequest->getContext(),
         ]);
 
-        $form->handleRequest($request->getRequest());
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             try {
@@ -174,17 +174,17 @@ class CrudController extends Controller
 
     public function editAction(Request $request, $id)
     {
-        $request = new CrudRequest($request, TypeConfig::CONTEXT_EDIT);
-        $this->initialize($request);
+        $crudRequest = CrudRequest::fromRequest($request, TypeConfig::CONTEXT_EDIT);
+        $this->initialize($crudRequest);
         $entity = $this->findEntity($id);
         $this->denyAccessUnlessGranted('EDIT', $entity);
         $crud = $this->getCrud();
         $form = $this->createForm($crud->getFormType(), $entity, [
             'entity' => $this->entity,
-            'context' => $request->getContext(),
+            'context' => $crudRequest->getContext(),
         ]);
 
-        $form->handleRequest($request->getRequest());
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             try {
@@ -209,7 +209,7 @@ class CrudController extends Controller
 
     public function editDefaultAction(Request $request)
     {
-        $this->initialize(new CrudRequest($request, TypeConfig::CONTEXT_EDIT));
+        $this->initialize(CrudRequest::fromRequest($request, TypeConfig::CONTEXT_EDIT));
 
         return $this->editAction($request, $this->findDefaultEntity()->getId());
     }

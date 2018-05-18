@@ -33,12 +33,12 @@ class Exporter
      */
     public function getResponse(CrudRequest $crudRequest, $format)
     {
-        $entity = $crudRequest->getEntity();
-        $exportConfig = $this->configStore->getExportConfig($entity);
+        $entityClass = $crudRequest->getEntityClass();
+        $exportConfig = $this->configStore->getExportConfig($entityClass);
         $exporter = new BaseExporter($this->getWritersFromConfig($exportConfig));
 
-        $query = $this->selector->getQueryBuilder($crudRequest, $entity)->getQuery();
-        $exportFields = $this->configStore->getTypeConfig($entity)->getTypes(TypeConfig::CONTEXT_EXPORT);
+        $query = $this->selector->getQueryBuilder($crudRequest, $entityClass)->getQuery();
+        $exportFields = $this->configStore->getTypeConfig($entityClass)->getTypes(TypeConfig::CONTEXT_EXPORT);
         $source = new TypedDoctrineORMQuerySourceIterator($this->typeRegistry, $query, $exportFields);
 
         return $exporter->getResponse($format, $exportConfig->getFilename($format), $source);

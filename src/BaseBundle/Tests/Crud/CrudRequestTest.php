@@ -7,101 +7,89 @@ use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Config\TypeConfig;
 
 /**
- * CrudRequestTest.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class CrudRequestTest extends \PHPUnit_Framework_TestCase
 {
-    public function newRequest($query = [], $context = TypeConfig::CONTEXT_LIST)
-    {
-        $request = new Request($query);
-
-        return new CrudRequest($request, $context);
-    }
-
-    public function testGetRequest()
-    {
-        $r = new Request();
-        $req = new CrudRequest($r, TypeConfig::CONTEXT_CREATE);
-
-        $this->assertSame($r, $req->getRequest());
-    }
-
     public function testGetContext()
     {
-        $this->assertSame(TypeConfig::CONTEXT_VIEW, $this->newRequest([], TypeConfig::CONTEXT_VIEW)->getContext());
+        $req = new CrudRequest(TypeConfig::CONTEXT_VIEW);
+        $this->assertSame(TypeConfig::CONTEXT_VIEW, $req->getContext());
     }
 
-    public function testGetEntity()
+    public function testGetSetEntityClass()
     {
-        $r = new Request();
-        $r->attributes->set('_entity', 'FooBundle:Foo');
-        $req = new CrudRequest($r, TypeConfig::CONTEXT_CREATE);
-
-        $this->assertSame('FooBundle:Foo', $req->getEntity());
+        $req = new CrudRequest(TypeConfig::CONTEXT_LIST);
+        $this->assertSame($req, $req->setEntityClass('FooBundle:Foo'));
+        $this->assertSame('FooBundle:Foo', $req->getEntityClass());
     }
 
-    public function testSetEntity()
+    public function testGetSetPage()
     {
-        $r = new Request();
-        $req = new CrudRequest($r, TypeConfig::CONTEXT_CREATE);
-        $req->setEntity('BarBundle:Bar');
-
-        $this->assertSame('BarBundle:Bar', $req->getEntity());
-    }
-
-    public function testSetEntityOverridesRequestAttribute()
-    {
-        $r = new Request();
-        $r->attributes->set('_entity', 'FooBundle:Foo');
-        $req = new CrudRequest($r, TypeConfig::CONTEXT_CREATE);
-        $req->setEntity('BarBundle:Bar');
-
-        $this->assertSame('BarBundle:Bar', $req->getEntity());
+        $req = new CrudRequest(TypeConfig::CONTEXT_LIST);
+        $this->assertSame($req, $req->setPage(2));
+        $this->assertSame(2, $req->getPage());
     }
 
     public function testGetDefaultPage()
     {
-        $req = $this->newRequest();
+        $req = new CrudRequest(TypeConfig::CONTEXT_LIST);
         $this->assertSame(1, $req->getPage());
     }
 
-    public function testGetPage()
+    public function testGetSetSortField()
     {
-        $req = $this->newRequest(['page' => "2"]);
-        $this->assertSame(2, $req->getPage());
+        $req = new CrudRequest(TypeConfig::CONTEXT_LIST);
+        $this->assertSame($req, $req->setSortField('title'));
+        $this->assertSame('title', $req->getSortField());
     }
 
-    public function testGetSortField()
+    public function testGetSetSortDirection()
     {
-        $req = $this->newRequest(['sort' => 'title']);
-        $this->assertSame('title', $req->getSortField());
+        $req = new CrudRequest(TypeConfig::CONTEXT_LIST);
+        $this->assertSame($req, $req->setSortDirection('desc'));
+        $this->assertSame('DESC', $req->getSortDirection());
+
+        $this->assertSame($req, $req->setSortDirection('n'));
+        $this->assertSame('N', $req->getSortDirection());
     }
 
     public function testGetDefaultSortDirection()
     {
-        $req = $this->newRequest();
+        $req = new CrudRequest(TypeConfig::CONTEXT_LIST);
         $this->assertSame('ASC', $req->getSortDirection());
     }
 
-    public function testGetSortDirection()
+    public function testBadSortDirection()
     {
-        $req = $this->newRequest(['direction' => 'desc']);
-        $this->assertSame('DESC', $req->getSortDirection());
-        $req = $this->newRequest(['direction' => 'n']);
-        $this->assertSame('N', $req->getSortDirection());
-    }
-
-    public function testBadSortDirectionDefault()
-    {
-        $req = $this->newRequest(['direction' => 'foo']);
+        $req = new CrudRequest(TypeConfig::CONTEXT_LIST);
+        $this->assertSame($req, $req->setSortDirection('foo'));
         $this->assertSame('ASC', $req->getSortDirection());
     }
 
-    public function testGetFilter()
+    public function testGetSetFilter()
     {
-        $req = $this->newRequest(['filter' => 'new']);
+        $req = new CrudRequest(TypeConfig::CONTEXT_LIST);
+        $this->assertSame($req, $req->setFilter('new'));
         $this->assertSame('new', $req->getFilter());
+    }
+
+    public function testFromRequest()
+    {
+        $request = new Request([
+            'page' => 2,
+            'sort' => 'title',
+            'direction' => 'DESC',
+            'filter' => 'some_filter',
+        ]);
+        $request->attributes->set('_entity', 'FooBundle:Foo');
+        $req = CrudRequest::fromRequest($request, TypeConfig::CONTEXT_LIST);
+
+        $this->assertSame(TypeConfig::CONTEXT_LIST, $req->getContext());
+        $this->assertSame('FooBundle:Foo', $req->getEntityClass());
+        $this->assertSame(2, $req->getPage());
+        $this->assertSame('title', $req->getSortField());
+        $this->assertSame('DESC', $req->getSortDirection());
+        $this->assertSame('some_filter', $req->getFilter());
     }
 }
