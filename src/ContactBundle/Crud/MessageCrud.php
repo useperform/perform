@@ -65,20 +65,20 @@ class MessageCrud extends AbstractCrud
     {
         $config->add('new', [
             'query' => function($qb) {
-                return $qb->where('e.status = :status')
+                return $qb->andWhere('e.status = :status')
                     ->setParameter('status', Message::STATUS_NEW);
             },
             'count' => true,
         ]);
         $config->add('archive', [
             'query' => function($qb) {
-                return $qb->where('e.status = :status')
+                return $qb->andWhere('e.status = :status')
                     ->setParameter('status', Message::STATUS_ARCHIVE);
             },
         ]);
         $config->add('spam', [
             'query' => function($qb) {
-                return $qb->where('e.status = :status')
+                return $qb->andWhere('e.status = :status')
                     ->setParameter('status', Message::STATUS_SPAM);
             },
         ]);
