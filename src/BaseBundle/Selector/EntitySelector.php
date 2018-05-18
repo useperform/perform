@@ -30,34 +30,22 @@ class EntitySelector
 
     public function getQueryBuilder(CrudRequest $request)
     {
-        $entityName = $request->getEntityClass();
-        if (!$entityName) {
-            throw new \InvalidArgumentException('Missing required entity class.');
-        }
-
+        $entityClass = $this->getEntityClass($request);
         $qb = $this->entityManager->createQueryBuilder()
             ->select('e')
-            ->from($entityName, 'e');
+            ->from($entityClass, 'e');
 
-        $this->dispatcher->dispatch(ListQueryEvent::NAME, new ListQueryEvent($qb, $request));
+        $event = new ListQueryEvent($qb, $request);
+        $this->dispatcher->dispatch(ListQueryEvent::NAME, $event);
 
-        //potentially add filtering, using FilterConfig from the
-        //admin, or even returning a new builder entirely
-        $filterName = $request->getFilter($this->store->getFilterConfig($entityName)->getDefault());
-
-        $qb = $this->maybeFilter($qb, $entityName, $filterName, true);
-        if (!$qb instanceof QueryBuilder) {
-            throw new \UnexpectedValueException(sprintf('The filter function "%s" for %s must return an instance of Doctrine\ORM\QueryBuilder.', $filterName, $entityName));
-        }
-
-        // return the query builder from the event
-        return $qb;
+        return $event->getQueryBuilder();
     }
 
     public function listContext(CrudRequest $request)
     {
+        $entityClass = $this->getEntityClass($request);
+        $request->setDefaultFilter($this->store->getFilterConfig($entityClass)->getDefault());
         $qb = $this->getQueryBuilder($request);
-        $this->assignFilterCounts($request->getEntityClass());
 
         $paginator = new Pagerfanta(new DoctrineORMAdapter($qb));
         $paginator->setMaxPerPage(10);
@@ -71,48 +59,13 @@ class EntitySelector
         return [$paginator, $orderBy];
     }
 
-    protected function assignFilterCounts($entityName)
+    private function getEntityClass(CrudRequest $request)
     {
-        $filterConfig = $this->store->getFilterConfig($entityName);
-        if (!$filterConfig) {
-            return;
+        $entityClass = $request->getEntityClass();
+        if (!$entityClass) {
+            throw new \InvalidArgumentException('Missing required entity class.');
         }
 
-        foreach ($filterConfig->getFilters() as $filterName => $filter) {
-            $config = $filter->getConfig();
-            if (!$config['count']) {
-                continue;
-            }
-            $qb = $this->entityManager->createQueryBuilder()
-                ->select('COUNT(1)')
-                ->from($entityName, 'e');
-            $this->maybeFilter($qb, $entityName, $filterName);
-            $count = $qb->getQuery()->getSingleScalarResult();
-            $filter->setCount($count);
-        }
-    }
-
-    /**
-     * @return QueryBuilder
-     */
-    protected function maybeFilter(QueryBuilder $qb, $entityName, $filterName, $active = false)
-    {
-        if (!$filterName) {
-            return $qb;
-        }
-
-        $filter = $this->store->getFilterConfig($entityName)->getFilter($filterName);
-        if (!$filter) {
-            return $qb;
-        }
-
-        if ($active) {
-            $filter->setActive(true);
-        }
-
-        $config = $filter->getConfig();
-        $filteredQuery = $config['query']($qb);
-
-        return $filteredQuery;
+        return $entityClass;
     }
 }
