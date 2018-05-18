@@ -5,6 +5,8 @@ namespace Perform\BaseBundle\Tests\Crud;
 use Symfony\Component\HttpFoundation\Request;
 use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Tests\Fixtures\ReflectionUtil\ChildEntity;
+use Perform\BaseBundle\Tests\Fixtures\ReflectionUtil\ParentEntity;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -130,5 +132,20 @@ class CrudRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('title', $req->getSortField());
         $this->assertSame('DESC', $req->getSortDirection());
         $this->assertSame('some_filter', $req->getFilter());
+    }
+
+    public function testSupportsEntityClass()
+    {
+        $request = new CrudRequest(CrudRequest::CONTEXT_LIST);
+        $request->setEntityClass(ChildEntity::class);
+        $this->assertTrue($request->supportsEntityClass(ChildEntity::class));
+        $this->assertTrue($request->supportsEntityClass(ParentEntity::class));
+        $this->assertFalse($request->supportsEntityClass(\stdClass::class));
+
+        $request = new CrudRequest(CrudRequest::CONTEXT_LIST);
+        $request->setEntityClass(ParentEntity::class);
+        $this->assertFalse($request->supportsEntityClass(ChildEntity::class));
+        $this->assertTrue($request->supportsEntityClass(ParentEntity::class));
+        $this->assertFalse($request->supportsEntityClass(\stdClass::class));
     }
 }

@@ -72,6 +72,19 @@ class CrudRequest
     }
 
     /**
+     * Check if the given entity class is supported by this request.
+     * A supported class is either the same as, or is a parent of, the current entity class.
+     *
+     * @param string
+     *
+     * @return bool
+     */
+    public function supportsEntityClass($entityClass)
+    {
+        return $this->entityClass === $entityClass || is_subclass_of($this->entityClass, $entityClass);
+    }
+
+    /**
      * Set the page number for this request, only relevant on the list context.
      *
      * @param int $page
