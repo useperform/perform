@@ -12,8 +12,6 @@ use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
 
 /**
- * EntitySelector.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class EntitySelector
@@ -27,13 +25,18 @@ class EntitySelector
         $this->store = $store;
     }
 
-    public function getQueryBuilder(CrudRequest $request, $entityName)
+    public function getQueryBuilder(CrudRequest $request)
     {
-        return $this->getQueryBuilderInternal($request, $entityName)[0];
+        return $this->getQueryBuilderInternal($request)[0];
     }
 
-    private function getQueryBuilderInternal(CrudRequest $request, $entityName)
+    private function getQueryBuilderInternal(CrudRequest $request)
     {
+        $entityName = $request->getEntityClass();
+        if (!$entityName) {
+            throw new \InvalidArgumentException('Missing required entity class.');
+        }
+
         $qb = $this->entityManager->createQueryBuilder()
             ->select('e')
             ->from($entityName, 'e');
@@ -64,10 +67,10 @@ class EntitySelector
         return [$qb, $orderField, $direction];
     }
 
-    public function listContext(CrudRequest $request, $entityName)
+    public function listContext(CrudRequest $request)
     {
-        list($qb, $orderField, $direction) = $this->getQueryBuilderInternal($request, $entityName);
-        $this->assignFilterCounts($entityName);
+        list($qb, $orderField, $direction) = $this->getQueryBuilderInternal($request);
+        $this->assignFilterCounts($request->getEntityClass());
 
         $paginator = new Pagerfanta(new DoctrineORMAdapter($qb));
         $paginator->setMaxPerPage(10);
