@@ -1,12 +1,5 @@
-Crud
-====
-
-A common requirement in web applications is 'CRUD' operations on your entities, i.e. `create`, `read`, `update`, and `delete`.
-
-Perform introduces the concept of `crud` classes that configure CRUD operations for different entities.
-
 Creating a crud class
----------------------
+=====================
 
 All crud classes must implement ``Perform\BaseBundle\Crud\CrudInterface``,
 and define services tagged with ``perform_base.crud``.
@@ -145,25 +138,25 @@ different ways.
 Here are all the possible ways of overriding a template, in order of priority:
 
 Return a response object from the controller
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------------------------
 
 If an action returns a Symfony ``Response`` object, no template is
 needed.
 
 Use twig explicitly or with an annotation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------------------
 
 Use ``render()`` or the ``@Template`` annotation to
 explicitly render a template in the controller action.
 
 Implement getTemplate() in the crud class
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------------------
 
 A crud class may implement ``CrudInterface#getTemplate()`` to return a
 custom template name.
 
 Place a file in a specific location
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------------
 
 The template ``@<Bundle>/crud/<entity>/<context>.html.twig`` will be used
 automatically if available,
@@ -172,7 +165,7 @@ e.g. ``@PerformContact/crud/message/view.html.twig``.
 Note that the entity class will be snake cased, so the entity ``BookPublisher`` in the ``AppBundle`` will search for ``@App/crud/book_publisher/list.html.twig`` in the ``list`` context.
 
 Default
-~~~~~~~
+-------
 
 If nothing else has been specified, the template
 ``@PerformBase/crud/<context>.html.twig`` will be used.

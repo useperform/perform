@@ -1,11 +1,26 @@
 CRUD Events
 ===========
 
-Certain events are dispatched when creating and updating entities with
-Perform's admin tools.
+Certain events are dispatched at various points in the CRUD lifecycle.
+
+Context events
+--------------
+
+``Perform\BaseBundle\Event\ListContextEvent`` events are dispatched for each of the crud contexts.
+
+List queries
+~~~~~~~~~~~~
+
+In the list context, ``Perform\BaseBundle\Event\ListQueryEvent`` events are dispatched when querying the database.
+This event can be used to adjust the query, or change it entirely.
+
+Entity events
+-------------
+
+``Perform\BaseBundle\Event\EntityEvent`` events are dispatched when an entity is saved or removed from the database.
 
 Pre and post creation
----------------------
+~~~~~~~~~~~~~~~~~~~~~
 
 ``EntityEvent::PRE_CREATE`` and ``EntityEvent::POST_CREATE`` events
 are dispatched before and after an entity is saved for the first time.
@@ -21,7 +36,7 @@ if certain conditions are not met.
         public function preCreate(EntityEvent $event)
         {
             $post = $event->getEntity();
-            if ($post->getAuthor() !== $this->userManager()->getUser()) {
+            if ($post->getAuthor() !== $this->currentUser()) {
                 throw new AccessDeniedException('You are not allowed to author a post on behalf of someone else.');
             }
 
@@ -30,13 +45,13 @@ if certain conditions are not met.
 
         public function postCreate(EntityEvent $event)
         {
-            $this->mailer->sendMessage('Created a new post!', $event->getEntity());
+            $this->notify('Created a new post!', $event->getEntity());
         }
     }
 
 
 Pre and post update
--------------------
+~~~~~~~~~~~~~~~~~~~
 
 When an entity is updated, ``EntityEvent::PRE_UPDATE`` and
 ``EntityEvent::POST_UPDATE`` events are dispatched before and after it
@@ -44,7 +59,7 @@ is saved to the database.
 
 
 Setting a different entity
---------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can use the ``setEntity`` method on
 ``Perform\BaseBundle\Event\EntityEvent`` to override the entity to be

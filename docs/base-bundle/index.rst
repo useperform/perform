@@ -14,11 +14,7 @@ tools to build applications rapidly:
 
    ./ui/index
    ./assets/index
-   ./crud
-   ./types
-   ./filters
-   ./actions
-   ./exporting
+   ./crud/index
    ./menu
    ./styling
    ./email
