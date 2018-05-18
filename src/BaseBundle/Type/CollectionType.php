@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\BaseBundle\Asset\AssetContainer;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
  * CollectionType.
@@ -36,12 +36,12 @@ class CollectionType extends AbstractType
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
-        return $this->addFormField($builder, $field, $options, TypeConfig::CONTEXT_CREATE);
+        return $this->addFormField($builder, $field, $options, CrudRequest::CONTEXT_CREATE);
     }
 
     public function editContext(FormBuilderInterface $builder, $field, array $options = [])
     {
-        return $this->addFormField($builder, $field, $options, TypeConfig::CONTEXT_EDIT);
+        return $this->addFormField($builder, $field, $options, CrudRequest::CONTEXT_EDIT);
     }
 
     protected function addFormField(FormBuilderInterface $builder, $field, array $options, $context)
@@ -65,7 +65,7 @@ class CollectionType extends AbstractType
             $originalCollection[] = $item;
         }
 
-        $builder->addEventListener(FormEvents::POST_SUBMIT, function($event) use ($field, $originalCollection) {
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function ($event) use ($field, $originalCollection) {
             $entity = $event->getData();
             $collection = $this->accessor->getValue($entity, $field);
             foreach ($originalCollection as $item) {

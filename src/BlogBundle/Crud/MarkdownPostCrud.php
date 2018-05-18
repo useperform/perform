@@ -3,6 +3,7 @@
 namespace Perform\BlogBundle\Crud;
 
 use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -18,9 +19,9 @@ class MarkdownPostCrud extends AbstractPostCrud
             ->add('markdown', [
                 'type' => 'markdown',
                 'contexts' => [
-                    TypeConfig::CONTEXT_VIEW,
-                    TypeConfig::CONTEXT_CREATE,
-                    TypeConfig::CONTEXT_EDIT,
+                    CrudRequest::CONTEXT_VIEW,
+                    CrudRequest::CONTEXT_CREATE,
+                    CrudRequest::CONTEXT_EDIT,
                 ],
                 'options' => [
                     'label' => 'Content',

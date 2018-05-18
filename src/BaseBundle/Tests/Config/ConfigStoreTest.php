@@ -8,7 +8,6 @@ use Perform\BaseBundle\Doctrine\EntityResolver;
 use Perform\BaseBundle\Crud\CrudRegistry;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Perform\BaseBundle\Config\TypeConfig;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Perform\BaseBundle\Type\StringType;
 use Perform\BaseBundle\Action\ActionRegistry;
 use Perform\BaseBundle\Config\FilterConfig;
@@ -17,6 +16,7 @@ use Perform\BaseBundle\Config\ConfigStoreInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Perform\BaseBundle\Config\ExportConfig;
 use Perform\BaseBundle\Test\Services;
+use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -99,7 +99,7 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
         $this->configure('SomeBundle:stdClass', \stdClass::class, $crud, $override);
 
         $config = $this->store->getTypeConfig(\stdClass::class);
-        $this->assertArrayHasKey('slug', $config->getTypes(TypeConfig::CONTEXT_LIST));
+        $this->assertArrayHasKey('slug', $config->getTypes(CrudRequest::CONTEXT_LIST));
     }
 
     public function testGetActionConfig()
@@ -107,8 +107,8 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
         $crud = $this->getMock(CrudInterface::class);
         $crud->expects($this->once())
             ->method('configureActions')
-            ->with($this->callback(function($config) {
-                    return $config instanceof ActionConfig;
+            ->with($this->callback(function ($config) {
+                return $config instanceof ActionConfig;
             }));
 
         $alias = 'SomeBundle:stdClass';
@@ -131,8 +131,8 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
         $crud = $this->getMock(CrudInterface::class);
         $crud->expects($this->once())
             ->method('configureFilters')
-            ->with($this->callback(function($config) {
-                    return $config instanceof FilterConfig;
+            ->with($this->callback(function ($config) {
+                return $config instanceof FilterConfig;
             }));
 
         $alias = 'SomeBundle:stdClass';
@@ -155,8 +155,8 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
         $crud = $this->getMock(CrudInterface::class);
         $crud->expects($this->once())
             ->method('configureExports')
-            ->with($this->callback(function($config) {
-                    return $config instanceof ExportConfig;
+            ->with($this->callback(function ($config) {
+                return $config instanceof ExportConfig;
             }));
 
         $alias = 'SomeBundle:stdClass';

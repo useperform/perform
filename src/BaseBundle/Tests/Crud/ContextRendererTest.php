@@ -7,7 +7,7 @@ use Perform\BaseBundle\Crud\ContextRenderer;
 use Perform\BaseBundle\Type\TypeInterface;
 use Twig\Template;
 use Symfony\Component\Form\FormView;
-use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -116,7 +116,7 @@ class ContextRendererTest extends \PHPUnit_Framework_TestCase
             'form' => $formView,
             'label' => 'Title',
             'entity' => $entity,
-            'context' => TypeConfig::CONTEXT_CREATE,
+            'context' => CrudRequest::CONTEXT_CREATE,
             'type_vars' => ['format' => 1],
         ];
         $template->expects($this->any())
@@ -149,7 +149,7 @@ class ContextRendererTest extends \PHPUnit_Framework_TestCase
             'form' => $formView,
             'label' => 'Title',
             'entity' => $entity,
-            'context' => TypeConfig::CONTEXT_EDIT,
+            'context' => CrudRequest::CONTEXT_EDIT,
             'type_vars' => ['format' => 1],
         ];
         $template->expects($this->any())

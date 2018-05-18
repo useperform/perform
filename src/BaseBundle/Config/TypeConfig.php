@@ -7,20 +7,13 @@ use Perform\BaseBundle\Util\StringUtil;
 use Symfony\Component\OptionsResolver\Exception\ExceptionInterface;
 use Perform\BaseBundle\Exception\InvalidTypeException;
 use Perform\BaseBundle\Type\TypeRegistry;
+use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
- * TypeConfig.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class TypeConfig
 {
-    const CONTEXT_LIST = 'list';
-    const CONTEXT_VIEW = 'view';
-    const CONTEXT_CREATE = 'create';
-    const CONTEXT_EDIT = 'edit';
-    const CONTEXT_EXPORT = 'export';
-
     protected static $optionKeys = [
         'listOptions',
         'viewOptions',
@@ -47,11 +40,11 @@ class TypeConfig
             ->setRequired(['type'])
             ->setDefaults([
                 'contexts' => [
-                    static::CONTEXT_LIST,
-                    static::CONTEXT_VIEW,
-                    static::CONTEXT_CREATE,
-                    static::CONTEXT_EDIT,
-                    static::CONTEXT_EXPORT,
+                    CrudRequest::CONTEXT_LIST,
+                    CrudRequest::CONTEXT_VIEW,
+                    CrudRequest::CONTEXT_CREATE,
+                    CrudRequest::CONTEXT_EDIT,
+                    CrudRequest::CONTEXT_EXPORT,
                 ],
                 'sort' => true,
             ])

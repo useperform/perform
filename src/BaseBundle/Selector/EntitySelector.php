@@ -114,7 +114,7 @@ class EntitySelector
             return $qb;
         }
 
-        $typeConfig = $this->store->getTypeConfig($entityName)->getTypes(TypeConfig::CONTEXT_LIST);
+        $typeConfig = $this->store->getTypeConfig($entityName)->getTypes(CrudRequest::CONTEXT_LIST);
         if (!isset($typeConfig[$orderField]['sort'])) {
             // no type config available for this field, but assume they want to sort by the doctrine field supplied
             return $qb->orderBy('e.'.$orderField, $direction);

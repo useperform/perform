@@ -6,12 +6,12 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Perform\BaseBundle\Type\TypeRegistry;
-use Perform\BaseBundle\Config\TypeConfig;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 use Perform\BaseBundle\Doctrine\EntityResolver;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
+use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -33,7 +33,7 @@ class CrudType extends AbstractType
     {
         $context = $options['context'];
         $fields = $this->getTypes($options['entity'], $context);
-        $method = $context === TypeConfig::CONTEXT_CREATE ? 'createContext' : 'editContext';
+        $method = $context === CrudRequest::CONTEXT_CREATE ? 'createContext' : 'editContext';
         $templateVars = [];
 
         foreach ($fields as $field => $config) {
@@ -61,7 +61,7 @@ class CrudType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setRequired(['context', 'entity']);
-        $resolver->setAllowedValues('context', [TypeConfig::CONTEXT_CREATE, TypeConfig::CONTEXT_EDIT]);
+        $resolver->setAllowedValues('context', [CrudRequest::CONTEXT_CREATE, CrudRequest::CONTEXT_EDIT]);
         $resolver->setDefault('data_class', function (Options $options) {
             return $this->resolver->resolve($options['entity']);
         });

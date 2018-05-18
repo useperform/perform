@@ -99,7 +99,7 @@ class CrudController extends Controller
 
     public function listAction(Request $request)
     {
-        $request = CrudRequest::fromRequest($request, TypeConfig::CONTEXT_LIST);
+        $request = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_LIST);
         $this->initialize($request);
         $crud = $this->getCrud();
         $selector = $this->get('perform_base.selector.entity');
@@ -119,7 +119,7 @@ class CrudController extends Controller
 
     public function viewAction(Request $request, $id)
     {
-        $request = CrudRequest::fromRequest($request, TypeConfig::CONTEXT_VIEW);
+        $request = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_VIEW);
         $this->initialize($request);
         $entity = $this->findEntity($id);
         $this->denyAccessUnlessGranted('VIEW', $entity);
@@ -133,14 +133,14 @@ class CrudController extends Controller
 
     public function viewDefaultAction(Request $request)
     {
-        $this->initialize(CrudRequest::fromRequest($request, TypeConfig::CONTEXT_VIEW));
+        $this->initialize(CrudRequest::fromRequest($request, CrudRequest::CONTEXT_VIEW));
 
         return $this->viewAction($request, $this->findDefaultEntity()->getId());
     }
 
     public function createAction(Request $request)
     {
-        $crudRequest = CrudRequest::fromRequest($request, TypeConfig::CONTEXT_CREATE);
+        $crudRequest = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_CREATE);
         $this->initialize($crudRequest);
         $builder = $this->createFormBuilder($entity = $this->newEntity());
         $crud = $this->getCrud();
@@ -174,7 +174,7 @@ class CrudController extends Controller
 
     public function editAction(Request $request, $id)
     {
-        $crudRequest = CrudRequest::fromRequest($request, TypeConfig::CONTEXT_EDIT);
+        $crudRequest = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_EDIT);
         $this->initialize($crudRequest);
         $entity = $this->findEntity($id);
         $this->denyAccessUnlessGranted('EDIT', $entity);
@@ -209,7 +209,7 @@ class CrudController extends Controller
 
     public function editDefaultAction(Request $request)
     {
-        $this->initialize(CrudRequest::fromRequest($request, TypeConfig::CONTEXT_EDIT));
+        $this->initialize(CrudRequest::fromRequest($request, CrudRequest::CONTEXT_EDIT));
 
         return $this->editAction($request, $this->findDefaultEntity()->getId());
     }

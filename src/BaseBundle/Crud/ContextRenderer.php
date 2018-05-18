@@ -62,7 +62,7 @@ class ContextRenderer
             'form' => $form,
             'label' => $config['createOptions']['label'],
             'entity' => $entity,
-            'context' => TypeConfig::CONTEXT_CREATE,
+            'context' => CrudRequest::CONTEXT_CREATE,
             'type_vars' => $typeVars,
         ];
 
@@ -83,7 +83,7 @@ class ContextRenderer
             'form' => $form,
             'label' => $config['editOptions']['label'],
             'entity' => $entity,
-            'context' => TypeConfig::CONTEXT_EDIT,
+            'context' => CrudRequest::CONTEXT_EDIT,
             'type_vars' => $typeVars,
         ];
 

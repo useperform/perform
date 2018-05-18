@@ -78,7 +78,7 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectQueryBuilder('Bundle:SomeEntity');
         $this->expectTypeConfig('Bundle:SomeEntity', []);
-        $request = new CrudRequest(TypeConfig::CONTEXT_LIST);
+        $request = new CrudRequest(CrudRequest::CONTEXT_LIST);
         $request->setEntityClass('Bundle:SomeEntity');
         $result = $this->selector->listContext($request);
 
@@ -89,7 +89,7 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
 
     public function testListContextWithSorting()
     {
-        $request = new CrudRequest(TypeConfig::CONTEXT_LIST);
+        $request = new CrudRequest(CrudRequest::CONTEXT_LIST);
         $request->setEntityClass('Bundle:SomeEntity');
         $request->setSortField('title');
         $request->setSortDirection('DESC');
@@ -111,7 +111,7 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
 
     public function testListContextWithDisabledSortField()
     {
-        $request = new CrudRequest(TypeConfig::CONTEXT_LIST);
+        $request = new CrudRequest(CrudRequest::CONTEXT_LIST);
         $request->setEntityClass('Bundle:SomeEntity');
         $request->setSortField('enabled');
         $request->setSortDirection('DESC');
@@ -131,7 +131,7 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
 
     public function testListContextWithCustomSorting()
     {
-        $request = new CrudRequest(TypeConfig::CONTEXT_LIST);
+        $request = new CrudRequest(CrudRequest::CONTEXT_LIST);
         $request->setEntityClass('Bundle:SomeEntity');
         $request->setSortField('fullname');
         $request->setSortDirection('DESC');
@@ -160,7 +160,7 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
 
     public function testListContextWithCustomSortQueryBuilder()
     {
-        $request = new CrudRequest(TypeConfig::CONTEXT_LIST);
+        $request = new CrudRequest(CrudRequest::CONTEXT_LIST);
         $request->setEntityClass('Bundle:SomeEntity');
         $request->setSortField('fullname');
         $request->setSortDirection('DESC');
@@ -185,7 +185,7 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidSortFunctionThrowsException()
     {
-        $request = new CrudRequest(TypeConfig::CONTEXT_LIST);
+        $request = new CrudRequest(CrudRequest::CONTEXT_LIST);
         $request->setEntityClass('Bundle:SomeEntity');
         $request->setSortField('fullname');
         $request->setSortDirection('DESC');
@@ -209,6 +209,6 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
     public function testMissingEntityClassThrowsException()
     {
         $this->setExpectedException(\InvalidArgumentException::class);
-        $this->selector->listContext(new CrudRequest(TypeConfig::CONTEXT_LIST));
+        $this->selector->listContext(new CrudRequest(CrudRequest::CONTEXT_LIST));
     }
 }

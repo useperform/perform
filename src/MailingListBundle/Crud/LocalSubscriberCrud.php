@@ -4,6 +4,7 @@ namespace Perform\MailingListBundle\Crud;
 
 use Perform\BaseBundle\Crud\AbstractCrud;
 use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -18,9 +19,9 @@ class LocalSubscriberCrud extends AbstractCrud
             ->add('firstName', [
                 'type' => 'string',
                 'contexts' => [
-                    TypeConfig::CONTEXT_VIEW,
-                    TypeConfig::CONTEXT_CREATE,
-                    TypeConfig::CONTEXT_EDIT,
+                    CrudRequest::CONTEXT_VIEW,
+                    CrudRequest::CONTEXT_CREATE,
+                    CrudRequest::CONTEXT_EDIT,
                 ]
             ])
             ->add('email', [
@@ -38,8 +39,8 @@ class LocalSubscriberCrud extends AbstractCrud
             ->add('createdAt', [
                 'type' => 'datetime',
                 'contexts' => [
-                    TypeConfig::CONTEXT_LIST,
-                    TypeConfig::CONTEXT_VIEW,
+                    CrudRequest::CONTEXT_LIST,
+                    CrudRequest::CONTEXT_VIEW,
                 ],
                 'options' => [
                     'label' => 'Sign-up date',

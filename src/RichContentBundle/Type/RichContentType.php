@@ -6,7 +6,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Perform\BaseBundle\Type\AbstractType;
 use Perform\RichContentBundle\Form\Type\RichContentType as FormType;
-use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
  * Use the ``rich_content`` type for linking to rich content.
@@ -39,9 +39,9 @@ class RichContentType extends AbstractType
     {
         return [
             'contexts' => [
-                TypeConfig::CONTEXT_VIEW,
-                TypeConfig::CONTEXT_CREATE,
-                TypeConfig::CONTEXT_EDIT,
+                CrudRequest::CONTEXT_VIEW,
+                CrudRequest::CONTEXT_CREATE,
+                CrudRequest::CONTEXT_EDIT,
             ],
             'sort' => false,
             'template' => '@PerformRichContent/type/rich_content.html.twig',

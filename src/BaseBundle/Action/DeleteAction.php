@@ -30,7 +30,7 @@ class DeleteAction implements ActionInterface
 
         $response = new ActionResponse(sprintf('%s deleted.', count($entities) === 1 ? 'Item' : count($entities).' items'));
         $response->setRedirect(
-            isset($options['context']) && $options['context'] === TypeConfig::CONTEXT_VIEW ?
+            isset($options['context']) && $options['context'] === CrudRequest::CONTEXT_VIEW ?
             ActionResponse::REDIRECT_PREVIOUS :
             ActionResponse::REDIRECT_CURRENT
         );

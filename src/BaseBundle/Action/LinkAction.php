@@ -2,8 +2,6 @@
 
 namespace Perform\BaseBundle\Action;
 
-use Perform\BaseBundle\Crud\CrudRequest;
-
 /**
  * Special action that just shows a link, and doesn't actually run anything.
  *

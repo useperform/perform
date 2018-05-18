@@ -23,8 +23,8 @@ use Perform\MediaBundle\Exception\MediaTypeException;
  *         // 'types' => ['image'],
  *     ],
  *     'contexts' => [
- *         TypeConfig::CONTEXT_LIST,
- *         TypeConfig::CONTEXT_EDIT,
+ *         CrudRequest::CONTEXT_LIST,
+ *         CrudRequest::CONTEXT_EDIT,
  *     ],
  * ])
  *

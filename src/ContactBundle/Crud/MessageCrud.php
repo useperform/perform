@@ -7,6 +7,7 @@ use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BaseBundle\Config\FilterConfig;
 use Perform\BaseBundle\Config\ActionConfig;
 use Perform\ContactBundle\Entity\Message;
+use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -29,22 +30,22 @@ class MessageCrud extends AbstractCrud
             ->add('name', [
                 'type' => 'string',
                 'contexts' => [
-                    TypeConfig::CONTEXT_LIST,
-                    TypeConfig::CONTEXT_VIEW,
+                    CrudRequest::CONTEXT_LIST,
+                    CrudRequest::CONTEXT_VIEW,
                 ],
             ])
             ->add('email', [
                 'type' => 'string',
                 'contexts' => [
-                    TypeConfig::CONTEXT_LIST,
-                    TypeConfig::CONTEXT_VIEW,
+                    CrudRequest::CONTEXT_LIST,
+                    CrudRequest::CONTEXT_VIEW,
                 ],
             ])
             ->add('createdAt', [
                 'type' => 'datetime',
                 'contexts' => [
-                    TypeConfig::CONTEXT_LIST,
-                    TypeConfig::CONTEXT_VIEW,
+                    CrudRequest::CONTEXT_LIST,
+                    CrudRequest::CONTEXT_VIEW,
                 ],
                 'options' => [
                     'label' => 'Sent at',
@@ -53,7 +54,7 @@ class MessageCrud extends AbstractCrud
             ->add('message', [
                 'type' => 'text',
                 'contexts' => [
-                    TypeConfig::CONTEXT_VIEW,
+                    CrudRequest::CONTEXT_VIEW,
                 ],
             ])
             ->setDefaultSort('createdAt', 'DESC')

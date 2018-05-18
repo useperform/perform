@@ -7,6 +7,7 @@ use Perform\BaseBundle\Config\ActionConfig;
 use Perform\BaseBundle\Config\LabelConfig;
 use Perform\UserBundle\Controller\UserController;
 use Perform\BaseBundle\Crud\AbstractCrud;
+use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -28,14 +29,14 @@ class UserCrud extends AbstractCrud
                 'type' => 'email',
                 'listOptions' => [
                     'link' => false,
-                ]
+                ],
             ])
             ->add('passwordExpiresAt', [
                 'type' => 'datetime',
                 'contexts' => [
-                    TypeConfig::CONTEXT_EDIT,
-                    TypeConfig::CONTEXT_VIEW,
-                ]
+                    CrudRequest::CONTEXT_EDIT,
+                    CrudRequest::CONTEXT_VIEW,
+                ],
             ])
             ->add('plainPassword', [
                 'type' => 'password',
@@ -43,9 +44,9 @@ class UserCrud extends AbstractCrud
                     'label' => 'Password',
                 ],
                 'contexts' => [
-                    TypeConfig::CONTEXT_CREATE,
-                    TypeConfig::CONTEXT_EDIT,
-                ]
+                    CrudRequest::CONTEXT_CREATE,
+                    CrudRequest::CONTEXT_EDIT,
+                ],
             ])
             ;
     }

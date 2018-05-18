@@ -12,6 +12,7 @@ use Perform\BaseBundle\Type\BooleanType;
 use Perform\BaseBundle\Exception\InvalidTypeException;
 use Symfony\Component\OptionsResolver\Exception\ExceptionInterface;
 use Perform\BaseBundle\Test\Services;
+use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -49,7 +50,7 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testGetNoTypes()
     {
-        $this->assertSame([], $this->config->getTypes(TypeConfig::CONTEXT_VIEW));
+        $this->assertSame([], $this->config->getTypes(CrudRequest::CONTEXT_VIEW));
     }
 
     public function testAddSimpleType()
@@ -57,7 +58,7 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($this->config, $this->config->add('title', [
             'type' => 'string',
         ]));
-        $types = $this->config->getTypes(TypeConfig::CONTEXT_CREATE);
+        $types = $this->config->getTypes(CrudRequest::CONTEXT_CREATE);
         $this->assertArrayHasKey('type', $types['title']);
     }
 
@@ -72,21 +73,21 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
         $this->config->add('title', [
             'type' => 'string',
             'contexts' => [
-                TypeConfig::CONTEXT_LIST,
-                TypeConfig::CONTEXT_VIEW,
+                CrudRequest::CONTEXT_LIST,
+                CrudRequest::CONTEXT_VIEW,
             ],
         ]);
 
-        $this->assertSame(1, count($this->config->getTypes(TypeConfig::CONTEXT_VIEW)));
-        $this->assertSame(1, count($this->config->getTypes(TypeConfig::CONTEXT_LIST)));
-        $this->assertSame(0, count($this->config->getTypes(TypeConfig::CONTEXT_CREATE)));
-        $this->assertSame(0, count($this->config->getTypes(TypeConfig::CONTEXT_EDIT)));
+        $this->assertSame(1, count($this->config->getTypes(CrudRequest::CONTEXT_VIEW)));
+        $this->assertSame(1, count($this->config->getTypes(CrudRequest::CONTEXT_LIST)));
+        $this->assertSame(0, count($this->config->getTypes(CrudRequest::CONTEXT_CREATE)));
+        $this->assertSame(0, count($this->config->getTypes(CrudRequest::CONTEXT_EDIT)));
     }
 
     public function testThereAreDefaults()
     {
         $this->config->add('title', ['type' => 'string']);
-        $type = $this->config->getTypes(TypeConfig::CONTEXT_LIST)['title'];
+        $type = $this->config->getTypes(CrudRequest::CONTEXT_LIST)['title'];
         $this->assertInternalType('array', $type['listOptions']);
         $this->assertInternalType('string', $type['listOptions']['label']);
         $this->assertTrue($type['sort']);
@@ -101,16 +102,16 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
             ],
         ]);
 
-        $this->assertSame(true, $this->config->getTypes(TypeConfig::CONTEXT_VIEW)['date']['viewOptions']['human']);
+        $this->assertSame(true, $this->config->getTypes(CrudRequest::CONTEXT_VIEW)['date']['viewOptions']['human']);
     }
 
     public function contextProvider()
     {
         return [
-            [TypeConfig::CONTEXT_LIST, 'listOptions'],
-            [TypeConfig::CONTEXT_VIEW, 'viewOptions'],
-            [TypeConfig::CONTEXT_CREATE, 'createOptions'],
-            [TypeConfig::CONTEXT_EDIT, 'editOptions'],
+            [CrudRequest::CONTEXT_LIST, 'listOptions'],
+            [CrudRequest::CONTEXT_VIEW, 'viewOptions'],
+            [CrudRequest::CONTEXT_CREATE, 'createOptions'],
+            [CrudRequest::CONTEXT_EDIT, 'editOptions'],
         ];
     }
 
@@ -129,11 +130,11 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
             ],
         ]);
 
-        if ($context === TypeConfig::CONTEXT_VIEW) {
-            $notContext = TypeConfig::CONTEXT_LIST;
+        if ($context === CrudRequest::CONTEXT_VIEW) {
+            $notContext = CrudRequest::CONTEXT_LIST;
             $notContextKey = 'listOptions';
         } else {
-            $notContext = TypeConfig::CONTEXT_VIEW;
+            $notContext = CrudRequest::CONTEXT_VIEW;
             $notContextKey = 'viewOptions';
         }
         $this->assertSame(true, $this->config->getTypes($notContext)['date'][$notContextKey]['human']);
@@ -144,7 +145,7 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
     public function testSensibleLabelIsGiven()
     {
         $this->config->add('superTitle', ['type' => 'string']);
-        $this->assertSame('Super title', $this->config->getTypes(TypeConfig::CONTEXT_LIST)['superTitle']['listOptions']['label']);
+        $this->assertSame('Super title', $this->config->getTypes(CrudRequest::CONTEXT_LIST)['superTitle']['listOptions']['label']);
     }
 
     public function testLabelCanBeOverridden()
@@ -155,7 +156,7 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
                 'label' => 'Title',
             ],
         ]);
-        $this->assertSame('Title', $this->config->getTypes(TypeConfig::CONTEXT_LIST)['superTitle']['listOptions']['label']);
+        $this->assertSame('Title', $this->config->getTypes(CrudRequest::CONTEXT_LIST)['superTitle']['listOptions']['label']);
     }
 
     public function testLabelCanBeOverriddenPerContext()
@@ -166,8 +167,8 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
                 'label' => 'Title',
             ],
         ]);
-        $this->assertSame('Title', $this->config->getTypes(TypeConfig::CONTEXT_LIST)['superTitle']['listOptions']['label']);
-        $this->assertSame('Super title', $this->config->getTypes(TypeConfig::CONTEXT_EDIT)['superTitle']['editOptions']['label']);
+        $this->assertSame('Title', $this->config->getTypes(CrudRequest::CONTEXT_LIST)['superTitle']['listOptions']['label']);
+        $this->assertSame('Super title', $this->config->getTypes(CrudRequest::CONTEXT_EDIT)['superTitle']['editOptions']['label']);
     }
 
     public function testOverriddenLabelIsNotChanged()
@@ -187,8 +188,8 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
             ],
         ]);
 
-        $this->assertSame('Some label', $this->config->getTypes(TypeConfig::CONTEXT_LIST)['title']['listOptions']['label']);
-        $this->assertSame('foo', $this->config->getTypes(TypeConfig::CONTEXT_LIST)['title']['listOptions']['other_option']);
+        $this->assertSame('Some label', $this->config->getTypes(CrudRequest::CONTEXT_LIST)['title']['listOptions']['label']);
+        $this->assertSame('foo', $this->config->getTypes(CrudRequest::CONTEXT_LIST)['title']['listOptions']['other_option']);
     }
 
     public function testOverriddenLabelCanBeChanged()
@@ -209,8 +210,8 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
             ],
         ]);
 
-        $this->assertSame('Custom label again', $this->config->getTypes(TypeConfig::CONTEXT_LIST)['title']['listOptions']['label']);
-        $this->assertSame('foo', $this->config->getTypes(TypeConfig::CONTEXT_LIST)['title']['listOptions']['other_option']);
+        $this->assertSame('Custom label again', $this->config->getTypes(CrudRequest::CONTEXT_LIST)['title']['listOptions']['label']);
+        $this->assertSame('foo', $this->config->getTypes(CrudRequest::CONTEXT_LIST)['title']['listOptions']['other_option']);
     }
 
     public function testFieldsCanBeAddedMultipleTimes()
@@ -241,7 +242,7 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
             'bar' => false,
             'baz' => true,
         ];
-        $actual = $this->config->getTypes(TypeConfig::CONTEXT_LIST)['title']['listOptions']['stuff'];
+        $actual = $this->config->getTypes(CrudRequest::CONTEXT_LIST)['title']['listOptions']['stuff'];
         $this->assertSame($expected, $actual);
     }
 
@@ -249,14 +250,14 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
     {
         $this->config->add('title', [
             'type' => 'string',
-            'contexts' => [TypeConfig::CONTEXT_VIEW, TypeConfig::CONTEXT_LIST],
+            'contexts' => [CrudRequest::CONTEXT_VIEW, CrudRequest::CONTEXT_LIST],
         ]);
         $this->config->add('title', [
-            'contexts' => [TypeConfig::CONTEXT_VIEW],
+            'contexts' => [CrudRequest::CONTEXT_VIEW],
         ]);
 
-        $this->assertSame(0, count($this->config->getTypes(TypeConfig::CONTEXT_LIST)));
-        $this->assertSame(1, count($this->config->getTypes(TypeConfig::CONTEXT_VIEW)));
+        $this->assertSame(0, count($this->config->getTypes(CrudRequest::CONTEXT_LIST)));
+        $this->assertSame(1, count($this->config->getTypes(CrudRequest::CONTEXT_VIEW)));
     }
 
     public function testSortCanBeDisabled()
@@ -265,7 +266,7 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
             'type' => 'boolean',
             'sort' => false,
         ]);
-        $this->assertFalse($this->config->getTypes(TypeConfig::CONTEXT_LIST)['enabled']['sort']);
+        $this->assertFalse($this->config->getTypes(CrudRequest::CONTEXT_LIST)['enabled']['sort']);
     }
 
     public function testDefaultSort()
@@ -299,7 +300,7 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
 
         $this->config->add('title', ['type' => 'stub']);
 
-        $resolved = $this->config->getTypes(TypeConfig::CONTEXT_LIST)['title'];
+        $resolved = $this->config->getTypes(CrudRequest::CONTEXT_LIST)['title'];
         $this->assertSame('foo', $resolved['viewOptions']['some_type_option']);
         $this->assertSame('bar', $resolved['listOptions']['some_type_option']);
     }
@@ -330,7 +331,7 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->config->add('two', [
             'type' => 'string',
-            'contexts' => [TypeConfig::CONTEXT_LIST],
+            'contexts' => [CrudRequest::CONTEXT_LIST],
         ]);
 
         $all = $this->config->getAllTypes();

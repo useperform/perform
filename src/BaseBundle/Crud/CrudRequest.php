@@ -11,6 +11,12 @@ use Symfony\Component\HttpFoundation\Request;
  **/
 class CrudRequest
 {
+    const CONTEXT_LIST = 'list';
+    const CONTEXT_VIEW = 'view';
+    const CONTEXT_CREATE = 'create';
+    const CONTEXT_EDIT = 'edit';
+    const CONTEXT_EXPORT = 'export';
+
     protected $context;
     protected $entityClass;
     protected $page = 1;

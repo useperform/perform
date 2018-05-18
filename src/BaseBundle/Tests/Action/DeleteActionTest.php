@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Perform\BaseBundle\Action\DeleteAction;
 use Perform\BaseBundle\Action\ActionResponse;
 use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -43,7 +44,7 @@ class DeleteActionTest extends \PHPUnit_Framework_TestCase
 
     public function testResponseRedirectsToPreviousWhenViewingEntity()
     {
-        $response = $this->action->run([], ['context' => TypeConfig::CONTEXT_VIEW]);
+        $response = $this->action->run([], ['context' => CrudRequest::CONTEXT_VIEW]);
         $this->assertInstanceOf(ActionResponse::class, $response);
         $this->assertSame(ActionResponse::REDIRECT_PREVIOUS, $response->getRedirect());
     }
