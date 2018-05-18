@@ -101,6 +101,8 @@ class CrudController extends Controller
     {
         $request = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_LIST);
         $this->initialize($request);
+        // initialize resolves the entity class, it may have changed from parent to child
+        $request->setEntityClass($this->entity);
         $crud = $this->getCrud();
         $selector = $this->get('perform_base.selector.entity');
         list($paginator, $orderBy) = $selector->listContext($request, $this->entity);
