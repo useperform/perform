@@ -100,6 +100,19 @@ class CrudRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('new', $req->getFilter());
     }
 
+    public function testSetDefaultFilter()
+    {
+        $req = new CrudRequest(CrudRequest::CONTEXT_LIST);
+        $this->assertSame($req, $req->setDefaultFilter('new'));
+        $this->assertSame('new', $req->getFilter());
+
+        $this->assertSame($req, $req->setFilter('old'));
+        $this->assertSame('old', $req->getFilter());
+
+        $this->assertSame($req, $req->setDefaultFilter('new'));
+        $this->assertSame('old', $req->getFilter());
+    }
+
     public function testFromRequest()
     {
         $request = new Request([

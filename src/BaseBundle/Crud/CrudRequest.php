@@ -165,10 +165,22 @@ class CrudRequest
     }
 
     /**
-     * @return string $default The default direction to return if none is set
+     * @param string $filter
      */
-    public function getFilter($default = null)
+    public function setDefaultFilter($filter)
     {
-        return $this->filter ?: $default;
+        if (!$this->filter) {
+            $this->filter = $filter;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilter()
+    {
+        return $this->filter;
     }
 }
