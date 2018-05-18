@@ -379,7 +379,7 @@ Override the ``getTemplate`` method of ``ContactMessageCrud`` to the following:
 
     public function getTemplate(Environment $twig, $entityName, $context)
     {
-        if ($context === TypeConfig::CONTEXT_VIEW) {
+        if ($context === CrudRequest::CONTEXT_VIEW) {
             return '@App/crud/contact_message/view.html.twig';
         }
 

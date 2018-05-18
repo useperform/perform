@@ -330,7 +330,7 @@ Use the ``isButtonAvailable`` and ``isBatchOptionAvailable`` options to decide w
 ``isButtonAvailable`` decides when to show a button next to an entity.
 
 The value can be a boolean or a function that returns a boolean.
-If a function, it is called with the entity in question and an ``CrudRequest`` instance.
+If a function, it is called with the entity in question and a ``CrudRequest`` instance.
 
 The default is ``true``.
 

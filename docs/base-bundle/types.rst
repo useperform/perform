@@ -45,7 +45,7 @@ The field name can be anything accessible by Symfony's `property access componen
 Configuration should be an array with the following properties:
 
 * ``type`` - `string`, **required**. The type name.
-* ``contexts`` - `array`. A list of contexts using this type. Each item should be one of ``TypeConfig::CONTEXT_LIST``, ``TypeConfig::CONTEXT_VIEW``, ``TypeConfig::CONTEXT_CREATE``, or ``TypeConfig::CONTEXT_EDIT``. Defaults to all contexts.
+* ``contexts`` - `array`. A list of contexts using this type. Each item should be one of ``CrudRequest::CONTEXT_LIST``, ``CrudRequest::CONTEXT_VIEW``, ``CrudRequest::CONTEXT_CREATE``, ``CrudRequest::CONTEXT_EDIT``, or ``CrudRequest::CONTEXT_EXPORT``. Defaults to all contexts.
 * ``sort`` - `boolean` or `Closure`. Whether to allow sorting by this field. Pass a closure for custom sorting by this field. Defaults to true.
 * ``options`` - `array`. Options to pass to the type. Different types require different options.
 * ``listOptions``, ``viewOptions``, ``createOptions``, ``editOptions`` - `array`. Options specific to a certain context.
@@ -65,16 +65,16 @@ Use the ``contexts`` option to restrict a type to certain contexts:
         $config->add('readOnly', [
             'type' => 'string',
             'contexts' => [
-                TypeConfig::CONTEXT_LIST,
-                TypeConfig::CONTEXT_VIEW,
+                CrudRequest::CONTEXT_LIST,
+                CrudRequest::CONTEXT_VIEW,
             ],
         ]);
         $config->add('noEdit', [
             'type' => 'string',
             'contexts' => [
-                TypeConfig::CONTEXT_LIST,
-                TypeConfig::CONTEXT_VIEW,
-                TypeConfig::CONTEXT_CREATE,
+                CrudRequest::CONTEXT_LIST,
+                CrudRequest::CONTEXT_VIEW,
+                CrudRequest::CONTEXT_CREATE,
             ],
         ]);
     }
@@ -115,7 +115,7 @@ It's not possible to sort by this method in the database, so a custom sort funct
         $config->add('fullname', [
             'type' => 'string',
             'contexts' => [
-                TypeConfig::CONTEXT_LIST,
+                CrudRequest::CONTEXT_LIST,
             ],
             'sort' => function($qb, $direction) {
                 return $qb->orderBy('e.forename', $direction)
