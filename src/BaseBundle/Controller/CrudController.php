@@ -9,6 +9,7 @@ use Symfony\Bridge\Twig\Extension\FormExtension;
 use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Twig\Extension\ActionExtension;
+use Perform\BaseBundle\Event\ListContextEvent;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -106,6 +107,7 @@ class CrudController extends Controller
         $crud = $this->getCrud();
         $selector = $this->get('perform_base.selector.entity');
         list($paginator, $orderBy) = $selector->listContext($request, $this->entity);
+        $this->get('event_dispatcher')->dispatch(ListContextEvent::NAME, new ListContextEvent($request));
 
         return [
             'fields' => $this->getTypeConfig()->getTypes($request->getContext()),
