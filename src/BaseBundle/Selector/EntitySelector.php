@@ -6,10 +6,11 @@ use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
-use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BaseBundle\Config\FilterConfig;
 use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Perform\BaseBundle\Event\ListQueryEvent;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -17,20 +18,17 @@ use Perform\BaseBundle\Config\ConfigStoreInterface;
 class EntitySelector
 {
     protected $entityManager;
+    protected $dispatcher;
     protected $store;
 
-    public function __construct(EntityManagerInterface $entityManager, ConfigStoreInterface $store)
+    public function __construct(EntityManagerInterface $entityManager, EventDispatcherInterface $dispatcher, ConfigStoreInterface $store)
     {
         $this->entityManager = $entityManager;
+        $this->dispatcher = $dispatcher;
         $this->store = $store;
     }
 
     public function getQueryBuilder(CrudRequest $request)
-    {
-        return $this->getQueryBuilderInternal($request)[0];
-    }
-
-    private function getQueryBuilderInternal(CrudRequest $request)
     {
         $entityName = $request->getEntityClass();
         if (!$entityName) {
@@ -41,19 +39,7 @@ class EntitySelector
             ->select('e')
             ->from($entityName, 'e');
 
-        //potentially add sorting, using custom functions from TypeConfig
-        $defaultSort = $this->store->getTypeConfig($entityName)->getDefaultSort();
-        $orderField = $request->getSortField($defaultSort[0]);
-        $direction = $request->getSortDirection($defaultSort[1]);
-
-        //direction can be set to 'N' to override default sorting
-        if ($direction === 'N') {
-            $orderField = null;
-        }
-        $qb = $this->maybeOrderBy($qb, $entityName, $orderField, $direction);
-        if (!$qb instanceof QueryBuilder) {
-            throw new \UnexpectedValueException(sprintf('The sort function for %s->%s must return an instance of Doctrine\ORM\QueryBuilder.', $entityName, $orderField));
-        }
+        $this->dispatcher->dispatch(ListQueryEvent::NAME, new ListQueryEvent($qb, $request));
 
         //potentially add filtering, using FilterConfig from the
         //admin, or even returning a new builder entirely
@@ -64,12 +50,13 @@ class EntitySelector
             throw new \UnexpectedValueException(sprintf('The filter function "%s" for %s must return an instance of Doctrine\ORM\QueryBuilder.', $filterName, $entityName));
         }
 
-        return [$qb, $orderField, $direction];
+        // return the query builder from the event
+        return $qb;
     }
 
     public function listContext(CrudRequest $request)
     {
-        list($qb, $orderField, $direction) = $this->getQueryBuilderInternal($request);
+        $qb = $this->getQueryBuilder($request);
         $this->assignFilterCounts($request->getEntityClass());
 
         $paginator = new Pagerfanta(new DoctrineORMAdapter($qb));
@@ -77,8 +64,8 @@ class EntitySelector
         $paginator->setCurrentPage($request->getPage());
 
         $orderBy = [
-            'field' => $orderField,
-            'direction' => $direction,
+            'field' => $request->getSortField(),
+            'direction' => $request->getSortDirection(),
         ];
 
         return [$paginator, $orderBy];
@@ -103,32 +90,6 @@ class EntitySelector
             $count = $qb->getQuery()->getSingleScalarResult();
             $filter->setCount($count);
         }
-    }
-
-    /**
-     * @return QueryBuilder
-     */
-    protected function maybeOrderBy(QueryBuilder $qb, $entityName, $orderField, $direction)
-    {
-        if (!$orderField) {
-            return $qb;
-        }
-
-        $typeConfig = $this->store->getTypeConfig($entityName)->getTypes(CrudRequest::CONTEXT_LIST);
-        if (!isset($typeConfig[$orderField]['sort'])) {
-            // no type config available for this field, but assume they want to sort by the doctrine field supplied
-            return $qb->orderBy('e.'.$orderField, $direction);
-        }
-        $sort = $typeConfig[$orderField]['sort'];
-
-        if ($sort === true) {
-            return $qb->orderBy('e.'.$orderField, $direction);
-        }
-        if (is_callable($sort)) {
-            return $sort($qb, $direction);
-        }
-
-        return $qb;
     }
 
     /**

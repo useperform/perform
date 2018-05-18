@@ -8,7 +8,7 @@
       <th>
         {% if not config.sort %}
           {{config.listOptions.label}}
-        {% elseif orderBy.field is same as(field) %}
+        {% elseif orderBy.field is same as(field) and orderBy.direction != 'N' %}
           {% if orderBy.direction == 'ASC' %}
             <a href="{{perform_crud_route(entityClass, 'list', query|merge({sort: field, direction: 'desc'}))}}">
               {{config.listOptions.label}}

@@ -198,7 +198,15 @@ services:
         class: Perform\BaseBundle\Selector\EntitySelector
         arguments:
             - "@doctrine.orm.entity_manager"
+            - "@event_dispatcher"
             - "@perform_base.config_store"
+
+    perform_base.listener.list_query.sort:
+        class: Perform\BaseBundle\EventListener\SortListQueryListener
+        arguments:
+            - "@perform_base.config_store"
+        tags:
+            - {name: kernel.event_listener, event: perform_base.list_query, method: onListQuery}
 
     perform_base.entity_manager:
         class: Perform\BaseBundle\Manager\EntityManager
