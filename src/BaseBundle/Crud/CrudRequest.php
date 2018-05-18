@@ -102,13 +102,23 @@ class CrudRequest
     }
 
     /**
-     * @return string|null
-     *
-     * @param string $default The default field to return if none is set
+     * @param string $sortField
      */
-    public function getSortField($default = null)
+    public function setDefaultSortField($sortField)
     {
-        return $this->sortField ?: $default;
+        if (!$this->sortField) {
+            $this->sortField = $sortField;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSortField()
+    {
+        return $this->sortField;
     }
 
     /**
@@ -117,20 +127,31 @@ class CrudRequest
     public function setSortDirection($sortDirection)
     {
         $sortDirection = strtoupper($sortDirection);
-        if ($sortDirection !== 'DESC' && $sortDirection !== 'N') {
-            $sortDirection = 'ASC';
+        if (in_array($sortDirection, ['ASC', 'DESC', 'N'])) {
+            $this->sortDirection = $sortDirection;
         }
-        $this->sortDirection = $sortDirection;
 
         return $this;
     }
 
     /**
-     * @return string $default The default direction to return if none is set
+     * @param string $sortDirection
      */
-    public function getSortDirection($default = 'ASC')
+    public function setDefaultSortDirection($sortDirection)
     {
-        return $this->sortDirection ?: $default;
+        if (!$this->sortDirection) {
+            return $this->setSortDirection($sortDirection);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSortDirection()
+    {
+        return $this->sortDirection ?: 'ASC';
     }
 
     /**

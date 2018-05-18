@@ -31,7 +31,7 @@ class CrudRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(2, $req->getPage());
     }
 
-    public function testGetDefaultPage()
+    public function testPageHasADefault()
     {
         $req = new CrudRequest(CrudRequest::CONTEXT_LIST);
         $this->assertSame(1, $req->getPage());
@@ -41,6 +41,19 @@ class CrudRequestTest extends \PHPUnit_Framework_TestCase
     {
         $req = new CrudRequest(CrudRequest::CONTEXT_LIST);
         $this->assertSame($req, $req->setSortField('title'));
+        $this->assertSame('title', $req->getSortField());
+    }
+
+    public function testSetDefaultSortField()
+    {
+        $req = new CrudRequest(CrudRequest::CONTEXT_LIST);
+        $this->assertSame($req, $req->setDefaultSortField('id'));
+        $this->assertSame('id', $req->getSortField());
+
+        $this->assertSame($req, $req->setSortField('title'));
+        $this->assertSame('title', $req->getSortField());
+
+        $this->assertSame($req, $req->setDefaultSortField('id'));
         $this->assertSame('title', $req->getSortField());
     }
 
@@ -54,9 +67,22 @@ class CrudRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('N', $req->getSortDirection());
     }
 
-    public function testGetDefaultSortDirection()
+    public function testSortDirectionHasADefault()
     {
         $req = new CrudRequest(CrudRequest::CONTEXT_LIST);
+        $this->assertSame('ASC', $req->getSortDirection());
+    }
+
+    public function testSetDefaultSortDirection()
+    {
+        $req = new CrudRequest(CrudRequest::CONTEXT_LIST);
+        $this->assertSame($req, $req->setDefaultSortDirection('desc'));
+        $this->assertSame('DESC', $req->getSortDirection());
+
+        $this->assertSame($req, $req->setSortDirection('ASC'));
+        $this->assertSame('ASC', $req->getSortDirection());
+
+        $this->assertSame($req, $req->setDefaultSortDirection('desc'));
         $this->assertSame('ASC', $req->getSortDirection());
     }
 
