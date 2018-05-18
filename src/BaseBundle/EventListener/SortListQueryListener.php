@@ -23,22 +23,18 @@ class SortListQueryListener
     {
         $request = $event->getCrudRequest();
         $entityName = $request->getEntityClass();
-        $typeConfig = $this->store->getTypeConfig($entityName);
-        $defaultSort = $typeConfig->getDefaultSort();
-
-        $request->setDefaultSortField($defaultSort[0]);
         $orderField = $request->getSortField();
         if (!$orderField) {
             return;
         }
 
-        $request->setDefaultSortDirection($defaultSort[1]);
         $direction = $request->getSortDirection();
         //direction can be set to 'N' to override default sorting
         if ($direction === 'N') {
             return;
         }
 
+        $typeConfig = $this->store->getTypeConfig($entityName);
         $qb = $event->getQueryBuilder();
 
         $typeConfig = $typeConfig->getTypes(CrudRequest::CONTEXT_LIST);
@@ -64,7 +60,7 @@ class SortListQueryListener
             return;
         }
         if (!$newQb instanceof QueryBuilder) {
-            throw new \UnexpectedValueException(sprintf('The sort function for %s->%s must return an instance of Doctrine\ORM\QueryBuilder.', $entityName, $orderField));
+            throw new \UnexpectedValueException(sprintf('The sort function for %s->%s must return an instance of Doctrine\ORM\QueryBuilder or null.', $entityName, $orderField));
         }
 
         $event->setQueryBuilder($newQb);

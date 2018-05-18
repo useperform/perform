@@ -15,6 +15,7 @@ use Doctrine\ORM\QueryBuilder;
 use Perform\BaseBundle\Test\Services;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Perform\BaseBundle\Event\ListQueryEvent;
+use Perform\BaseBundle\Config\TypeConfig;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -37,16 +38,20 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
         $em->expects($this->any())
             ->method('createQueryBuilder')
             ->will($this->returnValue($this->qb));
-
-        $this->typeRegistry = Services::typeRegistry([
-            'string' => new StringType(),
-            'boolean' => new BooleanType(),
-        ]);
         $this->dispatcher = $this->getMock(EventDispatcherInterface::class);
         $this->store = $this->getMock(ConfigStoreInterface::class);
+        $this->typeConfig = $this->getMockBuilder(TypeConfig::class)
+                          ->disableOriginalConstructor()
+                          ->getMock();
+        $this->store->expects($this->any())
+            ->method('getTypeConfig')
+            ->will($this->returnValue($this->typeConfig));
+        $this->filterConfig = $this->getMockBuilder(FilterConfig::class)
+                          ->disableOriginalConstructor()
+                          ->getMock();
         $this->store->expects($this->any())
             ->method('getFilterConfig')
-            ->will($this->returnValue(new FilterConfig([])));
+            ->will($this->returnValue($this->filterConfig));
 
         $this->selector = new EntitySelector($em, $this->dispatcher, $this->store);
     }
@@ -86,11 +91,23 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
         $this->expectQueryBuilder('Bundle:SomeEntity');
         $request = new CrudRequest(CrudRequest::CONTEXT_LIST);
         $request->setEntityClass('Bundle:SomeEntity');
+        $this->filterConfig->expects($this->any())
+            ->method('getDefault')
+            ->will($this->returnValue('some_filter'));
+        $this->typeConfig->expects($this->any())
+            ->method('getDefaultSort')
+            ->will($this->returnValue(['sort_field', 'DESC']));
+
         $result = $this->selector->listContext($request);
 
         $this->assertInternalType('array', $result);
         $this->assertInstanceOf(Pagerfanta::class, $result[0]);
         $this->assertInternalType('array', $result[1]);
+
+        // assert that the defaults have been applied to the request
+        $this->assertSame('some_filter', $request->getFilter());
+        $this->assertSame('sort_field', $request->getSortField());
+        $this->assertSame('DESC', $request->getSortDirection());
     }
 
     public function testMissingEntityClassThrowsException()

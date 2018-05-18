@@ -45,6 +45,10 @@ class EntitySelector
     {
         $entityClass = $this->getEntityClass($request);
         $request->setDefaultFilter($this->store->getFilterConfig($entityClass)->getDefault());
+        $defaultSort = $this->store->getTypeConfig($entityClass)->getDefaultSort();
+        $request->setDefaultSortField($defaultSort[0]);
+        $request->setDefaultSortDirection($defaultSort[1]);
+
         $qb = $this->getQueryBuilder($request);
 
         $paginator = new Pagerfanta(new DoctrineORMAdapter($qb));
