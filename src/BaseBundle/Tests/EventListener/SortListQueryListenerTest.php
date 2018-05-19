@@ -10,7 +10,7 @@ use Perform\BaseBundle\Config\ConfigStoreInterface;
 use Perform\BaseBundle\Test\Services;
 use Perform\BaseBundle\Type\StringType;
 use Perform\BaseBundle\Type\BooleanType;
-use Perform\BaseBundle\Event\ListQueryEvent;
+use Perform\BaseBundle\Event\QueryEvent;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -62,7 +62,7 @@ class SortListQueryListenerTest extends \PHPUnit_Framework_TestCase
         $this->qb->expects($this->never())
             ->method('orderBy');
 
-        $this->listener->onListQuery(new ListQueryEvent($this->qb, $request));
+        $this->listener->onListQuery(new QueryEvent($this->qb, $request));
     }
 
     public function testSort()
@@ -83,7 +83,7 @@ class SortListQueryListenerTest extends \PHPUnit_Framework_TestCase
             ->with('e.title', 'DESC')
             ->will($this->returnSelf());
 
-        $this->listener->onListQuery(new ListQueryEvent($this->qb, $request));
+        $this->listener->onListQuery(new QueryEvent($this->qb, $request));
     }
 
     public function testSortWithDisabledField()
@@ -102,7 +102,7 @@ class SortListQueryListenerTest extends \PHPUnit_Framework_TestCase
         $this->qb->expects($this->never())
             ->method('orderBy');
 
-        $this->listener->onListQuery(new ListQueryEvent($this->qb, $request));
+        $this->listener->onListQuery(new QueryEvent($this->qb, $request));
     }
 
     public function testSortWithCustomFunction()
@@ -130,7 +130,7 @@ class SortListQueryListenerTest extends \PHPUnit_Framework_TestCase
             ->with('e.surname', 'DESC')
             ->will($this->returnSelf());
 
-        $this->listener->onListQuery(new ListQueryEvent($this->qb, $request));
+        $this->listener->onListQuery(new QueryEvent($this->qb, $request));
     }
 
     public function testSortWithCustomQueryBuilder()
@@ -151,7 +151,7 @@ class SortListQueryListenerTest extends \PHPUnit_Framework_TestCase
                 },
             ],
         ]);
-        $event = new ListQueryEvent($this->qb, $request);
+        $event = new QueryEvent($this->qb, $request);
         $this->listener->onListQuery($event);
         $this->assertSame($differentQb, $event->getQueryBuilder());
     }
@@ -173,6 +173,6 @@ class SortListQueryListenerTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $this->setExpectedException(\UnexpectedValueException::class);
-        $this->listener->onListQuery(new ListQueryEvent($this->qb, $request));
+        $this->listener->onListQuery(new QueryEvent($this->qb, $request));
     }
 }

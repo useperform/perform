@@ -5,7 +5,7 @@ namespace Perform\BaseBundle\EventListener;
 use Doctrine\ORM\QueryBuilder;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
 use Perform\BaseBundle\Crud\CrudRequest;
-use Perform\BaseBundle\Event\ListQueryEvent;
+use Perform\BaseBundle\Event\QueryEvent;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -19,7 +19,7 @@ class SortListQueryListener
         $this->store = $store;
     }
 
-    public function onListQuery(ListQueryEvent $event)
+    public function onListQuery(QueryEvent $event)
     {
         $request = $event->getCrudRequest();
         $entityName = $request->getEntityClass();

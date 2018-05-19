@@ -9,9 +9,11 @@ use Symfony\Component\EventDispatcher\Event;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ListQueryEvent extends Event
+class QueryEvent extends Event
 {
-    const NAME = 'perform_base.list_query';
+    const LIST_QUERY = 'perform_base.crud.list_query';
+    const VIEW_QUERY = 'perform_base.crud.view_query';
+    const EDIT_QUERY = 'perform_base.crud.edit_query';
 
     protected $qb;
     protected $request;

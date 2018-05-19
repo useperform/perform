@@ -10,7 +10,7 @@ use Perform\BaseBundle\Config\FilterConfig;
 use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Perform\BaseBundle\Event\ListQueryEvent;
+use Perform\BaseBundle\Event\QueryEvent;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -35,8 +35,8 @@ class EntitySelector
             ->select('e')
             ->from($entityClass, 'e');
 
-        $event = new ListQueryEvent($qb, $request);
-        $this->dispatcher->dispatch(ListQueryEvent::NAME, $event);
+        $event = new QueryEvent($qb, $request);
+        $this->dispatcher->dispatch(QueryEvent::LIST_QUERY, $event);
 
         return $event->getQueryBuilder();
     }

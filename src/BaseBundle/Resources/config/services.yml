@@ -206,7 +206,7 @@ services:
         arguments:
             - "@perform_base.config_store"
         tags:
-            - {name: kernel.event_listener, event: perform_base.list_query, method: onListQuery}
+            - {name: kernel.event_listener, event: perform_base.crud.list_query, method: onListQuery}
 
     perform_base.listener.list_query.filter:
         class: Perform\BaseBundle\EventListener\FilterListQueryListener
@@ -214,7 +214,7 @@ services:
             - "@perform_base.config_store"
             - "@perform_base.selector.entity"
         tags:
-            - {name: kernel.event_listener, event: perform_base.list_query, method: onListQuery}
+            - {name: kernel.event_listener, event: perform_base.crud.list_query, method: onListQuery}
             - {name: kernel.event_listener, event: perform_base.crud.list_context, method: onListContext}
 
     perform_base.entity_manager:

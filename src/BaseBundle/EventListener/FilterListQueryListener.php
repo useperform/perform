@@ -5,7 +5,7 @@ namespace Perform\BaseBundle\EventListener;
 use Doctrine\ORM\QueryBuilder;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
 use Perform\BaseBundle\Crud\CrudRequest;
-use Perform\BaseBundle\Event\ListQueryEvent;
+use Perform\BaseBundle\Event\QueryEvent;
 use Perform\BaseBundle\Selector\EntitySelector;
 use Perform\BaseBundle\Event\ContextEvent;
 
@@ -23,7 +23,7 @@ class FilterListQueryListener
         $this->selector = $selector;
     }
 
-    public function onListQuery(ListQueryEvent $event)
+    public function onListQuery(QueryEvent $event)
     {
         $request = $event->getCrudRequest();
         $entityClass = $request->getEntityClass();

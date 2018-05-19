@@ -14,7 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Perform\BaseBundle\Test\Services;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Perform\BaseBundle\Event\ListQueryEvent;
+use Perform\BaseBundle\Event\QueryEvent;
 use Perform\BaseBundle\Config\TypeConfig;
 
 /**
@@ -76,8 +76,8 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
 
         $this->dispatcher->expects($this->once())
             ->method('dispatch')
-            ->with(ListQueryEvent::NAME, $this->callback(function ($e) use ($request) {
-                return $e instanceof ListQueryEvent
+            ->with(QueryEvent::LIST_QUERY, $this->callback(function ($e) use ($request) {
+                return $e instanceof QueryEvent
                         && $e->getQueryBuilder() === $this->qb
                         && $e->getCrudRequest() === $request;
             }));
