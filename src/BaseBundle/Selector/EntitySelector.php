@@ -63,6 +63,42 @@ class EntitySelector
         return [$paginator, $orderBy];
     }
 
+    public function viewContext(CrudRequest $request, $identifier)
+    {
+        return $this->selectSingleEntity($request, $identifier, QueryEvent::VIEW_QUERY);
+    }
+
+    public function editContext(CrudRequest $request, $identifier)
+    {
+        return $this->selectSingleEntity($request, $identifier, QueryEvent::EDIT_QUERY);
+    }
+
+    private function selectSingleEntity(CrudRequest $request, $identifier, $eventName)
+    {
+        $entityClass = $this->getEntityClass($request);
+        $idColumn = $this->entityManager->getClassMetadata($entityClass)->getIdentifier();
+
+        if (!is_array($idColumn) || !isset($idColumn[0])) {
+            throw new \Exception('Only non-composite doctrine identifiers are supported.');
+        }
+
+        $qb = $this->entityManager->createQueryBuilder()
+            ->select('e')
+            ->from($entityClass, 'e')
+            ->where(sprintf('e.%s = :identifier', $idColumn[0]))
+            ->setParameter('identifier', $identifier);
+
+        $event = new QueryEvent($qb, $request);
+        $this->dispatcher->dispatch($eventName, $event);
+
+        $result = $event->getQueryBuilder()
+                ->getQuery()
+                ->setMaxResults(1)
+                ->getResult();
+
+        return isset($result[0]) ? $result[0] : null;
+    }
+
     private function getEntityClass(CrudRequest $request)
     {
         $entityClass = $request->getEntityClass();

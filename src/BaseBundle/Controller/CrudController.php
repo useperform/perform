@@ -71,15 +71,11 @@ class CrudController extends Controller
         return new $className();
     }
 
-    protected function findEntity($id)
+    protected function throwNotFoundIfNull($entity, $identifier)
     {
-        $repo = $this->getDoctrine()->getRepository($this->entity);
-        $entity = $repo->find($id);
         if (!$entity) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException(sprintf('Entity with identifier "%s" was not found.', $identifier));
         }
-
-        return $entity;
     }
 
     protected function findDefaultEntity()
@@ -127,7 +123,8 @@ class CrudController extends Controller
     {
         $crudRequest = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_VIEW);
         $this->initialize($crudRequest);
-        $entity = $this->findEntity($id);
+        $entity = $this->get('perform_base.selector.entity')->viewContext($crudRequest, $id);
+        $this->throwNotFoundIfNull($entity, $id);
         $this->denyAccessUnlessGranted('VIEW', $entity);
 
         $templateVariables = [
@@ -190,7 +187,8 @@ class CrudController extends Controller
     {
         $crudRequest = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_EDIT);
         $this->initialize($crudRequest);
-        $entity = $this->findEntity($id);
+        $entity = $this->get('perform_base.selector.entity')->editContext($crudRequest, $id);
+        $this->throwNotFoundIfNull($entity, $id);
         $this->denyAccessUnlessGranted('EDIT', $entity);
         $crud = $this->getCrud();
         $form = $this->createForm($crud->getFormType(), $entity, [
