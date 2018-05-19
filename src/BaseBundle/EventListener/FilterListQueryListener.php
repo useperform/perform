@@ -7,7 +7,7 @@ use Perform\BaseBundle\Config\ConfigStoreInterface;
 use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Event\ListQueryEvent;
 use Perform\BaseBundle\Selector\EntitySelector;
-use Perform\BaseBundle\Event\ListContextEvent;
+use Perform\BaseBundle\Event\ContextEvent;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -53,7 +53,7 @@ class FilterListQueryListener
         $event->setQueryBuilder($newQb);
     }
 
-    public function onListContext(ListContextEvent $event)
+    public function onListContext(ContextEvent $event)
     {
         $request = $event->getCrudRequest();
         $entityClass = $request->getEntityClass();

@@ -9,7 +9,7 @@ use Symfony\Bridge\Twig\Extension\FormExtension;
 use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Twig\Extension\ActionExtension;
-use Perform\BaseBundle\Event\ListContextEvent;
+use Perform\BaseBundle\Event\ContextEvent;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -18,12 +18,14 @@ class CrudController extends Controller
 {
     protected $entity;
 
-    protected function initialize(CrudRequest $request)
+    protected function initialize(CrudRequest $crudRequest)
     {
-        $this->entity = $this->get('perform_base.doctrine.entity_resolver')->resolve($request->getEntityClass());
+        $this->entity = $this->get('perform_base.doctrine.entity_resolver')->resolve($crudRequest->getEntityClass());
+        // tell crudRequest about the resolved entity
+        $crudRequest->setEntityClass($this->entity);
         $this->get('twig')
             ->getExtension(ActionExtension::class)
-            ->setCrudRequest($request);
+            ->setCrudRequest($crudRequest);
     }
 
     /**
@@ -100,39 +102,43 @@ class CrudController extends Controller
 
     public function listAction(Request $request)
     {
-        $request = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_LIST);
-        $this->initialize($request);
-        // initialize resolves the entity class, it may have changed from parent to child
-        $request->setEntityClass($this->entity);
+        $crudRequest = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_LIST);
+        $this->initialize($crudRequest);
         $crud = $this->getCrud();
         $selector = $this->get('perform_base.selector.entity');
-        list($paginator, $orderBy) = $selector->listContext($request, $this->entity);
-        $this->get('event_dispatcher')->dispatch(ListContextEvent::NAME, new ListContextEvent($request));
-
-        return [
-            'fields' => $this->getTypeConfig()->getTypes($request->getContext()),
+        list($paginator, $orderBy) = $selector->listContext($crudRequest, $this->entity);
+        $templateVariables = [
+            'fields' => $this->getTypeConfig()->getTypes($crudRequest->getContext()),
             'filters' => $this->getFilterConfig()->getFilters(),
-            'batchActions' => $this->getActionConfig()->getBatchOptionsForRequest($request),
+            'batchActions' => $this->getActionConfig()->getBatchOptionsForRequest($crudRequest),
             'labelConfig' => $this->getLabelConfig(),
             'orderBy' => $orderBy,
             'routePrefix' => $crud->getRoutePrefix(),
             'paginator' => $paginator,
             'entityClass' => $this->entity,
         ];
+        $event = new ContextEvent($crudRequest, $templateVariables);
+        $this->get('event_dispatcher')->dispatch(ContextEvent::CONTEXT_LIST, $event);
+
+        return $event->getTemplateVariables();
     }
 
     public function viewAction(Request $request, $id)
     {
-        $request = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_VIEW);
-        $this->initialize($request);
+        $crudRequest = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_VIEW);
+        $this->initialize($crudRequest);
         $entity = $this->findEntity($id);
         $this->denyAccessUnlessGranted('VIEW', $entity);
 
-        return [
-            'fields' => $this->getTypeConfig()->getTypes($request->getContext()),
+        $templateVariables = [
+            'fields' => $this->getTypeConfig()->getTypes($crudRequest->getContext()),
             'entity' => $entity,
             'labelConfig' => $this->getLabelConfig(),
         ];
+        $event = new ContextEvent($crudRequest, $templateVariables);
+        $this->get('event_dispatcher')->dispatch(ContextEvent::CONTEXT_VIEW, $event);
+
+        return $event->getTemplateVariables();
     }
 
     public function viewDefaultAction(Request $request)
@@ -169,11 +175,15 @@ class CrudController extends Controller
         $formView = $form->createView();
         $this->setFormTheme($formView);
 
-        return [
+        $templateVariables = [
             'entity' => $entity,
             'form' => $formView,
             'labelConfig' => $this->getLabelConfig(),
         ];
+        $event = new ContextEvent($crudRequest, $templateVariables);
+        $this->get('event_dispatcher')->dispatch(ContextEvent::CONTEXT_CREATE, $event);
+
+        return $event->getTemplateVariables();
     }
 
     public function editAction(Request $request, $id)
@@ -204,11 +214,15 @@ class CrudController extends Controller
         $formView = $form->createView();
         $this->setFormTheme($formView);
 
-        return [
+        $templateVariables = [
             'entity' => $entity,
             'form' => $formView,
             'labelConfig' => $this->getLabelConfig(),
         ];
+        $event = new ContextEvent($crudRequest, $templateVariables);
+        $this->get('event_dispatcher')->dispatch(ContextEvent::CONTEXT_EDIT, $event);
+
+        return $event->getTemplateVariables();
     }
 
     public function editDefaultAction(Request $request)
