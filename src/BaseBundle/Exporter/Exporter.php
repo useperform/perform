@@ -38,7 +38,7 @@ class Exporter
         $exporter = new BaseExporter($this->getWritersFromConfig($exportConfig));
 
         $query = $this->selector->getQueryBuilder($crudRequest, $entityClass)->getQuery();
-        $exportFields = $this->configStore->getCrudRequest($entityClass)->getTypes(CrudRequest::CONTEXT_EXPORT);
+        $exportFields = $this->configStore->getTypeConfig($entityClass)->getTypes(CrudRequest::CONTEXT_EXPORT);
         $source = new TypedDoctrineORMQuerySourceIterator($this->typeRegistry, $query, $exportFields);
 
         return $exporter->getResponse($format, $exportConfig->getFilename($format), $source);
