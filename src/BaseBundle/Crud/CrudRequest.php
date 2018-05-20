@@ -5,7 +5,7 @@ namespace Perform\BaseBundle\Crud;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * A request that involves a crud service.
+ * A request that involves a crud operation.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
@@ -16,6 +16,7 @@ class CrudRequest
     const CONTEXT_CREATE = 'create';
     const CONTEXT_EDIT = 'edit';
     const CONTEXT_EXPORT = 'export';
+    const CONTEXT_DELETE = 'delete';
 
     protected $context;
     protected $entityClass;

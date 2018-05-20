@@ -76,4 +76,59 @@ class EntityManager
             throw $e;
         }
     }
+
+    /**
+     * Delete an entity from the database.
+     *
+     * @param object $entity
+     */
+    public function delete($entity)
+    {
+        $crudRequest = new CrudRequest(CrudRequest::CONTEXT_DELETE);
+        $crudRequest->setEntityClass(get_class($entity));
+        $preDelete = new EntityEvent($crudRequest, $entity);
+        $this->dispatcher->dispatch(EntityEvent::PRE_DELETE, $preDelete);
+        // entity may have been replaced by the event
+        $newEntity = $preDelete->getEntity();
+        $this->em->remove($newEntity);
+        $this->em->flush();
+        $postDelete = new EntityEvent($crudRequest, $newEntity);
+        $this->dispatcher->dispatch(EntityEvent::POST_DELETE, $postDelete);
+
+        return $newEntity;
+    }
+
+    /**
+     * Delete an array of entities from the database in a single transaction.
+     *
+     * Note that all of the PRE_DELETE events will be dispatched
+     * first, followed by all of the POST_DELETE events.
+     *
+     * @param array $entities
+     */
+    public function deleteMany(array $entities)
+    {
+        $deletedEntities = [];
+        $postDeletes = [];
+
+        foreach ($entities as $entity) {
+            $crudRequest = new CrudRequest(CrudRequest::CONTEXT_DELETE);
+            $crudRequest->setEntityClass(get_class($entity));
+            $preDelete = new EntityEvent($crudRequest, $entity);
+            $this->dispatcher->dispatch(EntityEvent::PRE_DELETE, $preDelete);
+            // entity may have been replaced by the event
+            $newEntity = $preDelete->getEntity();
+            $this->em->remove($newEntity);
+            $deletedEntities[] = $newEntity;
+            $postDeletes[] = new EntityEvent($crudRequest, $newEntity);
+        }
+
+        $this->em->flush();
+
+        foreach ($postDeletes as $event) {
+            $this->dispatcher->dispatch(EntityEvent::POST_DELETE, $event);
+        }
+
+        return $deletedEntities;
+    }
 }
