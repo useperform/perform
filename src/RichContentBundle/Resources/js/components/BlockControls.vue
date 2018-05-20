@@ -1,9 +1,9 @@
 <template>
   <div class="p--local">
     <div class="p-comp-rich-content-controls btn-group" role="group" aria-label="Block controls">
-      <button type="button" class="btn btn-default">
-        <i class="fa fa-arrows"></i>
-      </button>
+      <!-- <button type="button" class="btn btn-default"> -->
+      <!-- <i class="fa fa-arrows"></i> -->
+      <!-- </button> -->
       <button type="button" class="btn btn-default" @click.prevent="clickUp">
         <i class="fa fa-arrow-up"></i>
       </button>
