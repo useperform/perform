@@ -7,6 +7,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\BaseBundle\Event\EntityEvent;
 use Perform\BaseBundle\Manager\EntityManager;
+use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -29,7 +30,7 @@ class EntityManagerTest extends \PHPUnit_Framework_TestCase
             ->with($entity);
         $this->em->expects($this->once())
             ->method('flush');
-        $eventCallback = function($e) {
+        $eventCallback = function ($e) {
             return $e instanceof EntityEvent;
         };
         $this->dispatcher->expects($this->exactly(2))
@@ -39,7 +40,7 @@ class EntityManagerTest extends \PHPUnit_Framework_TestCase
                 [$this->equalTo(EntityEvent::POST_CREATE), $this->callback($eventCallback)]
             );
 
-        $this->assertSame($entity, $this->manager->create($entity));
+        $this->assertSame($entity, $this->manager->create(new CrudRequest(CrudRequest::CONTEXT_LIST), $entity));
     }
 
     public function testCreateWithChangedEntity()
@@ -51,11 +52,11 @@ class EntityManagerTest extends \PHPUnit_Framework_TestCase
             ->with($this->identicalTo($newEntity));
         $this->dispatcher->expects($this->any())
             ->method('dispatch')
-            ->will($this->returnCallback(function($type, $event) use ($newEntity) {
+            ->will($this->returnCallback(function ($type, $event) use ($newEntity) {
                 $event->setEntity($newEntity);
             }));
 
-        $this->assertSame($newEntity, $this->manager->create($entity));
+        $this->assertSame($newEntity, $this->manager->create(new CrudRequest(CrudRequest::CONTEXT_LIST), $entity));
     }
 
     public function testUpdate()
@@ -66,7 +67,7 @@ class EntityManagerTest extends \PHPUnit_Framework_TestCase
             ->with($entity);
         $this->em->expects($this->once())
             ->method('flush');
-        $eventCallback = function($e) {
+        $eventCallback = function ($e) {
             return $e instanceof EntityEvent;
         };
         $this->dispatcher->expects($this->exactly(2))
@@ -76,7 +77,7 @@ class EntityManagerTest extends \PHPUnit_Framework_TestCase
                 [$this->equalTo(EntityEvent::POST_UPDATE), $this->callback($eventCallback)]
             );
 
-        $this->assertSame($entity, $this->manager->update($entity));
+        $this->assertSame($entity, $this->manager->update(new CrudRequest(CrudRequest::CONTEXT_LIST), $entity));
     }
 
     public function testUpdateWithChangedEntity()
@@ -88,10 +89,10 @@ class EntityManagerTest extends \PHPUnit_Framework_TestCase
             ->with($this->identicalTo($newEntity));
         $this->dispatcher->expects($this->any())
             ->method('dispatch')
-            ->will($this->returnCallback(function($type, $event) use ($newEntity) {
+            ->will($this->returnCallback(function ($type, $event) use ($newEntity) {
                 $event->setEntity($newEntity);
             }));
 
-        $this->assertSame($newEntity, $this->manager->update($entity));
+        $this->assertSame($newEntity, $this->manager->update(new CrudRequest(CrudRequest::CONTEXT_LIST), $entity));
     }
 }

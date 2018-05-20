@@ -6,6 +6,7 @@ use Perform\BaseBundle\Event\EntityEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
+use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
  * Wrapper for the doctrine entity manager that dispatches events
@@ -29,16 +30,19 @@ class EntityManager
     /**
      * Save a new entity.
      */
-    public function create($entity)
+    public function create(CrudRequest $crudRequest, $entity)
     {
         try {
-            $event = new EntityEvent($entity);
-            $this->dispatcher->dispatch(EntityEvent::PRE_CREATE, $event);
-            $this->em->persist($event->getEntity());
+            $preCreate = new EntityEvent($crudRequest, $entity);
+            $this->dispatcher->dispatch(EntityEvent::PRE_CREATE, $preCreate);
+            // entity may have been replaced by the event
+            $newEntity = $preCreate->getEntity();
+            $this->em->persist($newEntity);
             $this->em->flush();
-            $this->dispatcher->dispatch(EntityEvent::POST_CREATE, new EntityEvent($event->getEntity()));
+            $postCreate = new EntityEvent($crudRequest, $newEntity);
+            $this->dispatcher->dispatch(EntityEvent::POST_CREATE, $postCreate);
 
-            return $event->getEntity();
+            return $newEntity;
         } catch (\Exception $e) {
             $this->logger->error('An exception occurred creating an entity.', [
                 'entity' => $entity,
@@ -51,16 +55,19 @@ class EntityManager
     /**
      * Update an existing entity.
      */
-    public function update($entity)
+    public function update(CrudRequest $crudRequest, $entity)
     {
         try {
-            $event = new EntityEvent($entity);
-            $this->dispatcher->dispatch(EntityEvent::PRE_UPDATE, $event);
-            $this->em->persist($event->getEntity());
+            $preUpdate = new EntityEvent($crudRequest, $entity);
+            $this->dispatcher->dispatch(EntityEvent::PRE_UPDATE, $preUpdate);
+            // entity may have been replaced by the event
+            $newEntity = $preUpdate->getEntity();
+            $this->em->persist($newEntity);
             $this->em->flush();
-            $this->dispatcher->dispatch(EntityEvent::POST_UPDATE, new EntityEvent($event->getEntity()));
+            $postUpdate = new EntityEvent($crudRequest, $newEntity);
+            $this->dispatcher->dispatch(EntityEvent::POST_UPDATE, $postUpdate);
 
-            return $event->getEntity();
+            return $newEntity;
         } catch (\Exception $e) {
             $this->logger->error('An exception occurred updating an entity.', [
                 'entity' => $entity,
