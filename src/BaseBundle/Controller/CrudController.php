@@ -6,10 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bridge\Twig\Extension\FormExtension;
-use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Twig\Extension\ActionExtension;
-use Perform\BaseBundle\Event\ContextEvent;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -100,23 +98,10 @@ class CrudController extends Controller
     {
         $crudRequest = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_LIST);
         $this->initialize($crudRequest);
-        $crud = $this->getCrud();
-        $selector = $this->get('perform_base.selector.entity');
-        list($paginator, $orderBy) = $selector->listContext($crudRequest, $this->entity);
-        $templateVariables = [
-            'fields' => $this->getTypeConfig()->getTypes($crudRequest->getContext()),
-            'filters' => $this->getFilterConfig()->getFilters(),
-            'batchActions' => $this->getActionConfig()->getBatchOptionsForRequest($crudRequest),
-            'labelConfig' => $this->getLabelConfig(),
-            'orderBy' => $orderBy,
-            'routePrefix' => $crud->getRoutePrefix(),
-            'paginator' => $paginator,
-            'entityClass' => $this->entity,
-        ];
-        $event = new ContextEvent($crudRequest, $templateVariables);
-        $this->get('event_dispatcher')->dispatch(ContextEvent::CONTEXT_LIST, $event);
+        list($paginator, $orderBy) = $this->get('perform_base.selector.entity')->listContext($crudRequest);
+        $populator = $this->get('perform_base.template_populator');
 
-        return $event->getTemplateVariables();
+        return $populator->listContext($crudRequest, $paginator, $orderBy);
     }
 
     public function viewAction(Request $request, $id)
@@ -126,16 +111,9 @@ class CrudController extends Controller
         $entity = $this->get('perform_base.selector.entity')->viewContext($crudRequest, $id);
         $this->throwNotFoundIfNull($entity, $id);
         $this->denyAccessUnlessGranted('VIEW', $entity);
+        $populator = $this->get('perform_base.template_populator');
 
-        $templateVariables = [
-            'fields' => $this->getTypeConfig()->getTypes($crudRequest->getContext()),
-            'entity' => $entity,
-            'labelConfig' => $this->getLabelConfig(),
-        ];
-        $event = new ContextEvent($crudRequest, $templateVariables);
-        $this->get('event_dispatcher')->dispatch(ContextEvent::CONTEXT_VIEW, $event);
-
-        return $event->getTemplateVariables();
+        return $populator->viewContext($crudRequest, $entity);
     }
 
     public function viewDefaultAction(Request $request)
@@ -157,8 +135,7 @@ class CrudController extends Controller
         ]);
 
         $form->handleRequest($request);
-
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->get('perform_base.entity_manager')->create($crudRequest, $entity);
                 $this->addFlash('success', 'Item created successfully.');
@@ -171,16 +148,9 @@ class CrudController extends Controller
 
         $formView = $form->createView();
         $this->setFormTheme($formView);
+        $populator = $this->get('perform_base.template_populator');
 
-        $templateVariables = [
-            'entity' => $entity,
-            'form' => $formView,
-            'labelConfig' => $this->getLabelConfig(),
-        ];
-        $event = new ContextEvent($crudRequest, $templateVariables);
-        $this->get('event_dispatcher')->dispatch(ContextEvent::CONTEXT_CREATE, $event);
-
-        return $event->getTemplateVariables();
+        return $populator->editContext($crudRequest, $formView, $entity);
     }
 
     public function editAction(Request $request, $id)
@@ -197,8 +167,7 @@ class CrudController extends Controller
         ]);
 
         $form->handleRequest($request);
-
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->get('perform_base.entity_manager')->update($crudRequest, $entity);
                 $this->addFlash('success', 'Item updated successfully.');
@@ -211,16 +180,9 @@ class CrudController extends Controller
 
         $formView = $form->createView();
         $this->setFormTheme($formView);
+        $populator = $this->get('perform_base.template_populator');
 
-        $templateVariables = [
-            'entity' => $entity,
-            'form' => $formView,
-            'labelConfig' => $this->getLabelConfig(),
-        ];
-        $event = new ContextEvent($crudRequest, $templateVariables);
-        $this->get('event_dispatcher')->dispatch(ContextEvent::CONTEXT_EDIT, $event);
-
-        return $event->getTemplateVariables();
+        return $populator->editContext($crudRequest, $formView, $entity);
     }
 
     public function editDefaultAction(Request $request)

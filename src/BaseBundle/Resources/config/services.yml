@@ -90,6 +90,13 @@ services:
                 method: onKernelController
                 priority: -200
 
+    perform_base.template_populator:
+        class: Perform\BaseBundle\Crud\TemplatePopulator
+        arguments:
+            - "@perform_base.config_store"
+            - "@perform_base.crud.registry"
+            - "@event_dispatcher"
+
     perform_base.listener.ajax:
         class: Perform\BaseBundle\EventListener\AjaxListener
         tags:
