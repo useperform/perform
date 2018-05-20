@@ -7,7 +7,7 @@ use Perform\BaseBundle\Action\DeleteAction;
 use Perform\BaseBundle\Action\ActionResponse;
 use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BaseBundle\Crud\CrudRequest;
-use Perform\BaseBundle\Manager\EntityManager;
+use Perform\BaseBundle\Crud\EntityManager;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>

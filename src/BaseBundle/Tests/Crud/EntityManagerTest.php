@@ -1,12 +1,12 @@
 <?php
 
-namespace Perform\BaseBundle\Tests\Manager;
+namespace Perform\BaseBundle\Tests\Crud;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\BaseBundle\Event\EntityEvent;
-use Perform\BaseBundle\Manager\EntityManager;
+use Perform\BaseBundle\Crud\EntityManager;
 use Perform\BaseBundle\Crud\CrudRequest;
 
 /**

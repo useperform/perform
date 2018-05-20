@@ -3,7 +3,7 @@
 namespace Perform\BaseBundle\Action;
 
 use Perform\BaseBundle\Crud\CrudRequest;
-use Perform\BaseBundle\Manager\EntityManager;
+use Perform\BaseBundle\Crud\EntityManager;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>

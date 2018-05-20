@@ -225,7 +225,7 @@ services:
             - {name: kernel.event_listener, event: perform_base.crud.list_context, method: onListContext}
 
     perform_base.entity_manager:
-        class: Perform\BaseBundle\Manager\EntityManager
+        class: Perform\BaseBundle\Crud\EntityManager
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@event_dispatcher"
