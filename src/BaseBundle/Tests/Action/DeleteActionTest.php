@@ -7,30 +7,31 @@ use Perform\BaseBundle\Action\DeleteAction;
 use Perform\BaseBundle\Action\ActionResponse;
 use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BaseBundle\Crud\CrudRequest;
+use Perform\BaseBundle\Manager\EntityManager;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class DeleteActionTest extends \PHPUnit_Framework_TestCase
 {
-    protected $em;
+    protected $manager;
     protected $action;
 
     public function setUp()
     {
-        $this->em = $this->getMock(EntityManagerInterface::class);
-        $this->action = new DeleteAction($this->em);
+        $this->manager = $this->getMockBuilder(EntityManager::class)
+                  ->disableOriginalConstructor()
+                  ->getMock();
+        $this->action = new DeleteAction($this->manager);
     }
 
     public function testEntitiesAreDeleted()
     {
         $one = new \stdClass();
         $two = new \stdClass();
-        $this->em->expects($this->exactly(2))
-            ->method('remove')
-            ->with($this->logicalOr($one, $two));
-        $this->em->expects($this->once())
-            ->method('flush');
+        $this->manager->expects($this->once())
+            ->method('deleteMany')
+            ->with([$one, $two]);
 
         $this->action->run([$one, $two], []);
     }
