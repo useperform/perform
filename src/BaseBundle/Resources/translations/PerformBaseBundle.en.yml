@@ -1,5 +1,5 @@
 header:
-    title: 'Site Crudistration'
+    title: 'Site Administration'
     links:
         logout: 'Logout'
         home: 'Go to site homepage'
