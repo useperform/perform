@@ -7,6 +7,9 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * A request that involves a crud operation.
  *
+ * The crud name and context are required, all other properties are
+ * optional and depend on the context.
+ *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class CrudRequest
@@ -18,22 +21,23 @@ class CrudRequest
     const CONTEXT_EXPORT = 'export';
     const CONTEXT_DELETE = 'delete';
 
+    protected $crudName;
     protected $context;
-    protected $entityClass;
     protected $page = 1;
     protected $sortField;
     protected $sortDirection;
     protected $filter;
 
-    public function __construct($context)
+    public function __construct($crudName, $context)
     {
+        $this->crudName = $crudName;
         $this->context = $context;
     }
 
     public static function fromRequest(Request $request, $context)
     {
-        $req = new static($context);
-        $req->setEntityClass($request->attributes->get('_entity'));
+        $crudName = $request->attributes->get('_crud');
+        $req = new static($crudName, $context);
         $req->setPage($request->query->get('page', 1));
         $req->setSortField($request->query->get('sort'));
         $req->setSortDirection($request->query->get('direction'));
@@ -45,44 +49,17 @@ class CrudRequest
     /**
      * @return string
      */
+    public function getCrudName()
+    {
+        return $this->crudName;
+    }
+
+    /**
+     * @return string
+     */
     public function getContext()
     {
         return $this->context;
-    }
-
-    /**
-     * Set the entity class for this request.
-     *
-     * @param string $entityClass
-     */
-    public function setEntityClass($entityClass)
-    {
-        $this->entityClass = $entityClass;
-
-        return $this;
-    }
-
-    /**
-     * Get the entity class for this request.
-     *
-     * @return string
-     */
-    public function getEntityClass()
-    {
-        return $this->entityClass;
-    }
-
-    /**
-     * Check if the given entity class is supported by this request.
-     * A supported class is either the same as, or is a parent of, the current entity class.
-     *
-     * @param string
-     *
-     * @return bool
-     */
-    public function supportsEntityClass($entityClass)
-    {
-        return $this->entityClass === $entityClass || is_subclass_of($this->entityClass, $entityClass);
     }
 
     /**
