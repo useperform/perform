@@ -22,23 +22,25 @@ class LinkActionTest extends \PHPUnit_Framework_TestCase
                         ->disableOriginalConstructor()
                         ->getMock();
         $this->authChecker = $this->getMock(AuthorizationCheckerInterface::class);
-        $this->config = new ActionConfig($this->registry, $this->authChecker);
+        $this->config = new ActionConfig($this->registry, $this->authChecker, 'some_crud');
         $this->config->addInstance('link', new LinkAction());
         $this->action = $this->config->get('link');
+    }
+
+    private function crudRequest()
+    {
+        return new CrudRequest('some_crud', CrudRequest::CONTEXT_ACTION);
     }
 
     public function testRunIsForbidden()
     {
         $this->setExpectedException(\RuntimeException::class);
-        $this->action->run([], []);
+        $this->action->run($this->crudRequest(), [], []);
     }
 
     public function testBatchActionDisabled()
     {
-        $request = $this->getMockBuilder(CrudRequest::class)
-                 ->disableOriginalConstructor()
-                 ->getMock();
-        $this->assertFalse($this->action->isBatchOptionAvailable($request));
+        $this->assertFalse($this->action->isBatchOptionAvailable($this->crudRequest()));
     }
 
     public function testIsAlwaysGranted()
