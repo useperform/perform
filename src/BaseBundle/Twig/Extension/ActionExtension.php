@@ -46,12 +46,12 @@ class ActionExtension extends \Twig_Extension
         $this->request = $request;
     }
 
-    public function actionButton(\Twig_Environment $twig, ConfiguredAction $action, $entity, $context, array $attr = [])
+    public function actionButton(\Twig_Environment $twig, ConfiguredAction $action, $crudName, $entity, $context, array $attr = [])
     {
         $label = $action->getLabel($this->request, $entity);
 
         $attr['data-action'] = json_encode([
-            'entityClass' => get_class($entity),
+            'crudName' => $crudName,
             'ids' => [$entity->getId()],
             'label' => $label,
             'context' => $context,
@@ -74,13 +74,13 @@ class ActionExtension extends \Twig_Extension
         ]);
     }
 
-    public function actionOption(\Twig_Environment $twig, ConfiguredAction $action, $entityClass, $context)
+    public function actionOption(\Twig_Environment $twig, ConfiguredAction $action, $crudName, $context)
     {
         $label = $action->getBatchLabel($this->request);
 
         $attr = [];
         $attr['data-action'] = json_encode([
-            'entityClass' => $entityClass,
+            'crudName' => $crudName,
             'label' => $label,
             'context' => $context,
             //need to change the message depending on the number of entities - ajax?
@@ -96,9 +96,9 @@ class ActionExtension extends \Twig_Extension
         ]);
     }
 
-    public function buttonsForEntity($entity)
+    public function buttonsForEntity($crudName, $entity)
     {
-        return $this->store->getActionConfig($entity)->getButtonsForEntity($entity, $this->request);
+        return $this->store->getActionConfig($crudName)->getButtonsForEntity($entity, $this->request);
     }
 
     public function getName()
