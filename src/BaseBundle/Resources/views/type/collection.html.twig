@@ -1,11 +1,11 @@
 {% extends '@PerformBase/type/simple.html.twig' %}
 
 {% block view %}
-  {% if admin is not null %}
+  {% if has_items is not null %}
     <ul class="list-unstyled">
       {% for item in collection %}
         <li>
-          {{perform_entity_label(item)}}
+          {{perform_crud_entity_label(crud_name, item)}}
         </li>
       {% endfor %}
     </ul>

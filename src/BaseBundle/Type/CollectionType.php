@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\Collection;
 use Perform\BaseBundle\Exception\InvalidTypeException;
 use Perform\BaseBundle\Form\Type\CrudType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType as CollectionFormType;
-use Perform\BaseBundle\Crud\CrudRegistry;
 use Symfony\Component\Form\FormEvents;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,20 +15,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
- * CollectionType.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class CollectionType extends AbstractType
 {
-    protected $crudRegistry;
     protected $entityManager;
     protected $assets;
 
-    public function __construct(CrudRegistry $crudRegistry, EntityManagerInterface $entityManager, AssetContainer $assets)
+    public function __construct(EntityManagerInterface $entityManager, AssetContainer $assets)
     {
         parent::__construct();
-        $this->crudRegistry = $crudRegistry;
         $this->entityManager = $entityManager;
         $this->assets = $assets;
     }
@@ -51,7 +46,7 @@ class CollectionType extends AbstractType
         $builder->add($field, CollectionFormType::class, [
             'entry_type' => CrudType::class,
             'entry_options' => [
-                'entity' => $options['entity'],
+                'crud_name' => $options['crud_name'],
                 'context' => $context,
             ],
             'allow_add' => true,
@@ -93,11 +88,12 @@ class CollectionType extends AbstractType
      * entities. Defaults to 'item' or 'items'. Use a string and the
      * plural word will be guessed, or an array of two strings to
      * define the plural word explicitly.
+     * @doc crud_name The crud name to use for the related entity
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setRequired('entity');
-        $resolver->setAllowedTypes('entity', 'string');
+        $resolver->setRequired('crud_name');
+        $resolver->setAllowedTypes('crud_name', 'string');
         $resolver->setDefined('itemLabel');
         $resolver->setAllowedTypes('itemLabel', ['string', 'array']);
         $resolver->setDefaults([
@@ -111,14 +107,10 @@ class CollectionType extends AbstractType
         $collection = $this->accessor->getValue($entity, $field);
         $this->ensureCollection($collection);
 
-        $crud = null;
-        if (isset($collection[0])) {
-            $crud = $this->crudRegistry->get($collection[0]);
-        }
-
         return [
+            'has_items' => isset($collection[0]),
             'collection' => $collection,
-            'admin' => $crud,
+            'crud_name' => $options['crud_name'],
         ];
     }
 
