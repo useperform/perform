@@ -41,18 +41,18 @@ class CrudTemplateListener
 
         $request = $event->getRequest();
         //don't override @Template annotation
-        if ($request->attributes->has('_template') || !$request->attributes->has('_entity')) {
+        if ($request->attributes->has('_template') || !$request->attributes->has('_crud')) {
             return;
         }
 
-        $entity = $request->attributes->get('_entity');
+        $crudName = $request->attributes->get('_crud');
 
         //remove Action
         $context = substr($controller[1], 0, -6);
 
         $template = $this->container->get('perform_base.crud.registry')
-                  ->get($entity)
-                  ->getTemplate($this->container->get('twig'), $entity, $context);
+                  ->get($crudName)
+                  ->getTemplate($this->container->get('twig'), $crudName, $context);
 
         $annotation = new Template([]);
         $annotation->setTemplate($template);
