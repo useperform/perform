@@ -56,23 +56,26 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
         $this->selector = new EntitySelector($em, $this->dispatcher, $this->store);
     }
 
-    protected function expectQueryBuilder($entityName)
+    protected function expectQueryBuilder($entityClass)
     {
-        $this->qb->expects($this->once())
+        $this->store->expects($this->any())
+            ->method('getEntityClass')
+            ->with('some_crud')
+            ->will($this->returnValue($entityClass));
+        $this->qb->expects($this->any())
             ->method('select')
             ->with('e')
             ->will($this->returnSelf());
-        $this->qb->expects($this->once())
+        $this->qb->expects($this->any())
             ->method('from')
-            ->with($entityName, 'e')
+            ->with($entityClass, 'e')
             ->will($this->returnSelf());
     }
 
     public function testGetQueryBuilder()
     {
         $this->expectQueryBuilder('Bundle:SomeEntity');
-        $request = new CrudRequest(CrudRequest::CONTEXT_LIST);
-        $request->setEntityClass('Bundle:SomeEntity');
+        $request = new CrudRequest('some_crud', CrudRequest::CONTEXT_LIST);
 
         $this->dispatcher->expects($this->once())
             ->method('dispatch')
@@ -89,8 +92,7 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
     public function testListContext()
     {
         $this->expectQueryBuilder('Bundle:SomeEntity');
-        $request = new CrudRequest(CrudRequest::CONTEXT_LIST);
-        $request->setEntityClass('Bundle:SomeEntity');
+        $request = new CrudRequest('some_crud', CrudRequest::CONTEXT_LIST);
         $this->filterConfig->expects($this->any())
             ->method('getDefault')
             ->will($this->returnValue('some_filter'));
@@ -108,11 +110,5 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('some_filter', $request->getFilter());
         $this->assertSame('sort_field', $request->getSortField());
         $this->assertSame('DESC', $request->getSortDirection());
-    }
-
-    public function testMissingEntityClassThrowsException()
-    {
-        $this->setExpectedException(\InvalidArgumentException::class);
-        $this->selector->listContext(new CrudRequest(CrudRequest::CONTEXT_LIST));
     }
 }

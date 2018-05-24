@@ -50,10 +50,9 @@ class SortListQueryListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testNoSort()
     {
-        $request = new CrudRequest(CrudRequest::CONTEXT_LIST);
-        $request->setEntityClass('Bundle:SomeEntity');
+        $request = new CrudRequest('some_crud', CrudRequest::CONTEXT_LIST);
 
-        $this->expectTypeConfig('Bundle:SomeEntity', [
+        $this->expectTypeConfig('some_crud', [
             'enabled' => [
                 'type' => 'boolean',
                 'sort' => true,
@@ -67,12 +66,11 @@ class SortListQueryListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testSort()
     {
-        $request = new CrudRequest(CrudRequest::CONTEXT_LIST);
-        $request->setEntityClass('Bundle:SomeEntity');
+        $request = new CrudRequest('some_crud', CrudRequest::CONTEXT_LIST);
         $request->setSortField('title');
         $request->setSortDirection('DESC');
 
-        $this->expectTypeConfig('Bundle:SomeEntity', [
+        $this->expectTypeConfig('some_crud', [
             'title' => [
                 'type' => 'string',
                 'sort' => true,
@@ -88,12 +86,11 @@ class SortListQueryListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testSortWithDisabledField()
     {
-        $request = new CrudRequest(CrudRequest::CONTEXT_LIST);
-        $request->setEntityClass('Bundle:SomeEntity');
+        $request = new CrudRequest('some_crud', CrudRequest::CONTEXT_LIST);
         $request->setSortField('enabled');
         $request->setSortDirection('DESC');
 
-        $this->expectTypeConfig('Bundle:SomeEntity', [
+        $this->expectTypeConfig('some_crud', [
             'enabled' => [
                 'type' => 'boolean',
                 'sort' => false,
@@ -107,12 +104,11 @@ class SortListQueryListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testSortWithCustomFunction()
     {
-        $request = new CrudRequest(CrudRequest::CONTEXT_LIST);
-        $request->setEntityClass('Bundle:SomeEntity');
+        $request = new CrudRequest('some_crud', CrudRequest::CONTEXT_LIST);
         $request->setSortField('fullname');
         $request->setSortDirection('DESC');
 
-        $this->expectTypeConfig('Bundle:SomeEntity', [
+        $this->expectTypeConfig('some_crud', [
             'fullname' => [
                 'type' => 'string',
                 'sort' => function ($qb, $direction) {
@@ -135,15 +131,14 @@ class SortListQueryListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testSortWithCustomQueryBuilder()
     {
-        $request = new CrudRequest(CrudRequest::CONTEXT_LIST);
-        $request->setEntityClass('Bundle:SomeEntity');
+        $request = new CrudRequest('some_crud', CrudRequest::CONTEXT_LIST);
         $request->setSortField('fullname');
         $request->setSortDirection('DESC');
 
         $differentQb = $this->getMockBuilder(QueryBuilder::class)
                      ->disableOriginalConstructor()
                      ->getMock();
-        $this->expectTypeConfig('Bundle:SomeEntity', [
+        $this->expectTypeConfig('some_crud', [
             'fullname' => [
                 'type' => 'string',
                 'sort' => function ($qb, $direction) use ($differentQb) {
@@ -158,12 +153,11 @@ class SortListQueryListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testSortWithInvalidCustomFunction()
     {
-        $request = new CrudRequest(CrudRequest::CONTEXT_LIST);
-        $request->setEntityClass('Bundle:SomeEntity');
+        $request = new CrudRequest('some_crud', CrudRequest::CONTEXT_LIST);
         $request->setSortField('fullname');
         $request->setSortDirection('DESC');
 
-        $this->expectTypeConfig('Bundle:SomeEntity', [
+        $this->expectTypeConfig('some_crud', [
             'fullname' => [
                 'type' => 'string',
                 'sort' => function ($qb, $direction) {

@@ -22,7 +22,7 @@ class SortListQueryListener
     public function onListQuery(QueryEvent $event)
     {
         $request = $event->getCrudRequest();
-        $entityName = $request->getEntityClass();
+        $crudName = $request->getCrudName();
         $orderField = $request->getSortField();
         if (!$orderField) {
             return;
@@ -34,7 +34,7 @@ class SortListQueryListener
             return;
         }
 
-        $typeConfig = $this->store->getTypeConfig($entityName);
+        $typeConfig = $this->store->getTypeConfig($crudName);
         $qb = $event->getQueryBuilder();
 
         $typeConfig = $typeConfig->getTypes(CrudRequest::CONTEXT_LIST);
@@ -60,7 +60,7 @@ class SortListQueryListener
             return;
         }
         if (!$newQb instanceof QueryBuilder) {
-            throw new \UnexpectedValueException(sprintf('The sort function for %s->%s must return an instance of Doctrine\ORM\QueryBuilder or null.', $entityName, $orderField));
+            throw new \UnexpectedValueException(sprintf('The sort function for %s->%s must return an instance of Doctrine\ORM\QueryBuilder or null.', $crudName, $orderField));
         }
 
         $event->setQueryBuilder($newQb);

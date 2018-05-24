@@ -26,12 +26,12 @@ class FilterListQueryListener
     public function onListQuery(QueryEvent $event)
     {
         $request = $event->getCrudRequest();
-        $entityClass = $request->getEntityClass();
+        $crudName = $request->getCrudName();
         $filterName = $request->getFilter();
         if (!$filterName) {
             return;
         }
-        $filterConfig = $this->store->getFilterConfig($entityClass);
+        $filterConfig = $this->store->getFilterConfig($crudName);
         $filter = $filterConfig->getFilter($filterName);
         if (!$filter) {
             return;
@@ -47,7 +47,7 @@ class FilterListQueryListener
             return;
         }
         if (!$newQb instanceof QueryBuilder) {
-            throw new \UnexpectedValueException(sprintf('The filter function "%s" for %s must return an instance of Doctrine\ORM\QueryBuilder or null.', $filterName, $entityClass));
+            throw new \UnexpectedValueException(sprintf('The filter function "%s" for %s must return an instance of Doctrine\ORM\QueryBuilder or null.', $filterName, $crudName));
         }
 
         $event->setQueryBuilder($newQb);
@@ -56,8 +56,8 @@ class FilterListQueryListener
     public function onListContext(ContextEvent $event)
     {
         $request = $event->getCrudRequest();
-        $entityClass = $request->getEntityClass();
-        $filterConfig = $this->store->getFilterConfig($entityClass);
+        $crudName = $request->getCrudName();
+        $filterConfig = $this->store->getFilterConfig($crudName);
         if (!$filterConfig) {
             return;
         }

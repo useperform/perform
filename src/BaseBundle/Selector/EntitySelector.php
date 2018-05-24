@@ -30,7 +30,7 @@ class EntitySelector
 
     public function getQueryBuilder(CrudRequest $request)
     {
-        $entityClass = $this->getEntityClass($request);
+        $entityClass = $this->store->getEntityClass($request->getCrudName());
         $qb = $this->entityManager->createQueryBuilder()
             ->select('e')
             ->from($entityClass, 'e');
@@ -43,9 +43,9 @@ class EntitySelector
 
     public function listContext(CrudRequest $request)
     {
-        $entityClass = $this->getEntityClass($request);
-        $request->setDefaultFilter($this->store->getFilterConfig($entityClass)->getDefault());
-        $defaultSort = $this->store->getTypeConfig($entityClass)->getDefaultSort();
+        $crudName = $request->getCrudName();
+        $request->setDefaultFilter($this->store->getFilterConfig($crudName)->getDefault());
+        $defaultSort = $this->store->getTypeConfig($crudName)->getDefaultSort();
         $request->setDefaultSortField($defaultSort[0]);
         $request->setDefaultSortDirection($defaultSort[1]);
 
@@ -75,7 +75,7 @@ class EntitySelector
 
     private function selectSingleEntity(CrudRequest $request, $identifier, $eventName)
     {
-        $entityClass = $this->getEntityClass($request);
+        $entityClass = $this->store->getEntityClass($request->getCrudName());
         $idColumn = $this->entityManager->getClassMetadata($entityClass)->getIdentifier();
 
         if (!is_array($idColumn) || !isset($idColumn[0])) {
@@ -97,15 +97,5 @@ class EntitySelector
                 ->getResult();
 
         return isset($result[0]) ? $result[0] : null;
-    }
-
-    private function getEntityClass(CrudRequest $request)
-    {
-        $entityClass = $request->getEntityClass();
-        if (!$entityClass) {
-            throw new \InvalidArgumentException('Missing required entity class.');
-        }
-
-        return $entityClass;
     }
 }
