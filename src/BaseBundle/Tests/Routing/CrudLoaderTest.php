@@ -4,6 +4,8 @@ namespace Perform\BaseBundle\Tests\Routing;
 
 use Perform\BaseBundle\Routing\CrudLoader;
 use Symfony\Component\Routing\Route;
+use Perform\BaseBundle\Crud\CrudRegistry;
+use Perform\BaseBundle\Crud\CrudInterface;
 
 /**
  * CrudLoaderTest
@@ -17,15 +19,15 @@ class CrudLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->registry = $this->getMockBuilder('Perform\BaseBundle\Crud\CrudRegistry')
+        $this->registry = $this->getMockBuilder(CrudRegistry::class)
                                 ->disableOriginalConstructor()
                                 ->getMock();
         $this->loader = new CrudLoader($this->registry);
     }
 
-    protected function expectCrud($controller, $routePrefix, array $actions)
+    protected function expectCrud($crudName, $controller, $routePrefix, array $actions)
     {
-        $crud = $this->getMock('Perform\BaseBundle\Crud\CrudInterface');
+        $crud = $this->getMock(CrudInterface::class);
         $crud->expects($this->any())
             ->method('getControllerName')
             ->will($this->returnValue($controller));
@@ -38,6 +40,7 @@ class CrudLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->registry->expects($this->any())
             ->method('get')
+            ->with($crudName)
             ->will($this->returnValue($crud));
     }
 
@@ -58,9 +61,10 @@ class CrudLoaderTest extends \PHPUnit_Framework_TestCase
             '/create' => 'create',
             '/edit/{id}' => 'edit',
         ];
-        $this->expectCrud($controller, $routePrefix, $routes);
+        $crudName = 'some_crud';
+        $this->expectCrud($crudName, $controller, $routePrefix, $routes);
 
-        $collection = $this->loader->load('SomeBundle:Foo');
+        $collection = $this->loader->load($crudName);
         $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
 
         foreach ($collection as $name => $route) {
@@ -81,9 +85,10 @@ class CrudLoaderTest extends \PHPUnit_Framework_TestCase
             '/' => 'viewDefault',
             '/edit' => 'editDefault',
         ];
-        $this->expectCrud($controller, $routePrefix, $routes);
+        $crudName = 'another_crud';
+        $this->expectCrud($crudName, $controller, $routePrefix, $routes);
 
-        $collection = $this->loader->load('SomeBundle:Foo');
+        $collection = $this->loader->load($crudName);
         $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
 
         $this->assertSame(['some_foo_view_default', 'some_foo_edit_default'], array_keys($collection->all()));

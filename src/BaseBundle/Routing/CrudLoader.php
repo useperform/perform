@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Route;
 use Perform\BaseBundle\Crud\CrudRegistry;
 use Symfony\Component\Config\Resource\FileResource;
 use Perform\BaseBundle\Crud\CrudInterface;
+use Perform\BaseBundle\Controller\CrudController;
 
 /**
  * CrudLoader creates crud routes dynamically for an entity crud.
@@ -23,22 +24,22 @@ class CrudLoader extends Loader
         $this->registry = $registry;
     }
 
-    public function load($entity, $type = null)
+    public function load($crudName, $type = null)
     {
-        $crud = $this->registry->get($entity);
-        $class = $crud->getControllerName();
-        $refl = new \ReflectionClass($class);
+        $crud = $this->registry->get($crudName);
 
-        $crudClass = 'Perform\BaseBundle\Controller\CrudController';
-        if ($refl->getName() !== $crudClass && !$refl->isSubclassOf($crudClass)) {
-            throw new \InvalidArgumentException($class.' must be an instance of Perform\BaseBundle\Controller\CrudController to use crud routing');
+        $controllerClass = $crud->getControllerName();
+        $refl = new \ReflectionClass($controllerClass);
+        $baseControllerClass = CrudController::class;
+        if ($refl->getName() !== $baseControllerClass && !$refl->isSubclassOf($baseControllerClass)) {
+            throw new \InvalidArgumentException(sprintf('%s must be an instance of %s to use crud routing.', $controllerClass, $baseControllerClass));
         }
 
         $collection = new RouteCollection();
         foreach ($crud->getActions() as $path => $action) {
             $route = new Route($path, [
-                '_controller' => $class.'::'.$action.'Action',
-                '_entity' => $entity,
+                '_controller' => $controllerClass.'::'.$action.'Action',
+                '_crud' => $crudName,
             ]);
             $collection->add($this->createRouteName($crud, $action), $route);
         }
