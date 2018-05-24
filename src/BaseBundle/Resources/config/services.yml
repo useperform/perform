@@ -31,7 +31,6 @@ services:
         class: Perform\BaseBundle\Form\Type\CrudType
         arguments:
             - '@perform_base.config_store'
-            - '@perform_base.doctrine.entity_resolver'
             - '@perform_base.type_registry'
         tags:
             - {name: form.type}
