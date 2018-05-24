@@ -9,6 +9,7 @@ use Perform\BaseBundle\Crud\CrudRegistry;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\TraceableAccessDecisionManager;
+use Perform\BaseBundle\Util\StringUtil;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -30,20 +31,28 @@ class CrudDataCollector extends DataCollector
 
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
-        $crudServices = $this->registry->all();
+        $crudNames = [];
+        foreach ($this->registry->all() as $crudName => $crud) {
+            $crudNames[$crudName] = [
+                $crudClass = get_class($crud),
+                $crudClass::getEntityClass(),
+            ];
+        }
 
-        ksort($crudServices);
+        ksort($crudNames);
         $this->data = [
-            'crud' => $crudServices,
+            'crudNames' => $crudNames,
             'extendedEntities' => $this->extendedEntities,
             'correctVoterStrategy' => $this->accessDecisionManager instanceof TraceableAccessDecisionManager ? $this->accessDecisionManager->getStrategy() === 'unanimous' : true,
         ];
-        if ($request->attributes->has('_entity')) {
-            $this->data['activeEntity'] = $request->attributes->get('_entity');
-            $this->data['activeCrud'] = get_class($this->registry->get($this->data['activeEntity']));
-            $this->data['typeConfig'] = $this->store->getTypeConfig($this->data['activeEntity'])->getAllTypes();
+        if ($request->attributes->has('_crud')) {
+            $crudName = $request->attributes->get('_crud');
+            $this->data['activeCrud'] = $crudNames[$crudName][0];
+            $this->data['activeCrudAlias'] = StringUtil::classBasename($crudNames[$crudName][0]);
+            $this->data['activeEntity'] = $crudNames[$crudName][1];
+            $this->data['typeConfig'] = $this->store->getTypeConfig($crudName)->getAllTypes();
             $this->sanitize($this->data['typeConfig']);
-            $this->data['addedConfigs'] = $this->store->getTypeConfig($this->data['activeEntity'])->getAddedConfigs();
+            $this->data['addedConfigs'] = $this->store->getTypeConfig($crudName)->getAddedConfigs();
             $this->sanitize($this->data['addedConfigs']);
         }
     }
@@ -57,14 +66,9 @@ class CrudDataCollector extends DataCollector
         });
     }
 
-    public function getCrud()
+    public function getCrudNames()
     {
-        return $this->data['crud'];
-    }
-
-    public function getActiveEntity()
-    {
-        return isset($this->data['activeEntity']) ? $this->data['activeEntity'] : null;
+        return $this->data['crudNames'];
     }
 
     public function getActiveCrud()
@@ -72,12 +76,14 @@ class CrudDataCollector extends DataCollector
         return isset($this->data['activeCrud']) ? $this->data['activeCrud'] : null;
     }
 
-    public function getActiveAlias()
+    public function getActiveCrudAlias()
     {
-        $crud = $this->getActiveCrud();
-        $pieces = explode('\\', $this->getActiveCrud());
+        return isset($this->data['activeCrudAlias']) ? $this->data['activeCrudAlias'] : null;
+    }
 
-        return array_pop($pieces);
+    public function getActiveEntity()
+    {
+        return isset($this->data['activeEntity']) ? $this->data['activeEntity'] : null;
     }
 
     public function getTypeConfig()
