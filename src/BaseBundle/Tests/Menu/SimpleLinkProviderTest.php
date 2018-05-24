@@ -12,9 +12,9 @@ use Knp\Menu\ItemInterface;
  **/
 class SimpleLinkProviderTest extends \PHPUnit_Framework_TestCase
 {
-    protected function create($alias, $entity = null, $route = null, $icon = null)
+    protected function create($alias, $crud = null, $route = null, $icon = null)
     {
-        return new SimpleLinkProvider($alias, $entity, $route, $icon);
+        return new SimpleLinkProvider($alias, $crud, $route, $icon);
     }
 
     protected function stubMenu()
@@ -50,26 +50,26 @@ class SimpleLinkProviderTest extends \PHPUnit_Framework_TestCase
         $provider->addLinks($menu);
     }
 
-    public function testEntityOnly()
+    public function testCrudOnly()
     {
-        $provider = $this->create('foo', 'FooBundle:Entity', null);
+        $provider = $this->create('foo', 'some_crud', null);
 
         $menu = $this->stubMenu();
         $menu->expects($this->once())
             ->method('addChild')
-            ->with('foo', ['entity' => 'FooBundle:Entity']);
+            ->with('foo', ['crud' => 'some_crud']);
         $provider->addLinks($menu);
     }
 
-    public function testEntityWithIcon()
+    public function testCrudWithIcon()
     {
-        $provider = $this->create('foo', 'FooBundle:Entity', null, 'foo');
+        $provider = $this->create('foo', 'some_crud', null, 'foo');
 
         $menu = $this->stubMenu();
         $child = $this->stubMenu();
         $menu->expects($this->once())
             ->method('addChild')
-            ->with('foo', ['entity' => 'FooBundle:Entity'])
+            ->with('foo', ['crud' => 'some_crud'])
             ->will($this->returnValue($child));
         $child->expects($this->once())
             ->method('setExtra')
@@ -78,18 +78,18 @@ class SimpleLinkProviderTest extends \PHPUnit_Framework_TestCase
         $provider->addLinks($menu);
     }
 
-    public function testEntityOverridesRoute()
+    public function testCrudOverridesRoute()
     {
-        $provider = $this->create('foo', 'FooBundle:Entity', 'foo_entity');
+        $provider = $this->create('foo', 'some_crud', 'foo_crud');
 
         $menu = $this->stubMenu();
         $menu->expects($this->once())
             ->method('addChild')
-            ->with('foo', ['entity' => 'FooBundle:Entity']);
+            ->with('foo', ['crud' => 'some_crud']);
         $provider->addLinks($menu);
     }
 
-    public function testRouteOrEntityIsRequired()
+    public function testRouteOrCrudIsRequired()
     {
         $this->setExpectedException(\InvalidArgumentException::class);
         $this->create('foo');

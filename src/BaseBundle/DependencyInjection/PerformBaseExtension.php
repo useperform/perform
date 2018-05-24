@@ -13,6 +13,7 @@ use Perform\Licensing\Licensing;
 use Perform\BaseBundle\Type\TypeInterface;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Money\Money;
+use Perform\BaseBundle\Menu\SimpleLinkProvider;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -158,8 +159,8 @@ class PerformBaseExtension extends Extension
     protected function createSimpleMenus(ContainerBuilder $container, array $config)
     {
         foreach ($config as $alias => $options) {
-            $definition = $container->register('perform_base.menu.simple.'.$alias, 'Perform\BaseBundle\Menu\SimpleLinkProvider');
-            $definition->setArguments([$alias, $options['entity'], $options['route'], $options['icon']]);
+            $definition = $container->register('perform_base.menu.simple.'.$alias, SimpleLinkProvider::class);
+            $definition->setArguments([$alias, $options['crud'], $options['route'], $options['icon']]);
             $definition->addTag('perform_base.link_provider', ['alias' => $alias]);
         }
     }

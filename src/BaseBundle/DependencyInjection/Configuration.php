@@ -134,7 +134,7 @@ class Configuration implements ConfigurationInterface
                                     ->scalarNode('route')
                                         ->defaultNull()
                                     ->end()
-                                    ->scalarNode('entity')
+                                    ->scalarNode('crud')
                                         ->defaultNull()
                                     ->end()
                                     ->scalarNode('icon')
