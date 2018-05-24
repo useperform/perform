@@ -8,16 +8,14 @@ use Perform\BaseBundle\Config\TypeConfig;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class TestCrud extends AbstractCrud
+class InvalidCrud extends AbstractCrud
 {
-    protected $routePrefix = 'test_crud_';
-
     public function configureTypes(TypeConfig $config)
     {
     }
 
     public static function getEntityClass()
     {
-        return TestEntity::class;
+        return 'Perform\Not\An\Entity';
     }
 }

@@ -4,10 +4,13 @@ namespace BaseBundle\Tests\DependencyInjection\Compiler;
 
 use Perform\BaseBundle\DependencyInjection\Compiler\CrudPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\XmlParentBundle\Entity\Item;
-use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\XmlParentBundle\Entity\ItemLink;
-use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\XmlChildBundle\Entity\XmlItem;
 use Perform\BaseBundle\Crud\InvalidCrudException;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Perform\BaseBundle\Tests\Crud\TestCrud;
+use Perform\BaseBundle\Tests\Crud\OtherTestCrud;
+use Perform\BaseBundle\Tests\Crud\InvalidCrud;
+use Symfony\Component\DependencyInjection\Reference;
+use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -16,118 +19,43 @@ class CrudPassTest extends \PHPUnit_Framework_TestCase
 {
     protected $pass;
     protected $container;
+    protected $registry;
 
     public function setUp()
     {
         $this->pass = new CrudPass();
         $this->container = new ContainerBuilder();
-        $this->registry = $this->container->register('perform_base.crud.registry', 'Perform\BaseBundle\Type\TypeRegistry');
-        $this->container->setParameter('perform_base.cruds', []);
-        $this->container->setParameter('perform_base.extended_entities', []);
+        $this->registry = $this->container->register('perform_base.crud.registry', CrudRegistry::class);
     }
 
     public function testIsCompilerPass()
     {
-        $this->assertInstanceOf('Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface', $this->pass);
+        $this->assertInstanceOf(CompilerPassInterface::class, $this->pass);
     }
 
-    public function testRegisterCrud()
+    public function testTaggedServicesAreRegistered()
     {
-        $this->container->setParameter('perform_base.entity_aliases', [
-            'ParentBundle:Item' => Item::class,
-            'ParentBundle:ItemLink' => ItemLink::class,
-        ]);
-        $this->container->register('parent.crud.item', 'ParentBundle\Crud\ItemCrud')
-            ->addTag('perform_base.crud', ['entity' => 'ParentBundle:Item']);
-        $this->container->register('parent.crud.item_link', 'ParentBundle\Crud\ItemLinkCrud')
-            ->addTag('perform_base.crud', ['entity' => 'ParentBundle:ItemLink']);
+        $this->container->register('crud.foo', TestCrud::class)
+            ->addTag('perform_base.crud', ['crud_name' => 'foo']);
+        $this->container->register('crud.bar', OtherTestCrud::class)
+            ->addTag('perform_base.crud', ['crud_name' => 'bar']);
 
         $this->pass->process($this->container);
-        $calls = [
-            [
-                'add',
-                [Item::class, 'parent.crud.item'],
-            ],
-            [
-                'add',
-                [ItemLink::class, 'parent.crud.item_link'],
-            ],
+
+        $locator = $this->registry->getArgument(0);
+        $this->assertSame(LoopableServiceLocator::class, $locator->getClass());
+        $expectedFactories = [
+            'foo' => new Reference('crud.foo'),
+            'bar' => new Reference('crud.bar'),
         ];
-        $this->assertSame($calls, $this->registry->getMethodCalls());
+        $this->assertEquals($expectedFactories, $locator->getArgument(0));
     }
 
-    public function testRegisterCrudWithClassname()
-    {
-        $this->container->setParameter('perform_base.entity_aliases', [
-            'ParentBundle:Item' => Item::class,
-        ]);
-        $this->container->register('parent.crud.item', 'ParentBundle\Crud\ItemCrud')
-            ->addTag('perform_base.crud', ['entity' => Item::class]);
-
-        $this->pass->process($this->container);
-        $calls = [
-            [
-                'add',
-                [Item::class, 'parent.crud.item'],
-            ],
-        ];
-        $this->assertSame($calls, $this->registry->getMethodCalls());
-    }
-
-    public function testExtendedEntitiesAreSkipped()
-    {
-        //an entity has been extended, but the same admin is being used (no
-        //admin registered for the extended entity).
-        $this->container->setParameter('perform_base.entity_aliases', [
-            'ParentBundle:Item' => Item::class,
-            'ChildBundle:XmlItem' => XmlItem::class,
-        ]);
-        $this->container->register('parent.crud.item', 'ParentBundle\Crud\ItemCrud')
-            ->addTag('perform_base.crud', ['entity' => 'ParentBundle:Item']);
-        $this->container->setParameter('perform_base.extended_entities', [
-            Item::class => XmlItem::class,
-        ]);
-
-        $this->pass->process($this->container);
-        $calls = [
-            [
-                'add',
-                [XmlItem::class, 'parent.crud.item'],
-            ],
-        ];
-        $this->assertSame($calls, $this->registry->getMethodCalls());
-    }
-
-    public function testChildEntitiesUseNewCrud()
-    {
-        //an entity has been extended, and a new admin is being used.
-        $this->container->setParameter('perform_base.entity_aliases', [
-            'ParentBundle:Item' => Item::class,
-            'ChildBundle:XmlItem' => XmlItem::class,
-        ]);
-        $this->container->register('parent.crud.item', 'ParentBundle\Crud\ItemCrud')
-            ->addTag('perform_base.crud', ['entity' => 'ParentBundle:Item']);
-        $this->container->register('child.crud.xml_item', 'ChildBundle\Crud\XmlItemCrud')
-            ->addTag('perform_base.crud', ['entity' => 'ChildBundle:XmlItem']);
-        $this->container->setParameter('perform_base.extended_entities', [
-            Item::class => XmlItem::class,
-        ]);
-
-        $this->pass->process($this->container);
-        $calls = [
-            [
-                'add',
-                [XmlItem::class, 'child.crud.xml_item'],
-            ],
-        ];
-        $this->assertSame($calls, $this->registry->getMethodCalls());
-    }
-
-    public function testUnknownClassThrowsException()
+    public function testCrudWithUnknownEntityThrowsException()
     {
         $this->container->setParameter('perform_base.entity_aliases', []);
-        $this->container->register('parent.crud.item', 'ParentBundle\Crud\ItemCrud')
-            ->addTag('perform_base.crud', ['entity' => 'ParentBundle:Item']);
+        $this->container->register('crud.invalid', InvalidCrud::class)
+            ->addTag('perform_base.crud', ['crud_name' => 'invalid']);
 
         $this->setExpectedException(InvalidCrudException::class);
         $this->pass->process($this->container);
