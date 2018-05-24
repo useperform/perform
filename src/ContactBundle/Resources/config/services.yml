@@ -2,13 +2,13 @@ services:
     perform_contact.crud.message:
         class: Perform\ContactBundle\Crud\MessageCrud
         tags:
-            - { name: perform_base.crud, entity: "PerformContactBundle:Message" }
+            - { name: perform_base.crud, crud_name: "perform_contact.message" }
 
     perform_contact.menu_link.contact:
         class: Perform\BaseBundle\Menu\SimpleLinkProvider
         arguments:
             - 'contact'
-            - 'PerformContactBundle:Message'
+            - 'perform_contact.message'
             - null
             - 'envelope'
         tags:
@@ -40,21 +40,21 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
         tags:
-            - { name: perform_base.action, alias: perform_contact_archive, entity: 'PerformContactBundle:Message' }
+            - { name: perform_base.action, alias: perform_contact_archive }
 
     perform_contact.action.new:
         class: Perform\ContactBundle\Action\NewAction
         arguments:
             - "@doctrine.orm.entity_manager"
         tags:
-            - { name: perform_base.action, alias: perform_contact_new, entity: 'PerformContactBundle:Message' }
+            - { name: perform_base.action, alias: perform_contact_new }
 
     perform_contact.action.spam:
         class: Perform\ContactBundle\Action\SpamAction
         arguments:
             - "@doctrine.orm.entity_manager"
         tags:
-            - { name: perform_base.action, alias: perform_contact_spam, entity: 'PerformContactBundle:Message' }
+            - { name: perform_base.action, alias: perform_contact_spam }
 
     Perform\ContactBundle\Command\:
         resource: '../../Command'
