@@ -28,16 +28,15 @@ class TemplatePopulator
 
     public function listContext(CrudRequest $crudRequest, PagerfantaInterface $paginator, array $orderBy)
     {
-        $entityClass = $crudRequest->getEntityClass();
+        $crudName = $crudRequest->getCrudName();
         $templateVariables = [
-            'fields' => $this->store->getTypeConfig($entityClass)->getTypes($crudRequest->getContext()),
-            'filters' => $this->store->getFilterConfig($entityClass)->getFilters(),
-            'batchActions' => $this->store->getActionConfig($entityClass)->getBatchOptionsForRequest($crudRequest),
-            'labelConfig' => $this->store->getLabelConfig($entityClass),
-            'routePrefix' => $this->crudRegistry->get($entityClass)->getRoutePrefix(),
+            'fields' => $this->store->getTypeConfig($crudName)->getTypes($crudRequest->getContext()),
+            'filters' => $this->store->getFilterConfig($crudName)->getFilters(),
+            'batchActions' => $this->store->getActionConfig($crudName)->getBatchOptionsForRequest($crudRequest),
+            'labelConfig' => $this->store->getLabelConfig($crudName),
             'paginator' => $paginator,
             'orderBy' => $orderBy,
-            'entityClass' => $entityClass,
+            'crudName' => $crudName,
         ];
         $event = new ContextEvent($crudRequest, $templateVariables);
         $this->dispatcher->dispatch(ContextEvent::CONTEXT_LIST, $event);
@@ -47,11 +46,12 @@ class TemplatePopulator
 
     public function viewContext(CrudRequest $crudRequest, $entity)
     {
-        $entityClass = $crudRequest->getEntityClass();
+        $crudName = $crudRequest->getCrudName();
         $templateVariables = [
-            'fields' => $this->store->getTypeConfig($entityClass)->getTypes($crudRequest->getContext()),
-            'labelConfig' => $this->store->getLabelConfig($entityClass),
+            'fields' => $this->store->getTypeConfig($crudName)->getTypes($crudRequest->getContext()),
+            'labelConfig' => $this->store->getLabelConfig($crudName),
             'entity' => $entity,
+            'crudName' => $crudName,
         ];
         $event = new ContextEvent($crudRequest, $templateVariables);
         $this->dispatcher->dispatch(ContextEvent::CONTEXT_VIEW, $event);
@@ -61,11 +61,12 @@ class TemplatePopulator
 
     public function createContext(CrudRequest $crudRequest, FormView $formView, $entity)
     {
-        $entityClass = $crudRequest->getEntityClass();
+        $crudName = $crudRequest->getCrudName();
         $templateVariables = [
             'entity' => $entity,
             'form' => $formView,
-            'labelConfig' => $this->store->getLabelConfig($entityClass),
+            'crudName' => $crudName,
+            'labelConfig' => $this->store->getLabelConfig($crudName),
         ];
         $event = new ContextEvent($crudRequest, $templateVariables);
         $this->dispatcher->dispatch(ContextEvent::CONTEXT_CREATE, $event);
@@ -75,11 +76,12 @@ class TemplatePopulator
 
     public function editContext(CrudRequest $crudRequest, FormView $formView, $entity)
     {
-        $entityClass = $crudRequest->getEntityClass();
+        $crudName = $crudRequest->getCrudName();
         $templateVariables = [
             'entity' => $entity,
             'form' => $formView,
-            'labelConfig' => $this->store->getLabelConfig($entityClass),
+            'crudName' => $crudName,
+            'labelConfig' => $this->store->getLabelConfig($crudName),
         ];
         $event = new ContextEvent($crudRequest, $templateVariables);
         $this->dispatcher->dispatch(ContextEvent::CONTEXT_EDIT, $event);

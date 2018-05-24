@@ -8,7 +8,7 @@
     {% if paginator.haveToPaginate %}
       {% set query = app.request.query.all %}
       <nav aria-label="Page navigation">
-        {{perform_crud_paginator(paginator, entityClass)}}
+        {{perform_crud_paginator(paginator, crudName)}}
       </nav>
     {% endif %}
   </div>

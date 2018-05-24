@@ -33,9 +33,9 @@
         </tbody>
       </table>
       {% block actions %}
-        <a href="{{perform_crud_route(entity, 'list')}}" class="btn btn-light">Back</a>
-        {% for action in perform_action_buttons_for(entity) %}
-          {{perform_action_button(action, entity, 'view')}}
+        <a href="{{perform_crud_route(crudName, 'list')}}" class="btn btn-light">Back</a>
+        {% for action in perform_action_buttons_for(crudName, entity) %}
+          {{perform_action_button(action, crudName, entity, 'view')}}
         {% endfor %}
       {% endblock %}
     </div>
