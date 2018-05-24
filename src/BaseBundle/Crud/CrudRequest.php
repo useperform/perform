@@ -19,7 +19,7 @@ class CrudRequest
     const CONTEXT_CREATE = 'create';
     const CONTEXT_EDIT = 'edit';
     const CONTEXT_EXPORT = 'export';
-    const CONTEXT_DELETE = 'delete';
+    const CONTEXT_ACTION = 'action';
 
     protected $crudName;
     protected $context;

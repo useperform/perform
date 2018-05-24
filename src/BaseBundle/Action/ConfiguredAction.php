@@ -116,8 +116,8 @@ class ConfiguredAction
         return $this->options['buttonStyle'];
     }
 
-    public function run($entities, array $options = [])
+    public function run(CrudRequest $crudRequest, $entities, array $options = [])
     {
-        return $this->action->run($entities, $options);
+        return $this->action->run($crudRequest, $entities, $options);
     }
 }

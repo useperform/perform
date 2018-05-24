@@ -24,7 +24,7 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
                         ->disableOriginalConstructor()
                         ->getMock();
         $this->authChecker = $this->getMock(AuthorizationCheckerInterface::class);
-        $this->config = new ActionConfig($this->registry, $this->authChecker);
+        $this->config = new ActionConfig($this->registry, $this->authChecker, 'some_crud');
     }
 
     protected function stubRequest()
@@ -44,6 +44,11 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
         return $action;
     }
 
+    public function testGetCrudName()
+    {
+        $this->assertSame('some_crud', $this->config->getCrudName());
+    }
+
     public function testAddInstance()
     {
         $action = $this->stubAction();
@@ -53,12 +58,13 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(ConfiguredAction::class, $ca);
         $this->assertFalse($ca->isLink());
 
-        $options = ['opt' => true];
+        $request = new CrudRequest('some_crud', CrudRequest::CONTEXT_ACTION);
         $entities = [new \stdClass()];
+        $options = ['opt' => true];
         $action->expects($this->once())
             ->method('run')
-            ->with($entities, $options);
-        $ca->run($entities, $options);
+            ->with($request, $entities, $options);
+        $ca->run($request, $entities, $options);
     }
 
     public function testAddNoLabels()

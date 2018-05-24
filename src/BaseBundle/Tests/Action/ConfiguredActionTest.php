@@ -108,10 +108,11 @@ class ConfiguredActionTest extends \PHPUnit_Framework_TestCase
         $options = ['options'];
         $ca = new ConfiguredAction('foo', $this->action, []);
 
+        $request = new CrudRequest('some_crud', CrudRequest::CONTEXT_ACTION);
         $this->action->expects($this->once())
             ->method('run')
-            ->with($entities, $options);
+            ->with($request, $entities, $options);
 
-        $ca->run($entities, $options);
+        $ca->run($request, $entities, $options);
     }
 }

@@ -7,6 +7,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Doctrine\ORM\EntityNotFoundException;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
  * ActionRunner.
@@ -26,9 +27,11 @@ class ActionRunner
         $this->authChecker = $authChecker;
     }
 
-    public function run($actionName, $entityClass, array $entityIds, array $options = [])
+    public function run($crudName, $actionName, array $entityIds, array $options = [])
     {
-        $action = $this->store->getActionConfig($entityClass)->get($actionName);
+        $action = $this->store->getActionConfig($crudName)->get($actionName);
+        $entityClass = $this->store->getEntityClass($crudName);
+        $crudRequest = new CrudRequest($crudName, CrudRequest::CONTEXT_ACTION);
 
         $entities = [];
         foreach ($entityIds as $id) {
@@ -44,6 +47,6 @@ class ActionRunner
             $entities[] = $entity;
         }
 
-        return $action->run($entities, $options);
+        return $action->run($crudRequest, $entities, $options);
     }
 }
