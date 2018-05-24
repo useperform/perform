@@ -22,6 +22,11 @@ class EntityManagerTest extends \PHPUnit_Framework_TestCase
         $this->manager = new EntityManager($this->em, $this->dispatcher, $this->logger);
     }
 
+    private function crudRequest($context)
+    {
+        return new CrudRequest('some_crud', $context);
+    }
+
     public function testCreate()
     {
         $entity = new \stdClass();
@@ -40,7 +45,7 @@ class EntityManagerTest extends \PHPUnit_Framework_TestCase
                 [$this->equalTo(EntityEvent::POST_CREATE), $this->callback($eventCallback)]
             );
 
-        $this->assertSame($entity, $this->manager->create(new CrudRequest(CrudRequest::CONTEXT_CREATE), $entity));
+        $this->assertSame($entity, $this->manager->create($this->crudRequest(CrudRequest::CONTEXT_CREATE), $entity));
     }
 
     public function testCreateWithChangedEntity()
@@ -56,7 +61,7 @@ class EntityManagerTest extends \PHPUnit_Framework_TestCase
                 $event->setEntity($newEntity);
             }));
 
-        $this->assertSame($newEntity, $this->manager->create(new CrudRequest(CrudRequest::CONTEXT_CREATE), $entity));
+        $this->assertSame($newEntity, $this->manager->create($this->crudRequest(CrudRequest::CONTEXT_CREATE), $entity));
     }
 
     public function testUpdate()
@@ -77,7 +82,7 @@ class EntityManagerTest extends \PHPUnit_Framework_TestCase
                 [$this->equalTo(EntityEvent::POST_UPDATE), $this->callback($eventCallback)]
             );
 
-        $this->assertSame($entity, $this->manager->update(new CrudRequest(CrudRequest::CONTEXT_EDIT), $entity));
+        $this->assertSame($entity, $this->manager->update($this->crudRequest(CrudRequest::CONTEXT_EDIT), $entity));
     }
 
     public function testUpdateWithChangedEntity()
@@ -93,7 +98,7 @@ class EntityManagerTest extends \PHPUnit_Framework_TestCase
                 $event->setEntity($newEntity);
             }));
 
-        $this->assertSame($newEntity, $this->manager->update(new CrudRequest(CrudRequest::CONTEXT_EDIT), $entity));
+        $this->assertSame($newEntity, $this->manager->update($this->crudRequest(CrudRequest::CONTEXT_EDIT), $entity));
     }
 
     public function testDelete()
@@ -114,7 +119,7 @@ class EntityManagerTest extends \PHPUnit_Framework_TestCase
                 [$this->equalTo(EntityEvent::POST_DELETE), $this->callback($eventCallback)]
             );
 
-        $this->assertSame($entity, $this->manager->delete($entity));
+        $this->assertSame($entity, $this->manager->delete($this->crudRequest(CrudRequest::CONTEXT_ACTION), $entity));
     }
 
     public function testDeleteWithChangedEntity()
@@ -130,7 +135,7 @@ class EntityManagerTest extends \PHPUnit_Framework_TestCase
                 $event->setEntity($newEntity);
             }));
 
-        $this->assertSame($newEntity, $this->manager->delete($entity));
+        $this->assertSame($newEntity, $this->manager->delete($this->crudRequest(CrudRequest::CONTEXT_ACTION), $entity));
     }
 
     public function testDeleteMany()
@@ -154,7 +159,7 @@ class EntityManagerTest extends \PHPUnit_Framework_TestCase
                 [$this->equalTo(EntityEvent::POST_DELETE), $this->callback($eventCallback)]
             );
 
-        $this->assertSame([$one, $two], $this->manager->deleteMany([$one, $two]));
+        $this->assertSame([$one, $two], $this->manager->deleteMany($this->crudRequest(CrudRequest::CONTEXT_ACTION), [$one, $two]));
     }
 
     public function testDeleteManyWithChangedEntity()
@@ -175,6 +180,6 @@ class EntityManagerTest extends \PHPUnit_Framework_TestCase
                 }
             }));
 
-        $this->assertSame([$newOne, $newTwo], $this->manager->deleteMany([$one, $two]));
+        $this->assertSame([$newOne, $newTwo], $this->manager->deleteMany($this->crudRequest(CrudRequest::CONTEXT_ACTION), [$one, $two]));
     }
 }

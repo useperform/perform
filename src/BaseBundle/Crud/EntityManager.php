@@ -81,10 +81,8 @@ class EntityManager
      *
      * @param object $entity
      */
-    public function delete($entity)
+    public function delete(CrudRequest $crudRequest, $entity)
     {
-        $crudRequest = new CrudRequest(CrudRequest::CONTEXT_DELETE);
-        $crudRequest->setEntityClass(get_class($entity));
         $preDelete = new EntityEvent($crudRequest, $entity);
         $this->dispatcher->dispatch(EntityEvent::PRE_DELETE, $preDelete);
         // entity may have been replaced by the event
@@ -105,14 +103,12 @@ class EntityManager
      *
      * @param array $entities
      */
-    public function deleteMany(array $entities)
+    public function deleteMany(CrudRequest $crudRequest, array $entities)
     {
         $deletedEntities = [];
         $postDeletes = [];
 
         foreach ($entities as $entity) {
-            $crudRequest = new CrudRequest(CrudRequest::CONTEXT_DELETE);
-            $crudRequest->setEntityClass(get_class($entity));
             $preDelete = new EntityEvent($crudRequest, $entity);
             $this->dispatcher->dispatch(EntityEvent::PRE_DELETE, $preDelete);
             // entity may have been replaced by the event
