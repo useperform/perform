@@ -42,7 +42,7 @@ class CrudExtension extends \Twig_Extension
         ];
     }
 
-    public function paginator(Pagerfanta $pagerfanta, $entityClass)
+    public function paginator(Pagerfanta $pagerfanta, $crudName)
     {
         $view = new TwitterBootstrap4View();
         $options = [
@@ -50,10 +50,10 @@ class CrudExtension extends \Twig_Extension
         ];
         $requestParams = $this->requestStack->getCurrentRequest()->query->all();
 
-        $routeGenerator = function($page) use ($requestParams, $entityClass) {
+        $routeGenerator = function($page) use ($requestParams, $crudName) {
             $params = array_merge($requestParams, ['page' => $page]);
 
-            return $this->urlGenerator->generate($entityClass, 'list', $params);
+            return $this->urlGenerator->generate($crudName, 'list', $params);
         };
 
         return $view->render($pagerfanta, $routeGenerator, $options);
