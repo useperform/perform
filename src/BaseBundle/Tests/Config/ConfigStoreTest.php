@@ -17,6 +17,8 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Perform\BaseBundle\Config\ExportConfig;
 use Perform\BaseBundle\Test\Services;
 use Perform\BaseBundle\Crud\CrudRequest;
+use Perform\BaseBundle\Tests\Crud\TestCrud;
+use Perform\BaseBundle\Tests\Crud\TestEntity;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -32,28 +34,25 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->crudRegistry = $this->getMockBuilder(CrudRegistry::class)
-                             ->disableOriginalConstructor()
-                             ->getMock();
+                            ->disableOriginalConstructor()
+                            ->getMock();
         $this->typeRegistry = Services::typeRegistry([
             'string' => new StringType(),
         ]);
         $this->actionRegistry = $this->getMockBuilder(ActionRegistry::class)
-                      ->disableOriginalConstructor()
-                      ->getMock();
+                              ->disableOriginalConstructor()
+                              ->getMock();
         $this->authChecker = $this->getMock(AuthorizationCheckerInterface::class);
     }
 
-    private function configure($alias, $class, $crud, array $override = [])
+    private function configure($class, $crud, array $override = [])
     {
         $this->crudRegistry->expects($this->any())
             ->method('get')
             ->with($class)
             ->will($this->returnValue($crud));
-        $resolver = new EntityResolver([
-            $alias => $class,
-        ]);
 
-        $this->store = new ConfigStore($resolver, $this->crudRegistry, $this->typeRegistry, $this->actionRegistry, $this->authChecker, $override);
+        $this->store = new ConfigStore(new EntityResolver([]), $this->crudRegistry, $this->typeRegistry, $this->actionRegistry, $this->authChecker, $override);
     }
 
     public function testInterface()
@@ -71,34 +70,29 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
                 return $config instanceof TypeConfig;
             }));
 
-        $alias = 'SomeBundle:stdClass';
-        $classname = \stdClass::class;
-        $this->configure($alias, $classname, $crud);
+        $crudName = 'some_crud';
+        $this->configure($crudName, $crud);
 
-        $aliasConfig = $this->store->getTypeConfig($alias);
-        $classConfig = $this->store->getTypeConfig($classname);
-        $objectConfig = $this->store->getTypeConfig(new \stdClass());
+        $config = $this->store->getTypeConfig($crudName);
 
-        $this->assertInstanceOf(TypeConfig::class, $aliasConfig);
+        $this->assertInstanceOf(TypeConfig::class, $config);
         //check the same object is always returned
-        $this->assertSame($aliasConfig, $classConfig);
-        $this->assertSame($aliasConfig, $objectConfig);
-        $this->assertSame($aliasConfig, $this->store->getTypeConfig($alias));
+        $this->assertSame($config, $this->store->getTypeConfig($crudName));
     }
 
     public function testGetTypeConfigWithOverride()
     {
         $override = [
-            \stdClass::class => [
+            'some_crud' => [
                 'types' => [
                     'slug' => ['type' => 'string'],
                 ],
             ],
         ];
         $crud = $this->getMock(CrudInterface::class);
-        $this->configure('SomeBundle:stdClass', \stdClass::class, $crud, $override);
+        $this->configure('some_crud', $crud, $override);
 
-        $config = $this->store->getTypeConfig(\stdClass::class);
+        $config = $this->store->getTypeConfig('some_crud');
         $this->assertArrayHasKey('slug', $config->getTypes(CrudRequest::CONTEXT_LIST));
     }
 
@@ -111,19 +105,14 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
                 return $config instanceof ActionConfig;
             }));
 
-        $alias = 'SomeBundle:stdClass';
-        $classname = \stdClass::class;
-        $this->configure($alias, $classname, $crud);
+        $crudName = 'some_crud';
+        $this->configure($crudName, $crud);
 
-        $aliasConfig = $this->store->getActionConfig($alias);
-        $classConfig = $this->store->getActionConfig($classname);
-        $objectConfig = $this->store->getActionConfig(new \stdClass());
+        $config = $this->store->getActionConfig($crudName);
 
-        $this->assertInstanceOf(ActionConfig::class, $aliasConfig);
+        $this->assertInstanceOf(ActionConfig::class, $config);
         //check the same object is always returned
-        $this->assertSame($aliasConfig, $classConfig);
-        $this->assertSame($aliasConfig, $objectConfig);
-        $this->assertSame($aliasConfig, $this->store->getActionConfig($alias));
+        $this->assertSame($config, $this->store->getActionConfig($crudName));
     }
 
     public function testGetFilterConfig()
@@ -135,19 +124,14 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
                 return $config instanceof FilterConfig;
             }));
 
-        $alias = 'SomeBundle:stdClass';
-        $classname = \stdClass::class;
-        $this->configure($alias, $classname, $crud);
+        $crudName = 'some_crud';
+        $this->configure($crudName, $crud);
 
-        $aliasConfig = $this->store->getFilterConfig($alias);
-        $classConfig = $this->store->getFilterConfig($classname);
-        $objectConfig = $this->store->getFilterConfig(new \stdClass());
+        $config = $this->store->getFilterConfig($crudName);
 
-        $this->assertInstanceOf(FilterConfig::class, $aliasConfig);
+        $this->assertInstanceOf(FilterConfig::class, $config);
         //check the same object is always returned
-        $this->assertSame($aliasConfig, $classConfig);
-        $this->assertSame($aliasConfig, $objectConfig);
-        $this->assertSame($aliasConfig, $this->store->getFilterConfig($alias));
+        $this->assertSame($config, $this->store->getFilterConfig($crudName));
     }
 
     public function testGetExportConfig()
@@ -159,18 +143,21 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
                 return $config instanceof ExportConfig;
             }));
 
-        $alias = 'SomeBundle:stdClass';
-        $classname = \stdClass::class;
-        $this->configure($alias, $classname, $crud);
+        $crudName = 'some_crud';
+        $this->configure($crudName, $crud);
 
-        $aliasConfig = $this->store->getExportConfig($alias);
-        $classConfig = $this->store->getExportConfig($classname);
-        $objectConfig = $this->store->getExportConfig(new \stdClass());
+        $config = $this->store->getExportConfig($crudName);
 
-        $this->assertInstanceOf(ExportConfig::class, $aliasConfig);
+        $this->assertInstanceOf(ExportConfig::class, $config);
         //check the same object is always returned
-        $this->assertSame($aliasConfig, $classConfig);
-        $this->assertSame($aliasConfig, $objectConfig);
-        $this->assertSame($aliasConfig, $this->store->getExportConfig($alias));
+        $this->assertSame($config, $this->store->getExportConfig($crudName));
+    }
+
+    public function testGetEntityClass()
+    {
+        $crud = new TestCrud();
+        $crudName = 'some_crud';
+        $this->configure($crudName, $crud);
+        $this->assertSame(TestEntity::class, $this->store->getEntityClass($crudName));
     }
 }

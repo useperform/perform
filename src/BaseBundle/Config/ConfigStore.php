@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * ConfigStore creates and stores a single instance of the different
- * config classes for each entity class.
+ * config classes for each crud class.
  *
  * Config classes are configured by crud services, and may also be
  * overridden by configuration passed to the ConfigStore.
@@ -30,6 +30,7 @@ class ConfigStore implements ConfigStoreInterface
     protected $filterConfigs = [];
     protected $actionConfigs = [];
     protected $labelConfigs = [];
+    protected $entityClasses = [];
 
     public function __construct(EntityResolver $resolver, CrudRegistry $crudRegistry, TypeRegistry $typeRegistry, ActionRegistry $actionRegistry, AuthorizationCheckerInterface $authChecker, array $override = [])
     {
@@ -41,70 +42,75 @@ class ConfigStore implements ConfigStoreInterface
         $this->override = $override;
     }
 
-    public function getTypeConfig($entity)
+    public function getTypeConfig($crudName)
     {
-        $class = $this->resolver->resolve($entity);
-        if (!isset($this->typeConfigs[$class])) {
+        if (!isset($this->typeConfigs[$crudName])) {
             $typeConfig = new TypeConfig($this->typeRegistry);
-            $this->crudRegistry->get($class)->configureTypes($typeConfig);
+            $this->crudRegistry->get($crudName)->configureTypes($typeConfig);
 
-            if (isset($this->override[$class]['types'])) {
-                foreach ($this->override[$class]['types'] as $field => $config) {
+            if (isset($this->override[$crudName]['types'])) {
+                foreach ($this->override[$crudName]['types'] as $field => $config) {
                     $typeConfig->add($field, $config);
                 }
             }
-            $this->typeConfigs[$class] = $typeConfig;
+            $this->typeConfigs[$crudName] = $typeConfig;
         }
 
-        return $this->typeConfigs[$class];
+        return $this->typeConfigs[$crudName];
     }
 
-    public function getActionConfig($entity)
+    public function getActionConfig($crudName)
     {
-        $class = $this->resolver->resolve($entity);
-        if (!isset($this->actionConfigs[$class])) {
-            $this->actionConfigs[$class] = new ActionConfig($this->actionRegistry, $this->authChecker);
-            $this->crudRegistry->get($class)->configureActions($this->actionConfigs[$class]);
+        if (!isset($this->actionConfigs[$crudName])) {
+            $this->actionConfigs[$crudName] = new ActionConfig($this->actionRegistry, $this->authChecker, $crudName);
+            $this->crudRegistry->get($crudName)->configureActions($this->actionConfigs[$crudName]);
         }
 
-        return $this->actionConfigs[$class];
+        return $this->actionConfigs[$crudName];
     }
 
-    public function getFilterConfig($entity)
+    public function getFilterConfig($crudName)
     {
-        $class = $this->resolver->resolve($entity);
-        if (!isset($this->filterConfigs[$class])) {
-            $this->filterConfigs[$class] = new FilterConfig();
-            $this->crudRegistry->get($class)->configureFilters($this->filterConfigs[$class]);
+        if (!isset($this->filterConfigs[$crudName])) {
+            $this->filterConfigs[$crudName] = new FilterConfig();
+            $this->crudRegistry->get($crudName)->configureFilters($this->filterConfigs[$crudName]);
         }
 
-        return $this->filterConfigs[$class];
+        return $this->filterConfigs[$crudName];
     }
 
-    public function getLabelConfig($entity)
+    public function getLabelConfig($crudName)
     {
-        $class = $this->resolver->resolve($entity);
-        if (!isset($this->labelConfigs[$class])) {
-            $this->labelConfigs[$class] = new LabelConfig();
-            $this->crudRegistry->get($class)->configureLabels($this->labelConfigs[$class]);
+        if (!isset($this->labelConfigs[$crudName])) {
+            $this->labelConfigs[$crudName] = new LabelConfig();
+            $this->crudRegistry->get($crudName)->configureLabels($this->labelConfigs[$crudName]);
         }
 
-        return $this->labelConfigs[$class];
+        return $this->labelConfigs[$crudName];
     }
 
-    public function getExportConfig($entity)
+    public function getExportConfig($crudName)
     {
-        $class = $this->resolver->resolve($entity);
-        if (!isset($this->exportConfigs[$class])) {
-            $this->exportConfigs[$class] = new ExportConfig();
-            $this->exportConfigs[$class]->setFormats([
+        if (!isset($this->exportConfigs[$crudName])) {
+            $this->exportConfigs[$crudName] = new ExportConfig();
+            $this->exportConfigs[$crudName]->setFormats([
                 ExportConfig::FORMAT_JSON,
                 ExportConfig::FORMAT_CSV,
                 ExportConfig::FORMAT_XLS,
             ]);
-            $this->crudRegistry->get($class)->configureExports($this->exportConfigs[$class]);
+            $this->crudRegistry->get($crudName)->configureExports($this->exportConfigs[$crudName]);
         }
 
-        return $this->exportConfigs[$class];
+        return $this->exportConfigs[$crudName];
+    }
+
+    public function getEntityClass($crudName)
+    {
+        if (!isset($this->entityClasses[$crudName])) {
+            $crudClass = get_class($this->crudRegistry->get($crudName));
+            $this->entityClasses[$crudName] = $this->resolver->resolve($crudClass::getEntityClass());
+        }
+
+        return $this->entityClasses[$crudName];
     }
 }

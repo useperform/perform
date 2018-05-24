@@ -3,49 +3,52 @@
 namespace Perform\BaseBundle\Config;
 
 /**
- * ConfigStoreInterface
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 interface ConfigStoreInterface
 {
     /**
-     * Get the TypeConfig for an entity. The type config may include
+     * Get the TypeConfig for a crud name. The type config may include
      * overrides from application configuration.
      *
-     * @param string|object $entity
+     * @param string|object $crudName
      *
      * @return TypeConfig
      */
-    public function getTypeConfig($entity);
+    public function getTypeConfig($crudName);
 
     /**
-     * Get the ActionConfig for an entity. The action config may include
+     * Get the ActionConfig for a crud name. The action config may include
      * overrides from application configuration.
      *
-     * @param string|object $entity
+     * @param string|object $crudName
      *
      * @return ActionConfig
      */
-    public function getActionConfig($entity);
+    public function getActionConfig($crudName);
 
     /**
-     * Get the FilterConfig for an entity. The filter config may include
+     * Get the FilterConfig for a crud name. The filter config may include
      * overrides from application configuration.
      *
-     * @param string|object $entity
+     * @param string|object $crudName
      *
      * @return FilterConfig
      */
-    public function getFilterConfig($entity);
+    public function getFilterConfig($crudName);
 
     /**
-     * Get the LabelConfig for an entity. The label config may include
+     * Get the LabelConfig for a crud name. The label config may include
      * overrides from application configuration.
      *
-     * @param string|object $entity
+     * @param string|object $crudName
      *
      * @return LabelConfig
      */
-    public function getLabelConfig($entity);
+    public function getLabelConfig($crudName);
+
+    /**
+     * Get the resolved entity class for a crud name.
+     */
+    public function getEntityClass($crudName);
 }
