@@ -102,11 +102,11 @@ abstract class AbstractCrud implements CrudInterface
             });
     }
 
-    public function getTemplate(Environment $twig, $entityName, $context)
+    public function getTemplate(Environment $twig, $crudName, $context)
     {
         //try a template in the entity bundle first, e.g.
         //@PerformContact/crud/message/view.html.twig
-        $template = StringUtil::crudTemplateForEntity($entityName, $context);
+        $template = StringUtil::templateForCrud(static::class, $context);
 
         return $twig->getLoader()->exists($template) ? $template : sprintf('@PerformBase/crud/%s.html.twig', $context);
     }
