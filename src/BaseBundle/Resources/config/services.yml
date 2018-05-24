@@ -24,6 +24,7 @@ services:
         arguments:
             - '@perform_base.crud.registry'
             - '@perform_base.routing.crud_url'
+            - '@doctrine.orm.entity_manager'
         tags:
             - security.voter
 
