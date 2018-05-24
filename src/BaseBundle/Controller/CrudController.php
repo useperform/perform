@@ -14,59 +14,22 @@ use Perform\BaseBundle\Twig\Extension\ActionExtension;
  **/
 class CrudController extends Controller
 {
-    protected $entity;
+    protected $crud;
 
     protected function initialize(CrudRequest $crudRequest)
     {
-        $this->entity = $this->get('perform_base.doctrine.entity_resolver')->resolve($crudRequest->getEntityClass());
-        // tell crudRequest about the resolved entity
-        $crudRequest->setEntityClass($this->entity);
+        $this->crud = $this->get('perform_base.crud.registry')->get($crudRequest->getCrudName());
         $this->get('twig')
             ->getExtension(ActionExtension::class)
             ->setCrudRequest($crudRequest);
     }
 
-    /**
-     * @return CrudInterface
-     */
-    protected function getCrud()
-    {
-        return $this->get('perform_base.crud.registry')
-            ->get($this->entity);
-    }
-
-    protected function getTypeConfig()
-    {
-        return $this->get('perform_base.config_store')
-            ->getTypeConfig($this->entity);
-    }
-
-    protected function getFilterConfig()
-    {
-        return $this->get('perform_base.config_store')
-            ->getFilterConfig($this->entity);
-    }
-
-    protected function getActionConfig()
-    {
-        return $this->get('perform_base.config_store')
-            ->getActionConfig($this->entity);
-    }
-
-    protected function getLabelConfig()
-    {
-        return $this->get('perform_base.config_store')
-            ->getLabelConfig($this->entity);
-    }
-
     protected function newEntity()
     {
-        $className = $this->getDoctrine()
-                   ->getManager()
-                   ->getClassMetadata($this->entity)
-                   ->name;
+        $crudClass = get_class($this->crud);
+        $class = $crudClass::getEntityClass();
 
-        return new $className();
+        return new $class();
     }
 
     protected function throwNotFoundIfNull($entity, $identifier)
@@ -127,10 +90,10 @@ class CrudController extends Controller
     {
         $crudRequest = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_CREATE);
         $this->initialize($crudRequest);
+        $crudName = $crudRequest->getCrudName();
         $builder = $this->createFormBuilder($entity = $this->newEntity());
-        $crud = $this->getCrud();
-        $form = $this->createForm($crud->getFormType(), $entity, [
-            'entity' => $this->entity,
+        $form = $this->createForm($this->crud->getFormType(), $entity, [
+            'crud_name' => $crudName,
             'context' => $crudRequest->getContext(),
         ]);
 
@@ -140,7 +103,7 @@ class CrudController extends Controller
                 $this->get('perform_base.entity_manager')->create($crudRequest, $entity);
                 $this->addFlash('success', 'Item created successfully.');
 
-                return $this->redirect($this->get('perform_base.routing.crud_url')->generateDefaultEntityRoute($entity));
+                return $this->redirect($this->get('perform_base.routing.crud_url')->generateDefaultEntityRoute($crudName));
             } catch (\Exception $e) {
                 $this->addFlash('danger', 'An error occurred.');
             }
@@ -157,12 +120,12 @@ class CrudController extends Controller
     {
         $crudRequest = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_EDIT);
         $this->initialize($crudRequest);
+        $crudName = $crudRequest->getCrudName();
         $entity = $this->get('perform_base.selector.entity')->editContext($crudRequest, $id);
         $this->throwNotFoundIfNull($entity, $id);
         $this->denyAccessUnlessGranted('EDIT', $entity);
-        $crud = $this->getCrud();
-        $form = $this->createForm($crud->getFormType(), $entity, [
-            'entity' => $this->entity,
+        $form = $this->createForm($this->crud->getFormType(), $entity, [
+            'crud_name' => $crudName,
             'context' => $crudRequest->getContext(),
         ]);
 
@@ -172,7 +135,7 @@ class CrudController extends Controller
                 $this->get('perform_base.entity_manager')->update($crudRequest, $entity);
                 $this->addFlash('success', 'Item updated successfully.');
 
-                return $this->redirect($this->get('perform_base.routing.crud_url')->generateDefaultEntityRoute($entity));
+                return $this->redirect($this->get('perform_base.routing.crud_url')->generateDefaultEntityRoute($crudName));
             } catch (\Exception $e) {
                 $this->addFlash('danger', 'An error occurred.');
             }
