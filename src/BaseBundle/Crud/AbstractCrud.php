@@ -65,16 +65,17 @@ abstract class AbstractCrud implements CrudInterface
 
     protected function addViewAction(ActionConfig $config)
     {
-        $config->addLink(function ($entity, $crudUrlGenerator) {
-            return $crudUrlGenerator->generate($entity, 'view');
+        $config->addLink(function ($entity, $crudUrlGenerator) use ($config) {
+            return $crudUrlGenerator->generate($config->getCrudName(), 'view', ['entity' => $entity]);
         },
             'View',
             [
                 'isButtonAvailable' => function ($entity, $request) {
                     return $request->getContext() !== 'view';
                 },
-                'isGranted' => function ($entity, $authChecker) {
-                    return $authChecker->isGranted('VIEW', $entity);
+                'isGranted' => function ($entity, $authChecker) use ($config) {
+                    return $authChecker->isGranted('VIEW', $config->getCrudName())
+                        && $authChecker->isGranted('VIEW', $entity);
                 },
                 'buttonStyle' => 'btn-primary',
             ]);
@@ -82,13 +83,14 @@ abstract class AbstractCrud implements CrudInterface
 
     protected function addEditAction(ActionConfig $config)
     {
-        $config->addLink(function ($entity, $crudUrlGenerator) {
-            return $crudUrlGenerator->generate($entity, 'edit');
+        $config->addLink(function ($entity, $crudUrlGenerator) use ($config) {
+            return $crudUrlGenerator->generate($config->getCrudName(), 'edit', ['entity' => $entity]);
         },
             'Edit',
             [
-                'isGranted' => function ($entity, $authChecker) {
-                    return $authChecker->isGranted('EDIT', $entity);
+                'isGranted' => function ($entity, $authChecker) use ($config) {
+                    return $authChecker->isGranted('EDIT', $config->getCrudName())
+                        && $authChecker->isGranted('EDIT', $entity);
                 },
                 'buttonStyle' => 'btn-warning',
             ]);
