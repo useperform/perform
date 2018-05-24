@@ -2,70 +2,102 @@
 
 namespace Perform\BaseBundle\Crud;
 
-use Perform\BaseBundle\Crud\CrudNotFoundException;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Perform\BaseBundle\Doctrine\EntityResolver;
+use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
 
 /**
- * CrudRegistry.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class CrudRegistry
 {
-    protected $container;
-    protected $cruds = [];
-    protected $aliases = [];
+    protected $cruds;
     protected $resolver;
+    protected $crudEntityMap = [];
 
-    public function __construct(ContainerInterface $container, EntityResolver $resolver)
+    public function __construct(LoopableServiceLocator $cruds, EntityResolver $resolver, array $crudEntityMap)
     {
-        $this->container = $container;
+        $this->cruds = $cruds;
         $this->resolver = $resolver;
+        $this->crudEntityMap = $crudEntityMap;
     }
 
     /**
-     * Register a crud service with the registry.
+     * Get a crud service by name.
      *
-     * The service is fetched lazily from the container for performance reasons.
-     *
-     * @param string $entity  the fully qualified class name of the entity
-     * @param string $service the name of the service in the container
+     * @param string $crudName The name of the crud service
      */
-    public function add($entity, $service)
+    public function get($crudName)
     {
-        $this->cruds[$entity] = $service;
+        if (!$this->cruds->has($crudName)) {
+            throw new CrudNotFoundException(sprintf('Crud service not found: "%s"', $crudName));
+        }
+
+        return $this->cruds->get($crudName);
     }
 
     /**
-     * Get the Crud instance for managing $entity.
+     * Return true if the given crud exists.
      *
-     * @param string $entity the full class name of the entity
+     * @return bool
      */
-    public function get($entity)
+    public function has($crudName)
+    {
+        return $this->cruds->has($crudName);
+    }
+
+    /**
+     * Get the crud name for managing $entity.
+     *
+     * An exception will be thrown if more than one crud exists for the given entity.
+     *
+     * @param mixed $entity
+     *
+     * @throws DuplicateCrudException When more than one crud is available for an entity
+     */
+    public function getNameForEntity($entity)
+    {
+        $names = $this->getAllNamesForEntity($entity);
+
+        if (!isset($names[0])) {
+            $entityClass = $this->resolver->resolve($entity);
+            throw new CrudNotFoundException(sprintf('No crud service is available for entity class %s.', $entityClass));
+        }
+
+        if (count($names) > 1) {
+            $entityClass = $this->resolver->resolve($entity);
+            throw new DuplicateCrudException(sprintf('More than one crud service is available for entity class %s. You should find the crud service you want to use and explicitly fetch it with CrudRegistry#get().', $entityClass));
+        }
+
+        return $names[0];
+    }
+
+    /**
+     * Get all the available crud names for an entity.
+     *
+     * @param mixed $entity
+     */
+    public function getAllNamesForEntity($entity)
     {
         try {
-            $class = $this->resolver->resolve($entity);
+            $entityClass = $this->resolver->resolve($entity);
         } catch (\InvalidArgumentException $e) {
             throw new CrudNotFoundException('Crud not found, invalid argument.', 1, $e);
         }
 
-        if (isset($this->cruds[$class])) {
-            return $this->container->get($this->cruds[$class]);
-        }
-
-        throw new CrudNotFoundException(sprintf('Crud not found for entity "%s"', $class));
+        return isset($this->crudEntityMap[$entityClass]) ? $this->crudEntityMap[$entityClass] : [];
     }
 
     /**
-     * Return true if the given entity or class has a crud service.
+     * Return true is the given entity has at least one crud service.
      *
-     * @return bool
+     * @param mixed $entity
+     *
+     * @return true
      */
-    public function has($entity)
+    public function hasForEntity($entity)
     {
         try {
-            return isset($this->cruds[$this->resolver->resolve($entity)]);
+            return count($this->getAllNamesForEntity($entity)) > 0;
         } catch (\InvalidArgumentException $e) {
             return false;
         }
