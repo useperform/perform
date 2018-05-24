@@ -24,13 +24,14 @@ class ExportController extends Controller
     {
         // $this->denyAccessUnlessGranted('EXPORT')
 
-        $crudRequest = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_EXPORT);
         // entity name is only set on routes created by CrudLoader. Set it manually here
-        if (!$request->query->has('entity')) {
-            throw new \InvalidArgumentException(sprintf('%s requires the entity name.', __METHOD__));
+        $request->attributes->set('_crud', $request->query->get('crud'));
+        try {
+            $crudRequest = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_EXPORT);
+        } catch (\Exception $e) {
+            throw new \InvalidArgumentException(sprintf('%s requires the entity name.', __METHOD__), 1, $e);
         }
-        $entity = $this->get('perform_base.doctrine.entity_resolver')->resolve($request->query->get('entity'));
-        $crudRequest->setEntityClass($entity);
+
         $format = $request->query->get('format');
 
         return $this->get('perform_base.exporter')->getResponse($crudRequest, $format);

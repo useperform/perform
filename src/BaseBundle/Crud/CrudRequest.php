@@ -37,6 +37,10 @@ class CrudRequest
     public static function fromRequest(Request $request, $context)
     {
         $crudName = $request->attributes->get('_crud');
+        if (!$crudName) {
+            throw new \InvalidArgumentException('The "_crud" request attribute is required to create a CrudRequest from a Request.');
+        }
+
         $req = new static($crudName, $context);
         $req->setPage($request->query->get('page', 1));
         $req->setSortField($request->query->get('sort'));

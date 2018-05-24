@@ -39,29 +39,29 @@ class ExportExtension extends \Twig_Extension
         $this->request = $event->getRequest();
     }
 
-    public function exportDropdown(\Twig_Environment $twig, $entity, $label = 'export.dropdown')
+    public function exportDropdown(\Twig_Environment $twig, $crudName, $label = 'export.dropdown')
     {
         if (!$this->router->getRouteCollection()->get('perform_base_export_stream') instanceof Route) {
             return '';
         }
 
-        $formats = $this->configStore->getExportConfig($entity)->getFormats();
+        $formats = $this->configStore->getExportConfig($crudName)->getFormats();
         if (empty($formats)) {
             return '';
         }
 
         return $twig->render('@PerformBase/crud/_export_dropdown.html.twig', [
             'formats' => $formats,
-            'entityClass' => $entity,
+            'crudName' => $crudName,
             'label' => $label,
         ]);
     }
 
-    public function exportRoute($entity, $format)
+    public function exportRoute($crudName, $format)
     {
         try {
             $vars = array_merge([
-                'entity' => $entity,
+                'crud' => $crudName,
                 'format' => $format,
             ], $this->request->query->all());
             // get all entities, not a single page
