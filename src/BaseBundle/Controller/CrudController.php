@@ -39,17 +39,6 @@ class CrudController extends Controller
         }
     }
 
-    protected function findDefaultEntity()
-    {
-        $repo = $this->getDoctrine()->getRepository($this->entity);
-        $result = $repo->findBy([], [], 1);
-        if (!isset($result[0])) {
-            throw new NotFoundHttpException();
-        }
-
-        return $result[0];
-    }
-
     private function setFormTheme($formView)
     {
         $this->get('twig')
@@ -77,13 +66,6 @@ class CrudController extends Controller
         $populator = $this->get('perform_base.template_populator');
 
         return $populator->viewContext($crudRequest, $entity);
-    }
-
-    public function viewDefaultAction(Request $request)
-    {
-        $this->initialize(CrudRequest::fromRequest($request, CrudRequest::CONTEXT_VIEW));
-
-        return $this->viewAction($request, $this->findDefaultEntity()->getId());
     }
 
     public function createAction(Request $request)
@@ -146,12 +128,5 @@ class CrudController extends Controller
         $populator = $this->get('perform_base.template_populator');
 
         return $populator->editContext($crudRequest, $formView, $entity);
-    }
-
-    public function editDefaultAction(Request $request)
-    {
-        $this->initialize(CrudRequest::fromRequest($request, CrudRequest::CONTEXT_EDIT));
-
-        return $this->editAction($request, $this->findDefaultEntity()->getId());
     }
 }

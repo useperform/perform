@@ -82,8 +82,8 @@ class CrudLoaderTest extends \PHPUnit_Framework_TestCase
         $controller = 'Perform\BaseBundle\Controller\CrudController';
         $routePrefix = 'some_foo_';
         $routes = [
-            '/' => 'viewDefault',
-            '/edit' => 'editDefault',
+            '/' => 'someMethod',
+            '/edit' => 'someOtherMethod',
         ];
         $crudName = 'another_crud';
         $this->expectCrud($crudName, $controller, $routePrefix, $routes);
@@ -91,19 +91,19 @@ class CrudLoaderTest extends \PHPUnit_Framework_TestCase
         $collection = $this->loader->load($crudName);
         $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
 
-        $this->assertSame(['some_foo_view_default', 'some_foo_edit_default'], array_keys($collection->all()));
+        $this->assertSame(['some_foo_some_method', 'some_foo_some_other_method'], array_keys($collection->all()));
 
-        $route = $collection->get('some_foo_view_default');
+        $route = $collection->get('some_foo_some_method');
         $this->assertInstanceOf(Route::class, $route);
         $this->assertSame(
-            $controller.'::'.'viewDefaultAction',
+            $controller.'::'.'someMethodAction',
             $route->getDefault('_controller')
         );
 
-        $route = $collection->get('some_foo_edit_default');
+        $route = $collection->get('some_foo_some_other_method');
         $this->assertInstanceOf(Route::class, $route);
         $this->assertSame(
-            $controller.'::'.'editDefaultAction',
+            $controller.'::'.'someOtherMethodAction',
             $route->getDefault('_controller')
         );
     }
