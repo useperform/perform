@@ -9,6 +9,7 @@ use Perform\BaseBundle\Crud\CrudInterface;
 use Perform\BaseBundle\Crud\CrudNotFoundException;
 use Perform\BaseBundle\Test\Services;
 use Perform\BaseBundle\Crud\DuplicateCrudException;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -21,6 +22,7 @@ class CrudRegistryTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $this->em = $this->getMock(EntityManagerInterface::class);
         $this->crudOne = $this->getMock(CrudInterface::class);
         $this->crudTwo = $this->getMock(CrudInterface::class);
         $cruds = Services::serviceLocator([
@@ -31,7 +33,7 @@ class CrudRegistryTest extends \PHPUnit_Framework_TestCase
             'Entity\One' => ['one'],
             'Entity\Two' => ['two'],
         ];
-        $this->registry = new CrudRegistry($cruds, new EntityResolver([]), $entityMap);
+        $this->registry = new CrudRegistry(new EntityResolver([]), $this->em, $cruds, $entityMap);
     }
 
     public function testGet()
@@ -72,7 +74,7 @@ class CrudRegistryTest extends \PHPUnit_Framework_TestCase
         $entityMap = [
             'Entity\Item' => ['one', 'two'],
         ];
-        $registry = new CrudRegistry($cruds, new EntityResolver([]), $entityMap);
+        $registry = new CrudRegistry(new EntityResolver([]), $this->em, $cruds, $entityMap);
 
         $this->assertSame(['one', 'two'], $registry->getAllNamesForEntity('Entity\Item'));
     }
@@ -86,7 +88,7 @@ class CrudRegistryTest extends \PHPUnit_Framework_TestCase
         $entityMap = [
             'Entity\Item' => ['one', 'two'],
         ];
-        $registry = new CrudRegistry($cruds, new EntityResolver([]), $entityMap);
+        $registry = new CrudRegistry(new EntityResolver([]), $this->em, $cruds, $entityMap);
 
         $this->setExpectedException(DuplicateCrudException::class);
         $registry->getNameForEntity('Entity\Item');

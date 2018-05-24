@@ -4,20 +4,24 @@ namespace Perform\BaseBundle\Crud;
 
 use Perform\BaseBundle\Doctrine\EntityResolver;
 use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\MappingException;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class CrudRegistry
 {
-    protected $cruds;
     protected $resolver;
+    protected $em;
+    protected $cruds;
     protected $crudEntityMap = [];
 
-    public function __construct(LoopableServiceLocator $cruds, EntityResolver $resolver, array $crudEntityMap)
+    public function __construct(EntityResolver $resolver, EntityManagerInterface $em, LoopableServiceLocator $cruds, array $crudEntityMap)
     {
-        $this->cruds = $cruds;
         $this->resolver = $resolver;
+        $this->em = $em;
+        $this->cruds = $cruds;
         $this->crudEntityMap = $crudEntityMap;
     }
 
@@ -29,7 +33,7 @@ class CrudRegistry
     public function get($crudName)
     {
         if (!$this->cruds->has($crudName)) {
-            throw new CrudNotFoundException(sprintf('Crud service not found: "%s"', $crudName));
+            throw new CrudNotFoundException(sprintf('Crud service not found: "%s". Use the crud data collector panel or the perform:debug:crud command to see the available services.', $crudName));
         }
 
         return $this->cruds->get($crudName);
@@ -65,7 +69,7 @@ class CrudRegistry
 
         if (count($names) > 1) {
             $entityClass = $this->resolver->resolve($entity);
-            throw new DuplicateCrudException(sprintf('More than one crud service is available for entity class %s. You should find the crud service you want to use and explicitly fetch it with CrudRegistry#get().', $entityClass));
+            throw new DuplicateCrudException(sprintf('More than one crud service is available for entity class %s. You should explicitly fetch one of "%s" with CrudRegistry#get().', $entityClass, implode('", "', $names)));
         }
 
         return $names[0];
@@ -100,6 +104,26 @@ class CrudRegistry
             return count($this->getAllNamesForEntity($entity)) > 0;
         } catch (\InvalidArgumentException $e) {
             return false;
+        }
+    }
+
+    /**
+     * Get the crud name for an entity relation.
+     *
+     * For example, if a BlogPost had an 'author' property, the crud
+     * name for an Author entity would be returned.
+     */
+    public function getNameForRelatedEntity($entity, $property)
+    {
+        $metadata = $this->em->getClassMetadata($this->resolver->resolve($entity));
+
+        try {
+            $relatedClass = $metadata->getAssociationMapping($property)['targetEntity'];
+
+            return $this->getNameForEntity($relatedClass);
+        } catch (MappingException $e) {
+            $msg = sprintf('Entity field "%s" of class "%s" must be a doctrine association to be able to fetch a crud service for it.', $property, $metadata->name);
+            throw new CrudNotFoundException($msg, 1, $e);
         }
     }
 

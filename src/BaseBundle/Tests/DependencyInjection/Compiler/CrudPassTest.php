@@ -42,7 +42,7 @@ class CrudPassTest extends \PHPUnit_Framework_TestCase
 
         $this->pass->process($this->container);
 
-        $locator = $this->registry->getArgument(0);
+        $locator = $this->registry->getArgument(2);
         $this->assertSame(LoopableServiceLocator::class, $locator->getClass());
         $expectedFactories = [
             'foo' => new Reference('crud.foo'),

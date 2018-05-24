@@ -40,8 +40,8 @@ class CrudPass implements CompilerPassInterface
         }
 
         $container->getDefinition('perform_base.crud.registry')
-            ->setArgument(0, LoopableServiceLocator::createDefinition($crudNames))
-            ->setArgument(2, $crudEntityMap);
+            ->setArgument(2, LoopableServiceLocator::createDefinition($crudNames))
+            ->setArgument(3, $crudEntityMap);
     }
 
     private function createCrudName($service)

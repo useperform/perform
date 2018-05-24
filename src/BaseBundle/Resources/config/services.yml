@@ -6,9 +6,8 @@ services:
     perform_base.crud.registry:
         class: Perform\BaseBundle\Crud\CrudRegistry
         arguments:
-            - null
             - '@perform_base.doctrine.entity_resolver'
-            - []
+            - '@doctrine.orm.entity_manager'
 
     perform_base.config_store:
         class: Perform\BaseBundle\Config\ConfigStore
