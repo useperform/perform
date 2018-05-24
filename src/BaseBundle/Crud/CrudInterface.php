@@ -62,4 +62,11 @@ interface CrudInterface
      * @return string
      */
     public function getTemplate(Environment $twig, $entityName, $context);
+
+    /**
+     * Get the entity class name managed by this crud service.
+     *
+     * @return string
+     */
+    public static function getEntityClass();
 }

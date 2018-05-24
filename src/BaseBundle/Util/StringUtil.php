@@ -71,6 +71,24 @@ class StringUtil
     }
 
     /**
+     * Suggest the class name of an entity for a crud class.
+     *
+     * @param string $crudClass
+     */
+    public static function entityClassForCrud($crudClass)
+    {
+        $basename = static::classBasename($crudClass, 'Crud');
+        $pieces = explode('\\', $crudClass);
+        // Namespace\AppBundle\Crud\SomethingCrud -> Namespace\AppBundle\Entity\Something
+        array_pop($pieces);
+        array_pop($pieces);
+        $pieces[] = 'Entity';
+        $pieces[] = $basename;
+
+        return implode('\\', $pieces);
+    }
+
+    /**
      * Suggest a twig template location for an entity.
      *
      * @param string $entityName e.g. SomeBundle:SomeEntity

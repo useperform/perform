@@ -81,6 +81,21 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, StringUtil::classBasename($class));
     }
 
+    public function entityClassForCrudProvider()
+    {
+        return [
+            ['App\Crud\FooCrud', 'App\Entity\Foo'],
+        ];
+    }
+
+    /**
+     * @dataProvider entityClassForCrudProvider()
+     */
+    public function testEntityClassForCrud($class, $expected)
+    {
+        $this->assertSame($expected, StringUtil::entityClassForCrud($class));
+    }
+
     public function basenameWithSuffixProvider()
     {
         return [

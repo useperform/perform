@@ -110,4 +110,14 @@ abstract class AbstractCrud implements CrudInterface
 
         return $twig->getLoader()->exists($template) ? $template : sprintf('@PerformBase/crud/%s.html.twig', $context);
     }
+
+    public static function getEntityClass()
+    {
+        $entityClass = StringUtil::entityClassForCrud(static::class);
+        if (!class_exists($entityClass)) {
+            throw new \Exception(sprintf('Unable to guess the entity class to use for %s - tried "%s" but the class does not exist. You should implement %s::getEntityClass().', static::class, $entityClass, static::class));
+        }
+
+        return $entityClass;
+    }
 }
