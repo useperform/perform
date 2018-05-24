@@ -113,6 +113,7 @@ services:
         class: Perform\BaseBundle\Twig\Extension\CrudExtension
         arguments:
             - '@perform_base.context_renderer'
+            - '@perform_base.config_store'
             - '@perform_base.routing.crud_url'
             - '@request_stack'
         tags:
@@ -141,7 +142,6 @@ services:
         class: Perform\BaseBundle\Twig\Extension\UtilExtension
         arguments:
             - "@router"
-            - '@perform_base.config_store'
         tags:
             - {name: twig.extension}
 
