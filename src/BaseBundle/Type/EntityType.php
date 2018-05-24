@@ -7,6 +7,7 @@ use Perform\BaseBundle\Exception\InvalidTypeException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType as EntityFormType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Perform\BaseBundle\Crud\CrudRegistry;
 
 /**
  * Use the ``entity`` type for relations to other entities.
@@ -38,11 +39,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class EntityType extends AbstractType
 {
     protected $entityManager;
+    protected $crudRegistry;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, CrudRegistry $crudRegistry)
     {
         parent::__construct();
         $this->entityManager = $entityManager;
+        $this->crudRegistry = $crudRegistry;
     }
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
@@ -60,6 +63,7 @@ class EntityType extends AbstractType
      * @doc display_field The property to use to display the related entity
      * @doc link_to If true, display a link to view the related entity
      * @doc multiple If true, assume the relation is a doctrine collection
+     * @doc crud_name The crud name to use for the related entity
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -67,6 +71,8 @@ class EntityType extends AbstractType
         $resolver->setAllowedTypes('display_field', 'string');
         $resolver->setRequired('class');
         $resolver->setAllowedTypes('class', 'string');
+        $resolver->setDefault('crud_name', '');
+        $resolver->setAllowedTypes('crud_name', 'string');
         $resolver->setDefault('link_to', true);
         $resolver->setAllowedTypes('link_to', 'boolean');
         $resolver->setDefault('multiple', false);
@@ -90,7 +96,12 @@ class EntityType extends AbstractType
             return '';
         }
 
+        if ($options['link_to'] === true && !$options['crud_name']) {
+            $options['crud_name'] = $this->crudRegistry->getNameForRelatedEntity($entity, $field);
+        }
+
         return [
+            'crud_name' => $options['crud_name'],
             'value' => $relatedEntity,
             'display_field' => $options['display_field'],
             'link_to' => $options['link_to'],
