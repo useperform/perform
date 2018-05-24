@@ -17,9 +17,9 @@ class DeleteAction implements ActionInterface
         $this->entityManager = $entityManager;
     }
 
-    public function run(array $entities, array $options)
+    public function run(CrudRequest $request, array $entities, array $options)
     {
-        $this->entityManager->deleteMany($entities);
+        $this->entityManager->deleteMany($request, $entities);
 
         $response = new ActionResponse(sprintf('%s deleted.', count($entities) === 1 ? 'Item' : count($entities).' items'));
         $response->setRedirect(

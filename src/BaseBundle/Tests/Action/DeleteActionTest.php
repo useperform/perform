@@ -25,27 +25,33 @@ class DeleteActionTest extends \PHPUnit_Framework_TestCase
         $this->action = new DeleteAction($this->manager);
     }
 
+    private function crudRequest()
+    {
+        return new CrudRequest('some_crud', CrudRequest::CONTEXT_ACTION);
+    }
+
     public function testEntitiesAreDeleted()
     {
         $one = new \stdClass();
         $two = new \stdClass();
+        $request = $this->crudRequest();
         $this->manager->expects($this->once())
             ->method('deleteMany')
-            ->with([$one, $two]);
+            ->with($request, [$one, $two]);
 
-        $this->action->run([$one, $two], []);
+        $this->action->run($request, [$one, $two], []);
     }
 
     public function testResponseRedirectsToCurrent()
     {
-        $response = $this->action->run([], []);
+        $response = $this->action->run($this->crudRequest(), [], []);
         $this->assertInstanceOf(ActionResponse::class, $response);
         $this->assertSame(ActionResponse::REDIRECT_CURRENT, $response->getRedirect());
     }
 
     public function testResponseRedirectsToPreviousWhenViewingEntity()
     {
-        $response = $this->action->run([], ['context' => CrudRequest::CONTEXT_VIEW]);
+        $response = $this->action->run($this->crudRequest(), [], ['context' => CrudRequest::CONTEXT_VIEW]);
         $this->assertInstanceOf(ActionResponse::class, $response);
         $this->assertSame(ActionResponse::REDIRECT_PREVIOUS, $response->getRedirect());
     }
