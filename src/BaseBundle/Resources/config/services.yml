@@ -156,8 +156,8 @@ services:
         tags:
             - { name: knp_menu.menu_builder, method: createSidebar, alias: perform_sidebar }
 
-    perform_base.menu_extension:
-        class: Perform\BaseBundle\Menu\Extension\EntityExtension
+    perform_base.menu_extension.crud:
+        class: Perform\BaseBundle\Menu\Extension\CrudExtension
         arguments: ['@perform_base.routing.crud_url']
         tags:
             # higher priority than routing extension at 0

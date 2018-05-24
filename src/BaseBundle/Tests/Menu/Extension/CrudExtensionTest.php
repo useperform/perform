@@ -3,42 +3,40 @@
 namespace Perform\BaseBundle\Tests\Menu\Extension;
 
 use Perform\BaseBundle\Routing\CrudUrlGenerator;
-use Perform\BaseBundle\Menu\Extension\EntityExtension;
+use Perform\BaseBundle\Menu\Extension\CrudExtension;
 
 /**
- * EntityExtensionTest
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class EntityExtensionTest extends \PHPUnit_Framework_TestCase
+class CrudExtensionTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
         $this->urlGenerator = $this->getMockBuilder(CrudUrlGenerator::class)
                             ->disableOriginalConstructor()
                             ->getMock();
-        $this->extension = new EntityExtension($this->urlGenerator);
+        $this->extension = new CrudExtension($this->urlGenerator);
     }
 
-    public function testBuildOptionsWithEntityKey()
+    public function testBuildOptionsWithCrudKey()
     {
         $options = [
-            'entity' => 'SomeBundle:Entity',
+            'crud' => 'some_crud',
             'route' => 'some_route',
         ];
         $this->urlGenerator->expects($this->any())
             ->method('getDefaultEntityRoute')
-            ->with('SomeBundle:Entity')
-            ->will($this->returnValue('entity_route_list'));
+            ->with('some_crud')
+            ->will($this->returnValue('crud_route_list'));
         $expected = [
-            'entity' => 'SomeBundle:Entity',
+            'crud' => 'some_crud',
             //route should be overridden
-            'route' => 'entity_route_list',
+            'route' => 'crud_route_list',
         ];
         $this->assertSame($expected, $this->extension->buildOptions($options));
     }
 
-    public function testBuildOptionsWithoutEntityKey()
+    public function testBuildOptionsWithoutCrudKey()
     {
         $options = [
             'route' => 'some_route',
