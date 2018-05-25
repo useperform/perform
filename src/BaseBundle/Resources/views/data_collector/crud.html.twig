@@ -54,7 +54,18 @@ security:
   {% endif %}
   {% if collector.activeCrud is not null %}
     <h2>Active Crud</h2>
-    {{collector.activeCrud}}
+    <div class="metrics">
+      <div class="metric">
+        <span class="value">{{collector.activeCrud}}</span>
+        <span class="label">Crud Class</span>
+      </div>
+
+      <div class="metric">
+        <span class="value">{{collector.activeEntity}}</span>
+        <span class="label">Entity Class</span>
+      </div>
+      <!-- show if entity is extended -->
+    </div>
     {% if collector.typeConfig is not null %}
       <h2>Type Config</h2>
       <table>
@@ -103,6 +114,9 @@ security:
   </table>
 
   <h2>Extended Entities</h2>
+  <p>
+    Whenever crud functionality is requested for a parent entity, the child entity will be used instead.
+  </p>
   <table>
     <thead>
       <tr>
