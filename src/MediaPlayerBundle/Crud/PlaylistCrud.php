@@ -23,7 +23,7 @@ class PlaylistCrud extends AbstractCrud
                 'options' => [
                     'label' => 'Tracks',
                     'itemLabel' => 'track',
-                    'entity' => 'PerformMediaPlayerBundle:PlaylistItem',
+                    'crud_name' => 'perform_media_player.playlist_item',
                     'sortField' => 'sortOrder',
                 ]
             ])
