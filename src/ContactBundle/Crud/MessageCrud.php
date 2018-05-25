@@ -32,6 +32,7 @@ class MessageCrud extends AbstractCrud
                 'contexts' => [
                     CrudRequest::CONTEXT_LIST,
                     CrudRequest::CONTEXT_VIEW,
+                    CrudRequest::CONTEXT_EXPORT,
                 ],
             ])
             ->add('email', [
@@ -39,6 +40,7 @@ class MessageCrud extends AbstractCrud
                 'contexts' => [
                     CrudRequest::CONTEXT_LIST,
                     CrudRequest::CONTEXT_VIEW,
+                    CrudRequest::CONTEXT_EXPORT,
                 ],
             ])
             ->add('createdAt', [
@@ -46,6 +48,7 @@ class MessageCrud extends AbstractCrud
                 'contexts' => [
                     CrudRequest::CONTEXT_LIST,
                     CrudRequest::CONTEXT_VIEW,
+                    CrudRequest::CONTEXT_EXPORT,
                 ],
                 'options' => [
                     'label' => 'Sent at',
@@ -55,6 +58,7 @@ class MessageCrud extends AbstractCrud
                 'type' => 'text',
                 'contexts' => [
                     CrudRequest::CONTEXT_VIEW,
+                    CrudRequest::CONTEXT_EXPORT,
                 ],
             ])
             ->setDefaultSort('createdAt', 'DESC')
