@@ -18,10 +18,12 @@ use Perform\BaseBundle\Controller\CrudController;
 class CrudLoader extends Loader
 {
     protected $registry;
+    protected $routeOptions;
 
-    public function __construct(CrudRegistry $registry)
+    public function __construct(CrudRegistry $registry, array $routeOptions = [])
     {
         $this->registry = $registry;
+        $this->routeOptions = $routeOptions;
     }
 
     public function load($crudName, $type = null)
@@ -35,13 +37,14 @@ class CrudLoader extends Loader
             throw new \InvalidArgumentException(sprintf('%s must be an instance of %s to use crud routing.', $controllerClass, $baseControllerClass));
         }
 
+        $options = $this->getOptions($crudName);
         $collection = new RouteCollection();
-        foreach ($crud->getActions() as $path => $action) {
-            $route = new Route($path, [
-                '_controller' => $controllerClass.'::'.$action.'Action',
+        foreach ($options['contexts'] as $context => $urlFragment) {
+            $route = new Route($urlFragment, [
+                '_controller' => $controllerClass.'::'.$context.'Action',
                 '_crud' => $crudName,
             ]);
-            $collection->add($this->createRouteName($crud, $action), $route);
+            $collection->add($options['route_name_prefix'].$context, $route);
         }
         $crudRefl = new \ReflectionClass($crud);
         $filename = $crudRefl->getFileName();
@@ -54,9 +57,13 @@ class CrudLoader extends Loader
         return $collection;
     }
 
-    protected function createRouteName(CrudInterface $crud, $action)
+    protected function getOptions($crudName)
     {
-        return $crud->getRoutePrefix().strtolower(preg_replace('/([A-Z])/', '_\1', $action));
+        if (!isset($this->routeOptions[$crudName])) {
+            throw new \InvalidArgumentException(sprintf('Unable to register routes for the given crud "%s", route options have not been registered.', $crudName));
+        }
+
+        return $this->routeOptions[$crudName];
     }
 
     public function supports($resource, $type = null)
