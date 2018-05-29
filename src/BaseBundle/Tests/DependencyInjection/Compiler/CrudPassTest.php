@@ -11,6 +11,8 @@ use Perform\BaseBundle\Tests\Crud\OtherTestCrud;
 use Perform\BaseBundle\Tests\Crud\InvalidCrud;
 use Symfony\Component\DependencyInjection\Reference;
 use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
+use Perform\BaseBundle\Routing\CrudUrlGenerator;
+use Perform\BaseBundle\Routing\CrudLoader;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -26,6 +28,8 @@ class CrudPassTest extends \PHPUnit_Framework_TestCase
         $this->pass = new CrudPass();
         $this->container = new ContainerBuilder();
         $this->registry = $this->container->register('perform_base.crud.registry', CrudRegistry::class);
+        $this->routeLoader = $this->container->register('perform_base.routing.crud_loader', CrudLoader::class);
+        $this->routeGenerator = $this->container->register('perform_base.routing.crud_generator', CrudUrlGenerator::class);
     }
 
     public function testIsCompilerPass()
@@ -53,7 +57,6 @@ class CrudPassTest extends \PHPUnit_Framework_TestCase
 
     public function testCrudWithUnknownEntityThrowsException()
     {
-        $this->container->setParameter('perform_base.entity_aliases', []);
         $this->container->register('crud.invalid', InvalidCrud::class)
             ->addTag('perform_base.crud', ['crud_name' => 'invalid']);
 

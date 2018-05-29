@@ -7,6 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Perform\BaseBundle\Crud\InvalidCrudException;
 use Symfony\Component\DependencyInjection\Reference;
 use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
+use Perform\BaseBundle\Crud\DuplicateCrudException;
 
 /**
  * Register Crud services.
@@ -19,6 +20,7 @@ class CrudPass implements CompilerPassInterface
     {
         $crudNames = [];
         $crudEntityMap = [];
+        $crudRoutes = [];
 
         foreach ($container->findTaggedServiceIds('perform_base.crud') as $service => $tags) {
             $crudClass = $container->getDefinition($service)->getClass();
@@ -32,21 +34,73 @@ class CrudPass implements CompilerPassInterface
             }
 
             foreach ($tags as $tag) {
-                $crudName = isset($tag['crud_name']) ? $tag['crud_name'] : $this->createCrudName($service);
+                if (!isset($tag['crud_name'])) {
+                    $tag['crud_name'] = $this->createCrudName($service);
+                }
+                $crudName = $tag['crud_name'];
+
+                if (isset($crudNames[$crudName])) {
+                    throw new DuplicateCrudException(sprintf('A crud with the name "%s" is already defined. You should explicitly set the "crud_name" attribute of the "perform_base.crud" tag on the "%s" service to something not in the existing list: "%s".', $crudName, $service, implode('", "', array_keys($crudNames))));
+                }
 
                 $crudNames[$crudName] = new Reference($service);
                 $crudEntityMap[$entityClass][] = $crudName;
+                $crudRoutes[$crudName] = $this->getRouteOptionsFromTag($tag);
             }
         }
 
         $container->getDefinition('perform_base.crud.registry')
             ->setArgument(2, LoopableServiceLocator::createDefinition($crudNames))
             ->setArgument(3, $crudEntityMap);
+
+        $container->getDefinition('perform_base.routing.crud_loader')
+            ->setArgument(1, $crudRoutes);
+
+        $container->getDefinition('perform_base.routing.crud_generator')
+            ->setArgument(1, $crudRoutes);
     }
 
     private function createCrudName($service)
     {
         // generate a sensible name from the class or service definition
         return $service;
+    }
+
+    private function getRouteOptionsFromTag(array $tag)
+    {
+        $options = [];
+
+        $crudName = $tag['crud_name'];
+        $options['route_name_prefix'] = isset($tag['route_name_prefix']) ?
+                                      $tag['route_name_prefix'] :
+                                      $this->createRouteNamePrefix($crudName);
+
+        $defaultContexts = [
+            'list' => '/',
+            'view' => '/view/{id}',
+            'create' => '/create',
+            'edit' => '/edit/{id}',
+        ];
+        $unsetCount = 0;
+
+        foreach ($defaultContexts as $context => $urlFragment) {
+            if (!isset($tag[$context.'_context'])) {
+                ++$unsetCount;
+                continue;
+            }
+            $options['contexts'][$context] = $tag[$context.'_context'];
+        }
+
+        // if no contexts are defined, load them all.
+        if ($unsetCount === count($defaultContexts)) {
+            $options['contexts'] = $defaultContexts;
+        }
+
+        return $options;
+    }
+
+    private function createRouteNamePrefix($crudName)
+    {
+        return preg_replace('/([^_a-z0-9])/', '_', strtolower($crudName)).'_';
     }
 }
