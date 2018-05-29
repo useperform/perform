@@ -13,6 +13,8 @@ interface CrudUrlGeneratorInterface
     /**
      * Get the url to a crud route for an entity.
      *
+     * For the view and edit contexts, the 'entity' parameter is required.
+     *
      * @param string $crudName
      * @param string $context
      * @param array  $params
@@ -20,6 +22,13 @@ interface CrudUrlGeneratorInterface
      * @return string
      */
     public function generate($crudName, $context, array $params = []);
+
+    /**
+     * Return true if the given crud name has at least one route registered.
+     *
+     * @return bool
+     */
+    public function isRouted($crudName);
 
     /**
      * Check if a crud route exists.
