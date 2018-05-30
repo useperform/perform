@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Doctrine\ORM\EntityNotFoundException;
 use Perform\BaseBundle\Action\ActionResponse;
 use Perform\BaseBundle\Action\ActionFailedException;
+use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
  * ActionController.
@@ -52,9 +53,8 @@ class ActionController extends Controller
         if ($response->getRedirect() === ActionResponse::REDIRECT_URL) {
             $json['redirect'] = $response->getUrl();
         }
-        if ($response->getRedirect() === ActionResponse::REDIRECT_ENTITY_DEFAULT) {
-            $defaultRoute = $this->get('perform_base.routing.crud_url')->getDefaultEntityRoute($crudName);
-            $response->setRedirectRoute($defaultRoute);
+        if ($response->getRedirect() === ActionResponse::REDIRECT_LIST_CONTEXT) {
+            $json['redirect'] = $this->get('perform_base.routing.crud_generator')->generate($crudName, CrudRequest::CONTEXT_LIST, $response->getRouteParams());
         }
         if ($response->getRedirect() === ActionResponse::REDIRECT_ROUTE) {
             $json['redirect'] = $this->generateUrl($response->getRoute(), $response->getRouteParams());
