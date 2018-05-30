@@ -2,7 +2,12 @@ services:
     perform_contact.crud.message:
         class: Perform\ContactBundle\Crud\MessageCrud
         tags:
-            - { name: perform_base.crud, crud_name: "perform_contact.message" }
+            -
+                name: perform_base.crud
+                crud_name: "perform_contact.message"
+                list_context: "/"
+                view_context: "/view/{id}"
+
 
     perform_contact.menu_link.contact:
         class: Perform\BaseBundle\Menu\SimpleLinkProvider

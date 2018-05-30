@@ -14,16 +14,6 @@ use Perform\BaseBundle\Crud\CrudRequest;
  **/
 class MessageCrud extends AbstractCrud
 {
-    protected $routePrefix = 'perform_contact_message_';
-
-    public function getActions()
-    {
-        return [
-            '/' => 'list',
-            '/view/{id}' => 'view',
-        ];
-    }
-
     public function configureTypes(TypeConfig $config)
     {
         $config
