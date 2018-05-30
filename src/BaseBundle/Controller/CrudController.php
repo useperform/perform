@@ -27,7 +27,7 @@ class CrudController extends Controller
     protected function newEntity()
     {
         $crudClass = get_class($this->crud);
-        $class = $crudClass::getEntityClass();
+        $class = $this->get('perform_base.doctrine.entity_resolver')->resolve($crudClass::getEntityClass());
 
         return new $class();
     }
