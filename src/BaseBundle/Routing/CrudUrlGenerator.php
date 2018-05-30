@@ -2,9 +2,9 @@
 
 namespace Perform\BaseBundle\Routing;
 
-use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -33,48 +33,30 @@ class CrudUrlGenerator implements CrudUrlGeneratorInterface
             unset($params['entity']);
         }
 
-        return $this->generator->generate($this->createRouteName($crudName, $context), $params);
+        return $this->generator->generate($this->getRouteName($crudName, $context), $params);
     }
 
-    public function isRouted($crudName)
-    {
-        return isset($this->routeOptions[$crudName]);
-    }
-
-    /**
-     * @return bool
-     */
     public function routeExists($crudName, $context)
     {
         try {
-            $this->generator->generate($this->createRouteName($crudName, $context));
+            $this->generator->generate($this->getRouteName($crudName, $context));
 
             return true;
         } catch (RouteNotFoundException $e) {
-            // thrown by url generator when the route isn't found, or by createRouteName() if the crud isn't routed at all
+            // thrown by url generator when the route isn't found, or by getRouteName() if the crud isn't available at all
             return false;
-        } catch (\Exception $e) {
+        } catch (MissingMandatoryParametersException $e) {
             // missing parameters, but route exists
             return true;
         }
     }
 
-    protected function createRouteName($crudName, $context)
+    public function getRouteName($crudName, $context)
     {
         if (!isset($this->routeOptions[$crudName]['route_name_prefix'])) {
             throw new RouteNotFoundException(sprintf('No routes have been registered for the crud name "%s".', $crudName));
         }
 
         return $this->routeOptions[$crudName]['route_name_prefix'].$context;
-    }
-
-    public function getDefaultEntityRoute($crudName)
-    {
-        return $this->createRouteName($crudName, 'list');
-    }
-
-    public function generateDefaultEntityRoute($crudName)
-    {
-        return $this->generator->generate($this->getDefaultEntityRoute($crudName));
     }
 }

@@ -135,28 +135,13 @@ class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($generator->routeExists('test_crud', 'list'));
     }
 
-    public function testGetDefaultEntityRoute()
+    public function testGetRouteName()
     {
         $generator = $this->createGenerator([
             'test_crud' => [
-                'route_name_prefix' => 'some_prefix_',
+                'route_name_prefix' => 'test_crud_',
             ]
         ]);
-        $this->assertSame('some_prefix_list', $generator->getDefaultEntityRoute('test_crud'));
-    }
-
-    public function testGenerateDefaultEntityRoute()
-    {
-        $generator = $this->createGenerator([
-            'test_crud' => [
-                'route_name_prefix' => 'some_prefix_',
-            ]
-        ]);
-        $this->urlGenerator->expects($this->any())
-            ->method('generate')
-            ->with('some_prefix_list')
-            ->will($this->returnValue('/some/url'));
-
-        $this->assertSame('/some/url', $generator->generateDefaultEntityRoute('test_crud'));
+        $this->assertSame('test_crud_list', $generator->getRouteName('test_crud', 'list'));
     }
 }
