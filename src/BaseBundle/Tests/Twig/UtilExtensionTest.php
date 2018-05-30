@@ -3,25 +3,24 @@
 namespace Perform\BaseBundle\Tests\Twig;
 
 use Perform\BaseBundle\Twig\Extension\UtilExtension;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Route;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class UtilExtensionTest extends \PHPUnit_Framework_TestCase
 {
-    protected $extension;
-    protected $router;
+    protected $urlGenerator;
     protected $configStore;
+    protected $extension;
 
     public function setUp()
     {
-        $this->router = $this->getMock(RouterInterface::class);
+        $this->urlGenerator = $this->getMock(UrlGeneratorInterface::class);
         $this->configStore = $this->getMock(ConfigStoreInterface::class);
-        $this->extension = new UtilExtension($this->router, $this->configStore);
+        $this->extension = new UtilExtension($this->urlGenerator, $this->configStore);
     }
 
     public function testHumanDateNoDate()
@@ -31,13 +30,16 @@ class UtilExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testRouteExists()
     {
-        $routes = new RouteCollection();
-        $routes->add('bar', new Route('/bar'));
-        $this->router->expects($this->any())
-            ->method('getRouteCollection')
-            ->will($this->returnValue($routes));
+        $this->assertTrue($this->extension->routeExists('some_route'));
+    }
 
-        $this->assertFalse($this->extension->routeExists('foo'));
-        $this->assertTrue($this->extension->routeExists('bar'));
+    public function testRouteDoesNotExist()
+    {
+        $this->urlGenerator->expects($this->any())
+            ->method('generate')
+            ->with('some_route')
+            ->will($this->throwException(new RouteNotFoundException()));
+
+        $this->assertFalse($this->extension->routeExists('some_route'));
     }
 }

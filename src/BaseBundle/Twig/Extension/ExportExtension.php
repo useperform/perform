@@ -6,8 +6,7 @@ use Perform\BaseBundle\Config\ConfigStoreInterface;
 use Perform\BaseBundle\Routing\MissingResourceException;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Render export links.
@@ -16,13 +15,13 @@ use Symfony\Component\Routing\RouterInterface;
  **/
 class ExportExtension extends \Twig_Extension
 {
-    protected $router;
+    protected $urlGenerator;
     protected $configStore;
     protected $request;
 
-    public function __construct(RouterInterface $router, ConfigStoreInterface $configStore)
+    public function __construct(UrlGeneratorInterface $urlGenerator, ConfigStoreInterface $configStore)
     {
-        $this->router = $router;
+        $this->urlGenerator = $urlGenerator;
         $this->configStore = $configStore;
     }
 
@@ -41,7 +40,9 @@ class ExportExtension extends \Twig_Extension
 
     public function exportDropdown(\Twig_Environment $twig, $crudName, $label = 'export.dropdown')
     {
-        if (!$this->router->getRouteCollection()->get('perform_base_export_stream') instanceof Route) {
+        try {
+            $this->urlGenerator->generate('perform_base_export_stream');
+        } catch (RouteNotFoundException $e) {
             return '';
         }
 
@@ -68,7 +69,7 @@ class ExportExtension extends \Twig_Extension
             // filters, sorting, etc are kept however
             unset($vars['page']);
 
-            return $this->router->generate('perform_base_export_stream', $vars);
+            return $this->urlGenerator->generate('perform_base_export_stream', $vars);
         } catch (RouteNotFoundException $e) {
             throw MissingResourceException::create($e, '@PerformBaseBundle/Resources/config/routing_export.yml', 'to render export links', 'perform_base_export_stream');
         }

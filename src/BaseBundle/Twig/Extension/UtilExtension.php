@@ -3,8 +3,9 @@
 namespace Perform\BaseBundle\Twig\Extension;
 
 use Carbon\Carbon;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 
 /**
  * General twig helpers.
@@ -13,11 +14,11 @@ use Symfony\Component\Routing\Route;
  **/
 class UtilExtension extends \Twig_Extension
 {
-    protected $router;
+    protected $urlGenerator;
 
-    public function __construct(RouterInterface $router)
+    public function __construct(UrlGeneratorInterface $urlGenerator)
     {
-        $this->router = $router;
+        $this->urlGenerator = $urlGenerator;
     }
 
     public function getFilters()
@@ -45,7 +46,16 @@ class UtilExtension extends \Twig_Extension
 
     public function routeExists($routeName)
     {
-        return $this->router->getRouteCollection()->get($routeName) instanceof Route;
+        try {
+            $this->urlGenerator->generate($routeName);
+
+            return true;
+        } catch (RouteNotFoundException $e) {
+            return false;
+        } catch (MissingMandatoryParametersException $e) {
+            // missing parameters, but route exists
+            return true;
+        }
     }
 
     public function getName()
