@@ -10,8 +10,6 @@ use Perform\BaseBundle\Config\TypeConfig;
  **/
 class TestCrud extends AbstractCrud
 {
-    protected $routePrefix = 'test_crud_';
-
     public function configureTypes(TypeConfig $config)
     {
     }

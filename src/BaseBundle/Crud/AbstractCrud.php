@@ -16,35 +16,14 @@ use Twig\Environment;
  **/
 abstract class AbstractCrud implements CrudInterface
 {
-    protected $routePrefix;
-
     public function getFormType()
     {
         return CrudType::class;
     }
 
-    public function getRoutePrefix()
-    {
-        if (!$this->routePrefix) {
-            throw new \Exception('An admin route prefix must be configured.');
-        }
-
-        return $this->routePrefix;
-    }
-
     public function getControllerName()
     {
         return 'Perform\BaseBundle\Controller\CrudController';
-    }
-
-    public function getActions()
-    {
-        return [
-            '/' => 'list',
-            '/view/{id}' => 'view',
-            '/create' => 'create',
-            '/edit/{id}' => 'edit',
-        ];
     }
 
     public function configureFilters(FilterConfig $config)
