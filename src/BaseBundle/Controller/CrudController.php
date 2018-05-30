@@ -85,7 +85,7 @@ class CrudController extends Controller
                 $this->get('perform_base.entity_manager')->create($crudRequest, $entity);
                 $this->addFlash('success', 'Item created successfully.');
 
-                return $this->redirect($this->get('perform_base.routing.crud_url')->generateDefaultEntityRoute($crudName));
+                return $this->redirect($this->get('perform_base.routing.crud_generator')->generate($crudName, CrudRequest::CONTEXT_LIST));
             } catch (\Exception $e) {
                 $this->addFlash('danger', 'An error occurred.');
             }
@@ -117,7 +117,7 @@ class CrudController extends Controller
                 $this->get('perform_base.entity_manager')->update($crudRequest, $entity);
                 $this->addFlash('success', 'Item updated successfully.');
 
-                return $this->redirect($this->get('perform_base.routing.crud_url')->generateDefaultEntityRoute($crudName));
+                return $this->redirect($this->get('perform_base.routing.crud_generator')->generate($crudName, CrudRequest::CONTEXT_LIST));
             } catch (\Exception $e) {
                 $this->addFlash('danger', 'An error occurred.');
             }
