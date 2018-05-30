@@ -10,8 +10,6 @@ use Perform\BaseBundle\Config\TypeConfig;
  **/
 class PlaylistCrud extends AbstractCrud
 {
-    protected $routePrefix = 'perform_mediaplayer_playlist_';
-
     public function configureTypes(TypeConfig $config)
     {
         $config
