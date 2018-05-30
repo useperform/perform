@@ -5,6 +5,7 @@ namespace Perform\BaseBundle\Menu\Extension;
 use Knp\Menu\Factory\ExtensionInterface;
 use Knp\Menu\ItemInterface;
 use Perform\BaseBundle\Routing\CrudUrlGenerator;
+use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
  * Adds a 'crud' menu option to automatically route to a crud service.
@@ -21,7 +22,7 @@ class CrudExtension implements ExtensionInterface
     public function buildOptions(array $options = [])
     {
         if (isset($options['crud'])) {
-            $options['route'] = $this->urlGenerator->getDefaultEntityRoute($options['crud']);
+            $options['route'] = $this->urlGenerator->getRouteName($options['crud'], CrudRequest::CONTEXT_LIST);
         }
 
         return $options;

@@ -25,8 +25,8 @@ class CrudExtensionTest extends \PHPUnit_Framework_TestCase
             'route' => 'some_route',
         ];
         $this->urlGenerator->expects($this->any())
-            ->method('getDefaultEntityRoute')
-            ->with('some_crud')
+            ->method('getRouteName')
+            ->with('some_crud', 'list')
             ->will($this->returnValue('crud_route_list'));
         $expected = [
             'crud' => 'some_crud',
@@ -42,7 +42,7 @@ class CrudExtensionTest extends \PHPUnit_Framework_TestCase
             'route' => 'some_route',
         ];
         $this->urlGenerator->expects($this->never())
-            ->method('getDefaultEntityRoute');
+            ->method('getRouteName');
         $expected = [
             'route' => 'some_route',
         ];
