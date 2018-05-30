@@ -11,8 +11,6 @@ use Perform\BaseBundle\Crud\CrudRequest;
  **/
 class LocalSubscriberCrud extends AbstractCrud
 {
-    protected $routePrefix = 'perform_mailing_list_local_subscriber_';
-
     public function configureTypes(TypeConfig $config)
     {
         $config

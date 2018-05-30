@@ -14,8 +14,6 @@ use Perform\BaseBundle\Crud\CrudRequest;
  **/
 class UserCrud extends AbstractCrud
 {
-    protected $routePrefix = 'perform_user_user_';
-
     public function configureTypes(TypeConfig $config)
     {
         $config

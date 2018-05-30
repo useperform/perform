@@ -10,8 +10,6 @@ use Perform\BaseBundle\Crud\CrudRequest;
  **/
 class MarkdownPostCrud extends AbstractPostCrud
 {
-    protected $routePrefix = 'perform_blog_markdown_post_';
-
     public function configureTypes(TypeConfig $config)
     {
         parent::configureTypes($config);
