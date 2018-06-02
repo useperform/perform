@@ -15,6 +15,6 @@ services:
     perform_base.action.delete:
         class: Perform\BaseBundle\Action\DeleteAction
         arguments:
-            - "@doctrine.orm.entity_manager"
+            - "@perform_base.entity_manager"
         tags:
             - { name: perform_base.action, alias: perform_base_delete }

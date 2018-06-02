@@ -4,7 +4,6 @@ namespace Perform\BaseBundle\Tests\Selector;
 
 use Perform\BaseBundle\Selector\EntitySelector;
 use Pagerfanta\Pagerfanta;
-use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BaseBundle\Config\FilterConfig;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Perform\BaseBundle\Type\StringType;
@@ -14,13 +13,16 @@ use Perform\BaseBundle\Config\ConfigStoreInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Perform\BaseBundle\Test\Services;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Perform\BaseBundle\Event\QueryEvent;
+use Perform\BaseBundle\Config\TypeConfig;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class EntitySelectorTest extends \PHPUnit_Framework_TestCase
 {
-    protected $entityManager;
+    protected $em;
     protected $qb;
     protected $typeRegistry;
     protected $store;
@@ -28,187 +30,85 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->entityManager = $this->getMock(EntityManagerInterface::class);
+        $em = $this->getMock(EntityManagerInterface::class);
         $this->qb = $this->getMockBuilder(QueryBuilder::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->entityManager->expects($this->any())
+        $em->expects($this->any())
             ->method('createQueryBuilder')
             ->will($this->returnValue($this->qb));
-
-        $this->typeRegistry = Services::typeRegistry([
-            'string' => new StringType(),
-            'boolean' => new BooleanType(),
-        ]);
+        $this->dispatcher = $this->getMock(EventDispatcherInterface::class);
         $this->store = $this->getMock(ConfigStoreInterface::class);
+        $this->typeConfig = $this->getMockBuilder(TypeConfig::class)
+                          ->disableOriginalConstructor()
+                          ->getMock();
+        $this->store->expects($this->any())
+            ->method('getTypeConfig')
+            ->will($this->returnValue($this->typeConfig));
+        $this->filterConfig = $this->getMockBuilder(FilterConfig::class)
+                          ->disableOriginalConstructor()
+                          ->getMock();
         $this->store->expects($this->any())
             ->method('getFilterConfig')
-            ->will($this->returnValue(new FilterConfig([])));
+            ->will($this->returnValue($this->filterConfig));
 
-        $this->selector = new EntitySelector($this->entityManager, $this->store);
+        $this->selector = new EntitySelector($em, $this->dispatcher, $this->store);
     }
 
-    protected function expectQueryBuilder($entityName)
+    protected function expectQueryBuilder($entityClass)
     {
-        $this->qb->expects($this->once())
+        $this->store->expects($this->any())
+            ->method('getEntityClass')
+            ->with('some_crud')
+            ->will($this->returnValue($entityClass));
+        $this->qb->expects($this->any())
             ->method('select')
             ->with('e')
             ->will($this->returnSelf());
-        $this->qb->expects($this->once())
+        $this->qb->expects($this->any())
             ->method('from')
-            ->with($entityName, 'e')
+            ->with($entityClass, 'e')
             ->will($this->returnSelf());
     }
 
-    protected function expectTypeConfig($entityName, array $config)
-    {
-        $typeConfig = new TypeConfig($this->typeRegistry);
-        foreach ($config as $field => $config) {
-            $typeConfig->add($field, $config);
-        }
-
-        $this->store->expects($this->any())
-            ->method('getTypeConfig')
-            ->with($entityName)
-            ->will($this->returnValue($typeConfig));
-    }
-
-    public function testDefaultListContext()
+    public function testGetQueryBuilder()
     {
         $this->expectQueryBuilder('Bundle:SomeEntity');
-        $this->expectTypeConfig('Bundle:SomeEntity', []);
-        $request = new CrudRequest(CrudRequest::CONTEXT_LIST);
-        $request->setEntityClass('Bundle:SomeEntity');
+        $request = new CrudRequest('some_crud', CrudRequest::CONTEXT_LIST);
+
+        $this->dispatcher->expects($this->once())
+            ->method('dispatch')
+            ->with(QueryEvent::LIST_QUERY, $this->callback(function ($e) use ($request) {
+                return $e instanceof QueryEvent
+                        && $e->getQueryBuilder() === $this->qb
+                        && $e->getCrudRequest() === $request;
+            }));
+
+        $qb = $this->selector->getQueryBuilder($request);
+        $this->assertSame($this->qb, $qb);
+    }
+
+    public function testListContext()
+    {
+        $this->expectQueryBuilder('Bundle:SomeEntity');
+        $request = new CrudRequest('some_crud', CrudRequest::CONTEXT_LIST);
+        $this->filterConfig->expects($this->any())
+            ->method('getDefault')
+            ->will($this->returnValue('some_filter'));
+        $this->typeConfig->expects($this->any())
+            ->method('getDefaultSort')
+            ->will($this->returnValue(['sort_field', 'DESC']));
+
         $result = $this->selector->listContext($request);
 
         $this->assertInternalType('array', $result);
         $this->assertInstanceOf(Pagerfanta::class, $result[0]);
         $this->assertInternalType('array', $result[1]);
-    }
 
-    public function testListContextWithSorting()
-    {
-        $request = new CrudRequest(CrudRequest::CONTEXT_LIST);
-        $request->setEntityClass('Bundle:SomeEntity');
-        $request->setSortField('title');
-        $request->setSortDirection('DESC');
-
-        $this->expectQueryBuilder('Bundle:SomeEntity');
-        $this->expectTypeConfig('Bundle:SomeEntity', [
-            'title' => [
-                'type' => 'string',
-                'sort' => true,
-            ],
-        ]);
-        $this->qb->expects($this->once())
-            ->method('orderBy')
-            ->with('e.title', 'DESC')
-            ->will($this->returnSelf());
-
-        $this->selector->listContext($request);
-    }
-
-    public function testListContextWithDisabledSortField()
-    {
-        $request = new CrudRequest(CrudRequest::CONTEXT_LIST);
-        $request->setEntityClass('Bundle:SomeEntity');
-        $request->setSortField('enabled');
-        $request->setSortDirection('DESC');
-
-        $this->expectQueryBuilder('Bundle:SomeEntity');
-        $this->expectTypeConfig('Bundle:SomeEntity', [
-            'enabled' => [
-                'type' => 'boolean',
-                'sort' => false,
-            ],
-        ]);
-        $this->qb->expects($this->never())
-            ->method('orderBy');
-
-        $this->selector->listContext($request);
-    }
-
-    public function testListContextWithCustomSorting()
-    {
-        $request = new CrudRequest(CrudRequest::CONTEXT_LIST);
-        $request->setEntityClass('Bundle:SomeEntity');
-        $request->setSortField('fullname');
-        $request->setSortDirection('DESC');
-
-        $this->expectQueryBuilder('Bundle:SomeEntity');
-        $this->expectTypeConfig('Bundle:SomeEntity', [
-            'fullname' => [
-                'type' => 'string',
-                'sort' => function ($qb, $direction) {
-                    return $qb->orderBy('e.forename', $direction)
-                        ->addOrderBy('e.surname', $direction);
-                },
-            ],
-        ]);
-        $this->qb->expects($this->once())
-            ->method('orderBy')
-            ->with('e.forename', 'DESC')
-            ->will($this->returnSelf());
-        $this->qb->expects($this->once())
-            ->method('addOrderBy')
-            ->with('e.surname', 'DESC')
-            ->will($this->returnSelf());
-
-        $this->selector->listContext($request);
-    }
-
-    public function testListContextWithCustomSortQueryBuilder()
-    {
-        $request = new CrudRequest(CrudRequest::CONTEXT_LIST);
-        $request->setEntityClass('Bundle:SomeEntity');
-        $request->setSortField('fullname');
-        $request->setSortDirection('DESC');
-
-        $differentQb = $this->getMockBuilder('Doctrine\ORM\QueryBuilder')
-                     ->disableOriginalConstructor()
-                     ->getMock();
-        $this->expectQueryBuilder('Bundle:SomeEntity');
-        $this->expectTypeConfig('Bundle:SomeEntity', [
-            'fullname' => [
-                'type' => 'string',
-                'sort' => function ($qb, $direction) use ($differentQb) {
-                    return $differentQb;
-                },
-            ],
-        ]);
-
-        $differentQb->expects($this->once())
-            ->method('getQuery');
-        $this->selector->listContext($request);
-    }
-
-    public function testInvalidSortFunctionThrowsException()
-    {
-        $request = new CrudRequest(CrudRequest::CONTEXT_LIST);
-        $request->setEntityClass('Bundle:SomeEntity');
-        $request->setSortField('fullname');
-        $request->setSortDirection('DESC');
-
-        $differentQb = $this->getMockBuilder('Doctrine\ORM\QueryBuilder')
-                     ->disableOriginalConstructor()
-                     ->getMock();
-        $this->expectQueryBuilder('Bundle:SomeEntity');
-        $this->expectTypeConfig('Bundle:SomeEntity', [
-            'fullname' => [
-                'type' => 'string',
-                'sort' => function ($qb, $direction) use ($differentQb) {
-                },
-            ],
-        ]);
-
-        $this->setExpectedException('\UnexpectedValueException');
-        $this->selector->listContext($request);
-    }
-
-    public function testMissingEntityClassThrowsException()
-    {
-        $this->setExpectedException(\InvalidArgumentException::class);
-        $this->selector->listContext(new CrudRequest(CrudRequest::CONTEXT_LIST));
+        // assert that the defaults have been applied to the request
+        $this->assertSame('some_filter', $request->getFilter());
+        $this->assertSame('sort_field', $request->getSortField());
+        $this->assertSame('DESC', $request->getSortDirection());
     }
 }

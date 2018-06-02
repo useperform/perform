@@ -19,14 +19,16 @@ class ActionConfig
 {
     protected $registry;
     protected $authChecker;
+    protected $crudName;
     protected $resolver;
     protected $actions = [];
     protected $linkIndex = 0;
 
-    public function __construct(ActionRegistry $registry, AuthorizationCheckerInterface $authChecker)
+    public function __construct(ActionRegistry $registry, AuthorizationCheckerInterface $authChecker, $crudName)
     {
         $this->registry = $registry;
         $this->authChecker = $authChecker;
+        $this->crudName = $crudName;
         $this->resolver = new OptionsResolver();
         $this->resolver
             ->setDefined('label')
@@ -52,6 +54,16 @@ class ActionConfig
             ->setDefined('link')
             ->setAllowedTypes('link', 'Closure')
             ;
+    }
+
+    /**
+     * Get the name of crud this action config originated from.
+     *
+     * @return string
+     */
+    public function getCrudName()
+    {
+        return $this->crudName;
     }
 
     /**
@@ -173,7 +185,7 @@ class ActionConfig
      * This method is purely presentational; the presence of a button
      * doesn't guarantee the action will be granted for the entity.
      *
-     * @param object       $entity
+     * @param object      $entity
      * @param CrudRequest $request
      *
      * @return ConfiguredAction[]

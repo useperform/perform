@@ -43,16 +43,16 @@ class AbstractCrudTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetTemplate($context, $expected)
     {
-        $this->assertSame($expected, $this->crud->getTemplate($this->twig, 'SomeBundle:SomeEntity', $context));
+        $this->assertSame($expected, $this->crud->getTemplate($this->twig, 'some_crud', $context));
     }
 
     public function overrideTemplateProvider()
     {
         return [
-            ['list', '@Some/crud/some_entity/list.html.twig'],
-            ['view', '@Some/crud/some_entity/view.html.twig'],
-            ['create', '@Some/crud/some_entity/create.html.twig'],
-            ['edit', '@Some/crud/some_entity/edit.html.twig'],
+            ['list', '@PerformBase/crud/test/list.html.twig'],
+            ['view', '@PerformBase/crud/test/view.html.twig'],
+            ['create', '@PerformBase/crud/test/create.html.twig'],
+            ['edit', '@PerformBase/crud/test/edit.html.twig'],
         ];
     }
 
@@ -66,6 +66,6 @@ class AbstractCrudTest extends \PHPUnit_Framework_TestCase
             ->with($expected)
             ->will($this->returnValue(true));
 
-        $this->assertSame($expected, $this->crud->getTemplate($this->twig, 'SomeBundle:SomeEntity', $context));
+        $this->assertSame($expected, $this->crud->getTemplate($this->twig, 'some_crud', $context));
     }
 }

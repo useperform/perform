@@ -11,6 +11,7 @@ use Perform\BaseBundle\Config\ActionConfig;
 use Perform\BaseBundle\Action\ConfiguredAction;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
  * ActionRunnerTest.
@@ -41,6 +42,11 @@ class ActionRunnerTest extends \PHPUnit_Framework_TestCase
                         ->disableOriginalConstructor()
                         ->getMock();
         $this->store = $this->getMock(ConfigStoreInterface::class);
+        $this->store->expects($this->any())
+            ->method('getEntityClass')
+            ->with('some_crud')
+            ->will($this->returnValue('FooBundle\\Foo'));
+
         $this->authChecker = $this->getMock(AuthorizationCheckerInterface::class);
 
         $this->runner = new ActionRunner($this->em, $this->store, $this->authChecker);
@@ -49,9 +55,10 @@ class ActionRunnerTest extends \PHPUnit_Framework_TestCase
     public function testRun()
     {
         $actionName = 'foo_action';
+        $crudName = 'some_crud';
         $this->store->expects($this->any())
             ->method('getActionConfig')
-            ->with('FooBundle\\Foo')
+            ->with($crudName)
             ->will($this->returnValue($this->config));
         $this->config->expects($this->any())
             ->method('get')
@@ -73,18 +80,25 @@ class ActionRunnerTest extends \PHPUnit_Framework_TestCase
         ];
         $this->action->expects($this->once())
             ->method('run')
-            ->with([$entity], $options)
+            ->with(
+                $this->callback(function($request) use ($crudName) {
+                    return $request instanceof CrudRequest
+                        && $request->getCrudName() === $crudName
+                        && $request->getContext() === CrudRequest::CONTEXT_ACTION;
+                }),
+                [$entity], $options)
             ->will($this->returnValue($response));
 
-        $this->assertSame($response, $this->runner->run($actionName, 'FooBundle\\Foo', ['some-id'], $options));
+        $this->assertSame($response, $this->runner->run($crudName, $actionName, ['some-id'], $options));
     }
 
     public function testRunNotGranted()
     {
+        $crudName = 'some_crud';
         $actionName = 'foo_action';
         $this->store->expects($this->any())
             ->method('getActionConfig')
-            ->with('FooBundle\\Foo')
+            ->with($crudName)
             ->will($this->returnValue($this->config));
         $this->config->expects($this->any())
             ->method('get')
@@ -99,6 +113,6 @@ class ActionRunnerTest extends \PHPUnit_Framework_TestCase
             ->method('run');
         $this->setExpectedException(AccessDeniedException::class);
 
-        $this->runner->run($actionName, 'FooBundle\\Foo', ['some-id'], []);
+        $this->runner->run($crudName, $actionName, ['some-id'], []);
     }
 }

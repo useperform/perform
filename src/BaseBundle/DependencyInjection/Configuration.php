@@ -70,15 +70,6 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-                ->arrayNode('admins')
-                    ->prototype('array')
-                        ->children()
-                            ->arrayNode('types')
-                                ->prototype('variable')->end()
-                            ->end()
-                        ->end()
-                    ->end()
-                ->end()
                 ->arrayNode('doctrine')
                     ->addDefaultsIfNotSet()
                     ->children()
@@ -134,7 +125,7 @@ class Configuration implements ConfigurationInterface
                                     ->scalarNode('route')
                                         ->defaultNull()
                                     ->end()
-                                    ->scalarNode('entity')
+                                    ->scalarNode('crud')
                                         ->defaultNull()
                                     ->end()
                                     ->scalarNode('icon')
@@ -149,37 +140,6 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end();
-
-        // how to configure admin options:
-        // perform_base:
-        //     admins:
-        //         PerformMusicBundle:Composition:
-        //             types:
-        //                 # change an option
-        //                 publishDate:
-        //                     options:
-        //                         dateFormat: 'Y'
-        //                     viewOptions:
-        //                         dateFormat: 'Y-m-d'
-        //                 # enable a field
-        //                 category:
-        //                     contexts:
-        //                         - list
-        //                         - view
-        //                         - create
-        //                         - edit
-        //                 # disable a field
-        //                 title:
-        //                     contexts: []
-        //                 # change a type
-        //                 slug:
-        //                     type: text
-        //                 # add a field (even though it will probably be an
-        //                 # extended entity anyway)
-        //                 createdAt:
-        //                     type: datetime
-        //                     contexts:
-        //                         - edit
 
         return $treeBuilder;
     }

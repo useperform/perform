@@ -6,6 +6,7 @@ use Perform\BaseBundle\Type\EntityType;
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\UserBundle\Entity\User;
 use Perform\BaseBundle\Exception\InvalidTypeException;
+use Perform\BaseBundle\Crud\CrudRegistry;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -17,7 +18,10 @@ class EntityTypeTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $entityManager = $this->getMock(EntityManagerInterface::class);
-        $this->type = new EntityType($entityManager);
+        $crudRegistry = $this->getMockBuilder(CrudRegistry::class)
+                      ->disableOriginalConstructor()
+                      ->getMock();
+        $this->type = new EntityType($entityManager, $crudRegistry);
     }
 
     public function testListContext()
@@ -30,12 +34,14 @@ class EntityTypeTest extends \PHPUnit_Framework_TestCase
 
         $options = [
             'class' => 'PerformUserBundle:User',
+            'crud_name' => 'some_crud',
             'display_field' => 'email',
             'link_to' => false,
             'multiple' => false,
         ];
 
         $expected = [
+            'crud_name' => 'some_crud',
             'value' => $user,
             'display_field' => 'email',
             'link_to' => false,

@@ -12,27 +12,27 @@ use Knp\Menu\ItemInterface;
 class SimpleLinkProvider implements LinkProviderInterface
 {
     protected $alias;
-    protected $entity;
+    protected $crud;
     protected $route;
     protected $icon;
 
-    public function __construct($alias, $entity = null, $route = null, $icon = null)
+    public function __construct($alias, $crud = null, $route = null, $icon = null)
     {
-        if (!$entity && !$route) {
-            throw new \InvalidArgumentException('A simple menu requires either a route or an entity.');
+        if (!$crud && !$route) {
+            throw new \InvalidArgumentException('A simple menu requires either a crud name or route name.');
         }
 
         $this->alias = $alias;
-        $this->entity = $entity;
+        $this->crud = $crud;
         $this->route = $route;
         $this->icon = $icon;
     }
 
     public function addLinks(ItemInterface $menu)
     {
-        if ($this->entity) {
+        if ($this->crud) {
             $child = $menu->addChild($this->alias, [
-                'entity' => $this->entity,
+                'crud' => $this->crud,
             ]);
         } else {
             $child = $menu->addChild($this->alias, [

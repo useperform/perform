@@ -6,10 +6,11 @@ use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
-use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BaseBundle\Config\FilterConfig;
 use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Perform\BaseBundle\Event\QueryEvent;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -17,141 +18,84 @@ use Perform\BaseBundle\Config\ConfigStoreInterface;
 class EntitySelector
 {
     protected $entityManager;
+    protected $dispatcher;
     protected $store;
 
-    public function __construct(EntityManagerInterface $entityManager, ConfigStoreInterface $store)
+    public function __construct(EntityManagerInterface $entityManager, EventDispatcherInterface $dispatcher, ConfigStoreInterface $store)
     {
         $this->entityManager = $entityManager;
+        $this->dispatcher = $dispatcher;
         $this->store = $store;
     }
 
     public function getQueryBuilder(CrudRequest $request)
     {
-        return $this->getQueryBuilderInternal($request)[0];
-    }
-
-    private function getQueryBuilderInternal(CrudRequest $request)
-    {
-        $entityName = $request->getEntityClass();
-        if (!$entityName) {
-            throw new \InvalidArgumentException('Missing required entity class.');
-        }
-
+        $entityClass = $this->store->getEntityClass($request->getCrudName());
         $qb = $this->entityManager->createQueryBuilder()
             ->select('e')
-            ->from($entityName, 'e');
+            ->from($entityClass, 'e');
 
-        //potentially add sorting, using custom functions from TypeConfig
-        $defaultSort = $this->store->getTypeConfig($entityName)->getDefaultSort();
-        $orderField = $request->getSortField($defaultSort[0]);
-        $direction = $request->getSortDirection($defaultSort[1]);
+        $event = new QueryEvent($qb, $request);
+        $this->dispatcher->dispatch(QueryEvent::LIST_QUERY, $event);
 
-        //direction can be set to 'N' to override default sorting
-        if ($direction === 'N') {
-            $orderField = null;
-        }
-        $qb = $this->maybeOrderBy($qb, $entityName, $orderField, $direction);
-        if (!$qb instanceof QueryBuilder) {
-            throw new \UnexpectedValueException(sprintf('The sort function for %s->%s must return an instance of Doctrine\ORM\QueryBuilder.', $entityName, $orderField));
-        }
-
-        //potentially add filtering, using FilterConfig from the
-        //admin, or even returning a new builder entirely
-        $filterName = $request->getFilter($this->store->getFilterConfig($entityName)->getDefault());
-
-        $qb = $this->maybeFilter($qb, $entityName, $filterName, true);
-        if (!$qb instanceof QueryBuilder) {
-            throw new \UnexpectedValueException(sprintf('The filter function "%s" for %s must return an instance of Doctrine\ORM\QueryBuilder.', $filterName, $entityName));
-        }
-
-        return [$qb, $orderField, $direction];
+        return $event->getQueryBuilder();
     }
 
     public function listContext(CrudRequest $request)
     {
-        list($qb, $orderField, $direction) = $this->getQueryBuilderInternal($request);
-        $this->assignFilterCounts($request->getEntityClass());
+        $crudName = $request->getCrudName();
+        $request->setDefaultFilter($this->store->getFilterConfig($crudName)->getDefault());
+        $defaultSort = $this->store->getTypeConfig($crudName)->getDefaultSort();
+        $request->setDefaultSortField($defaultSort[0]);
+        $request->setDefaultSortDirection($defaultSort[1]);
+
+        $qb = $this->getQueryBuilder($request);
 
         $paginator = new Pagerfanta(new DoctrineORMAdapter($qb));
         $paginator->setMaxPerPage(10);
         $paginator->setCurrentPage($request->getPage());
 
         $orderBy = [
-            'field' => $orderField,
-            'direction' => $direction,
+            'field' => $request->getSortField(),
+            'direction' => $request->getSortDirection(),
         ];
 
         return [$paginator, $orderBy];
     }
 
-    protected function assignFilterCounts($entityName)
+    public function viewContext(CrudRequest $request, $identifier)
     {
-        $filterConfig = $this->store->getFilterConfig($entityName);
-        if (!$filterConfig) {
-            return;
-        }
-
-        foreach ($filterConfig->getFilters() as $filterName => $filter) {
-            $config = $filter->getConfig();
-            if (!$config['count']) {
-                continue;
-            }
-            $qb = $this->entityManager->createQueryBuilder()
-                ->select('COUNT(1)')
-                ->from($entityName, 'e');
-            $this->maybeFilter($qb, $entityName, $filterName);
-            $count = $qb->getQuery()->getSingleScalarResult();
-            $filter->setCount($count);
-        }
+        return $this->selectSingleEntity($request, $identifier, QueryEvent::VIEW_QUERY);
     }
 
-    /**
-     * @return QueryBuilder
-     */
-    protected function maybeOrderBy(QueryBuilder $qb, $entityName, $orderField, $direction)
+    public function editContext(CrudRequest $request, $identifier)
     {
-        if (!$orderField) {
-            return $qb;
-        }
-
-        $typeConfig = $this->store->getTypeConfig($entityName)->getTypes(CrudRequest::CONTEXT_LIST);
-        if (!isset($typeConfig[$orderField]['sort'])) {
-            // no type config available for this field, but assume they want to sort by the doctrine field supplied
-            return $qb->orderBy('e.'.$orderField, $direction);
-        }
-        $sort = $typeConfig[$orderField]['sort'];
-
-        if ($sort === true) {
-            return $qb->orderBy('e.'.$orderField, $direction);
-        }
-        if (is_callable($sort)) {
-            return $sort($qb, $direction);
-        }
-
-        return $qb;
+        return $this->selectSingleEntity($request, $identifier, QueryEvent::EDIT_QUERY);
     }
 
-    /**
-     * @return QueryBuilder
-     */
-    protected function maybeFilter(QueryBuilder $qb, $entityName, $filterName, $active = false)
+    private function selectSingleEntity(CrudRequest $request, $identifier, $eventName)
     {
-        if (!$filterName) {
-            return $qb;
+        $entityClass = $this->store->getEntityClass($request->getCrudName());
+        $idColumn = $this->entityManager->getClassMetadata($entityClass)->getIdentifier();
+
+        if (!is_array($idColumn) || !isset($idColumn[0])) {
+            throw new \Exception('Only non-composite doctrine identifiers are supported.');
         }
 
-        $filter = $this->store->getFilterConfig($entityName)->getFilter($filterName);
-        if (!$filter) {
-            return $qb;
-        }
+        $qb = $this->entityManager->createQueryBuilder()
+            ->select('e')
+            ->from($entityClass, 'e')
+            ->where(sprintf('e.%s = :identifier', $idColumn[0]))
+            ->setParameter('identifier', $identifier);
 
-        if ($active) {
-            $filter->setActive(true);
-        }
+        $event = new QueryEvent($qb, $request);
+        $this->dispatcher->dispatch($eventName, $event);
 
-        $config = $filter->getConfig();
-        $filteredQuery = $config['query']($qb);
+        $result = $event->getQueryBuilder()
+                ->getQuery()
+                ->setMaxResults(1)
+                ->getResult();
 
-        return $filteredQuery;
+        return isset($result[0]) ? $result[0] : null;
     }
 }

@@ -13,6 +13,7 @@ use Perform\Licensing\Licensing;
 use Perform\BaseBundle\Type\TypeInterface;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Money\Money;
+use Perform\BaseBundle\Menu\SimpleLinkProvider;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -45,7 +46,6 @@ class PerformBaseExtension extends Extension
         $this->configureMailer($config, $container);
         $this->findExtendedEntities($container, $config);
         $this->configureResolvedEntities($container, $config);
-        $this->processCrudConfig($container, $config);
         $this->createSimpleMenus($container, $config['menu']['simple']);
         $this->configureAssets($container, $config['assets']);
     }
@@ -158,8 +158,8 @@ class PerformBaseExtension extends Extension
     protected function createSimpleMenus(ContainerBuilder $container, array $config)
     {
         foreach ($config as $alias => $options) {
-            $definition = $container->register('perform_base.menu.simple.'.$alias, 'Perform\BaseBundle\Menu\SimpleLinkProvider');
-            $definition->setArguments([$alias, $options['entity'], $options['route'], $options['icon']]);
+            $definition = $container->register('perform_base.menu.simple.'.$alias, SimpleLinkProvider::class);
+            $definition->setArguments([$alias, $options['crud'], $options['route'], $options['icon']]);
             $definition->addTag('perform_base.link_provider', ['alias' => $alias]);
         }
     }
@@ -187,16 +187,5 @@ class PerformBaseExtension extends Extension
         if (!$container->hasParameter(Assets::PARAM_EXTRA_SASS)) {
             $container->setParameter(Assets::PARAM_EXTRA_SASS, []);
         }
-    }
-
-    public function processCrudConfig(ContainerBuilder $container, array $config)
-    {
-        $cruds = [];
-        $resolver = new EntityResolver($container->getParameter('perform_base.entity_aliases'));
-        foreach ($config['admins'] as $entity => $configuration) {
-            $cruds[$resolver->resolveNoExtend($entity)] = $configuration;
-        }
-
-        $container->setParameter('perform_base.cruds', $cruds);
     }
 }

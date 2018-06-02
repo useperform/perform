@@ -3,9 +3,9 @@
 namespace Perform\BaseBundle\Twig\Extension;
 
 use Carbon\Carbon;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Routing\Route;
-use Perform\BaseBundle\Config\ConfigStoreInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 
 /**
  * General twig helpers.
@@ -14,13 +14,11 @@ use Perform\BaseBundle\Config\ConfigStoreInterface;
  **/
 class UtilExtension extends \Twig_Extension
 {
-    protected $router;
-    protected $configStore;
+    protected $urlGenerator;
 
-    public function __construct(RouterInterface $router, ConfigStoreInterface $configStore)
+    public function __construct(UrlGeneratorInterface $urlGenerator)
     {
-        $this->router = $router;
-        $this->configStore = $configStore;
+        $this->urlGenerator = $urlGenerator;
     }
 
     public function getFilters()
@@ -34,8 +32,6 @@ class UtilExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFunction('perform_route_exists', [$this, 'routeExists']),
-            new \Twig_SimpleFunction('perform_entity_label', [$this, 'entityLabel']),
-            new \Twig_SimpleFunction('perform_entity_name', [$this, 'entityName']),
         ];
     }
 
@@ -50,17 +46,16 @@ class UtilExtension extends \Twig_Extension
 
     public function routeExists($routeName)
     {
-        return $this->router->getRouteCollection()->get($routeName) instanceof Route;
-    }
+        try {
+            $this->urlGenerator->generate($routeName);
 
-    public function entityName($entity)
-    {
-        return $this->configStore->getLabelConfig($entity)->getEntityName();
-    }
-
-    public function entityLabel($entity)
-    {
-        return $this->configStore->getLabelConfig($entity)->getEntityLabel($entity);
+            return true;
+        } catch (RouteNotFoundException $e) {
+            return false;
+        } catch (MissingMandatoryParametersException $e) {
+            // missing parameters, but route exists
+            return true;
+        }
     }
 
     public function getName()

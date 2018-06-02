@@ -22,12 +22,9 @@ class CollectionTypeTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $registry = $this->getMockBuilder(CrudRegistry::class)
-                  ->disableOriginalConstructor()
-                  ->getMock();
         $entityManager = $this->getMock(EntityManagerInterface::class);
         $assets = new AssetContainer();
-        $this->type = new CollectionType($registry, $entityManager, $assets);
+        $this->type = new CollectionType($entityManager, $assets);
     }
 
     public function testListContextDefaultItemLabel()
@@ -82,6 +79,6 @@ class CollectionTypeTest extends \PHPUnit_Framework_TestCase
             ->method('add')
             ->with('items', CollectionFormType::class);
 
-        $this->type->createContext($builder, 'items', ['entity' => 'SomeRelation', 'sortField' => false]);
+        $this->type->createContext($builder, 'items', ['crud_name' => 'SomeRelation', 'sortField' => false]);
     }
 }

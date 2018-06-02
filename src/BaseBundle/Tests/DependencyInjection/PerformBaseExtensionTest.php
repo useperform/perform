@@ -4,10 +4,9 @@ namespace Perform\BaseBundle\Tests\DependencyInjection;
 
 use Perform\BaseBundle\DependencyInjection\PerformBaseExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Perform\BaseBundle\Menu\SimpleLinkProvider;
 
 /**
- * PerformBaseExtensionTest
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class PerformBaseExtensionTest extends \PHPUnit_Framework_TestCase
@@ -17,30 +16,24 @@ class PerformBaseExtensionTest extends \PHPUnit_Framework_TestCase
         $this->ext = new PerformBaseExtension();
     }
 
-    public function testCrudAliasesAreResolved()
+    public function testSimpleMenus()
     {
         $container = new ContainerBuilder();
+        $container->setParameter('kernel.debug', true);
+        $container->setParameter('kernel.bundles', []);
         $config = [
-            'admins' => [
-                'SomeBundle:Item' => [
-                    'types' => [
-                        'slug' => ['type' => 'string']
+            'menu' => [
+                'simple' => [
+                    'test' => [
+                        'route' => 'some_route',
                     ]
                 ]
             ],
         ];
-        $container->setParameter('perform_base.entity_aliases', [
-            'SomeBundle:Item' => 'SomeBundle\Entity\Item',
-        ]);
-        $this->ext->processCrudConfig($container, $config);
-        $expected = [
-            'SomeBundle\Entity\Item' => [
-                'types' => [
-                    'slug' => ['type' => 'string']
-                ]
-            ]
-        ];
+        $this->ext->load([$config], $container);
 
-        $this->assertSame($expected, $container->getParameter('perform_base.cruds'));
+        $menuService = $container->getDefinition('perform_base.menu.simple.test');
+        $this->assertSame(SimpleLinkProvider::class, $menuService->getClass());
+        $this->assertSame('some_route', $menuService->getArgument(2));
     }
 }

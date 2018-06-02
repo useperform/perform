@@ -5,7 +5,7 @@
         <label for="batch-actions-select">With selected:</label>
         <select class="form-control ml-sm-3 mr-sm-3" id="batch-actions-select">
           {% for action in batchActions %}
-            {{perform_action_option(action, entityClass, 'list')}}
+            {{perform_action_option(action, crudName, 'list')}}
           {% endfor %}
         </select>
       </div>
@@ -14,7 +14,7 @@
       </div>
     </div>
     <div>
-      {{perform_export_dropdown(entityClass)}}
+      {{perform_export_dropdown(crudName)}}
     </div>
   </div>
 </div>

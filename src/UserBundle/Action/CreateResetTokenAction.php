@@ -19,7 +19,7 @@ class CreateResetTokenAction implements ActionInterface
         $this->tokenManager = $tokenManager;
     }
 
-    public function run(array $entities, array $options)
+    public function run(CrudRequest $crudRequest, array $entities, array $options)
     {
         foreach ($entities as $user) {
             $this->tokenManager->createAndSaveToken($user->getEmail());

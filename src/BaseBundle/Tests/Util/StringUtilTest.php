@@ -81,6 +81,21 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, StringUtil::classBasename($class));
     }
 
+    public function entityClassForCrudProvider()
+    {
+        return [
+            ['App\Crud\FooCrud', 'App\Entity\Foo'],
+        ];
+    }
+
+    /**
+     * @dataProvider entityClassForCrudProvider()
+     */
+    public function testEntityClassForCrud($class, $expected)
+    {
+        $this->assertSame($expected, StringUtil::entityClassForCrud($class));
+    }
+
     public function basenameWithSuffixProvider()
     {
         return [
@@ -104,16 +119,18 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
     public function crudTemplateProvider()
     {
         return [
-            ['AppBundle:Foo', 'list', '@App/crud/foo/list.html.twig'],
-            ['SomeOtherAppBundle:UserProfile', 'view', '@SomeOtherApp/crud/user_profile/view.html.twig'],
+            ['AppBundle\Crud\FooCrud', 'list', '@App/crud/foo/list.html.twig'],
+            ['SomeOtherAppBundle\Crud\UserProfileCrud', 'view', '@SomeOtherApp/crud/user_profile/view.html.twig'],
+            ['SomeCompany\Serious\ApiBundle\WidgetCrud', 'create', '@SomeCompanySeriousApi/crud/widget/create.html.twig'],
+            ['App\Crud\ItemCrud', 'edit', 'crud/item/edit.html.twig'],
         ];
     }
 
     /**
      * @dataProvider crudTemplateProvider()
      */
-    public function testCrudTemplateForEntity($entity, $context, $expected)
+    public function testTemplateForCrud($crudClass, $context, $expected)
     {
-        $this->assertSame($expected, StringUtil::crudTemplateForEntity($entity, $context));
+        $this->assertSame($expected, StringUtil::templateForCrud($crudClass, $context));
     }
 }

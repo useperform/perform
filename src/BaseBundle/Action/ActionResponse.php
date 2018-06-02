@@ -14,7 +14,7 @@ class ActionResponse
     const REDIRECT_ROUTE = 'route';
     const REDIRECT_PREVIOUS = 'previous';
     const REDIRECT_CURRENT = 'current';
-    const REDIRECT_ENTITY_DEFAULT = 'entity_default';
+    const REDIRECT_LIST_CONTEXT = 'list';
 
     protected $redirect = 'none';
     protected $message;
@@ -54,6 +54,9 @@ class ActionResponse
             }
 
             $this->route = $options['route'];
+        }
+
+        if ($redirect === static::REDIRECT_ROUTE || $redirect === static::REDIRECT_LIST_CONTEXT) {
             $this->routeParams = isset($options['params']) ? (array) $options['params'] : [];
         }
 

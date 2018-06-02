@@ -10,8 +10,6 @@ use Perform\BaseBundle\Config\TypeConfig;
  **/
 class PlaylistCrud extends AbstractCrud
 {
-    protected $routePrefix = 'perform_mediaplayer_playlist_';
-
     public function configureTypes(TypeConfig $config)
     {
         $config
@@ -23,7 +21,7 @@ class PlaylistCrud extends AbstractCrud
                 'options' => [
                     'label' => 'Tracks',
                     'itemLabel' => 'track',
-                    'entity' => 'PerformMediaPlayerBundle:PlaylistItem',
+                    'crud_name' => 'perform_media_player.playlist_item',
                     'sortField' => 'sortOrder',
                 ]
             ])

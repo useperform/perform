@@ -22,7 +22,7 @@ class ArchiveAction implements ActionInterface
         $this->entityManager = $entityManager;
     }
 
-    public function run(array $messages, array $options)
+    public function run(CrudRequest $crudRequest, array $messages, array $options)
     {
         foreach ($messages as $message) {
             $message->setStatus(Message::STATUS_ARCHIVE);
@@ -32,7 +32,7 @@ class ArchiveAction implements ActionInterface
         $this->entityManager->flush();
 
         $response = new ActionResponse(sprintf('%s archived.', count($messages) === 1 ? 'Message' : count($messages).' messages'));
-        $response->setRedirectRoute('perform_contact_message_list');
+        $response->setRedirect(ActionResponse::REDIRECT_LIST_CONTEXT);
 
         return $response;
     }

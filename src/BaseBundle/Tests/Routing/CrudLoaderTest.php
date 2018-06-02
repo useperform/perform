@@ -3,11 +3,15 @@
 namespace Perform\BaseBundle\Tests\Routing;
 
 use Perform\BaseBundle\Routing\CrudLoader;
-use Symfony\Component\Routing\Route;
+use Perform\BaseBundle\Crud\CrudRegistry;
+use Perform\BaseBundle\Crud\CrudInterface;
+use Perform\BaseBundle\Controller\CrudController;
+use Symfony\Component\Routing\Loader\XmlFileLoader;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Config\Loader\LoaderResolver;
 
 /**
- * CrudLoaderTest
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class CrudLoaderTest extends \PHPUnit_Framework_TestCase
@@ -17,89 +21,101 @@ class CrudLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->registry = $this->getMockBuilder('Perform\BaseBundle\Crud\CrudRegistry')
+        $this->registry = $this->getMockBuilder(CrudRegistry::class)
                                 ->disableOriginalConstructor()
                                 ->getMock();
-        $this->loader = new CrudLoader($this->registry);
     }
 
-    protected function expectCrud($controller, $routePrefix, array $actions)
+    protected function createLoader(array $options = [])
     {
-        $crud = $this->getMock('Perform\BaseBundle\Crud\CrudInterface');
+        return new CrudLoader($this->registry, $options);
+    }
+
+    protected function expectCrud($crudName, $controller)
+    {
+        $crud = $this->getMock(CrudInterface::class);
         $crud->expects($this->any())
             ->method('getControllerName')
             ->will($this->returnValue($controller));
-        $crud->expects($this->any())
-            ->method('getRoutePrefix')
-            ->will($this->returnValue($routePrefix));
-        $crud->expects($this->any())
-            ->method('getActions')
-            ->will($this->returnValue($actions));
 
         $this->registry->expects($this->any())
             ->method('get')
+            ->with($crudName)
             ->will($this->returnValue($crud));
     }
 
     public function testSupports()
     {
-        $this->assertTrue($this->loader->supports('foo', 'crud'));
-        $this->assertFalse($this->loader->supports('foo', null));
-        $this->assertFalse($this->loader->supports('foo', 'yaml'));
+        $loader = $this->createLoader();
+        $this->assertTrue($loader->supports('foo', 'crud'));
+        $this->assertFalse($loader->supports('foo', null));
+        $this->assertFalse($loader->supports('foo', 'yaml'));
     }
 
-    public function testDefaultRoutes()
+    public function testLoad()
     {
-        $controller = 'Perform\BaseBundle\Controller\CrudController';
-        $routePrefix = 'some_foo_';
-        $routes = [
-            '/' => 'list',
-            '/view/{id}' => 'view',
-            '/create' => 'create',
-            '/edit/{id}' => 'edit',
+        $crudName = 'some_crud';
+        $routePrefix = 'prefix_';
+        $contexts = [
+            'list' => '/',
+            'view' => '/view/{id}',
+            'create' => '/create',
+            'edit' => '/edit/{id}',
         ];
-        $this->expectCrud($controller, $routePrefix, $routes);
+        $this->expectCrud($crudName, CrudController::class);
 
-        $collection = $this->loader->load('SomeBundle:Foo');
-        $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
+        $loader = $this->createLoader([
+            'some_crud' => [
+                'route_name_prefix' => $routePrefix,
+                'contexts' => $contexts,
+            ],
+        ]);
+        $collection = $loader->load($crudName);
 
+        $this->assertInstanceOf(RouteCollection::class, $collection);
+        $routes = array_flip($contexts);
         foreach ($collection as $name => $route) {
             $this->assertTrue(isset($routes[$route->getPath()]));
             $this->assertSame(
-                $controller.'::'.$routes[$route->getPath()].'Action',
+                CrudController::class.'::'.$routes[$route->getPath()].'Action',
                 $route->getDefault('_controller')
             );
             $this->assertStringStartsWith($routePrefix, $name);
         }
     }
 
-    public function testRouteNamesGetSlugified()
+    public function testLoadFromXml()
     {
-        $controller = 'Perform\BaseBundle\Controller\CrudController';
-        $routePrefix = 'some_foo_';
-        $routes = [
-            '/' => 'viewDefault',
-            '/edit' => 'editDefault',
+        $crudName = 'xml_crud';
+        $routePrefix = 'xml_';
+        $contexts = [
+            'list' => '/',
+            'view' => '/inspect/{id}',
         ];
-        $this->expectCrud($controller, $routePrefix, $routes);
+        $this->expectCrud($crudName, CrudController::class);
 
-        $collection = $this->loader->load('SomeBundle:Foo');
-        $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $collection);
+        $loader = $this->createLoader([
+            $crudName => [
+                'route_name_prefix' => $routePrefix,
+                'contexts' => $contexts,
+            ],
+        ]);
 
-        $this->assertSame(['some_foo_view_default', 'some_foo_edit_default'], array_keys($collection->all()));
+        $xmlLoader = new XmlFileLoader(new FileLocator(__DIR__));
+        $resolver = new LoaderResolver([$loader]);
+        $xmlLoader->setResolver($resolver);
 
-        $route = $collection->get('some_foo_view_default');
-        $this->assertInstanceOf(Route::class, $route);
-        $this->assertSame(
-            $controller.'::'.'viewDefaultAction',
-            $route->getDefault('_controller')
-        );
+        $collection = $xmlLoader->load('routing.xml');
 
-        $route = $collection->get('some_foo_edit_default');
-        $this->assertInstanceOf(Route::class, $route);
-        $this->assertSame(
-            $controller.'::'.'editDefaultAction',
-            $route->getDefault('_controller')
-        );
+        $this->assertInstanceOf(RouteCollection::class, $collection);
+        $routes = array_flip($contexts);
+        foreach ($collection as $name => $route) {
+            $this->assertTrue(isset($routes[$route->getPath()]));
+            $this->assertSame(
+                CrudController::class.'::'.$routes[$route->getPath()].'Action',
+                $route->getDefault('_controller')
+            );
+            $this->assertStringStartsWith($routePrefix, $name);
+        }
     }
 }

@@ -14,18 +14,39 @@ use Twig\Environment;
  **/
 interface CrudInterface
 {
+    /**
+     * @param TypeConfig $config
+     *
+     * Configure field mappings.
+     * For each entity property you want to expose, call $config->add().
+     */
     public function configureTypes(TypeConfig $config);
 
+    /**
+     * @param FilterConfig $config
+     *
+     * Configure filters.
+     */
     public function configureFilters(FilterConfig $config);
 
+    /**
+     * @param ActionConfig $config
+     *
+     * Configure actions.
+     */
     public function configureActions(ActionConfig $config);
 
+    /**
+     * @param LabelConfig $config
+     *
+     * Configure labels.
+     */
     public function configureLabels(LabelConfig $config);
 
     /**
      * @param ExportConfig $config
      *
-     * Configure how exports work for this entity.
+     * Configure how exports work.
      * You may wish to set the available formats and configure how they behave.
      */
     public function configureExports(ExportConfig $config);
@@ -38,17 +59,7 @@ interface CrudInterface
     /**
      * @return string
      */
-    public function getRoutePrefix();
-
-    /**
-     * @return string
-     */
     public function getControllerName();
-
-    /**
-     * @return array
-     */
-    public function getActions();
 
     /**
      * Get the name of the template for the given entity and context.
@@ -56,10 +67,17 @@ interface CrudInterface
      * The supplied twig environment may be used to check if templates exist.
      *
      * @param Environment $twig
-     * @param string      $entityName
+     * @param string      $crudName
      * @param string      $context
      *
      * @return string
      */
-    public function getTemplate(Environment $twig, $entityName, $context);
+    public function getTemplate(Environment $twig, $crudName, $context);
+
+    /**
+     * Get the entity class name managed by this crud service.
+     *
+     * @return string
+     */
+    public static function getEntityClass();
 }

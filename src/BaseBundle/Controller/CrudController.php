@@ -6,7 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bridge\Twig\Extension\FormExtension;
-use Perform\BaseBundle\Config\TypeConfig;
 use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Twig\Extension\ActionExtension;
 
@@ -15,79 +14,29 @@ use Perform\BaseBundle\Twig\Extension\ActionExtension;
  **/
 class CrudController extends Controller
 {
-    protected $entity;
+    protected $crud;
 
-    protected function initialize(CrudRequest $request)
+    protected function initialize(CrudRequest $crudRequest)
     {
-        $this->entity = $this->get('perform_base.doctrine.entity_resolver')->resolve($request->getEntityClass());
+        $this->crud = $this->get('perform_base.crud.registry')->get($crudRequest->getCrudName());
         $this->get('twig')
             ->getExtension(ActionExtension::class)
-            ->setCrudRequest($request);
-    }
-
-    /**
-     * @return CrudInterface
-     */
-    protected function getCrud()
-    {
-        return $this->get('perform_base.crud.registry')
-            ->get($this->entity);
-    }
-
-    protected function getTypeConfig()
-    {
-        return $this->get('perform_base.config_store')
-            ->getTypeConfig($this->entity);
-    }
-
-    protected function getFilterConfig()
-    {
-        return $this->get('perform_base.config_store')
-            ->getFilterConfig($this->entity);
-    }
-
-    protected function getActionConfig()
-    {
-        return $this->get('perform_base.config_store')
-            ->getActionConfig($this->entity);
-    }
-
-    protected function getLabelConfig()
-    {
-        return $this->get('perform_base.config_store')
-            ->getLabelConfig($this->entity);
+            ->setCrudRequest($crudRequest);
     }
 
     protected function newEntity()
     {
-        $className = $this->getDoctrine()
-                   ->getManager()
-                   ->getClassMetadata($this->entity)
-                   ->name;
+        $crudClass = get_class($this->crud);
+        $class = $this->get('perform_base.doctrine.entity_resolver')->resolve($crudClass::getEntityClass());
 
-        return new $className();
+        return new $class();
     }
 
-    protected function findEntity($id)
+    protected function throwNotFoundIfNull($entity, $identifier)
     {
-        $repo = $this->getDoctrine()->getRepository($this->entity);
-        $entity = $repo->find($id);
         if (!$entity) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException(sprintf('Entity with identifier "%s" was not found.', $identifier));
         }
-
-        return $entity;
-    }
-
-    protected function findDefaultEntity()
-    {
-        $repo = $this->getDoctrine()->getRepository($this->entity);
-        $result = $repo->findBy([], [], 1);
-        if (!isset($result[0])) {
-            throw new NotFoundHttpException();
-        }
-
-        return $result[0];
     }
 
     private function setFormTheme($formView)
@@ -99,66 +48,44 @@ class CrudController extends Controller
 
     public function listAction(Request $request)
     {
-        $request = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_LIST);
-        $this->initialize($request);
-        // initialize resolves the entity class, it may have changed from parent to child
-        $request->setEntityClass($this->entity);
-        $crud = $this->getCrud();
-        $selector = $this->get('perform_base.selector.entity');
-        list($paginator, $orderBy) = $selector->listContext($request, $this->entity);
+        $crudRequest = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_LIST);
+        $this->initialize($crudRequest);
+        list($paginator, $orderBy) = $this->get('perform_base.selector.entity')->listContext($crudRequest);
+        $populator = $this->get('perform_base.template_populator');
 
-        return [
-            'fields' => $this->getTypeConfig()->getTypes($request->getContext()),
-            'filters' => $this->getFilterConfig()->getFilters(),
-            'batchActions' => $this->getActionConfig()->getBatchOptionsForRequest($request),
-            'labelConfig' => $this->getLabelConfig(),
-            'orderBy' => $orderBy,
-            'routePrefix' => $crud->getRoutePrefix(),
-            'paginator' => $paginator,
-            'entityClass' => $this->entity,
-        ];
+        return $populator->listContext($crudRequest, $paginator, $orderBy);
     }
 
     public function viewAction(Request $request, $id)
     {
-        $request = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_VIEW);
-        $this->initialize($request);
-        $entity = $this->findEntity($id);
+        $crudRequest = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_VIEW);
+        $this->initialize($crudRequest);
+        $entity = $this->get('perform_base.selector.entity')->viewContext($crudRequest, $id);
+        $this->throwNotFoundIfNull($entity, $id);
         $this->denyAccessUnlessGranted('VIEW', $entity);
+        $populator = $this->get('perform_base.template_populator');
 
-        return [
-            'fields' => $this->getTypeConfig()->getTypes($request->getContext()),
-            'entity' => $entity,
-            'labelConfig' => $this->getLabelConfig(),
-        ];
-    }
-
-    public function viewDefaultAction(Request $request)
-    {
-        $this->initialize(CrudRequest::fromRequest($request, CrudRequest::CONTEXT_VIEW));
-
-        return $this->viewAction($request, $this->findDefaultEntity()->getId());
+        return $populator->viewContext($crudRequest, $entity);
     }
 
     public function createAction(Request $request)
     {
         $crudRequest = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_CREATE);
         $this->initialize($crudRequest);
+        $crudName = $crudRequest->getCrudName();
         $builder = $this->createFormBuilder($entity = $this->newEntity());
-        $crud = $this->getCrud();
-        $form = $this->createForm($crud->getFormType(), $entity, [
-            'entity' => $this->entity,
+        $form = $this->createForm($this->crud->getFormType(), $entity, [
+            'crud_name' => $crudName,
             'context' => $crudRequest->getContext(),
         ]);
 
         $form->handleRequest($request);
-
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->get('perform_base.entity_manager')->create($entity);
+                $this->get('perform_base.entity_manager')->create($crudRequest, $entity);
                 $this->addFlash('success', 'Item created successfully.');
 
-                return $this->redirect($this->get('perform_base.routing.crud_url')->generateDefaultEntityRoute($entity));
+                return $this->redirect($this->get('perform_base.routing.crud_generator')->generate($crudName, CrudRequest::CONTEXT_LIST));
             } catch (\Exception $e) {
                 $this->addFlash('danger', 'An error occurred.');
             }
@@ -166,34 +93,31 @@ class CrudController extends Controller
 
         $formView = $form->createView();
         $this->setFormTheme($formView);
+        $populator = $this->get('perform_base.template_populator');
 
-        return [
-            'entity' => $entity,
-            'form' => $formView,
-            'labelConfig' => $this->getLabelConfig(),
-        ];
+        return $populator->editContext($crudRequest, $formView, $entity);
     }
 
     public function editAction(Request $request, $id)
     {
         $crudRequest = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_EDIT);
         $this->initialize($crudRequest);
-        $entity = $this->findEntity($id);
+        $crudName = $crudRequest->getCrudName();
+        $entity = $this->get('perform_base.selector.entity')->editContext($crudRequest, $id);
+        $this->throwNotFoundIfNull($entity, $id);
         $this->denyAccessUnlessGranted('EDIT', $entity);
-        $crud = $this->getCrud();
-        $form = $this->createForm($crud->getFormType(), $entity, [
-            'entity' => $this->entity,
+        $form = $this->createForm($this->crud->getFormType(), $entity, [
+            'crud_name' => $crudName,
             'context' => $crudRequest->getContext(),
         ]);
 
         $form->handleRequest($request);
-
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->get('perform_base.entity_manager')->update($entity);
+                $this->get('perform_base.entity_manager')->update($crudRequest, $entity);
                 $this->addFlash('success', 'Item updated successfully.');
 
-                return $this->redirect($this->get('perform_base.routing.crud_url')->generateDefaultEntityRoute($entity));
+                return $this->redirect($this->get('perform_base.routing.crud_generator')->generate($crudName, CrudRequest::CONTEXT_LIST));
             } catch (\Exception $e) {
                 $this->addFlash('danger', 'An error occurred.');
             }
@@ -201,18 +125,8 @@ class CrudController extends Controller
 
         $formView = $form->createView();
         $this->setFormTheme($formView);
+        $populator = $this->get('perform_base.template_populator');
 
-        return [
-            'entity' => $entity,
-            'form' => $formView,
-            'labelConfig' => $this->getLabelConfig(),
-        ];
-    }
-
-    public function editDefaultAction(Request $request)
-    {
-        $this->initialize(CrudRequest::fromRequest($request, CrudRequest::CONTEXT_EDIT));
-
-        return $this->editAction($request, $this->findDefaultEntity()->getId());
+        return $populator->editContext($crudRequest, $formView, $entity);
     }
 }

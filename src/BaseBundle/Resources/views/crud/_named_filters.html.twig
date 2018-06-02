@@ -1,7 +1,7 @@
 <ul class="nav nav-pills flex-column">
   {% for filterName, filter in filters %}
     <li class="nav-item">
-      <a href="{{perform_crud_route(entityClass, 'list', {filter: filterName})}}" class="nav-link{% if filter.isActive() %} active{% endif %}">
+      <a href="{{perform_crud_route(crudName, 'list', {filter: filterName})}}" class="nav-link{% if filter.isActive() %} active{% endif %}">
         {{filter.config.label}}
         {% if filter.hasCount() %}
           <span class="badge badge-light pull-right">

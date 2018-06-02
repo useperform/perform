@@ -46,4 +46,11 @@ class ActionResponseTest extends \PHPUnit_Framework_TestCase
         $r->setRedirectUrl('https://example.com');
         $this->assertSame('https://example.com', $r->getUrl());
     }
+
+    public function testRedirectListContextWithParams()
+    {
+        $r = new ActionResponse('Message');
+        $r->setRedirect(ActionResponse::REDIRECT_LIST_CONTEXT, ['params' => ['page' => 2]]);
+        $this->assertSame(['page' => 2], $r->getRouteParams());
+    }
 }

@@ -14,16 +14,6 @@ use Perform\BaseBundle\Crud\CrudRequest;
  **/
 class MessageCrud extends AbstractCrud
 {
-    protected $routePrefix = 'perform_contact_message_';
-
-    public function getActions()
-    {
-        return [
-            '/' => 'list',
-            '/view/{id}' => 'view',
-        ];
-    }
-
     public function configureTypes(TypeConfig $config)
     {
         $config
@@ -32,6 +22,7 @@ class MessageCrud extends AbstractCrud
                 'contexts' => [
                     CrudRequest::CONTEXT_LIST,
                     CrudRequest::CONTEXT_VIEW,
+                    CrudRequest::CONTEXT_EXPORT,
                 ],
             ])
             ->add('email', [
@@ -39,6 +30,7 @@ class MessageCrud extends AbstractCrud
                 'contexts' => [
                     CrudRequest::CONTEXT_LIST,
                     CrudRequest::CONTEXT_VIEW,
+                    CrudRequest::CONTEXT_EXPORT,
                 ],
             ])
             ->add('createdAt', [
@@ -46,6 +38,7 @@ class MessageCrud extends AbstractCrud
                 'contexts' => [
                     CrudRequest::CONTEXT_LIST,
                     CrudRequest::CONTEXT_VIEW,
+                    CrudRequest::CONTEXT_EXPORT,
                 ],
                 'options' => [
                     'label' => 'Sent at',
@@ -55,6 +48,7 @@ class MessageCrud extends AbstractCrud
                 'type' => 'text',
                 'contexts' => [
                     CrudRequest::CONTEXT_VIEW,
+                    CrudRequest::CONTEXT_EXPORT,
                 ],
             ])
             ->setDefaultSort('createdAt', 'DESC')
@@ -65,20 +59,20 @@ class MessageCrud extends AbstractCrud
     {
         $config->add('new', [
             'query' => function($qb) {
-                return $qb->where('e.status = :status')
+                return $qb->andWhere('e.status = :status')
                     ->setParameter('status', Message::STATUS_NEW);
             },
             'count' => true,
         ]);
         $config->add('archive', [
             'query' => function($qb) {
-                return $qb->where('e.status = :status')
+                return $qb->andWhere('e.status = :status')
                     ->setParameter('status', Message::STATUS_ARCHIVE);
             },
         ]);
         $config->add('spam', [
             'query' => function($qb) {
-                return $qb->where('e.status = :status')
+                return $qb->andWhere('e.status = :status')
                     ->setParameter('status', Message::STATUS_SPAM);
             },
         ]);

@@ -71,21 +71,41 @@ class StringUtil
     }
 
     /**
-     * Suggest a twig template location for an entity.
+     * Suggest the class name of an entity for a crud class.
      *
-     * @param string $entityName e.g. SomeBundle:SomeEntity
+     * @param string $crudClass
+     */
+    public static function entityClassForCrud($crudClass)
+    {
+        $basename = static::classBasename($crudClass, 'Crud');
+        $pieces = explode('\\', $crudClass);
+        // Namespace\AppBundle\Crud\SomethingCrud -> Namespace\AppBundle\Entity\Something
+        array_pop($pieces);
+        array_pop($pieces);
+        $pieces[] = 'Entity';
+        $pieces[] = $basename;
+
+        return implode('\\', $pieces);
+    }
+
+    /**
+     * Suggest a twig template location for a crud class.
+     *
+     * @param string $crudClass
      * @param string $context    The crud context
      */
-    public static function crudTemplateForEntity($entityName, $context)
+    public static function templateForCrud($crudClass, $context)
     {
-        $pieces = explode(':', $entityName);
-        if (count($pieces) !== 2) {
-            throw new \InvalidArgumentException(sprintf('An entity name must be of the format <Bundle>:<EntityName>, "%s" given.', $entityName));
+        $basename = strtolower(preg_replace('/([a-z\d])([A-Z])/', '\\1_\\2', self::classBasename($crudClass, 'Crud')));
+
+        $pos = strpos($crudClass, 'Bundle');
+        if ($pos !== false) {
+            // Vendor/FooBundle -> VendorFoo
+            $namespace = str_replace('\\', '', substr($crudClass, 0, $pos));
+
+            return sprintf('@%s/crud/%s/%s.html.twig', $namespace, $basename, $context);
         }
 
-        $bundle = preg_replace('/Bundle$/', '', $pieces[0]);
-        $entity = strtolower(preg_replace('/([a-z\d])([A-Z])/', '\\1_\\2', $pieces[1]));
-
-        return sprintf('@%s/crud/%s/%s.html.twig', $bundle, $entity, $context);
+        return sprintf('crud/%s/%s.html.twig', $basename, $context);
     }
 }

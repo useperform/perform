@@ -2,77 +2,61 @@
 
 namespace Perform\BaseBundle\Routing;
 
-use Perform\BaseBundle\Crud\CrudRegistry;
-use Perform\BaseBundle\Crud\CrudInterface;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Routing\Route;
-use Perform\BaseBundle\Crud\CrudNotFoundException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class CrudUrlGenerator implements CrudUrlGeneratorInterface
 {
-    protected $crudRegistry;
-    protected $router;
+    protected $generator;
+    protected $routeOptions;
 
-    public function __construct(CrudRegistry $crudRegistry, RouterInterface $router)
+    public function __construct(UrlGeneratorInterface $generator, array $routeOptions = [])
     {
-        $this->crudRegistry = $crudRegistry;
-        $this->router = $router;
+        $this->generator = $generator;
+        $this->routeOptions = $routeOptions;
     }
 
-    public function generate($entity, $action, array $params = [])
+    public function generate($crudName, $context, array $params = [])
     {
-        $params = in_array($action, ['view', 'edit']) ?
-                array_merge($params, ['id' => $entity->getId()]) :
-                $params;
-        $crud = $this->crudRegistry->get($entity);
+        $crudName = (string) $crudName;
 
-        return $this->router->generate($this->createRouteName($crud, $action), $params);
+        if (in_array($context, ['view', 'edit'])) {
+            if (!isset($params['entity'])) {
+                throw new \InvalidArgumentException(sprintf('Missing required "entity" parameter to generate a crud route for "%s", context "%s".', $crudName, $context));
+            }
+
+            $params = array_merge($params, ['id' => $params['entity']->getId()]);
+            unset($params['entity']);
+        }
+
+        return $this->generator->generate($this->getRouteName($crudName, $context), $params);
     }
 
-    /**
-     * @return bool
-     */
-    public function routeExists($entity, $action)
+    public function routeExists($crudName, $context)
     {
         try {
-            $crud = $this->crudRegistry->get($entity);
-        } catch (CrudNotFoundException $e) {
+            $this->generator->generate($this->getRouteName($crudName, $context));
+
+            return true;
+        } catch (RouteNotFoundException $e) {
+            // thrown by url generator when the route isn't found, or by getRouteName() if the crud isn't available at all
             return false;
+        } catch (MissingMandatoryParametersException $e) {
+            // missing parameters, but route exists
+            return true;
         }
-
-        if (!in_array($action, $crud->getActions())) {
-            return false;
-        }
-
-        return $this->router->getRouteCollection()->get($this->createRouteName($crud, $action)) instanceof Route;
     }
 
-    protected function createRouteName(CrudInterface $crud, $action)
+    public function getRouteName($crudName, $context)
     {
-        return $crud->getRoutePrefix().strtolower(preg_replace('/([A-Z])/', '_\1', $action));
-    }
-
-    public function generateDefaultEntityRoute($entity)
-    {
-        return $this->router->generate($this->getDefaultEntityRoute($entity));
-    }
-
-    public function getDefaultEntityRoute($entity)
-    {
-        $crud = $this->crudRegistry->get($entity);
-
-        $actions = $crud->getActions();
-
-        if (in_array('list', $actions)) {
-            return $crud->getRoutePrefix().'list';
-        }
-        if (in_array('viewDefault', $actions)) {
-            return $crud->getRoutePrefix().'view_default';
+        if (!isset($this->routeOptions[$crudName]['route_name_prefix'])) {
+            throw new RouteNotFoundException(sprintf('No routes have been registered for the crud name "%s".', $crudName));
         }
 
-        throw new \Exception(sprintf('Unable to find the default route for %s', is_string($entity) ? $entity : get_class($entity)));
+        return $this->routeOptions[$crudName]['route_name_prefix'].$context;
     }
 }

@@ -5,7 +5,10 @@ namespace Perform\BaseBundle\Crud;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * A request that involves a crud service.
+ * A request that involves a crud operation.
+ *
+ * The crud name and context are required, all other properties are
+ * optional and depend on the context.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
@@ -16,23 +19,29 @@ class CrudRequest
     const CONTEXT_CREATE = 'create';
     const CONTEXT_EDIT = 'edit';
     const CONTEXT_EXPORT = 'export';
+    const CONTEXT_ACTION = 'action';
 
+    protected $crudName;
     protected $context;
-    protected $entityClass;
     protected $page = 1;
     protected $sortField;
     protected $sortDirection;
     protected $filter;
 
-    public function __construct($context)
+    public function __construct($crudName, $context)
     {
+        $this->crudName = $crudName;
         $this->context = $context;
     }
 
     public static function fromRequest(Request $request, $context)
     {
-        $req = new static($context);
-        $req->setEntityClass($request->attributes->get('_entity'));
+        $crudName = $request->attributes->get('_crud');
+        if (!$crudName) {
+            throw new \InvalidArgumentException('The "_crud" request attribute is required to create a CrudRequest from a Request.');
+        }
+
+        $req = new static($crudName, $context);
         $req->setPage($request->query->get('page', 1));
         $req->setSortField($request->query->get('sort'));
         $req->setSortDirection($request->query->get('direction'));
@@ -44,31 +53,17 @@ class CrudRequest
     /**
      * @return string
      */
+    public function getCrudName()
+    {
+        return $this->crudName;
+    }
+
+    /**
+     * @return string
+     */
     public function getContext()
     {
         return $this->context;
-    }
-
-    /**
-     * Set the entity class for this request.
-     *
-     * @param string $entityClass
-     */
-    public function setEntityClass($entityClass)
-    {
-        $this->entityClass = $entityClass;
-
-        return $this;
-    }
-
-    /**
-     * Get the entity class for this request.
-     *
-     * @return string
-     */
-    public function getEntityClass()
-    {
-        return $this->entityClass;
     }
 
     /**
@@ -102,13 +97,23 @@ class CrudRequest
     }
 
     /**
-     * @return string|null
-     *
-     * @param string $default The default field to return if none is set
+     * @param string $sortField
      */
-    public function getSortField($default = null)
+    public function setDefaultSortField($sortField)
     {
-        return $this->sortField ?: $default;
+        if (!$this->sortField) {
+            $this->sortField = $sortField;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSortField()
+    {
+        return $this->sortField;
     }
 
     /**
@@ -117,20 +122,31 @@ class CrudRequest
     public function setSortDirection($sortDirection)
     {
         $sortDirection = strtoupper($sortDirection);
-        if ($sortDirection !== 'DESC' && $sortDirection !== 'N') {
-            $sortDirection = 'ASC';
+        if (in_array($sortDirection, ['ASC', 'DESC', 'N'])) {
+            $this->sortDirection = $sortDirection;
         }
-        $this->sortDirection = $sortDirection;
 
         return $this;
     }
 
     /**
-     * @return string $default The default direction to return if none is set
+     * @param string $sortDirection
      */
-    public function getSortDirection($default = 'ASC')
+    public function setDefaultSortDirection($sortDirection)
     {
-        return $this->sortDirection ?: $default;
+        if (!$this->sortDirection) {
+            return $this->setSortDirection($sortDirection);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSortDirection()
+    {
+        return $this->sortDirection ?: 'ASC';
     }
 
     /**
@@ -144,10 +160,22 @@ class CrudRequest
     }
 
     /**
-     * @return string $default The default direction to return if none is set
+     * @param string $filter
      */
-    public function getFilter($default = null)
+    public function setDefaultFilter($filter)
     {
-        return $this->filter ?: $default;
+        if (!$this->filter) {
+            $this->filter = $filter;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilter()
+    {
+        return $this->filter;
     }
 }

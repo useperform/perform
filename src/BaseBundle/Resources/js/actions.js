@@ -14,7 +14,7 @@ $(function () {
       url: href,
       type: 'post',
       data: {
-        entityClass: action.entityClass,
+        crudName: action.crudName,
         ids: action.ids,
         options: {
           context: action.context

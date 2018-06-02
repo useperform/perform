@@ -1,3 +1,3 @@
 contact:
-    resource: "PerformContactBundle:Message"
+    resource: "perform_contact.message"
     type:     crud

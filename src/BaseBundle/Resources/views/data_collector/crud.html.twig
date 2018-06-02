@@ -4,7 +4,7 @@
   {% if collector.activeCrud is not null %}
   {% set icon %}
     <span class="icon">{{ include('@PerformBase/data_collector/crud.svg') }}</span>
-    <span class="sf-toolbar-value">&nbsp;&nbsp;{{collector.activeAlias}}</span>
+    <span class="sf-toolbar-value">&nbsp;&nbsp;{{collector.activeCrudAlias}}</span>
   {% endset %}
 
   {% set text %}
@@ -18,8 +18,8 @@
     <span class="sf-toolbar-status">{{collector.activeCrud}}</span>
   </div>
   <div class="sf-toolbar-info-piece">
-    <b>Loaded Crud</b>
-    <span class="sf-toolbar-status">{{ collector.crud | length }}</span>
+    <b>Available</b>
+    <span class="sf-toolbar-status">{{ collector.crudNames | length }}</span>
   </div>
   <div class="sf-toolbar-info-piece">
     <b>Extended Entities</b>
@@ -54,7 +54,18 @@ security:
   {% endif %}
   {% if collector.activeCrud is not null %}
     <h2>Active Crud</h2>
-    {{collector.activeCrud}}
+    <div class="metrics">
+      <div class="metric">
+        <span class="value">{{collector.activeCrud}}</span>
+        <span class="label">Crud Class</span>
+      </div>
+
+      <div class="metric">
+        <span class="value">{{collector.activeEntity}}</span>
+        <span class="label">Entity Class</span>
+      </div>
+      <!-- show if entity is extended -->
+    </div>
     {% if collector.typeConfig is not null %}
       <h2>Type Config</h2>
       <table>
@@ -82,25 +93,30 @@ security:
     {% endif %}
   {% endif %}
 
-  <h2>Loaded Crud</h2>
+  <h2>Loaded Crud Services</h2>
   <table>
     <thead>
       <tr>
-        <th scope="col">Entity</th>
-        <th scope="col">Crud</th>
+        <th scope="col">Name</th>
+        <th scope="col">Class</th>
+        <th scope="col">Entity Class</th>
       </tr>
     </thead>
     <tbody>
-      {% for entityClass, crudClass in collector.crud %}
+      {% for crudName, data in collector.crudNames %}
         <tr>
-          <td>{{ entityClass }}</td>
-          <td class="font-normal">{{ crudClass }}</td>
+          <td>{{ crudName }}</td>
+          <td class="font-normal">{{ data[0] }}</td>
+          <td class="font-normal">{{ data[1] }}</td>
         </tr>
       {% endfor %}
     </tbody>
   </table>
 
   <h2>Extended Entities</h2>
+  <p>
+    Whenever crud functionality is requested for a parent entity, the child entity will be used instead.
+  </p>
   <table>
     <thead>
       <tr>

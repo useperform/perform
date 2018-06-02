@@ -13,14 +13,15 @@ services:
     Perform\BaseBundle\Type\EntityType:
         arguments:
             - "@doctrine.orm.entity_manager"
+            - "@perform_base.crud.registry"
 
     Perform\BaseBundle\Type\TagType:
         arguments:
             - "@doctrine.orm.entity_manager"
+            - "@perform_base.crud.registry"
 
     Perform\BaseBundle\Type\CollectionType:
         arguments:
-            - "@perform_base.crud.registry"
             - "@doctrine.orm.entity_manager"
             - "@perform_base.asset_container"
 

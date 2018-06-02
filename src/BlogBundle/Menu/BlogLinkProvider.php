@@ -15,7 +15,7 @@ class BlogLinkProvider implements LinkProviderInterface
     public function addLinks(ItemInterface $menu)
     {
         $menu->addChild('blog', [
-            'entity' => 'PerformBlogBundle:MarkdownPost',
+            'crud' => 'perform_blog.markdown_post',
         ])->setExtra('icon', 'newspaper-o');
     }
 }

@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Route;
 use Perform\BaseBundle\Crud\CrudRegistry;
 use Symfony\Component\Config\Resource\FileResource;
 use Perform\BaseBundle\Crud\CrudInterface;
+use Perform\BaseBundle\Controller\CrudController;
 
 /**
  * CrudLoader creates crud routes dynamically for an entity crud.
@@ -17,30 +18,33 @@ use Perform\BaseBundle\Crud\CrudInterface;
 class CrudLoader extends Loader
 {
     protected $registry;
+    protected $routeOptions;
 
-    public function __construct(CrudRegistry $registry)
+    public function __construct(CrudRegistry $registry, array $routeOptions = [])
     {
         $this->registry = $registry;
+        $this->routeOptions = $routeOptions;
     }
 
-    public function load($entity, $type = null)
+    public function load($crudName, $type = null)
     {
-        $crud = $this->registry->get($entity);
-        $class = $crud->getControllerName();
-        $refl = new \ReflectionClass($class);
+        $crud = $this->registry->get($crudName);
 
-        $crudClass = 'Perform\BaseBundle\Controller\CrudController';
-        if ($refl->getName() !== $crudClass && !$refl->isSubclassOf($crudClass)) {
-            throw new \InvalidArgumentException($class.' must be an instance of Perform\BaseBundle\Controller\CrudController to use crud routing');
+        $controllerClass = $crud->getControllerName();
+        $refl = new \ReflectionClass($controllerClass);
+        $baseControllerClass = CrudController::class;
+        if ($refl->getName() !== $baseControllerClass && !$refl->isSubclassOf($baseControllerClass)) {
+            throw new \InvalidArgumentException(sprintf('%s must be an instance of %s to use crud routing.', $controllerClass, $baseControllerClass));
         }
 
+        $options = $this->getOptions($crudName);
         $collection = new RouteCollection();
-        foreach ($crud->getActions() as $path => $action) {
-            $route = new Route($path, [
-                '_controller' => $class.'::'.$action.'Action',
-                '_entity' => $entity,
+        foreach ($options['contexts'] as $context => $urlFragment) {
+            $route = new Route($urlFragment, [
+                '_controller' => $controllerClass.'::'.$context.'Action',
+                '_crud' => $crudName,
             ]);
-            $collection->add($this->createRouteName($crud, $action), $route);
+            $collection->add($options['route_name_prefix'].$context, $route);
         }
         $crudRefl = new \ReflectionClass($crud);
         $filename = $crudRefl->getFileName();
@@ -53,9 +57,13 @@ class CrudLoader extends Loader
         return $collection;
     }
 
-    protected function createRouteName(CrudInterface $crud, $action)
+    protected function getOptions($crudName)
     {
-        return $crud->getRoutePrefix().strtolower(preg_replace('/([A-Z])/', '_\1', $action));
+        if (!isset($this->routeOptions[$crudName])) {
+            throw new \InvalidArgumentException(sprintf('Unable to register routes for the given crud "%s", route options have not been registered.', $crudName));
+        }
+
+        return $this->routeOptions[$crudName];
     }
 
     public function supports($resource, $type = null)

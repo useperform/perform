@@ -11,36 +11,34 @@ namespace Perform\BaseBundle\Routing;
 interface CrudUrlGeneratorInterface
 {
     /**
-     * Get the url to a crud route for an entity.
+     * Generate the URL for a crud context.
      *
-     * @param string|object $entity
-     * @param string        $context
+     * For the view and edit contexts, the 'entity' parameter is required.
      *
-     * @return string
-     */
-    public function generate($entity, $context, array $params = []);
-
-    /**
-     * Check if a crud route exists for an entity.
-     *
-     * @param string|object $entity
-     * @param string        $context
+     * @param string $crudName
+     * @param string $context
+     * @param array  $params
      *
      * @return string
      */
-    public function routeExists($entity, $context);
+    public function generate($crudName, $context, array $params = []);
 
     /**
-     * Get the name of the default CRUD route for an entity.
+     * Check if a crud route exists.
      *
-     * @param string|object $entity
+     * @param string $crudName
+     * @param string $context
+     *
+     * @return bool
      */
-    public function getDefaultEntityRoute($entity);
+    public function routeExists($crudName, $context);
 
     /**
-     * Generate the URL of the default CRUD route for an entity.
+     * Get the name of a crud route.
      *
-     * @param string|object $entity
+     * @return bool
+     *
+     * @return string
      */
-    public function generateDefaultEntityRoute($entity);
+    public function getRouteName($crudName, $context);
 }

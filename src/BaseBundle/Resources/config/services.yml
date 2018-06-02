@@ -6,8 +6,8 @@ services:
     perform_base.crud.registry:
         class: Perform\BaseBundle\Crud\CrudRegistry
         arguments:
-            - '@service_container'
             - '@perform_base.doctrine.entity_resolver'
+            - '@doctrine.orm.entity_manager'
 
     perform_base.config_store:
         class: Perform\BaseBundle\Config\ConfigStore
@@ -22,7 +22,8 @@ services:
         class: Perform\BaseBundle\Security\CrudVoter
         arguments:
             - '@perform_base.crud.registry'
-            - '@perform_base.routing.crud_url'
+            - '@perform_base.routing.crud_generator'
+            - '@doctrine.orm.entity_manager'
         tags:
             - security.voter
 
@@ -30,7 +31,6 @@ services:
         class: Perform\BaseBundle\Form\Type\CrudType
         arguments:
             - '@perform_base.config_store'
-            - '@perform_base.doctrine.entity_resolver'
             - '@perform_base.type_registry'
         tags:
             - {name: form.type}
@@ -69,16 +69,16 @@ services:
     perform_base.asset_container:
         class: Perform\BaseBundle\Asset\AssetContainer
 
-    perform_base.routing.crud:
+    perform_base.routing.crud_loader:
         class: Perform\BaseBundle\Routing\CrudLoader
         public: false
         arguments: ['@perform_base.crud.registry']
         tags:
             - {name: routing.loader}
 
-    perform_base.routing.crud_url:
+    perform_base.routing.crud_generator:
         class: Perform\BaseBundle\Routing\CrudUrlGenerator
-        arguments: ['@perform_base.crud.registry', '@router']
+        arguments: ['@router']
 
     perform_base.listener.crud_template:
         class: Perform\BaseBundle\EventListener\CrudTemplateListener
@@ -89,6 +89,13 @@ services:
                 event: kernel.controller
                 method: onKernelController
                 priority: -200
+
+    perform_base.template_populator:
+        class: Perform\BaseBundle\Crud\TemplatePopulator
+        arguments:
+            - "@perform_base.config_store"
+            - "@perform_base.crud.registry"
+            - "@event_dispatcher"
 
     perform_base.listener.ajax:
         class: Perform\BaseBundle\EventListener\AjaxListener
@@ -105,7 +112,8 @@ services:
         class: Perform\BaseBundle\Twig\Extension\CrudExtension
         arguments:
             - '@perform_base.context_renderer'
-            - '@perform_base.routing.crud_url'
+            - '@perform_base.config_store'
+            - '@perform_base.routing.crud_generator'
             - '@request_stack'
         tags:
             - {name: twig.extension}
@@ -114,7 +122,7 @@ services:
         class: Perform\BaseBundle\Twig\Extension\ActionExtension
         arguments:
             - "@router"
-            - "@perform_base.routing.crud_url"
+            - "@perform_base.routing.crud_generator"
             - "@perform_base.action_registry"
             - "@perform_base.config_store"
         tags:
@@ -133,7 +141,6 @@ services:
         class: Perform\BaseBundle\Twig\Extension\UtilExtension
         arguments:
             - "@router"
-            - '@perform_base.config_store'
         tags:
             - {name: twig.extension}
 
@@ -149,9 +156,9 @@ services:
         tags:
             - { name: knp_menu.menu_builder, method: createSidebar, alias: perform_sidebar }
 
-    perform_base.menu_extension:
-        class: Perform\BaseBundle\Menu\Extension\EntityExtension
-        arguments: ['@perform_base.routing.crud_url']
+    perform_base.menu_extension.crud:
+        class: Perform\BaseBundle\Menu\Extension\CrudExtension
+        arguments: ['@perform_base.routing.crud_generator']
         tags:
             # higher priority than routing extension at 0
             - { name: knp_menu.factory_extension, priority: 1}
@@ -198,10 +205,27 @@ services:
         class: Perform\BaseBundle\Selector\EntitySelector
         arguments:
             - "@doctrine.orm.entity_manager"
+            - "@event_dispatcher"
             - "@perform_base.config_store"
 
+    perform_base.listener.list_query.sort:
+        class: Perform\BaseBundle\EventListener\SortListQueryListener
+        arguments:
+            - "@perform_base.config_store"
+        tags:
+            - {name: kernel.event_listener, event: perform_base.crud.list_query, method: onListQuery}
+
+    perform_base.listener.list_query.filter:
+        class: Perform\BaseBundle\EventListener\FilterListQueryListener
+        arguments:
+            - "@perform_base.config_store"
+            - "@perform_base.selector.entity"
+        tags:
+            - {name: kernel.event_listener, event: perform_base.crud.list_query, method: onListQuery}
+            - {name: kernel.event_listener, event: perform_base.crud.list_context, method: onListContext}
+
     perform_base.entity_manager:
-        class: Perform\BaseBundle\Manager\EntityManager
+        class: Perform\BaseBundle\Crud\EntityManager
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@event_dispatcher"

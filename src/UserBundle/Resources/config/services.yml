@@ -19,13 +19,13 @@ services:
     perform_user.crud.user:
         class: Perform\UserBundle\Crud\UserCrud
         tags:
-            - {name: perform_base.crud, entity: "PerformUserBundle:User"}
+            - {name: perform_base.crud, crud_name: "perform_user.user"}
 
     perform_user.menu_link.users:
         class: Perform\BaseBundle\Menu\SimpleLinkProvider
         arguments:
             - 'users'
-            - 'PerformUserBundle:User'
+            - 'perform_user.user'
             - null
             - 'users'
         tags:

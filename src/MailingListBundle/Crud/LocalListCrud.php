@@ -12,8 +12,6 @@ use Perform\BaseBundle\Config\ActionConfig;
  **/
 class LocalListCrud extends AbstractCrud
 {
-    protected $routePrefix = 'perform_mailing_list_local_list_';
-
     public function configureTypes(TypeConfig $config)
     {
         $config->add('name', [

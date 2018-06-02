@@ -19,20 +19,18 @@ use Perform\BaseBundle\Crud\CrudRequest;
 class CrudType extends AbstractType
 {
     protected $store;
-    protected $resolver;
     protected $typeRegistry;
 
-    public function __construct(ConfigStoreInterface $store, EntityResolver $resolver, TypeRegistry $typeRegistry)
+    public function __construct(ConfigStoreInterface $store, TypeRegistry $typeRegistry)
     {
         $this->store = $store;
-        $this->resolver = $resolver;
         $this->typeRegistry = $typeRegistry;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $context = $options['context'];
-        $fields = $this->getTypes($options['entity'], $context);
+        $fields = $this->getTypes($options['crud_name'], $context);
         $method = $context === CrudRequest::CONTEXT_CREATE ? 'createContext' : 'editContext';
         $templateVars = [];
 
@@ -48,22 +46,22 @@ class CrudType extends AbstractType
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['type_vars'] = $form->getConfig()->getAttribute('type_vars');
-        $view->vars['fields'] = $this->getTypes($options['entity'], $options['context']);
+        $view->vars['fields'] = $this->getTypes($options['crud_name'], $options['context']);
     }
 
-    protected function getTypes($entity, $context)
+    protected function getTypes($crudName, $context)
     {
-        $typeConfig = $this->store->getTypeConfig($entity);
+        $typeConfig = $this->store->getTypeConfig($crudName);
 
         return $typeConfig->getTypes($context);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setRequired(['context', 'entity']);
+        $resolver->setRequired(['context', 'crud_name']);
         $resolver->setAllowedValues('context', [CrudRequest::CONTEXT_CREATE, CrudRequest::CONTEXT_EDIT]);
         $resolver->setDefault('data_class', function (Options $options) {
-            return $this->resolver->resolve($options['entity']);
+            return $this->store->getEntityClass($options['crud_name']);
         });
     }
 }
