@@ -80,22 +80,6 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($config, $this->store->getTypeConfig($crudName));
     }
 
-    public function testGetTypeConfigWithOverride()
-    {
-        $override = [
-            'some_crud' => [
-                'types' => [
-                    'slug' => ['type' => 'string'],
-                ],
-            ],
-        ];
-        $crud = $this->getMock(CrudInterface::class);
-        $this->configure('some_crud', $crud, $override);
-
-        $config = $this->store->getTypeConfig('some_crud');
-        $this->assertArrayHasKey('slug', $config->getTypes(CrudRequest::CONTEXT_LIST));
-    }
-
     public function testGetActionConfig()
     {
         $crud = $this->getMock(CrudInterface::class);

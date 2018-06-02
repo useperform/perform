@@ -8,40 +8,36 @@ namespace Perform\BaseBundle\Config;
 interface ConfigStoreInterface
 {
     /**
-     * Get the TypeConfig for a crud name. The type config may include
-     * overrides from application configuration.
+     * Get the TypeConfig for a crud name.
      *
-     * @param string|object $crudName
+     * @param string $crudName
      *
      * @return TypeConfig
      */
     public function getTypeConfig($crudName);
 
     /**
-     * Get the ActionConfig for a crud name. The action config may include
-     * overrides from application configuration.
+     * Get the ActionConfig for a crud name.
      *
-     * @param string|object $crudName
+     * @param string $crudName
      *
      * @return ActionConfig
      */
     public function getActionConfig($crudName);
 
     /**
-     * Get the FilterConfig for a crud name. The filter config may include
-     * overrides from application configuration.
+     * Get the FilterConfig for a crud name.
      *
-     * @param string|object $crudName
+     * @param string $crudName
      *
      * @return FilterConfig
      */
     public function getFilterConfig($crudName);
 
     /**
-     * Get the LabelConfig for a crud name. The label config may include
-     * overrides from application configuration.
+     * Get the LabelConfig for a crud name.
      *
-     * @param string|object $crudName
+     * @param string $crudName
      *
      * @return LabelConfig
      */
@@ -49,6 +45,10 @@ interface ConfigStoreInterface
 
     /**
      * Get the resolved entity class for a crud name.
+     *
+     * @param string $crudName
+     *
+     * @return string
      */
     public function getEntityClass($crudName);
 }

@@ -12,9 +12,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  * ConfigStore creates and stores a single instance of the different
  * config classes for each crud class.
  *
- * Config classes are configured by crud services, and may also be
- * overridden by configuration passed to the ConfigStore.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class ConfigStore implements ConfigStoreInterface
@@ -24,7 +21,6 @@ class ConfigStore implements ConfigStoreInterface
     protected $typeRegistry;
     protected $actionRegistry;
     protected $authChecker;
-    protected $override;
 
     protected $typeConfigs = [];
     protected $filterConfigs = [];
@@ -32,14 +28,13 @@ class ConfigStore implements ConfigStoreInterface
     protected $labelConfigs = [];
     protected $entityClasses = [];
 
-    public function __construct(EntityResolver $resolver, CrudRegistry $crudRegistry, TypeRegistry $typeRegistry, ActionRegistry $actionRegistry, AuthorizationCheckerInterface $authChecker, array $override = [])
+    public function __construct(EntityResolver $resolver, CrudRegistry $crudRegistry, TypeRegistry $typeRegistry, ActionRegistry $actionRegistry, AuthorizationCheckerInterface $authChecker)
     {
         $this->resolver = $resolver;
         $this->crudRegistry = $crudRegistry;
         $this->typeRegistry = $typeRegistry;
         $this->actionRegistry = $actionRegistry;
         $this->authChecker = $authChecker;
-        $this->override = $override;
     }
 
     public function getTypeConfig($crudName)
@@ -48,11 +43,6 @@ class ConfigStore implements ConfigStoreInterface
             $typeConfig = new TypeConfig($this->typeRegistry);
             $this->crudRegistry->get($crudName)->configureTypes($typeConfig);
 
-            if (isset($this->override[$crudName]['types'])) {
-                foreach ($this->override[$crudName]['types'] as $field => $config) {
-                    $typeConfig->add($field, $config);
-                }
-            }
             $this->typeConfigs[$crudName] = $typeConfig;
         }
 
