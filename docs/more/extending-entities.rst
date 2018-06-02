@@ -10,12 +10,12 @@ A common way bundles provide this functionality is declaring the parent entity a
 
 However, there may be other times when you want to use the bundle's entity `as is`.
 In this case a mapped superclass won't work; they are considered abstract entities to Doctrine and therefore not available.
-For example, in one application we may wish to extend Perform's user entity with some extra fields, but in another application we want to use the existing entity as is.
+For example, in one application we may wish to extend the user entity with some extra fields, but in another application we want to use it as is.
 
 Defining extended entities
 --------------------------
 
-The PerformBaseBundle provides an event listener that configures an entity as a mapped superclass at the moment the mapping is loaded.
+The base bundle provides an event listener that configures an entity as a mapped superclass at the moment the mapping is loaded.
 This allows an entity to be used both as a mapped superclass when required, but also as a standalone entity.
 
 To extend an entity, create an entity class that extends the parent class, and then create a new mapping file that declares any extra fields and relationships.
@@ -65,9 +65,9 @@ For example, to extend Perform's user entity:
 
     perform_base:
         extended_entities:
-            "PerformUserBundle:User": "AppBundle:User"
+            "Perform\UserBundle\Entity\\User": "AppBundle\Entity\User"
 
-This will configure ``PerformUserBundle:User`` to be a mapped superclass, and ``AppBundle:User`` to be a concrete entity extending it.
+This will change ``Perform\UserBundle\Entity\User`` to be a mapped superclass, and ``AppBundle\Entity\User`` to be a concrete entity extending it.
 
 Working with the correct entity
 -------------------------------
@@ -114,7 +114,9 @@ If it had not been extended, all calls would return ``Perform\UserBundle\Entity\
 Crud for extended entities
 ----------------------------
 
-Exisiting crud classes for entities that have been extended will work for the child entities, although they won't be aware of the new fields and relationships.
+Crud classes for entities that have been extended will work for the child entities, although they won't be aware of the new fields and relationships.
+
+For example, if you extended ``Perform\UserBundle\Entity\User`` with ``AppBundle\Entity\User``, routing to the ``perform_user.user`` crud name would use ``AppBundle\Entity\User`` entity classes, but it won't be aware of the fields on ``AppBundle\Entity\User``.
 
 To define a new crud class for the extended entity, create a new class that extends the existing class and register it as a service:
 
@@ -139,40 +141,10 @@ To define a new crud class for the extended entity, create a new class that exte
 
 .. code-block:: yaml
 
-    app.crud.user:
-        class: AppBundle\Crud\UserCrud
+    AppBundle\Crud\UserCrud:
         tags:
-            - {name: perform_base.crud, entity: "AppBundle:User"}
+            - {name: perform_base.crud, crud_name: "user"}
 
+.. note::
 
-The ``CrudRegistry`` uses the ``EntityResolver`` internally to fetch the correct crud service, so calls like this:
-
-.. code-block:: php
-
-   <?php
-
-   /* @var CrudRegistry $registry */
-   $registry->get('PerformUserBundle:User');
-
-will return an instance of ``AppBundle\Crud\UserCrud`` because the entity has been extended.
-
-If it had not been extended, or no new crud class had been created, it would return an instance of ``Perform\UserBundle\Crud\UserCrud``.
-
-CRUD routing
-------------
-
-The ``crud`` routing loader will also account for extended entities.
-
-Loading a resource such as:
-
-.. code-block:: yaml
-
-    user_crud:
-        resource: "PerformUserBundle:User"
-        type: crud
-        prefix: /admin/users
-
-
-will create CRUD routes for ``AppBundle:User`` because the entity has been extended.
-
-If it had not been extended, it would create CRUD routes for ``PerformUserBundle:User``.
+   Remember that auto-configuration will add a ``perform_base.crud`` tag for you with sensible defaults.
