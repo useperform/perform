@@ -46,7 +46,6 @@ class PerformBaseExtension extends Extension
         $this->configureMailer($config, $container);
         $this->findExtendedEntities($container, $config);
         $this->configureResolvedEntities($container, $config);
-        $this->processCrudConfig($container, $config);
         $this->createSimpleMenus($container, $config['menu']['simple']);
         $this->configureAssets($container, $config['assets']);
     }
@@ -188,16 +187,5 @@ class PerformBaseExtension extends Extension
         if (!$container->hasParameter(Assets::PARAM_EXTRA_SASS)) {
             $container->setParameter(Assets::PARAM_EXTRA_SASS, []);
         }
-    }
-
-    public function processCrudConfig(ContainerBuilder $container, array $config)
-    {
-        $cruds = [];
-        $resolver = new EntityResolver($container->getParameter('perform_base.entity_aliases'));
-        foreach ($config['admins'] as $entity => $configuration) {
-            $cruds[$resolver->resolveNoExtend($entity)] = $configuration;
-        }
-
-        $container->setParameter('perform_base.cruds', $cruds);
     }
 }
