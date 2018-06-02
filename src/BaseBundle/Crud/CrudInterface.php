@@ -14,18 +14,39 @@ use Twig\Environment;
  **/
 interface CrudInterface
 {
+    /**
+     * @param TypeConfig $config
+     *
+     * Configure field mappings.
+     * For each entity property you want to expose, call $config->add().
+     */
     public function configureTypes(TypeConfig $config);
 
+    /**
+     * @param FilterConfig $config
+     *
+     * Configure filters.
+     */
     public function configureFilters(FilterConfig $config);
 
+    /**
+     * @param ActionConfig $config
+     *
+     * Configure actions.
+     */
     public function configureActions(ActionConfig $config);
 
+    /**
+     * @param LabelConfig $config
+     *
+     * Configure labels.
+     */
     public function configureLabels(LabelConfig $config);
 
     /**
      * @param ExportConfig $config
      *
-     * Configure how exports work for this entity.
+     * Configure how exports work.
      * You may wish to set the available formats and configure how they behave.
      */
     public function configureExports(ExportConfig $config);

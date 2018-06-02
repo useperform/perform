@@ -96,7 +96,7 @@ abstract class AbstractCrud implements CrudInterface
     {
         $entityClass = StringUtil::entityClassForCrud(static::class);
         if (!class_exists($entityClass)) {
-            throw new \Exception(sprintf('Unable to guess the entity class to use for %s - tried "%s" but the class does not exist. You should implement %s::getEntityClass().', static::class, $entityClass, static::class));
+            throw new \Exception(sprintf('Unable to guess the entity class to use for %s - tried "%s" but the class does not exist. You should implement %s::getEntityClass() or remove its service.', static::class, $entityClass, static::class));
         }
 
         return $entityClass;
