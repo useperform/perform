@@ -30,7 +30,7 @@ configured to only run after passing various conditions.
 Required configuration
 ----------------------
 
-Add ``routing_action.yml`` from the `BaseBundle` to your routing configuration:
+Add ``routing_action.yml`` from the base bundle to your routing configuration:
 
 .. code-block:: yaml
 
@@ -46,9 +46,9 @@ Make sure to use a sensible prefix that won't conflict with any existing routes,
 Using actions
 -------------
 
-Use the ``addInstance`` and ``add`` methods of the ``ActionConfig`` object in ``Perform\BaseBundle\Crud\CrudInterface#configureActions()`` to add actions for your entity.
+Use the ``addInstance`` and ``add`` methods of the ``ActionConfig`` object in ``Perform\BaseBundle\Crud\CrudInterface#configureActions()`` to add actions for your crud classes.
 
-``addInstance`` requires an arbitrary action name (unique for this entity only) and an instance of ``Perform\BaseBundle\Action\ActionInterface``.
+``addInstance`` requires an arbitrary action name (unique for this crud name only) and an instance of ``Perform\BaseBundle\Action\ActionInterface``.
 However, you'll often find that actions require injected dependencies, such as the Doctrine entity manager to save entities.
 
 Fortunately, actions can be added to a `registry`, which handles their dependencies and allows you to refer to them globally by name.
@@ -103,7 +103,7 @@ Here is a basic action that simply logs the entities as JSON:
             $this->logger = $logger;
         }
 
-        public function run(array $entities, array $options)
+        public function run(CrudRequest $crudRequest, array $entities, array $options)
         {
             foreach ($entities as $entity) {
                 $this->logger->info(json_encode($entity));
@@ -166,7 +166,7 @@ You might want to redirect somewhere after running an action.
 * ``ActionResponse::REDIRECT_ROUTE`` - redirect to a named route
 * ``ActionResponse::REDIRECT_PREVIOUS`` - redirect to the previous page
 * ``ActionResponse::REDIRECT_CURRENT`` - reload the current page
-* ``ActionResponse::REDIRECT_ENTITY_DEFAULT`` - redirect to the default route for the current entity type (usually the list context)
+* ``ActionResponse::REDIRECT_LIST_CONTEXT`` - redirect to the list context
 
 Set this redirect by calling ``setRedirect()`` on the response before returning it:
 
@@ -185,8 +185,9 @@ Set this redirect by calling ``setRedirect()`` on the response before returning 
    $response->setRedirect(ActionResponse::REDIRECT_ROUTE, ['route' => 'crud_foo_list']);
    $response->setRedirect(ActionResponse::REDIRECT_ROUTE, ['route' => 'crud_foo_view', 'params' => ['id' => 1]]);
 
-   //default route of the current entity (usually the list context)
-   $response->setRedirect(ActionResponse::REDIRECT_ENTITY_DEFAULT);
+   //list context, with optional params
+   $response->setRedirect(ActionResponse::REDIRECT_LIST_CONTEXT);
+   $response->setRedirect(ActionResponse::REDIRECT_LIST_CONTEXT, ['params' => ['page' => 2]]);
 
 .. note::
 
@@ -393,7 +394,7 @@ You can also specify the error message to show by throwing a
 .. code-block:: php
 
     <?php
-    public function run(array $entities, array $options)
+    public function run(CrudRequest $crudRequest, array $entities, array $options)
     {
         // will show a generic error shown to the user, hiding exception details
         throw new \RuntimeException('The flux capacitor failed to start.');
