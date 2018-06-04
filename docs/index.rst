@@ -44,7 +44,7 @@ Topic index
 .. toctree::
    :caption: Tutorials
 
-   tutorial/index
+   tutorials/hipster-bikes/index
 
 .. toctree::
    :caption: Bundle guides

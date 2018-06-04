@@ -1,7 +1,5 @@
-Tutorial
-========
-
-Let's use Perform to create an application!
+Hipster Bikes
+=============
 
 We've been tasked with creating a website for *Hipster Bikes*, the trendiest bike gallery in town.
 
