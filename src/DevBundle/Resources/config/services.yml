@@ -18,14 +18,6 @@ services:
             - {name: kernel.event_listener, method: onConsoleException, event: console.exception}
             - {name: kernel.event_listener, method: onConsoleTerminate, event: console.terminate}
 
-    perform_dev.frontend_registry:
-        class: Perform\DevBundle\Frontend\FrontendRegistry
-
-    perform_dev.frontend.twbs3:
-        class: Perform\DevBundle\Frontend\Bootstrap3Frontend
-        tags:
-            - {name: perform_dev.frontend}
-
     Perform\DevBundle\Command\CreateThemeCommand:
         class: Perform\DevBundle\Command\CreateThemeCommand
         arguments:
