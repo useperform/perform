@@ -1,3 +1,0 @@
-perform_media_player_admin:
-    resource: "perform_media_player.playlist"
-    type:     crud
