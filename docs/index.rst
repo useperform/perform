@@ -56,7 +56,6 @@ Topic index
    dev-bundle/index
    mailing-list-bundle/index
    media-bundle/index
-   music-bundle/index
    notification-bundle/index
    page-editor-bundle/index
    rich-content-bundle/index
