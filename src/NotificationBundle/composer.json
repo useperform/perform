@@ -1,6 +1,7 @@
 {
     "name": "perform/notification-bundle",
     "description": "Send notifications using a variety of publishers.",
+    "type": "symfony-bundle",
     "license": "proprietary",
     "authors": [
         {

@@ -1,6 +1,7 @@
 {
     "name": "perform/rich-content-bundle",
     "description": "Edit rich content with an extensible editor.",
+    "type": "symfony-bundle",
     "license": "proprietary",
     "authors": [
         {

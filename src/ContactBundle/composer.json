@@ -1,6 +1,7 @@
 {
     "name": "perform/contact-bundle",
     "description": "Handle contact form submissions, notify users, and detect spam",
+    "type": "symfony-bundle",
     "license": "proprietary",
     "authors": [
         {

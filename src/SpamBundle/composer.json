@@ -1,6 +1,7 @@
 {
     "name": "perform/spam-bundle",
     "description": "Spam detection and prevention",
+    "type": "symfony-bundle",
     "license": "proprietary",
     "authors": [
         {

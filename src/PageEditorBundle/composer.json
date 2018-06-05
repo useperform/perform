@@ -1,6 +1,7 @@
 {
     "name": "perform/page-editor-bundle",
     "description": "Live page editing for websites",
+    "type": "symfony-bundle",
     "license": "proprietary",
     "authors": [
         {

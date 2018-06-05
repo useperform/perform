@@ -1,6 +1,7 @@
 {
     "name": "perform/base-bundle",
     "description": "Perform base bundle",
+    "type": "symfony-bundle",
     "license": "proprietary",
     "authors": [
         {
