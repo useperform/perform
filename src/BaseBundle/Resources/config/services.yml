@@ -183,10 +183,6 @@ services:
         tags:
             - { name: perform_base.link_provider, alias: settings }
 
-    perform_base.email.mailer:
-        class: Perform\BaseBundle\Email\Mailer
-        arguments: ["@swiftmailer.mailer", "@twig", "%perform_base.mailer.from_address%", "@logger"]
-
     perform_base.doctrine.extend_listener:
         class: Perform\BaseBundle\Doctrine\ExtendEntitiesListener
         arguments:

@@ -43,7 +43,6 @@ class PerformBaseExtension extends Extension
         $container->setParameter('perform_base.auto_asset_version', uniqid());
         $container->setParameter('perform_base.assets.theme', $config['assets']['theme']);
         $this->configureTypeRegistry($container);
-        $this->configureMailer($config, $container);
         $this->findExtendedEntities($container, $config);
         $this->configureResolvedEntities($container, $config);
         $this->createSimpleMenus($container, $config['menu']['simple']);
@@ -55,25 +54,6 @@ class PerformBaseExtension extends Extension
         $container->register('perform_base.type_registry', TypeRegistry::class);
         $container->registerForAutoconfiguration(TypeInterface::class)
             ->addTag('perform_base.type');
-    }
-
-    protected function configureMailer(array $config, ContainerBuilder $container)
-    {
-        if (!isset($config['mailer']['from_address'])) {
-            $container->removeDefinition('perform_base.email.mailer');
-
-            return;
-        }
-
-        $container->setParameter('perform_base.mailer.from_address', $config['mailer']['from_address']);
-
-        if (!isset($config['mailer']['excluded_domains'])) {
-            return;
-        }
-
-        $definition = $container->getDefinition('perform_base.email.mailer');
-        // test each composer.json requires licensing
-        $definition->addMethodCall('setExcludedDomains', [$config['mailer']['excluded_domains']]);
     }
 
     /**

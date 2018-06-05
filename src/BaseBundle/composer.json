@@ -21,7 +21,6 @@
         "symfony/framework-bundle": "^3.4|^4.0",
         "symfony/monolog-bundle": "^3.0.3",
         "symfony/security-bundle": "^3.4|^4.0",
-        "symfony/swiftmailer-bundle": "^2.3",
         "symfony/twig-bundle": "^3.4|^4.0",
         "symfony/validator": "^3.4|^4.0",
         "symfony/yaml": "^3.4|^4.0"
