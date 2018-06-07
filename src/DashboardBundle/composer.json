@@ -1,0 +1,19 @@
+{
+    "name": "perform/dashboard-bundle",
+    "description": "Create dashboard pages with reusable panels.",
+    "type": "symfony-bundle",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Glynn Forrest",
+            "email": "me@glynnforrest.com"
+        }
+    ],
+    "require": {
+    },
+    "autoload": {
+        "psr-4": {
+            "Perform\\DashboardBundle\\": ""
+        }
+    }
+}

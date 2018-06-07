@@ -60,6 +60,7 @@
         "perform/base-bundle": "self.version",
         "perform/blog-bundle": "self.version",
         "perform/contact-bundle": "self.version",
+        "perform/dashboard-bundle": "self.version",
         "perform/dev-bundle": "self.version",
         "perform/licensing": "self.version",
         "perform/mailing-list-bundle": "self.version",
