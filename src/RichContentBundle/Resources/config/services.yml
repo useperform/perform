@@ -38,6 +38,7 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@perform_rich_content.repo.content"
             - "@perform_rich_content.repo.block"
+    Perform\RichContentBundle\Persister\Persister: '@perform_rich_content.persister'
 
     perform_rich_content.repo.content:
         class: Perform\RichContentBundle\Repository\ContentRepository
