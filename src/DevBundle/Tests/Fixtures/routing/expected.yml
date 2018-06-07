@@ -5,14 +5,6 @@ perform_user_login:
 perform_user_passwords:
     resource: "@PerformBaseBundle/Resources/config/routing_password.yml"
 
-perform_base_index:
-    resource: "@PerformBaseBundle/Resources/config/routing_index.yml"
-    prefix: /admin
-
-perform_base_dashboard:
-    resource: "@PerformBaseBundle/Resources/config/routing_dashboard.yml"
-    prefix: /admin/dashboard
-
 perform_base_settings:
     resource: "@PerformBaseBundle/Resources/config/routing_settings.yml"
     prefix: /admin/settings

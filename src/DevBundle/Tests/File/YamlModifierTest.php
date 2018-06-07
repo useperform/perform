@@ -59,7 +59,7 @@ class YamlModifierTest extends \PHPUnit_Framework_TestCase
         copy($this->routing('current'), $this->routing('actual'));
 
         $mod = new YamlModifier($this->routing('actual'));
-        $mod->addConfig((new ContactBundleResource())->getRoutes(), '/^perform_base_dashboard:/m');
+        $mod->addConfig((new ContactBundleResource())->getRoutes(), '/^perform_base_settings:/m');
 
         $this->assertFileEquals($this->routing('current'), $this->routing('actual'));
     }
