@@ -1,6 +1,7 @@
 parameters:
     locale: en
     secret: EJFNEKJNEIDUNIJN
+    container.autowiring.strict_mode: true
 
 security:
     encoders:
