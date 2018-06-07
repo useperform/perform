@@ -80,6 +80,11 @@ services:
         class: Perform\BaseBundle\Routing\CrudUrlGenerator
         arguments: ['@router']
 
+    perform_base.routing.checker:
+        class: Perform\BaseBundle\Routing\RouteChecker
+        arguments:
+            - "@router"
+
     perform_base.listener.crud_template:
         class: Perform\BaseBundle\EventListener\CrudTemplateListener
         arguments: ['@service_container']
@@ -140,7 +145,7 @@ services:
     perform_base.twig.util:
         class: Perform\BaseBundle\Twig\Extension\UtilExtension
         arguments:
-            - "@router"
+            - "@perform_base.routing.checker"
         tags:
             - {name: twig.extension}
 

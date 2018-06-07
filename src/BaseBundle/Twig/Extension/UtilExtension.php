@@ -3,9 +3,7 @@
 namespace Perform\BaseBundle\Twig\Extension;
 
 use Carbon\Carbon;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
-use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
+use Perform\BaseBundle\Routing\RouteChecker;
 
 /**
  * General twig helpers.
@@ -14,11 +12,11 @@ use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
  **/
 class UtilExtension extends \Twig_Extension
 {
-    protected $urlGenerator;
+    protected $routeChecker;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    public function __construct(RouteChecker $routeChecker)
     {
-        $this->urlGenerator = $urlGenerator;
+        $this->routeChecker = $routeChecker;
     }
 
     public function getFilters()
@@ -31,7 +29,7 @@ class UtilExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('perform_route_exists', [$this, 'routeExists']),
+            new \Twig_SimpleFunction('perform_route_exists', [$this->routeChecker, 'routeExists']),
         ];
     }
 
@@ -42,20 +40,6 @@ class UtilExtension extends \Twig_Extension
         }
 
         return Carbon::instance($date)->diffForHumans();
-    }
-
-    public function routeExists($routeName)
-    {
-        try {
-            $this->urlGenerator->generate($routeName);
-
-            return true;
-        } catch (RouteNotFoundException $e) {
-            return false;
-        } catch (MissingMandatoryParametersException $e) {
-            // missing parameters, but route exists
-            return true;
-        }
     }
 
     public function getName()
