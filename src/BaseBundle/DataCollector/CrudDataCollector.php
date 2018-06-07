@@ -106,6 +106,11 @@ class CrudDataCollector extends DataCollector
         return $this->data['correctVoterStrategy'];
     }
 
+    public function reset()
+    {
+        $this->data = [];
+    }
+
     public function getName()
     {
         return 'perform_base.crud';
