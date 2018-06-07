@@ -37,8 +37,6 @@ class PerformBaseExtension extends Extension
             $loader->load('services/money.yml');
         }
 
-        $container->setParameter('perform_base.panels.left', $config['panels']['left']);
-        $container->setParameter('perform_base.panels.right', $config['panels']['right']);
         $container->setParameter('perform_base.menu_order', $config['menu']['order']);
         $container->setParameter('perform_base.auto_asset_version', uniqid());
         $container->setParameter('perform_base.assets.theme', $config['assets']['theme']);

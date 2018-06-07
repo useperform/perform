@@ -1,0 +1,10 @@
+services:
+    perform_dashboard.menu_link.dashboard:
+        class: Perform\BaseBundle\Menu\SimpleLinkProvider
+        arguments:
+            - 'dashboard'
+            - null
+            - 'perform_dashboard_dashboard_index'
+            - 'dashboard'
+        tags:
+            - { name: perform_base.link_provider, alias: dashboard }

@@ -173,11 +173,6 @@ services:
         tags:
             - { name: knp_menu.renderer, alias: perform_sidebar }
 
-    perform_base.menu_link.dashboard:
-        class: Perform\BaseBundle\Menu\DashboardLinkProvider
-        tags:
-            - { name: perform_base.link_provider, alias: dashboard }
-
     perform_base.menu_link.settings:
         class: Perform\BaseBundle\Menu\SettingsLinkProvider
         tags:
