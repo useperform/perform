@@ -19,7 +19,7 @@ class ResolveEntitiesTest extends \PHPUnit_Framework_TestCase
     {
         $this->kernel = new TestKernel([
             new ResolveBundle(),
-        ], __DIR__.'/../Fixtures/ResolveEntities/config.yml');
+        ], [__DIR__.'/../Fixtures/ResolveEntities/config.yml']);
         $this->kernel->boot();
     }
 
