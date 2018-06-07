@@ -12,12 +12,12 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
 {
     protected $kernel;
 
-    private function configure($extraConfig = null)
+    private function configure(array $extraConfig = [])
     {
         $this->kernel = new TestKernel([
             new \Perform\RichContentBundle\PerformRichContentBundle(),
             new \Perform\MediaBundle\PerformMediaBundle()
-        ], $extraConfig);
+        ], array_merge([__DIR__.'/aliases.yml'], $extraConfig));
         $this->kernel->boot();
     }
 
@@ -28,12 +28,12 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
 
     private function getRegistry()
     {
-        return $this->kernel->getContainer()->get('perform_rich_content.block_type_registry');
+        return $this->kernel->getContainer()->get('test.perform_rich_content.block_type_registry');
     }
 
     public function testConfigureBlockTypes()
     {
-        $this->configure(__DIR__.'/block_types.yml');
+        $this->configure([__DIR__.'/block_types.yml']);
         $types = $this->getRegistry()->all();
         $this->assertSame(['text', 'image'], array_keys($types));
     }
