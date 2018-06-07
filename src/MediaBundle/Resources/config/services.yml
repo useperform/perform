@@ -1,10 +1,14 @@
 services:
+    _defaults:
+        public: false
+
     perform_media.importer.file:
         class: Perform\MediaBundle\Importer\FileImporter
         arguments:
             - "@perform_media.bucket_registry"
             - "@doctrine.orm.entity_manager"
             - "@event_dispatcher"
+    Perform\MediaBundle\Importer\FileImporter: '@perform_media.importer.file'
 
     perform_media.bucket_registry:
         class: Perform\MediaBundle\Bucket\BucketRegistry
@@ -29,7 +33,6 @@ services:
 
     perform_media.listener.download_url:
         class: Perform\MediaBundle\EventListener\DownloadUrlListener
-        public: false
         tags:
             - { name: kernel.event_listener, event: perform_media.import_url, method: onImport, priority: -100 }
 
@@ -45,6 +48,7 @@ services:
         factory: ["@doctrine.orm.entity_manager", "getRepository"]
         arguments:
             - "PerformMediaBundle:File"
+    Perform\MediaBundle\Repository\FileRepository: '@perform_media.repo.file'
 
     perform_media.normalizer.file:
         class: Perform\MediaBundle\Serializer\FileNormalizer
@@ -55,12 +59,10 @@ services:
 
     Perform\MediaBundle\Controller\:
         resource: '../../Controller'
-        public: false
         autoconfigure: true
 
     Perform\MediaBundle\Command\:
         resource: '../../Command'
-        public: false
         autowire: true
         autoconfigure: true
 
