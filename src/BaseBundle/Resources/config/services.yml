@@ -103,11 +103,6 @@ services:
             - "@perform_base.crud.registry"
             - "@event_dispatcher"
 
-    perform_base.listener.ajax:
-        class: Perform\BaseBundle\EventListener\AjaxListener
-        tags:
-            - {name: kernel.event_subscriber}
-
     perform_base.context_renderer:
         class: Perform\BaseBundle\Crud\ContextRenderer
         arguments:
