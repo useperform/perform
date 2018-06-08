@@ -3,7 +3,7 @@
 namespace Perform\BaseBundle\FieldType;
 
 use Symfony\Component\Form\FormBuilderInterface;
-use Perform\BaseBundle\Exception\InvalidTypeException;
+use Perform\BaseBundle\Exception\InvalidFieldException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType as EntityFormType;
 use Symfony\Component\OptionsResolver\OptionsResolver;

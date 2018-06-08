@@ -7,7 +7,7 @@ use Perform\BaseBundle\Selector\EntitySelector;
 use Perform\BaseBundle\FieldType\FieldTypeRegistry;
 use Exporter\Exporter as BaseExporter;
 use Perform\BaseBundle\Crud\CrudRequest;
-use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Config\FieldConfig;
 use Perform\BaseBundle\Config\ExportConfig;
 
 /**
@@ -36,7 +36,7 @@ class Exporter
         $crudName = $crudRequest->getCrudName();
 
         $crudRequest->setDefaultFilter($this->configStore->getFilterConfig($crudName)->getDefault());
-        $defaultSort = $this->configStore->getTypeConfig($crudName)->getDefaultSort();
+        $defaultSort = $this->configStore->getFieldConfig($crudName)->getDefaultSort();
         $crudRequest->setDefaultSortField($defaultSort[0]);
         $crudRequest->setDefaultSortDirection($defaultSort[1]);
 
@@ -45,7 +45,7 @@ class Exporter
         $exporter = new BaseExporter($this->getWritersFromConfig($exportConfig));
 
         $query = $this->selector->getQueryBuilder($crudRequest, $entityClass)->getQuery();
-        $exportFields = $this->configStore->getTypeConfig($crudName)->getTypes(CrudRequest::CONTEXT_EXPORT);
+        $exportFields = $this->configStore->getFieldConfig($crudName)->getTypes(CrudRequest::CONTEXT_EXPORT);
         $source = new TypedDoctrineORMQuerySourceIterator($this->typeRegistry, $query, $exportFields);
 
         return $exporter->getResponse($format, $exportConfig->getFilename($format), $source);

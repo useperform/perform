@@ -8,13 +8,13 @@ namespace Perform\BaseBundle\Config;
 interface ConfigStoreInterface
 {
     /**
-     * Get the TypeConfig for a crud name.
+     * Get the FieldConfig for a crud name.
      *
      * @param string $crudName
      *
-     * @return TypeConfig
+     * @return FieldConfig
      */
-    public function getTypeConfig($crudName);
+    public function getFieldConfig($crudName);
 
     /**
      * Get the ActionConfig for a crud name.

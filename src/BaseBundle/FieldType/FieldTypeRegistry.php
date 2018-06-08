@@ -3,7 +3,7 @@
 namespace Perform\BaseBundle\FieldType;
 
 use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
-use Perform\BaseBundle\Exception\TypeNotFoundException;
+use Perform\BaseBundle\Exception\FieldTypeNotFoundException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -22,7 +22,7 @@ class FieldTypeRegistry
     public function getType($name)
     {
         if (!$this->locator->has($name)) {
-            throw new TypeNotFoundException(sprintf('Entity field type not found: "%s"', $name));
+            throw new FieldTypeNotFoundException(sprintf('Entity field type not found: "%s"', $name));
         }
 
         return $this->locator->get($name);

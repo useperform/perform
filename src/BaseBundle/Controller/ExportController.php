@@ -4,7 +4,7 @@ namespace Perform\BaseBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Config\FieldConfig;
 use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Exporter\TypedDoctrineORMQuerySourceIterator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;

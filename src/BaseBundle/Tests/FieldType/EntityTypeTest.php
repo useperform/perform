@@ -5,7 +5,7 @@ namespace Perform\BaseBundle\Tests\Type;
 use Perform\BaseBundle\FieldType\EntityType;
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\UserBundle\Entity\User;
-use Perform\BaseBundle\Exception\InvalidTypeException;
+use Perform\BaseBundle\Exception\InvalidFieldException;
 use Perform\BaseBundle\Crud\CrudRegistry;
 
 /**
@@ -74,7 +74,7 @@ class EntityTypeTest extends \PHPUnit_Framework_TestCase
             'display_field' => 'email',
         ];
 
-        $this->setExpectedException(InvalidTypeException::class);
+        $this->setExpectedException(InvalidFieldException::class);
         $this->type->listContext($entity, 'user', $options);
     }
 }

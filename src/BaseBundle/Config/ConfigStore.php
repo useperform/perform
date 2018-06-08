@@ -37,11 +37,11 @@ class ConfigStore implements ConfigStoreInterface
         $this->authChecker = $authChecker;
     }
 
-    public function getTypeConfig($crudName)
+    public function getFieldConfig($crudName)
     {
         if (!isset($this->typeConfigs[$crudName])) {
-            $typeConfig = new TypeConfig($this->typeRegistry);
-            $this->crudRegistry->get($crudName)->configureTypes($typeConfig);
+            $typeConfig = new FieldConfig($this->typeRegistry);
+            $this->crudRegistry->get($crudName)->configureFields($typeConfig);
 
             $this->typeConfigs[$crudName] = $typeConfig;
         }

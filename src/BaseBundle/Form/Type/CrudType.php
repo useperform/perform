@@ -51,7 +51,7 @@ class CrudType extends AbstractType
 
     protected function getTypes($crudName, $context)
     {
-        $typeConfig = $this->store->getTypeConfig($crudName);
+        $typeConfig = $this->store->getFieldConfig($crudName);
 
         return $typeConfig->getTypes($context);
     }

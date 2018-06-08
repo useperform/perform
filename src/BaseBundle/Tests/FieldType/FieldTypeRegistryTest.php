@@ -3,7 +3,7 @@
 namespace Perform\BaseBundle\Tests\Type;
 
 use Perform\BaseBundle\FieldType\FieldTypeInterface;
-use Perform\BaseBundle\Exception\TypeNotFoundException;
+use Perform\BaseBundle\Exception\FieldTypeNotFoundException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Perform\BaseBundle\Test\Services;
 
@@ -22,7 +22,7 @@ class TypeRegistryTest extends \PHPUnit_Framework_TestCase
     public function testGetType()
     {
         $this->register([
-            'one' => $one = $this->getMock(TypeInterface::class),
+            'one' => $one = $this->getMock(FieldTypeInterface::class),
         ]);
 
         $this->assertSame($one, $this->registry->getType('one'));
@@ -31,15 +31,15 @@ class TypeRegistryTest extends \PHPUnit_Framework_TestCase
     public function testNotFound()
     {
         $this->register([]);
-        $this->setExpectedException(TypeNotFoundException::class);
+        $this->setExpectedException(FieldTypeNotFoundException::class);
         $this->registry->getType('foo');
     }
 
     public function testGetAll()
     {
         $this->register([
-            'one' => $one = $this->getMock(TypeInterface::class),
-            'two' => $two = $this->getMock(TypeInterface::class),
+            'one' => $one = $this->getMock(FieldTypeInterface::class),
+            'two' => $two = $this->getMock(FieldTypeInterface::class),
         ]);
 
         $this->assertEquals([
@@ -51,7 +51,7 @@ class TypeRegistryTest extends \PHPUnit_Framework_TestCase
     public function testGetOptionsResolver()
     {
         $this->register([
-            'test' => $type = $this->getMock(TypeInterface::class),
+            'test' => $type = $this->getMock(FieldTypeInterface::class),
         ]);
 
         $type->expects($this->once())

@@ -30,7 +30,7 @@ interface FieldTypeInterface
     public function editContext(FormBuilderInterface $builder, $field, array $options = []);
 
     /**
-     * @return array the default config array passed to TypeConfig#add()
+     * @return array the default config array passed to FieldConfig#add()
      */
     public function getDefaultConfig();
 

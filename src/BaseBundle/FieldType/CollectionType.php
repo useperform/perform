@@ -4,7 +4,7 @@ namespace Perform\BaseBundle\FieldType;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Doctrine\Common\Collections\Collection;
-use Perform\BaseBundle\Exception\InvalidTypeException;
+use Perform\BaseBundle\Exception\InvalidFieldException;
 use Perform\BaseBundle\Form\Type\CrudType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType as CollectionFormType;
 use Symfony\Component\Form\FormEvents;
@@ -132,7 +132,7 @@ class CollectionType extends AbstractType
     protected function ensureCollection($value)
     {
         if (!$value instanceof Collection) {
-            throw new InvalidTypeException(sprintf('The entity field "%s" passed to %s must be an instance of %s', $field, __CLASS__, Collection::class));
+            throw new InvalidFieldException(sprintf('The entity field "%s" passed to %s must be an instance of %s', $field, __CLASS__, Collection::class));
         }
     }
 }

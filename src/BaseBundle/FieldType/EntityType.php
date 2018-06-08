@@ -3,7 +3,7 @@
 namespace Perform\BaseBundle\FieldType;
 
 use Symfony\Component\Form\FormBuilderInterface;
-use Perform\BaseBundle\Exception\InvalidTypeException;
+use Perform\BaseBundle\Exception\InvalidFieldException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType as EntityFormType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -124,7 +124,7 @@ class EntityType extends AbstractType
     protected function ensureEntity($field, $value)
     {
         if (!is_object($value) && !is_null($value)) {
-            throw new InvalidTypeException(sprintf('The entity field "%s" passed to %s must be a doctrine entity, a doctrine collection, or null.', $field, __CLASS__));
+            throw new InvalidFieldException(sprintf('The entity field "%s" passed to %s must be a doctrine entity, a doctrine collection, or null.', $field, __CLASS__));
         }
     }
 }

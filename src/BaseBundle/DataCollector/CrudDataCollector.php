@@ -50,9 +50,9 @@ class CrudDataCollector extends DataCollector
             $this->data['activeCrud'] = $crudNames[$crudName][0];
             $this->data['activeCrudAlias'] = StringUtil::classBasename($crudNames[$crudName][0]);
             $this->data['activeEntity'] = $crudNames[$crudName][1];
-            $this->data['typeConfig'] = $this->store->getTypeConfig($crudName)->getAllTypes();
+            $this->data['typeConfig'] = $this->store->getFieldConfig($crudName)->getAllTypes();
             $this->sanitize($this->data['typeConfig']);
-            $this->data['addedConfigs'] = $this->store->getTypeConfig($crudName)->getAddedConfigs();
+            $this->data['addedConfigs'] = $this->store->getFieldConfig($crudName)->getAddedConfigs();
             $this->sanitize($this->data['addedConfigs']);
         }
     }
@@ -86,7 +86,7 @@ class CrudDataCollector extends DataCollector
         return isset($this->data['activeEntity']) ? $this->data['activeEntity'] : null;
     }
 
-    public function getTypeConfig()
+    public function getFieldConfig()
     {
         return isset($this->data['typeConfig']) ? $this->data['typeConfig'] : [];
     }

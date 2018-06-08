@@ -4,7 +4,7 @@ namespace Perform\BaseBundle\Crud;
 
 use Perform\BaseBundle\FieldType\FieldTypeRegistry;
 use Symfony\Component\Form\FormView;
-use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Config\FieldConfig;
 
 /**
  * Render data and forms for entities, using types and crud classes.

@@ -20,7 +20,7 @@ class TypedDoctrineORMQuerySourceIterator implements SourceIteratorInterface
     protected $iterator;
 
     /**
-     * @param array $exportFields An array of configure types returned from TypeConfig with CONTEXT_EXPORT
+     * @param array $exportFields An array of configure types returned from FieldConfig with CONTEXT_EXPORT
      */
     public function __construct(FieldTypeRegistry $typeRegistry, Query $query, array $exportFields)
     {

@@ -34,7 +34,7 @@ class SortListQueryListener
             return;
         }
 
-        $typeConfig = $this->store->getTypeConfig($crudName);
+        $typeConfig = $this->store->getFieldConfig($crudName);
         $qb = $event->getQueryBuilder();
 
         $typeConfig = $typeConfig->getTypes(CrudRequest::CONTEXT_LIST);

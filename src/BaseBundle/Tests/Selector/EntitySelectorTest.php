@@ -15,7 +15,7 @@ use Doctrine\ORM\QueryBuilder;
 use Perform\BaseBundle\Test\Services;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Perform\BaseBundle\Event\QueryEvent;
-use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Config\FieldConfig;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -40,11 +40,11 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($this->qb));
         $this->dispatcher = $this->getMock(EventDispatcherInterface::class);
         $this->store = $this->getMock(ConfigStoreInterface::class);
-        $this->typeConfig = $this->getMockBuilder(TypeConfig::class)
+        $this->typeConfig = $this->getMockBuilder(FieldConfig::class)
                           ->disableOriginalConstructor()
                           ->getMock();
         $this->store->expects($this->any())
-            ->method('getTypeConfig')
+            ->method('getFieldConfig')
             ->will($this->returnValue($this->typeConfig));
         $this->filterConfig = $this->getMockBuilder(FilterConfig::class)
                           ->disableOriginalConstructor()

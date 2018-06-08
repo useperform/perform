@@ -5,14 +5,14 @@ namespace Perform\BaseBundle\Config;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Perform\BaseBundle\Util\StringUtil;
 use Symfony\Component\OptionsResolver\Exception\ExceptionInterface;
-use Perform\BaseBundle\Exception\InvalidTypeException;
+use Perform\BaseBundle\Exception\InvalidFieldException;
 use Perform\BaseBundle\FieldType\FieldTypeRegistry;
 use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class TypeConfig
+class FieldConfig
 {
     protected static $optionKeys = [
         'listOptions',
@@ -106,7 +106,7 @@ class TypeConfig
         // use the default for the type if there is no existing config
         if (!isset($this->fields[$name])) {
             if (!isset($config['type'])) {
-                throw new InvalidTypeException('TypeConfig#add() requires "type" to be set.');
+                throw new InvalidFieldException('FieldConfig#add() requires "type" to be set.');
             }
 
             $this->fields[$name] = $this->registry->getType($config['type'])->getDefaultConfig();
@@ -158,7 +158,7 @@ class TypeConfig
                 $config[$key] = $resolver->resolve($config[$key]);
             } catch (ExceptionInterface $e) {
                 $msg = sprintf('"%s" for the field "%s" of type "%s" are invalid: %s', $key, $name, $config['type'], $e->getMessage());
-                throw new InvalidTypeException($msg, 1, $e);
+                throw new InvalidFieldException($msg, 1, $e);
             }
         }
 
@@ -169,7 +169,7 @@ class TypeConfig
      * @param string $name
      * @param string $direction
      *
-     * @return TypeConfig
+     * @return FieldConfig
      */
     public function setDefaultSort($name, $direction)
     {

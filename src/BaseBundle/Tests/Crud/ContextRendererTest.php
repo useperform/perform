@@ -31,7 +31,7 @@ class ContextRendererTest extends \PHPUnit_Framework_TestCase
 
     protected function mockType($name, $templateName)
     {
-        $type = $this->getMock(TypeInterface::class);
+        $type = $this->getMock(FieldTypeInterface::class);
         $this->registry->expects($this->any())
             ->method('getType')
             ->with($name)

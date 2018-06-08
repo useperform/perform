@@ -30,7 +30,7 @@ class TemplatePopulator
     {
         $crudName = $crudRequest->getCrudName();
         $templateVariables = [
-            'fields' => $this->store->getTypeConfig($crudName)->getTypes($crudRequest->getContext()),
+            'fields' => $this->store->getFieldConfig($crudName)->getTypes($crudRequest->getContext()),
             'filters' => $this->store->getFilterConfig($crudName)->getFilters(),
             'batchActions' => $this->store->getActionConfig($crudName)->getBatchOptionsForRequest($crudRequest),
             'labelConfig' => $this->store->getLabelConfig($crudName),
@@ -48,7 +48,7 @@ class TemplatePopulator
     {
         $crudName = $crudRequest->getCrudName();
         $templateVariables = [
-            'fields' => $this->store->getTypeConfig($crudName)->getTypes($crudRequest->getContext()),
+            'fields' => $this->store->getFieldConfig($crudName)->getTypes($crudRequest->getContext()),
             'labelConfig' => $this->store->getLabelConfig($crudName),
             'entity' => $entity,
             'crudName' => $crudName,

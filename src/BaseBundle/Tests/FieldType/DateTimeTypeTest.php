@@ -4,7 +4,7 @@ namespace Perform\BaseBundle\Tests\Type;
 
 use Perform\BaseBundle\FieldType\FieldTypeRegistry;
 use Perform\BaseBundle\FieldType\DateTimeType;
-use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Config\FieldConfig;
 use Perform\BaseBundle\Test\Services;
 use Perform\BaseBundle\Crud\CrudRequest;
 
@@ -18,7 +18,7 @@ class DateTimeTypeTest extends \PHPUnit_Framework_TestCase
         $this->registry = Services::typeRegistry([
             'datetime' => new DateTimeType(),
         ]);
-        $this->config = new TypeConfig($this->registry);
+        $this->config = new FieldConfig($this->registry);
     }
 
     public function testListContextWithDefaults()

@@ -2,14 +2,14 @@
 
 namespace Perform\BaseBundle\Tests\Config;
 
-use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Config\FieldConfig;
 use Perform\BaseBundle\FieldType\FieldTypeRegistry;
 use Perform\BaseBundle\FieldType\StringType;
 use Perform\BaseBundle\FieldType\FieldTypeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Perform\BaseBundle\FieldType\DateTimeType;
 use Perform\BaseBundle\FieldType\BooleanType;
-use Perform\BaseBundle\Exception\InvalidTypeException;
+use Perform\BaseBundle\Exception\InvalidFieldException;
 use Symfony\Component\OptionsResolver\Exception\ExceptionInterface;
 use Perform\BaseBundle\Test\Services;
 use Perform\BaseBundle\Crud\CrudRequest;
@@ -17,7 +17,7 @@ use Perform\BaseBundle\Crud\CrudRequest;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class TypeConfigTest extends \PHPUnit_Framework_TestCase
+class FieldConfigTest extends \PHPUnit_Framework_TestCase
 {
     protected $config;
     protected $typeRegistry;
@@ -29,9 +29,9 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
             'string' => new StringType(),
             'datetime' => new DateTimeType(),
             'boolean' => new BooleanType(),
-            'stub' => $this->stubType = $this->getMock(TypeInterface::class),
+            'stub' => $this->stubType = $this->getMock(FieldTypeInterface::class),
         ]);
-        $this->config = new TypeConfig($this->typeRegistry);
+        $this->config = new FieldConfig($this->typeRegistry);
     }
 
     protected function stubOptions($callback)
@@ -64,7 +64,7 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testTypeMustBeSupplied()
     {
-        $this->setExpectedException(InvalidTypeException::class);
+        $this->setExpectedException(InvalidFieldException::class);
         $this->config->add('title', []);
     }
 
@@ -314,7 +314,7 @@ class TypeConfigTest extends \PHPUnit_Framework_TestCase
                     'not_an_option' => false,
                 ],
             ]);
-        } catch (InvalidTypeException $e) {
+        } catch (InvalidFieldException $e) {
             $this->assertInstanceOf(ExceptionInterface::class, $e->getPrevious());
 
             return;
