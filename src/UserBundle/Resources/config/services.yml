@@ -22,14 +22,14 @@ services:
             - {name: perform_base.crud, crud_name: "perform_user.user"}
 
     perform_user.menu_link.users:
-        class: Perform\BaseBundle\Menu\SimpleLinkProvider
+        class: Perform\BaseBundle\EventListener\SimpleMenuListener
         arguments:
             - 'users'
             - 'perform_user.user'
             - null
             - 'users'
         tags:
-            - { name: perform_base.link_provider, alias: users }
+            - { name: kernel.event_listener, event: perform_base.menu.build, method: onMenuBuild }
 
     perform_user.doctrine.user_listener:
         class: Perform\UserBundle\Doctrine\UserListener
