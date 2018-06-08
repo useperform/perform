@@ -6,14 +6,14 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Finder\Finder;
 use Perform\BaseBundle\Doctrine\EntityResolver;
 use Perform\Licensing\Licensing;
 use Perform\BaseBundle\Type\TypeInterface;
 use Perform\BaseBundle\Type\TypeRegistry;
 use Money\Money;
-use Perform\BaseBundle\Menu\SimpleLinkProvider;
+use Perform\BaseBundle\EventListener\SimpleMenuListener;
+use Perform\BaseBundle\Event\MenuEvent;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -135,10 +135,10 @@ class PerformBaseExtension extends Extension
 
     protected function createSimpleMenus(ContainerBuilder $container, array $config)
     {
-        foreach ($config as $alias => $options) {
-            $definition = $container->register('perform_base.menu.simple.'.$alias, SimpleLinkProvider::class);
-            $definition->setArguments([$alias, $options['crud'], $options['route'], $options['icon']]);
-            $definition->addTag('perform_base.link_provider', ['alias' => $alias]);
+        foreach ($config as $name => $options) {
+            $definition = $container->register('perform_base.menu.simple.'.$name, SimpleMenuListener::class);
+            $definition->setArguments([$name, $options['crud'], $options['route'], $options['icon']]);
+            $definition->addTag('kernel.event_listener', ['event' => MenuEvent::BUILD, 'method' => 'onMenuBuild']);
         }
     }
 
