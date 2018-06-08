@@ -26,10 +26,15 @@ services:
         class: Perform\MediaBundle\Url\SimpleUrlGenerator
         arguments: ["/uploads"]
 
-    perform_media.menu_link.media:
-        class: Perform\MediaBundle\Menu\MediaLinkProvider
+    perform_media.event_listener.menu:
+        class: Perform\BaseBundle\EventListener\SimpleMenuListener
+        arguments:
+            - 'media'
+            - null
+            - 'perform_media_app_index'
+            - 'briefcase'
         tags:
-            - { name: perform_base.link_provider, alias: media }
+            - { name: kernel.event_listener, event: perform_base.menu.build, method: onMenuBuild }
 
     perform_media.listener.download_url:
         class: Perform\MediaBundle\EventListener\DownloadUrlListener
