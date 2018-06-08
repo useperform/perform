@@ -9,10 +9,10 @@ services:
         tags:
             - {name: perform_base.crud, crud_name: "perform_mailing_list.local_list"}
 
-    perform_mailing_list.menu.mailing_list:
-        class: Perform\MailingListBundle\Menu\MailingListLinkProvider
+    perform_mailing_list.listener.menu:
+        class: Perform\MailingListBundle\EventListener\MailingListMenuListener
         tags:
-            - { name: perform_base.link_provider, alias: mailing_list }
+            - { name: kernel.event_listener, event: perform_base.menu.build, method: onMenuBuild }
 
     perform_mailing_list.form_factory:
         class: Perform\MailingListBundle\Form\UniqueFormFactory

@@ -1,19 +1,23 @@
 <?php
 
-namespace Perform\MailingListBundle\Menu;
+namespace Perform\MailingListBundle\EventListener;
 
 use Knp\Menu\ItemInterface;
 use Perform\BaseBundle\Menu\LinkProviderInterface;
+use Perform\BaseBundle\Event\MenuEvent;
 
 /**
- * MailingListLinkProvider.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class MailingListLinkProvider implements LinkProviderInterface
+class MailingListMenuListener
 {
-    public function addLinks(ItemInterface $menu)
+    public function onMenuBuild(MenuEvent $event)
     {
+        if ($event->getMenuName() !== 'perform_sidebar') {
+            return;
+        }
+        $menu = $event->getMenu();
+
         $parent = $menu->addChild('mailing_list.main', [
             'uri' => '#'
         ])->setExtra('icon', 'users');
