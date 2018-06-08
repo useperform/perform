@@ -157,7 +157,9 @@ services:
 
     perform_base.menu_builder:
         class: Perform\BaseBundle\Menu\MenuBuilder
-        arguments: ["@knp_menu.factory"]
+        arguments:
+            - '@knp_menu.factory'
+            - '@event_dispatcher'
         tags:
             - { name: knp_menu.menu_builder, method: createSidebar, alias: perform_sidebar }
 
