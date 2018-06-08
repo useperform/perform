@@ -1,10 +1,10 @@
 <?php
 
-namespace Perform\RichContentBundle\Type;
+namespace Perform\RichContentBundle\FieldType;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Perform\BaseBundle\Type\AbstractType;
+use Perform\BaseBundle\FieldType\AbstractType;
 use Perform\RichContentBundle\Form\Type\RichContentType as FormType;
 use Perform\BaseBundle\Crud\CrudRequest;
 
@@ -44,7 +44,7 @@ class RichContentType extends AbstractType
                 CrudRequest::CONTEXT_EDIT,
             ],
             'sort' => false,
-            'template' => '@PerformRichContent/type/rich_content.html.twig',
+            'template' => '@PerformRichContent/field_type/rich_content.html.twig',
         ];
     }
 }
