@@ -10,14 +10,14 @@ services:
 
 
     perform_contact.menu_link.contact:
-        class: Perform\BaseBundle\Menu\SimpleLinkProvider
+        class: Perform\BaseBundle\EventListener\SimpleMenuListener
         arguments:
             - 'contact'
             - 'perform_contact.message'
             - null
             - 'envelope'
         tags:
-            - { name: perform_base.link_provider, alias: contact }
+            - { name: kernel.event_listener, event: perform_base.menu.build, method: onMenuBuild }
 
     perform_contact.form.handler.contact:
         class: Perform\ContactBundle\Form\Handler\ContactFormHandler
