@@ -26,7 +26,6 @@ class PerformBaseExtension extends Extension
     public function load(array $configs, ContainerBuilder $container)
     {
         Licensing::validateProject($container);
-        // $this->ensureUTC();
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
@@ -52,16 +51,6 @@ class PerformBaseExtension extends Extension
         $container->register('perform_base.type_registry', TypeRegistry::class);
         $container->registerForAutoconfiguration(TypeInterface::class)
             ->addTag('perform_base.type');
-    }
-
-    /**
-     * Stop the show if the server is running anything but UTC timezone.
-     */
-    protected function ensureUTC()
-    {
-        if ('UTC' !== $timezone = date_default_timezone_get()) {
-            throw new \Exception(sprintf('The server timezone must be set to UTC, it is currently "%s".', $timezone));
-        }
     }
 
     protected function configureResolvedEntities(ContainerBuilder $container, array $config)
