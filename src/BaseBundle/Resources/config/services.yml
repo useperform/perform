@@ -51,6 +51,7 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@perform_base.doctrine.entity_resolver'
+    Perform\BaseBundle\Doctrine\RepositoryResolver: '@perform_base.doctrine.repository_resolver'
 
     perform_base.data_collector.crud:
         class: Perform\BaseBundle\DataCollector\CrudDataCollector
