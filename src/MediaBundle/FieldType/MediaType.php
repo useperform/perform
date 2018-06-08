@@ -1,10 +1,10 @@
 <?php
 
-namespace Perform\MediaBundle\Type;
+namespace Perform\MediaBundle\FieldType;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Perform\BaseBundle\Type\AbstractType;
+use Perform\BaseBundle\FieldType\AbstractType;
 use Perform\MediaBundle\Entity\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Perform\MediaBundle\Form\Type\MediaType as SelectorFormType;
@@ -86,7 +86,7 @@ class MediaType extends AbstractType
     public function getDefaultConfig()
     {
         return [
-            'template' => '@PerformMedia/type/media.html.twig',
+            'template' => '@PerformMedia/field_type/media.html.twig',
             'sort' => false,
         ];
     }

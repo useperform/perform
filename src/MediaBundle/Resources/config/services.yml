@@ -41,12 +41,12 @@ services:
         tags:
             - { name: kernel.event_listener, event: perform_media.import_url, method: onImport, priority: -100 }
 
-    perform_media.type.media:
-        class: Perform\MediaBundle\Type\MediaType
+    perform_media.field_type.media:
+        class: Perform\MediaBundle\FieldType\MediaType
         arguments:
             - '@perform_media.bucket_registry'
         tags:
-            - { name: perform_base.type, alias: media }
+            - { name: perform_base.field_type, alias: media }
 
     perform_media.repo.file:
         class: Perform\MediaBundle\Repository\FileRepository
