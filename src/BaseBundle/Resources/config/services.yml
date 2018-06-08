@@ -180,10 +180,12 @@ services:
         tags:
             - { name: knp_menu.renderer, alias: perform_sidebar }
 
-    perform_base.menu_link.settings:
-        class: Perform\BaseBundle\Menu\SettingsLinkProvider
+    perform_base.listener.settings_menu:
+        class: Perform\BaseBundle\EventListener\SettingsMenuListener
+        arguments:
+            - '@perform_base.routing.checker'
         tags:
-            - { name: perform_base.link_provider, alias: settings }
+            - { name: kernel.event_listener, event: perform_base.menu.build, method: onMenuBuild }
 
     perform_base.doctrine.extend_listener:
         class: Perform\BaseBundle\Doctrine\ExtendEntitiesListener
