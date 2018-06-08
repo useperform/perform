@@ -31,6 +31,8 @@ class SettingsMenuListener
 
         $menu->addChild('settings', [
             'route' => 'perform_base_settings_settings',
-        ])->setExtra('icon', 'cogs');
+        ])
+            ->setExtra('icon', 'cogs')
+            ->setExtra('priority', -10);
     }
 }
