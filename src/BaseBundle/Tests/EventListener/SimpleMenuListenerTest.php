@@ -12,9 +12,9 @@ use Perform\BaseBundle\Event\MenuEvent;
  **/
 class SimpleMenuListenerTest extends \PHPUnit_Framework_TestCase
 {
-    protected function create($name, $crud = null, $route = null, $icon = null)
+    protected function create($name, $crud = null, $route = null, $icon = null, $priority = 0)
     {
-        return new SimpleMenuListener($name, $crud, $route, $icon);
+        return new SimpleMenuListener($name, $crud, $route, $icon, $priority);
     }
 
     protected function stubEvent()
@@ -96,5 +96,25 @@ class SimpleMenuListenerTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(\InvalidArgumentException::class);
         $this->create('foo');
+    }
+
+    public function testCrudWithIconAndPriority()
+    {
+        $listener = $this->create('foo', 'some_crud', null, 'foo', 3000);
+
+        $event = $this->stubEvent();
+        $child = $this->stubEvent()->getMenu();
+        $event->getMenu()->expects($this->once())
+            ->method('addChild')
+            ->with('foo', ['crud' => 'some_crud'])
+            ->will($this->returnValue($child));
+        $child->expects($this->exactly(2))
+            ->method('setExtra')
+            ->withConsecutive(
+                ['icon', 'foo'],
+                ['priority', 3000]
+            );
+
+        $listener->onMenuBuild($event);
     }
 }
