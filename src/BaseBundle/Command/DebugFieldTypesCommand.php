@@ -21,7 +21,7 @@ class DebugFieldTypesCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $types = $this->getContainer()->get('perform_base.type_registry')->getAll();
+        $types = $this->getContainer()->get('perform_base.field_type_registry')->getAll();
 
         $table = new Table($output);
         $table->setHeaders(['Name', 'Class']);

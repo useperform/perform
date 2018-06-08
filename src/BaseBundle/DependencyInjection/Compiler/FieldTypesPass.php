@@ -18,17 +18,17 @@ class FieldTypesPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         $types = [];
-        foreach ($container->findTaggedServiceIds('perform_base.type') as $service => $tag) {
+        foreach ($container->findTaggedServiceIds('perform_base.field_type') as $service => $tag) {
             $alias = isset($tag[0]['alias']) ? $tag[0]['alias'] : $this->guessAlias($container, $service);
             if (isset($types[$alias])) {
                 $existingService = (string) $types[$alias];
-                $container->log($this, sprintf('Changing type "%s" from service "%s" to service "%s". To avoid overriding this type, register "%s" with a different alias than "%s" in the "perform_base.type" tag.', $alias, $existingService, $service, $service, $alias));
+                $container->log($this, sprintf('Changing field type "%s" from service "%s" to service "%s". To avoid overriding this type, register "%s" with a different alias than "%s" in the "perform_base.field_type" tag.', $alias, $existingService, $service, $service, $alias));
             }
 
             $types[$alias] = new Reference($service);
         }
 
-        $container->getDefinition('perform_base.type_registry')
+        $container->getDefinition('perform_base.field_type_registry')
             ->setArgument(0, LoopableServiceLocator::createDefinition($types));
     }
 

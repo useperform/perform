@@ -8,7 +8,7 @@ services:
 
     Perform\BaseBundle\FieldType\DateTimeType:
         tags:
-            - {name: perform_base.type, alias: datetime}
+            - {name: perform_base.field_type, alias: datetime}
 
     Perform\BaseBundle\FieldType\EntityType:
         arguments:

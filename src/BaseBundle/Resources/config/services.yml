@@ -14,7 +14,7 @@ services:
         arguments:
             - '@perform_base.doctrine.entity_resolver'
             - '@perform_base.crud.registry'
-            - '@perform_base.type_registry'
+            - '@perform_base.field_type_registry'
             - '@perform_base.action_registry'
             - '@security.authorization_checker'
 
@@ -31,7 +31,7 @@ services:
         class: Perform\BaseBundle\Form\Type\CrudType
         arguments:
             - '@perform_base.config_store'
-            - '@perform_base.type_registry'
+            - '@perform_base.field_type_registry'
         tags:
             - {name: form.type}
 
@@ -106,7 +106,7 @@ services:
     perform_base.context_renderer:
         class: Perform\BaseBundle\Crud\ContextRenderer
         arguments:
-            - '@perform_base.type_registry'
+            - '@perform_base.field_type_registry'
             - '@twig'
 
     perform_base.twig.crud:
@@ -273,7 +273,7 @@ services:
         arguments:
             - '@perform_base.config_store'
             - '@perform_base.selector.entity'
-            - '@perform_base.type_registry'
+            - '@perform_base.field_type_registry'
             - '@perform_base.export.writer_factory'
 
     perform_base.asset.dumper:

@@ -48,9 +48,9 @@ class PerformBaseExtension extends Extension
 
     protected function configureFieldTypeRegistry(ContainerBuilder $container)
     {
-        $container->register('perform_base.type_registry', FieldTypeRegistry::class);
+        $container->register('perform_base.field_type_registry', FieldTypeRegistry::class);
         $container->registerForAutoconfiguration(FieldTypeInterface::class)
-            ->addTag('perform_base.type');
+            ->addTag('perform_base.field_type');
     }
 
     protected function configureResolvedEntities(ContainerBuilder $container, array $config)
