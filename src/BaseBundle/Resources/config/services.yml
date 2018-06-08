@@ -1,6 +1,6 @@
 imports:
     - { resource: services_actions.yml }
-    - { resource: services_types.yml }
+    - { resource: services/field_types.yml }
 
 services:
     perform_base.crud.registry:

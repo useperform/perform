@@ -2,9 +2,9 @@
 
 namespace Perform\BaseBundle\Tests\Crud;
 
-use Perform\BaseBundle\Type\TypeRegistry;
+use Perform\BaseBundle\FieldType\FieldTypeRegistry;
 use Perform\BaseBundle\Crud\ContextRenderer;
-use Perform\BaseBundle\Type\TypeInterface;
+use Perform\BaseBundle\FieldType\FieldTypeInterface;
 use Twig\Template;
 use Symfony\Component\Form\FormView;
 use Perform\BaseBundle\Crud\CrudRequest;
@@ -20,7 +20,7 @@ class ContextRendererTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->registry = $this->getMockBuilder(TypeRegistry::class)
+        $this->registry = $this->getMockBuilder(FieldTypeRegistry::class)
                         ->disableOriginalConstructor()
                         ->getMock();
         $this->twig = $this->getMockBuilder(\Twig_Environment::class)

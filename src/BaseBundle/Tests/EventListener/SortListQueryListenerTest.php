@@ -8,8 +8,8 @@ use Doctrine\ORM\QueryBuilder;
 use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
 use Perform\BaseBundle\Test\Services;
-use Perform\BaseBundle\Type\StringType;
-use Perform\BaseBundle\Type\BooleanType;
+use Perform\BaseBundle\FieldType\StringType;
+use Perform\BaseBundle\FieldType\BooleanType;
 use Perform\BaseBundle\Event\QueryEvent;
 
 /**

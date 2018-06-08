@@ -3,12 +3,12 @@
 namespace Perform\BaseBundle\Tests\Config;
 
 use Perform\BaseBundle\Config\TypeConfig;
-use Perform\BaseBundle\Type\TypeRegistry;
-use Perform\BaseBundle\Type\StringType;
-use Perform\BaseBundle\Type\TypeInterface;
+use Perform\BaseBundle\FieldType\FieldTypeRegistry;
+use Perform\BaseBundle\FieldType\StringType;
+use Perform\BaseBundle\FieldType\FieldTypeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Perform\BaseBundle\Type\DateTimeType;
-use Perform\BaseBundle\Type\BooleanType;
+use Perform\BaseBundle\FieldType\DateTimeType;
+use Perform\BaseBundle\FieldType\BooleanType;
 use Perform\BaseBundle\Exception\InvalidTypeException;
 use Symfony\Component\OptionsResolver\Exception\ExceptionInterface;
 use Perform\BaseBundle\Test\Services;

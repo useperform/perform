@@ -9,8 +9,8 @@ use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\Finder\Finder;
 use Perform\BaseBundle\Doctrine\EntityResolver;
 use Perform\Licensing\Licensing;
-use Perform\BaseBundle\Type\TypeInterface;
-use Perform\BaseBundle\Type\TypeRegistry;
+use Perform\BaseBundle\FieldType\FieldTypeInterface;
+use Perform\BaseBundle\FieldType\FieldTypeRegistry;
 use Money\Money;
 use Perform\BaseBundle\EventListener\SimpleMenuListener;
 use Perform\BaseBundle\Event\MenuEvent;
@@ -39,17 +39,17 @@ class PerformBaseExtension extends Extension
         $container->setParameter('perform_base.menu_order', $config['menu']['order']);
         $container->setParameter('perform_base.auto_asset_version', uniqid());
         $container->setParameter('perform_base.assets.theme', $config['assets']['theme']);
-        $this->configureTypeRegistry($container);
+        $this->configureFieldTypeRegistry($container);
         $this->findExtendedEntities($container, $config);
         $this->configureResolvedEntities($container, $config);
         $this->createSimpleMenus($container, $config['menu']['simple']);
         $this->configureAssets($container, $config['assets']);
     }
 
-    protected function configureTypeRegistry(ContainerBuilder $container)
+    protected function configureFieldTypeRegistry(ContainerBuilder $container)
     {
-        $container->register('perform_base.type_registry', TypeRegistry::class);
-        $container->registerForAutoconfiguration(TypeInterface::class)
+        $container->register('perform_base.type_registry', FieldTypeRegistry::class);
+        $container->registerForAutoconfiguration(FieldTypeInterface::class)
             ->addTag('perform_base.type');
     }
 

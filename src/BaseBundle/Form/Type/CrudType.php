@@ -5,7 +5,7 @@ namespace Perform\BaseBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Perform\BaseBundle\Type\TypeRegistry;
+use Perform\BaseBundle\FieldType\FieldTypeRegistry;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
@@ -21,7 +21,7 @@ class CrudType extends AbstractType
     protected $store;
     protected $typeRegistry;
 
-    public function __construct(ConfigStoreInterface $store, TypeRegistry $typeRegistry)
+    public function __construct(ConfigStoreInterface $store, FieldTypeRegistry $typeRegistry)
     {
         $this->store = $store;
         $this->typeRegistry = $typeRegistry;

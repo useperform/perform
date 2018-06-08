@@ -4,7 +4,7 @@ namespace Perform\BaseBundle\Exporter;
 
 use Perform\BaseBundle\Config\ConfigStoreInterface;
 use Perform\BaseBundle\Selector\EntitySelector;
-use Perform\BaseBundle\Type\TypeRegistry;
+use Perform\BaseBundle\FieldType\FieldTypeRegistry;
 use Exporter\Exporter as BaseExporter;
 use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Config\TypeConfig;
@@ -20,7 +20,7 @@ class Exporter
     protected $typeRegistry;
     protected $writerFactory;
 
-    public function __construct(ConfigStoreInterface $configStore, EntitySelector $selector, TypeRegistry $typeRegistry, WriterFactoryInterface $writerFactory)
+    public function __construct(ConfigStoreInterface $configStore, EntitySelector $selector, FieldTypeRegistry $typeRegistry, WriterFactoryInterface $writerFactory)
     {
         $this->configStore = $configStore;
         $this->selector = $selector;

@@ -6,7 +6,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Perform\BaseBundle\Util\StringUtil;
 use Symfony\Component\OptionsResolver\Exception\ExceptionInterface;
 use Perform\BaseBundle\Exception\InvalidTypeException;
-use Perform\BaseBundle\Type\TypeRegistry;
+use Perform\BaseBundle\FieldType\FieldTypeRegistry;
 use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
@@ -27,7 +27,7 @@ class TypeConfig
     protected $addedConfigs = [];
     protected $defaultSort;
 
-    public function __construct(TypeRegistry $registry)
+    public function __construct(FieldTypeRegistry $registry)
     {
         $this->registry = $registry;
         $this->configureOptionsResolver();

@@ -4,7 +4,7 @@ namespace Perform\BaseBundle\Config;
 
 use Perform\BaseBundle\Doctrine\EntityResolver;
 use Perform\BaseBundle\Crud\CrudRegistry;
-use Perform\BaseBundle\Type\TypeRegistry;
+use Perform\BaseBundle\FieldType\FieldTypeRegistry;
 use Perform\BaseBundle\Action\ActionRegistry;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -28,7 +28,7 @@ class ConfigStore implements ConfigStoreInterface
     protected $labelConfigs = [];
     protected $entityClasses = [];
 
-    public function __construct(EntityResolver $resolver, CrudRegistry $crudRegistry, TypeRegistry $typeRegistry, ActionRegistry $actionRegistry, AuthorizationCheckerInterface $authChecker)
+    public function __construct(EntityResolver $resolver, CrudRegistry $crudRegistry, FieldTypeRegistry $typeRegistry, ActionRegistry $actionRegistry, AuthorizationCheckerInterface $authChecker)
     {
         $this->resolver = $resolver;
         $this->crudRegistry = $crudRegistry;
