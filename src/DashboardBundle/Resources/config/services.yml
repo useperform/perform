@@ -6,5 +6,6 @@ services:
             - null
             - 'perform_dashboard_dashboard_index'
             - 'dashboard'
+            - 100
         tags:
             - { name: kernel.event_listener, event: perform_base.menu.build, method: onMenuBuild }
