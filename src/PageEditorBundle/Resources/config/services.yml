@@ -42,10 +42,16 @@ services:
             # profiler
             - {name: kernel.event_listener, event: kernel.response, priority: -99}
 
-    perform_page_editor.menu.page_editor:
-        class: Perform\PageEditorBundle\Menu\PageEditorLinkProvider
+    perform_page_editor.listener.menu:
+        class: Perform\BaseBundle\EventListener\SimpleMenuListener
+        arguments:
+            - 'page_editor'
+            - null
+            - 'perform_pageeditor_session_begin'
+            - 'pencil'
         tags:
-            - {name: perform_base.link_provider, alias: page_editor}
+            - { name: kernel.event_listener, event: perform_base.menu.build, method: onMenuBuild }
+
 
     perform_page_editor.twig.content:
         class: Perform\PageEditorBundle\Twig\Extension\ContentExtension
