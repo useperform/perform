@@ -1,10 +1,10 @@
 services:
-    perform_dashboard.menu_link.dashboard:
-        class: Perform\BaseBundle\Menu\SimpleLinkProvider
+    perform_dashboard.listener.menu:
+        class: Perform\BaseBundle\EventListener\SimpleMenuListener
         arguments:
             - 'dashboard'
             - null
             - 'perform_dashboard_dashboard_index'
             - 'dashboard'
         tags:
-            - { name: perform_base.link_provider, alias: dashboard }
+            - { name: kernel.event_listener, event: perform_base.menu.build, method: onMenuBuild }
