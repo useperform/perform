@@ -126,7 +126,7 @@ class PerformBaseExtension extends Extension
     {
         foreach ($config as $name => $options) {
             $definition = $container->register('perform_base.menu.simple.'.$name, SimpleMenuListener::class);
-            $definition->setArguments([$name, $options['crud'], $options['route'], $options['icon']]);
+            $definition->setArguments([$name, $options['crud'], $options['route'], $options['icon'], $options['priority']]);
             $definition->addTag('kernel.event_listener', ['event' => MenuEvent::BUILD, 'method' => 'onMenuBuild']);
         }
     }
