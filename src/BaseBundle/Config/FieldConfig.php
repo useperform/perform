@@ -49,7 +49,7 @@ class FieldConfig
                 'sort' => true,
             ])
             ->setAllowedTypes('contexts', 'array')
-            ->setDefault('template', '@PerformBase/type/simple.html.twig')
+            ->setDefault('template', '@PerformBase/field_type/simple.html.twig')
             ->setAllowedTypes('template', 'string')
             ->setDefined(static::$optionKeys);
         foreach (static::$optionKeys as $key) {

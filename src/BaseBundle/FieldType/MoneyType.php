@@ -43,7 +43,7 @@ class MoneyType extends AbstractType
     {
         return [
             'sort' => false,
-            'template' => '@PerformBase/type/money.html.twig',
+            'template' => '@PerformBase/field_type/money.html.twig',
         ];
     }
 }

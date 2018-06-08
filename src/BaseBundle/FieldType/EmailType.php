@@ -41,7 +41,7 @@ class EmailType extends AbstractType
     public function getDefaultConfig()
     {
         return [
-            'template' => '@PerformBase/type/email.html.twig',
+            'template' => '@PerformBase/field_type/email.html.twig',
         ];
     }
 }

@@ -61,7 +61,7 @@ class DurationType extends AbstractType
     public function getDefaultConfig()
     {
         return [
-            'template' => '@PerformBase/type/duration.html.twig',
+            'template' => '@PerformBase/field_type/duration.html.twig',
             'listOptions' => [
                 'format' => DurationType::FORMAT_DIGITAL,
             ],

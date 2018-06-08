@@ -34,7 +34,7 @@ EOT;
         $config = [
             'type' => 'md',
             'listOptions' => [],
-            'template' => '@PerformBase/type/markdown.html.twig',
+            'template' => '@PerformBase/field_type/markdown.html.twig',
         ];
         $expected = '<div class="p-markdown"><h1>big title</h1><h2>little title</h2><p>text</p></div>';
         $this->assertTrimmedString($expected, $this->renderer->listContext($obj, 'content', $config));

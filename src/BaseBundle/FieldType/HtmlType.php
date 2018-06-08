@@ -36,7 +36,7 @@ class HtmlType extends AbstractType
     public function getDefaultConfig()
     {
         return [
-            'template' => '@PerformBase/type/html.html.twig',
+            'template' => '@PerformBase/field_type/html.html.twig',
         ];
     }
 }

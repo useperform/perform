@@ -41,7 +41,7 @@ class TagType extends EntityType
     public function getDefaultConfig()
     {
         return [
-            'template' => '@PerformBase/type/tag.html.twig',
+            'template' => '@PerformBase/field_type/tag.html.twig',
             'sort' => false,
             'options' => [
                 'multiple' => true,

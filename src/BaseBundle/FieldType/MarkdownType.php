@@ -58,7 +58,7 @@ class MarkdownType extends AbstractType
     public function getDefaultConfig()
     {
         return [
-            'template' => '@PerformBase/type/markdown.html.twig',
+            'template' => '@PerformBase/field_type/markdown.html.twig',
         ];
     }
 
