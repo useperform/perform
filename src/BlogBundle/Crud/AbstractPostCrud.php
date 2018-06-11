@@ -3,7 +3,7 @@
 namespace Perform\BlogBundle\Crud;
 
 use Perform\BaseBundle\Crud\AbstractCrud;
-use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Config\FieldConfig;
 use Perform\BlogBundle\Entity\AbstractPost;
 
 /**
@@ -11,7 +11,7 @@ use Perform\BlogBundle\Entity\AbstractPost;
  **/
 abstract class AbstractPostCrud extends AbstractCrud
 {
-    public function configureTypes(TypeConfig $config)
+    public function configureFields(FieldConfig $config)
     {
         $config
             ->add('title', [
