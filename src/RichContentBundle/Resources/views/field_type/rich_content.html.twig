@@ -1,0 +1,10 @@
+{% extends '@PerformBase/field_type/simple.html.twig' %}
+
+{% block list %}
+{% endblock %}
+
+{% block view %}
+  {% if value %}
+    {{perform_rich_content(value)}}
+  {% endif %}
+{% endblock %}

@@ -3,7 +3,7 @@
 namespace Perform\ContactBundle\Crud;
 
 use Perform\BaseBundle\Crud\AbstractCrud;
-use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Config\FieldConfig;
 use Perform\BaseBundle\Config\FilterConfig;
 use Perform\BaseBundle\Config\ActionConfig;
 use Perform\ContactBundle\Entity\Message;
@@ -14,7 +14,7 @@ use Perform\BaseBundle\Crud\CrudRequest;
  **/
 class MessageCrud extends AbstractCrud
 {
-    public function configureTypes(TypeConfig $config)
+    public function configureFields(FieldConfig $config)
     {
         $config
             ->add('name', [

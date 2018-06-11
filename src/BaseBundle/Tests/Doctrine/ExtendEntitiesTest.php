@@ -22,7 +22,7 @@ class ExtendEntitiesTest extends \PHPUnit_Framework_TestCase
 
     private function configure(array $bundles, $extraConfig)
     {
-        $this->kernel = new TestKernel($bundles, __DIR__.'/../Fixtures/ExtendEntities/'.$extraConfig);
+        $this->kernel = new TestKernel($bundles, [__DIR__.'/../Fixtures/ExtendEntities/'.$extraConfig]);
         $this->kernel->boot();
     }
 

@@ -6,14 +6,14 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Finder\Finder;
 use Perform\BaseBundle\Doctrine\EntityResolver;
 use Perform\Licensing\Licensing;
-use Perform\BaseBundle\Type\TypeInterface;
-use Perform\BaseBundle\Type\TypeRegistry;
+use Perform\BaseBundle\FieldType\FieldTypeInterface;
+use Perform\BaseBundle\FieldType\FieldTypeRegistry;
 use Money\Money;
-use Perform\BaseBundle\Menu\SimpleLinkProvider;
+use Perform\BaseBundle\EventListener\SimpleMenuListener;
+use Perform\BaseBundle\Event\MenuEvent;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -26,7 +26,6 @@ class PerformBaseExtension extends Extension
     public function load(array $configs, ContainerBuilder $container)
     {
         Licensing::validateProject($container);
-        // $this->ensureUTC();
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
@@ -37,53 +36,21 @@ class PerformBaseExtension extends Extension
             $loader->load('services/money.yml');
         }
 
-        $container->setParameter('perform_base.panels.left', $config['panels']['left']);
-        $container->setParameter('perform_base.panels.right', $config['panels']['right']);
         $container->setParameter('perform_base.menu_order', $config['menu']['order']);
         $container->setParameter('perform_base.auto_asset_version', uniqid());
         $container->setParameter('perform_base.assets.theme', $config['assets']['theme']);
-        $this->configureTypeRegistry($container);
-        $this->configureMailer($config, $container);
+        $this->configureFieldTypeRegistry($container);
         $this->findExtendedEntities($container, $config);
         $this->configureResolvedEntities($container, $config);
         $this->createSimpleMenus($container, $config['menu']['simple']);
         $this->configureAssets($container, $config['assets']);
     }
 
-    protected function configureTypeRegistry(ContainerBuilder $container)
+    protected function configureFieldTypeRegistry(ContainerBuilder $container)
     {
-        $container->register('perform_base.type_registry', TypeRegistry::class);
-        $container->registerForAutoconfiguration(TypeInterface::class)
-            ->addTag('perform_base.type');
-    }
-
-    protected function configureMailer(array $config, ContainerBuilder $container)
-    {
-        if (!isset($config['mailer']['from_address'])) {
-            $container->removeDefinition('perform_base.email.mailer');
-
-            return;
-        }
-
-        $container->setParameter('perform_base.mailer.from_address', $config['mailer']['from_address']);
-
-        if (!isset($config['mailer']['excluded_domains'])) {
-            return;
-        }
-
-        $definition = $container->getDefinition('perform_base.email.mailer');
-        // test each composer.json requires licensing
-        $definition->addMethodCall('setExcludedDomains', [$config['mailer']['excluded_domains']]);
-    }
-
-    /**
-     * Stop the show if the server is running anything but UTC timezone.
-     */
-    protected function ensureUTC()
-    {
-        if ('UTC' !== $timezone = date_default_timezone_get()) {
-            throw new \Exception(sprintf('The server timezone must be set to UTC, it is currently "%s".', $timezone));
-        }
+        $container->register('perform_base.field_type_registry', FieldTypeRegistry::class);
+        $container->registerForAutoconfiguration(FieldTypeInterface::class)
+            ->addTag('perform_base.field_type');
     }
 
     protected function configureResolvedEntities(ContainerBuilder $container, array $config)
@@ -157,10 +124,10 @@ class PerformBaseExtension extends Extension
 
     protected function createSimpleMenus(ContainerBuilder $container, array $config)
     {
-        foreach ($config as $alias => $options) {
-            $definition = $container->register('perform_base.menu.simple.'.$alias, SimpleLinkProvider::class);
-            $definition->setArguments([$alias, $options['crud'], $options['route'], $options['icon']]);
-            $definition->addTag('perform_base.link_provider', ['alias' => $alias]);
+        foreach ($config as $name => $options) {
+            $definition = $container->register('perform_base.menu.simple.'.$name, SimpleMenuListener::class);
+            $definition->setArguments([$name, $options['crud'], $options['route'], $options['icon'], $options['priority']]);
+            $definition->addTag('kernel.event_listener', ['event' => MenuEvent::BUILD, 'method' => 'onMenuBuild']);
         }
     }
 

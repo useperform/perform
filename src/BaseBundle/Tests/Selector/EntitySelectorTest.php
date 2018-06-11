@@ -5,17 +5,17 @@ namespace Perform\BaseBundle\Tests\Selector;
 use Perform\BaseBundle\Selector\EntitySelector;
 use Pagerfanta\Pagerfanta;
 use Perform\BaseBundle\Config\FilterConfig;
-use Perform\BaseBundle\Type\TypeRegistry;
-use Perform\BaseBundle\Type\StringType;
+use Perform\BaseBundle\FieldType\FieldTypeRegistry;
+use Perform\BaseBundle\FieldType\StringType;
 use Perform\BaseBundle\Crud\CrudRequest;
-use Perform\BaseBundle\Type\BooleanType;
+use Perform\BaseBundle\FieldType\BooleanType;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Perform\BaseBundle\Test\Services;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Perform\BaseBundle\Event\QueryEvent;
-use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Config\FieldConfig;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -40,11 +40,11 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($this->qb));
         $this->dispatcher = $this->getMock(EventDispatcherInterface::class);
         $this->store = $this->getMock(ConfigStoreInterface::class);
-        $this->typeConfig = $this->getMockBuilder(TypeConfig::class)
+        $this->typeConfig = $this->getMockBuilder(FieldConfig::class)
                           ->disableOriginalConstructor()
                           ->getMock();
         $this->store->expects($this->any())
-            ->method('getTypeConfig')
+            ->method('getFieldConfig')
             ->will($this->returnValue($this->typeConfig));
         $this->filterConfig = $this->getMockBuilder(FilterConfig::class)
                           ->disableOriginalConstructor()

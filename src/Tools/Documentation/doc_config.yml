@@ -69,10 +69,5 @@ stof_doctrine_extensions:
 doctrine_cache:
     providers:
         default:
-            namespace: admin-sandbox
+            namespace: docs
             file_system: []
-
-perform_base:
-    panels:
-        left: []
-        right: []

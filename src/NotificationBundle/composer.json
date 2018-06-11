@@ -1,6 +1,7 @@
 {
     "name": "perform/notification-bundle",
     "description": "Send notifications using a variety of publishers.",
+    "type": "symfony-bundle",
     "license": "proprietary",
     "authors": [
         {
@@ -11,7 +12,11 @@
     "require": {
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.8"
+        "phpunit/phpunit": "^4.8",
+        "symfony/swiftmailer-bundle": "^2.3"
+    },
+    "suggest": {
+        "symfony/swiftmailer-bundle": "To use the email publisher"
     },
     "autoload": {
         "psr-4": {

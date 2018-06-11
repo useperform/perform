@@ -1,0 +1,71 @@
+{% extends '@PerformBase/field_type/simple.html.twig' %}
+
+{% block view %}
+  {% if has_items is not null %}
+    <ul class="list-unstyled">
+      {% for item in collection %}
+        <li>
+          {{perform_crud_entity_label(crud_name, item)}}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock %}
+
+{% block linkActions %}
+  <a class="btn btn-sm btn-danger remove-item" href="#">
+    <i class="fa fa-times"></i>
+  </a>
+  {% if type_vars.sortField != false %}
+    <a class="btn btn-sm btn-light move-up" href="#">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="btn btn-sm btn-light move-down" href="#">
+      <i class="fa fa-chevron-down"></i>
+    </a>
+  {% endif %}
+{% endblock %}
+
+{% block create %}
+  <div class="collection" data-field="{{field}}" data-sort-field="{{type_vars.sortField}}">
+    <div class="collection-rows" id="collection-{{field}}">
+      {% for childForm in form[field] %}
+        <div class="collection-row row" data-form-id="{{childForm.vars.id}}">
+          <div class="col-sm-2 link-actions">
+            {{block('linkActions')}}
+          </div>
+          <div class="col-sm-10">
+            {% for childField, childConfig in childForm.vars.fields %}
+              {% if context == 'create' %}
+                {{perform_crud_create_context(entity, childField, childConfig, childForm)}}
+              {% else %}
+                {{perform_crud_edit_context(entity, childField, childConfig, childForm)}}
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <a class="btn btn-primary add-item" href="#">
+      <i class="fa fa-plus"></i>
+    </a>
+  </div>
+
+  <script type="text/template" id="template-collection-{{field}}">
+     {% set childForm = form[field].vars.prototype %}
+     <div class="collection-row row" data-form-id="{{childForm.vars.id}}">
+        <div class="col-sm-2 link-actions">
+        {{block('linkActions')}}
+        </div>
+        <div class="col-sm-10">
+        {% for childField, childConfig in childForm.vars.fields %}
+        {% if context == 'create' %}
+            {{perform_crud_create_context(entity, childField, childConfig, childForm)}}
+        {% else %}
+            {{perform_crud_edit_context(entity, childField, childConfig, childForm)}}
+        {% endif %}
+        {% endfor %}
+        </div>
+     </div>
+  </script>
+{% endblock %}

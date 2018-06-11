@@ -48,7 +48,7 @@ Open up the newly generated ``BikeCrud`` class, containing a few empty methods:
 
    <?php
 
-    public function configureTypes(TypeConfig $config)
+    public function configureFields(FieldConfig $config)
     {
     }
 
@@ -61,12 +61,12 @@ Open up the newly generated ``BikeCrud`` class, containing a few empty methods:
         parent::configureActions($config);
     }
 
-For now, we'll only deal with the ``configureTypes`` method.
+For now, we'll only deal with the ``configureFields`` method.
 Add the following code:
 
 .. code-block:: diff
 
-      public function configureTypes(TypeConfig $config)
+      public function configureFields(FieldConfig $config)
       {
     +     $config->add('title', [
     +         'type' => 'string',

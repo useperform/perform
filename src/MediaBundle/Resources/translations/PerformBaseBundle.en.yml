@@ -1,5 +1,2 @@
 menu:
-    media:
-        main: Media
-        list: Library
-        add: Import
+    media: Media Library

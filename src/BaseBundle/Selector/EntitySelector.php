@@ -45,7 +45,7 @@ class EntitySelector
     {
         $crudName = $request->getCrudName();
         $request->setDefaultFilter($this->store->getFilterConfig($crudName)->getDefault());
-        $defaultSort = $this->store->getTypeConfig($crudName)->getDefaultSort();
+        $defaultSort = $this->store->getFieldConfig($crudName)->getDefaultSort();
         $request->setDefaultSortField($defaultSort[0]);
         $request->setDefaultSortDirection($defaultSort[1]);
 

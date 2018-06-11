@@ -1,3 +1,0 @@
-dashboard:
-    resource: "@PerformBaseBundle/Controller/DashboardController.php"
-    type:     annotation

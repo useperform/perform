@@ -2,7 +2,7 @@
 
 namespace Perform\BaseBundle\Crud;
 
-use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Config\FieldConfig;
 use Perform\BaseBundle\Config\FilterConfig;
 use Perform\BaseBundle\Config\ActionConfig;
 use Perform\BaseBundle\Config\LabelConfig;
@@ -15,12 +15,12 @@ use Twig\Environment;
 interface CrudInterface
 {
     /**
-     * @param TypeConfig $config
+     * @param FieldConfig $config
      *
      * Configure field mappings.
      * For each entity property you want to expose, call $config->add().
      */
-    public function configureTypes(TypeConfig $config);
+    public function configureFields(FieldConfig $config);
 
     /**
      * @param FilterConfig $config

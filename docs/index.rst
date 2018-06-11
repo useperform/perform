@@ -9,8 +9,8 @@ About these docs
 
 The docs are split into 5 sections:
 
-* **Getting started** - How to install Perform, system requirements, licensing, etc
-* **Tutorials** - Step by step instructions to build applications from scratch.
+* **Overview** - What Perform is, how to install it, system requirements, licensing, etc.
+* **Tutorials** - Step by step tutorials to build applications from scratch.
 * **Bundle guides** - Detailed guides demonstrating Perform's features, grouped by bundle.
 * **Further reading** - More tips on building applications, best practices, and troubleshooting.
 * **Reference** - Technical reference for various Perform features such as CRUD types, form types, and sass variables.
@@ -24,9 +24,9 @@ As well as viewing online, you can download this manual in different formats:
 New users
 ---------
 
-Just getting started with Perform?
+Just getting started?
 
-Skim through the getting started pages, particularly :doc:`start/overview`, then check the :doc:`requirements guide<start/requirements>`.
+Skim through the overview pages, particularly :doc:`overview/summary`, then check the :doc:`requirements guide<overview/requirements>`.
 
 Once you've got an overview of what Perform is, take the :doc:`Acme Widgets tutorial <tutorial/index>`, which will teach you how to build an application from scratch.
 
@@ -34,12 +34,12 @@ Topic index
 -----------
 
 .. toctree::
-   :caption: Getting started
+   :caption: Overview
 
-   start/overview
-   start/requirements
-   start/usage
-   start/licensing
+   overview/summary
+   overview/requirements
+   overview/install
+   overview/licensing
 
 .. toctree::
    :caption: Tutorials
@@ -56,7 +56,6 @@ Topic index
    dev-bundle/index
    mailing-list-bundle/index
    media-bundle/index
-   music-bundle/index
    notification-bundle/index
    page-editor-bundle/index
    rich-content-bundle/index
@@ -67,11 +66,12 @@ Topic index
    :caption: Further reading
    :glob:
 
+   more/cli/index
    more/*
 
 .. toctree::
    :caption: Reference
 
-   reference/types/index
+   reference/field-types/index
    reference/twig/index
    reference/sass

@@ -1,6 +1,7 @@
 {
     "name": "perform/base-bundle",
     "description": "Perform base bundle",
+    "type": "symfony-bundle",
     "license": "proprietary",
     "authors": [
         {
@@ -16,15 +17,14 @@
         "pagerfanta/pagerfanta": "^1.0",
         "sensio/framework-extra-bundle": "^5.0",
         "stof/doctrine-extensions-bundle": "^1.2",
-        "symfony/asset": "^3.4",
-        "symfony/form": "^3.4",
-        "symfony/framework-bundle": "^3.4",
-        "symfony/monolog-bundle": "^2.11",
-        "symfony/security-bundle": "^3.4",
-        "symfony/swiftmailer-bundle": "^2.3",
-        "symfony/twig-bundle": "^3.4",
-        "symfony/validator": "^3.4",
-        "symfony/yaml": "^3.4"
+        "symfony/asset": "^3.4|^4.0",
+        "symfony/form": "^3.4|^4.0",
+        "symfony/framework-bundle": "^3.4|^4.0",
+        "symfony/monolog-bundle": "^3.0.3",
+        "symfony/security-bundle": "^3.4|^4.0",
+        "symfony/twig-bundle": "^3.4|^4.0",
+        "symfony/validator": "^3.4|^4.0",
+        "symfony/yaml": "^3.4|^4.0"
     },
     "require-dev": {
         "doctrine/data-fixtures": "^1.2",

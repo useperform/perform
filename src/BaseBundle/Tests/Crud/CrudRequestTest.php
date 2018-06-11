@@ -4,7 +4,7 @@ namespace Perform\BaseBundle\Tests\Crud;
 
 use Symfony\Component\HttpFoundation\Request;
 use Perform\BaseBundle\Crud\CrudRequest;
-use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Config\FieldConfig;
 use Perform\BaseBundle\Tests\Fixtures\ReflectionUtil\ChildEntity;
 use Perform\BaseBundle\Tests\Fixtures\ReflectionUtil\ParentEntity;
 

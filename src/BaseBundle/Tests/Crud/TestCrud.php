@@ -3,14 +3,14 @@
 namespace Perform\BaseBundle\Tests\Crud;
 
 use Perform\BaseBundle\Crud\AbstractCrud;
-use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Config\FieldConfig;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class TestCrud extends AbstractCrud
 {
-    public function configureTypes(TypeConfig $config)
+    public function configureFields(FieldConfig $config)
     {
     }
 

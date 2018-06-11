@@ -1,3 +1,0 @@
-perform_media_player:
-    resource: "@PerformMediaPlayerBundle/Controller/"
-    type:     annotation

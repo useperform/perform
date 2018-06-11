@@ -13,15 +13,15 @@ class TestKernel extends Kernel
 {
     protected $temping;
     protected $extraBundles;
-    protected $extraConfig;
+    protected $extraConfigs = [];
 
-    public function __construct(array $extraBundles = [], $extraConfig = null)
+    public function __construct(array $extraBundles = [], array $extraConfigs = [])
     {
         parent::__construct('dev', true);
         $this->temping = new Temping();
         $this->rootDir = $this->temping->getDirectory();
         $this->extraBundles = $extraBundles;
-        $this->extraConfig = $extraConfig;
+        $this->extraConfigs = $extraConfigs;
     }
 
     public function shutdown()
@@ -65,8 +65,8 @@ class TestKernel extends Kernel
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load(__DIR__.'/config.yml');
-        if ($this->extraConfig) {
-            $loader->load($this->extraConfig);
+        foreach ($this->extraConfigs as $config) {
+            $loader->load($config);
         }
     }
 }

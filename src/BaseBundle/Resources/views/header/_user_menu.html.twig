@@ -1,0 +1,15 @@
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="perform-user-dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <i class="fa fa-user"></i>
+    {{app.user.fullname}}
+  </a>
+  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="perform-user-dropdown-toggle">
+    <a class="dropdown-item" href="/">
+      {{'header.links.home'|trans({}, 'PerformBaseBundle')}}
+    </a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="{{path('perform_user_logout')}}">
+      {{'header.links.logout'|trans({}, 'PerformBaseBundle')}}
+    </a>
+  </div>
+</li>

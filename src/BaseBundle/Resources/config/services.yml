@@ -1,6 +1,6 @@
 imports:
     - { resource: services_actions.yml }
-    - { resource: services_types.yml }
+    - { resource: services/field_types.yml }
 
 services:
     perform_base.crud.registry:
@@ -14,7 +14,7 @@ services:
         arguments:
             - '@perform_base.doctrine.entity_resolver'
             - '@perform_base.crud.registry'
-            - '@perform_base.type_registry'
+            - '@perform_base.field_type_registry'
             - '@perform_base.action_registry'
             - '@security.authorization_checker'
 
@@ -31,7 +31,7 @@ services:
         class: Perform\BaseBundle\Form\Type\CrudType
         arguments:
             - '@perform_base.config_store'
-            - '@perform_base.type_registry'
+            - '@perform_base.field_type_registry'
         tags:
             - {name: form.type}
 
@@ -51,6 +51,7 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@perform_base.doctrine.entity_resolver'
+    Perform\BaseBundle\Doctrine\RepositoryResolver: '@perform_base.doctrine.repository_resolver'
 
     perform_base.data_collector.crud:
         class: Perform\BaseBundle\DataCollector\CrudDataCollector
@@ -80,6 +81,11 @@ services:
         class: Perform\BaseBundle\Routing\CrudUrlGenerator
         arguments: ['@router']
 
+    perform_base.routing.checker:
+        class: Perform\BaseBundle\Routing\RouteChecker
+        arguments:
+            - "@router"
+
     perform_base.listener.crud_template:
         class: Perform\BaseBundle\EventListener\CrudTemplateListener
         arguments: ['@service_container']
@@ -97,15 +103,10 @@ services:
             - "@perform_base.crud.registry"
             - "@event_dispatcher"
 
-    perform_base.listener.ajax:
-        class: Perform\BaseBundle\EventListener\AjaxListener
-        tags:
-            - {name: kernel.event_subscriber}
-
     perform_base.context_renderer:
         class: Perform\BaseBundle\Crud\ContextRenderer
         arguments:
-            - '@perform_base.type_registry'
+            - '@perform_base.field_type_registry'
             - '@twig'
 
     perform_base.twig.crud:
@@ -140,7 +141,7 @@ services:
     perform_base.twig.util:
         class: Perform\BaseBundle\Twig\Extension\UtilExtension
         arguments:
-            - "@router"
+            - "@perform_base.routing.checker"
         tags:
             - {name: twig.extension}
 
@@ -152,7 +153,9 @@ services:
 
     perform_base.menu_builder:
         class: Perform\BaseBundle\Menu\MenuBuilder
-        arguments: ["@knp_menu.factory"]
+        arguments:
+            - '@knp_menu.factory'
+            - '@event_dispatcher'
         tags:
             - { name: knp_menu.menu_builder, method: createSidebar, alias: perform_sidebar }
 
@@ -173,19 +176,12 @@ services:
         tags:
             - { name: knp_menu.renderer, alias: perform_sidebar }
 
-    perform_base.menu_link.dashboard:
-        class: Perform\BaseBundle\Menu\DashboardLinkProvider
+    perform_base.listener.settings_menu:
+        class: Perform\BaseBundle\EventListener\SettingsMenuListener
+        arguments:
+            - '@perform_base.routing.checker'
         tags:
-            - { name: perform_base.link_provider, alias: dashboard }
-
-    perform_base.menu_link.settings:
-        class: Perform\BaseBundle\Menu\SettingsLinkProvider
-        tags:
-            - { name: perform_base.link_provider, alias: settings }
-
-    perform_base.email.mailer:
-        class: Perform\BaseBundle\Email\Mailer
-        arguments: ["@swiftmailer.mailer", "@twig", "%perform_base.mailer.from_address%", "@logger"]
+            - { name: kernel.event_listener, event: perform_base.menu.build, method: onMenuBuild }
 
     perform_base.doctrine.extend_listener:
         class: Perform\BaseBundle\Doctrine\ExtendEntitiesListener
@@ -277,7 +273,7 @@ services:
         arguments:
             - '@perform_base.config_store'
             - '@perform_base.selector.entity'
-            - '@perform_base.type_registry'
+            - '@perform_base.field_type_registry'
             - '@perform_base.export.writer_factory'
 
     perform_base.asset.dumper:

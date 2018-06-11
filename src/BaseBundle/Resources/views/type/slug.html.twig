@@ -1,7 +1,0 @@
-{% extends '@PerformBase/type/simple.html.twig' %}
-
-{% block create %}
-  <div class="perform-type-slug" data-target="{{type_vars.target}}">
-    {{form_row(form[field], {attr: {readonly: type_vars.readonly} | merge(type_vars.readonly ? {tabindex: '-1'} : {})})}}
-  </div>
-{% endblock %}

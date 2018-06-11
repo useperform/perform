@@ -1,6 +1,7 @@
 {
     "name": "perform/mailing-list-bundle",
     "description": "Manage mailing lists using different providers",
+    "type": "symfony-bundle",
     "license": "proprietary",
     "authors": [
         {

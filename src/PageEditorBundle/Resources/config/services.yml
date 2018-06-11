@@ -20,6 +20,7 @@ services:
         class: Perform\PageEditorBundle\SessionManager
         arguments:
             - "%perform_page_editor.toolbar.excluded_urls%"
+    Perform\PageEditorBundle\SessionManager: '@perform_page_editor.session_manager'
 
     perform_page_editor.listener.page_manager:
         class: Perform\PageEditorBundle\EventListener\PageManagerListener
@@ -41,10 +42,16 @@ services:
             # profiler
             - {name: kernel.event_listener, event: kernel.response, priority: -99}
 
-    perform_page_editor.menu.page_editor:
-        class: Perform\PageEditorBundle\Menu\PageEditorLinkProvider
+    perform_page_editor.listener.menu:
+        class: Perform\BaseBundle\EventListener\SimpleMenuListener
+        arguments:
+            - 'page_editor'
+            - null
+            - 'perform_pageeditor_session_begin'
+            - 'pencil'
         tags:
-            - {name: perform_base.link_provider, alias: page_editor}
+            - { name: kernel.event_listener, event: perform_base.menu.build, method: onMenuBuild }
+
 
     perform_page_editor.twig.content:
         class: Perform\PageEditorBundle\Twig\Extension\ContentExtension
@@ -60,12 +67,14 @@ services:
             - "getRepository"
         arguments:
             - "PerformPageEditorBundle:Version"
+    Perform\PageEditorBundle\Repository\VersionRepository: '@perform_page_editor.repo.version'
 
     perform_page_editor.persister:
         class: Perform\PageEditorBundle\Persister\Persister
         arguments:
             - "@perform_rich_content.persister"
             - "@doctrine.orm.entity_manager"
+    Perform\PageEditorBundle\Persister\Persister: '@perform_page_editor.persister'
 
     perform_page_editor.denormalizer.version_update:
         class: Perform\PageEditorBundle\Serializer\VersionUpdateDenormalizer

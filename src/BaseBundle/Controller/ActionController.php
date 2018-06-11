@@ -4,7 +4,6 @@ namespace Perform\BaseBundle\Controller;
 
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Perform\BaseBundle\Annotation\Ajax;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -14,8 +13,6 @@ use Perform\BaseBundle\Action\ActionFailedException;
 use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
- * ActionController.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class ActionController extends Controller
@@ -23,7 +20,6 @@ class ActionController extends Controller
     /**
      * @Route("/{action}")
      * @Method("POST")
-     * @Ajax
      */
     public function indexAction($action, Request $request)
     {
@@ -35,14 +31,11 @@ class ActionController extends Controller
             $response = $this->get('perform_base.action_runner')
                       ->run($crudName, $action, $ids, $options);
         } catch (EntityNotFoundException $e) {
-            return [
-                'code' => 404,
-            ];
+            return new JsonResponse([], JsonResponse::HTTP_NOT_FOUND);
         } catch (ActionFailedException $e) {
-            return [
-                'code' => 500,
+            return new JsonResponse([
                 'message' => $e->getMessage(),
-            ];
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $json = [
@@ -63,6 +56,6 @@ class ActionController extends Controller
             $this->addFlash('success', $response->getMessage());
         }
 
-        return $json;
+        return new JsonResponse($json);
     }
 }

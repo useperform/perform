@@ -38,6 +38,7 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@perform_rich_content.repo.content"
             - "@perform_rich_content.repo.block"
+    Perform\RichContentBundle\Persister\Persister: '@perform_rich_content.persister'
 
     perform_rich_content.repo.content:
         class: Perform\RichContentBundle\Repository\ContentRepository
@@ -54,10 +55,10 @@ services:
     perform_rich_content.block_type_registry:
         class: Perform\RichContentBundle\BlockType\BlockTypeRegistry
 
-    perform_rich_content.type:
-        class: Perform\RichContentBundle\Type\RichContentType
+    perform_rich_content.field_type:
+        class: Perform\RichContentBundle\FieldType\RichContentType
         tags:
-            - {name: perform_base.type, alias: rich_content}
+            - {name: perform_base.field_type, alias: rich_content}
 
     perform_rich_content.fixture_profile_registry:
         class: Perform\RichContentBundle\DataFixtures\Profile\ProfileRegistry

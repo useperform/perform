@@ -10,14 +10,14 @@ services:
 
 
     perform_contact.menu_link.contact:
-        class: Perform\BaseBundle\Menu\SimpleLinkProvider
+        class: Perform\BaseBundle\EventListener\SimpleMenuListener
         arguments:
             - 'contact'
             - 'perform_contact.message'
             - null
             - 'envelope'
         tags:
-            - { name: perform_base.link_provider, alias: contact }
+            - { name: kernel.event_listener, event: perform_base.menu.build, method: onMenuBuild }
 
     perform_contact.form.handler.contact:
         class: Perform\ContactBundle\Form\Handler\ContactFormHandler
@@ -27,6 +27,7 @@ services:
             - "@perform_notification.provider.settings"
             - "@perform_spam.manager"
             - "@logger"
+    Perform\ContactBundle\Form\Handler\ContactFormHandler: '@perform_contact.form.handler.contact'
 
     perform_contact.panel.messages:
         class: Perform\ContactBundle\Panel\MessagesPanel
@@ -63,6 +64,5 @@ services:
 
     Perform\ContactBundle\Command\:
         resource: '../../Command'
-        public: false
         autowire: true
         autoconfigure: true

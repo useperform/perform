@@ -3,7 +3,7 @@
 namespace Perform\BaseBundle\Test;
 
 use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
-use Perform\BaseBundle\Type\TypeRegistry;
+use Perform\BaseBundle\FieldType\FieldTypeRegistry;
 
 /**
  * Helpers to create difficult to construct services for testing.
@@ -12,9 +12,9 @@ use Perform\BaseBundle\Type\TypeRegistry;
  **/
 class Services
 {
-    public static function typeRegistry(array $services)
+    public static function fieldTypeRegistry(array $services)
     {
-        return new TypeRegistry(self::serviceLocator($services));
+        return new FieldTypeRegistry(self::serviceLocator($services));
     }
 
     public static function serviceLocator(array $services)

@@ -1,0 +1,5 @@
+services:
+    _defaults:
+        public: true
+
+    test.perform_rich_content.block_type_registry: '@perform_rich_content.block_type_registry'

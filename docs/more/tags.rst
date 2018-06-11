@@ -51,7 +51,7 @@ in your admin classes to tag your entities.
 
     <?php
 
-    public function configureTypes(TypeConfig $config)
+    public function configureFields(FieldConfig $config)
     {
         $config->add('tags', [
             'type' => 'tag',
@@ -80,7 +80,7 @@ There's nothing stopping you defining multiple taggable properties on an entity:
 
     <?php
 
-    public function configureTypes(TypeConfig $config)
+    public function configureFields(FieldConfig $config)
     {
         $config->add('categories', [
             'type' => 'tag',

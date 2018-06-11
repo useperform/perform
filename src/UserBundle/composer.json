@@ -1,6 +1,7 @@
 {
     "name": "perform/user-bundle",
     "description": "User implementation and management",
+    "type": "symfony-bundle",
     "license": "proprietary",
     "authors": [
         {

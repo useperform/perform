@@ -4,7 +4,7 @@ namespace Perform\BaseBundle\Tests\DependencyInjection;
 
 use Perform\BaseBundle\DependencyInjection\PerformBaseExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Perform\BaseBundle\Menu\SimpleLinkProvider;
+use Perform\BaseBundle\EventListener\SimpleMenuListener;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -32,8 +32,8 @@ class PerformBaseExtensionTest extends \PHPUnit_Framework_TestCase
         ];
         $this->ext->load([$config], $container);
 
-        $menuService = $container->getDefinition('perform_base.menu.simple.test');
-        $this->assertSame(SimpleLinkProvider::class, $menuService->getClass());
-        $this->assertSame('some_route', $menuService->getArgument(2));
+        $listenerService = $container->getDefinition('perform_base.menu.simple.test');
+        $this->assertSame(SimpleMenuListener::class, $listenerService->getClass());
+        $this->assertSame('some_route', $listenerService->getArgument(2));
     }
 }

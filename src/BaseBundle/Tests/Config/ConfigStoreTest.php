@@ -6,9 +6,9 @@ use Perform\BaseBundle\Config\ConfigStore;
 use Perform\BaseBundle\Crud\CrudInterface;
 use Perform\BaseBundle\Doctrine\EntityResolver;
 use Perform\BaseBundle\Crud\CrudRegistry;
-use Perform\BaseBundle\Type\TypeRegistry;
-use Perform\BaseBundle\Config\TypeConfig;
-use Perform\BaseBundle\Type\StringType;
+use Perform\BaseBundle\FieldType\FieldTypeRegistry;
+use Perform\BaseBundle\Config\FieldConfig;
+use Perform\BaseBundle\FieldType\StringType;
 use Perform\BaseBundle\Action\ActionRegistry;
 use Perform\BaseBundle\Config\FilterConfig;
 use Perform\BaseBundle\Config\ActionConfig;
@@ -36,7 +36,7 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
         $this->crudRegistry = $this->getMockBuilder(CrudRegistry::class)
                             ->disableOriginalConstructor()
                             ->getMock();
-        $this->typeRegistry = Services::typeRegistry([
+        $this->typeRegistry = Services::fieldTypeRegistry([
             'string' => new StringType(),
         ]);
         $this->actionRegistry = $this->getMockBuilder(ActionRegistry::class)
@@ -61,23 +61,23 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(ConfigStoreInterface::class, $store);
     }
 
-    public function testGetTypeConfig()
+    public function testGetFieldConfig()
     {
         $crud = $this->getMock(CrudInterface::class);
         $crud->expects($this->once())
-            ->method('configureTypes')
+            ->method('configureFields')
             ->with($this->callback(function ($config) {
-                return $config instanceof TypeConfig;
+                return $config instanceof FieldConfig;
             }));
 
         $crudName = 'some_crud';
         $this->configure($crudName, $crud);
 
-        $config = $this->store->getTypeConfig($crudName);
+        $config = $this->store->getFieldConfig($crudName);
 
-        $this->assertInstanceOf(TypeConfig::class, $config);
+        $this->assertInstanceOf(FieldConfig::class, $config);
         //check the same object is always returned
-        $this->assertSame($config, $this->store->getTypeConfig($crudName));
+        $this->assertSame($config, $this->store->getFieldConfig($crudName));
     }
 
     public function testGetActionConfig()

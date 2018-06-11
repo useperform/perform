@@ -25,5 +25,3 @@ Its recommended to only use this bundle during development, so only add it to yo
 
 .. toctree::
    :maxdepth: 1
-
-   frontends

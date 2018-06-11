@@ -20,16 +20,15 @@
         "ralouphie/mimey": "^1.0",
         "sensio/framework-extra-bundle": "^5.0",
         "stof/doctrine-extensions-bundle": "^1.2",
-        "symfony/asset": "^3.4",
-        "symfony/form": "^3.4",
-        "symfony/framework-bundle": "^3.4",
-        "symfony/monolog-bundle": "^2.11",
-        "symfony/security-bundle": "^3.4",
-        "symfony/serializer": "^3.4",
-        "symfony/swiftmailer-bundle": "^2.3",
-        "symfony/twig-bundle": "^3.4",
-        "symfony/validator": "^3.4",
-        "symfony/yaml": "^3.4"
+        "symfony/asset": "^3.4|^4.0",
+        "symfony/form": "^3.4|^4.0",
+        "symfony/framework-bundle": "^3.4|^4.0",
+        "symfony/monolog-bundle": "^3.0.3",
+        "symfony/security-bundle": "^3.4|^4.0",
+        "symfony/serializer": "^3.4|^4.0",
+        "symfony/twig-bundle": "^3.4|^4.0",
+        "symfony/validator": "^3.4|^4.0",
+        "symfony/yaml": "^3.4|^4.0"
     },
     "require-dev": {
         "doctrine/data-fixtures": "^1.2",
@@ -38,12 +37,13 @@
         "glynnforrest/temping": "^0.5.0",
         "imagine/imagine": "^0.6.3",
         "league/commonmark": "^0.17.0",
+        "moneyphp/money": "^3.1",
         "php-vfs/php-vfs": "^1.3",
         "phpdocumentor/reflection-docblock": "^3.1",
         "phpunit/phpunit": "^4.8",
         "sonata-project/exporter": "^1.7",
         "symfony/phpunit-bridge": "^4.0",
-        "moneyphp/money": "^3.1"
+        "symfony/swiftmailer-bundle": "^2.3"
     },
     "suggest": {
         "doctrine/data-fixtures": "Use database fixtures",
@@ -51,14 +51,16 @@
         "fzaninotto/faker": "Use database fixtures",
         "imagine/imagine": "Use the image media plugin",
         "league/commonmark": "Use the markdown type in the base bundle",
+        "moneyphp/money": "To use the money type",
         "sonata-project/exporter": "Export entities to a variety of formats",
-        "moneyphp/money": "To use the money type"
+        "symfony/swiftmailer-bundle": "To use the email notification publisher"
     },
     "replace": {
         "perform/analytics-bundle": "self.version",
         "perform/base-bundle": "self.version",
         "perform/blog-bundle": "self.version",
         "perform/contact-bundle": "self.version",
+        "perform/dashboard-bundle": "self.version",
         "perform/dev-bundle": "self.version",
         "perform/licensing": "self.version",
         "perform/mailing-list-bundle": "self.version",

@@ -10,7 +10,7 @@ Usually types will show the underlying data in the `list` and `view` contexts, a
 Types can also include css and javascript for complex UI interactions, and also include types themselves!
 For example, the ``collection`` type can arbitrarily nest child crud classes and manage their ordering using a javascript helper.
 
-For every crud class, the types are defined in the ``configureTypes()`` method.
+For every crud class, the types are defined in the ``configureFields()`` method.
 
 Available types
 ---------------
@@ -23,23 +23,23 @@ Run the ``perform:debug:types`` command to list the available types:
 
    $ ./bin/console perform:debug:types
 
-   +------------+----------------------------------------+
-   | Type       | Class                                  |
-   +------------+----------------------------------------+
-   | string     | Perform\BaseBundle\Type\StringType     |
-   | text       | Perform\BaseBundle\Type\TextType       |
-   | password   | Perform\BaseBundle\Type\PasswordType   |
-   | date       | Perform\BaseBundle\Type\DateType       |
+   +------------+---------------------------------------------+
+   | Type       | Class                                       |
+   +------------+---------------------------------------------+
+   | string     | Perform\BaseBundle\FieldType\StringType     |
+   | text       | Perform\BaseBundle\FieldType\TextType       |
+   | password   | Perform\BaseBundle\FieldType\PasswordType   |
+   | date       | Perform\BaseBundle\FieldType\DateType       |
    ...
 
-Types are registered with the ``perform_base.type_registry`` service (an instance of ``Perform\BaseBundle\Type\TypeRegistry``) when the container is compiled.
+Types are registered with the ``perform_base.field_type_registry`` service (an instance of ``Perform\BaseBundle\FieldType\FieldTypeRegistry``) when the container is compiled.
 You normally won't need to interact with this service directly.
 
 Using types
 -----------
 
-``CrudInterface#configureTypes()`` takes an instance of ``Perform\BaseBundle\Config\TypeConfig``, which is used as a builder to add types for a given entity.
-Add a new type with ``TypeConfig#add()``, which requires the name of the field and an array of configuration.
+``CrudInterface#configureFields()`` takes an instance of ``Perform\BaseBundle\Config\FieldConfig``, which is used as a builder to add types for a given entity.
+Add a new type with ``FieldConfig#add()``, which requires the name of the field and an array of configuration.
 
 The field name can be anything accessible by Symfony's `property access component <http://symfony.com/doc/current/components/property_access.html>`_.
 Configuration should be an array with the following properties:
@@ -60,7 +60,7 @@ Use the ``contexts`` option to restrict a type to certain contexts:
 
    <?php
 
-    public function configureTypes(TypeConfig $config)
+    public function configureFields(FieldConfig $config)
     {
         $config->add('readOnly', [
             'type' => 'string',
@@ -110,7 +110,7 @@ It's not possible to sort by this method in the database, so a custom sort funct
 
    <?php
 
-    public function configureTypes(TypeConfig $config)
+    public function configureFields(FieldConfig $config)
     {
         $config->add('fullname', [
             'type' => 'string',
@@ -125,7 +125,7 @@ It's not possible to sort by this method in the database, so a custom sort funct
     }
 
 On first load, the `list` context is completely unsorted.
-Use ``TypeConfig#setDefaultSort()`` to sort by a certain field by default.
+Use ``FieldConfig#setDefaultSort()`` to sort by a certain field by default.
 
 You may also pass in a field that has not been added to the type config, which will be treated as if it had been added with the ``sort`` option set to ``true``.
 
@@ -133,7 +133,7 @@ You may also pass in a field that has not been added to the type config, which w
 
    <?php
 
-    public function configureTypes(TypeConfig $config)
+    public function configureFields(FieldConfig $config)
     {
         //...
         $config->setDefaultSort('createdAt', 'DESC');
@@ -150,7 +150,7 @@ For example, here we tell the ``datetime`` type to show a human friendly date di
 
     <?php
 
-    public function configureTypes(TypeConfig $config)
+    public function configureFields(FieldConfig $config)
     {
         $config->add('createdAt', [
                 'type' => 'datetime',
@@ -166,11 +166,11 @@ For example, here we tell the ``datetime`` type to show a human friendly date di
 Creating a new type
 -------------------
 
-Create a service that implements ``Perform\Base\Type\TypeInterface``, either through autowiring or manually.
+Create a service that implements ``Perform\Base\FieldType\FieldTypeInterface``, either through autowiring or manually.
 
 If the service is autoconfigured, the type will be added to the registry automatically.
 
-If the service is not autoconfigured, give the service the ``perform_base.type`` tag.
+If the service is not autoconfigured, give the service the ``perform_base.field_type`` tag.
 
 The name of the type will be guessed from the class name, or you can set it manually with the ``alias`` tag option.
 
@@ -183,12 +183,12 @@ The name of the type will be guessed from the class name, or you can set it manu
     # configured manually
     MyApp\Type\ManualType
         tags:
-            - {name: perform_base.type}
+            - {name: perform_base.field_type}
 
     # configured manually, setting the type name explicitly
     MyApp\Type\AnotherType
         tags:
-            - {name: perform_base.type, alias: app_another}
+            - {name: perform_base.field_type, alias: app_another}
 
 
 Then run the ``perform:debug:types`` command to view your new types:

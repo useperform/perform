@@ -2,7 +2,7 @@
 
 namespace Perform\BlogBundle\Crud;
 
-use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Config\FieldConfig;
 use Perform\BaseBundle\Crud\CrudRequest;
 
 /**
@@ -10,9 +10,9 @@ use Perform\BaseBundle\Crud\CrudRequest;
  **/
 class MarkdownPostCrud extends AbstractPostCrud
 {
-    public function configureTypes(TypeConfig $config)
+    public function configureFields(FieldConfig $config)
     {
-        parent::configureTypes($config);
+        parent::configureFields($config);
         $config
             ->add('markdown', [
                 'type' => 'markdown',

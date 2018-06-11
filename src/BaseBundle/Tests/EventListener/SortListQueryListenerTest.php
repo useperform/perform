@@ -3,13 +3,13 @@
 namespace Perform\BaseBundle\Tests\EventListener;
 
 use Perform\BaseBundle\EventListener\SortListQueryListener;
-use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Config\FieldConfig;
 use Doctrine\ORM\QueryBuilder;
 use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
 use Perform\BaseBundle\Test\Services;
-use Perform\BaseBundle\Type\StringType;
-use Perform\BaseBundle\Type\BooleanType;
+use Perform\BaseBundle\FieldType\StringType;
+use Perform\BaseBundle\FieldType\BooleanType;
 use Perform\BaseBundle\Event\QueryEvent;
 
 /**
@@ -27,7 +27,7 @@ class SortListQueryListenerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $this->store = $this->getMock(ConfigStoreInterface::class);
-        $this->typeRegistry = Services::typeRegistry([
+        $this->typeRegistry = Services::fieldTypeRegistry([
             'string' => new StringType(),
             'boolean' => new BooleanType(),
         ]);
@@ -35,15 +35,15 @@ class SortListQueryListenerTest extends \PHPUnit_Framework_TestCase
         $this->listener = new SortListQueryListener($this->store);
     }
 
-    protected function expectTypeConfig($entityName, array $config)
+    protected function expectFieldConfig($entityName, array $config)
     {
-        $typeConfig = new TypeConfig($this->typeRegistry);
+        $typeConfig = new FieldConfig($this->typeRegistry);
         foreach ($config as $field => $config) {
             $typeConfig->add($field, $config);
         }
 
         $this->store->expects($this->any())
-            ->method('getTypeConfig')
+            ->method('getFieldConfig')
             ->with($entityName)
             ->will($this->returnValue($typeConfig));
     }
@@ -52,7 +52,7 @@ class SortListQueryListenerTest extends \PHPUnit_Framework_TestCase
     {
         $request = new CrudRequest('some_crud', CrudRequest::CONTEXT_LIST);
 
-        $this->expectTypeConfig('some_crud', [
+        $this->expectFieldConfig('some_crud', [
             'enabled' => [
                 'type' => 'boolean',
                 'sort' => true,
@@ -70,7 +70,7 @@ class SortListQueryListenerTest extends \PHPUnit_Framework_TestCase
         $request->setSortField('title');
         $request->setSortDirection('DESC');
 
-        $this->expectTypeConfig('some_crud', [
+        $this->expectFieldConfig('some_crud', [
             'title' => [
                 'type' => 'string',
                 'sort' => true,
@@ -90,7 +90,7 @@ class SortListQueryListenerTest extends \PHPUnit_Framework_TestCase
         $request->setSortField('enabled');
         $request->setSortDirection('DESC');
 
-        $this->expectTypeConfig('some_crud', [
+        $this->expectFieldConfig('some_crud', [
             'enabled' => [
                 'type' => 'boolean',
                 'sort' => false,
@@ -108,7 +108,7 @@ class SortListQueryListenerTest extends \PHPUnit_Framework_TestCase
         $request->setSortField('fullname');
         $request->setSortDirection('DESC');
 
-        $this->expectTypeConfig('some_crud', [
+        $this->expectFieldConfig('some_crud', [
             'fullname' => [
                 'type' => 'string',
                 'sort' => function ($qb, $direction) {
@@ -138,7 +138,7 @@ class SortListQueryListenerTest extends \PHPUnit_Framework_TestCase
         $differentQb = $this->getMockBuilder(QueryBuilder::class)
                      ->disableOriginalConstructor()
                      ->getMock();
-        $this->expectTypeConfig('some_crud', [
+        $this->expectFieldConfig('some_crud', [
             'fullname' => [
                 'type' => 'string',
                 'sort' => function ($qb, $direction) use ($differentQb) {
@@ -157,7 +157,7 @@ class SortListQueryListenerTest extends \PHPUnit_Framework_TestCase
         $request->setSortField('fullname');
         $request->setSortDirection('DESC');
 
-        $this->expectTypeConfig('some_crud', [
+        $this->expectFieldConfig('some_crud', [
             'fullname' => [
                 'type' => 'string',
                 'sort' => function ($qb, $direction) {

@@ -3,7 +3,7 @@
 namespace Perform\MailingListBundle\Crud;
 
 use Perform\BaseBundle\Crud\AbstractCrud;
-use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Config\FieldConfig;
 use Perform\BaseBundle\Config\FilterConfig;
 use Perform\BaseBundle\Config\ActionConfig;
 
@@ -12,7 +12,7 @@ use Perform\BaseBundle\Config\ActionConfig;
  **/
 class LocalListCrud extends AbstractCrud
 {
-    public function configureTypes(TypeConfig $config)
+    public function configureFields(FieldConfig $config)
     {
         $config->add('name', [
                 'type' => 'string',

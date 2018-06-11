@@ -1,0 +1,39 @@
+services:
+    _defaults:
+        public: false
+        autoconfigure: true
+
+    Perform\BaseBundle\FieldType\:
+        resource: '../../FieldType'
+
+    Perform\BaseBundle\FieldType\DateTimeType:
+        tags:
+            - {name: perform_base.field_type, alias: datetime}
+
+    Perform\BaseBundle\FieldType\EntityType:
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@perform_base.crud.registry"
+
+    Perform\BaseBundle\FieldType\TagType:
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@perform_base.crud.registry"
+
+    Perform\BaseBundle\FieldType\CollectionType:
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@perform_base.asset_container"
+
+    Perform\BaseBundle\FieldType\SlugType:
+        arguments:
+            - "@perform_base.asset_container"
+
+    Perform\BaseBundle\FieldType\MarkdownType:
+        arguments:
+            - "@perform_base.markdown"
+            - "@perform_base.asset_container"
+
+    Perform\BaseBundle\FieldType\HtmlType:
+        arguments:
+            - "@perform_base.asset_container"

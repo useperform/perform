@@ -1,6 +1,7 @@
 {
     "name": "perform/dev-bundle",
     "description": "Perform development tools.",
+    "type": "symfony-bundle",
     "license": "proprietary",
     "authors": [
         {

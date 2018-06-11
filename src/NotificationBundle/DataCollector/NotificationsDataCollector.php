@@ -43,6 +43,11 @@ class NotificationsDataCollector extends DataCollector
         return $this->data['publishers'];
     }
 
+    public function reset()
+    {
+        $this->data = [];
+    }
+
     public function getName()
     {
         return 'perform_notification';

@@ -1,6 +1,7 @@
 {
     "name": "perform/media-bundle",
     "description": "Perform media bundle",
+    "type": "symfony-bundle",
     "license": "proprietary",
     "authors": [
         {

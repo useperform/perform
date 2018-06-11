@@ -2,9 +2,9 @@
 
 namespace Perform\BaseBundle\Crud;
 
-use Perform\BaseBundle\Type\TypeRegistry;
+use Perform\BaseBundle\FieldType\FieldTypeRegistry;
 use Symfony\Component\Form\FormView;
-use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Config\FieldConfig;
 
 /**
  * Render data and forms for entities, using types and crud classes.
@@ -16,7 +16,7 @@ class ContextRenderer
     protected $typeRegistry;
     protected $twig;
 
-    public function __construct(TypeRegistry $typeRegistry, \Twig_Environment $twig)
+    public function __construct(FieldTypeRegistry $typeRegistry, \Twig_Environment $twig)
     {
         $this->typeRegistry = $typeRegistry;
         $this->twig = $twig;

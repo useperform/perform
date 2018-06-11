@@ -1,6 +1,7 @@
 {
     "name": "perform/analytics-bundle",
     "description": "Integrate various analytics providers into your application",
+    "type": "symfony-bundle",
     "license": "proprietary",
     "authors": [
         {

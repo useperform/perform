@@ -16,8 +16,8 @@ test_results.xml
 Dockerfile
 
 docs/_build
-docs/reference/types
-!docs/reference/types/index.rst
+docs/reference/field-types/*
+!docs/reference/field-types/index.rst
 docs/reference/sass.rst
 docs/_themes/perform/node_modules
 docs/_themes/perform/static

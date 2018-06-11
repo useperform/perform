@@ -2,6 +2,8 @@ services:
     perform_notification.notifier:
         class: Perform\NotificationBundle\Notifier\Notifier
 
+    Perform\NotificationBundle\Notifier\Notifier: '@perform_notification.notifier'
+
     perform_notification.renderer:
         class: Perform\NotificationBundle\Renderer\TwigRenderer
         arguments:

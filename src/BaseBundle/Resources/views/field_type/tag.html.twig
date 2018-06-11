@@ -1,0 +1,13 @@
+{% extends '@PerformBase/field_type/entity.html.twig' %}
+
+{% block view %}
+  {{block('list')}}
+{% endblock %}
+
+{% block list %}
+  {% for tag in value %}
+    <span class="badge badge-secondary">
+      {{tag.title}}
+    </span>
+  {% endfor %}
+{% endblock %}

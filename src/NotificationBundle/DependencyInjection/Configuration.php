@@ -31,7 +31,7 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('default_from')
                             ->useAttributeAsKey('email')
                             ->prototype('scalar')->end()
-                            ->cannotBeEmpty()
+                            ->requiresAtLeastOneElement()
                             ->info("['noreply@example.com': 'Sender'] or ['noreply@example.com': 'Sender', 'noreply2@example.com': 'Another Sender']")
                         ->end()
                     ->end()

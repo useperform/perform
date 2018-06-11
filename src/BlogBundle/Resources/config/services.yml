@@ -4,10 +4,12 @@ services:
         tags:
             - {name: perform_base.crud, crud_name: "perform_blog.markdown_post"}
 
-    perform_blog.menu_link.blog:
-        class: Perform\BlogBundle\Menu\BlogLinkProvider
+    perform_blog.listener.menu:
+        class: Perform\BlogBundle\EventListener\BlogMenuListener
+        arguments:
+            - '@perform_base.routing.crud_generator'
         tags:
-            - { name: perform_base.link_provider, alias: blog }
+            - { name: kernel.event_listener, event: perform_base.menu.build, method: onMenuBuild }
 
     perform_blog.twig.blog:
         class: Perform\BlogBundle\Twig\Extension\BlogExtension
