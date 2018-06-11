@@ -25,7 +25,7 @@ class FieldTypeReferenceGeneratorTest extends \PHPUnit_Framework_TestCase
         ];
         $twig = new \Twig_Environment($loader = new \Twig_Loader_Filesystem(__DIR__.'/../../Documentation'));
 
-        $registry = Services::typeRegistry([
+        $registry = Services::fieldTypeRegistry([
             'doctest' => new DocTestType(),
         ]);
         $this->gen = new FieldTypeReferenceGenerator($twig, $registry);

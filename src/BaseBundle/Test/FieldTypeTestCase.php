@@ -24,7 +24,7 @@ abstract class FieldTypeTestCase extends \PHPUnit_Framework_TestCase
         $twig = $this->kernel->getContainer()->get('twig');
 
         // but create a fresh type registry and container for testing
-        $this->typeRegistry = Services::typeRegistry($this->registerTypes());
+        $this->typeRegistry = Services::fieldTypeRegistry($this->registerTypes());
         $this->renderer = new ContextRenderer($this->typeRegistry, $twig);
     }
 

@@ -27,7 +27,7 @@ class SortListQueryListenerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $this->store = $this->getMock(ConfigStoreInterface::class);
-        $this->typeRegistry = Services::typeRegistry([
+        $this->typeRegistry = Services::fieldTypeRegistry([
             'string' => new StringType(),
             'boolean' => new BooleanType(),
         ]);

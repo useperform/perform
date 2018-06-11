@@ -15,7 +15,7 @@ class DateTimeTypeTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->registry = Services::typeRegistry([
+        $this->registry = Services::fieldTypeRegistry([
             'datetime' => new DateTimeType(),
         ]);
         $this->config = new FieldConfig($this->registry);

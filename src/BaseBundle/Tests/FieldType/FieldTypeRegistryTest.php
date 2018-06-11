@@ -16,7 +16,7 @@ class TypeRegistryTest extends \PHPUnit_Framework_TestCase
 
     protected function register(array $services)
     {
-        $this->registry = Services::typeRegistry($services);
+        $this->registry = Services::fieldTypeRegistry($services);
     }
 
     public function testGetType()

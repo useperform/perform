@@ -12,7 +12,7 @@ use Perform\BaseBundle\FieldType\FieldTypeRegistry;
  **/
 class Services
 {
-    public static function typeRegistry(array $services)
+    public static function fieldTypeRegistry(array $services)
     {
         return new FieldTypeRegistry(self::serviceLocator($services));
     }

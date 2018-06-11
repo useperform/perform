@@ -36,7 +36,7 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
         $this->crudRegistry = $this->getMockBuilder(CrudRegistry::class)
                             ->disableOriginalConstructor()
                             ->getMock();
-        $this->typeRegistry = Services::typeRegistry([
+        $this->typeRegistry = Services::fieldTypeRegistry([
             'string' => new StringType(),
         ]);
         $this->actionRegistry = $this->getMockBuilder(ActionRegistry::class)

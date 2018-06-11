@@ -25,7 +25,7 @@ class FieldConfigTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->typeRegistry = Services::typeRegistry([
+        $this->typeRegistry = Services::fieldTypeRegistry([
             'string' => new StringType(),
             'datetime' => new DateTimeType(),
             'boolean' => new BooleanType(),
