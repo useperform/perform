@@ -10,7 +10,7 @@ use Twig\Environment;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-abstract class TypeTestCase extends \PHPUnit_Framework_TestCase
+abstract class FieldTypeTestCase extends \PHPUnit_Framework_TestCase
 {
     protected $kernel;
     protected $typeRegistry;

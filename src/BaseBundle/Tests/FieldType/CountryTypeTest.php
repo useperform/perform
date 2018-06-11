@@ -3,14 +3,14 @@
 namespace Perform\BaseBundle\Tests\Type;
 
 use Perform\BaseBundle\FieldType\CountryType;
-use Perform\BaseBundle\Test\TypeTestCase;
+use Perform\BaseBundle\Test\FieldTypeTestCase;
 use Perform\BaseBundle\Test\WhitespaceAssertions;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  * @group kernel
  **/
-class CountryTypeTest extends TypeTestCase
+class CountryTypeTest extends FieldTypeTestCase
 {
     use WhitespaceAssertions;
 

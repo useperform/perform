@@ -3,7 +3,7 @@
 namespace Perform\BaseBundle\Tests\Type;
 
 use Perform\BaseBundle\FieldType\MarkdownType;
-use Perform\BaseBundle\Test\TypeTestCase;
+use Perform\BaseBundle\Test\FieldTypeTestCase;
 use Perform\BaseBundle\Test\WhitespaceAssertions;
 use League\CommonMark\CommonMarkConverter;
 use Perform\BaseBundle\Asset\AssetContainer;
@@ -12,7 +12,7 @@ use Perform\BaseBundle\Asset\AssetContainer;
  * @author Glynn Forrest <me@glynnforrest.com>
  * @group kernel
  **/
-class MarkdownTypeTest extends TypeTestCase
+class MarkdownTypeTest extends FieldTypeTestCase
 {
     use WhitespaceAssertions;
 
