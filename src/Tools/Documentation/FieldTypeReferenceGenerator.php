@@ -4,13 +4,13 @@ namespace Perform\Tools\Documentation;
 
 use phpDocumentor\Reflection\DocBlockFactory;
 use Symfony\Component\Filesystem\Filesystem;
-use Perform\BaseBundle\Type\TypeInterface;
+use Perform\BaseBundle\FieldType\FieldTypeInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class TypeReferenceGenerator
+class FieldTypeReferenceGenerator
 {
     protected $twig;
     protected $registry;
@@ -58,7 +58,7 @@ class TypeReferenceGenerator
         return $rst;
     }
 
-    protected function getOptions($name, TypeInterface $type)
+    protected function getOptions($name, FieldTypeInterface $type)
     {
         $resolver = $this->registry->getOptionsResolver($name);
         $options = [];
@@ -75,7 +75,7 @@ class TypeReferenceGenerator
             $options[$key]['defaults'] = $defaults[$key];
             $options[$key]['allowed_types'] = isset($allowedTypes[$key]) ? $allowedTypes[$key] : [];
         }
-        //tweak label slightly, since it will always have a value from TypeConfig
+        //tweak label slightly, since it will always have a value from FieldConfig
         $options['label']['required'] = false;
         $options['label']['description'] = 'The label to use for form labels and table headings. If no label is provided, a sensible label will be created automatically.';
 
@@ -83,7 +83,7 @@ class TypeReferenceGenerator
         return $options;
     }
 
-    protected function getOptionDescriptions(TypeInterface $type)
+    protected function getOptionDescriptions(FieldTypeInterface $type)
     {
         $ref = new \ReflectionObject($type);
         $method = $ref->getMethod('configureOptions');
@@ -106,7 +106,7 @@ class TypeReferenceGenerator
         return $descriptions;
     }
 
-    protected function getDefaults(OptionsResolver $resolver, TypeInterface $type)
+    protected function getDefaults(OptionsResolver $resolver, FieldTypeInterface $type)
     {
         $defaults = [];
         $defaultConfig = $type->getDefaultConfig();

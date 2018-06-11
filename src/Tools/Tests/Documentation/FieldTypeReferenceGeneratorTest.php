@@ -2,15 +2,15 @@
 
 namespace Perform\Tools\Tests\Documentation;
 
-use Perform\Tools\Documentation\TypeReferenceGenerator;
+use Perform\Tools\Documentation\FieldTypeReferenceGenerator;
 use Temping\Temping;
-use Perform\BaseBundle\Type\TypeRegistry;
+use Perform\BaseBundle\FieldType\FieldTypeRegistry;
 use Perform\BaseBundle\Test\Services;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class TypeReferenceGeneratorTest extends \PHPUnit_Framework_TestCase
+class FieldTypeReferenceGeneratorTest extends \PHPUnit_Framework_TestCase
 {
     protected $temp;
     protected $gen;
@@ -28,7 +28,7 @@ class TypeReferenceGeneratorTest extends \PHPUnit_Framework_TestCase
         $registry = Services::typeRegistry([
             'doctest' => new DocTestType(),
         ]);
-        $this->gen = new TypeReferenceGenerator($twig, $registry);
+        $this->gen = new FieldTypeReferenceGenerator($twig, $registry);
     }
 
     public function tearDown()

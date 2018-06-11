@@ -1,5 +1,5 @@
-Type Reference
-==============
+Field Type Reference
+====================
 
 .. toctree::
    :maxdepth: 1

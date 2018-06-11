@@ -3,7 +3,7 @@
 namespace Perform\Tools\Tests\Documentation;
 
 use Symfony\Component\Form\FormBuilderInterface;
-use Perform\BaseBundle\Type\AbstractType;
+use Perform\BaseBundle\FieldType\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**

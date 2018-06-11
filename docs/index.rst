@@ -71,6 +71,6 @@ Topic index
 .. toctree::
    :caption: Reference
 
-   reference/types/index
+   reference/field-types/index
    reference/twig/index
    reference/sass
