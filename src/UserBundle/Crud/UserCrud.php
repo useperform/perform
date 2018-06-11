@@ -2,7 +2,7 @@
 
 namespace Perform\UserBundle\Crud;
 
-use Perform\BaseBundle\Config\TypeConfig;
+use Perform\BaseBundle\Config\FieldConfig;
 use Perform\BaseBundle\Config\ActionConfig;
 use Perform\BaseBundle\Config\LabelConfig;
 use Perform\UserBundle\Controller\UserController;
@@ -14,7 +14,7 @@ use Perform\BaseBundle\Crud\CrudRequest;
  **/
 class UserCrud extends AbstractCrud
 {
-    public function configureTypes(TypeConfig $config)
+    public function configureFields(FieldConfig $config)
     {
         $config
             ->add('forename', [
