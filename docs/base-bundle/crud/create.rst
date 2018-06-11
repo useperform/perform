@@ -6,7 +6,7 @@ If a service implementing this interface is auto-configured, the tag will be add
 
 Implementing ``CrudInterface`` requires creating several methods.
 For most cases, extending ``Perform\BaseBundle\Crud\AbstractCrud`` saves coding time.
-The only required code is implementing ``configureTypes()``.
+The only required code is implementing ``configureFields()``.
 
 Suppose we created the Doctrine entity ``AppBundle\Entity\Bike``, with the fields ``model`` (a string) and ``wheelCount`` (an integer).
 
@@ -18,7 +18,7 @@ An example crud class could be:
 
     class BikeCrud extends AbstractCrud
     {
-        public function configureTypes(TypeConfig $config)
+        public function configureFields(FieldConfig $config)
         {
             $config
                 ->add('model', ['type' => 'string'])

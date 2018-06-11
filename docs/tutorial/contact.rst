@@ -322,20 +322,20 @@ First, extend the existing crud from the contact bundle:
 
     - use Perform\BaseBundle\Crud\AbstractCrud;
     + use Perform\ContactBundle\Crud\MessageCrud;
-      use Perform\BaseBundle\Config\TypeConfig;
+      use Perform\BaseBundle\Config\FieldConfig;
       use Perform\BaseBundle\Config\FilterConfig;
       use Perform\BaseBundle\Config\ActionConfig;
 
     - class ContactMessageCrud extends AbstractCrud
     + class ContactMessageCrud extends MessageCrud
 
-Then add the new field to ``configureTypes``, making sure to also call the parent method:
+Then add the new field to ``configureFields``, making sure to also call the parent method:
 
 .. code-block:: diff
 
-      public function configureTypes(TypeConfig $config)
+      public function configureFields(FieldConfig $config)
       {
-    +     parent::configureTypes($config);
+    +     parent::configureFields($config);
     +
     +     $config->add('favouriteBike', [
     +         'type' => 'entity',

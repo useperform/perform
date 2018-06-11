@@ -17,4 +17,3 @@ tools to build applications rapidly:
    ./crud/index
    ./menu
    ./styling
-   ./email

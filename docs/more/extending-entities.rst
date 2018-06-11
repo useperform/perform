@@ -125,13 +125,13 @@ To define a new crud class for the extended entity, create a new class that exte
    <?php
 
     use Perform\UserBundle\Crud\UserCrud as BaseCrud;
-    use Perform\BaseBundle\Config\TypeConfig;
+    use Perform\BaseBundle\Config\FieldConfig;
 
     class UserCrud extends BaseCrud
     {
-        public function configureTypes(TypeConfig $config)
+        public function configureFields(FieldConfig $config)
         {
-            parent::configureTypes($config);
+            parent::configureFields($config);
 
             $config->add('birthDate', [
                 'type' => 'date',
