@@ -28,7 +28,7 @@ Just getting started?
 
 Skim through the overview pages, particularly :doc:`overview/summary`, then check the :doc:`requirements guide<overview/requirements>`.
 
-Once you've got an overview of what Perform is, take the :doc:`Acme Widgets tutorial <tutorial/index>`, which will teach you how to build an application from scratch.
+Once you've got an overview of what Perform is, take the :doc:`Open Some Hours tutorial <tutorials/open-some-hours/index>`, which will teach you how to build an application from scratch.
 
 Topic index
 -----------
@@ -44,6 +44,7 @@ Topic index
 .. toctree::
    :caption: Tutorials
 
+   tutorials/open-some-hours/index
    tutorials/hipster-bikes/index
 
 .. toctree::
