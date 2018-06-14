@@ -9,6 +9,18 @@ services:
             - '@perform_base.doctrine.entity_resolver'
             - '@doctrine.orm.entity_manager'
 
+    Perform\BaseBundle\Controller\CrudController:
+        arguments:
+            - '@twig'
+            - '@perform_base.crud.registry'
+            - '@perform_base.selector.entity'
+            - '@perform_base.doctrine.entity_resolver'
+            - '@perform_base.template_populator'
+            - '@perform_base.entity_manager'
+            - '@perform_base.routing.crud_generator'
+        tags:
+            - controller.service_arguments
+
     perform_base.config_store:
         class: Perform\BaseBundle\Config\ConfigStore
         arguments:

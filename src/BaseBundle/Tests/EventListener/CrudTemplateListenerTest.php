@@ -38,7 +38,10 @@ class CrudTemplateListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testCrudActionSetsTemplate()
     {
-        $controller = [new CrudController(), 'viewAction'];
+        $crudController = $this->getMockBuilder(CrudController::class)
+                        ->disableOriginalConstructor()
+                        ->getMock();
+        $controller = [$crudController, 'viewAction'];
         $request = new Request();
         $request->attributes->set('_crud', 'some_crud');
         $event = new FilterControllerEvent(
