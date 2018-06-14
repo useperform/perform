@@ -35,6 +35,8 @@ class CrudPass implements CompilerPassInterface
                 $crudEntityMap[$entityClass] = [];
             }
 
+            $tags = $this->filterAutoconfiguredTags($tags);
+
             foreach ($tags as $tag) {
                 if (!isset($tag['crud_name'])) {
                     $tag['crud_name'] = $this->createCrudName($container->getDefinition($service));
@@ -103,5 +105,27 @@ class CrudPass implements CompilerPassInterface
     private function createRouteNamePrefix($crudName)
     {
         return preg_replace('/([^_a-z0-9])/', '_', strtolower($crudName)).'_';
+    }
+
+    /**
+     * Prevent a duplicate crud exception with a service like the following:
+     *
+     * TestCrud:
+     *    tags:
+     *        - {name: perform_base.crud, crud_name: test}
+     *
+     * An empty tag will be added with autoconfiguration, giving 2 crud names of 'test'.
+     *
+     * Remove this empty tag if one exists already.
+     */
+    private function filterAutoconfiguredTags(array $tags)
+    {
+        if (count($tags) < 2) {
+            return $tags;
+        }
+
+        return array_filter($tags, function($tag) {
+            return !empty($tag);
+        });
     }
 }
