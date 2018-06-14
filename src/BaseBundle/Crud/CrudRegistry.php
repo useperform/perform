@@ -82,17 +82,13 @@ class CrudRegistry
      */
     public function getAllNamesForEntity($entity)
     {
-        try {
-            $entityClass = $this->resolver->resolve($entity);
-        } catch (\InvalidArgumentException $e) {
-            throw new CrudNotFoundException('Crud not found, invalid argument.', 1, $e);
-        }
+        $entityClass = $this->resolver->resolve($entity);
 
         return isset($this->crudEntityMap[$entityClass]) ? $this->crudEntityMap[$entityClass] : [];
     }
 
     /**
-     * Return true is the given entity has at least one crud service.
+     * Return true if the given entity has at least one crud service.
      *
      * @param mixed $entity
      *
@@ -100,11 +96,7 @@ class CrudRegistry
      */
     public function hasForEntity($entity)
     {
-        try {
-            return count($this->getAllNamesForEntity($entity)) > 0;
-        } catch (\InvalidArgumentException $e) {
-            return false;
-        }
+        return count($this->getAllNamesForEntity($entity)) > 0;
     }
 
     /**
