@@ -88,7 +88,6 @@ services:
 
     perform_base.listener.crud_template:
         class: Perform\BaseBundle\EventListener\CrudTemplateListener
-        arguments: ['@service_container']
         tags:
             -
                 name: kernel.event_listener

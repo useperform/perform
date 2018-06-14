@@ -14,6 +14,8 @@ use Perform\BaseBundle\FieldType\FieldTypeRegistry;
 use Money\Money;
 use Perform\BaseBundle\EventListener\SimpleMenuListener;
 use Perform\BaseBundle\Event\MenuEvent;
+use Perform\BaseBundle\Crud\CrudInterface;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -39,18 +41,23 @@ class PerformBaseExtension extends Extension
         $container->setParameter('perform_base.menu_order', $config['menu']['order']);
         $container->setParameter('perform_base.auto_asset_version', uniqid());
         $container->setParameter('perform_base.assets.theme', $config['assets']['theme']);
-        $this->configureFieldTypeRegistry($container);
+        $this->configureCrud($container);
         $this->findExtendedEntities($container, $config);
         $this->configureResolvedEntities($container, $config);
         $this->createSimpleMenus($container, $config['menu']['simple']);
         $this->configureAssets($container, $config['assets']);
     }
 
-    protected function configureFieldTypeRegistry(ContainerBuilder $container)
+    protected function configureCrud(ContainerBuilder $container)
     {
-        $container->register('perform_base.field_type_registry', FieldTypeRegistry::class);
         $container->registerForAutoconfiguration(FieldTypeInterface::class)
             ->addTag('perform_base.field_type');
+
+        $container->getDefinition('perform_base.listener.crud_template')
+            ->setArgument(0, LoopableServiceLocator::createDefinition([
+                'registry' => new Reference('perform_base.crud.registry'),
+                'twig' => new Reference('twig'),
+            ]));
     }
 
     protected function configureResolvedEntities(ContainerBuilder $container, array $config)
