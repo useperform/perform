@@ -1,5 +1,5 @@
 header:
-    title: 'Site Administration'
+    title: 'Perform'
     links:
         logout: 'Logout'
         home: 'Go to site homepage'
