@@ -5,6 +5,7 @@ namespace Perform\BaseBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Perform\BaseBundle\DependencyInjection\Compiler\CrudPass;
+use Perform\BaseBundle\DependencyInjection\Compiler\CrudVoterPass;
 use Perform\BaseBundle\DependencyInjection\Compiler\ConfigureSettingsPass;
 use Perform\BaseBundle\DependencyInjection\Compiler\ActionsPass;
 use Perform\BaseBundle\DependencyInjection\Compiler\FieldTypesPass;
@@ -20,6 +21,7 @@ class PerformBaseBundle extends Bundle
     {
         parent::build($container);
         $container->addCompilerPass(new CrudPass());
+        $container->addCompilerPass(new CrudVoterPass());
         $container->addCompilerPass(new ConfigureSettingsPass());
         $container->addCompilerPass(new ActionsPass());
         $container->addCompilerPass(new FieldTypesPass());
