@@ -8,6 +8,8 @@ use Perform\BaseBundle\Crud\InvalidCrudException;
 use Symfony\Component\DependencyInjection\Reference;
 use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
 use Perform\BaseBundle\Crud\DuplicateCrudException;
+use Symfony\Component\DependencyInjection\Definition;
+use Perform\BaseBundle\Util\StringUtil;
 
 /**
  * Register Crud services.
@@ -35,7 +37,7 @@ class CrudPass implements CompilerPassInterface
 
             foreach ($tags as $tag) {
                 if (!isset($tag['crud_name'])) {
-                    $tag['crud_name'] = $this->createCrudName($service);
+                    $tag['crud_name'] = $this->createCrudName($container->getDefinition($service));
                 }
                 $crudName = $tag['crud_name'];
 
@@ -60,10 +62,9 @@ class CrudPass implements CompilerPassInterface
             ->setArgument(1, $crudRoutes);
     }
 
-    private function createCrudName($service)
+    private function createCrudName(Definition $definition)
     {
-        // generate a sensible name from the class or service definition
-        return $service;
+        return strtolower(preg_replace('/([A-Z])/', '_\1', lcfirst(StringUtil::classBasename($definition->getClass(), 'Crud'))));
     }
 
     private function getRouteOptionsFromTag(array $tag)

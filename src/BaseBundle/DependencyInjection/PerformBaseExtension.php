@@ -53,6 +53,9 @@ class PerformBaseExtension extends Extension
         $container->registerForAutoconfiguration(FieldTypeInterface::class)
             ->addTag('perform_base.field_type');
 
+        $container->registerForAutoconfiguration(CrudInterface::class)
+            ->addTag('perform_base.crud');
+
         $container->getDefinition('perform_base.listener.crud_template')
             ->setArgument(0, LoopableServiceLocator::createDefinition([
                 'registry' => new Reference('perform_base.crud.registry'),
