@@ -17,3 +17,4 @@ We'll use the *Base*, *User*, *Media*, and *Notification* bundles to accomplish 
    :glob:
 
    setup
+   products

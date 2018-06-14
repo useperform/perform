@@ -20,6 +20,7 @@ Start with the base bundle:
 
 .. code-block:: bash
 
+   cd open-some-hours/
    composer require perform/base-bundle
 
 This will add the perform base bundle to our application.
@@ -164,3 +165,17 @@ Refresh the page http://localhost:8000. Hooray, it works!
    As you get to know Perform more, the assets workflow will start to make more sense.
 
    See :doc:`../../base-bundle/assets/index` to find out more.
+
+Save your work
+--------------
+
+   At this point in the tutorial, you might want to commit your files to version control.
+
+   Avoid committing the following files and directories:
+
+   * ``vendor/`` - composer packages, commit ``composer.lock`` instead
+   * ``node_modules/`` - npm packages, commit ``package-lock.json`` (or ``yarn.lock``) instead
+   * ``asset-paths.js``
+   * ``public/fonts``, ``public/*.js``, ``public/*.css``, ``public/*.map`` - built asset files
+
+   Instead, make sure they are present in the VCS 'ignore' file, e.g. ``.gitignore``.
