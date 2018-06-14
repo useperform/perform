@@ -2,44 +2,39 @@
 
 namespace Perform\BaseBundle\Action;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
 
 /**
- * ActionRegistry
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class ActionRegistry
 {
-    protected $container;
-    protected $actions = [];
+    protected $actions;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(LoopableServiceLocator $actions)
     {
-        $this->container = $container;
+        $this->actions = $actions;
     }
 
-    public function addAction($name, $service)
+    /**
+     * Get an action service by name.
+     *
+     * @return ActionInterface
+     */
+    public function get($name)
     {
-        $this->actions[$name] = $service;
-    }
-
-    public function getAction($name)
-    {
-        if (!isset($this->actions[$name])) {
-            throw new ActionNotFoundException(sprintf('Action "%s" has not been registered.', $name));
+        if (!$this->actions->has($name)) {
+            throw new ActionNotFoundException(sprintf('Action "%s" is not registered. Use the perform:debug:actions command to see the available actions.', $name));
         }
 
-        return $this->container->get($this->actions[$name]);
+        return $this->actions->get($name);
     }
 
-    public function getAll()
+    /**
+     * @return LoopableServiceLocator
+     */
+    public function all()
     {
-        $actions = [];
-        foreach ($this->actions as $name => $action) {
-            $actions[$name] = $this->getAction($name);
-        }
-
-        return $actions;
+        return $this->actions;
     }
 }

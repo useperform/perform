@@ -6,38 +6,36 @@ use Perform\BaseBundle\Action\ActionRegistry;
 use Perform\BaseBundle\Action\ActionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Perform\BaseBundle\Action\ActionNotFoundException;
+use Perform\BaseBundle\Test\Services;
 
 /**
- * ActionRegistryTest
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class ActionRegistryTest extends \PHPUnit_Framework_TestCase
 {
-    protected $container;
+    protected $actionOne;
+    protected $actionTwo;
     protected $registry;
 
     public function setUp()
     {
-        $this->container = $this->getMock(ContainerInterface::class);
-        $this->registry = new ActionRegistry($this->container);
+        $this->actionOne = $this->getMock(ActionInterface::class);
+        $this->actionTwo = $this->getMock(ActionInterface::class);
+        $this->registry = new ActionRegistry(Services::serviceLocator([
+            'one' => $this->actionOne,
+            'two' => $this->actionTwo,
+        ]));
     }
 
-    public function testGetAction()
+    public function testGet()
     {
-        $this->registry->addAction('foo_action', 'foo_service');
-        $action = $this->getMock(ActionInterface::class);
-        $this->container->expects($this->any())
-            ->method('get')
-            ->with('foo_service')
-            ->will($this->returnValue($action));
-
-        $this->assertSame($action, $this->registry->getAction('foo_action'));
+        $this->assertSame($this->actionOne, $this->registry->get('one'));
+        $this->assertSame($this->actionTwo, $this->registry->get('two'));
     }
 
-    public function testGetUnknownService()
+    public function testGetUnknown()
     {
         $this->setExpectedException(ActionNotFoundException::class);
-        $this->registry->getAction('bar_action');
+        $this->registry->get('unknown');
     }
 }

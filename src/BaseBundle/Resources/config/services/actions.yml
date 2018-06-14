@@ -1,9 +1,6 @@
 services:
     perform_base.action_registry:
         class: Perform\BaseBundle\Action\ActionRegistry
-        arguments:
-            - "@service_container"
-            - []
 
     perform_base.action_runner:
         class: Perform\BaseBundle\Action\ActionRunner

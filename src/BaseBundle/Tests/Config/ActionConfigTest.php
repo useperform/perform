@@ -71,7 +71,7 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
     {
         $action = $this->stubAction();
         $this->registry->expects($this->any())
-            ->method('getAction')
+            ->method('get')
             ->with('foo')
             ->will($this->returnValue($action));
 
@@ -89,7 +89,7 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
     {
         $action = $this->stubAction();
         $this->registry->expects($this->any())
-            ->method('getAction')
+            ->method('get')
             ->with('foo')
             ->will($this->returnValue($action));
         $this->config->add('foo', [

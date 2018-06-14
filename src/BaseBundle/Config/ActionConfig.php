@@ -76,7 +76,7 @@ class ActionConfig
      */
     public function add($name, array $options = [])
     {
-        return $this->addInstance($name, $this->registry->getAction($name), $options);
+        return $this->addInstance($name, $this->registry->get($name), $options);
     }
 
     /**

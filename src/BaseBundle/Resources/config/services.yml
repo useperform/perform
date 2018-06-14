@@ -1,5 +1,5 @@
 imports:
-    - { resource: services_actions.yml }
+    - { resource: services/actions.yml }
     - { resource: services/field_types.yml }
 
 services:
