@@ -27,7 +27,7 @@ class MenuBuilderTest extends \PHPUnit_Framework_TestCase
     public function testSortByPriority()
     {
         $menu = new MenuItem('base', $this->factory);
-        $menu->addChild('one');
+        $menu->addChild('one')->setExtra('priority', -10);
         $menu->addChild('two');
         $menu->addChild('three')->setExtra('priority', 40);
 
@@ -38,7 +38,7 @@ class MenuBuilderTest extends \PHPUnit_Framework_TestCase
     public function testSortByPriorityRecursively()
     {
         $menu = new MenuItem('', $this->factory);
-        $menu->addChild('one');
+        $menu->addChild('one')->setExtra('priority', -10);
         $two = $menu->addChild('two');
         $two->addChild('two.one')->setExtra('priority', 60);
         $two->addChild('two.two')->setExtra('priority', 100);
