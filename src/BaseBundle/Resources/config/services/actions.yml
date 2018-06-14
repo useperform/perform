@@ -15,3 +15,8 @@ services:
             - "@perform_base.entity_manager"
         tags:
             - { name: perform_base.action, alias: perform_base_delete }
+
+    Perform\BaseBundle\Controller\ActionController:
+        arguments:
+            - '@perform_base.action_runner'
+            - '@perform_base.routing.crud_generator'
