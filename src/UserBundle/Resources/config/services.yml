@@ -74,6 +74,9 @@ services:
         tags:
             - controller.service_arguments
 
+    Perform\UserBundle\Controller\UserController:
+        parent: Perform\BaseBundle\Controller\CrudController
+
     perform_user.auth.single_use:
         class: Perform\UserBundle\Security\SingleUseAuthenticator
         arguments:
