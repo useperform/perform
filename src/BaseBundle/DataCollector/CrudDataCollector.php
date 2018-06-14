@@ -7,8 +7,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Perform\BaseBundle\Crud\CrudRegistry;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
-use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
-use Symfony\Component\Security\Core\Authorization\TraceableAccessDecisionManager;
 use Perform\BaseBundle\Util\StringUtil;
 
 /**
@@ -18,14 +16,12 @@ class CrudDataCollector extends DataCollector
 {
     protected $registry;
     protected $store;
-    protected $accessDecisionManager;
     protected $extendedEntities;
 
-    public function __construct(CrudRegistry $registry, ConfigStoreInterface $store, AccessDecisionManagerInterface $accessDecisionManager, array $extendedEntities)
+    public function __construct(CrudRegistry $registry, ConfigStoreInterface $store, array $extendedEntities)
     {
         $this->registry = $registry;
         $this->store = $store;
-        $this->accessDecisionManager = $accessDecisionManager;
         $this->extendedEntities = $extendedEntities;
     }
 
@@ -43,7 +39,6 @@ class CrudDataCollector extends DataCollector
         $this->data = [
             'crudNames' => $crudNames,
             'extendedEntities' => $this->extendedEntities,
-            'correctVoterStrategy' => $this->accessDecisionManager instanceof TraceableAccessDecisionManager ? $this->accessDecisionManager->getStrategy() === 'unanimous' : true,
         ];
         if ($request->attributes->has('_crud')) {
             $crudName = $request->attributes->get('_crud');
@@ -88,11 +83,6 @@ class CrudDataCollector extends DataCollector
     public function getExtendedEntities()
     {
         return $this->data['extendedEntities'];
-    }
-
-    public function getCorrectVoterStrategy()
-    {
-        return $this->data['correctVoterStrategy'];
     }
 
     public function reset()

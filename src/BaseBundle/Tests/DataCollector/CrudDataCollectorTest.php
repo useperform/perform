@@ -7,7 +7,6 @@ use Perform\BaseBundle\DataCollector\CrudDataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Perform\BaseBundle\Config\ConfigStoreInterface;
-use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Perform\BaseBundle\Tests\Crud\TestCrud;
 use Perform\BaseBundle\Tests\Crud\TestEntity;
 
@@ -22,8 +21,7 @@ class CrudDataCollectorTest extends \PHPUnit_Framework_TestCase
                         ->disableOriginalConstructor()
                         ->getMock();
         $store = $this->getMock(ConfigStoreInterface::class);
-        $accessManager = $this->getMock(AccessDecisionManagerInterface::class);
-        $this->collector = new CrudDataCollector($this->registry, $store, $accessManager, []);
+        $this->collector = new CrudDataCollector($this->registry, $store, []);
     }
 
     public function testCollectGetsLoadedCrud()

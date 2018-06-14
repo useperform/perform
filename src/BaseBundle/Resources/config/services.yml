@@ -71,7 +71,6 @@ services:
         arguments:
             - '@perform_base.crud.registry'
             - '@perform_base.config_store'
-            - '@security.access.decision_manager'
             - '%perform_base.extended_entities%'
         tags:
             -
