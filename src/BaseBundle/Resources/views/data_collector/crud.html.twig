@@ -66,8 +66,8 @@ security:
       </div>
       <!-- show if entity is extended -->
     </div>
-    {% if collector.typeConfig is not null %}
-      <h2>Type Config</h2>
+    {% if collector.fieldConfig is not null %}
+      <h2>Field Config</h2>
       <table>
         <thead>
           <tr>
@@ -82,10 +82,10 @@ security:
               <td>{{ field }}</td>
               <td>
                 {% for config in addedConfigs %}
-                  {{dump(config)}}
+                  {{profiler_dump(config, 1)}}
                 {% endfor %}
               </td>
-              <td class="font-normal">{{dump(collector.typeConfig[field])}}</td>
+              <td class="font-normal">{{profiler_dump(collector.fieldConfig[field], 1)}}</td>
             </tr>
           {% endfor %}
         </tbody>
