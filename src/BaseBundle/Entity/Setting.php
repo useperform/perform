@@ -25,21 +25,6 @@ class Setting
     protected $value;
 
     /**
-     * @var mixed
-     */
-    protected $defaultValue;
-
-    /**
-     * @var string
-     */
-    protected $type;
-
-    /**
-     * @var string
-     */
-    protected $requiredRole;
-
-    /**
      * @var bool
      */
     protected $global = true;
@@ -54,12 +39,8 @@ class Setting
      */
     public function __construct($key)
     {
-        if (!is_string($key)) {
+        if (!is_string($key) || strlen(trim($key)) === 0) {
             throw new \InvalidArgumentException('A setting key must be string.');
-        }
-
-        if (!strlen($key) === 0 || !preg_match('/^[_a-z]+$/', $key)) {
-            throw new \InvalidArgumentException(sprintf('The key for a setting must be string containing lower case characters and underscores, "%s" given.', $key));
         }
 
         $this->key = $key;
@@ -88,77 +69,29 @@ class Setting
      */
     public function setValue($value)
     {
-        $this->value = $value;
+        $this->value = \serialize($value);
 
         return $this;
     }
 
     /**
+     * Get the value of the setting, null if it has not been set.
+     *
      * @return mixed
      */
     public function getValue()
     {
-        return $this->value;
-    }
+        if ($this->value !== null) {
+            $value = @\unserialize($this->value);
+            if ($value === false) {
+                // unserialize returns false on failure, but a missing value must return null
+                // check explicitly for the value being false, otherwise return null
+                return serialize(false) === $this->value ? false : null;
+            }
+            return $value;
+        }
 
-    /**
-     * @param mixed $defaultValue
-     *
-     * @return Setting
-     */
-    public function setDefaultValue($defaultValue)
-    {
-        $this->defaultValue = $defaultValue;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDefaultValue()
-    {
-        return $this->defaultValue;
-    }
-
-    /**
-     * @param string $type
-     *
-     * @return Setting
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * @param string $requiredRole
-     *
-     * @return Setting
-     */
-    public function setRequiredRole($requiredRole)
-    {
-        $this->requiredRole = $requiredRole;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRequiredRole()
-    {
-        return $this->requiredRole;
+        return null;
     }
 
     /**
@@ -194,50 +127,10 @@ class Setting
     }
 
     /**
-     * @return UserInterface
+     * @return UserInterface|null
      */
     public function getUser()
     {
         return $this->user;
-    }
-
-    /**
-     * Check if this setting requires to be updated, according to a new setting
-     * definition.
-     *
-     * @param Setting $new The new setting definition
-     */
-    public function requiresUpdate(Setting $new)
-    {
-        if ($new->getKey() !== $this->key) {
-            return false;
-        }
-
-        if ($new->isGlobal() !== $this->global
-            || $new->getRequiredRole() !== $this->requiredRole
-            || $new->getType() !== $this->type
-            || $new->getDefaultValue() !== $this->defaultValue
-        ) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Update this setting according to a new setting definition.
-     *
-     * @param Setting $new The new setting definition
-     */
-    public function update(Setting $new)
-    {
-        if ($new->getKey() !== $this->key) {
-            throw new \InvalidArgumentException(sprintf('Unable to update setting "%s" with setting definition "%s", keys must match.', $this->key, $new->getKey()));
-        }
-
-        $this->setGlobal($new->isGlobal());
-        $this->setRequiredRole($new->getRequiredRole());
-        $this->setType($new->getType());
-        $this->setDefaultValue($new->getDefaultValue());
     }
 }
