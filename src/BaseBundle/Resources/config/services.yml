@@ -243,10 +243,6 @@ services:
         arguments:
             - "%perform_base.auto_asset_version%"
 
-    perform_base.settings_importer:
-        class: Perform\BaseBundle\Settings\SettingsImporter
-        arguments: ["@doctrine.orm.entity_manager"]
-
     perform_base.repo.setting:
         class: Perform\BaseBundle\Repository\SettingRepository
         factory: ["@doctrine.orm.entity_manager", "getRepository"]
