@@ -1,0 +1,32 @@
+services:
+    perform_base.repo.setting:
+        class: Perform\BaseBundle\Repository\SettingRepository
+        factory: ['@doctrine.orm.entity_manager', 'getRepository']
+        arguments:
+            - 'PerformBaseBundle:Setting'
+
+    perform_base.settings_manager:
+        class: Perform\BaseBundle\Settings\Manager\DoctrineManager
+        arguments:
+            - '@perform_base.repo.setting'
+
+    perform_base.settings_panel_registry:
+        class: Perform\BaseBundle\Settings\SettingsPanelRegistry
+        arguments:
+            - '@twig'
+            - []
+
+    perform_base.settings.account:
+        class: Perform\BaseBundle\Settings\AccountPanel
+        tags:
+            - { name: perform_base.settings_panel, alias: account }
+
+    perform_base.data_collector.settings:
+        class: Perform\BaseBundle\DataCollector\SettingsDataCollector
+        arguments:
+            - '@perform_base.settings_manager'
+        tags:
+            -
+                name: data_collector
+                template: '@PerformBase/data_collector/settings.html.twig'
+                id: 'perform_base.settings'
