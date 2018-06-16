@@ -247,9 +247,16 @@ services:
         class: Perform\BaseBundle\Settings\SettingsImporter
         arguments: ["@doctrine.orm.entity_manager"]
 
+    perform_base.repo.setting:
+        class: Perform\BaseBundle\Repository\SettingRepository
+        factory: ["@doctrine.orm.entity_manager", "getRepository"]
+        arguments:
+            - "PerformBaseBundle:Setting"
+
     perform_base.settings_manager:
-        class: Perform\BaseBundle\Settings\SettingsManager
-        arguments: ["@doctrine.orm.entity_manager"]
+        class: Perform\BaseBundle\Settings\Manager\DoctrineManager
+        arguments:
+            - '@perform_base.repo.setting'
 
     perform_base.settings_panel_registry:
         class: Perform\BaseBundle\Settings\SettingsPanelRegistry

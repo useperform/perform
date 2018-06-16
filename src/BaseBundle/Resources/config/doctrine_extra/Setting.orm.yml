@@ -1,6 +1,7 @@
 Perform\BaseBundle\Entity\Setting:
     type: entity
     table: perform_base_setting
+    repositoryClass: Perform\BaseBundle\Repository\SettingRepository
     id:
         id:
             type: guid
