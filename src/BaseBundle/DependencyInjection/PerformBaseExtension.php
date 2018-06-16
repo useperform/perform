@@ -16,6 +16,7 @@ use Perform\BaseBundle\EventListener\SimpleMenuListener;
 use Perform\BaseBundle\Event\MenuEvent;
 use Perform\BaseBundle\Crud\CrudInterface;
 use Symfony\Component\DependencyInjection\Reference;
+use Perform\BaseBundle\Entity\Setting;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -46,6 +47,7 @@ class PerformBaseExtension extends Extension
         $this->configureResolvedEntities($container, $config);
         $this->createSimpleMenus($container, $config['menu']['simple']);
         $this->configureAssets($container, $config['assets']);
+        $this->configureSettings($container, $config['settings']);
     }
 
     protected function configureCrud(ContainerBuilder $container, array $config)
@@ -167,6 +169,13 @@ class PerformBaseExtension extends Extension
         // if no sass has been added, ensure that the extra_sass parameter will still be created
         if (!$container->hasParameter(Assets::PARAM_EXTRA_SASS)) {
             $container->setParameter(Assets::PARAM_EXTRA_SASS, []);
+        }
+    }
+
+    public function configureSettings(ContainerBuilder $container, array $config)
+    {
+        if ($config['enabled']) {
+            Doctrine::addExtraMapping($container, Setting::class, __DIR__.'/../Resources/config/doctrine_extra/Setting.orm.yml');
         }
     }
 }
