@@ -26,8 +26,7 @@ class PerformAnalyticsExtension extends Extension
         $loader->load('services.yml');
 
         $twigExtension = $container->getDefinition('perform_analytics.twig.analytics');
-        $twigExtension->addArgument($config['enabled']);
-        $twigExtension->addArgument($config['vendors']);
+        $twigExtension->setArgument(1, $config['vendors']);
 
         $settingsPanel = $container->getDefinition('perform_analytics.settings.analytics');
         $settingsPanel->addArgument($config['enabled']);

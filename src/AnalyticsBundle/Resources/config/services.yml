@@ -11,6 +11,7 @@ services:
 
     perform_analytics.twig.analytics:
         class: Perform\AnalyticsBundle\Twig\Extension\AnalyticsExtension
-        arguments: ["@perform_base.settings_manager"]
+        arguments:
+            - '@perform_base.settings_manager'
         tags:
             - {name: twig.extension}
