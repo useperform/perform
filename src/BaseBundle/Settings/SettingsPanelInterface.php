@@ -4,7 +4,7 @@ namespace Perform\BaseBundle\Settings;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
-use Perform\BaseBundle\Settings\SettingsManager;
+use Perform\BaseBundle\Settings\Manager\SettingsManagerInterface;
 
 /**
  * SettingsPanelInterface
@@ -13,9 +13,9 @@ use Perform\BaseBundle\Settings\SettingsManager;
  **/
 interface SettingsPanelInterface
 {
-    public function buildForm(FormBuilderInterface $builder, SettingsManager $manager);
+    public function buildForm(FormBuilderInterface $builder, SettingsManagerInterface $manager);
 
-    public function handleSubmission(FormInterface $form, SettingsManager $manager);
+    public function handleSubmission(FormInterface $form, SettingsManagerInterface $manager);
 
     public function getTemplate();
 
