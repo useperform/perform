@@ -3,7 +3,7 @@
 namespace Perform\NotificationBundle\Tests\RecipientProvider;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Perform\BaseBundle\Settings\SettingsManager;
+use Perform\BaseBundle\Settings\Manager\SettingsManagerInterface;
 use Perform\NotificationBundle\RecipientProvider\SettingsProvider;
 use Perform\NotificationBundle\Recipient\RecipientInterface;
 use Perform\UserBundle\Repository\UserRepository;
@@ -31,9 +31,7 @@ class SettingsProviderTest extends \PHPUnit_Framework_TestCase
             ->method('getRepository')
             ->will($this->returnValue($this->repo));
 
-        $this->settings = $this->getMockBuilder(SettingsManager::class)
-                        ->disableOriginalConstructor()
-                        ->getMock();
+        $this->settings = $this->getMock(SettingsManagerInterface::class);
         $this->provider = new SettingsProvider($this->em, $this->settings);
     }
 
