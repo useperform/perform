@@ -42,7 +42,8 @@ class CrudDataCollector extends DataCollector
         ];
         if ($request->attributes->has('_crud')) {
             $crudName = $request->attributes->get('_crud');
-            $this->data['activeCrud'] = $crudNames[$crudName][0];
+            $this->data['activeCrud'] = $crudName;
+            $this->data['activeCrudClass'] = $crudNames[$crudName][0];
             $this->data['activeCrudAlias'] = StringUtil::classBasename($crudNames[$crudName][0]);
             $this->data['activeEntity'] = $crudNames[$crudName][1];
             $this->data['fieldConfig'] = $this->cloneVar($this->store->getFieldConfig($crudName)->getAllTypes());
@@ -58,6 +59,11 @@ class CrudDataCollector extends DataCollector
     public function getActiveCrud()
     {
         return isset($this->data['activeCrud']) ? $this->data['activeCrud'] : null;
+    }
+
+    public function getActiveCrudClass()
+    {
+        return isset($this->data['activeCrudClass']) ? $this->data['activeCrudClass'] : null;
     }
 
     public function getActiveCrudAlias()

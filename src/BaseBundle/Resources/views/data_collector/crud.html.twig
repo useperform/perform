@@ -37,15 +37,22 @@
   {% if collector.activeCrud is not null %}
     <h2>Active Crud</h2>
     <div class="metrics">
-      <div class="metric">
-        <span class="value">{{collector.activeCrud}}</span>
-        <span class="label">Crud Class</span>
-      </div>
-
-      <div class="metric">
-        <span class="value">{{collector.activeEntity}}</span>
-        <span class="label">Entity Class</span>
-      </div>
+      <table>
+        <tbody>
+          <tr>
+            <th>Crud Name</th>
+            <td>{{collector.activeCrud}}</td>
+          </tr>
+          <tr>
+            <th>Crud Class</th>
+            <td>{{collector.activeCrudClass}}</td>
+          </tr>
+          <tr>
+            <th>Entity Class</th>
+            <td>{{collector.activeEntity}}</td>
+          </tr>
+        </tbody>
+      </table>
       <!-- show if entity is extended -->
     </div>
     {% if collector.fieldConfig is not null %}
