@@ -29,7 +29,7 @@ class PerformAnalyticsExtension extends Extension
         $twigExtension->setArgument(1, $config['vendors']);
 
         $settingsPanel = $container->getDefinition('perform_analytics.settings.analytics');
-        $settingsPanel->addArgument($config['enabled']);
+        $settingsPanel->addArgument($config['settings_panel_can_enable']);
         $settingsPanel->addArgument($config['vendors']);
     }
 }

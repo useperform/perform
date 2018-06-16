@@ -6,6 +6,8 @@ services:
 
     perform_analytics.settings.analytics:
         class: Perform\AnalyticsBundle\Settings\AnalyticsPanel
+        arguments:
+            - '@perform_base.settings_manager'
         tags:
             - { name: perform_base.settings_panel, alias: analytics }
 

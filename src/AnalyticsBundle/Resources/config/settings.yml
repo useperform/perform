@@ -1,2 +1,2 @@
-perform_analytics_ga_key:
+perform_analytics.ga_key:
     type: string
