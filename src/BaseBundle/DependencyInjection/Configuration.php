@@ -134,6 +134,11 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('manager')
                             ->defaultValue('parameters')
                         ->end()
+                        ->scalarNode('cache')
+                        ->end()
+                        ->integerNode('cache_expiry')
+                            ->defaultValue(0)
+                        ->end()
                     ->end()
                 ->end()
             ->end();

@@ -15,8 +15,10 @@ use Perform\BaseBundle\EventListener\SimpleMenuListener;
 use Perform\BaseBundle\Event\MenuEvent;
 use Perform\BaseBundle\Crud\CrudInterface;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Definition;
 use Perform\BaseBundle\Entity\Setting;
 use Perform\BaseBundle\Settings\Manager\DoctrineManager;
+use Perform\BaseBundle\Settings\Manager\CacheableManager;
 use Perform\BaseBundle\Settings\Manager\ParametersManager;
 
 /**
@@ -190,6 +192,15 @@ class PerformBaseExtension extends Extension
         default:
             // service
             $container->setAlias($managerService, $config['manager']);
+            $manager = new Reference($config['manager']);
+        }
+
+        if (isset($config['cache'])) {
+            $cacheableManager = new Definition(CacheableManager::class);
+            $cacheableManager->setArgument(0, $manager);
+            $cacheableManager->setArgument(1, new Reference($config['cache']));
+            $cacheableManager->setArgument(2, $config['cache_expiry']);
+            $container->setDefinition($managerService, $cacheableManager);
         }
     }
 }
