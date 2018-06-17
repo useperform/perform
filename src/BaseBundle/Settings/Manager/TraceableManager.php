@@ -19,6 +19,11 @@ class TraceableManager implements SettingsManagerInterface
         $this->manager = $manager;
     }
 
+    public function getInnerManager()
+    {
+        return $this->manager;
+    }
+
     public function getValue($key, $default = null)
     {
         try {

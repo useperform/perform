@@ -24,6 +24,7 @@ class SettingsDataCollector extends DataCollector
         $this->data['getCalls'] = $this->settings->getGetCalls();
         $this->data['setCalls'] = $this->settings->getSetCalls();
         $this->data['used'] = isset($this->data['getCalls'][0]) || isset($this->data['setCalls'][0]);
+        $this->data['managerClass'] = get_class($this->settings->getInnerManager());
     }
 
     public function reset()
@@ -67,5 +68,10 @@ class SettingsDataCollector extends DataCollector
     public function getUsed()
     {
         return $this->data['used'];
+    }
+
+    public function getManagerClass()
+    {
+        return $this->data['managerClass'];
     }
 }
