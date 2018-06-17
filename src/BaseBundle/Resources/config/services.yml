@@ -1,6 +1,7 @@
 imports:
     - { resource: services/actions.yml }
     - { resource: services/field_types.yml }
+    - { resource: services/settings.yml }
 
 services:
     perform_base.crud.registry:
@@ -242,23 +243,6 @@ services:
         public: false
         arguments:
             - "%perform_base.auto_asset_version%"
-
-    perform_base.settings_importer:
-        class: Perform\BaseBundle\Settings\SettingsImporter
-        arguments: ["@doctrine.orm.entity_manager"]
-
-    perform_base.settings_manager:
-        class: Perform\BaseBundle\Settings\SettingsManager
-        arguments: ["@doctrine.orm.entity_manager"]
-
-    perform_base.settings_panel_registry:
-        class: Perform\BaseBundle\Settings\SettingsPanelRegistry
-        arguments: ["@twig", []]
-
-    perform_base.settings.account:
-        class: Perform\BaseBundle\Settings\AccountPanel
-        tags:
-            - { name: perform_base.settings_panel, alias: account }
 
     perform_base.markdown:
         class: League\CommonMark\CommonMarkConverter

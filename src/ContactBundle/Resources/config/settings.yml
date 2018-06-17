@@ -1,3 +1,0 @@
-perform_contact_notify_address:
-    type: string
-    defaultValue: me@glynnforrest.com

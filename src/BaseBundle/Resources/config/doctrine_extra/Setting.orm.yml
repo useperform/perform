@@ -1,6 +1,7 @@
 Perform\BaseBundle\Entity\Setting:
     type: entity
     table: perform_base_setting
+    repositoryClass: Perform\BaseBundle\Repository\SettingRepository
     id:
         id:
             type: guid
@@ -13,15 +14,6 @@ Perform\BaseBundle\Entity\Setting:
             column: key_name
         value:
             type: text
-            nullable: true
-        defaultValue:
-            type: text
-            nullable: true
-        type:
-            type: string
-        requiredRole:
-            type: string
-            nullable: true
         global:
             type: boolean
     manyToOne:

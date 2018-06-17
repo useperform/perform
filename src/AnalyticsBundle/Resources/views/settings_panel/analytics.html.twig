@@ -8,22 +8,25 @@
 {% endblock %}
 
 {% block panel %}
-  {# 2 for _token #}
-  {% if not enabled %}
+  {% if not canEnable and not enabled %}
     <div class="alert alert-danger">
       <i class="fa fa-warning"></i>
       Analytics hasn't been enabled.
       You can edit these settings, but tracking codes will not appear on the site until it is enabled.
       Contact the site administrator.
     </div>
-  {% elseif form|length < 2 %}
+  {% endif %}
+  {% if vendors|length < 1 %}
     <div class="alert alert-warning">
       <i class="fa fa-warning"></i>
-      Analytics is enabled, but no integrations have been configured.
+      No analytics integrations have been configured.
       Contact the site administrator.
     </div>
   {% endif %}
-  {% for row in form %}
-    {{form_row(row)}}
+  {% if canEnable %}
+    {{form_row(form.enabled)}}
+  {% endif %}
+  {% for vendor in vendors %}
+    {{form_row(form[vendor])}}
   {% endfor %}
 {% endblock %}

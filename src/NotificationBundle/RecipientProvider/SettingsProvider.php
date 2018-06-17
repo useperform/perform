@@ -3,7 +3,7 @@
 namespace Perform\NotificationBundle\RecipientProvider;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Perform\BaseBundle\Settings\SettingsManager;
+use Perform\BaseBundle\Settings\Manager\SettingsManagerInterface;
 use Perform\NotificationBundle\Recipient\SimpleRecipient;
 
 /**
@@ -17,7 +17,7 @@ class SettingsProvider implements RecipientProviderInterface
     protected $entityManager;
     protected $settings;
 
-    public function __construct(EntityManagerInterface $entityManager, SettingsManager $settings)
+    public function __construct(EntityManagerInterface $entityManager, SettingsManagerInterface $settings)
     {
         $this->entityManager = $entityManager;
         $this->settings = $settings;

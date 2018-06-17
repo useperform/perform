@@ -89,7 +89,7 @@ class ContactFormHandler
     public function sendNotifications(Message $message)
     {
         $recipients = $this->recipientProvider->getRecipients([
-            'setting' => 'perform_contact_notify_address',
+            'setting' => 'perform_contact.notify_address',
         ]);
         $notification = new Notification($recipients, 'PerformContactBundle:new_message', [
             'subject' => 'New contact form message from '.$message->getName(),

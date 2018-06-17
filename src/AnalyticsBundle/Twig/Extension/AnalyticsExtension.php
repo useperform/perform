@@ -2,7 +2,7 @@
 
 namespace Perform\AnalyticsBundle\Twig\Extension;
 
-use Perform\BaseBundle\Settings\SettingsManager;
+use Perform\BaseBundle\Settings\Manager\SettingsManagerInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -10,13 +10,11 @@ use Perform\BaseBundle\Settings\SettingsManager;
 class AnalyticsExtension extends \Twig_Extension
 {
     protected $settings;
-    protected $enabled;
     protected $vendors;
 
-    public function __construct(SettingsManager $settings, $enabled, array $vendors = [])
+    public function __construct(SettingsManagerInterface $settings, array $vendors = [])
     {
         $this->settings = $settings;
-        $this->enabled = (bool) $enabled;
         $this->vendors = $vendors;
     }
 
@@ -29,7 +27,7 @@ class AnalyticsExtension extends \Twig_Extension
 
     public function getTrackingCode()
     {
-        if (!$this->enabled) {
+        if (!$this->settings->getValue('perform_analytics.enabled', false)) {
             return sprintf('<!-- disabled: analytics for %s -->', implode(', ', $this->vendors));
         }
 
@@ -55,7 +53,7 @@ ga('send', 'pageview');
 </script>
 EOF;
 
-        return sprintf($script, $this->settings->getValue('perform_analytics_ga_key'));
+        return sprintf($script, $this->settings->getRequiredValue('perform_analytics.ga_key'));
     }
 
     public function getName()

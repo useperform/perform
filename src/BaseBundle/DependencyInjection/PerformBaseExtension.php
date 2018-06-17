@@ -10,13 +10,16 @@ use Symfony\Component\Finder\Finder;
 use Perform\BaseBundle\Doctrine\EntityResolver;
 use Perform\Licensing\Licensing;
 use Perform\BaseBundle\FieldType\FieldTypeInterface;
-use Perform\BaseBundle\FieldType\FieldTypeRegistry;
 use Money\Money;
 use Perform\BaseBundle\EventListener\SimpleMenuListener;
 use Perform\BaseBundle\Event\MenuEvent;
 use Perform\BaseBundle\Crud\CrudInterface;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Definition;
 use Perform\BaseBundle\Entity\Setting;
+use Perform\BaseBundle\Settings\Manager\DoctrineManager;
+use Perform\BaseBundle\Settings\Manager\CacheableManager;
+use Perform\BaseBundle\Settings\Manager\ParametersManager;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -174,8 +177,30 @@ class PerformBaseExtension extends Extension
 
     public function configureSettings(ContainerBuilder $container, array $config)
     {
-        if ($config['enabled']) {
+        $managerService = 'perform_base.settings_manager';
+
+        switch ($config['manager']) {
+        case 'doctrine':
             Doctrine::addExtraMapping($container, Setting::class, __DIR__.'/../Resources/config/doctrine_extra/Setting.orm.yml');
+            $manager = $container->register($managerService, DoctrineManager::class);
+            $manager->setArgument(0, new Reference('perform_base.repo.setting'));
+            break;
+        case 'parameters':
+            $manager = $container->register($managerService, ParametersManager::class);
+            $manager->setArgument(0, new Reference('service_container'));
+            break;
+        default:
+            // service
+            $container->setAlias($managerService, $config['manager']);
+            $manager = new Reference($config['manager']);
+        }
+
+        if (isset($config['cache'])) {
+            $cacheableManager = new Definition(CacheableManager::class);
+            $cacheableManager->setArgument(0, $manager);
+            $cacheableManager->setArgument(1, new Reference($config['cache']));
+            $cacheableManager->setArgument(2, $config['cache_expiry']);
+            $container->setDefinition($managerService, $cacheableManager);
         }
     }
 }
