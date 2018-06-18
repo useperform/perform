@@ -33,7 +33,6 @@ services:
 
     perform_user.doctrine.user_listener:
         class: Perform\UserBundle\Doctrine\UserListener
-        arguments: ["@service_container"]
         tags:
             - { name: doctrine.event_subscriber }
 

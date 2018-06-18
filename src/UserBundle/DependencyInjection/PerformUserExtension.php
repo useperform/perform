@@ -10,6 +10,8 @@ use Perform\Licensing\Licensing;
 use Perform\BaseBundle\DependencyInjection\Doctrine;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Perform\UserBundle\Entity\User;
+use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -32,5 +34,10 @@ class PerformUserExtension extends Extension
         $tokenManager->addArgument($config['reset_token_expiry']);
 
         Doctrine::registerDefaultImplementation($container, UserInterface::class, User::class);
+
+        $userListener = $container->getDefinition('perform_user.doctrine.user_listener');
+        $userListener->setArgument(0, LoopableServiceLocator::createDefinition([
+            'encoder_factory' => new Reference('security.encoder_factory'),
+        ]));
     }
 }
