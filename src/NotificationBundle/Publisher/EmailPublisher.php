@@ -33,7 +33,7 @@ class EmailPublisher implements PublisherInterface
         }
 
         foreach ($notification->getRecipients() as $recipient) {
-            $message = \Swift_Message::newInstance()
+            $message = (new \Swift_Message)
                      ->setSubject($context['subject'])
                      ->setTo($recipient->getEmail())
                      ->setFrom($this->defaultFrom)
