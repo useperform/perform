@@ -23,7 +23,7 @@ class NotificationsDataCollector extends DataCollector
 
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
-        $this->data['sent'] = $this->notifier->getSent();
+        $this->data['sent'] = $this->cloneVar($this->notifier->getSent());
         $this->data['sentCount'] = count($this->data['sent']);
         $this->data['publishers'] = $this->notifier->getPublisherClasses();
     }
