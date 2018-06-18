@@ -4,18 +4,30 @@ namespace Perform\UserBundle\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Perform\UserBundle\Entity\User;
 use Symfony\Component\Console\Question\Question;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Command\Command;
+use Perform\BaseBundle\Doctrine\EntityResolver;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  */
-class UpdateRolesCommand extends ContainerAwareCommand
+class UpdateRolesCommand extends Command
 {
+    protected $em;
+    protected $resolver;
+
+    public function __construct(EntityManagerInterface $em, EntityResolver $resolver)
+    {
+        $this->em = $em;
+        $this->resolver = $resolver;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this->setName('perform:user:update-roles')
@@ -29,8 +41,7 @@ class UpdateRolesCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $user = $this->getUser($input, $output, $em);
+        $user = $this->getUser($input, $output);
 
         $output->writeln([
             sprintf('Current roles for <info>%s</info>:', $user->getEmail()),
@@ -54,8 +65,8 @@ class UpdateRolesCommand extends ContainerAwareCommand
             $output->writeln(sprintf('Removing role <info>%s</info>', $role));
         }
 
-        $em->persist($user);
-        $em->flush();
+        $this->em->persist($user);
+        $this->em->flush();
 
         $output->writeln([
             '',
@@ -63,7 +74,7 @@ class UpdateRolesCommand extends ContainerAwareCommand
         ]);
     }
 
-    protected function getUser(InputInterface $input, OutputInterface $output, EntityManagerInterface $em)
+    protected function getUser(InputInterface $input, OutputInterface $output)
     {
         $email = $input->getArgument('email');
         if (!$email) {
@@ -71,8 +82,7 @@ class UpdateRolesCommand extends ContainerAwareCommand
             $email = $this->getHelper('question')->ask($input, $output, $question);
         }
 
-        $resolver = $this->getContainer()->get('perform_base.doctrine.entity_resolver');
-        $user = $em->getRepository($resolver->resolve('PerformUserBundle:User'))->findOneByEmail($email);
+        $user = $this->em->getRepository($this->resolver->resolve('PerformUserBundle:User'))->findOneByEmail($email);
 
         if (!$user) {
             throw new \RuntimeException(sprintf('User with email "%s" was not found.', $email));
