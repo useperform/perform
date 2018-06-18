@@ -16,5 +16,6 @@ tools to build applications rapidly:
    ./assets/index
    ./crud/index
    ./settings/index
+   ./doctrine/index
    ./menu
    ./styling

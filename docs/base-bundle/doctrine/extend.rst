@@ -1,5 +1,5 @@
-Extending Doctrine entities
-===========================
+Extending entities
+==================
 
 A common scenario when using a collection of bundles like Perform is the need to extend an entity.
 You want to use all the logic and tools provided by the bundles, but
