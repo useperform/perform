@@ -4,24 +4,34 @@ namespace Perform\UserBundle\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Perform\UserBundle\Entity\User;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Command\Command;
+use Doctrine\ORM\EntityManagerInterface;
+use Perform\BaseBundle\Doctrine\EntityResolver;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  */
-class UpdatePasswordCommand extends ContainerAwareCommand
+class ResetPasswordCommand extends Command
 {
-    protected $name = 'perform:user:update-password';
-    protected $description = 'Update a user password';
+    protected $em;
+    protected $resolver;
+
+    public function __construct(EntityManagerInterface $em, EntityResolver $resolver)
+    {
+        $this->em = $em;
+        $this->resolver = $resolver;
+
+        parent::__construct();
+    }
 
     protected function configure()
     {
-        $this->setName($this->name)
-            ->setDescription($this->description)
-            ->addArgument('email', InputArgument::OPTIONAL, 'Email address of the user.')
+        $this->setName('perform:user:reset-password')
+            ->setDescription('Reset a password')
+            ->addArgument('email', InputArgument::OPTIONAL, 'Email address of the user')
             ;
     }
 
@@ -33,9 +43,7 @@ class UpdatePasswordCommand extends ContainerAwareCommand
             $email = $this->getHelper('question')->ask($input, $output, $question);
         }
 
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $resolver = $this->getContainer()->get('perform_base.doctrine.entity_resolver');
-        $user = $em->getRepository($resolver->resolve('PerformUserBundle:User'))->findOneByEmail($email);
+        $user = $this->em->getRepository($this->resolver->resolve('PerformUserBundle:User'))->findOneByEmail($email);
 
         if (!$user) {
             throw new \RuntimeException(sprintf('User with email "%s" was not found.', $email));
@@ -47,8 +55,8 @@ class UpdatePasswordCommand extends ContainerAwareCommand
         $question->setHiddenFallback(false);
         $user->setPlainPassword($helper->ask($input, $output, $question));
 
-        $em->persist($user);
-        $em->flush();
+        $this->em->persist($user);
+        $this->em->flush();
 
         $output->writeln(sprintf('Updated password for user <info>%s</info>, email <info>%s</info>.', $user->getFullname(), $user->getEmail()));
     }

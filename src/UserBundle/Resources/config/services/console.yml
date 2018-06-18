@@ -5,3 +5,10 @@ services:
             - '@perform_base.doctrine.entity_resolver'
         tags:
             - console.command
+
+    Perform\UserBundle\Command\ResetPasswordCommand:
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@perform_base.doctrine.entity_resolver'
+        tags:
+            - console.command
