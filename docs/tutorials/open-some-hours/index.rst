@@ -1,7 +1,7 @@
 Open Some Hours
 ===============
 
-Arkwight and Granville run a small shop.
+Arkwright and Granville run a small shop.
 Tired of managing their inventory manually with spreadsheets and bits of paper, they've decided to create a web app to track it all in a single place.
 
 Our task is to create it.
@@ -18,3 +18,4 @@ We'll use the *Base*, *User*, *Media*, and *Notification* bundles to accomplish 
 
    setup
    products
+   logins

@@ -129,7 +129,7 @@ Add to ``config/routes.yaml``:
 Add a menu link
 ---------------
 
-Add a new entry to ``perform_base:menu:simple`` in ``config/perform_base.yaml``:
+Add a new entry to ``perform_base:menu:simple`` in ``config/packages/perform_base.yaml``:
 
 .. code-block:: diff
 
@@ -146,6 +146,47 @@ And create a label for it in ``translations/PerformBaseBundle.en.yml``:
 
    menu:
        products: 'Products'
+
+Enabling actions
+----------------
+
+Add to ``routes.yaml``:
+
+.. code-block:: yaml
+
+    actions:
+        resource: '@PerformBaseBundle/Resources/config/routing/actions.yml'
+
+
+Enable the crud security voter in ``config/packages/perform_base.yaml`` so basic actions like viewing, editing, and deleting are available:
+
+.. code-block:: diff
+
+      perform_base:
+    +     security:
+    +         crud_voter: true
+          menu:
+              simple:
+
+
+To use the voter, we have to set the security strategy to ``unanimous`` in ``config/packages/security.yaml``:
+
+.. code-block:: diff
+
+      security:
+          providers:
+              in_memory: { memory: ~ }
+    +     access_decision_manager:
+    +         strategy: unanimous
+
+
+The crud voter grants access to all entities that have a crud, for attributes like ``VIEW``, ``EDIT``, and ``DELETE``.
+Without this voter, these access decisions will be denied unless you register a voter yourself.
+
+.. note::
+
+   Security is a deep topic that we only skim over in this tutorial.
+   Don't worry if you don't understand everything that is going on here; our aim is to get up and running quickly.
 
 Results
 -------
