@@ -1,3 +1,6 @@
+imports:
+    - services/console.yml
+
 services:
     perform_user.listener.login:
         class: Perform\UserBundle\EventListener\LoginListener

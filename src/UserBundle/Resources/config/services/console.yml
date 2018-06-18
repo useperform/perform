@@ -1,0 +1,7 @@
+services:
+    Perform\UserBundle\Command\CreateUserCommand:
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@perform_base.doctrine.entity_resolver'
+        tags:
+            - console.command
