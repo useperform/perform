@@ -20,3 +20,5 @@ services:
         arguments:
             - '@perform_base.action_runner'
             - '@perform_base.routing.crud_generator'
+        tags:
+            - controller.service_arguments
