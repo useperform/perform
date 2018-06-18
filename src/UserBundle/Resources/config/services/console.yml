@@ -19,3 +19,9 @@ services:
             - '@perform_base.doctrine.entity_resolver'
         tags:
             - console.command
+
+    Perform\UserBundle\Command\PurgeResetTokensCommand:
+        arguments:
+            - '@perform_user.reset_token_manager'
+        tags:
+            - console.command

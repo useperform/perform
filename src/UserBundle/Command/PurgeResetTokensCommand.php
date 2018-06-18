@@ -4,25 +4,33 @@ namespace Perform\UserBundle\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
+use Perform\UserBundle\Security\ResetTokenManager;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class PurgeResetTokensCommand extends ContainerAwareCommand
+class PurgeResetTokensCommand extends Command
 {
+    protected $tokenManager;
+
+    public function __construct(ResetTokenManager $tokenManager)
+    {
+        $this->tokenManager = $tokenManager;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        $this->setName('perform:purge-reset-tokens')
+        $this->setName('perform:user:purge-reset-tokens')
             ->setDescription('Remove expired password reset tokens from the database.')
             ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $count = $this->getContainer()->get('perform_user.reset_token_manager')
-                  ->removeStaleTokens(new \DateTime());
+        $count = $this->tokenManager->removeStaleTokens(new \DateTime());
 
         $output->writeln(sprintf('Removed <info>%s</info> expired %s from the database.', $count, $count === 1 ? 'token' : 'tokens'));
     }
