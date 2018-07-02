@@ -30,7 +30,7 @@ Import the login routes provided by the bundle in ``config/routes.yaml``:
     login:
         resource: '@PerformUserBundle/Resources/config/routing/login.yml'
 
-And configure the firewall in ``config/packages/security.yml``:
+And configure the firewall in ``config/packages/security.yaml``:
 
 .. code-block:: diff
 

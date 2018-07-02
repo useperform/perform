@@ -72,12 +72,29 @@ Next, create the database if it doesn't exist:
 
    ./bin/console doctrine:database:create
 
+.. note::
+
+    If you're using PostgreSQL, make sure the ``uuid-ossp`` extension is installed:
+
+    .. code-block:: bash
+
+        ./bin/console doctrine:query:sql 'create extension "uuid-ossp"'
 
 With an empty database created, we can now update the database schema to create the new products table:
 
 .. code-block:: bash
 
    ./bin/console doctrine:schema:update --force --dump-sql
+
+Enable the ``timestampable`` doctrine extension in ``config/packages/stof_doctrine_extensions.yaml``:
+
+.. code-block:: yaml
+
+      stof_doctrine_extensions:
+          default_locale: en_US
+    +     orm:
+    +         default:
+    +             timestampable: true
 
 Create a crud class
 -------------------
