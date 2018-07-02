@@ -30,6 +30,7 @@ help:
 	@echo "  htmlhelp   to make HTML files and a HTML help project"
 	@echo "  qthelp     to make HTML files and a qthelp project"
 	@echo "  applehelp  to make an Apple Help Book"
+	@echo "  dev        to run a livereload server for development"
 	@echo "  devhelp    to make HTML files and a Devhelp project"
 	@echo "  epub       to make an epub"
 	@echo "  epub3      to make an epub3"
@@ -107,6 +108,10 @@ applehelp:
 	@echo "N.B. You won't be able to view it unless you put it in" \
 	      "~/Library/Documentation/Help or install it in your application" \
 	      "bundle."
+
+.PHONY: dev
+dev:
+	(cd _themes/perform; npm run dev)
 
 .PHONY: devhelp
 devhelp:
