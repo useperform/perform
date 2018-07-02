@@ -28,11 +28,11 @@ This will add the perform base bundle to our application.
 Dev dependencies
 ~~~~~~~~~~~~~~~~
 
-For our convenience, let's add the dev bundle and symfony web server:
+For our convenience, let's add the perform dev bundle, symfony debug tools, and symfony web server:
 
 .. code-block:: bash
 
-   composer require --dev perform/dev-bundle server
+   composer require --dev perform/dev-bundle debug-pack server
 
 
 The first controller

@@ -94,17 +94,64 @@ We can now login as the two shopkeepers.
 Restricting to roles
 --------------------
 
-Arkwright is quite controlling, and doesn't want Granville to be able to create or edit products.
+Arkwright is quite controlling, and doesn't want Granville to be able to create, edit, or delete products.
 
-He does want Granville to be able to update the quantities however.
+Let's create a custom voter that only allows users with the ``ROLE_ADMIN`` role to change products.
 
-Let's create a custom voter that only allows users with the ``ROLE_ADMIN`` role to edit products.
+Use the ``make:voter`` command in the maker bundle:
+
+.. code-block:: bash
+
+   ./bin/console make:voter ProductVoter
+
+Now replace the ``supports`` and ``voteOnAttribute`` methods with the following:
+
+.. code-block:: php
+
+    use App\Entity\Product;
+    use Perform\UserBundle\Entity\User;
+
+    class ProductVoter extends Voter
+    {
+        protected function supports($attribute, $subject)
+        {
+            return $subject instanceof Product || $subject === 'product';
+        }
+
+        protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+        {
+            $user = $token->getUser();
+            if (!$user instanceof User) {
+                return false;
+            }
+
+            if ($attribute === 'VIEW') {
+                return true;
+            }
+
+            // all other actions available to Arkwright only
+            return in_array('ROLE_ADMIN', $user->getRoles(), true);
+        }
+    }
+
+Make sure you add use statements for the ``Product`` and ``User`` entities.
 
 Now give Arkwright the ``ROLE_ADMIN`` role:
 
 .. code-block:: bash
 
    ./bin/console perform:user:update-roles arkwright@example.com --add ROLE_ADMIN
+
+Now login as Arkwright, and then again as Granville.
+
+You'll notice that for Granville, the product pages are now read-only.
+
+Column-level permissions
+------------------------
+
+With the new security system in place, Granville is unable to fulfill one of his duties - updating stock quantities.
+
+It'd be nice if we could allow Granville to edit **only** the ``quantity`` property, with everything else being restricted.
 
 Forgotten passwords
 -------------------
