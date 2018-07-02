@@ -146,12 +146,70 @@ Now login as Arkwright, and then again as Granville.
 
 You'll notice that for Granville, the product pages are now read-only.
 
-Column-level permissions
-------------------------
+Field-level permissions
+-----------------------
 
 With the new security system in place, Granville is unable to fulfill one of his duties - updating stock quantities.
 
 It'd be nice if we could allow Granville to edit **only** the ``quantity`` property, with everything else being restricted.
+
+We can accomplish this by injecting Symfony's authorization checker to the ``ProductCrud`` class, and using the results of that to decide what fields to enable.
+
+Update ``src/Crud/ProductCrud.php`` with the following:
+
+.. code-block:: diff
+
+    + use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+    + use Perform\BaseBundle\Crud\CrudRequest;
+
+      class ProductCrud extends AbstractCrud
+      {
+    +     protected $authChecker;
+    +
+    +     public function __construct(AuthorizationCheckerInterface $authChecker)
+    +     {
+    +         $this->authChecker = $authChecker;
+    +     }
+    +
+          public function configureFields(FieldConfig $config)
+          {
+    +         if (!$this->authChecker->isGranted('ROLE_ADMIN')) {
+    +             $config->setDefaultContexts([
+    +                 CrudRequest::CONTEXT_LIST,
+    +                 CrudRequest::CONTEXT_VIEW,
+    +             ]);
+    +         }
+    +
+              $config->add('name', [
+                  'type' => 'string',
+              ])->add('quantity', [
+                  'type' => 'integer',
+              ])->add('description', [
+                  'type' => 'text',
+              ]);
+    +
+    +         if (!$this->authChecker->isGranted('ROLE_ADMIN')) {
+    +             $config->add('quantity', [
+    +                 'contexts' => [
+    +                     CrudRequest::CONTEXT_LIST,
+    +                     CrudRequest::CONTEXT_VIEW,
+    +                     CrudRequest::CONTEXT_EDIT,
+    +                 ],
+    +             ]);
+    +         }
+          }
+      }
+
+And tweak the voter in ``src/Security/Voter/ProductVoter.php`` to allow Granville to edit products:
+
+.. code-block:: diff
+
+    - if ($attribute === 'VIEW') {
+    + if ($attribute === 'VIEW' || $attribute === 'EDIT') {
+          return true;
+      }
+
+Perfect! Granville can edit products now, but **only** the quantity field.
 
 Forgotten passwords
 -------------------
