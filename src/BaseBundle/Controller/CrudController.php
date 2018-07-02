@@ -95,6 +95,7 @@ class CrudController extends Controller
         $crudRequest = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_CREATE);
         $this->initialize($crudRequest);
         $crudName = $crudRequest->getCrudName();
+        $this->denyAccessUnlessGranted('CREATE', $crudName);
         $builder = $this->createFormBuilder($entity = $this->newEntity());
         $form = $this->createForm($this->crud->getFormType(), $entity, [
             'crud_name' => $crudName,

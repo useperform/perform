@@ -50,7 +50,7 @@ class CrudVoter extends Voter
                 return true;
             }
 
-            return in_array($attribute, ['VIEW', 'EDIT']) &&
+            return in_array($attribute, ['CREATE', 'VIEW', 'EDIT']) &&
                 $this->urlGenerator->routeExists($subject, strtolower($attribute));
         }
 
@@ -60,7 +60,7 @@ class CrudVoter extends Voter
 
         // entity class
         // can vote if it has a crud and the attribute is one of the
-        // crud contexts that is checked with an entity object (not LIST or EXPORT)
+        // crud contexts that is checked with an entity object (not CREATE, LIST, or EXPORT)
         $class = get_class($subject);
         if (!isset($this->classSupportsCache[$class])) {
             $this->classSupportsCache[$class] =
