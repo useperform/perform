@@ -15,6 +15,9 @@
 import sys
 import os
 
+from sphinx.highlighting import lexers
+from pygments.lexers.web import PhpLexer
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -103,6 +106,8 @@ pygments_style = 'trac'
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
 
+# Don't require <?php open tag in php code
+lexers['php'] = PhpLexer(startinline=True)
 
 # -- Options for HTML output ----------------------------------------------
 
