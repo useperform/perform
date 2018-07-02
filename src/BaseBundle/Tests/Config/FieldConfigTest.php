@@ -353,4 +353,19 @@ class FieldConfigTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(['one' => [$first, $second]], $this->config->getAddedConfigs());
     }
+
+    public function testDefaultContextsCanBeChanged()
+    {
+        $defaults = [
+            CrudRequest::CONTEXT_LIST,
+            CrudRequest::CONTEXT_VIEW,
+        ];
+        $this->config->setDefaultContexts($defaults);
+
+        $this->config->add('one', [
+            'type' => 'string',
+        ]);
+
+        $this->assertSame($defaults, $this->config->getAllTypes()['one']['contexts']);
+    }
 }
