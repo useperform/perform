@@ -163,8 +163,36 @@ For example, here we tell the ``datetime`` type to show a human friendly date di
             ]);
     }
 
-Creating a new type
--------------------
+Change the default contexts
+----------------------------
+
+Adding a field without the ``contexts`` option will enable it for all contexts by default.
+
+You can change this default by calling ``setDefaultContexts()``:
+
+.. code-block:: php
+
+    public function configureFields(FieldConfig $config)
+    {
+        // fields are read-only by default
+        $config->setDefaultContexts([
+            CrudRequest::CONTEXT_LIST,
+            CrudRequest::CONTEXT_VIEW,
+        ]);
+        $config->add('title', [
+            'type' => 'string',
+        ]);
+    }
+
+.. note::
+
+   The new defaults will only apply to ``add()`` invocations after this method has been called, so you should probably place it at the top of the ``configureFields()`` method.
+
+   You may call this method multiple times.
+   Each call to ``add()`` will use the latest given defaults.
+
+Creating a new field type
+-------------------------
 
 Create a service that implements ``Perform\Base\FieldType\FieldTypeInterface``, either through autowiring or manually.
 
