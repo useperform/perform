@@ -15,3 +15,4 @@ Perform introduces the concept of `crud` classes that configure CRUD operations 
    ./actions
    ./exporting
    ./events
+   ./security
