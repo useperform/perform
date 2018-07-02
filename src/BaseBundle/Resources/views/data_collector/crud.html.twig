@@ -70,7 +70,8 @@
             <tr>
               <td>{{ field }}</td>
               <td>
-                {% for config in addedConfigs %}
+                {% for i, config in addedConfigs %}
+                  <span>{{i}}</span>
                   {{profiler_dump(config, 1)}}
                 {% endfor %}
               </td>
