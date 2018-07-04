@@ -18,9 +18,8 @@ interface BundleAwareInstallerInterface
     /**
      * Run the installation in the given bundles.
      *
-     * @param ContainerInterface $container
-     * @param LoggerInterface    $logger
      * @param BundleInterface[]  $bundles
+     * @param LoggerInterface    $logger
      */
-    public function installBundles(ContainerInterface $container, LoggerInterface $logger, array $bundles);
+    public function installBundles(array $bundles, LoggerInterface $logger);
 }
