@@ -83,3 +83,10 @@ services:
         class: Perform\UserBundle\Security\SingleUseAuthenticator
         arguments:
             - '@uri_signer'
+
+    Perform\UserBundle\Installer\UsersInstaller:
+        arguments:
+            - '@perform_user.importer.user'
+            - '%kernel.root_dir%/config/perform_users.yml'
+        tags:
+            - perform_base.installer
