@@ -10,9 +10,18 @@ use Symfony\Component\Console\Input\InputOption;
 use Perform\BaseBundle\Installer\InstallerInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Perform\BaseBundle\Installer\BundleAwareInstallerInterface;
+use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
 
 class InstallCommand extends ContainerAwareCommand
 {
+    protected $installers;
+
+    public function __construct(LoopableServiceLocator $installers)
+    {
+        $this->installers = $installers;
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this->setName('perform:install')
@@ -37,12 +46,11 @@ class InstallCommand extends ContainerAwareCommand
                 'Only run installers matching the given names'
             )
             ;
-        BundleFilter::addOptions($this);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $usedBundles = BundleFilter::filterBundles($input, $this->getApplication()->getKernel()->getBundles());
+        $logger = new ConsoleLogger($output);
 
         foreach ($this->getInstallers($input, $output) as $installer) {
             $msg = sprintf($installer instanceof BundleAwareInstallerInterface ?
@@ -56,75 +64,61 @@ class InstallCommand extends ContainerAwareCommand
             }
 
             if ($installer instanceof BundleAwareInstallerInterface) {
-                $installer->installBundles($this->getContainer(), new ConsoleLogger($output), $usedBundles);
+                $installer->installBundles($usedBundles, $logger);
                 continue;
             }
 
-            $installer->install($this->getContainer(), new ConsoleLogger($output));
+            $installer->install($logger);
         }
     }
 
     protected function getInstallers(InputInterface $input, OutputInterface $output)
     {
-        $usedBundleNames = BundleFilter::filterBundleNames($input, $this->getApplication()->getKernel()->getBundles());
+        $filteredNames = $input->getOption('only-installers');
+        $noConfig = $input->getOption('no-config');
 
-        $mapper = function($classname, $classBasename, BundleInterface $bundle) use ($usedBundleNames) {
-            $r = new \ReflectionClass($classname);
-            if (!$r->isSubclassOf(InstallerInterface::class) || $r->isAbstract()) {
-                return false;
+        $installers = [];
+        foreach ($this->installers as $installer) {
+            if (!$this->nameMatches($installer, $filteredNames)) {
+                continue;
+            }
+            if (!$this->canRun($output, $installer, $noConfig)) {
+                continue;
             }
 
-            // installers to use are in the used bundles, or are bundle-aware
-            if (in_array($bundle->getName(), $usedBundleNames) || $r->isSubclassOf(BundleAwareInstallerInterface::class)) {
-                return $r->newInstance();
-            }
+            $installers[] = $installer;
+        }
 
-            return false;
-        };
-
-        $installers = $this->getContainer()->get('perform_base.bundle_searcher')
-                    ->findClassesWithNamespaceSegment('Installer', $mapper);
-
-        $installers = $this->filterNames($installers, $input->getOption('only-installers'));
-
-        return $this->filterNoConfig($output, $installers, $input->getOption('no-config'));
+        return $installers;
     }
 
-    protected function filterNames(array $installers, array $only)
+    protected function nameMatches(InstallerInterface $installer, array $only)
     {
         if (empty($only)) {
-            return $installers;
+            return true;
         }
 
-        return array_filter($installers, function ($installer) use ($only) {
-            $class = get_class($installer);
-            $pieces = explode('\\', $class);
-            $end = strtolower(end($pieces));
-            foreach ($only as $item) {
-                if ($item === $class || strtolower($item) === $end || strtolower($item).'installer' === $end) {
-                    return true;
-                }
-            }
-
-            return false;
-        });
-    }
-
-    protected function filterNoConfig(OutputInterface $output, array $installers, $noConfig)
-    {
-        if (!$noConfig) {
-            return $installers;
-        }
-
-        return array_filter($installers, function ($installer) use ($output) {
-            if (!$installer->requiresConfiguration()) {
+        $class = get_class($installer);
+        $pieces = explode('\\', $class);
+        $end = strtolower(end($pieces));
+        foreach ($only as $item) {
+            if ($item === $class || strtolower($item) === $end || strtolower($item).'installer' === $end) {
                 return true;
             }
-            if ($output->isVerbose()) {
-                $output->writeln(sprintf('Skipping <info>%s</info> as it requires configuration', get_class($installer)));
-            }
+        }
 
-            return false;
-        });
+        return false;
+    }
+
+    protected function canRun(OutputInterface $output, InstallerInterface $installer, $noConfig)
+    {
+        if (!$noConfig || !$installer->requiresConfiguration()) {
+            return true;
+        }
+        if ($output->isVerbose()) {
+            $output->writeln(sprintf('Skipping <info>%s</info> as it requires configuration', get_class($installer)));
+        }
+
+        return false;
     }
 }

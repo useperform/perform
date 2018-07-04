@@ -1,0 +1,5 @@
+services:
+    Perform\BaseBundle\Command\InstallCommand:
+        arguments:
+        tags:
+            - console.command

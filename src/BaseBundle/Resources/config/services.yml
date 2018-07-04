@@ -2,6 +2,7 @@ imports:
     - { resource: services/actions.yml }
     - { resource: services/field_types.yml }
     - { resource: services/settings.yml }
+    - services/console.yml
 
 services:
     perform_base.crud.registry:
