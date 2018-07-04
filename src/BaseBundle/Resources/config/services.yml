@@ -295,3 +295,8 @@ services:
             - '%perform_base.assets.theme%'
         tags:
             - {name: kernel.event_listener, event: perform_base.asset_dump.add, method: onAddAssets}
+
+    perform_base.installer.assets:
+        class: Perform\BaseBundle\Installer\AssetsInstaller
+        tags:
+            - perform_base.installer
