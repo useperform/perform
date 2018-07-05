@@ -20,52 +20,44 @@ class UserImporter
         $this->repo = $entityManager->getRepository('PerformUserBundle:User');
     }
 
-    public function import(User $user)
+    public function import(array $definitions)
     {
-        $existing = $this->find($user->getEmail());
-        if ($existing) {
+        $newUsers = [];
+        foreach ($definitions as $definition) {
+            $user = $this->importUser($definition);
+            if ($user) {
+                $newUsers[] = $user;
+            }
+        }
+
+        if (!empty($newUsers)) {
+            $this->entityManager->flush();
+        }
+
+        return $newUsers;
+    }
+
+    protected function importUser(array $definition)
+    {
+        if (!isset($definition['email'])) {
+            throw new \InvalidArgumentException('Missing required "email" property for importing a user.`');
+        }
+
+        $existing = $this->repo->findOneBy(['email' => $definition['email']]);
+        if ($existing instanceof User) {
             return;
         }
 
+        $user = $this->newUser($definition);
         $this->entityManager->persist($user);
-        $this->entityManager->flush();
+
+        return $user;
     }
 
-    public function importYamlFile($path)
+    protected function newUser(array $definition)
     {
-        foreach ($this->parseYamlFile($path) as $user) {
-            $this->import($user);
-        }
-    }
-
-    protected function find($email)
-    {
-        return $this->repo->findOneBy(['email' => $email]);
-    }
-
-    public function parseYamlFile($path)
-    {
-        $config = Yaml::parse(file_get_contents($path));
-
-        foreach ($config as $email => $definition) {
-            $collection[] = $this->newUser($email, $definition);
-        }
-
-        return $collection;
-    }
-
-    protected function newUser($email, array $definition)
-    {
-        $resolver = new OptionsResolver();
-        $resolver->setRequired('forename')
-            ->setRequired('surname')
-            ->setRequired('password')
-            ->setDefault('roles', [])
-            ->setAllowedTypes('roles', 'array');
-        $definition = $resolver->resolve($definition);
-
         $user = new User();
-        $user->setEmail($email)
+        $user->setEmail($definition['email'])
             ->setForename($definition['forename'])
             ->setSurname($definition['surname'])
             ->setPassword($definition['password']);

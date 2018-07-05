@@ -21,6 +21,22 @@ class Configuration implements ConfigurationInterface
                     ->info('Number of seconds after generation.')
                     ->defaultValue(1800)
                 ->end()
+                ->arrayNode('initial_users')
+                    ->prototype('array')
+                        ->children()
+                            ->scalarNode('email')->isRequired()->end()
+                            ->scalarNode('password')
+                                ->isRequired()
+                                ->info('The hashed password')
+                            ->end()
+                            ->scalarNode('forename')->isRequired()->end()
+                            ->scalarNode('surname')->isRequired()->end()
+                            ->arrayNode('roles')
+                                ->prototype('scalar')
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;

@@ -3,7 +3,6 @@
 namespace Perform\UserBundle\Installer;
 
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Perform\BaseBundle\Installer\InstallerInterface;
 use Perform\UserBundle\Importer\UserImporter;
 
@@ -13,27 +12,23 @@ use Perform\UserBundle\Importer\UserImporter;
 class UsersInstaller implements InstallerInterface
 {
     protected $importer;
-    protected $usersFile;
+    protected $userDefinitions = [];
 
-    public function __construct(UserImporter $importer, $usersFile)
+    public function __construct(UserImporter $importer, array $userDefinitions)
     {
         $this->importer = $importer;
-        $this->usersFile = $usersFile;
+        $this->userDefinitions = $userDefinitions;
     }
 
     public function install(LoggerInterface $logger)
     {
-        if (!file_exists($this->usersFile)) {
-            $logger->debug(sprintf('Not importing users from <info>%s</info>, file not found', $this->usersFile));
+        $count = count($this->userDefinitions);
+        if ($count < 1) {
+            $logger->debug('No initial users found in configuration');
             return;
         }
 
-        $logger->info(sprintf('Importing users from <info>%s</info>', $this->usersFile));
-        $this->importer->importYamlFile($this->usersFile);
-    }
-
-    public function requiresConfiguration()
-    {
-        return true;
+        $logger->info(sprintf('Importing <info>%s</info> %s from configuration', $count, $count === 1 ? 'user' : 'users'));
+        $this->importer->import($this->userDefinitions);
     }
 }

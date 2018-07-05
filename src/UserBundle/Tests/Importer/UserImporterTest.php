@@ -4,6 +4,8 @@ namespace Perform\UserBundle\Tests\Importer;
 
 use Perform\UserBundle\Importer\UserImporter;
 use Perform\UserBundle\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Common\Persistence\ObjectRepository;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -16,8 +18,8 @@ class UserImporterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->entityManager = $this->getMock('Doctrine\ORM\EntityManagerInterface');
-        $this->repo = $this->getMock('Doctrine\Common\Persistence\ObjectRepository');
+        $this->entityManager = $this->getMock(EntityManagerInterface::class);
+        $this->repo = $this->getMock(ObjectRepository::class);
         $this->entityManager->expects($this->any())
             ->method('getRepository')
             ->with('PerformUserBundle:User')
@@ -25,23 +27,35 @@ class UserImporterTest extends \PHPUnit_Framework_TestCase
         $this->importer = new UserImporter($this->entityManager);
     }
 
-    public function testImportNewUser()
+    public function testImport()
     {
-        $user = new User();
+        $defs = [
+            [
+                'email' => 'user@example.com',
+                'forename' => 'Test',
+                'surname' => 'User',
+                'password' => 'some_pass_hash',
+                'roles' => [],
+            ],
+        ];
         $this->entityManager->expects($this->once())
             ->method('persist')
-            ->with($user);
+            ->with($this->callback(function ($user) {
+                return $user instanceof User
+                    && $user->getEmail() === 'user@example.com'
+                    && $user->getForename() === 'Test'
+                    && $user->getSurname() === 'User'
+                    && $user->getPassword() === 'some_pass_hash'
+                    && $user->getRoles() === ['ROLE_USER']
+                    ;
+            }));
         $this->entityManager->expects($this->once())
             ->method('flush');
-        $this->importer->import($user);
+        $this->importer->import($defs);
     }
 
-    public function testExistingUserStopsImport()
+    public function testImportExistingUser()
     {
-        $existing = new User();
-        $existing->setEmail('test@example.com');
-        $new = new User();
-        $new->setEmail('test@example.com');
         $this->entityManager->expects($this->never())
             ->method('persist');
         $this->entityManager->expects($this->never())
@@ -49,37 +63,33 @@ class UserImporterTest extends \PHPUnit_Framework_TestCase
         $this->repo->expects($this->once())
             ->method('findOneBy')
             ->with(['email' => 'test@example.com'])
-            ->will($this->returnValue($existing));
+            ->will($this->returnValue(new User()));
 
-        $this->importer->import($new);
+        $this->importer->import([
+            [
+                'email' => 'test@example.com',
+            ],
+        ]);
     }
 
-    public function testParseYamlFile()
+    public function testImportWithRoles()
     {
-        $users = $this->importer->parseYamlFile(__DIR__.'/sample_users.yml');
-        $this->assertSame(2, count($users));
-
-        $one = $users[0];
-        $this->assertSame('test@example.com', $one->getEmail());
-        $this->assertSame('Test', $one->getForename());
-        $this->assertSame('User', $one->getSurname());
-        $this->assertSame('some_bcrypt_hash', $one->getPassword());
-        $this->assertSame(['ROLE_USER'], $one->getRoles());
-
-        $two = $users[1];
-        $this->assertSame('test@example.co.uk', $two->getEmail());
-        $this->assertSame('Test2', $two->getForename());
-        $this->assertSame('User2', $two->getSurname());
-        $this->assertSame('some_other_bcrypt_hash', $two->getPassword());
-        $this->assertSame(['ROLE_USER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN'], $two->getRoles());
-    }
-
-    public function testImportYamlFile()
-    {
-        $this->entityManager->expects($this->exactly(2))
-            ->method('persist');
-        $this->entityManager->expects($this->exactly(2))
-            ->method('flush');
-        $this->importer->importYamlFile(__DIR__.'/sample_users.yml');
+        $defs = [
+            [
+                'email' => 'user@example.com',
+                'forename' => 'Test',
+                'surname' => 'User',
+                'password' => 'some_pass_hash',
+                'roles' => ['ROLE_ADMIN'],
+            ],
+        ];
+        $this->entityManager->expects($this->once())
+            ->method('persist')
+            ->with($this->callback(function ($user) {
+                return $user instanceof User
+                    && $user->getRoles() === ['ROLE_USER', 'ROLE_ADMIN']
+                    ;
+            }));
+        $this->importer->import($defs);
     }
 }

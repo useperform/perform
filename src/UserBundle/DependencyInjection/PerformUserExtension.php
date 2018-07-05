@@ -35,6 +35,9 @@ class PerformUserExtension extends Extension
 
         Doctrine::registerDefaultImplementation($container, UserInterface::class, User::class);
 
+        $container->getDefinition('Perform\UserBundle\Installer\UsersInstaller')
+            ->setArgument(1, $config['initial_users']);
+
         $userListener = $container->getDefinition('perform_user.doctrine.user_listener');
         $userListener->setArgument(0, LoopableServiceLocator::createDefinition([
             'encoder_factory' => new Reference('security.encoder_factory'),
