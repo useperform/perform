@@ -9,7 +9,6 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputOption;
 use Perform\BaseBundle\Installer\InstallerInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
-use Perform\BaseBundle\Installer\BundleAwareInstallerInterface;
 use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
 
 class InstallCommand extends ContainerAwareCommand
@@ -53,18 +52,10 @@ class InstallCommand extends ContainerAwareCommand
         $logger = new ConsoleLogger($output);
 
         foreach ($this->getInstallers($input, $output) as $installer) {
-            $msg = sprintf($installer instanceof BundleAwareInstallerInterface ?
-                           'Running bundle-aware <info>%s</info>' :
-                           'Running <info>%s</info>',
-                           get_class($installer));
+            $msg = sprintf('Running <info>%s</info>', get_class($installer));
             $output->writeln($msg);
 
             if ($input->getOption('dry-run')) {
-                continue;
-            }
-
-            if ($installer instanceof BundleAwareInstallerInterface) {
-                $installer->installBundles($usedBundles, $logger);
                 continue;
             }
 

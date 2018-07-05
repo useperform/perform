@@ -15,9 +15,4 @@ interface InstallerInterface
      * @param LoggerInterface $logger
      */
     public function install(LoggerInterface $logger);
-
-    /**
-     * @return bool
-     */
-    public function requiresConfiguration();
 }
