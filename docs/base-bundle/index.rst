@@ -19,3 +19,4 @@ tools to build applications rapidly:
    ./doctrine/index
    ./menu
    ./styling
+   ./installers
