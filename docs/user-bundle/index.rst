@@ -15,3 +15,4 @@ The *PerformUserBundle* provides a user implementation with many useful features
    ./setup
    ./password-resets
    ./one-time-logins
+   ./initial-users
