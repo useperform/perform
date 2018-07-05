@@ -213,5 +213,7 @@ class FieldConfig
     public function setDefaultContexts(array $contexts)
     {
         $this->defaultContexts = $contexts;
+
+        return $this;
     }
 }

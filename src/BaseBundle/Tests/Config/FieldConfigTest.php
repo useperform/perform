@@ -360,7 +360,7 @@ class FieldConfigTest extends \PHPUnit_Framework_TestCase
             CrudRequest::CONTEXT_LIST,
             CrudRequest::CONTEXT_VIEW,
         ];
-        $this->config->setDefaultContexts($defaults);
+        $this->assertSame($this->config, $this->config->setDefaultContexts($defaults));
 
         $this->config->add('one', [
             'type' => 'string',
