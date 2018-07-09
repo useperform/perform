@@ -29,7 +29,11 @@ class FieldTypeRegistry
     }
 
     /**
-     * Get a configured OptionsResolver for a given type.
+     * Get a configured OptionsResolver for a given field type.
+     *
+     * The resolver will be used to validate each of the options keys
+     * when adding the field: 'options', 'listOptions', 'viewOptions',
+     * 'createOptions', 'editOptions'.
      *
      * @return OptionsResolver
      */

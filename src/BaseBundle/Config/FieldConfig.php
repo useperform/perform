@@ -32,6 +32,7 @@ class FieldConfig
         CrudRequest::CONTEXT_EDIT,
         CrudRequest::CONTEXT_EXPORT,
     ];
+    protected $defaultContextsChanged = false;
     protected $defaultSort;
 
     public function __construct(FieldTypeRegistry $registry)
@@ -109,11 +110,15 @@ class FieldConfig
             if (!isset($config['type'])) {
                 throw new InvalidFieldException('FieldConfig#add() requires "type" to be set.');
             }
-            if (!isset($config['contexts'])) {
-                $config['contexts'] = $this->defaultContexts;
+            $this->fields[$name] = $this->registry->getType($config['type'])->getDefaultConfig();
+
+            // set default contexts if the field type didn't provide
+            // any with its default config, or if the default contexts
+            // have been explicitly changed
+            if (!isset($this->fields[$name]['contexts']) || $this->defaultContextsChanged) {
+                $this->fields[$name]['contexts'] = $this->defaultContexts;
             }
 
-            $this->fields[$name] = $this->registry->getType($config['type'])->getDefaultConfig();
             $this->normaliseOptions($this->fields[$name]);
         }
 
@@ -213,6 +218,7 @@ class FieldConfig
     public function setDefaultContexts(array $contexts)
     {
         $this->defaultContexts = $contexts;
+        $this->defaultContextsChanged = true;
 
         return $this;
     }

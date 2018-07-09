@@ -368,4 +368,30 @@ class FieldConfigTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($defaults, $this->config->getAllTypes()['one']['contexts']);
     }
+
+    public function testUnsetDefaultContextsDoNotOverrideContextsFromFieldType()
+    {
+        // default contexts have not been set, respect the default from the type
+        $this->stubType->expects($this->any())
+            ->method('getDefaultConfig')
+            ->will($this->returnValue([
+                'contexts' => [CrudRequest::CONTEXT_VIEW],
+            ]));
+
+        $this->config->add('one', [
+            'type' => 'stub',
+        ]);
+        $this->assertSame([CrudRequest::CONTEXT_VIEW], $this->config->getAllTypes()['one']['contexts']);
+
+        // default contexts have been set, should override the default from the type
+        $defaults = [
+            CrudRequest::CONTEXT_LIST,
+            CrudRequest::CONTEXT_VIEW,
+        ];
+        $this->config->setDefaultContexts($defaults);
+        $this->config->add('two', [
+            'type' => 'stub',
+        ]);
+        $this->assertSame($defaults, $this->config->getAllTypes()['two']['contexts']);
+    }
 }
