@@ -27,11 +27,13 @@
 {% endblock %}
 
 {% block list %}
-  {% if multiple %}
+  {% if multiple is defined and multiple %}
     {{value | length}} items
   {% else %}
     {% with {entity: value} %}
-      {{block('single_entity')}}
+      {% if entity %}
+        {{block('single_entity')}}
+      {% endif %}
     {% endwith %}
   {% endif %}
 {% endblock %}
