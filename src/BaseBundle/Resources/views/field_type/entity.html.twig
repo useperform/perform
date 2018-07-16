@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block view %}
-  {% if multiple %}
+  {% if multiple is defined and multiple %}
     <ul class="list-unstyled">
       {% for item in value %}
         <li>
