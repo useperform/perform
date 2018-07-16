@@ -4,3 +4,5 @@ perform_base:
             Perform\BaseBundle\Tests\Fixtures\ResolveEntities\ResolveBundle\Entity\AnimalInterface:
                 Perform\BaseBundle\Tests\Fixtures\ResolveEntities\ResolveBundle\Entity\Man: Perform\BaseBundle\Tests\Fixtures\ResolveEntities\ResolveBundle\Entity\Dog
                 Perform\BaseBundle\Tests\Fixtures\ResolveEntities\ResolveBundle\Entity\Woman: Perform\BaseBundle\Tests\Fixtures\ResolveEntities\ResolveBundle\Entity\Cat
+            # resolve to a mapped superclass, should fail
+            Perform\BaseBundle\Tests\Fixtures\ResolveEntities\ResolveBundle\Entity\BuildingInterface: Perform\BaseBundle\Tests\Fixtures\ResolveEntities\ResolveBundle\Entity\Building

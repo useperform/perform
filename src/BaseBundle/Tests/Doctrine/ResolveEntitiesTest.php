@@ -6,6 +6,7 @@ use Perform\BaseBundle\Test\TestKernel;
 use Perform\BaseBundle\Tests\Fixtures\ResolveEntities\ResolveBundle\ResolveBundle;
 use Perform\BaseBundle\Tests\Fixtures\ResolveEntities\ResolveBundle\Entity\Dog;
 use Perform\BaseBundle\Tests\Fixtures\ResolveEntities\ResolveBundle\Entity\Cat;
+use Doctrine\ORM\Mapping\MappingException;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -38,5 +39,12 @@ class ResolveEntitiesTest extends \PHPUnit_Framework_TestCase
         $woman = $em->getClassMetadata('ResolveBundle:Woman');
         $cat = $woman->getAssociationMapping('pet');
         $this->assertSame(Cat::class, $cat['targetEntity']);
+    }
+
+    public function testResolveToMappedSuperclassThrowException()
+    {
+        $em = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
+        $this->setExpectedException(MappingException::class);
+        $em->getClassMetadata('ResolveBundle:BuildingInterface');
     }
 }
