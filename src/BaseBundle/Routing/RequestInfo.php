@@ -18,10 +18,27 @@ class RequestInfo
         $this->requestStack = $requestStack;
     }
 
+    /**
+     * Get the referer for the current request, falling back to a
+     * default if none is present.
+     *
+     * To prevent a loop, the fallback will be used if the referer
+     * matches the URL of the current request.
+     */
     public function getReferer($fallback = '/')
     {
-        $headers = $this->requestStack->getCurrentRequest()->headers;
+        $request = $this->requestStack->getCurrentRequest();
+        if (!$request->headers->has('referer')) {
+            return $fallback;
+        }
 
-        return $headers->has('referer') ? $headers->get('referer') : $fallback;
+        $prev = $request->headers->get('referer');
+        $current = $request->getUri();
+
+        if (trim($current) === trim($prev)) {
+            return $fallback;
+        }
+
+        return $prev;
     }
 }

@@ -47,4 +47,15 @@ class RequestInfoTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame('/', $this->info->getReferer());
     }
+
+    public function testSameRefererAsCurrentRequestIsIgnored()
+    {
+        $request = Request::create('https://example.com/some-url');
+        $request->headers->set('referer', 'https://example.com/some-url');
+        $this->stack->expects($this->any())
+            ->method('getCurrentRequest')
+            ->will($this->returnValue($request));
+
+        $this->assertSame('/fallback', $this->info->getReferer('/fallback'));
+    }
 }
