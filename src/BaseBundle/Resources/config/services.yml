@@ -162,6 +162,13 @@ services:
         tags:
             - {name: twig.extension}
 
+    perform_base.twig.routing:
+        class: Perform\BaseBundle\Twig\Extension\RoutingExtension
+        arguments:
+            - "@perform_base.routing.info"
+        tags:
+            - {name: twig.extension}
+
     perform_base.twig.asset:
         class: Perform\BaseBundle\Twig\Extension\AssetExtension
         arguments: ["@perform_base.asset_container"]
