@@ -99,6 +99,11 @@ services:
         arguments:
             - "@router"
 
+    perform_base.routing.info:
+        class: Perform\BaseBundle\Routing\RequestInfo
+        arguments:
+            - "@request_stack"
+
     perform_base.listener.crud_template:
         class: Perform\BaseBundle\EventListener\CrudTemplateListener
         tags:
