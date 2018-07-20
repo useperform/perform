@@ -157,8 +157,6 @@ services:
 
     perform_base.twig.util:
         class: Perform\BaseBundle\Twig\Extension\UtilExtension
-        arguments:
-            - "@perform_base.routing.checker"
         tags:
             - {name: twig.extension}
 
@@ -166,6 +164,7 @@ services:
         class: Perform\BaseBundle\Twig\Extension\RoutingExtension
         arguments:
             - "@perform_base.routing.info"
+            - "@perform_base.routing.checker"
         tags:
             - {name: twig.extension}
 
