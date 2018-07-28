@@ -174,12 +174,44 @@ You can change this default by calling ``setDefaultContexts()``:
         ]);
     }
 
-.. note::
+The new defaults will only apply to ``add()`` invocations after this method has been called, so you should probably place it at the top of the ``configureFields()`` method.
 
-   The new defaults will only apply to ``add()`` invocations after this method has been called, so you should probably place it at the top of the ``configureFields()`` method.
+You may call this method multiple times.
+Each call to ``add()`` will use the latest given defaults.
 
-   You may call this method multiple times.
-   Each call to ``add()`` will use the latest given defaults.
+Relationship to ``getDefaultConfig()``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If the array returned from ``FieldTypeInterface#getDefaultConfig()`` includes contexts, they will be overridden if ``setDefaultContexts()`` has been called.
+
+For example, if a field type returned:
+
+.. code-block:: php
+
+    public function getDefaultConfig()
+    {
+        return [
+            'contexts' => [
+                CrudRequest::CONTEXT_VIEW,
+            ]
+        ];
+    }
+
+but ``setDefaultContexts()`` had been called by the crud class:
+
+   .. code-block:: php
+
+    public function configureFields(FieldConfig $config)
+    {
+        $config->setDefaultContexts([
+            CrudRequest::CONTEXT_LIST,
+            CrudRequest::CONTEXT_VIEW,
+        ]);
+    }
+
+then the field would be shown in the ``list`` and ``view`` contexts.
+
+If ``setDefaultContexts()`` had not been called in the crud class, it would only be shown in the ``view`` context.
 
 Creating a new field type
 -------------------------
