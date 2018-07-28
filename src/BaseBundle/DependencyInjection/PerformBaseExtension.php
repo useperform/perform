@@ -20,6 +20,7 @@ use Perform\BaseBundle\Entity\Setting;
 use Perform\BaseBundle\Settings\Manager\DoctrineManager;
 use Perform\BaseBundle\Settings\Manager\CacheableManager;
 use Perform\BaseBundle\Settings\Manager\ParametersManager;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -40,6 +41,9 @@ class PerformBaseExtension extends Extension
 
         if (class_exists(Money::class)) {
             $loader->load('services/money.yml');
+        }
+        if (\class_exists(Serializer::class)) {
+            $loader->load('services/serializer.yml');
         }
 
         $container->setParameter('perform_base.menu_order', $config['menu']['order']);
