@@ -5,11 +5,9 @@ namespace Perform\BaseBundle\Twig\Extension;
 use Carbon\Carbon;
 
 /**
- * General twig helpers.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class UtilExtension extends \Twig_Extension
+class DateExtension extends \Twig_Extension
 {
     public function getFilters()
     {
@@ -25,10 +23,5 @@ class UtilExtension extends \Twig_Extension
         }
 
         return Carbon::instance($date)->diffForHumans();
-    }
-
-    public function getName()
-    {
-        return 'perform_base_util';
     }
 }

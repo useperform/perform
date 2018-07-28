@@ -2,18 +2,18 @@
 
 namespace Perform\BaseBundle\Tests\Twig;
 
-use Perform\BaseBundle\Twig\Extension\UtilExtension;
+use Perform\BaseBundle\Twig\Extension\DateExtension;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class UtilExtensionTest extends \PHPUnit_Framework_TestCase
+class DateExtensionTest extends \PHPUnit_Framework_TestCase
 {
     protected $extension;
 
     public function setUp()
     {
-        $this->extension = new UtilExtension();
+        $this->extension = new DateExtension();
     }
 
     public function testHumanDateNoDate()

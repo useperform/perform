@@ -155,8 +155,8 @@ services:
             - {name: twig.extension}
             - {name: kernel.event_listener, method: onKernelRequest, event: kernel.request}
 
-    perform_base.twig.util:
-        class: Perform\BaseBundle\Twig\Extension\UtilExtension
+    perform_base.twig.date:
+        class: Perform\BaseBundle\Twig\Extension\DateExtension
         tags:
             - {name: twig.extension}
 
