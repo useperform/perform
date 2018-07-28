@@ -38,8 +38,9 @@
         "doctrine/data-fixtures": "Use database fixtures",
         "fzaninotto/faker": "Use database fixtures",
         "league/commonmark": "Use the markdown type",
+        "moneyphp/money": "Use the money type",
         "sonata-project/exporter": "Export entities to a variety of formats",
-        "moneyphp/money": "To use the money type"
+        "symfony/serializer": "Use the serialize twig filter"
     },
     "autoload": {
         "psr-4": {
