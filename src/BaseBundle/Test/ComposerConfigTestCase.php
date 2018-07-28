@@ -95,10 +95,10 @@ abstract class ComposerConfigTestCase extends \PHPUnit_Framework_TestCase
         $parentConfig = $this->getParentConfig();
 
         $bundleSuggestions = isset($bundleConfig['suggest']) ? $bundleConfig['suggest'] : [];
-        $parentSuggestions = $parentConfig['suggest'];
+        $parentPackages = array_keys(array_merge($parentConfig['suggest'], $parentConfig['require']));
 
         foreach (array_keys($bundleSuggestions) as $suggestion) {
-            $this->assertArrayHasKey($suggestion, $parentSuggestions, sprintf('Parent composer.json does not contain suggested dependency "%s"', $suggestion));
+            $this->assertContains($suggestion, $parentPackages, sprintf('Parent composer.json does not suggest or require suggested dependency "%s"', $suggestion));
         }
     }
 }
