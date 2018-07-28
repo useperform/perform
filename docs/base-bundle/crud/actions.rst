@@ -30,12 +30,12 @@ configured to only run after passing various conditions.
 Required configuration
 ----------------------
 
-Add ``routing_action.yml`` from the base bundle to your routing configuration:
+Add ``routing/actions.yml`` from the base bundle to your routing configuration:
 
 .. code-block:: yaml
 
     perform_base_action:
-        resource: "@PerformBaseBundle/Resources/config/routing_action.yml"
+        resource: "@PerformBaseBundle/Resources/config/routing/actions.yml"
         prefix: /admin/_action
 
 This resource loads routes for a controller in the `BaseBundle` that handles the different actions.

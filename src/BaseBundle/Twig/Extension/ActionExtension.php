@@ -111,7 +111,7 @@ class ActionExtension extends \Twig_Extension
         try {
             return $this->urlGenerator->generate('perform_base_action_index', ['action' => $action->getName()]);
         } catch (RouteNotFoundException $e) {
-            throw MissingResourceException::create($e, '@PerformBaseBundle/Resources/config/routing_action.yml', 'to use action buttons', 'perform_base_action_index');
+            throw MissingResourceException::create($e, '@PerformBaseBundle/Resources/config/routing/actions.yml', 'to use action buttons', 'perform_base_action_index');
         }
     }
 }
