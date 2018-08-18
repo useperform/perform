@@ -15,6 +15,7 @@ class DateType extends DateTimeType
     public function getDefaultConfig()
     {
         return [
+            'template' => '@PerformBase/field_type/datetime.html.twig',
             'options' => [
                 'format' => 'd/m/Y',
                 'human' => false,

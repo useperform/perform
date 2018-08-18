@@ -3,7 +3,6 @@
 namespace Perform\BaseBundle\FieldType;
 
 use Symfony\Component\Form\FormBuilderInterface;
-use Carbon\Carbon;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType as FormType;
 use Perform\BaseBundle\Form\Type\DatePickerType;
@@ -25,6 +24,9 @@ class DateTimeType extends AbstractType
      * @doc datepicker If true, use the interactive datepicker to set the value in forms.
      *
      * @doc datepicker_options An array of options to pass to the datepicker form type, if used.
+     *
+     * @doc view_timezone The timezone to use when displaying the data.
+     * This option will be passed to the form type in the edit and create contexts.
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -36,7 +38,8 @@ class DateTimeType extends AbstractType
                 'format' => 'hh:mma dd/MM/yyyy',
                 'pick_date' => true,
                 'pick_time' => true,
-            ]
+            ],
+            'view_timezone' => 'UTC',
         ]);
         $resolver->setRequired(['human', 'format']);
         $resolver->setAllowedTypes('human', 'boolean');
@@ -48,6 +51,7 @@ class DateTimeType extends AbstractType
     public function getDefaultConfig()
     {
         return [
+            'template' => '@PerformBase/field_type/datetime.html.twig',
             'viewOptions' => [
                 'human' => false,
             ],
@@ -57,15 +61,15 @@ class DateTimeType extends AbstractType
     public function listContext($entity, $field, array $options = [])
     {
         $datetime = $this->accessor->getValue($entity, $field);
-        if (!$datetime instanceof \DateTime || $datetime->format('Y') === '-0001') {
-            return 'Unknown';
+        if (!$datetime instanceof \DateTimeInterface || $datetime->format('Y') === '-0001') {
+            $datetime = null;
         }
 
-        if ($options['human']) {
-            return Carbon::instance($datetime)->diffForHumans();
-        }
-
-        return $datetime->format($options['format']);
+        return [
+            'value' => $datetime,
+            'field' => $field,
+            'options' => $options,
+        ];
     }
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
@@ -73,6 +77,7 @@ class DateTimeType extends AbstractType
         if (!$options['datepicker']) {
             // select boxes
             $builder->add($field, FormType::class, [
+                'view_timezone' => $options['view_timezone'],
             ]);
 
             return;
