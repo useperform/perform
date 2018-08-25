@@ -7,18 +7,21 @@ use Perform\BaseBundle\FieldType\DateTimeType;
 use Perform\BaseBundle\Config\FieldConfig;
 use Perform\BaseBundle\Test\Services;
 use Perform\BaseBundle\Crud\CrudRequest;
+use Perform\BaseBundle\Test\FieldTypeTestCase;
+use Perform\BaseBundle\Test\WhitespaceAssertions;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class DateTimeTypeTest extends \PHPUnit_Framework_TestCase
+class DateTimeTypeTest extends FieldTypeTestCase
 {
-    public function setUp()
+    use WhitespaceAssertions;
+
+    protected function registerTypes()
     {
-        $this->registry = Services::fieldTypeRegistry([
+        return [
             'datetime' => new DateTimeType(),
-        ]);
-        $this->config = new FieldConfig($this->registry);
+        ];
     }
 
     public function testListContextWithDefaults()
@@ -28,21 +31,31 @@ class DateTimeTypeTest extends \PHPUnit_Framework_TestCase
         $this->config->add('date', [
             'type' => 'datetime',
         ]);
-        $options = $this->config->getTypes(CrudRequest::CONTEXT_LIST)['date']['listOptions'];
-
-        $this->assertSame('1 second ago', $this->registry->getType('datetime')->listContext($obj, 'date', $options));
+        $this->assertTrimmedString('1 second ago', $this->listContext($obj, 'date'));
     }
 
     public function testViewContextWithDefaults()
     {
         $obj = new \stdClass();
-        $obj->date = new \DateTime();
+        $obj->date = new \DateTime('2017-12-12 09:30');
         $this->config->add('date', [
             'type' => 'datetime',
         ]);
-        $options = $this->config->getTypes(CrudRequest::CONTEXT_VIEW)['date']['viewOptions'];
-
         $expected = $obj->date->format('g:ia d/m/Y');
-        $this->assertSame($expected, $this->registry->getType('datetime')->viewContext($obj, 'date', $options));
+        $this->assertTrimmedString('9:30am 12/12/2017', $this->viewContext($obj, 'date'));
+    }
+
+    public function testViewContextWithTimezone()
+    {
+        $obj = new \stdClass();
+        $obj->date = new \DateTime('2017-12-12 09:30', new \DateTimeZone('UTC'));
+        $this->config->add('date', [
+            'type' => 'datetime',
+            'options' => [
+                'view_timezone' => 'America/Chicago',
+            ]
+        ]);
+        $expected = $obj->date->format('g:ia d/m/Y');
+        $this->assertTrimmedString('3:30am 12/12/2017', $this->viewContext($obj, 'date'));
     }
 }
