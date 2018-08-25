@@ -1,0 +1,23 @@
+{% extends '@PerformBase/field_type/simple.html.twig' %}
+
+{% block value %}
+  {% if not show_label %}
+    {{value}}
+  {% elseif choice_labels[value] is defined %}
+    {{choice_labels[value]}}
+  {% else %}
+    {{unknown_label}}
+  {% endif %}
+{% endblock %}
+
+{% block list %}
+  {% if multiple %}
+    {% for value in attribute(entity, field) %}
+      {{block('value')}}<br/>
+    {% endfor %}
+  {% else %}
+    {% with {value: attribute(entity, field)} %}
+      {{block('value')}}
+    {% endwith %}
+  {% endif %}
+{% endblock %}
