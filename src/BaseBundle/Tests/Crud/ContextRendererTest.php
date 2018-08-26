@@ -63,10 +63,10 @@ class ContextRendererTest extends \PHPUnit_Framework_TestCase
         $type->expects($this->any())
             ->method('listContext')
             ->with($entity, 'title', $listOptions)
-            ->will($this->returnValue('Entity title'));
+            ->will($this->returnValue([]));
         $template->expects($this->any())
             ->method('renderBlock')
-            ->with('list', ['value' => 'Entity title'])
+            ->with('list', ['entity' => $entity, 'field' => 'title'])
             ->will($this->returnValue('<span>Entity title</span>'));
 
         $this->assertSame('<span>Entity title</span>', $this->renderer->listContext($entity, 'title', $config));
@@ -85,10 +85,10 @@ class ContextRendererTest extends \PHPUnit_Framework_TestCase
         $type->expects($this->any())
             ->method('viewContext')
             ->with($entity, 'title', $viewOptions)
-            ->will($this->returnValue('Entity title'));
+            ->will($this->returnValue([]));
         $template->expects($this->any())
             ->method('renderBlock')
-            ->with('view', ['value' => 'Entity title'])
+            ->with('view', ['entity' => $entity, 'field' => 'title'])
             ->will($this->returnValue('<span>Entity title</span>'));
 
         $this->assertSame('<span>Entity title</span>', $this->renderer->viewContext($entity, 'title', $config));

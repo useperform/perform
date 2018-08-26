@@ -1,5 +1,9 @@
 {% block list %}
-  {{value}}
+  {% if value is defined %}
+    {{value}}
+  {% else %}
+    {{attribute(entity, field)}}
+  {% endif %}
 {% endblock %}
 
 {% block view %}
