@@ -14,9 +14,11 @@ class CountryType extends AbstractType
 {
     public function listContext($entity, $field, array $options = [])
     {
-        $countryCode = $this->accessor->getValue($entity, $field);
+        $countryCode = $this->getPropertyAccessor()->getValue($entity, $field);
 
-        return Intl::getRegionBundle()->getCountryName($countryCode);
+        return [
+            'value' => Intl::getRegionBundle()->getCountryName($countryCode),
+        ];
     }
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])

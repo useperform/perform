@@ -25,11 +25,11 @@ class CountryTypeTest extends FieldTypeTestCase
     {
         $obj = new \stdClass();
         $obj->homeCountry = 'GB';
-        $config = [
+        $this->config->add('homeCountry', [
             'type' => 'country',
             'template' => '@PerformBase/field_type/simple.html.twig',
             'listOptions' => [],
-        ];
-        $this->assertTrimmedString('United Kingdom', $this->renderer->listContext($obj, 'homeCountry', $config));
+        ]);
+        $this->assertTrimmedString('United Kingdom', $this->listContext($obj, 'homeCountry'));
     }
 }
