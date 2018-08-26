@@ -7,22 +7,22 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * BooleanType.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class BooleanType extends AbstractType
 {
     public function listContext($entity, $field, array $options = [])
     {
-        $labels = $options['valueLabels'];
+        $labels = $options['value_labels'];
 
-        return $this->accessor->getValue($entity, $field) ? $labels[0] : $labels[1];
+        return [
+            'value' => $this->getPropertyAccessor()->getValue($entity, $field) ? $labels[0] : $labels[1],
+        ];
     }
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
-        $labels = $options['valueLabels'];
+        $labels = $options['value_labels'];
         $builder->add($field, ChoiceType::class, [
             'label' => $options['label'],
             'choices' => [
@@ -36,8 +36,8 @@ class BooleanType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'valueLabels' => ['Yes', 'No'],
+            'value_labels' => ['Yes', 'No'],
         ]);
-        $resolver->setAllowedTypes('valueLabels', 'array');
+        $resolver->setAllowedTypes('value_labels', 'array');
     }
 }
