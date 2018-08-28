@@ -23,9 +23,15 @@ class TextType extends AbstractType
 
     public function listContext($entity, $field, array $options = [])
     {
-        $text = $this->accessor->getValue($entity, $field);
+        $text = $this->getPropertyAccessor()->getValue($entity, $field);
 
-        return $options['preview'] ? StringUtil::preview($text) : $text;
+        if ($options['preview']) {
+            $text = StringUtil::preview(str_replace(PHP_EOL, ' ', $text));
+        }
+
+        return [
+            'value' => $text,
+        ];
     }
 
     public function getDefaultConfig()

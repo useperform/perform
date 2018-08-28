@@ -39,7 +39,7 @@ class StringTypeTest extends FieldTypeTestCase
             ->method('add')
             ->with('forename', TextType::class);
 
-        $this->getType('string')->createContext($builder, 'forename');
+        $this->getType('string')->editContext($builder, 'forename');
     }
 
     public function testListContext()
