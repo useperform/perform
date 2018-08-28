@@ -19,6 +19,10 @@ class EqualTrimmedString extends \PHPUnit_Framework_Constraint
 
     protected function trim($value)
     {
+        if (!is_string($value)) {
+            return $value;
+        }
+
         return implode('', array_map('trim', explode(PHP_EOL, $value)));
     }
 
@@ -29,6 +33,11 @@ class EqualTrimmedString extends \PHPUnit_Framework_Constraint
 
     public function toString()
     {
-        return sprintf('is equal to "%s"', $this->value);
+        return sprintf("is equal to '%s'", $this->value);
+    }
+
+    protected function failureDescription($other)
+    {
+        return $this->exporter->export($this->trim($other)) . ' ' . $this->toString();
     }
 }
