@@ -1,7 +1,7 @@
 {% extends '@PerformBase/field_type/simple.html.twig' %}
 
 {% block list %}
-  {{value|raw}}
+  {{attribute(entity, field)|raw}}
 {% endblock %}
 
 {% block create %}

@@ -17,7 +17,6 @@ class HtmlType extends AbstractType
 
     public function __construct(AssetContainer $assets)
     {
-        parent::__construct();
         $this->assets = $assets;
     }
 
@@ -29,7 +28,7 @@ class HtmlType extends AbstractType
         $builder->add($field, FormType::class);
 
         return [
-            'html' => $this->accessor->getValue($builder->getData(), $field),
+            'html' => $this->getPropertyAccessor()->getValue($builder->getData(), $field),
         ];
     }
 
