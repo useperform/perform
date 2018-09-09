@@ -31,12 +31,10 @@ class MarkdownTypeTest extends FieldTypeTestCase
 ## little title
 text
 EOT;
-        $config = [
+        $this->config->add('content', [
             'type' => 'md',
-            'listOptions' => [],
-            'template' => '@PerformBase/field_type/markdown.html.twig',
-        ];
+        ]);
         $expected = '<div class="p-markdown"><h1>big title</h1><h2>little title</h2><p>text</p></div>';
-        $this->assertTrimmedString($expected, $this->renderer->listContext($obj, 'content', $config));
+        $this->assertTrimmedString($expected, $this->listContext($obj, 'content'));
     }
 }

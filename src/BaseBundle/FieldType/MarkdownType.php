@@ -21,14 +21,13 @@ class MarkdownType extends AbstractType
 
     public function __construct(CommonMarkConverter $markdown, AssetContainer $assets)
     {
-        parent::__construct();
         $this->markdown = $markdown;
         $this->assets = $assets;
     }
 
     public function listContext($entity, $field, array $options = [])
     {
-        $markdown = $this->accessor->getValue($entity, $field);
+        $markdown = $this->getPropertyAccessor()->getValue($entity, $field);
 
         return [
             'markdown' => $markdown,
