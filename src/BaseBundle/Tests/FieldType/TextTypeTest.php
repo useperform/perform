@@ -1,6 +1,6 @@
 <?php
 
-namespace Perform\BaseBundle\Tests\Type;
+namespace Perform\BaseBundle\Tests\FieldType;
 
 use Perform\BaseBundle\FieldType\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
