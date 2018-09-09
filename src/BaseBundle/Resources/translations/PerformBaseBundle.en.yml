@@ -13,6 +13,10 @@ crud:
         create: "New %entity_name%"
         edit: "Editing %entity_label%"
 
+field_type:
+    collection:
+        item_label: 'item|items'
+
 export:
     dropdown: 'Download'
     format:

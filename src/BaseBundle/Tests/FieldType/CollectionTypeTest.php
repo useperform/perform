@@ -2,68 +2,87 @@
 
 namespace Perform\BaseBundle\Tests\Type;
 
-use Perform\UserBundle\Entity\User;
 use Perform\BaseBundle\FieldType\CollectionType;
 use Doctrine\Common\Collections\ArrayCollection;
-use Perform\BaseBundle\Crud\CrudRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\BaseBundle\Asset\AssetContainer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType as CollectionFormType;
+use Perform\BaseBundle\Test\FieldTypeTestCase;
+use Perform\BaseBundle\Test\WhitespaceAssertions;
 
 /**
- * CollectionTypeTest
- *
  * @author Glynn Forrest <me@glynnforrest.com>
+ * @group kernel
  **/
-class CollectionTypeTest extends \PHPUnit_Framework_TestCase
+class CollectionTypeTest extends FieldTypeTestCase
 {
-    protected $type;
+    use WhitespaceAssertions;
 
-    public function setUp()
+    public function registerTypes()
     {
         $entityManager = $this->getMock(EntityManagerInterface::class);
         $assets = new AssetContainer();
-        $this->type = new CollectionType($entityManager, $assets);
+
+        return [
+            'collection' => new CollectionType($entityManager, $assets),
+        ];
     }
 
     public function testListContextDefaultItemLabel()
     {
         $entity = new \stdClass();
         $entity->items = new ArrayCollection();
-        $this->assertSame('0 items', $this->type->listContext($entity, 'items'));
+        $this->config->add('items', [
+            'type' => 'collection',
+            'options' => [
+                'crud_name' => 'some_crud',
+            ]
+        ]);
 
+        $this->assertTrimmedString('0 items', $this->listContext($entity, 'items'));
         $entity->items = new ArrayCollection([1]);
-        $this->assertSame('1 item', $this->type->listContext($entity, 'items'));
-
+        $this->assertTrimmedString('1 item', $this->listContext($entity, 'items'));
         $entity->items = new ArrayCollection([1, 2, 3, 4]);
-        $this->assertSame('4 items', $this->type->listContext($entity, 'items'));
+        $this->assertTrimmedString('4 items', $this->listContext($entity, 'items'));
     }
 
     public function testListContextWithItemLabel()
     {
         $entity = new \stdClass();
         $entity->items = new ArrayCollection();
-        $this->assertSame('0 things', $this->type->listContext($entity, 'items', ['itemLabel' => 'thing']));
+        $this->config->add('items', [
+            'type' => 'collection',
+            'options' => [
+                'crud_name' => 'some_crud',
+                'item_label' => 'test_key',
+            ]
+        ]);
 
+        $this->assertTrimmedString('0 test_key', $this->listContext($entity, 'items'));
         $entity->items = new ArrayCollection([1]);
-        $this->assertSame('1 thing', $this->type->listContext($entity, 'items', ['itemLabel' => 'thing']));
-
+        $this->assertTrimmedString('1 test_key', $this->listContext($entity, 'items'));
         $entity->items = new ArrayCollection([1, 2, 3, 4]);
-        $this->assertSame('4 things', $this->type->listContext($entity, 'items', ['itemLabel' => 'thing']));
+        $this->assertTrimmedString('4 test_key', $this->listContext($entity, 'items'));
     }
 
-    public function testListContextWithItemLabelPlural()
+    public function testListContextWithNoItemLabel()
     {
         $entity = new \stdClass();
         $entity->items = new ArrayCollection();
-        $this->assertSame('0 things (a lot)', $this->type->listContext($entity, 'items', ['itemLabel' => ['thing', 'things (a lot)']]));
+        $this->config->add('items', [
+            'type' => 'collection',
+            'options' => [
+                'crud_name' => 'some_crud',
+                'item_label' => false,
+            ]
+        ]);
 
+        $this->assertTrimmedString('0', $this->listContext($entity, 'items'));
         $entity->items = new ArrayCollection([1]);
-        $this->assertSame('1 thing', $this->type->listContext($entity, 'items', ['itemLabel' => ['thing', 'things (a lot)']]));
-
+        $this->assertTrimmedString('1', $this->listContext($entity, 'items'));
         $entity->items = new ArrayCollection([1, 2, 3, 4]);
-        $this->assertSame('4 things (a lot)', $this->type->listContext($entity, 'items', ['itemLabel' => ['thing', 'things (a lot)']]));
+        $this->assertTrimmedString('4', $this->listContext($entity, 'items'));
     }
 
     public function testCreateContext()
@@ -79,6 +98,6 @@ class CollectionTypeTest extends \PHPUnit_Framework_TestCase
             ->method('add')
             ->with('items', CollectionFormType::class);
 
-        $this->type->createContext($builder, 'items', ['crud_name' => 'SomeRelation', 'sortField' => false]);
+        $this->getType('collection')->createContext($builder, 'items', ['crud_name' => 'SomeRelation', 'sort_field' => false]);
     }
 }
