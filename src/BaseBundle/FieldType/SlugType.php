@@ -23,7 +23,6 @@ class SlugType extends AbstractType
 
     public function __construct(AssetContainer $assets)
     {
-        parent::__construct();
         $this->assets = $assets;
     }
 

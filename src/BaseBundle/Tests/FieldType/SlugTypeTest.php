@@ -5,19 +5,41 @@ namespace Perform\BaseBundle\Tests\Type;
 use Perform\BaseBundle\FieldType\SlugType;
 use Perform\BaseBundle\Asset\AssetContainer;
 use Symfony\Component\Form\FormBuilderInterface;
+use Perform\BaseBundle\Test\FieldTypeTestCase;
+use Perform\BaseBundle\Test\WhitespaceAssertions;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
+ * @group kernel
  **/
-class SlugTypeTest extends \PHPUnit_Framework_TestCase
+class SlugTypeTest extends FieldTypeTestCase
 {
-    protected $assets;
-    protected $type;
+    use WhitespaceAssertions;
 
-    public function setUp()
+    protected $assets;
+
+    public function registerTypes()
     {
         $this->assets = new AssetContainer();
-        $this->type = new SlugType($this->assets);
+
+        return [
+            'slug' => new SlugType($this->assets),
+        ];
+    }
+
+    public function testViewContext()
+    {
+        $entity = new \stdClass();
+        $entity->title = 'Some Title';
+        $entity->slug = 'some-title';
+
+        $this->config->add('slug', [
+            'type' => 'slug',
+            'options' => [
+                'target' => 'title',
+            ],
+        ]);
+        $this->assertTrimmedString('some-title', $this->viewContext($entity, 'slug'));
     }
 
     public function testDefaultCreateContextVars()
@@ -36,7 +58,7 @@ class SlugTypeTest extends \PHPUnit_Framework_TestCase
             'target' => '#crud_form_title',
         ];
 
-        $this->assertEquals($expected, $this->type->createContext($builder, 'slug', $config));
+        $this->assertEquals($expected, $this->getType('slug')->createContext($builder, 'slug', $config));
     }
 
     public function testCreateContextVars()
@@ -55,6 +77,6 @@ class SlugTypeTest extends \PHPUnit_Framework_TestCase
             'target' => '#crud_form_title',
         ];
 
-        $this->assertEquals($expected, $this->type->createContext($builder, 'slug', $config));
+        $this->assertEquals($expected, $this->getType('slug')->createContext($builder, 'slug', $config));
     }
 }
