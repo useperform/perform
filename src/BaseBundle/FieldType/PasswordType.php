@@ -3,25 +3,23 @@
 namespace Perform\BaseBundle\FieldType;
 
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType as PasswordFormType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType as FormType;
 
 /**
- * PasswordType
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class PasswordType extends AbstractType
 {
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
-        $builder->add($field, PasswordFormType::class, [
+        $builder->add($field, FormType::class, [
             'label' => $options['label'],
         ]);
     }
 
     public function editContext(FormBuilderInterface $builder, $field, array $options = [])
     {
-        $builder->add($field, PasswordFormType::class, [
+        $builder->add($field, FormType::class, [
             'label' => $options['label'],
             'required' => false,
         ]);
@@ -29,7 +27,8 @@ class PasswordType extends AbstractType
 
     public function listContext($entity, $field, array $options = [])
     {
-        return '*******';
+        return [
+            'value' => '********',
+        ];
     }
-
 }
