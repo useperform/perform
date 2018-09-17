@@ -37,7 +37,6 @@ class MediaType extends AbstractType
     public function __construct(BucketRegistryInterface $registry)
     {
         $this->registry = $registry;
-        parent::__construct();
     }
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
@@ -72,7 +71,7 @@ class MediaType extends AbstractType
 
     public function listContext($entity, $field, array $options = [])
     {
-        $file = $this->accessor->getValue($entity, $field);
+        $file = $this->getPropertyAccessor()->getValue($entity, $field);
 
         if ($file && !$file instanceof File) {
             throw new \Exception('Must be a file or null');

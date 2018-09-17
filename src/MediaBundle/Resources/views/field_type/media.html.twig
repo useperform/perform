@@ -1,7 +1,9 @@
 {% extends '@PerformBase/field_type/simple.html.twig' %}
 
 {% block list %}
-  <div class="p-type-media">
-    {{perform_media_preview(file)}}
-  </div>
+  {% if file %}
+    <div class="p-type-media">
+      {{perform_media_preview(file)}}
+    </div>
+  {% endif %}
 {% endblock %}

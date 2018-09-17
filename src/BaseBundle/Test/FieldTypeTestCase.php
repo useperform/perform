@@ -19,10 +19,15 @@ abstract class FieldTypeTestCase extends \PHPUnit_Framework_TestCase
     protected $config;
     protected $renderer;
 
+    protected function createTestKernel()
+    {
+        return new TestKernel();
+    }
+
     public function setUp()
     {
         // create a kernel to get full access to the twig environment
-        $this->kernel = new TestKernel();
+        $this->kernel = $this->createTestKernel();
         $this->kernel->boot();
         $twig = $this->kernel->getContainer()->get('twig');
 
