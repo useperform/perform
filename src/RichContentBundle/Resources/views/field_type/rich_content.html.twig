@@ -4,7 +4,8 @@
 {% endblock %}
 
 {% block view %}
-  {% if value %}
-    {{perform_rich_content(value)}}
+  {% set content = attribute(entity, field) %}
+  {% if content %}
+    {{perform_rich_content(content)}}
   {% endif %}
 {% endblock %}
