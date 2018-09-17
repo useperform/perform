@@ -60,7 +60,7 @@ class DateTimeType extends AbstractType
 
     public function listContext($entity, $field, array $options = [])
     {
-        $datetime = $this->accessor->getValue($entity, $field);
+        $datetime = $this->getPropertyAccessor()->getValue($entity, $field);
         if (!$datetime instanceof \DateTimeInterface || $datetime->format('Y') === '-0001') {
             $datetime = null;
         }
