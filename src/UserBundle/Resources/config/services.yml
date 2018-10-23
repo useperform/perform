@@ -62,6 +62,7 @@ services:
             - "@perform_user.user_manager"
             - "@perform_base.doctrine.entity_resolver"
             - "@perform_notification.notifier"
+    Perform\UserBundle\Security\ResetTokenManager: '@perform_user.reset_token_manager'
 
     perform_user.action.create_reset_token:
         class: Perform\UserBundle\Action\CreateResetTokenAction

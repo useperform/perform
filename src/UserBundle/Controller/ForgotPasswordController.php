@@ -45,10 +45,9 @@ class ForgotPasswordController extends Controller
     /**
      * @Template()
      */
-    public function reset(Request $request)
+    public function reset(ResetTokenManager $manager, Request $request)
     {
         try {
-            $manager = $this->get('perform_user.reset_token_manager');
             $token = $manager->findAndValidateToken(
                 $request->query->get('id'),
                 $request->query->get('secret')
@@ -57,7 +56,7 @@ class ForgotPasswordController extends Controller
             $user = $token->getUser();
             $form = $this->createForm(ResetPasswordType::class);
             $form->handleRequest($request);
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $manager->updatePassword($token, $form->get('password')->getData());
 
                 $this->addFlash('perform_password_success', 'Your password has been reset.');
