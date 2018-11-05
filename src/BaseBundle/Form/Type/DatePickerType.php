@@ -4,10 +4,11 @@ namespace Perform\BaseBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 use Perform\BaseBundle\Asset\AssetContainer;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToLocalizedStringTransformer;
 
 /**
  * Select dates, times, and timezones with an interactive picker.
@@ -42,16 +43,29 @@ class DatePickerType extends AbstractType
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([
-            'widget' => 'single_text',
-            'html5' => false,
-            'format' => 'MMM d, Y h:mma',
+            'model_timezone' => null,
+            'view_timezone' => null,
+            'format' => 'MMM d, yyyy h:mma',
             'pick_date' => true,
             'pick_time' => false,
             'week_start' => 1,
+            'compound' => false,
         ]);
         $resolver->setAllowedTypes('pick_date', 'boolean');
         $resolver->setAllowedTypes('pick_time', 'boolean');
         $resolver->setAllowedTypes('week_start', 'integer');
+    }
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->addViewTransformer(new DateTimeToLocalizedStringTransformer(
+            $options['model_timezone'],
+            $options['view_timezone'],
+            null,
+            null,
+            \IntlDateFormatter::GREGORIAN,
+            $options['format']
+        ));
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options)
@@ -59,11 +73,6 @@ class DatePickerType extends AbstractType
         parent::buildView($view, $form, $options);
         $this->assets->addJs('/bundles/performbase/js/types/datetime.js');
         $view->vars['flatPickrConfig'] = json_encode([]);
-    }
-
-    public function getParent()
-    {
-        return DateTimeType::class;
     }
 
     public function getBlockPrefix()
