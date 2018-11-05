@@ -2,11 +2,23 @@ import DatePickerInput from './components/DatePickerInput'
 import Vue from 'vue'
 import md from './util/markdown';
 
-export function datepicker(el, opts) {
+export function datepicker(el, options) {
   new Vue({
     el: el,
     render(h) {
-      return h(DatePickerInput, {props: opts});
+      return h(DatePickerInput, {props: {
+        inputName: options.inputName,
+        initialValue: options.initialValue,
+        flatPickrConfig: Object.assign({}, {
+         allowInput: true,
+         enableTime: true,
+         enableSeconds: false,
+         // transform ICU format to string
+         /* formatDate() { */
+         /* } */
+         dateFormat: 'M j, Y h:iK',
+        }, options.flatPickrConfig),
+      }});
     }
   });
 };

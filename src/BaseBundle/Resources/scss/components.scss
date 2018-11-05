@@ -44,3 +44,6 @@
     cursor: pointer;
   }
 }
+
+// support importing the .styl sources for customisation
+@import "~flatpickr/dist/flatpickr.css";

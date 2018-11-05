@@ -27,8 +27,7 @@ class DatePickerType extends AbstractType
      * @doc format The ICU format to use in the datepicker field.
      *
      * This is not the same as PHP's ``date()`` format.
-     * See http://userguide.icu-project.org/formatparse/datetime and
-     * http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
+     * See http://userguide.icu-project.org/formatparse/datetime#TOC-Date-Time-Format-Syntax
      * for more information.
      *
      * @doc pick_date If true, show the date component of the datepicker.
@@ -44,6 +43,8 @@ class DatePickerType extends AbstractType
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'widget' => 'single_text',
+            'html5' => false,
+            'format' => 'MMM d, Y h:mma',
             'pick_date' => true,
             'pick_time' => false,
             'week_start' => 1,
@@ -57,10 +58,7 @@ class DatePickerType extends AbstractType
     {
         parent::buildView($view, $form, $options);
         $this->assets->addJs('/bundles/performbase/js/types/datetime.js');
-        $view->vars['format'] = $options['format'];
-        $view->vars['pick_date'] = $options['pick_date'];
-        $view->vars['pick_time'] = $options['pick_time'];
-        $view->vars['week_start'] = $options['week_start'];
+        $view->vars['flatPickrConfig'] = json_encode([]);
     }
 
     public function getParent()
