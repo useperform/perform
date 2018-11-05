@@ -8,6 +8,7 @@ export function datepicker(el, options) {
     render(h) {
       return h(DatePickerInput, {props: {
         inputName: options.inputName,
+        disabled: options.disabled,
         initialValue: options.initialValue,
         flatPickrConfig: Object.assign({}, {
          allowInput: true,

@@ -6,19 +6,18 @@
           <i class="fa fa-calendar"></i>
         </span>
       </div>
-      <flat-pickr :name="inputName" class="form-control" autocomplete="off" v-model="datetime" :config="flatPickrConfig" />
+      <flat-pickr :name="inputName" :disabled="disabled" class="form-control" autocomplete="off" v-model="datetime" :config="flatPickrConfig" />
     </div>
   </div>
 </template>
 
 <script>
  import flatPickr from 'vue-flatpickr-component';
- import formatDate from 'date-fns/format';
- import parseDate from 'date-fns/parse';
 
  export default {
    props: [
      'inputName',
+     'disabled',
      'initialValue',
      'flatPickrConfig',
    ],

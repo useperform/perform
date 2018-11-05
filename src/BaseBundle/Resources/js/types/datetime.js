@@ -6,6 +6,7 @@ $(function () {
       inputName: input.attr('name'),
       initialValue: input.val(),
       flatPickrConfig: $(this).data('flat-picker-config'),
+      disabled: !!input.attr('disabled'),
     });
   });
 });
