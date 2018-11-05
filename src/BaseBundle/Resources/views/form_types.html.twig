@@ -1,0 +1,36 @@
+{% block duration_widget %}
+  {{form_widget(form)}}
+  <small class="form-text text-muted">e.g. 2m 3s, 1h30m, 3d 40m 2h 30s</small>
+{% endblock %}
+
+{% block datepicker_widget -%}
+  {# just a skeleton - the vue component will replace the elements in the div #}
+  <div class="input-group p-form-datepicker"
+       id="p-comp-container-{{id}}"
+       data-flat-pickr-config="{{form.vars.flatPickrConfig|e('html_attr')}}"
+  >
+    <div class="input-group-prepend">
+      <span class="input-group-text">
+        <i class="fa fa-calendar"></i>
+      </span>
+    </div>
+    {{block('datetime_widget')}}
+  </div>
+{%- endblock %}
+
+{% block perform_money_widget -%}
+  <div class="input-group">
+    {{form_widget(form.currency)}}
+    <div class="input-group-addon{% if not form.vars.valid %} text-danger border-right-0 border-danger{% endif %}">
+      <div class="input-group-text">
+        {% set currency_code = form.currency.vars.data is not null ? form.currency.vars.data : default_currency %}
+        {% if currency_classes[currency_code] is defined %}
+          <span class="fa {{currency_classes[currency_code]}}"></span>
+        {% else %}
+          {{currency_code}}
+        {% endif %}
+      </div>
+    </div>
+    {{form_widget(form.amount)}}
+  </div>
+{%- endblock %}

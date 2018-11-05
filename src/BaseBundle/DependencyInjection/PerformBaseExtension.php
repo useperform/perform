@@ -21,6 +21,7 @@ use Perform\BaseBundle\Settings\Manager\DoctrineManager;
 use Perform\BaseBundle\Settings\Manager\CacheableManager;
 use Perform\BaseBundle\Settings\Manager\ParametersManager;
 use Symfony\Component\Serializer\Serializer;
+use Perform\BaseBundle\DependencyInjection\Compiler\FormTemplatesPass;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -55,6 +56,8 @@ class PerformBaseExtension extends Extension
         $this->createSimpleMenus($container, $config['menu']['simple']);
         $this->configureAssets($container, $config['assets']);
         $this->configureSettings($container, $config['settings']);
+
+        FormTemplatesPass::addTemplate($container, '@PerformBase/form_types.html.twig');
     }
 
     protected function configureCrud(ContainerBuilder $container, array $config)
