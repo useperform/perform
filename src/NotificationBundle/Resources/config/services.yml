@@ -49,6 +49,14 @@ services:
         tags:
             - {name: twig.extension}
 
+    perform_notification.listener.log:
+        class: Perform\NotificationBundle\EventListener\LogListener
+        arguments:
+            - '@logger'
+        tags:
+            - {name: kernel.event_listener, event: perform_notification.post_send, method: postSend}
+            - {name: monolog.logger, channel: notification}
+
     perform_notification.data_collector:
         class: Perform\NotificationBundle\DataCollector\NotificationsDataCollector
         public: false

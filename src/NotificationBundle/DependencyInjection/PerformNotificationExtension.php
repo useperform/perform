@@ -22,6 +22,8 @@ class PerformNotificationExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
+        $this->configureLogging($container, $config);
+
         $container->setParameter(
             'perform_notification.email_default_from',
             isset($config['email']['default_from']) ? $config['email']['default_from'] : []
@@ -39,5 +41,19 @@ class PerformNotificationExtension extends Extension
     public function getConfiguration(array $config, ContainerBuilder $container)
     {
         return new Configuration($container->getParameter('kernel.debug'));
+    }
+
+    private function configureLogging(ContainerBuilder $container, array $config)
+    {
+        $service = 'perform_notification.listener.log';
+        if (!$config['logging']['enabled']) {
+            $container->removeDefinition($service);
+
+            return;
+        }
+
+        $level = isset($config['logging']['level']) ? $config['logging']['level'] : LogLevel::INFO;
+        $container->getDefinition($service)
+            ->setArgument(1, $level);
     }
 }
