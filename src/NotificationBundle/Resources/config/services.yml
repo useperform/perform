@@ -1,6 +1,9 @@
 services:
     perform_notification.notifier:
         class: Perform\NotificationBundle\Notifier\Notifier
+        arguments:
+            - ''
+            - '@event_dispatcher'
 
     Perform\NotificationBundle\Notifier\Notifier: '@perform_notification.notifier'
 
