@@ -5,6 +5,7 @@ namespace Perform\BaseBundle\Settings\Manager;
 use Perform\BaseBundle\Exception\SettingNotFoundException;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * A read-only manager that fetches settings from parameters in the container.
@@ -41,5 +42,20 @@ class ParametersManager implements SettingsManagerInterface
     public function setValue($key, $value)
     {
         throw new \Exception(__CLASS__.' is read-only; settings cannot be written with it.');
+    }
+
+    public function getUserValue(UserInterface $user, $key, $default = null)
+    {
+        return $this->getValue($key, $default);
+    }
+
+    public function getRequiredUserValue(UserInterface $user, $key)
+    {
+        return $this->getRequiredValue($key);
+    }
+
+    public function setUserValue(UserInterface $user, $key, $value)
+    {
+        return $this->setValue($key, $value);
     }
 }
