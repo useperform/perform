@@ -3,34 +3,20 @@
 namespace Perform\BaseBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Perform\BaseBundle\Exception\SettingNotFoundException;
-use Perform\BaseBundle\Entity\Setting;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class SettingRepository extends EntityRepository
 {
-    public function getRequiredValue($key)
+    public function findSetting($key)
     {
-        $setting = $this->findOneBy(['key' => $key, 'global' => true]);
-        if (!$setting) {
-            throw new SettingNotFoundException(sprintf('Setting "%s" was not found in the database.', $key));
-        }
-
-        return $setting->getValue();
+        return $this->findOneBy(['key' => $key, 'user' => null]);
     }
 
-    public function setValue($key, $value)
+    public function findUserSetting(UserInterface $user, $key)
     {
-        $setting = $this->findOneBy(['key' => $key, 'global' => true]);
-        if (!$setting) {
-            $setting = new Setting($key);
-            $setting->setGlobal(true);
-        }
-        $setting->setValue($value);
-
-        $this->_em->persist($setting);
-        $this->_em->flush();
+        return $this->findOneBy(['key' => $key, 'user' => $user]);
     }
 }

@@ -25,11 +25,6 @@ class Setting
     protected $value;
 
     /**
-     * @var bool
-     */
-    protected $global = true;
-
-    /**
      * @var UserInterface|null
      */
     protected $user;
@@ -92,26 +87,6 @@ class Setting
         }
 
         return null;
-    }
-
-    /**
-     * @param bool $global
-     *
-     * @return Setting
-     */
-    public function setGlobal($global)
-    {
-        $this->global = $global;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isGlobal()
-    {
-        return $this->global;
     }
 
     /**

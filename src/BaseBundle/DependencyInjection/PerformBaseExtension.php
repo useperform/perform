@@ -188,6 +188,7 @@ class PerformBaseExtension extends Extension
             Doctrine::addExtraMapping($container, Setting::class, __DIR__.'/../Resources/config/doctrine_extra/Setting.orm.yml');
             $manager = $container->register($managerService, DoctrineManager::class);
             $manager->setArgument(0, new Reference('perform_base.repo.setting'));
+            $manager->setArgument(1, new Reference('doctrine.orm.entity_manager'));
             break;
         case 'parameters':
             $manager = $container->register($managerService, ParametersManager::class);
