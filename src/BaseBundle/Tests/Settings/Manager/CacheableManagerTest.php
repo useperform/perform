@@ -6,21 +6,27 @@ use Perform\BaseBundle\Settings\Manager\CacheableManager;
 use Perform\BaseBundle\Settings\Manager\SettingsManagerInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\CacheItemInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class CacheableManagerTest extends \PHPUnit_Framework_TestCase
 {
-    protected $cache;
-    protected $innerManager;
-    protected $manager;
+    private $cache;
+    private $innerManager;
+    private $manager;
+    private $user;
 
     public function setUp()
     {
         $this->cache = $this->getMock(CacheItemPoolInterface::class);
         $this->innerManager = $this->getMock(SettingsManagerInterface::class);
         $this->manager = new CacheableManager($this->innerManager, $this->cache);
+        $this->user = $this->getMock(UserInterface::class);
+        $this->user->expects($this->any())
+            ->method('getUsername')
+            ->will($this->returnValue('testuser@example.com'));
     }
 
     public function testImplementsInterfaces()
@@ -109,5 +115,65 @@ class CacheableManagerTest extends \PHPUnit_Framework_TestCase
             ->with('some_setting');
 
         $this->manager->setValue('some_setting', 'new_value');
+    }
+
+    public function testGetUserValueCacheMiss()
+    {
+        $item = $this->expectItem('some_setting_'.md5('testuser@example.com'), false);
+        $this->innerManager->expects($this->once())
+            ->method('getRequiredUserValue')
+            ->with($this->user, 'some_setting')
+            ->will($this->returnValue('some_value'));
+        $item->expects($this->once())
+            ->method('set')
+            ->with('some_value');
+        $this->cache->expects($this->once())
+            ->method('save')
+            ->with($item);
+
+        $this->assertSame('some_value', $this->manager->getUserValue($this->user, 'some_setting'));
+    }
+
+    public function testGetUserValueCacheMissWithExpiryTime()
+    {
+        $this->manager = new CacheableManager($this->innerManager, $this->cache, 30);
+
+        $item = $this->expectItem('some_setting_'.md5('testuser@example.com'), false);
+        $this->innerManager->expects($this->once())
+            ->method('getRequiredUserValue')
+            ->with($this->user, 'some_setting')
+            ->will($this->returnValue('some_value'));
+        $item->expects($this->once())
+            ->method('set')
+            ->with('some_value');
+        $item->expects($this->once())
+            ->method('expiresAfter')
+            ->with(30);
+        $this->cache->expects($this->once())
+            ->method('save')
+            ->with($item);
+
+        $this->assertSame('some_value', $this->manager->getUserValue($this->user, 'some_setting'));
+    }
+
+    public function testGetUserValueCacheHit()
+    {
+        $this->expectItem('some_setting_'.md5('testuser@example.com'), true, 'cached_value');
+        $this->innerManager->expects($this->never())
+            ->method('getRequiredUserValue');
+
+        $this->assertSame('cached_value', $this->manager->getUserValue($this->user, 'some_setting', 'some_default'));
+    }
+
+    public function testSetUserValue()
+    {
+        $this->innerManager->expects($this->once())
+            ->method('setUserValue')
+            ->with($this->user, 'some_setting', 'new_value');
+        $this->cache->expects($this->once())
+            ->method('deleteItem')
+            ->with('some_setting_'.md5('testuser@example.com'));
+
+        $this->manager->setUserValue($this->user, 'some_setting', 'new_value');
     }
 }
