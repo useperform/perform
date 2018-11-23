@@ -48,6 +48,7 @@ class SettingsDataCollector extends DataCollector
                 $data[0],
                 $this->cloneVar($data[1]),
                 $data[2],
+                isset($data[3]) ? $data[3]->getUsername() : null
             ];
         }, $this->data['getCalls']);
     }
@@ -65,6 +66,7 @@ class SettingsDataCollector extends DataCollector
             return [
                 $data[0],
                 $this->cloneVar($data[1]),
+                isset($data[2]) ? $data[2]->getUsername() : null
             ];
         }, $this->data['setCalls']);
     }

@@ -3,6 +3,7 @@
 namespace Perform\BaseBundle\Settings\Manager;
 
 use Perform\BaseBundle\Exception\SettingNotFoundException;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -51,6 +52,35 @@ class TraceableManager implements SettingsManagerInterface
         $this->setCalls[] = [$key, $value];
 
         return $this->manager->setValue($key, $value);
+    }
+
+    public function getUserValue(UserInterface $user, $key, $default = null)
+    {
+        try {
+            $value = $this->manager->getRequiredUserValue($user, $key);
+            $this->getCalls[] = [$key, $value, true, $user];
+
+            return $value;
+        } catch (SettingNotFoundException $e) {
+            $this->getCalls[] = [$key, $default, false, $user];
+
+            return $default;
+        }
+    }
+
+    public function getRequiredUserValue(UserInterface $user, $key)
+    {
+        $value = $this->manager->getRequiredUserValue($user, $key);
+        $this->getCalls[] = [$key, $value, true, $user];
+
+        return $value;
+    }
+
+    public function setUserValue(UserInterface $user, $key, $value)
+    {
+        $this->setCalls[] = [$key, $value, $user];
+
+        return $this->manager->setUserValue($user, $key, $value);
     }
 
     public function getGetCalls()

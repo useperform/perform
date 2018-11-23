@@ -62,6 +62,7 @@
       <thead>
         <tr>
           <th scope="col">Key</th>
+          <th scope="col">User</th>
           <th scope="col">Value</th>
           <th scope="col">Default returned?</th>
         </tr>
@@ -69,7 +70,12 @@
       <tbody>
         {% for data in collector.getCalls %}
           <tr>
-            <td class="font-normal">{{ data[0] }}</td>
+            <td>{{data[0]}}</td>
+            {% if data[3] %}
+              <td class="font-normal">{{data[3]}}</td>
+            {% else %}
+              <td class="text-muted">(none)</td>
+            {% endif %}
             <td>{{profiler_dump(data[1])}}</td>
             <td>{{data[2] ? 'No' : 'Yes'}}</td>
           </tr>
@@ -88,13 +94,19 @@
       <thead>
         <tr>
           <th scope="col">Key</th>
+          <th scope="col">User</th>
           <th scope="col">Value</th>
         </tr>
       </thead>
       <tbody>
         {% for data in collector.setCalls %}
           <tr>
-            <td class="font-normal">{{ data[0] }}</td>
+            <td>{{data[0]}}</td>
+            {% if data[2] %}
+              <td class="font-normal">{{data[2]}}</td>
+            {% else %}
+              <td class="text-muted">(none)</td>
+            {% endif %}
             <td>{{profiler_dump(data[1])}}</td>
           </tr>
         {% endfor %}
