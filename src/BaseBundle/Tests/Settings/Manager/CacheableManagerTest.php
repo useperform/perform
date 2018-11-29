@@ -105,6 +105,12 @@ class CacheableManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('cached_value', $this->manager->getValue('some_setting', 'some_default'));
     }
 
+    public function testGetValueWithDodgyKey()
+    {
+        $this->expectItem(urlencode(':/?{}weird key""'), true, 'foo');
+        $this->manager->getValue(':/?{}weird key""');
+    }
+
     public function testSetValue()
     {
         $this->innerManager->expects($this->once())
@@ -119,7 +125,7 @@ class CacheableManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetUserValueCacheMiss()
     {
-        $item = $this->expectItem('some_setting_'.md5('testuser@example.com'), false);
+        $item = $this->expectItem('some_setting_'.urlencode('testuser@example.com'), false);
         $this->innerManager->expects($this->once())
             ->method('getRequiredUserValue')
             ->with($this->user, 'some_setting')
@@ -138,7 +144,7 @@ class CacheableManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->manager = new CacheableManager($this->innerManager, $this->cache, 30);
 
-        $item = $this->expectItem('some_setting_'.md5('testuser@example.com'), false);
+        $item = $this->expectItem('some_setting_'.urlencode('testuser@example.com'), false);
         $this->innerManager->expects($this->once())
             ->method('getRequiredUserValue')
             ->with($this->user, 'some_setting')
@@ -158,7 +164,7 @@ class CacheableManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetUserValueCacheHit()
     {
-        $this->expectItem('some_setting_'.md5('testuser@example.com'), true, 'cached_value');
+        $this->expectItem('some_setting_'.urlencode('testuser@example.com'), true, 'cached_value');
         $this->innerManager->expects($this->never())
             ->method('getRequiredUserValue');
 
@@ -172,7 +178,7 @@ class CacheableManagerTest extends \PHPUnit_Framework_TestCase
             ->with($this->user, 'some_setting', 'new_value');
         $this->cache->expects($this->once())
             ->method('deleteItem')
-            ->with('some_setting_'.md5('testuser@example.com'));
+            ->with('some_setting_'.urlencode('testuser@example.com'));
 
         $this->manager->setUserValue($this->user, 'some_setting', 'new_value');
     }

@@ -39,7 +39,7 @@ class CacheableManager implements SettingsManagerInterface
 
     public function getRequiredValue($key)
     {
-        $cachedValue = $this->cache->getItem($key);
+        $cachedValue = $this->cache->getItem($this->cacheKey($key));
         if ($cachedValue->isHit()) {
             return $cachedValue->get();
         }
@@ -56,14 +56,19 @@ class CacheableManager implements SettingsManagerInterface
 
     public function setValue($key, $value)
     {
-        $this->cache->deleteItem($key);
+        $this->cache->deleteItem($this->cacheKey($key));
 
         return $this->manager->setValue($key, $value);
     }
 
+    private function cacheKey($key)
+    {
+        return urlencode($key);
+    }
+
     protected function userCacheKey(UserInterface $user, $key)
     {
-        return $key.'_'.md5($user->getUsername());
+        return urlencode($key).'_'.urlencode($user->getUsername());
     }
 
     public function getUserValue(UserInterface $user, $key, $default = null)
