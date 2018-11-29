@@ -55,6 +55,12 @@
     <strong>Manager</strong>
     <code>{{collector.managerClass}}</code>
   </div>
+  <div class="metrics">
+    <div class="metric">
+      <span class="value">{{collector.managerWriteable ? 'Yes' : 'No'}}</span>
+      <span class="label">Manager writeable?</span>
+    </div>
+  </div>
 
   <h2>Reads</h2>
   {% if collector.getCalls|length > 0 %}

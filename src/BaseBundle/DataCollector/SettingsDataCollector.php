@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Perform\BaseBundle\Settings\Manager\TraceableManager;
 use Perform\BaseBundle\Settings\Manager\CacheableManager;
+use Perform\BaseBundle\Util\ReflectionUtil;
+use Perform\BaseBundle\Settings\Manager\WriteableSettingsManagerInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -25,9 +27,13 @@ class SettingsDataCollector extends DataCollector
         $this->data['getCalls'] = $this->settings->getGetCalls();
         $this->data['setCalls'] = $this->settings->getSetCalls();
         $this->data['used'] = isset($this->data['getCalls'][0]) || isset($this->data['setCalls'][0]);
-        $this->data['managerClass'] = get_class($this->settings->getInnerManager());
-        if ($this->settings->getInnerManager() instanceof CacheableManager) {
-            $this->data['managerClass'] .= sprintf(' (%s)', get_class($this->settings->getInnerManager()->getInnerManager()));
+        $usingCache = $this->settings->getInnerManager() instanceof CacheableManager;
+        $this->data['managerClass'] = $usingCache ?
+                                    get_class($this->settings->getInnerManager()->getInnerManager()) :
+                                    get_class($this->settings->getInnerManager());
+        $this->data['writeable'] = ReflectionUtil::implementsInterface($this->data['managerClass'], WriteableSettingsManagerInterface::class);
+        if ($usingCache) {
+            $this->data['managerClass'] .= sprintf(' (%s)', CacheableManager::class);
         }
     }
 
@@ -79,5 +85,10 @@ class SettingsDataCollector extends DataCollector
     public function getManagerClass()
     {
         return $this->data['managerClass'];
+    }
+
+    public function isManagerWriteable()
+    {
+        return $this->data['writeable'];
     }
 }
