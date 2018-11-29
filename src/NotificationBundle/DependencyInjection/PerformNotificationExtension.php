@@ -3,13 +3,17 @@
 namespace Perform\NotificationBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Psr\Log\LogLevel;
 use Perform\Licensing\Licensing;
+use Perform\NotificationBundle\Preference\SettingsPreference;
+use Perform\NotificationBundle\Preference\StaticPreference;
 use Perform\NotificationBundle\Publisher\PublisherInterface;
+use Perform\NotificationBundle\Preference\PreferenceInterface;
 
 class PerformNotificationExtension extends Extension
 {
@@ -23,6 +27,7 @@ class PerformNotificationExtension extends Extension
         $loader->load('services.yml');
 
         $this->configureLogging($container, $config);
+        $this->configurePreferences($container, $config['preferences']);
 
         $container->setParameter(
             'perform_notification.email_default_from',
@@ -55,5 +60,43 @@ class PerformNotificationExtension extends Extension
         $level = isset($config['logging']['level']) ? $config['logging']['level'] : LogLevel::INFO;
         $container->getDefinition($service)
             ->setArgument(1, $level);
+    }
+
+    private function configurePreferences(ContainerBuilder $container, array $preferencesConfig)
+    {
+        if (empty($preferencesConfig)) {
+            $serviceName = 'perform_notification.preference.default';
+            $container->register($serviceName, StaticPreference::class)
+                ->setArguments([true]);
+            $container->setAlias(PreferenceInterface::class, $serviceName);
+            return;
+        }
+
+        foreach ($preferencesConfig as $name => $config) {
+            $serviceName = 'perform_notification.preference.'.$name;
+
+            switch ($config['type']) {
+            case 'service':
+                $container->setAlias($serviceName, $config['service']);
+                break;
+            case 'static':
+                $container->register($serviceName, StaticPreference::class)
+                    ->setArguments([$config['default']]);
+                break;
+            case 'settings':
+                $container->register($serviceName, SettingsPreference::class)
+                    ->setArguments([
+                        new Reference('perform_base.settings_manager'),
+                        $config['prefix'],
+                        $config['default']
+                    ]);
+                break;
+            default:
+                throw new InvalidConfigurationException('Notification preference type "%s" does not exist. Possible types are "static" and "settings".');
+            }
+        }
+
+        $defaultService = 'perform_notification.preference.'.array_keys($preferencesConfig)[0];
+        $container->setAlias(PreferenceInterface::class, $defaultService);
     }
 }
