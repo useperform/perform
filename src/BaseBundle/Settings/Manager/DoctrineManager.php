@@ -11,7 +11,7 @@ use Perform\BaseBundle\Entity\Setting;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class DoctrineManager implements SettingsManagerInterface
+class DoctrineManager implements SettingsManagerInterface, WriteableSettingsManagerInterface
 {
     protected $repo;
     protected $em;

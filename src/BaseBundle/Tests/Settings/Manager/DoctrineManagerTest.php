@@ -6,6 +6,7 @@ use Perform\BaseBundle\Settings\Manager\DoctrineManager;
 use Perform\BaseBundle\Repository\SettingRepository;
 use Perform\BaseBundle\Exception\SettingNotFoundException;
 use Perform\BaseBundle\Settings\Manager\SettingsManagerInterface;
+use Perform\BaseBundle\Settings\Manager\WriteableSettingsManagerInterface;
 use Perform\BaseBundle\Entity\Setting;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -27,6 +28,7 @@ class DoctrineManagerTest extends \PHPUnit_Framework_TestCase
     public function testImplementsInterfaces()
     {
         $this->assertInstanceOf(SettingsManagerInterface::class, $this->manager);
+        $this->assertInstanceOf(WriteableSettingsManagerInterface::class, $this->manager);
     }
 
     public function testGetValue()
