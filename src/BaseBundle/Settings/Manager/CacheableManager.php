@@ -3,21 +3,24 @@
 namespace Perform\BaseBundle\Settings\Manager;
 
 use Perform\BaseBundle\Exception\SettingNotFoundException;
+use Perform\BaseBundle\Exception\ReadOnlySettingsException;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class CacheableManager implements SettingsManagerInterface
+class CacheableManager implements SettingsManagerInterface, WriteableSettingsManagerInterface
 {
     protected $manager;
+    protected $writeable;
     protected $cache;
     protected $cacheExpiry;
 
     public function __construct(SettingsManagerInterface $manager, CacheItemPoolInterface $cache, $cacheExpiry = 0)
     {
         $this->manager = $manager;
+        $this->writeable = $manager instanceof WriteableSettingsManagerInterface;
         $this->cache = $cache;
         $this->cacheExpiry = (int) $cacheExpiry;
     }
@@ -56,12 +59,20 @@ class CacheableManager implements SettingsManagerInterface
 
     public function setValue($key, $value)
     {
+        $this->assertWriteable();
         $this->cache->deleteItem($this->cacheKey($key));
 
         return $this->manager->setValue($key, $value);
     }
 
-    private function cacheKey($key)
+    private function assertWriteable()
+    {
+        if (!$this->writeable) {
+            throw new ReadOnlySettingsException(sprintf('%s is read-only. You should create a manager that implements %s to write settings.', get_class($this->manager), WriteableSettingsManagerInterface::class));
+        }
+    }
+
+    protected function cacheKey($key)
     {
         return urlencode($key);
     }
@@ -100,6 +111,7 @@ class CacheableManager implements SettingsManagerInterface
 
     public function setUserValue(UserInterface $user, $key, $value)
     {
+        $this->assertWriteable();
         $this->cache->deleteItem($this->userCacheKey($user, $key));
 
         return $this->manager->setUserValue($user, $key, $value);

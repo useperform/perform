@@ -7,6 +7,8 @@ use Perform\BaseBundle\Settings\Manager\SettingsManagerInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Perform\BaseBundle\Settings\Manager\WriteableSettingsManagerInterface;
+use Perform\BaseBundle\Exception\ReadOnlySettingsException;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -21,7 +23,7 @@ class CacheableManagerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->cache = $this->getMock(CacheItemPoolInterface::class);
-        $this->innerManager = $this->getMock(SettingsManagerInterface::class);
+        $this->innerManager = $this->getMock([SettingsManagerInterface::class, WriteableSettingsManagerInterface::class]);
         $this->manager = new CacheableManager($this->innerManager, $this->cache);
         $this->user = $this->getMock(UserInterface::class);
         $this->user->expects($this->any())
@@ -181,5 +183,19 @@ class CacheableManagerTest extends \PHPUnit_Framework_TestCase
             ->with('some_setting_'.urlencode('testuser@example.com'));
 
         $this->manager->setUserValue($this->user, 'some_setting', 'new_value');
+    }
+
+    public function testSetValueThrowsExceptionForNonWriteable()
+    {
+        $manager = new CacheableManager($this->getMock(SettingsManagerInterface::class), $this->cache);
+        $this->expectException(ReadOnlySettingsException::class);
+        $manager->setValue('some_setting', 'new_value');
+    }
+
+    public function testSetUserValueThrowsForNonWriteable()
+    {
+        $manager = new CacheableManager($this->getMock(SettingsManagerInterface::class), $this->cache);
+        $this->expectException(ReadOnlySettingsException::class);
+        $manager->setUserValue($this->user, 'some_setting', 'new_value');
     }
 }
