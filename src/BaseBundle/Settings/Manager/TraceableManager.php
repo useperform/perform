@@ -4,13 +4,15 @@ namespace Perform\BaseBundle\Settings\Manager;
 
 use Perform\BaseBundle\Exception\SettingNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Perform\BaseBundle\Exception\ReadOnlySettingsException;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class TraceableManager implements SettingsManagerInterface
+class TraceableManager implements SettingsManagerInterface, WriteableSettingsManagerInterface
 {
     protected $manager;
+    protected $writeable;
 
     protected $getCalls = [];
     protected $setCalls = [];
@@ -18,6 +20,7 @@ class TraceableManager implements SettingsManagerInterface
     public function __construct(SettingsManagerInterface $manager)
     {
         $this->manager = $manager;
+        $this->writeable = $manager instanceof WriteableSettingsManagerInterface;
     }
 
     public function getInnerManager()
@@ -49,9 +52,17 @@ class TraceableManager implements SettingsManagerInterface
 
     public function setValue($key, $value)
     {
+        $this->assertWriteable();
         $this->setCalls[] = [$key, $value];
 
         return $this->manager->setValue($key, $value);
+    }
+
+    private function assertWriteable()
+    {
+        if (!$this->writeable) {
+            throw new ReadOnlySettingsException(sprintf('%s is read-only. You should create a manager that implements %s to write settings.', get_class($this->manager), WriteableSettingsManagerInterface::class));
+        }
     }
 
     public function getUserValue(UserInterface $user, $key, $default = null)
@@ -78,6 +89,7 @@ class TraceableManager implements SettingsManagerInterface
 
     public function setUserValue(UserInterface $user, $key, $value)
     {
+        $this->assertWriteable();
         $this->setCalls[] = [$key, $value, $user];
 
         return $this->manager->setUserValue($user, $key, $value);
