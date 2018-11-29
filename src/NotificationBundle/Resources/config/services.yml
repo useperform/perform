@@ -25,6 +25,7 @@ services:
         arguments:
             - "@swiftmailer.mailer"
             - "@perform_notification.renderer"
+            - '@Perform\NotificationBundle\Preference\PreferenceInterface'
             - '%perform_notification.email_default_from%'
         tags:
             - {name: perform_notification.publisher, alias: email}

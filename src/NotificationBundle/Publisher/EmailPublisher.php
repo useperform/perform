@@ -4,6 +4,7 @@ namespace Perform\NotificationBundle\Publisher;
 
 use Perform\NotificationBundle\Notification;
 use Perform\NotificationBundle\Renderer\RendererInterface;
+use Perform\NotificationBundle\Preference\PreferenceInterface;
 
 /**
  * Send notifications to recipients via email.
@@ -14,12 +15,14 @@ class EmailPublisher implements PublisherInterface
 {
     protected $mailer;
     protected $renderer;
+    protected $prefs;
     protected $defaultFrom;
 
-    public function __construct(\Swift_Mailer $mailer, RendererInterface $renderer, array $defaultFrom)
+    public function __construct(\Swift_Mailer $mailer, RendererInterface $renderer, PreferenceInterface $prefs, array $defaultFrom)
     {
         $this->mailer = $mailer;
         $this->renderer = $renderer;
+        $this->prefs = $prefs;
         $this->defaultFrom = $defaultFrom;
     }
 
@@ -33,6 +36,9 @@ class EmailPublisher implements PublisherInterface
         }
 
         foreach ($notification->getRecipients() as $recipient) {
+            if (!$this->prefs->wantsNotification($recipient, $notification)) {
+                continue;
+            }
             $message = (new \Swift_Message)
                      ->setSubject($context['subject'])
                      ->setTo($recipient->getEmail())

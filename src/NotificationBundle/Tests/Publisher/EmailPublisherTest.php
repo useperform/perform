@@ -6,15 +6,17 @@ use Perform\NotificationBundle\Publisher\EmailPublisher;
 use Perform\NotificationBundle\Notification;
 use Perform\NotificationBundle\Recipient\RecipientInterface;
 use Perform\NotificationBundle\Renderer\RendererInterface;
+use Perform\NotificationBundle\Preference\PreferenceInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class EmailPublisherTest extends \PHPUnit_Framework_TestCase
 {
-    protected $mailer;
-    protected $renderer;
-    protected $publisher;
+    private $mailer;
+    private $renderer;
+    private $publisher;
+    private $prefs;
 
     public function setUp()
     {
@@ -22,19 +24,28 @@ class EmailPublisherTest extends \PHPUnit_Framework_TestCase
                       ->disableOriginalConstructor()
                       ->getMock();
         $this->renderer = $this->getMock(RendererInterface::class);
-        $this->publisher = new EmailPublisher($this->mailer, $this->renderer, ['app@example.com' => 'Sender']);
+        $this->prefs = $this->getMock(PreferenceInterface::class);
+        $this->prefs->expects($this->any())
+            ->method('wantsNotification')
+            ->will($this->returnValue(true));
+
+        $this->publisher = new EmailPublisher($this->mailer, $this->renderer, $this->prefs, ['app@example.com' => 'Sender']);
+    }
+
+    private function mockRecipient($email)
+    {
+        $recipient = $this->getMock(RecipientInterface::class);
+        $recipient->expects($this->any())
+            ->method('getEmail')
+            ->will($this->returnValue($email));
+
+        return $recipient;
     }
 
     public function testSend()
     {
-        $recipient1 = $this->getMock(RecipientInterface::class);
-        $recipient1->expects($this->any())
-            ->method('getEmail')
-            ->will($this->returnValue('1@example.com'));
-        $recipient2 = $this->getMock(RecipientInterface::class);
-        $recipient2->expects($this->any())
-            ->method('getEmail')
-            ->will($this->returnValue('2@example.com'));
+        $recipient1 = $this->mockRecipient('1@example.com');
+        $recipient2 = $this->mockRecipient('2@example.com');
         $notification = new Notification([$recipient1, $recipient2], 'foo', ['subject' => 'Test subject']);
         $this->renderer->expects($this->once())
             ->method('getTemplateName')
@@ -69,5 +80,22 @@ class EmailPublisherTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(['app@example.com' => 'Sender'], $sent[1]->getFrom());
         $this->assertSame('Test subject', $sent[1]->getSubject());
         $this->assertSame('Rendered email', $sent[1]->getBody());
+    }
+
+    public function testNotSentWhenNotWanted()
+    {
+        $prefs = $this->getMock(PreferenceInterface::class);
+        $prefs->expects($this->any())
+            ->method('wantsNotification')
+            ->will($this->returnValue(false));
+
+        $publisher = new EmailPublisher($this->mailer, $this->renderer, $prefs, ['app@example.com' => 'Sender']);
+
+        $recipient = $this->mockRecipient('user@example.com');
+        $notification = new Notification($recipient, 'foo', ['subject' => 'Test subject']);
+        $this->mailer->expects($this->never())
+            ->method('send');
+
+        $publisher->send($notification);
     }
 }
