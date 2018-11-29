@@ -19,4 +19,9 @@ class ReflectionUtil
 
         return false;
     }
+
+    public static function implementsInterface($classname, $interface)
+    {
+        return isset(class_implements($classname)[$interface]);
+    }
 }

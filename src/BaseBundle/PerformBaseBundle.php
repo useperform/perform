@@ -22,6 +22,8 @@ class PerformBaseBundle extends Bundle
 {
     private static $serviceRequirements = [
         'perform_base.twig.serializer' => ['serializer'],
+        'perform_base.menu_builder' => ['knp_menu.factory'],
+        'perform_base.menu_renderer' => ['knp_menu.matcher'],
     ];
     public function build(ContainerBuilder $container)
     {
