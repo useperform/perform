@@ -3,7 +3,6 @@
 namespace Perform\NotificationBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
@@ -88,11 +87,9 @@ class PerformNotificationExtension extends Extension
                     ->setArguments([
                         new Reference('perform_base.settings_manager'),
                         $config['prefix'],
-                        $config['default']
+                        $config['default'],
                     ]);
                 break;
-            default:
-                throw new InvalidConfigurationException('Notification preference type "%s" does not exist. Possible types are "static" and "settings".');
             }
         }
 
