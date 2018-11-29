@@ -54,10 +54,4 @@ class ParametersManagerTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(SettingNotFoundException::class);
         $this->manager->getRequiredValue('some_setting');
     }
-
-    public function testSetValueNotSupported()
-    {
-        $this->setExpectedException(\Exception::class);
-        $this->manager->setValue('some_setting', 'new_value');
-    }
 }

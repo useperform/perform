@@ -39,11 +39,6 @@ class ParametersManager implements SettingsManagerInterface
         }
     }
 
-    public function setValue($key, $value)
-    {
-        throw new \Exception(__CLASS__.' is read-only; settings cannot be written with it.');
-    }
-
     public function getUserValue(UserInterface $user, $key, $default = null)
     {
         return $this->getValue($key, $default);
@@ -52,10 +47,5 @@ class ParametersManager implements SettingsManagerInterface
     public function getRequiredUserValue(UserInterface $user, $key)
     {
         return $this->getRequiredValue($key);
-    }
-
-    public function setUserValue(UserInterface $user, $key, $value)
-    {
-        return $this->setValue($key, $value);
     }
 }
