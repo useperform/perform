@@ -25,12 +25,6 @@ interface SettingsManagerInterface
     public function getRequiredValue($key);
 
     /**
-     * @param string $key
-     * @param mixed  $value
-     */
-    public function setValue($key, $value);
-
-    /**
      * @param UserInterface $user
      * @param string        $key
      * @param mixed         $default
@@ -46,11 +40,4 @@ interface SettingsManagerInterface
      * @return mixed
      */
     public function getRequiredUserValue(UserInterface $user, $key);
-
-    /**
-     * @param UserInterface $user
-     * @param string        $key
-     * @param mixed         $value
-     */
-    public function setUserValue(UserInterface $user, $key, $value);
 }
