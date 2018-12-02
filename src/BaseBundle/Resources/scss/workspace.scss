@@ -29,11 +29,14 @@ a, a:hover, a:focus {
 
   #workspace {
     padding-top: 70px;
-    padding-left: $p-sidebar-width + 15px;
-  }
-
-  &.sidebar-closed #workspace {
     padding-left: 15px;
+
+    @include media-breakpoint-up(xl) {
+      padding-left: $p-sidebar-width + 15px;
+      &.sidebar-closed {
+        padding-left: 15px;
+      }
+    }
   }
 }
 

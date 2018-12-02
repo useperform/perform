@@ -23,8 +23,8 @@
       </div>
 
       <div class="wrapper">
-        <div id="sidebar" class="col-md-3">
-          {{ knp_menu_render('perform_sidebar', {}, 'perform_sidebar') }}
+        <div id="sidebar">
+          {% include '@PerformBase/_sidebar.html.twig' %}
         </div>
 
         <div id="workspace" class="container-fluid">

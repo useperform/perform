@@ -1,10 +1,28 @@
 #sidebar {
-  width: $p-sidebar-width;
   height: 100%;
+  width: 100%;
   position: fixed;
   background: $p-sidebar-bg;
   overflow: scroll;
   padding: 75px 0;
+  display: none;
+  z-index: 100;
+
+  @include media-breakpoint-up(md) {
+    width: $p-sidebar-width;
+  }
+
+  @include media-breakpoint-up(xl) {
+    display: block;
+  }
+
+  &.open {
+    display: block;
+  }
+
+  &.closed {
+    display: none;
+  }
 
   ul {
     padding-left: 20px;
