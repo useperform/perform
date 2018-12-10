@@ -38,9 +38,16 @@
         {% endfor %}
         {% block entityActions %}
           <td>
-            {% for action in perform_action_buttons_for(crudName, entity) %}
-              {{perform_action_button(action, crudName, entity, 'list', {class: "btn-sm"})}}
-            {% endfor %}
+            <div class="dropdown">
+              <a href="#" class="btn-sm btn-primary dropdown-toggle" id="actions-{{entity.id}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Actions
+              </a>
+              <div class="dropdown-menu" aria-labelledby="actions-{{entity.id}}">
+                {% for action in perform_action_buttons_for(crudName, entity) %}
+                  {{perform_action_button(action, crudName, entity, 'list', {class: "dropdown-item"})}}
+                {% endfor %}
+              </div>
+            </div>
           </td>
         {% endblock %}
       </tr>
