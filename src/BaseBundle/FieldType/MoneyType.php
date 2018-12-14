@@ -29,16 +29,6 @@ class MoneyType extends AbstractType
         $builder->add($field, FormType::class, $options['form_options']);
     }
 
-    /**
-     * @doc form_options An array of options to pass to the underlying form type.
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver
-            ->setDefault('form_options', [])
-            ->setAllowedTypes('form_options', 'array');
-    }
-
     public function getDefaultConfig()
     {
         return [

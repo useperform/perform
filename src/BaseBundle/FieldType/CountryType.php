@@ -25,15 +25,4 @@ class CountryType extends AbstractType
     {
         $builder->add($field, FormType::class, $options['form_options']);
     }
-
-    /**
-     * @doc form_options The options to pass to the form type in the create and edit contexts.
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'form_options' => [],
-        ]);
-        $resolver->setAllowedTypes('form_options', 'array');
-    }
 }

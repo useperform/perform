@@ -43,6 +43,8 @@ class FieldTypeRegistry
             $resolver = new OptionsResolver();
             $resolver->setRequired('label');
             $resolver->setAllowedTypes('label', 'string');
+            $resolver->setDefault('form_options', []);
+            $resolver->setAllowedTypes('form_options', 'array');
 
             $this->getType($name)->configureOptions($resolver);
             $this->resolvers[$name] = $resolver;
