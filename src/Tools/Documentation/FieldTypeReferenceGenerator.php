@@ -75,9 +75,11 @@ class FieldTypeReferenceGenerator
             $options[$key]['defaults'] = $defaults[$key];
             $options[$key]['allowed_types'] = isset($allowedTypes[$key]) ? $allowedTypes[$key] : [];
         }
-        //tweak label slightly, since it will always have a value from FieldConfig
-        $options['label']['required'] = false;
+        // set descriptions for common options manually
+        $options['form_options']['description'] = "An array of options to pass to the underlying form type in the ``create`` and ``edit`` contexts. These will be merged with (and will overwrite) any form options that have been created as a result of the field type's other options.";
         $options['label']['description'] = 'The label to use for form labels and table headings. If no label is provided, a sensible label will be created automatically.';
+        //set label to be not required, since it will always have a value from FieldConfig
+        $options['label']['required'] = false;
 
         ksort($options);
         return $options;

@@ -46,6 +46,22 @@ This option is *optional*.
 * Edit context: ``false``
 
 
+form_options
+~~~~~~~~~~~~
+An array of options to pass to the underlying form type in the ``create`` and ``edit`` contexts. These will be merged with (and will overwrite) any form options that have been created as a result of the field type's other options.
+
+This option is *optional*.
+
+**Allowed types**: ``array``
+
+**Defaults**:
+
+* List context: ``[]``
+* View context: ``[]``
+* Create context: ``[]``
+* Edit context: ``[]``
+
+
 label
 ~~~~~
 The label to use for form labels and table headings. If no label is provided, a sensible label will be created automatically.
