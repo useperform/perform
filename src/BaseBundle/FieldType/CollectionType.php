@@ -42,7 +42,7 @@ class CollectionType extends AbstractType
     {
         $this->assets->addJs('/bundles/performbase/js/types/collection.js');
 
-        $builder->add($field, CollectionFormType::class, [
+        $formOptions = [
             'entry_type' => CrudType::class,
             'entry_options' => [
                 'crud_name' => $options['crud_name'],
@@ -51,7 +51,8 @@ class CollectionType extends AbstractType
             'allow_add' => true,
             'allow_delete' => true,
             'by_reference' => false,
-        ]);
+        ];
+        $builder->add($field, CollectionFormType::class, array_merge($formOptions, $options['form_options']));
 
         $entity = $builder->getData();
         $originalCollection = new ArrayCollection();

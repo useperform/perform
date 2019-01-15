@@ -23,14 +23,15 @@ class BooleanType extends AbstractType
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
         $labels = $options['value_labels'];
-        $builder->add($field, ChoiceType::class, [
+        $formOptions = [
             'label' => $options['label'],
             'choices' => [
                 $labels[0] => true,
                 $labels[1] => false,
             ],
             'expanded' => true,
-        ]);
+        ];
+        $builder->add($field, ChoiceType::class, array_merge($formOptions, $options['form_options']));
     }
 
     public function configureOptions(OptionsResolver $resolver)

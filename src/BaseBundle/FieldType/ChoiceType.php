@@ -28,9 +28,11 @@ class ChoiceType extends AbstractType
 {
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
-        $builder->add($field, ChoiceFormType::class, [
+        $formOptions = [
             'choices' => $options['choices'],
-        ]);
+            'label' => $options['label'],
+        ];
+        $builder->add($field, ChoiceFormType::class, array_merge($formOptions, $options['form_options']));
 
         return [];
     }

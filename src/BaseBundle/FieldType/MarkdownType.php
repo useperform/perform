@@ -38,7 +38,10 @@ class MarkdownType extends AbstractType
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
         $this->assets->addJs('/bundles/performbase/js/types/markdown.js');
-        $builder->add($field, FormType::class);
+        $formOptions = [
+            'label' => $options['label'],
+        ];
+        $builder->add($field, FormType::class, array_merge($formOptions, $options['form_options']));
 
         return $options;
     }

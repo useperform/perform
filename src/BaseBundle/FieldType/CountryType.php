@@ -23,6 +23,9 @@ class CountryType extends AbstractType
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
-        $builder->add($field, FormType::class, $options['form_options']);
+        $formOptions = [
+            'label' => $options['label'],
+        ];
+        $builder->add($field, FormType::class, array_merge($formOptions, $options['form_options']));
     }
 }

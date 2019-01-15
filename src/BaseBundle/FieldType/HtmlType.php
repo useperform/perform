@@ -25,7 +25,10 @@ class HtmlType extends AbstractType
         $this->assets->addCss('https://cdn.quilljs.com/1.3.5/quill.snow.css');
         $this->assets->addJs('https://cdn.quilljs.com/1.3.5/quill.js');
         $this->assets->addJs('/bundles/performbase/js/types/html.js');
-        $builder->add($field, FormType::class);
+        $formOptions = [
+            'label' => $options['label'],
+        ];
+        $builder->add($field, FormType::class, array_merge($formOptions, $options['form_options']));
 
         return [
             'html' => $this->getPropertyAccessor()->getValue($builder->getData(), $field),

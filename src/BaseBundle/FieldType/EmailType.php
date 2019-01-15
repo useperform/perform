@@ -13,7 +13,10 @@ class EmailType extends AbstractType
 {
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
-        $builder->add($field, EmailFormType::class);
+        $formOptions = [
+            'label' => $options['label'],
+        ];
+        $builder->add($field, EmailFormType::class, array_merge($formOptions, $options['form_options']));
     }
 
     public function listContext($entity, $field, array $options = [])

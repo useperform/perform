@@ -29,9 +29,10 @@ class SlugType extends AbstractType
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
         $this->assets->addJs('/bundles/performbase/js/types/slug.js');
-        $builder->add($field, FormType::class, [
+        $formOptions = [
             'label' => $options['label'],
-        ]);
+        ];
+        $builder->add($field, FormType::class, array_merge($formOptions, $options['form_options']));
 
         return [
             'target' => sprintf('#%s_%s', $builder->getName(), $options['target']),

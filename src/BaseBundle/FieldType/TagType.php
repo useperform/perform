@@ -34,7 +34,7 @@ class TagType extends AbstractType
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
-        $builder->add($field, EntityFormType::class, [
+        $formOptions = [
             'class' => $options['class'],
             'choice_label' => $options['display_field'],
             'label' => $options['label'],
@@ -42,7 +42,8 @@ class TagType extends AbstractType
             'query_builder' => function ($repo) use ($options) {
                 return $repo->queryByDiscriminator($options['discriminator']);
             },
-        ]);
+        ];
+        $builder->add($field, EntityFormType::class, array_merge($formOptions, $options['form_options']));
     }
 
     public function getDefaultConfig()

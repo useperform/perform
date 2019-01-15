@@ -49,12 +49,13 @@ class EntityType extends AbstractType
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
-        $builder->add($field, EntityFormType::class, [
+        $formOptions = [
             'class' => $options['class'],
             'choice_label' => $options['display_field'],
             'label' => $options['label'],
             'multiple' => $options['multiple'],
-        ]);
+        ];
+        $builder->add($field, EntityFormType::class, array_merge($formOptions, $options['form_options']));
     }
 
     /**
