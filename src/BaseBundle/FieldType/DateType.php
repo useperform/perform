@@ -12,6 +12,11 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType as FormType;
  **/
 class DateType extends DateTimeType
 {
+    protected $defaultDatePickerOptions = [
+        'format' => 'dd/MM/yyyy',
+        'pick_time' => false,
+    ];
+
     public function getDefaultConfig()
     {
         return [
@@ -19,10 +24,6 @@ class DateType extends DateTimeType
             'options' => [
                 'format' => 'd/m/Y',
                 'human' => false,
-                'datepicker_options' => [
-                    'format' => 'dd/MM/yyyy',
-                    'pick_time' => false,
-                ]
             ],
         ];
     }
