@@ -36,9 +36,14 @@ class ChoiceTypeTest extends FieldTypeTestCase
             ->method('add')
             ->with('field', ChoiceFormType::class, [
                 'choices' => $choices,
+                'label' => 'Choice Label',
             ]);
 
-        $vars = $this->getType('choice')->createContext($builder, 'field', ['choices' => $choices]);
+        $vars = $this->getType('choice')->createContext($builder, 'field', [
+            'choices' => $choices,
+            'label' => 'Choice Label',
+            'form_options' => [],
+        ]);
         $this->assertSame([], $vars);
     }
 

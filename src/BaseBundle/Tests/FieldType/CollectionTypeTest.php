@@ -98,6 +98,10 @@ class CollectionTypeTest extends FieldTypeTestCase
             ->method('add')
             ->with('items', CollectionFormType::class);
 
-        $this->getType('collection')->createContext($builder, 'items', ['crud_name' => 'SomeRelation', 'sort_field' => false]);
+        $this->getType('collection')->createContext($builder, 'items', [
+            'crud_name' => 'SomeRelation',
+            'sort_field' => false,
+            'form_options' => [],
+        ]);
     }
 }

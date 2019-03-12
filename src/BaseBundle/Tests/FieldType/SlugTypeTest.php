@@ -52,6 +52,7 @@ class SlugTypeTest extends FieldTypeTestCase
             'label' => 'Slug',
             'target' => 'title',
             'readonly' => true,
+            'form_options' => [],
         ];
         $expected = [
             'readonly' => true,
@@ -71,6 +72,7 @@ class SlugTypeTest extends FieldTypeTestCase
             'label' => 'Slug',
             'target' => 'title',
             'readonly' => true,
+            'form_options' => [],
         ];
         $expected = [
             'readonly' => true,

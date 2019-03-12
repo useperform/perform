@@ -50,6 +50,9 @@ class PasswordTypeTest extends FieldTypeTestCase
             ->method('add')
             ->with('pass', FormType::class);
 
-        $this->getType('password')->createContext($builder, 'pass', ['label' => 'Password']);
+        $this->getType('password')->createContext($builder, 'pass', [
+            'label' => 'Password',
+            'form_options' => [],
+        ]);
     }
 }

@@ -29,7 +29,10 @@ class EmailTypeTest extends FieldTypeTestCase
             ->method('add')
             ->with('emailAddress', FormType::class);
 
-        $this->getType('email')->createContext($builder, 'emailAddress');
+        $this->getType('email')->createContext($builder, 'emailAddress', [
+            'label' => 'Email',
+            'form_options' => [],
+        ]);
     }
 
     public function testListContext()

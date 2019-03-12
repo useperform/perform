@@ -29,7 +29,10 @@ class TextTypeTest extends FieldTypeTestCase
             ->method('add')
             ->with('forename', TextareaType::class);
 
-        $this->getType('text')->createContext($builder, 'forename');
+        $this->getType('text')->createContext($builder, 'forename', [
+            'label' => 'Text',
+            'form_options' => [],
+        ]);
     }
 
     public function testListContext()

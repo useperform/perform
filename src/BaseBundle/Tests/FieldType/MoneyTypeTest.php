@@ -43,6 +43,9 @@ class MoneyTypeTest extends FieldTypeTestCase
             ->method('add')
             ->with('price', FormType::class);
 
-        $this->getType('money')->createContext($builder, 'price', ['form_options' => []]);
+        $this->getType('money')->createContext($builder, 'price', [
+            'label' => 'Money',
+            'form_options' => [],
+        ]);
     }
 }
