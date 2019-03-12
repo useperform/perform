@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\DataCollector;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Crud\CrudRegistry;
 use Perform\BaseBundle\DataCollector\CrudDataCollector;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,14 +14,14 @@ use Perform\BaseBundle\Tests\Crud\TestEntity;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class CrudDataCollectorTest extends \PHPUnit_Framework_TestCase
+class CrudDataCollectorTest extends TestCase
 {
     public function setUp()
     {
         $this->registry = $this->getMockBuilder(CrudRegistry::class)
                         ->disableOriginalConstructor()
                         ->getMock();
-        $store = $this->getMock(ConfigStoreInterface::class);
+        $store = $this->createMock(ConfigStoreInterface::class);
         $this->collector = new CrudDataCollector($this->registry, $store, []);
     }
 

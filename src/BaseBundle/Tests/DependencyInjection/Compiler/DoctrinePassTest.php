@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\DependencyInjection\Compiler;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Perform\BaseBundle\DependencyInjection\Compiler\DoctrinePass;
 use Perform\BaseBundle\DependencyInjection\Doctrine;
@@ -9,7 +10,7 @@ use Perform\BaseBundle\DependencyInjection\Doctrine;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class DoctrinePassTest extends \PHPUnit_Framework_TestCase
+class DoctrinePassTest extends TestCase
 {
     protected $pass;
     protected $container;

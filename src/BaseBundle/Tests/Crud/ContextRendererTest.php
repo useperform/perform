@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Crud;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\FieldType\FieldTypeRegistry;
 use Perform\BaseBundle\Crud\ContextRenderer;
 use Perform\BaseBundle\FieldType\FieldTypeInterface;
@@ -12,7 +13,7 @@ use Perform\BaseBundle\Crud\CrudRequest;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ContextRendererTest extends \PHPUnit_Framework_TestCase
+class ContextRendererTest extends TestCase
 {
     protected $registry;
     protected $twig;
@@ -31,14 +32,11 @@ class ContextRendererTest extends \PHPUnit_Framework_TestCase
 
     protected function mockType($name, $templateName)
     {
-        $type = $this->getMock(FieldTypeInterface::class);
+        $type = $this->createMock(FieldTypeInterface::class);
         $this->registry->expects($this->any())
             ->method('getType')
             ->with($name)
             ->will($this->returnValue($type));
-        $type->expects($this->any())
-            ->method('getTemplate')
-            ->will($this->returnValue($templateName));
         $template = $this->getMockBuilder(Template::class)
                   ->disableOriginalConstructor()
                   ->getMock();

@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Action;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Action\ActionInterface;
 use Perform\BaseBundle\Action\ConfiguredAction;
 use Perform\BaseBundle\Crud\CrudRequest;
@@ -13,13 +14,13 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ConfiguredActionTest extends \PHPUnit_Framework_TestCase
+class ConfiguredActionTest extends TestCase
 {
     protected $action;
 
     public function setUp()
     {
-        $this->action = $this->getMock(ActionInterface::class);
+        $this->action = $this->createMock(ActionInterface::class);
     }
 
     protected function stubRequest()
@@ -93,13 +94,13 @@ class ConfiguredActionTest extends \PHPUnit_Framework_TestCase
         ]);
         $entity = new \stdClass();
         $entity->title = 'hello';
-        $this->assertSame('hello', $ca->getLink($entity, $this->getMock(CrudUrlGeneratorInterface::class), $this->getMock(UrlGeneratorInterface::class)));
+        $this->assertSame('hello', $ca->getLink($entity, $this->createMock(CrudUrlGeneratorInterface::class), $this->createMock(UrlGeneratorInterface::class)));
     }
 
     public function testNotLink()
     {
         $ca = new ConfiguredAction('something', $this->action, []);
-        $this->assertSame('', $ca->getLink(new \stdClass, $this->getMock(CrudUrlGeneratorInterface::class), $this->getMock(UrlGeneratorInterface::class)));
+        $this->assertSame('', $ca->getLink(new \stdClass, $this->createMock(CrudUrlGeneratorInterface::class), $this->createMock(UrlGeneratorInterface::class)));
     }
 
     public function testRun()

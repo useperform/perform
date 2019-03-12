@@ -78,7 +78,7 @@ class BlockRepositoryTest extends RepositoryTestCase
     {
         $b1 = $this->newBlock();
 
-        $this->setExpectedException(EntityNotFoundException::class);
+        $this->expectException(EntityNotFoundException::class);
         $this->repo->findByIds([$b1->getId(), 'not-an-id']);
     }
 

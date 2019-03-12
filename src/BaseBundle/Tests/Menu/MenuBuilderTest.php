@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Menu;
 
+use PHPUnit\Framework\TestCase;
 use Knp\Menu\MenuItem;
 use Perform\BaseBundle\Menu\MenuBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -11,7 +12,7 @@ use Knp\Menu\MenuFactory;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class MenuBuilderTest extends \PHPUnit_Framework_TestCase
+class MenuBuilderTest extends TestCase
 {
     protected $factory;
     protected $dispatcher;
@@ -20,7 +21,7 @@ class MenuBuilderTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->factory = new MenuFactory();
-        $this->dispatcher = $this->getMock(EventDispatcherInterface::class);
+        $this->dispatcher = $this->createMock(EventDispatcherInterface::class);
         $this->builder = new MenuBuilder($this->factory, $this->dispatcher);
     }
 

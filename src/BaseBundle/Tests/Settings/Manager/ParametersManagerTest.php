@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Settings;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Settings\Manager\ParametersManager;
 use Perform\BaseBundle\Exception\SettingNotFoundException;
 use Perform\BaseBundle\Settings\Manager\SettingsManagerInterface;
@@ -11,11 +12,11 @@ use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ParametersManagerTest extends \PHPUnit_Framework_TestCase
+class ParametersManagerTest extends TestCase
 {
     public function setUp()
     {
-        $this->container = $this->getMock(ContainerInterface::class);
+        $this->container = $this->createMock(ContainerInterface::class);
         $this->manager = new ParametersManager($this->container);
     }
 
@@ -51,7 +52,7 @@ class ParametersManagerTest extends \PHPUnit_Framework_TestCase
             ->with('some_setting')
             ->will($this->throwException(new InvalidArgumentException()));
 
-        $this->setExpectedException(SettingNotFoundException::class);
+        $this->expectException(SettingNotFoundException::class);
         $this->manager->getRequiredValue('some_setting');
     }
 }

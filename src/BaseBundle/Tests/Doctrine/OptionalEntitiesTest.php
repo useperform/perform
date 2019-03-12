@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Doctrine;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Test\TestKernel;
 use Perform\BaseBundle\Tests\Fixtures\OptionalEntitiesBundle\OptionalEntitiesBundle;
 use Perform\BaseBundle\Tests\Fixtures\OptionalEntitiesBundle\Entity\One;
@@ -15,7 +16,7 @@ use Doctrine\Common\Persistence\Mapping\MappingException;
  * @author Glynn Forrest <me@glynnforrest.com>
  * @group kernel
  **/
-class OptionalEntitiesTest extends \PHPUnit_Framework_TestCase
+class OptionalEntitiesTest extends TestCase
 {
     protected $kernel;
 

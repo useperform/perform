@@ -2,12 +2,13 @@
 
 namespace Perform\BaseBundle\Tests\Config;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Config\LabelConfig;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class LabelConfigTest extends \PHPUnit_Framework_TestCase
+class LabelConfigTest extends TestCase
 {
     public function setUp()
     {

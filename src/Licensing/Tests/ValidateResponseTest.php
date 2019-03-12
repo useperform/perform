@@ -2,13 +2,14 @@
 
 namespace Perform\Licensing\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Perform\Licensing\ValidateResponse;
 use Perform\Licensing\Exception\LicensingException;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ValidateResponseTest extends \PHPUnit_Framework_TestCase
+class ValidateResponseTest extends TestCase
 {
     public function testValid()
     {
@@ -37,7 +38,7 @@ class ValidateResponseTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidResponseThrowsException()
     {
-        $this->setExpectedException(LicensingException::class);
+        $this->expectException(LicensingException::class);
         new ValidateResponse([]);
     }
 }

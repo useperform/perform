@@ -2,6 +2,7 @@
 
 namespace Perform\UserBundle\Tests\Security;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\UriSigner;
 use Perform\UserBundle\Entity\User;
 use Perform\UserBundle\Security\SingleUseAuthenticator;
@@ -12,7 +13,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class SingleUseAuthenticatorTest extends \PHPUnit_Framework_TestCase
+class SingleUseAuthenticatorTest extends TestCase
 {
     public function setUp()
     {
@@ -102,7 +103,7 @@ class SingleUseAuthenticatorTest extends \PHPUnit_Framework_TestCase
     {
         $token = $this->auth->createToken(Request::create($signedUrl), 'provider');
 
-        $provider = $this->getMock(UserProviderInterface::class);
+        $provider = $this->createMock(UserProviderInterface::class);
         $provider->expects($this->any())
             ->method('loadUserByUsername')
             ->with($user->getEmail())
@@ -119,7 +120,7 @@ class SingleUseAuthenticatorTest extends \PHPUnit_Framework_TestCase
     {
         $token = $this->auth->createToken(Request::create($signedUrl), 'provider');
 
-        $provider = $this->getMock(UserProviderInterface::class);
+        $provider = $this->createMock(UserProviderInterface::class);
         $provider->expects($this->any())
             ->method('loadUserByUsername')
             ->with($user->getEmail())

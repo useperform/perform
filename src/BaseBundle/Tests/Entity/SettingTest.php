@@ -2,13 +2,14 @@
 
 namespace Perform\BaseBundle\Tests\Entity;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Entity\Setting;
 use Perform\UserBundle\Entity\User;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class SettingTest extends \PHPUnit_Framework_TestCase
+class SettingTest extends TestCase
 {
     public function testKeyIsSet()
     {
@@ -30,7 +31,7 @@ class SettingTest extends \PHPUnit_Framework_TestCase
      */
     public function testKeyCannotContainIllegalCharacters($key)
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         new Setting($key);
     }
 

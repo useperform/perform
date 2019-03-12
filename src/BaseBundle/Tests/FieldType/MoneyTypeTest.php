@@ -38,7 +38,7 @@ class MoneyTypeTest extends FieldTypeTestCase
 
     public function testCreateContext()
     {
-        $builder = $this->getMock(FormBuilderInterface::class);
+        $builder = $this->createMock(FormBuilderInterface::class);
         $builder->expects($this->once())
             ->method('add')
             ->with('price', FormType::class);

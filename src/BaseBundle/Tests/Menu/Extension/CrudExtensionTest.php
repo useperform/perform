@@ -2,13 +2,14 @@
 
 namespace Perform\BaseBundle\Tests\Menu\Extension;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Routing\CrudUrlGenerator;
 use Perform\BaseBundle\Menu\Extension\CrudExtension;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class CrudExtensionTest extends \PHPUnit_Framework_TestCase
+class CrudExtensionTest extends TestCase
 {
     public function setUp()
     {

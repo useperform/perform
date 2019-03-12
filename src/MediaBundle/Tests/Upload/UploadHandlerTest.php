@@ -2,6 +2,7 @@
 
 namespace Perform\MediaBundle\Tests\Upload;
 
+use PHPUnit\Framework\TestCase;
 use Temping\Temping;
 use Perform\MediaBundle\Upload\UploadHandler;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +14,7 @@ use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class UploadHandlerTest extends \PHPUnit_Framework_TestCase
+class UploadHandlerTest extends TestCase
 {
     protected $uh;
     protected $temp;
@@ -102,7 +103,7 @@ class UploadHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessBadContentHeader()
     {
-        $this->setExpectedException(UploadException::class);
+        $this->expectException(UploadException::class);
         $this->uploadChunk('hello', 'bytes 0-5/6');
     }
 
@@ -111,7 +112,7 @@ class UploadHandlerTest extends \PHPUnit_Framework_TestCase
         $this->temp->create('foo.txt');
         $file = new UploadedFile($this->temp->getPathname('foo.txt'), 'foo.txt', null, null, UPLOAD_ERR_INI_SIZE, true);
 
-        $this->setExpectedException(UploadException::class);
+        $this->expectException(UploadException::class);
         $this->uh->process(new Request(), $file);
     }
 }

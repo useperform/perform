@@ -2,13 +2,14 @@
 
 namespace Perform\SpamBundle\Tests\Entity;
 
+use PHPUnit\Framework\TestCase;
 use Perform\SpamBundle\Entity\Report;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ReportTest extends \PHPUnit_Framework_TestCase
+class ReportTest extends TestCase
 {
     public function testAddRequestDetails()
     {

@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\DependencyInjection;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\DependencyInjection\Configuration;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
@@ -9,7 +10,7 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ConfigurationTest extends \PHPUnit_Framework_TestCase
+class ConfigurationTest extends TestCase
 {
     public function setUp()
     {
@@ -101,7 +102,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidResolveEntities($invalid)
     {
-        $this->setExpectedException(InvalidConfigurationException::class);
+        $this->expectException(InvalidConfigurationException::class);
         $this->process([
             'perform_base' => [
                 'doctrine' => [
@@ -152,7 +153,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidAssetEntrypoints()
     {
-        $this->setExpectedException(InvalidConfigurationException::class);
+        $this->expectException(InvalidConfigurationException::class);
         $this->process([
             'perform_base' => [
                 'assets' => [

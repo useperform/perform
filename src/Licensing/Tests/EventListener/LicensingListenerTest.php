@@ -2,6 +2,7 @@
 
 namespace Perform\Licensing\Tests\EventListener;
 
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -12,23 +13,23 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class LicensingListenerTest extends \PHPUnit_Framework_TestCase
+class LicensingListenerTest extends TestCase
 {
     protected $logger;
 
     public function setUp()
     {
-        $this->logger = $this->getMock(LoggerInterface::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
     }
 
     private function newEvent(Request $request)
     {
-        return new GetResponseEvent($this->getMock(HttpKernelInterface::class), $request, HttpKernelInterface::MASTER_REQUEST);
+        return new GetResponseEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MASTER_REQUEST);
     }
 
     private function newRequest($host)
     {
-        $request = $this->getMock(Request::class);
+        $request = $this->createMock(Request::class);
         $request->expects($this->any())
             ->method('getHost')
             ->will($this->returnValue($host));

@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Exporter;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Exporter\WriterFactory;
 use Perform\BaseBundle\Config\ExportConfig;
 use Exporter\Writer\JsonWriter;
@@ -11,7 +12,7 @@ use Exporter\Writer\XlsWriter;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class WriterFactoryTest extends \PHPUnit_Framework_TestCase
+class WriterFactoryTest extends TestCase
 {
     public function setUp()
     {

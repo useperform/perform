@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\DependencyInjection;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\DependencyInjection\Definition;
@@ -9,7 +10,7 @@ use Symfony\Component\DependencyInjection\Definition;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class LoopableServiceLocatorTest extends \PHPUnit_Framework_TestCase
+class LoopableServiceLocatorTest extends TestCase
 {
     public function testInterfaces()
     {

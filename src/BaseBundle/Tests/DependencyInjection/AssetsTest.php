@@ -2,13 +2,14 @@
 
 namespace Perform\BaseBundle\Tests\DependencyInjection;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\DependencyInjection\Assets;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class AssetsTest extends \PHPUnit_Framework_TestCase
+class AssetsTest extends TestCase
 {
     public function testExtraJs()
     {

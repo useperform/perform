@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Action;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Action\ActionResponse;
 
 /**
@@ -9,7 +10,7 @@ use Perform\BaseBundle\Action\ActionResponse;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ActionResponseTest extends \PHPUnit_Framework_TestCase
+class ActionResponseTest extends TestCase
 {
     public function testGetMessage()
     {

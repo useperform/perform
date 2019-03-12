@@ -2,12 +2,13 @@
 
 namespace Perform\UserBundle\Tests\Entity;
 
+use PHPUnit\Framework\TestCase;
 use Perform\UserBundle\Entity\User;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class UserTest extends \PHPUnit_Framework_TestCase
+class UserTest extends TestCase
 {
     public function testGetFullname()
     {

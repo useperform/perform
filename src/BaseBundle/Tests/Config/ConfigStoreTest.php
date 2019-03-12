@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Config;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Config\ConfigStore;
 use Perform\BaseBundle\Crud\CrudInterface;
 use Perform\BaseBundle\Doctrine\EntityResolver;
@@ -23,7 +24,7 @@ use Perform\BaseBundle\Tests\Crud\TestEntity;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ConfigStoreTest extends \PHPUnit_Framework_TestCase
+class ConfigStoreTest extends TestCase
 {
     protected $crudRegistry;
     protected $typeRegistry;
@@ -42,7 +43,7 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
         $this->actionRegistry = $this->getMockBuilder(ActionRegistry::class)
                               ->disableOriginalConstructor()
                               ->getMock();
-        $this->authChecker = $this->getMock(AuthorizationCheckerInterface::class);
+        $this->authChecker = $this->createMock(AuthorizationCheckerInterface::class);
     }
 
     private function configure($class, $crud, array $override = [])
@@ -63,7 +64,7 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFieldConfig()
     {
-        $crud = $this->getMock(CrudInterface::class);
+        $crud = $this->createMock(CrudInterface::class);
         $crud->expects($this->once())
             ->method('configureFields')
             ->with($this->callback(function ($config) {
@@ -82,7 +83,7 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
 
     public function testGetActionConfig()
     {
-        $crud = $this->getMock(CrudInterface::class);
+        $crud = $this->createMock(CrudInterface::class);
         $crud->expects($this->once())
             ->method('configureActions')
             ->with($this->callback(function ($config) {
@@ -101,7 +102,7 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFilterConfig()
     {
-        $crud = $this->getMock(CrudInterface::class);
+        $crud = $this->createMock(CrudInterface::class);
         $crud->expects($this->once())
             ->method('configureFilters')
             ->with($this->callback(function ($config) {
@@ -120,7 +121,7 @@ class ConfigStoreTest extends \PHPUnit_Framework_TestCase
 
     public function testGetExportConfig()
     {
-        $crud = $this->getMock(CrudInterface::class);
+        $crud = $this->createMock(CrudInterface::class);
         $crud->expects($this->once())
             ->method('configureExports')
             ->with($this->callback(function ($config) {

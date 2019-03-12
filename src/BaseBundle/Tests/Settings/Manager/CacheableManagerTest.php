@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Settings;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Settings\Manager\CacheableManager;
 use Perform\BaseBundle\Settings\Manager\SettingsManagerInterface;
 use Psr\Cache\CacheItemPoolInterface;
@@ -13,7 +14,7 @@ use Perform\BaseBundle\Exception\ReadOnlySettingsException;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class CacheableManagerTest extends \PHPUnit_Framework_TestCase
+class CacheableManagerTest extends TestCase
 {
     private $cache;
     private $innerManager;
@@ -22,10 +23,10 @@ class CacheableManagerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->cache = $this->getMock(CacheItemPoolInterface::class);
-        $this->innerManager = $this->getMock([SettingsManagerInterface::class, WriteableSettingsManagerInterface::class]);
+        $this->cache = $this->createMock(CacheItemPoolInterface::class);
+        $this->innerManager = $this->createMock([SettingsManagerInterface::class, WriteableSettingsManagerInterface::class]);
         $this->manager = new CacheableManager($this->innerManager, $this->cache);
-        $this->user = $this->getMock(UserInterface::class);
+        $this->user = $this->createMock(UserInterface::class);
         $this->user->expects($this->any())
             ->method('getUsername')
             ->will($this->returnValue('testuser@example.com'));
@@ -43,7 +44,7 @@ class CacheableManagerTest extends \PHPUnit_Framework_TestCase
 
     private function expectItem($key, $isHit, $value = null)
     {
-        $item = $this->getMock(CacheItemInterface::class);
+        $item = $this->createMock(CacheItemInterface::class);
         $item->expects($this->any())
             ->method('isHit')
             ->will($this->returnValue($isHit));
@@ -187,14 +188,14 @@ class CacheableManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testSetValueThrowsExceptionForNonWriteable()
     {
-        $manager = new CacheableManager($this->getMock(SettingsManagerInterface::class), $this->cache);
+        $manager = new CacheableManager($this->createMock(SettingsManagerInterface::class), $this->cache);
         $this->expectException(ReadOnlySettingsException::class);
         $manager->setValue('some_setting', 'new_value');
     }
 
     public function testSetUserValueThrowsForNonWriteable()
     {
-        $manager = new CacheableManager($this->getMock(SettingsManagerInterface::class), $this->cache);
+        $manager = new CacheableManager($this->createMock(SettingsManagerInterface::class), $this->cache);
         $this->expectException(ReadOnlySettingsException::class);
         $manager->setUserValue($this->user, 'some_setting', 'new_value');
     }

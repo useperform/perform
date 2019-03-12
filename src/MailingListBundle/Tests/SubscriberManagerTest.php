@@ -2,6 +2,7 @@
 
 namespace Perform\MailingListBundle\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\MailingListBundle\Connector\ConnectorInterface;
 use Perform\MailingListBundle\Enricher\EnricherInterface;
@@ -13,7 +14,7 @@ use Psr\Log\LoggerInterface;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class SubscriberManagerTest extends \PHPUnit_Framework_TestCase
+class SubscriberManagerTest extends TestCase
 {
     protected $em;
     protected $connector1;
@@ -25,20 +26,20 @@ class SubscriberManagerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->em = $this->getMock(EntityManagerInterface::class);
-        $this->connector1 = $this->getMock(ConnectorInterface::class);
-        $this->connector2 = $this->getMock(ConnectorInterface::class);
+        $this->em = $this->createMock(EntityManagerInterface::class);
+        $this->connector1 = $this->createMock(ConnectorInterface::class);
+        $this->connector2 = $this->createMock(ConnectorInterface::class);
         $connectors = new LoopableServiceLocator([
             'one' => function() { return $this->connector1; },
             'two' => function() { return $this->connector2; },
         ]);
-        $this->enricher1 = $this->getMock(EnricherInterface::class);
-        $this->enricher2 = $this->getMock(EnricherInterface::class);
+        $this->enricher1 = $this->createMock(EnricherInterface::class);
+        $this->enricher2 = $this->createMock(EnricherInterface::class);
         $enrichers = new LoopableServiceLocator([
             function() { return $this->enricher1; },
             function() { return $this->enricher2; },
         ]);
-        $this->logger = $this->getMock(LoggerInterface::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
         $this->manager = new SubscriberManager($this->em, $connectors, $enrichers, $this->logger);
     }
 

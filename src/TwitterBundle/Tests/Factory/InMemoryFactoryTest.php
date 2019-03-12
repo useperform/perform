@@ -2,6 +2,7 @@
 
 namespace Perform\TwitterBundle\Tests\Factory;
 
+use PHPUnit\Framework\TestCase;
 use Perform\TwitterBundle\Factory\InMemoryFactory;
 
 /**
@@ -9,7 +10,7 @@ use Perform\TwitterBundle\Factory\InMemoryFactory;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class InMemoryFactoryTest extends \PHPUnit_Framework_TestCase
+class InMemoryFactoryTest extends TestCase
 {
     public function setUp()
     {

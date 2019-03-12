@@ -2,12 +2,13 @@
 
 namespace Perform\BaseBundle\Tests\Doctrine;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Doctrine\ExtendEntitiesListener;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ExtendEntitiesListenerTest extends \PHPUnit_Framework_TestCase
+class ExtendEntitiesListenerTest extends TestCase
 {
     public function testClassesAreNormalised()
     {

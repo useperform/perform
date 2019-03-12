@@ -24,7 +24,7 @@ class EmailTypeTest extends FieldTypeTestCase
 
     public function testCreateContext()
     {
-        $builder = $this->getMock(FormBuilderInterface::class);
+        $builder = $this->createMock(FormBuilderInterface::class);
         $builder->expects($this->once())
             ->method('add')
             ->with('emailAddress', FormType::class);

@@ -2,12 +2,14 @@
 
 namespace Perform\BaseBundle\Test;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * ComposerConfigTestCase.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-abstract class ComposerConfigTestCase extends \PHPUnit_Framework_TestCase
+abstract class ComposerConfigTestCase extends TestCase
 {
     abstract protected function getPackageName();
 

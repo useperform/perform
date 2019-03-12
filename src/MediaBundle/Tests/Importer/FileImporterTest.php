@@ -2,6 +2,7 @@
 
 namespace Perform\MediaBundle\Tests\Importer;
 
+use PHPUnit\Framework\TestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Perform\MediaBundle\Importer\FileImporter;
@@ -20,7 +21,7 @@ use Perform\MediaBundle\Event\ImportUrlEvent;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class FileImporterTest extends \PHPUnit_Framework_TestCase
+class FileImporterTest extends TestCase
 {
     protected $bucketRegistry;
     protected $bucket;
@@ -33,15 +34,15 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->bucketRegistry = $this->getMock(BucketRegistryInterface::class);
-        $this->em = $this->getMock(EntityManagerInterface::class);
+        $this->bucketRegistry = $this->createMock(BucketRegistryInterface::class);
+        $this->em = $this->createMock(EntityManagerInterface::class);
         $this->conn = DriverManager::getConnection([
             'url' => 'sqlite:///:memory:',
         ]);
         $this->em->expects($this->any())
             ->method('getConnection')
             ->will($this->returnValue($this->conn));
-        $this->dispatcher = $this->getMock(EventDispatcherInterface::class);
+        $this->dispatcher = $this->createMock(EventDispatcherInterface::class);
         $this->importer = new FileImporter($this->bucketRegistry, $this->em, $this->dispatcher);
         $this->vfs = new FileSystem();
     }
@@ -75,7 +76,7 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
 
     private function mockBucket($name)
     {
-        $bucket = $this->getMock(BucketInterface::class);
+        $bucket = $this->createMock(BucketInterface::class);
         $bucket->expects($this->any())
             ->method('getName')
             ->will($this->returnValue($name));
@@ -90,7 +91,7 @@ class FileImporterTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue([]));
         $bucket->expects($this->any())
             ->method('getMediaType')
-            ->will($this->returnValue($this->getMock(MediaTypeInterface::class)));
+            ->will($this->returnValue($this->createMock(MediaTypeInterface::class)));
 
         return $bucket;
     }

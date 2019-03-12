@@ -31,7 +31,7 @@ class ChoiceTypeTest extends FieldTypeTestCase
             'Foo' => 'foo',
             'Bar' => 'bar',
         ];
-        $builder = $this->getMock(FormBuilderInterface::class);
+        $builder = $this->createMock(FormBuilderInterface::class);
         $builder->expects($this->once())
             ->method('add')
             ->with('field', ChoiceFormType::class, [

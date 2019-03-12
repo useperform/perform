@@ -2,6 +2,7 @@
 
 namespace TwitterBundle\Tests\Client;
 
+use PHPUnit\Framework\TestCase;
 use Doctrine\Common\Cache\ArrayCache;
 use Perform\TwitterBundle\Client\Client;
 use Guzzle\Http\Message\Response;
@@ -11,7 +12,7 @@ use Guzzle\Http\Message\Response;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ClientTest extends \PHPUnit_Framework_TestCase
+class ClientTest extends TestCase
 {
     protected $cache;
     protected $factory;
@@ -20,7 +21,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->cache = new ArrayCache();
-        $this->factory = $this->getMock('Perform\TwitterBundle\Factory\FactoryInterface');
+        $this->factory = $this->createMock('Perform\TwitterBundle\Factory\FactoryInterface');
         $this->client = new Client($this->factory, $this->cache);
     }
 
@@ -48,7 +49,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     public function testSetLogger()
     {
-        $logger = $this->getMock('Psr\Log\LoggerInterface');
+        $logger = $this->createMock('Psr\Log\LoggerInterface');
         $apiClient = $this->expectApiClient();
         $this->factory->expects($this->once())
             ->method('create')
@@ -60,7 +61,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     public function testSetLoggerBeforeClientCreated()
     {
-        $logger = $this->getMock('Psr\Log\LoggerInterface');
+        $logger = $this->createMock('Psr\Log\LoggerInterface');
         $apiClient = $this->expectApiClient();
         $apiClient->expects($this->once())
             ->method('setLogger')
@@ -72,7 +73,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     public function testClientIsNotCreatedTooEarly()
     {
-        $logger = $this->getMock('Psr\Log\LoggerInterface');
+        $logger = $this->createMock('Psr\Log\LoggerInterface');
         $this->factory->expects($this->never())
             ->method('create');
 
@@ -143,7 +144,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             ->method('query')
             ->with('GET', 'statuses/user_timeline', ['screen_name' => 'test', 'count' => 5])
             ->will($this->returnValue($response));
-        $cache = $this->getMock('Doctrine\Common\Cache\Cache');
+        $cache = $this->createMock('Doctrine\Common\Cache\Cache');
         $cache->expects($this->once())
             ->method('save')
             ->with('perform_twitter.timeline.test', $this->callback(function($value) {

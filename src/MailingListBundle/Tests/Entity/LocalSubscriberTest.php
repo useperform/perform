@@ -2,13 +2,14 @@
 
 namespace Perform\MailingListBundle\Tests\Entity;
 
+use PHPUnit\Framework\TestCase;
 use Perform\MailingListBundle\Entity\LocalSubscriber;
 use Perform\MailingListBundle\Entity\LocalList;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class LocalSubscriberTest extends \PHPUnit_Framework_TestCase
+class LocalSubscriberTest extends TestCase
 {
     public function testCanBeAddedToLists()
     {

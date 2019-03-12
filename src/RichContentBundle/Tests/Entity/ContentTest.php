@@ -2,13 +2,14 @@
 
 namespace Perform\RichContentBundle\Tests\Entity;
 
+use PHPUnit\Framework\TestCase;
 use Perform\RichContentBundle\Entity\Content;
 use Perform\RichContentBundle\Entity\Block;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ContentTest extends \PHPUnit_Framework_TestCase
+class ContentTest extends TestCase
 {
     private function block($id)
     {
@@ -57,7 +58,7 @@ class ContentTest extends \PHPUnit_Framework_TestCase
         $c->addBlock($b1);
         $c->addBlock($b2);
 
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $c->setBlockOrder([[1], [2]]);
     }
 
@@ -69,7 +70,7 @@ class ContentTest extends \PHPUnit_Framework_TestCase
         $c->addBlock($b1);
         $c->addBlock($b2);
 
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $c->setBlockOrder(['3', '1']);
     }
 }

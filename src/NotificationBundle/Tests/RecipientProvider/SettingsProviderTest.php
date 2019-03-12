@@ -2,6 +2,7 @@
 
 namespace Perform\NotificationBundle\Tests\RecipientProvider;
 
+use PHPUnit\Framework\TestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\BaseBundle\Settings\Manager\SettingsManagerInterface;
 use Perform\NotificationBundle\RecipientProvider\SettingsProvider;
@@ -14,7 +15,7 @@ use Perform\NotificationBundle\Recipient\SimpleRecipient;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class SettingsProviderTest extends \PHPUnit_Framework_TestCase
+class SettingsProviderTest extends TestCase
 {
     protected $em;
     protected $repo;
@@ -23,7 +24,7 @@ class SettingsProviderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->em = $this->getMock(EntityManagerInterface::class);
+        $this->em = $this->createMock(EntityManagerInterface::class);
         $this->repo = $this->getMockBuilder(UserRepository::class)
                     ->disableOriginalConstructor()
                     ->getMock();
@@ -31,13 +32,13 @@ class SettingsProviderTest extends \PHPUnit_Framework_TestCase
             ->method('getRepository')
             ->will($this->returnValue($this->repo));
 
-        $this->settings = $this->getMock(SettingsManagerInterface::class);
+        $this->settings = $this->createMock(SettingsManagerInterface::class);
         $this->provider = new SettingsProvider($this->em, $this->settings);
     }
 
     protected function mockRecipient($email)
     {
-        $user = $this->getMock(RecipientInterface::class);
+        $user = $this->createMock(RecipientInterface::class);
         $user->expects($this->any())
             ->method('getEmail')
             ->will($this->returnValue($email));

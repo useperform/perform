@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Settings;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Settings\Manager\DoctrineManager;
 use Perform\BaseBundle\Repository\SettingRepository;
 use Perform\BaseBundle\Exception\SettingNotFoundException;
@@ -13,14 +14,14 @@ use Doctrine\ORM\EntityManagerInterface;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class DoctrineManagerTest extends \PHPUnit_Framework_TestCase
+class DoctrineManagerTest extends TestCase
 {
     public function setUp()
     {
         $this->repo = $this->getMockBuilder(SettingRepository::class)
                     ->disableOriginalConstructor()
                     ->getMock();
-        $this->em = $this->getMock(EntityManagerInterface::class);
+        $this->em = $this->createMock(EntityManagerInterface::class);
 
         $this->manager = new DoctrineManager($this->repo, $this->em);
     }

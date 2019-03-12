@@ -2,13 +2,14 @@
 
 namespace Perform\Tools\Tests\Documentation;
 
+use PHPUnit\Framework\TestCase;
 use Temping\Temping;
 use Perform\Tools\Documentation\SassReferenceGenerator;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class SassReferenceGeneratorTest extends \PHPUnit_Framework_TestCase
+class SassReferenceGeneratorTest extends TestCase
 {
     protected $temp;
     protected $gen;

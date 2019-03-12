@@ -2,6 +2,7 @@
 
 namespace Perform\NotificationBundle\Tests\EventListener;
 
+use PHPUnit\Framework\TestCase;
 use Perform\NotificationBundle\EventListener\LogListener;
 use Perform\NotificationBundle\Event\SendEvent;
 use Perform\NotificationBundle\Notification;
@@ -12,20 +13,20 @@ use Psr\Log\LoggerInterface;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class LogListenerTest extends \PHPUnit_Framework_TestCase
+class LogListenerTest extends TestCase
 {
     protected $logger;
 
     public function setUp()
     {
-        $this->logger = $this->getMock(LoggerInterface::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
     }
 
     protected function newNotification($recipientCount = 1)
     {
         $recipients = [];
         while ($recipientCount !== 0) {
-            $recipients[] = $this->getMock(RecipientInterface::class);
+            $recipients[] = $this->createMock(RecipientInterface::class);
             --$recipientCount;
         }
 

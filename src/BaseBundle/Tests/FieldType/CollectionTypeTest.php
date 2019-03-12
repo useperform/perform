@@ -21,7 +21,7 @@ class CollectionTypeTest extends FieldTypeTestCase
 
     public function registerTypes()
     {
-        $entityManager = $this->getMock(EntityManagerInterface::class);
+        $entityManager = $this->createMock(EntityManagerInterface::class);
         $assets = new AssetContainer();
 
         return [
@@ -89,7 +89,7 @@ class CollectionTypeTest extends FieldTypeTestCase
     {
         $entity = new \stdClass();
         $entity->items = new ArrayCollection();
-        $builder = $this->getMock(FormBuilderInterface::class);
+        $builder = $this->createMock(FormBuilderInterface::class);
         $builder->expects($this->any())
             ->method('getData')
             ->will($this->returnValue($entity));

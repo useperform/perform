@@ -2,12 +2,13 @@
 
 namespace Perform\BaseBundle\Tests\Util;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Util\DurationUtil;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class DurationUtilTest extends \PHPUnit_Framework_TestCase
+class DurationUtilTest extends TestCase
 {
     public function humanProvider()
     {

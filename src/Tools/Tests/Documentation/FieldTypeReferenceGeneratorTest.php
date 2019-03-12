@@ -2,6 +2,7 @@
 
 namespace Perform\Tools\Tests\Documentation;
 
+use PHPUnit\Framework\TestCase;
 use Perform\Tools\Documentation\FieldTypeReferenceGenerator;
 use Temping\Temping;
 use Perform\BaseBundle\FieldType\FieldTypeRegistry;
@@ -10,7 +11,7 @@ use Perform\BaseBundle\Test\Services;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class FieldTypeReferenceGeneratorTest extends \PHPUnit_Framework_TestCase
+class FieldTypeReferenceGeneratorTest extends TestCase
 {
     protected $temp;
     protected $gen;

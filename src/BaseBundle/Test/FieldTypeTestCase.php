@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Test;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\FieldType\FieldTypeRegistry;
 use Perform\BaseBundle\Crud\ContextRenderer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -12,7 +13,7 @@ use Perform\BaseBundle\Crud\CrudRequest;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-abstract class FieldTypeTestCase extends \PHPUnit_Framework_TestCase
+abstract class FieldTypeTestCase extends TestCase
 {
     protected $kernel;
     protected $typeRegistry;

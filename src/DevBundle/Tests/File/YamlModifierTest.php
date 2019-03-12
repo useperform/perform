@@ -2,6 +2,7 @@
 
 namespace Perform\DevBundle\Tests\File;
 
+use PHPUnit\Framework\TestCase;
 use Perform\DevBundle\File\YamlModifier;
 use Perform\DevBundle\BundleResource\ContactBundleResource;
 use Perform\DevBundle\BundleResource\MediaBundleResource;
@@ -12,7 +13,7 @@ use Symfony\Component\Yaml\Yaml;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class YamlModifierTest extends \PHPUnit_Framework_TestCase
+class YamlModifierTest extends TestCase
 {
     private function routing($file)
     {

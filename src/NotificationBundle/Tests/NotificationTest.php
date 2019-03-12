@@ -2,17 +2,18 @@
 
 namespace Perform\NotificationBundle\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Perform\NotificationBundle\Notification;
 use Perform\NotificationBundle\Recipient\RecipientInterface;
 
 /**
  * NotificationTest
  **/
-class NotificationTest extends \PHPUnit_Framework_TestCase
+class NotificationTest extends TestCase
 {
     protected function mockRecipient()
     {
-        return $this->getMock(RecipientInterface::class);
+        return $this->createMock(RecipientInterface::class);
     }
 
     public function testGetters()
@@ -40,7 +41,7 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidRecipientThrowsException()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $n = new Notification(new \DateTime(), 'test');
     }
 }

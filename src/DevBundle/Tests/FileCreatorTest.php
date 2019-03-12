@@ -2,6 +2,7 @@
 
 namespace Perform\DevBundle\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Perform\DevBundle\File\FileCreator;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
@@ -15,7 +16,7 @@ use Symfony\Component\Console\Input\InputOption;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class FileCreatorTest extends \PHPUnit_Framework_TestCase
+class FileCreatorTest extends TestCase
 {
     protected $fs;
     protected $twig;
@@ -26,7 +27,7 @@ class FileCreatorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->fs = $this->getMock(Filesystem::class);
+        $this->fs = $this->createMock(Filesystem::class);
         $this->twig = $this->getMockBuilder(\Twig_Environment::class)
                     ->disableOriginalConstructor()
                     ->getMock();
@@ -144,7 +145,7 @@ class FileCreatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testResolveBundleClass($relativeClass)
     {
-        $bundle = $this->getMock(BundleInterface::class);
+        $bundle = $this->createMock(BundleInterface::class);
         $bundle->expects($this->any())
             ->method('getPath')
             ->will($this->returnValue('/bundle/root'));

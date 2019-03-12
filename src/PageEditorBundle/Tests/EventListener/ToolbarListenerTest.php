@@ -2,6 +2,7 @@
 
 namespace Perform\PageEditorBundle\Tests\EventListener;
 
+use PHPUnit\Framework\TestCase;
 use Perform\PageEditorBundle\EventListener\ToolbarListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,7 +13,7 @@ use Perform\PageEditorBundle\PageManager;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
+class ToolbarListenerTest extends TestCase
 {
     protected $pageManager;
     protected $twig;
@@ -28,7 +29,7 @@ class ToolbarListenerTest extends \PHPUnit_Framework_TestCase
                     ->disableOriginalConstructor()
                     ->getMock();
         $this->listener = new ToolbarListener($this->pageManager, $this->twig);
-        $this->kernel = $this->getMock(HttpKernelInterface::class);
+        $this->kernel = $this->createMock(HttpKernelInterface::class);
     }
 
     protected function createEvent($content)

@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Config;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Action\ActionRegistry;
 use Perform\BaseBundle\Config\ActionConfig;
 use Perform\BaseBundle\Action\ConfiguredAction;
@@ -16,14 +17,14 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ActionConfigTest extends \PHPUnit_Framework_TestCase
+class ActionConfigTest extends TestCase
 {
     public function setUp()
     {
         $this->registry = $this->getMockBuilder(ActionRegistry::class)
                         ->disableOriginalConstructor()
                         ->getMock();
-        $this->authChecker = $this->getMock(AuthorizationCheckerInterface::class);
+        $this->authChecker = $this->createMock(AuthorizationCheckerInterface::class);
         $this->config = new ActionConfig($this->registry, $this->authChecker, 'some_crud');
     }
 
@@ -36,7 +37,7 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
 
     protected function stubAction(array $defaultConfig = [])
     {
-        $action = $this->getMock(ActionInterface::class);
+        $action = $this->createMock(ActionInterface::class);
         $action->expects($this->any())
             ->method('getDefaultConfig')
             ->will($this->returnValue($defaultConfig));
@@ -113,7 +114,7 @@ class ActionConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('link_0', $ca->getName());
         $this->assertSame('Test link', $ca->getLabel($this->stubRequest(), new \stdClass()));
         $this->assertTrue($ca->isLink());
-        $link = $ca->getLink(new \stdClass(), $this->getMock(CrudUrlGeneratorInterface::class), $this->getMock(UrlGeneratorInterface::class));
+        $link = $ca->getLink(new \stdClass(), $this->createMock(CrudUrlGeneratorInterface::class), $this->createMock(UrlGeneratorInterface::class));
         $this->assertSame('http://example.com', $link);
     }
 

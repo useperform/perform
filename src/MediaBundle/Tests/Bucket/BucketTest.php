@@ -2,6 +2,7 @@
 
 namespace Perform\MediaBundle\Tests\Bucket;
 
+use PHPUnit\Framework\TestCase;
 use Perform\MediaBundle\MediaType\MediaTypeInterface;
 use League\Flysystem\FilesystemInterface;
 use Perform\MediaBundle\Url\UrlGeneratorInterface;
@@ -11,20 +12,20 @@ use Perform\MediaBundle\Exception\MediaTypeException;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class BucketTest extends \PHPUnit_Framework_TestCase
+class BucketTest extends TestCase
 {
     protected $flysystem;
     protected $urlGenerator;
 
     public function setUp()
     {
-        $this->flysystem = $this->getMock(FilesystemInterface::class);
-        $this->urlGenerator = $this->getMock(UrlGeneratorInterface::class);
+        $this->flysystem = $this->createMock(FilesystemInterface::class);
+        $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
     }
 
     public function testGetMediaType()
     {
-        $type = $this->getMock(MediaTypeInterface::class);
+        $type = $this->createMock(MediaTypeInterface::class);
         $bucket = new Bucket('test', $this->flysystem, $this->urlGenerator, ['some_type' => $type]);
 
         $this->assertSame($type, $bucket->getMediaType('some_type'));
@@ -33,7 +34,7 @@ class BucketTest extends \PHPUnit_Framework_TestCase
     public function testGetUnknownMediaType()
     {
         $bucket = new Bucket('test', $this->flysystem, $this->urlGenerator, []);
-        $this->setExpectedException(MediaTypeException::class);
+        $this->expectException(MediaTypeException::class);
         $bucket->getMediaType('unknown');
     }
 }

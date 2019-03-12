@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Util;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Tests\Fixtures\ReflectionUtil\ParentEntity;
 use Perform\BaseBundle\Tests\Fixtures\ReflectionUtil\ChildEntity;
 use Perform\BaseBundle\Tests\Fixtures\ReflectionUtil\OneTrait;
@@ -11,7 +12,7 @@ use Perform\BaseBundle\Util\ReflectionUtil;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ReflectionUtilTest extends \PHPUnit_Framework_TestCase
+class ReflectionUtilTest extends TestCase
 {
     public function usesTraitProvider()
     {

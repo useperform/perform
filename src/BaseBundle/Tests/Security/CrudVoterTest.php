@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Security;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Perform\BaseBundle\Security\CrudVoter;
@@ -15,7 +16,7 @@ use Doctrine\ORM\Mapping\ClassMetadataFactory;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class CrudVoterTest extends \PHPUnit_Framework_TestCase
+class CrudVoterTest extends TestCase
 {
     protected $mockVoter;
     protected $voter;
@@ -26,12 +27,12 @@ class CrudVoterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->mockVoter = $this->getMock(VoterInterface::class);
+        $this->mockVoter = $this->createMock(VoterInterface::class);
         $this->crudRegistry = $this->getMockBuilder(CrudRegistry::class)
                             ->disableOriginalConstructor()
                             ->getMock();
-        $this->urlGenerator = $this->getMock(CrudUrlGeneratorInterface::class);
-        $this->em = $this->getMock(EntityManagerInterface::class);
+        $this->urlGenerator = $this->createMock(CrudUrlGeneratorInterface::class);
+        $this->em = $this->createMock(EntityManagerInterface::class);
         $this->voter = $this->voter = new CrudVoter(
             $this->crudRegistry,
             $this->urlGenerator,
@@ -41,7 +42,7 @@ class CrudVoterTest extends \PHPUnit_Framework_TestCase
             $this->mockVoter,
             $this->voter,
         ];
-        $this->token = $this->getMock(TokenInterface::class);
+        $this->token = $this->createMock(TokenInterface::class);
     }
 
     private function mockVoterResult($result)
@@ -61,7 +62,7 @@ class CrudVoterTest extends \PHPUnit_Framework_TestCase
 
     private function entityHasCrud($classname, $exists = true)
     {
-        $meta = $this->getMock(ClassMetadataFactory::class);
+        $meta = $this->createMock(ClassMetadataFactory::class);
         $this->em->expects($this->any())
             ->method('getMetadataFactory')
             ->will($this->returnValue($meta));

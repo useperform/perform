@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\DependencyInjection;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\DependencyInjection\PerformBaseExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Perform\BaseBundle\EventListener\SimpleMenuListener;
@@ -23,7 +24,7 @@ use Perform\BaseBundle\Settings\Manager\SettingsManagerInterface;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class PerformBaseExtensionTest extends \PHPUnit_Framework_TestCase
+class PerformBaseExtensionTest extends TestCase
 {
     public function testSimpleMenus()
     {
