@@ -28,7 +28,7 @@
 
 {% block list %}
   {% if multiple %}
-    {{value | length}} items
+    {{related_entity | length}} items
   {% else %}
     {% if related_entity %}
       {{block('related_entity')}}
