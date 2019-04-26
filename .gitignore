@@ -1,5 +1,6 @@
-vendor/
-composer.lock
+/vendor/
+/composer.json
+/composer.lock
 
 src/*/vendor
 src/*/composer.lock
