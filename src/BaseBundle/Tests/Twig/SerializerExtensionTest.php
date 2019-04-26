@@ -2,20 +2,21 @@
 
 namespace Perform\BaseBundle\Tests\Twig;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Twig\Extension\SerializerExtension;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class SerializerExtensionTest extends \PHPUnit_Framework_TestCase
+class SerializerExtensionTest extends TestCase
 {
     protected $serializer;
     protected $extension;
 
     public function setUp()
     {
-        $this->serializer = $this->getMock(SerializerInterface::class);
+        $this->serializer = $this->createMock(SerializerInterface::class);
         $this->extension = new SerializerExtension($this->serializer);
     }
 

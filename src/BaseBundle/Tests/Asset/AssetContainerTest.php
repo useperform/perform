@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Asset;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Asset\AssetContainer;
 
 /**
@@ -9,7 +10,7 @@ use Perform\BaseBundle\Asset\AssetContainer;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class AssetContainerTest extends \PHPUnit_Framework_TestCase
+class AssetContainerTest extends TestCase
 {
     protected $assets;
 

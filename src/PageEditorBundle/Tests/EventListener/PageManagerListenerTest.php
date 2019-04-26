@@ -2,6 +2,7 @@
 
 namespace Perform\PageEditorBundle\Tests\EventListener;
 
+use PHPUnit\Framework\TestCase;
 use Perform\PageEditorBundle\Annotation\Page;
 use Perform\PageEditorBundle\EventListener\PageManagerListener;
 use Perform\PageEditorBundle\PageManager;
@@ -14,7 +15,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class PageManagerListenerTest extends \PHPUnit_Framework_TestCase
+class PageManagerListenerTest extends TestCase
 {
     protected $pageManager;
     protected $sessionManager;
@@ -30,7 +31,7 @@ class PageManagerListenerTest extends \PHPUnit_Framework_TestCase
                               ->disableOriginalConstructor()
                               ->getMock();
         $this->listener = new PageManagerListener($this->pageManager, $this->sessionManager);
-        $this->kernel = $this->getMock(HttpKernelInterface::class);
+        $this->kernel = $this->createMock(HttpKernelInterface::class);
     }
 
     public function testEditingSessionEnablesEditMode()

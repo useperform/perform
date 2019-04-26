@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Crud;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Config\FieldConfig;
@@ -11,7 +12,7 @@ use Perform\BaseBundle\Tests\Fixtures\ReflectionUtil\ParentEntity;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class CrudRequestTest extends \PHPUnit_Framework_TestCase
+class CrudRequestTest extends TestCase
 {
     public function testGetContext()
     {

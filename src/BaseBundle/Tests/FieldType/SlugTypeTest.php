@@ -44,7 +44,7 @@ class SlugTypeTest extends FieldTypeTestCase
 
     public function testDefaultCreateContextVars()
     {
-        $builder = $this->getMock(FormBuilderInterface::class);
+        $builder = $this->createMock(FormBuilderInterface::class);
         $builder->expects($this->any())
             ->method('getName')
             ->will($this->returnValue('crud_form'));
@@ -52,6 +52,7 @@ class SlugTypeTest extends FieldTypeTestCase
             'label' => 'Slug',
             'target' => 'title',
             'readonly' => true,
+            'form_options' => [],
         ];
         $expected = [
             'readonly' => true,
@@ -63,7 +64,7 @@ class SlugTypeTest extends FieldTypeTestCase
 
     public function testCreateContextVars()
     {
-        $builder = $this->getMock(FormBuilderInterface::class);
+        $builder = $this->createMock(FormBuilderInterface::class);
         $builder->expects($this->any())
             ->method('getName')
             ->will($this->returnValue('crud_form'));
@@ -71,6 +72,7 @@ class SlugTypeTest extends FieldTypeTestCase
             'label' => 'Slug',
             'target' => 'title',
             'readonly' => true,
+            'form_options' => [],
         ];
         $expected = [
             'readonly' => true,

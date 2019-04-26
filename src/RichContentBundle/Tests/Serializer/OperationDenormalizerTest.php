@@ -2,6 +2,7 @@
 
 namespace Perform\RichContentBundle\Tests\Serializer;
 
+use PHPUnit\Framework\TestCase;
 use Perform\RichContentBundle\Repository\ContentRepository;
 use Perform\RichContentBundle\Serializer\OperationDenormalizer;
 use Perform\RichContentBundle\Persister\OperationInterface;
@@ -14,7 +15,7 @@ use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class OperationDenormalizerTest extends \PHPUnit_Framework_TestCase
+class OperationDenormalizerTest extends TestCase
 {
     protected $denormalizer;
 
@@ -89,7 +90,7 @@ class OperationDenormalizerTest extends \PHPUnit_Framework_TestCase
             'newBlocks' => ['_someid' => 'data', '_someid2' => 'data'],
             'order' => ['_someid2', '_someid'],
         ];
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->denormalizer->denormalize($data, OperationInterface::class);
     }
 
@@ -104,7 +105,7 @@ class OperationDenormalizerTest extends \PHPUnit_Framework_TestCase
         $this->repo->expects($this->any())
             ->method('find')
             ->will($this->returnValue(null));
-        $this->setExpectedException(NotNormalizableValueException::class);
+        $this->expectException(NotNormalizableValueException::class);
         $this->denormalizer->denormalize($data, OperationInterface::class);
     }
 
@@ -115,7 +116,7 @@ class OperationDenormalizerTest extends \PHPUnit_Framework_TestCase
             'newBlocks' => ['_someid' => 'data', '_someid2' => 'data'],
             'order' => ['_someid2', '_someid'],
         ];
-        $this->setExpectedException(NotNormalizableValueException::class);
+        $this->expectException(NotNormalizableValueException::class);
         $this->denormalizer->denormalize($data, OperationInterface::class);
     }
 }

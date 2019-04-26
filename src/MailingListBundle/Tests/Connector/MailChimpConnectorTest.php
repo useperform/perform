@@ -2,6 +2,7 @@
 
 namespace Perform\MailingListBundle\Tests\Connector;
 
+use PHPUnit\Framework\TestCase;
 use Perform\MailingListBundle\Connector\MailChimpConnector;
 use Psr\Log\LoggerInterface;
 use DrewM\MailChimp\MailChimp;
@@ -13,7 +14,7 @@ use Perform\MailingListBundle\SubscriberFields;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class MailChimpConnectorTest extends \PHPUnit_Framework_TestCase
+class MailChimpConnectorTest extends TestCase
 {
     public function setUp()
     {
@@ -21,7 +22,7 @@ class MailChimpConnectorTest extends \PHPUnit_Framework_TestCase
                   ->disableOriginalConstructor()
                   ->setMethods(['put'])
                   ->getMock();
-        $this->logger = $this->getMock(LoggerInterface::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
         $this->connector = new MailChimpConnector($this->mc, $this->logger);
     }
 
@@ -67,7 +68,7 @@ class MailChimpConnectorTest extends \PHPUnit_Framework_TestCase
             ])
             ->will($this->returnValue(['status' => 404]));
 
-        $this->setExpectedException(ListNotFoundException::class);
+        $this->expectException(ListNotFoundException::class);
         $this->connector->subscribe($subscriber);
     }
 
@@ -87,7 +88,7 @@ class MailChimpConnectorTest extends \PHPUnit_Framework_TestCase
             ])
             ->will($this->returnValue(['status' => 401]));
 
-        $this->setExpectedException(ConnectorException::class);
+        $this->expectException(ConnectorException::class);
         $this->connector->subscribe($subscriber);
     }
 

@@ -2,6 +2,7 @@
 
 namespace Perform\ContactBundle\Tests\Form\Handler;
 
+use PHPUnit\Framework\TestCase;
 use Perform\NotificationBundle\Notifier\NotifierInterface;
 use Perform\NotificationBundle\RecipientProvider\RecipientProviderInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,7 +18,7 @@ use Perform\SpamBundle\Entity\Report;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ContactFormHandlerTest extends \PHPUnit_Framework_TestCase
+class ContactFormHandlerTest extends TestCase
 {
     protected $entityManager;
     protected $notifier;
@@ -27,9 +28,9 @@ class ContactFormHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->entityManager = $this->getMock(EntityManagerInterface::class);
-        $this->notifier = $this->getMock(NotifierInterface::class);
-        $this->recipientProvider = $this->getMock(RecipientProviderInterface::class);
+        $this->entityManager = $this->createMock(EntityManagerInterface::class);
+        $this->notifier = $this->createMock(NotifierInterface::class);
+        $this->recipientProvider = $this->createMock(RecipientProviderInterface::class);
         $this->spamManager = $this->getMockBuilder(SpamManager::class)
                            ->disableOriginalConstructor()
                            ->getMock();
@@ -40,7 +41,7 @@ class ContactFormHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $message = new Message();
         $message->setMessage('Spam text');
-        $form = $this->getMock(FormInterface::class);
+        $form = $this->createMock(FormInterface::class);
         $form->expects($this->any())
             ->method('isValid')
             ->will($this->returnValue(true));

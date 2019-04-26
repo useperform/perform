@@ -24,22 +24,28 @@ class StringTypeTest extends FieldTypeTestCase
 
     public function testCreateContext()
     {
-        $builder = $this->getMock(FormBuilderInterface::class);
+        $builder = $this->createMock(FormBuilderInterface::class);
         $builder->expects($this->once())
             ->method('add')
             ->with('forename', TextType::class);
 
-        $this->getType('string')->createContext($builder, 'forename');
+        $this->getType('string')->createContext($builder, 'forename', [
+            'label' => 'String',
+            'form_options' => [],
+        ]);
     }
 
     public function testEditContext()
     {
-        $builder = $this->getMock(FormBuilderInterface::class);
+        $builder = $this->createMock(FormBuilderInterface::class);
         $builder->expects($this->once())
             ->method('add')
             ->with('forename', TextType::class);
 
-        $this->getType('string')->editContext($builder, 'forename');
+        $this->getType('string')->editContext($builder, 'forename', [
+            'label' => 'String',
+            'form_options' => [],
+        ]);
     }
 
     public function testListContext()

@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\EventListener;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Crud\CrudRegistry;
 use Perform\BaseBundle\EventListener\CrudTemplateListener;
 use Perform\BaseBundle\Test\Services;
@@ -16,7 +17,7 @@ use Perform\BaseBundle\Crud\CrudInterface;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class CrudTemplateListenerTest extends \PHPUnit_Framework_TestCase
+class CrudTemplateListenerTest extends TestCase
 {
     protected $registry;
     protected $twig;
@@ -45,12 +46,12 @@ class CrudTemplateListenerTest extends \PHPUnit_Framework_TestCase
         $request = new Request();
         $request->attributes->set('_crud', 'some_crud');
         $event = new FilterControllerEvent(
-            $this->getMock(HttpKernelInterface::class),
+            $this->createMock(HttpKernelInterface::class),
             $controller,
             $request,
             HttpKernelInterface::MASTER_REQUEST
         );
-        $crud = $this->getMock(CrudInterface::class);
+        $crud = $this->createMock(CrudInterface::class);
         $crud->expects($this->any())
             ->method('getTemplate')
             ->with($this->twig, 'some_crud', 'view')

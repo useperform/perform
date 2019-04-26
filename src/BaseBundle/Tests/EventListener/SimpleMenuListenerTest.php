@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Menu;
 
+use PHPUnit\Framework\TestCase;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Perform\BaseBundle\EventListener\SimpleMenuListener;
@@ -10,7 +11,7 @@ use Perform\BaseBundle\Event\MenuEvent;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class SimpleMenuListenerTest extends \PHPUnit_Framework_TestCase
+class SimpleMenuListenerTest extends TestCase
 {
     protected function create($name, $crud = null, $route = null, $icon = null, $priority = 0)
     {
@@ -19,7 +20,7 @@ class SimpleMenuListenerTest extends \PHPUnit_Framework_TestCase
 
     protected function stubEvent()
     {
-        return new MenuEvent('perform_sidebar', $this->getMock(ItemInterface::class), $this->getMock(FactoryInterface::class));
+        return new MenuEvent('perform_sidebar', $this->createMock(ItemInterface::class), $this->createMock(FactoryInterface::class));
     }
 
     public function testRouteOnly()
@@ -94,7 +95,7 @@ class SimpleMenuListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testRouteOrCrudIsRequired()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->create('foo');
     }
 

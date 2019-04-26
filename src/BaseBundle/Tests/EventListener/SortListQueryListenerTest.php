@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\EventListener;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\EventListener\SortListQueryListener;
 use Perform\BaseBundle\Config\FieldConfig;
 use Doctrine\ORM\QueryBuilder;
@@ -15,7 +16,7 @@ use Perform\BaseBundle\Event\QueryEvent;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class SortListQueryListenerTest extends \PHPUnit_Framework_TestCase
+class SortListQueryListenerTest extends TestCase
 {
     protected $store;
     protected $qb;
@@ -26,7 +27,7 @@ class SortListQueryListenerTest extends \PHPUnit_Framework_TestCase
         $this->qb = $this->getMockBuilder(QueryBuilder::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->store = $this->getMock(ConfigStoreInterface::class);
+        $this->store = $this->createMock(ConfigStoreInterface::class);
         $this->typeRegistry = Services::fieldTypeRegistry([
             'string' => new StringType(),
             'boolean' => new BooleanType(),
@@ -166,7 +167,7 @@ class SortListQueryListenerTest extends \PHPUnit_Framework_TestCase
             ],
         ]);
 
-        $this->setExpectedException(\UnexpectedValueException::class);
+        $this->expectException(\UnexpectedValueException::class);
         $this->listener->onListQuery(new QueryEvent($this->qb, $request));
     }
 }

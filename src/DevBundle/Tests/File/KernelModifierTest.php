@@ -2,6 +2,7 @@
 
 namespace Perform\DevBundle\Tests\File;
 
+use PHPUnit\Framework\TestCase;
 use Perform\DevBundle\File\KernelModifier;
 
 /**
@@ -10,7 +11,7 @@ use Perform\DevBundle\File\KernelModifier;
  * @author Glynn Forrest <me@glynnforrest.com>
  * @group kernel
  **/
-class KernelModifierTest extends \PHPUnit_Framework_TestCase
+class KernelModifierTest extends TestCase
 {
     public function setUp()
     {

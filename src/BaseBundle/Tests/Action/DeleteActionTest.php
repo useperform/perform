@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Action;
 
+use PHPUnit\Framework\TestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\BaseBundle\Action\DeleteAction;
 use Perform\BaseBundle\Action\ActionResponse;
@@ -12,7 +13,7 @@ use Perform\BaseBundle\Crud\EntityManager;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class DeleteActionTest extends \PHPUnit_Framework_TestCase
+class DeleteActionTest extends TestCase
 {
     protected $manager;
     protected $action;

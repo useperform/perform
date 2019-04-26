@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Crud;
 
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,13 +13,13 @@ use Perform\BaseBundle\Crud\CrudRequest;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class EntityManagerTest extends \PHPUnit_Framework_TestCase
+class EntityManagerTest extends TestCase
 {
     public function setUp()
     {
-        $this->em = $this->getMock(EntityManagerInterface::class);
-        $this->dispatcher = $this->getMock(EventDispatcherInterface::class);
-        $this->logger = $this->getMock(LoggerInterface::class);
+        $this->em = $this->createMock(EntityManagerInterface::class);
+        $this->dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
         $this->manager = new EntityManager($this->em, $this->dispatcher, $this->logger);
     }
 

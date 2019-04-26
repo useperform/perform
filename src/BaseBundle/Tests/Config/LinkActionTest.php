@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Config;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Action\LinkAction;
 use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Config\ActionConfig;
@@ -11,7 +12,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class LinkActionTest extends \PHPUnit_Framework_TestCase
+class LinkActionTest extends TestCase
 {
     protected $authChecker;
     protected $action;
@@ -21,7 +22,7 @@ class LinkActionTest extends \PHPUnit_Framework_TestCase
         $this->registry = $this->getMockBuilder(ActionRegistry::class)
                         ->disableOriginalConstructor()
                         ->getMock();
-        $this->authChecker = $this->getMock(AuthorizationCheckerInterface::class);
+        $this->authChecker = $this->createMock(AuthorizationCheckerInterface::class);
         $this->config = new ActionConfig($this->registry, $this->authChecker, 'some_crud');
         $this->config->addInstance('link', new LinkAction());
         $this->action = $this->config->get('link');
@@ -34,7 +35,7 @@ class LinkActionTest extends \PHPUnit_Framework_TestCase
 
     public function testRunIsForbidden()
     {
-        $this->setExpectedException(\RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $this->action->run($this->crudRequest(), [], []);
     }
 

@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Action;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Action\ActionRegistry;
 use Perform\BaseBundle\Action\ActionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -11,7 +12,7 @@ use Perform\BaseBundle\Test\Services;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ActionRegistryTest extends \PHPUnit_Framework_TestCase
+class ActionRegistryTest extends TestCase
 {
     protected $actionOne;
     protected $actionTwo;
@@ -19,8 +20,8 @@ class ActionRegistryTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->actionOne = $this->getMock(ActionInterface::class);
-        $this->actionTwo = $this->getMock(ActionInterface::class);
+        $this->actionOne = $this->createMock(ActionInterface::class);
+        $this->actionTwo = $this->createMock(ActionInterface::class);
         $this->registry = new ActionRegistry(Services::serviceLocator([
             'one' => $this->actionOne,
             'two' => $this->actionTwo,
@@ -35,7 +36,7 @@ class ActionRegistryTest extends \PHPUnit_Framework_TestCase
 
     public function testGetUnknown()
     {
-        $this->setExpectedException(ActionNotFoundException::class);
+        $this->expectException(ActionNotFoundException::class);
         $this->registry->get('unknown');
     }
 }

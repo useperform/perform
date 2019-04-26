@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Crud;
 
+use PHPUnit\Framework\TestCase;
 use Twig\Loader\ExistsLoaderInterface;
 use Twig\Environment;
 use Perform\BaseBundle\Crud\CrudInterface;
@@ -9,7 +10,7 @@ use Perform\BaseBundle\Crud\CrudInterface;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class AbstractCrudTest extends \PHPUnit_Framework_TestCase
+class AbstractCrudTest extends TestCase
 {
     public function setUp()
     {
@@ -17,7 +18,7 @@ class AbstractCrudTest extends \PHPUnit_Framework_TestCase
         $this->twig = $this->getMockBuilder(Environment::class)
                     ->disableOriginalConstructor()
                     ->getMock();
-        $this->twigLoader = $this->getMock(ExistsLoaderInterface::class);
+        $this->twigLoader = $this->createMock(ExistsLoaderInterface::class);
         $this->twig->expects($this->any())
             ->method('getLoader')
             ->will($this->returnValue($this->twigLoader));

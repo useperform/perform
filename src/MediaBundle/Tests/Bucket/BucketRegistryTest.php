@@ -2,15 +2,17 @@
 
 namespace Perform\MediaBundle\Tests\Bucket;
 
+use PHPUnit\Framework\TestCase;
 use Perform\MediaBundle\Bucket\BucketRegistry;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Perform\MediaBundle\Entity\File;
 use Perform\MediaBundle\Exception\BucketNotFoundException;
+use Perform\MediaBundle\Bucket\BucketInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class BucketRegistryTest extends \PHPUnit_Framework_TestCase
+class BucketRegistryTest extends TestCase
 {
     protected $locator;
 
@@ -24,7 +26,7 @@ class BucketRegistryTest extends \PHPUnit_Framework_TestCase
 
     private function mockBucket($name)
     {
-        $bucket = $this->getMock(BucketInterface::class);
+        $bucket = $this->createMock(BucketInterface::class);
         $this->locator->expects($this->any())
             ->method('has')
             ->with($name)
@@ -45,7 +47,7 @@ class BucketRegistryTest extends \PHPUnit_Framework_TestCase
 
     public function testGetUnknown()
     {
-        $this->setExpectedException(BucketNotFoundException::class);
+        $this->expectException(BucketNotFoundException::class);
         $this->registry->get('government_docs');
     }
 

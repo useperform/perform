@@ -2,6 +2,7 @@
 
 namespace Perform\PageEditorBundle\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\PageEditorBundle\PageManager;
 use Perform\PageEditorBundle\Repository\VersionRepository;
@@ -10,7 +11,7 @@ use Perform\RichContentBundle\Renderer\RendererInterface;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class PageManagerTest extends \PHPUnit_Framework_TestCase
+class PageManagerTest extends TestCase
 {
     public function setUp()
     {
@@ -20,11 +21,11 @@ class PageManagerTest extends \PHPUnit_Framework_TestCase
         $repo = $this->getMockBuilder(VersionRepository::class)
               ->disableOriginalConstructor()
               ->getMock();
-        $entityManager = $this->getMock(EntityManagerInterface::class);
+        $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->expects($this->any())
             ->method('getRepository')
             ->will($this->returnValue($repo));
-        $this->renderer = $this->getMock(RendererInterface::class);
+        $this->renderer = $this->createMock(RendererInterface::class);
         $this->manager = new PageManager($entityManager, $this->twig, $this->renderer);
     }
 

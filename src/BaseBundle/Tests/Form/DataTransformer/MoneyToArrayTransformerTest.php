@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Form\DataTransformer;
 
+use PHPUnit\Framework\TestCase;
 use Money\Money;
 use Money\Currency;
 use Perform\BaseBundle\Form\DataTransformer\MoneyToArrayTransformer;
@@ -10,7 +11,7 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class MoneyToArrayTransformerTest extends \PHPUnit_Framework_TestCase
+class MoneyToArrayTransformerTest extends TestCase
 {
     public function testTransform()
     {
@@ -52,7 +53,7 @@ class MoneyToArrayTransformerTest extends \PHPUnit_Framework_TestCase
             'amount' => '188.37',
             'currency' => 'GBP',
         ];
-        $this->setExpectedException(TransformationFailedException::class);
+        $this->expectException(TransformationFailedException::class);
         $trans->reverseTransform($data);
     }
 }

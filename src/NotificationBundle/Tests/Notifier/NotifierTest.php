@@ -2,6 +2,7 @@
 
 namespace Perform\NotificationBundle\Tests\Notifier;
 
+use PHPUnit\Framework\TestCase;
 use Perform\NotificationBundle\Notifier\Notifier;
 use Perform\NotificationBundle\Notification;
 use Perform\NotificationBundle\Publisher\PublisherInterface;
@@ -16,7 +17,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class NotifierTest extends \PHPUnit_Framework_TestCase
+class NotifierTest extends TestCase
 {
     protected $notifier;
     protected $publisher;
@@ -24,11 +25,11 @@ class NotifierTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->publisher = $this->getMock(PublisherInterface::class);
+        $this->publisher = $this->createMock(PublisherInterface::class);
         $locator = new LoopableServiceLocator([
             'testPublisher' => function() { return $this->publisher; }
         ]);
-        $this->dispatcher = $this->getMock(EventDispatcherInterface::class);
+        $this->dispatcher = $this->createMock(EventDispatcherInterface::class);
         $this->notifier = new Notifier($locator, $this->dispatcher);
     }
 
@@ -41,7 +42,7 @@ class NotifierTest extends \PHPUnit_Framework_TestCase
     {
         $recipients = [];
         while ($recipientCount !== 0) {
-            $recipients[] = $this->getMock(RecipientInterface::class);
+            $recipients[] = $this->createMock(RecipientInterface::class);
             $recipientCount--;
         }
 

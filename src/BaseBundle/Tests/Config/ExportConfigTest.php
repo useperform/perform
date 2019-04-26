@@ -2,12 +2,13 @@
 
 namespace Perform\BaseBundle\Tests\Config;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Config\ExportConfig;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ExportConfigTest extends \PHPUnit_Framework_TestCase
+class ExportConfigTest extends TestCase
 {
     public function testGetDefaultFilename()
     {

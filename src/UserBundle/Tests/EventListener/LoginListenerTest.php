@@ -2,6 +2,7 @@
 
 namespace Perform\UserBundle\Tests\EventListener;
 
+use PHPUnit\Framework\TestCase;
 use Perform\UserBundle\EventListener\LoginListener;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,14 +16,14 @@ use Perform\UserBundle\Event\FirstLoginEvent;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class LoginListenerTest extends \PHPUnit_Framework_TestCase
+class LoginListenerTest extends TestCase
 {
     public function setUp()
     {
-        $this->em = $this->getMock(EntityManagerInterface::class);
+        $this->em = $this->createMock(EntityManagerInterface::class);
         $this->listener = new LoginListener($this->em);
-        $this->dispatcher = $this->getMock(EventDispatcherInterface::class);
-        $this->session = $this->getMock(SessionInterface::class);
+        $this->dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $this->session = $this->createMock(SessionInterface::class);
     }
 
     public function testFirstLogin()

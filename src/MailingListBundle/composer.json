@@ -10,7 +10,7 @@
         }
     ],
     "require-dev": {
-        "phpunit/phpunit": "^4.8",
+        "phpunit/phpunit": "^7.5",
         "drewm/mailchimp-api": "^2.4"
     },
     "suggest": {

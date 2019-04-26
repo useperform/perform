@@ -2,6 +2,7 @@
 
 namespace Perform\UserBundle\Tests\Importer;
 
+use PHPUnit\Framework\TestCase;
 use Perform\UserBundle\Importer\UserImporter;
 use Perform\UserBundle\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -10,7 +11,7 @@ use Doctrine\Common\Persistence\ObjectRepository;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class UserImporterTest extends \PHPUnit_Framework_TestCase
+class UserImporterTest extends TestCase
 {
     protected $entityManager;
     protected $repo;
@@ -18,8 +19,8 @@ class UserImporterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->entityManager = $this->getMock(EntityManagerInterface::class);
-        $this->repo = $this->getMock(ObjectRepository::class);
+        $this->entityManager = $this->createMock(EntityManagerInterface::class);
+        $this->repo = $this->createMock(ObjectRepository::class);
         $this->entityManager->expects($this->any())
             ->method('getRepository')
             ->with('PerformUserBundle:User')

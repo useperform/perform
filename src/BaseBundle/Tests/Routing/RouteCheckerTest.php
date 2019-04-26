@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Routing;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Perform\BaseBundle\Routing\RouteChecker;
@@ -9,14 +10,14 @@ use Perform\BaseBundle\Routing\RouteChecker;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class RouteCheckerTest extends \PHPUnit_Framework_TestCase
+class RouteCheckerTest extends TestCase
 {
     protected $urlGenerator;
     protected $checker;
 
     public function setUp()
     {
-        $this->urlGenerator = $this->getMock(UrlGeneratorInterface::class);
+        $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
         $this->checker = new RouteChecker($this->urlGenerator);
     }
 

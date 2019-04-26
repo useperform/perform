@@ -2,6 +2,7 @@
 
 namespace Perform\MediaBundle\Tests\File;
 
+use PHPUnit\Framework\TestCase;
 use Perform\MediaBundle\File\FinfoParser;
 use VirtualFileSystem\FileSystem;
 use Perform\MediaBundle\File\ParseResult;
@@ -9,7 +10,7 @@ use Perform\MediaBundle\File\ParseResult;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class FinfoParserTest extends \PHPUnit_Framework_TestCase
+class FinfoParserTest extends TestCase
 {
     protected $parser;
     protected $vfs;

@@ -2,6 +2,7 @@
 
 namespace Perform\MailingListBundle\Tests\Form;
 
+use PHPUnit\Framework\TestCase;
 use Perform\MailingListBundle\Form\UniqueFormFactory;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -9,14 +10,14 @@ use Symfony\Component\Form\FormInterface;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class UniqueFormFactoryTest extends \PHPUnit_Framework_TestCase
+class UniqueFormFactoryTest extends TestCase
 {
     protected $factory;
     protected $uniqueFactory;
 
     public function setUp()
     {
-        $this->factory = $this->getMock(FormFactoryInterface::class);
+        $this->factory = $this->createMock(FormFactoryInterface::class);
         $this->uniqueFactory = new UniqueFormFactory($this->factory);
     }
 
@@ -37,7 +38,7 @@ class UniqueFormFactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateGeneratesSuitableName($action, $expectedName)
     {
         $this->uniqueFactory->addType('email_only', 'SomeFormType');
-        $mockForm = $this->getMock(FormInterface::class);
+        $mockForm = $this->createMock(FormInterface::class);
         $this->factory->expects($this->once())
             ->method('createNamed')
             ->with($expectedName, 'SomeFormType')
@@ -50,7 +51,7 @@ class UniqueFormFactoryTest extends \PHPUnit_Framework_TestCase
     public function testSameFormIsReturnedWithIdenticalActions()
     {
         $this->uniqueFactory->addType('email_only', 'SomeFormType');
-        $mockForm = $this->getMock(FormInterface::class);
+        $mockForm = $this->createMock(FormInterface::class);
         $this->factory->expects($this->any())
             ->method('createNamed')
             ->will($this->returnValue($mockForm));
@@ -60,7 +61,7 @@ class UniqueFormFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testUnknownTypeThrowsException()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->uniqueFactory->create('some_type', '/submit');
     }
 }

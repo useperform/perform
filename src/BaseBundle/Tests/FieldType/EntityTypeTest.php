@@ -18,7 +18,7 @@ class EntityTypeTest extends FieldTypeTestCase
 
     protected function registerTypes()
     {
-        $entityManager = $this->getMock(EntityManagerInterface::class);
+        $entityManager = $this->createMock(EntityManagerInterface::class);
         $crudRegistry = $this->getMockBuilder(CrudRegistry::class)
                       ->disableOriginalConstructor()
                       ->getMock();
@@ -74,7 +74,7 @@ class EntityTypeTest extends FieldTypeTestCase
             ],
         ]);
 
-        $this->setExpectedException(InvalidFieldException::class);
+        $this->expectException(InvalidFieldException::class);
         $this->listContext($entity, 'user');
     }
 }

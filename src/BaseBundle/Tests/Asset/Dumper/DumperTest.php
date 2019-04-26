@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Asset\Dumper;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Asset\Dumper\Dumper;
 use Perform\BaseBundle\Asset\Dumper\TargetInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -10,7 +11,7 @@ use VirtualFileSystem\FileSystem as VirtualFileSystem;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class DumperTest extends \PHPUnit_Framework_TestCase
+class DumperTest extends TestCase
 {
     private $vfs;
     private $fs;
@@ -19,7 +20,7 @@ class DumperTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->vfs = new VirtualFileSystem();
-        $this->fs = $this->getMock(Filesystem::class);
+        $this->fs = $this->createMock(Filesystem::class);
         $this->dumper = new Dumper($this->fs);
     }
 
@@ -73,7 +74,7 @@ class DumperTest extends \PHPUnit_Framework_TestCase
 
     private function target($filename, $contents)
     {
-        $target = $this->getMock(TargetInterface::class);
+        $target = $this->createMock(TargetInterface::class);
         $target->expects($this->any())
             ->method('getFilename')
             ->will($this->returnValue($filename));

@@ -2,6 +2,7 @@
 
 namespace Perform\RichContentBundle\Tests\Renderer;
 
+use PHPUnit\Framework\TestCase;
 use Perform\RichContentBundle\BlockType\BlockTypeRegistry;
 use Perform\RichContentBundle\Renderer\Renderer;
 use Perform\RichContentBundle\BlockType\BlockTypeInterface;
@@ -11,7 +12,7 @@ use Perform\RichContentBundle\Entity\Block;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class RendererTest extends \PHPUnit_Framework_TestCase
+class RendererTest extends TestCase
 {
     protected $registry;
     protected $renderer;
@@ -24,7 +25,7 @@ class RendererTest extends \PHPUnit_Framework_TestCase
 
     private function addType($name)
     {
-        $type = $this->getMock(BlockTypeInterface::class);
+        $type = $this->createMock(BlockTypeInterface::class);
         $this->registry->add($name, $type);
 
         return $type;

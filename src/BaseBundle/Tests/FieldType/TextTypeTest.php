@@ -24,12 +24,15 @@ class TextTypeTest extends FieldTypeTestCase
 
     public function testCreateContext()
     {
-        $builder = $this->getMock(FormBuilderInterface::class);
+        $builder = $this->createMock(FormBuilderInterface::class);
         $builder->expects($this->once())
             ->method('add')
             ->with('forename', TextareaType::class);
 
-        $this->getType('text')->createContext($builder, 'forename');
+        $this->getType('text')->createContext($builder, 'forename', [
+            'label' => 'Text',
+            'form_options' => [],
+        ]);
     }
 
     public function testListContext()

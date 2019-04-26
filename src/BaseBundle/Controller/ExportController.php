@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Perform\BaseBundle\Config\FieldConfig;
 use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Exporter\TypedDoctrineORMQuerySourceIterator;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Exporter\Exporter;
 
 /**

@@ -2,6 +2,7 @@
 
 namespace Perform\DevBundle\Tests\BundleResource;
 
+use PHPUnit\Framework\TestCase;
 use Perform\DevBundle\BundleResource\BundleResourceRegistry;
 use Perform\DevBundle\BundleResource\ResourceInterface;
 use Perform\DevBundle\BundleResource\ParentResourceInterface;
@@ -11,7 +12,7 @@ use Perform\DevBundle\BundleResource\ParentResourceInterface;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class BundleResourceRegistryTest extends \PHPUnit_Framework_TestCase
+class BundleResourceRegistryTest extends TestCase
 {
     public function setUp()
     {
@@ -20,7 +21,7 @@ class BundleResourceRegistryTest extends \PHPUnit_Framework_TestCase
 
     protected function resource($bundleName)
     {
-        $r = $this->getMock(ResourceInterface::class);
+        $r = $this->createMock(ResourceInterface::class);
         $r->expects($this->any())
             ->method('getBundleName')
             ->will($this->returnValue($bundleName));
@@ -30,7 +31,7 @@ class BundleResourceRegistryTest extends \PHPUnit_Framework_TestCase
 
     protected function parentResource($bundleName, array $requiredBundles = [])
     {
-        $r = $this->getMock(ParentResourceInterface::class);
+        $r = $this->createMock(ParentResourceInterface::class);
         $r->expects($this->any())
             ->method('getBundleName')
             ->will($this->returnValue($bundleName));

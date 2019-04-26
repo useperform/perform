@@ -2,6 +2,7 @@
 
 namespace Perform\RichContentBundle\Tests\DataFixtures\Profile;
 
+use PHPUnit\Framework\TestCase;
 use Perform\RichContentBundle\DataFixtures\Profile\ProfileInterface;
 use Perform\RichContentBundle\DataFixtures\Profile\ProfileRegistry;
 use Perform\RichContentBundle\DataFixtures\Profile\ProfileNotFoundException;
@@ -9,12 +10,12 @@ use Perform\RichContentBundle\DataFixtures\Profile\ProfileNotFoundException;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ProfileRegistryTest extends \PHPUnit_Framework_TestCase
+class ProfileRegistryTest extends TestCase
 {
     public function testGet()
     {
         $registry = new ProfileRegistry([
-            'simple_text' => $profile = $this->getMock(ProfileInterface::class),
+            'simple_text' => $profile = $this->createMock(ProfileInterface::class),
         ]);
         $this->assertSame($profile, $registry->get('simple_text'));
     }
@@ -22,17 +23,17 @@ class ProfileRegistryTest extends \PHPUnit_Framework_TestCase
     public function testGetUnknownThrowsException()
     {
         $registry = new ProfileRegistry([
-            'simple_text' => $profile = $this->getMock(ProfileInterface::class),
+            'simple_text' => $profile = $this->createMock(ProfileInterface::class),
         ]);
-        $this->setExpectedException(ProfileNotFoundException::class);
+        $this->expectException(ProfileNotFoundException::class);
         $registry->get('long_text');
     }
 
     public function testGetRandom()
     {
         $registry = new ProfileRegistry($profiles = [
-            'simple_text' => $this->getMock(ProfileInterface::class),
-            'complex_text' => $this->getMock(ProfileInterface::class),
+            'simple_text' => $this->createMock(ProfileInterface::class),
+            'complex_text' => $this->createMock(ProfileInterface::class),
         ]);
         $this->assertTrue(in_array($registry->getRandom(), $profiles));
     }
@@ -40,7 +41,7 @@ class ProfileRegistryTest extends \PHPUnit_Framework_TestCase
     public function testGetRandomThrowsExceptionForNoProfiles()
     {
         $registry = new ProfileRegistry([]);
-        $this->setExpectedException(ProfileNotFoundException::class);
+        $this->expectException(ProfileNotFoundException::class);
         $registry->getRandom();
     }
 }

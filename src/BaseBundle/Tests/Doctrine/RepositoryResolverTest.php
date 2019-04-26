@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Doctrine;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Doctrine\EntityResolver;
 use Perform\BaseBundle\Doctrine\RepositoryResolver;
 use Doctrine\ORM\EntityManagerInterface;
@@ -10,12 +11,12 @@ use Doctrine\ORM\EntityRepository;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class RepositoryResolverTest extends \PHPUnit_Framework_TestCase
+class RepositoryResolverTest extends TestCase
 {
     public function setUp()
     {
-        $this->em = $this->getMock(EntityManagerInterface::class);
-        $this->entityResolver = $this->getMock(EntityResolver::class);
+        $this->em = $this->createMock(EntityManagerInterface::class);
+        $this->entityResolver = $this->createMock(EntityResolver::class);
         $this->resolver = new RepositoryResolver($this->em, $this->entityResolver);
     }
 

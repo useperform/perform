@@ -2,13 +2,14 @@
 
 namespace Perform\MediaBundle\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Perform\MediaBundle\MediaResource;
 use VirtualFileSystem\FileSystem;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class MediaResourceTest extends \PHPUnit_Framework_TestCase
+class MediaResourceTest extends TestCase
 {
     protected $vfs;
 

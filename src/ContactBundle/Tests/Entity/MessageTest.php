@@ -2,13 +2,14 @@
 
 namespace Perform\ContactBundle\Tests\Entity;
 
+use PHPUnit\Framework\TestCase;
 use Perform\ContactBundle\Entity\Message;
 use Perform\SpamBundle\Entity\Report;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class MessageTest extends \PHPUnit_Framework_TestCase
+class MessageTest extends TestCase
 {
     public function testIsSpam()
     {

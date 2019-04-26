@@ -2,13 +2,14 @@
 
 namespace Perform\RichContentBundle\Tests\DependencyInjection;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Test\TestKernel;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  * @group kernel
  **/
-class CompilerTest extends \PHPUnit_Framework_TestCase
+class CompilerTest extends TestCase
 {
     protected $kernel;
 

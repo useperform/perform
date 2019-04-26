@@ -2,13 +2,14 @@
 
 namespace Perform\MediaBundle\Tests\Entity;
 
+use PHPUnit\Framework\TestCase;
 use Perform\MediaBundle\Entity\File;
 use Perform\MediaBundle\Entity\Location;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class FileTest extends \PHPUnit_Framework_TestCase
+class FileTest extends TestCase
 {
     public function testHasType()
     {

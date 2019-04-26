@@ -2,12 +2,13 @@
 
 namespace Perform\BaseBundle\Tests\Twig;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Twig\Extension\DateExtension;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class DateExtensionTest extends \PHPUnit_Framework_TestCase
+class DateExtensionTest extends TestCase
 {
     protected $extension;
 

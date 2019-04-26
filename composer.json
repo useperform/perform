@@ -9,6 +9,7 @@
         }
     ],
     "require": {
+        "php": "^7.1.3",
         "composer/semver": "^1.4",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/orm": "^2.5",
@@ -40,10 +41,12 @@
         "moneyphp/money": "^3.1",
         "php-vfs/php-vfs": "^1.3",
         "phpdocumentor/reflection-docblock": "^3.1",
-        "phpunit/phpunit": "^4.8",
+        "phpunit/phpunit": "^7.5",
         "sonata-project/exporter": "^1.7",
         "symfony/phpunit-bridge": "^4.0",
-        "symfony/swiftmailer-bundle": "^2.3"
+        "symfony/swiftmailer-bundle": "^2.3",
+        "symfony/dom-crawler": "^4.2",
+        "symfony/css-selector": "^4.2"
     },
     "suggest": {
         "doctrine/data-fixtures": "Use database fixtures",

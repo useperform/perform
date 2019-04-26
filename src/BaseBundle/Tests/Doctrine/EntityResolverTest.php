@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Doctrine;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Doctrine\EntityResolver;
 use Doctrine\Common\Proxy\ProxyGenerator;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -12,7 +13,7 @@ use Temping\Temping;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class EntityResolverTest extends \PHPUnit_Framework_TestCase
+class EntityResolverTest extends TestCase
 {
     protected $temp;
     protected $proxyGenerator;
@@ -69,7 +70,7 @@ class EntityResolverTest extends \PHPUnit_Framework_TestCase
     public function testResolveInvalidType()
     {
         $resolver = new EntityResolver();
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $resolver->resolve([]);
     }
 

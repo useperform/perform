@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Command;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Perform\BaseBundle\Command\BundleFilter;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -11,11 +12,11 @@ use Symfony\Component\Console\Input\InputOption;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class BundleFilterTest extends \PHPUnit_Framework_TestCase
+class BundleFilterTest extends TestCase
 {
     private function mockBundle($name)
     {
-        $bundle = $this->getMock(BundleInterface::class);
+        $bundle = $this->createMock(BundleInterface::class);
         $bundle->expects($this->any())
             ->method('getName')
             ->will($this->returnValue($name));

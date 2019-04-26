@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Type;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\FieldType\DisplayType;
 use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Exception\InvalidFieldException;
@@ -10,14 +11,14 @@ use Symfony\Component\Form\FormBuilderInterface;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class DisplayTypeTest extends \PHPUnit_Framework_TestCase
+class DisplayTypeTest extends TestCase
 {
     protected $fieldType;
 
     public function setUp()
     {
         $this->fieldType = new DisplayType();
-        $this->formBuilder = $this->getMock(FormBuilderInterface::class);
+        $this->formBuilder = $this->createMock(FormBuilderInterface::class);
     }
 
     public function testDefaults()
@@ -48,13 +49,13 @@ class DisplayTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateContextThrowsException()
     {
-        $this->setExpectedException(InvalidFieldException::class);
+        $this->expectException(InvalidFieldException::class);
         $this->fieldType->createContext($this->formBuilder, 'some_field');
     }
 
     public function testEditContextThrowsException()
     {
-        $this->setExpectedException(InvalidFieldException::class);
+        $this->expectException(InvalidFieldException::class);
         $this->fieldType->editContext($this->formBuilder, 'some_field');
     }
 }

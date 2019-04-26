@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Routing;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Request;
 use Perform\BaseBundle\Routing\RequestInfo;
@@ -9,11 +10,11 @@ use Perform\BaseBundle\Routing\RequestInfo;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class RequestInfoTest extends \PHPUnit_Framework_TestCase
+class RequestInfoTest extends TestCase
 {
     public function setUp()
     {
-        $this->stack = $this->getMock(RequestStack::class);
+        $this->stack = $this->createMock(RequestStack::class);
         $this->info = new RequestInfo($this->stack);
     }
 

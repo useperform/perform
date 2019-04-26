@@ -2,6 +2,7 @@
 
 namespace Perform\NotificationBundle\Tests\Recipient;
 
+use PHPUnit\Framework\TestCase;
 use Perform\NotificationBundle\Recipient\RecipientInterface;
 use Perform\NotificationBundle\Recipient\SimpleRecipient;
 
@@ -10,7 +11,7 @@ use Perform\NotificationBundle\Recipient\SimpleRecipient;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class SimpleRecipientTest extends \PHPUnit_Framework_TestCase
+class SimpleRecipientTest extends TestCase
 {
     public function testIsRecipient()
     {

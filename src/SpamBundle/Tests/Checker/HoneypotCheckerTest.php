@@ -2,6 +2,7 @@
 
 namespace Perform\SpamBundle\Tests\Checker;
 
+use PHPUnit\Framework\TestCase;
 use Perform\SpamBundle\Checker\CheckResult;
 use Perform\SpamBundle\Checker\HoneypotChecker;
 use Perform\SpamBundle\Event\HoneypotEvent;
@@ -12,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class HoneypotCheckerTest extends \PHPUnit_Framework_TestCase
+class HoneypotCheckerTest extends TestCase
 {
     protected $checker;
     protected $requestStack;
@@ -25,7 +26,7 @@ class HoneypotCheckerTest extends \PHPUnit_Framework_TestCase
 
     public function testCheckGoodForm()
     {
-        $form = $this->getMock(FormInterface::class);
+        $form = $this->createMock(FormInterface::class);
         $result = new CheckResult();
         $this->checker->checkForm($result, $form);
 
@@ -34,7 +35,7 @@ class HoneypotCheckerTest extends \PHPUnit_Framework_TestCase
 
     public function testCheckBadForm()
     {
-        $form = $this->getMock(FormInterface::class);
+        $form = $this->createMock(FormInterface::class);
         $this->checker->onHoneypotCaught(new HoneypotEvent($form));
         $request = new Request();
         $request->headers->set('User-Agent', 'curl');

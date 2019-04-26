@@ -2,6 +2,7 @@
 
 namespace Perform\NotificationBundle\Tests\Publisher;
 
+use PHPUnit\Framework\TestCase;
 use Perform\NotificationBundle\Publisher\EmailPublisher;
 use Perform\NotificationBundle\Notification;
 use Perform\NotificationBundle\Recipient\RecipientInterface;
@@ -11,7 +12,7 @@ use Perform\NotificationBundle\Preference\PreferenceInterface;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class EmailPublisherTest extends \PHPUnit_Framework_TestCase
+class EmailPublisherTest extends TestCase
 {
     private $mailer;
     private $renderer;
@@ -23,8 +24,8 @@ class EmailPublisherTest extends \PHPUnit_Framework_TestCase
         $this->mailer = $this->getMockBuilder(\Swift_Mailer::class)
                       ->disableOriginalConstructor()
                       ->getMock();
-        $this->renderer = $this->getMock(RendererInterface::class);
-        $this->prefs = $this->getMock(PreferenceInterface::class);
+        $this->renderer = $this->createMock(RendererInterface::class);
+        $this->prefs = $this->createMock(PreferenceInterface::class);
         $this->prefs->expects($this->any())
             ->method('wantsNotification')
             ->will($this->returnValue(true));
@@ -34,7 +35,7 @@ class EmailPublisherTest extends \PHPUnit_Framework_TestCase
 
     private function mockRecipient($email)
     {
-        $recipient = $this->getMock(RecipientInterface::class);
+        $recipient = $this->createMock(RecipientInterface::class);
         $recipient->expects($this->any())
             ->method('getEmail')
             ->will($this->returnValue($email));
@@ -84,7 +85,7 @@ class EmailPublisherTest extends \PHPUnit_Framework_TestCase
 
     public function testNotSentWhenNotWanted()
     {
-        $prefs = $this->getMock(PreferenceInterface::class);
+        $prefs = $this->createMock(PreferenceInterface::class);
         $prefs->expects($this->any())
             ->method('wantsNotification')
             ->will($this->returnValue(false));

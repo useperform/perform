@@ -2,6 +2,7 @@
 
 namespace Perform\NotificationBundle\Tests\Preference;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Settings\Manager\SettingsManagerInterface;
 use Perform\NotificationBundle\Notification;
 use Perform\NotificationBundle\Preference\SettingsPreference;
@@ -11,19 +12,19 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class SettingsPreferenceTest extends \PHPUnit_Framework_TestCase
+class SettingsPreferenceTest extends TestCase
 {
     private $settings;
 
     public function setUp()
     {
-        $this->settings = $this->getMock(SettingsManagerInterface::class);
+        $this->settings = $this->createMock(SettingsManagerInterface::class);
     }
 
     public function testUsesManager()
     {
         $prefs = new SettingsPreference($this->settings, 'notify.', false);
-        $recipient = $this->getMock([RecipientInterface::class, UserInterface::class]);
+        $recipient = $this->createMock([RecipientInterface::class, UserInterface::class]);
 
         $this->settings->expects($this->exactly(2))
             ->method('getUserValue')

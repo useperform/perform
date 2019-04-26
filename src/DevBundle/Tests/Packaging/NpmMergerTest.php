@@ -2,12 +2,13 @@
 
 namespace Perform\DevBundle\Tests\Packaging;
 
+use PHPUnit\Framework\TestCase;
 use Perform\DevBundle\Packaging\NpmMerger;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class NpmMergerTest extends \PHPUnit_Framework_TestCase
+class NpmMergerTest extends TestCase
 {
     public function setUp()
     {
