@@ -10,14 +10,16 @@
         }
     ],
     "require": {
-        "perform/base-bundle": "self.version",
         "oneup/flysystem-bundle": "^1.3",
+        "perform/base-bundle": "self.version",
         "ralouphie/mimey": "^1.0"
     },
     "require-dev": {
         "imagine/imagine": "^0.6.3",
+        "php-vfs/php-vfs": "^1.3",
         "phpunit/phpunit": "^7.5",
-        "php-vfs/php-vfs": "^1.3"
+        "symfony/css-selector": "^4.0",
+        "symfony/dom-crawler": "^4.0"
     },
     "suggest": {
         "imagine/imagine": "Use the image plugin"
