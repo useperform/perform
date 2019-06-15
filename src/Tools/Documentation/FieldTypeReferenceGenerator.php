@@ -2,10 +2,12 @@
 
 namespace Perform\Tools\Documentation;
 
-use phpDocumentor\Reflection\DocBlockFactory;
-use Symfony\Component\Filesystem\Filesystem;
 use Perform\BaseBundle\FieldType\FieldTypeInterface;
+use Perform\BaseBundle\FieldType\FieldTypeRegistry;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Twig\Environment;
+use phpDocumentor\Reflection\DocBlockFactory;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -15,11 +17,23 @@ class FieldTypeReferenceGenerator
     protected $twig;
     protected $registry;
 
-    public function __construct($twig, $registry)
+    public function __construct(Environment $twig, FieldTypeRegistry $registry)
     {
         $this->twig = $twig;
         $this->registry = $registry;
         $this->docblock = DocBlockFactory::createInstance();
+    }
+
+    public function generateAllFiles(string $baseDirectory): array
+    {
+        $files = [];
+        foreach (array_keys($this->registry->getAll()) as $name) {
+            $file = sprintf('%s/%s.rst', $baseDirectory, $name);
+            $this->generateFile($name, $file);
+            $files[] = $file;
+        }
+
+        return $files;
     }
 
     public function generateFile($name, $filename)

@@ -1,3 +1,14 @@
+services:
+    _defaults:
+        autowire: true
+        public: true
+
+    Perform\Tools\Documentation\FieldTypeReferenceGenerator:
+        arguments:
+            - '@twig'
+            - '@perform_base.field_type_registry'
+    Perform\Tools\Documentation\SassReferenceGenerator:
+
 parameters:
     locale: en
     secret: docgen-kdjnskdjfnksjdfnk
@@ -26,8 +37,6 @@ framework:
     validation:      true
     templating: false
     default_locale:  "%locale%"
-    trusted_hosts:   ~
-    trusted_proxies: ~
     session:
         handler_id:  null
     fragments:       ~
@@ -38,8 +47,6 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
-    form_themes:
-        - 'bootstrap_3_layout.html.twig'
 
 doctrine:
     dbal:
@@ -50,15 +57,6 @@ doctrine:
         auto_generate_proxy_classes: true
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
-
-oneup_flysystem:
-    adapters:
-        main:
-            local:
-                directory: "%kernel.root_dir%/../web/uploads"
-    filesystems:
-        main:
-            adapter: main
 
 stof_doctrine_extensions:
     orm:
