@@ -7,7 +7,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Input\InputOption;
-use Perform\DevBundle\File\KernelModifier;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Perform\DevBundle\File\FileCreator;
 
@@ -59,7 +58,6 @@ EOF
 
         $creator = $this->getContainer()->get('perform_dev.file_creator');
         $creator->create($file, $creator->render('Bundle.php.twig', $vars));
-        $this->addToKernel($input, $output, sprintf('%s\\%s', $namespace, $bundleName));
     }
 
     protected function getNamespace(InputInterface $input, OutputInterface $output)
@@ -79,15 +77,5 @@ EOF
         }
 
         return trim(str_replace('/', '\\', $namespace), '\\');
-    }
-
-    protected function addToKernel(InputInterface $input, OutputInterface $output, $bundleClass)
-    {
-        $k = new KernelModifier($this->getContainer()->get('kernel'));
-        try {
-            $k->addBundle($bundleClass);
-        } catch (\Exception $e) {
-            $output->writeln(sprintf('Unable to add "%s" to your AppKernel. Please add it manually.', $bundleClass));
-        }
     }
 }
