@@ -32,6 +32,6 @@ services:
         class: Perform\DevBundle\Command\MergeNpmPackagesCommand
         arguments:
             - '%kernel.project_dir%'
-            - '%perform_base.assets.npm_configs%'
+            - []
         tags:
             - console.command

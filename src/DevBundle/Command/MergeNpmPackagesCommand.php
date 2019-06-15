@@ -15,12 +15,12 @@ use Perform\DevBundle\Packaging\NpmMerger;
 class MergeNpmPackagesCommand extends Command
 {
     protected $projectDir;
-    protected $npmConfigs;
+    protected $deps;
 
-    public function __construct($projectDir, array $npmConfigs)
+    public function __construct(string $projectDir, array $deps)
     {
         $this->projectDir = $projectDir;
-        $this->npmConfigs = $npmConfigs;
+        $this->deps = $deps;
         parent::__construct();
     }
 
@@ -35,11 +35,16 @@ class MergeNpmPackagesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $merger = new NpmMerger();
-        $existingFile = $this->projectDir.'/package.json';
-        $collection = new NpmMergeResultCollection($merger->loadRequirements($existingFile));
+        $targetFile = $this->projectDir.'/package.json';
+        $collection = new NpmMergeResultCollection($merger->loadRequirements($targetFile));
 
-        foreach ($this->npmConfigs as $file) {
-            $result = $merger->mergeRequirements($collection->getResolvedRequirements(), $merger->loadRequirements($file));
+        foreach ($this->deps as $deps) {
+            $packages = $deps->getDependencies();
+            if ($output->isVeryVerbose()) {
+                $output->writeln(sprintf('<comment>%d</comment> dependencies returned from <comment>%s</comment>', count($packages), get_class($deps)));
+            }
+
+            $result = $merger->mergeRequirements($collection->getResolvedRequirements(), $packages);
             $collection->addResult($result);
         }
 
@@ -61,7 +66,7 @@ class MergeNpmPackagesCommand extends Command
             return;
         }
 
-        $merger->writeRequirements($existingFile, $collection->getResolvedRequirements());
+        $merger->writeRequirements($targetFile, $collection->getResolvedRequirements());
         $output->writeln('Updated <comment>package.json</comment>. Please confirm changes and commit the result to version control.');
     }
 
