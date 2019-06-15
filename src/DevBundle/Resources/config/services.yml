@@ -12,8 +12,6 @@ services:
         tags:
             - {name: twig.extension}
             - {name: kernel.event_listener, method: onConsoleCommand, event: console.command}
-            - {name: kernel.event_listener, method: onConsoleException, event: console.exception}
-            - {name: kernel.event_listener, method: onConsoleTerminate, event: console.terminate}
 
     Perform\DevBundle\Command\CreateThemeCommand:
         class: Perform\DevBundle\Command\CreateThemeCommand
