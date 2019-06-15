@@ -104,6 +104,12 @@ class PerformBaseExtensionTest extends TestCase
         $container->loadFromExtension('perform_base', $config);
         $bundle = new PerformBaseBundle();
         $bundle->build($container);
+        // can be removed when test.container exists
+        $container->addCompilerPass(new MakePublicServicesPass([
+            'perform_base.settings_manager',
+            SettingsManagerInterface::class,
+            WriteableSettingsManagerInterface::class,
+        ]));
 
         if ($compile) {
             $container->compile();

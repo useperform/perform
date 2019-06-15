@@ -8,7 +8,6 @@ use Perform\BaseBundle\Action\ActionResponse;
 use Perform\BaseBundle\Action\ActionRunner;
 use Perform\BaseBundle\Crud\CrudRequest;
 use Perform\BaseBundle\Routing\CrudUrlGeneratorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,8 +28,7 @@ class ActionController extends Controller
     }
 
     /**
-     * @Route("/{action}")
-     * @Method("POST")
+     * @Route("/{action}", methods={"POST"})
      */
     public function indexAction($action, Request $request)
     {
