@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "oneup/flysystem-bundle": "^1.3",
+        "league/flysystem": "^1.0",
         "perform/base-bundle": "self.version",
         "ralouphie/mimey": "^1.0"
     },
@@ -22,7 +22,8 @@
         "symfony/dom-crawler": "^4.0"
     },
     "suggest": {
-        "imagine/imagine": "Use the image plugin"
+        "imagine/imagine": "Use the image plugin",
+        "oneup/flysystem-bundle": "Easy registration of flysystem services"
     },
     "autoload": {
         "psr-4": {

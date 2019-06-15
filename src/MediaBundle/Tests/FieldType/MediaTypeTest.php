@@ -7,7 +7,6 @@ use Perform\MediaBundle\FieldType\MediaType;
 use Perform\MediaBundle\Entity\File;
 use Perform\MediaBundle\PerformMediaBundle;
 use Perform\BaseBundle\Test\TestKernel;
-use Oneup\FlysystemBundle\OneupFlysystemBundle;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -18,7 +17,6 @@ class MediaTypeTest extends FieldTypeTestCase
     protected function createTestKernel()
     {
         return new TestKernel([
-            new OneupFlysystemBundle(),
             new PerformMediaBundle(),
         ], [__DIR__.'/config.yml']);
     }

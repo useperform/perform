@@ -45,7 +45,6 @@ perform_media:
     public function getRequiredBundles()
     {
         return [
-            'OneupFlysystemBundle',
         ];
     }
 
