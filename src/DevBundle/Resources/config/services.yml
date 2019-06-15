@@ -7,9 +7,6 @@ services:
         tags:
             - {name: kernel.event_listener, method: onConsoleCommand, event: console.command}
 
-    perform_dev.resource_registry:
-        class: Perform\DevBundle\BundleResource\BundleResourceRegistry
-
     perform_dev.twig.config:
         class: Perform\DevBundle\Twig\Extension\ConfigExtension
         tags:
