@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Perform\MediaBundle\Upload\UploadHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Perform\MediaBundle\Entity\File;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Perform\MediaBundle\Repository\FileRepository;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -30,8 +29,7 @@ class FileController extends Controller
     }
 
     /**
-     * @Route("/upload")
-     * @Method("POST")
+     * @Route("/upload", methods={"POST"})
      */
     public function uploadAction(Request $request)
     {
@@ -72,8 +70,7 @@ class FileController extends Controller
     }
 
     /**
-     * @Route("/delete/{id}")
-     * @Method("POST")
+     * @Route("/delete/{id}", methods={"POST"})
      */
     public function deleteAction(Request $request, File $file)
     {

@@ -6,7 +6,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Perform\PageEditorBundle\Entity\Version;
 use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Perform\PageEditorBundle\Repository\VersionRepository;
 use Perform\PageEditorBundle\Persister\Persister;
@@ -32,8 +31,7 @@ class EditorController extends Controller
     }
 
     /**
-     * @Route("/save")
-     * @Method("POST")
+     * @Route("/save", methods={"POST"})
      */
     public function saveVersionAction(SerializerInterface $serializer, Persister $persister, Request $request)
     {
@@ -46,8 +44,7 @@ class EditorController extends Controller
     }
 
     /**
-     * @Route("/publish/{id}")
-     * @Method("POST")
+     * @Route("/publish/{id}", methods={"POST"})
      */
     public function publishVersionAction(VersionRepository $repo, Version $version)
     {
