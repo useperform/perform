@@ -1,7 +1,7 @@
 Licensing
 =========
 
-Perform is commercial software; you need a license to use the code in a production environment.
+Perform is commercial software. You need a license to use the code in a production environment.
 
 Each of your applications must be configured with a *project key*, a key linked to a *project* you register on the Perform website.
 
@@ -31,6 +31,6 @@ License types and expiration
 
 **Single**: a one-off purchase. Each single license can create one project.
 
-**Pro and bespoke**: a yearly subscription. You can create unlimited projects as long as you pay for the subscription.
+**Pro and Bespoke**: a yearly subscription. You can create unlimited projects as long as you pay for the subscription.
 
 Projects are valid forever, even if they were created with a pro or bespoke license that has now expired.
