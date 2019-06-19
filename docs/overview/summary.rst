@@ -12,9 +12,9 @@ code.
 
 The bundles can be grouped into a few categories:
 
-* Foundation bundles such as the :doc:`../base-bundle/index` and :doc:`../user-bundle/index`, which are used in nearly every Perform application.
-* Supporting bundles such as the :doc:`../media-bundle/index` and :doc:`../rich-content-bundle/index`, which add significant functionality to build on top of.
-* Finally, dependent on this functionality are domain-specific bundles such as the :doc:`../page-editor-bundle/index`, :doc:`../blog-bundle/index`, :doc:`../analytics-bundle/index`, and :doc:`../contact-bundle/index`, designed to cater to a specific use case.
+* Foundation bundles, such as the :doc:`../base-bundle/index` and :doc:`../user-bundle/index`, which are used in nearly every Perform application.
+* Supporting bundles, such as the :doc:`../media-bundle/index` and :doc:`../rich-content-bundle/index`, which add significant functionality to build upon.
+* Finally, dependent on this functionality, are domain-specific bundles such as the :doc:`../page-editor-bundle/index`, :doc:`../blog-bundle/index`, :doc:`../analytics-bundle/index`, and the :doc:`../contact-bundle/index`, designed to cater to specific use cases.
 
 Together, these bundles can be combined to exactly match your
 requirements, instead of using a single monolithic system that

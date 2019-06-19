@@ -33,7 +33,7 @@ Run the ``perform:debug:field-types`` command to list the available field types:
    ...
 
 Field types are registered with the ``perform_base.field_type_registry`` service (an instance of ``Perform\BaseBundle\FieldType\FieldTypeRegistry``) when the container is compiled.
-You normally won't need to interact with this service directly.
+You won't normally need to interact with this service directly.
 
 Using fields
 ------------
