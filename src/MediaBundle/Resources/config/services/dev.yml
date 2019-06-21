@@ -1,0 +1,3 @@
+services:
+    Perform\MediaBundle\Npm\Dependencies:
+        autoconfigure: true
