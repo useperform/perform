@@ -21,6 +21,7 @@ use Perform\BaseBundle\Settings\Manager\DoctrineManager;
 use Perform\BaseBundle\Settings\Manager\CacheableManager;
 use Perform\BaseBundle\Settings\Manager\ParametersManager;
 use Symfony\Component\Serializer\Serializer;
+use Perform\DevBundle\PerformDevBundle;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -44,6 +45,9 @@ class PerformBaseExtension extends Extension
         }
         if (\class_exists(Serializer::class)) {
             $loader->load('services/serializer.yml');
+        }
+        if (\class_exists(PerformDevBundle::class)) {
+            $loader->load('services/dev.yml');
         }
 
         $container->setParameter('perform_base.menu_order', $config['menu']['order']);
@@ -156,7 +160,6 @@ class PerformBaseExtension extends Extension
 
     protected function configureAssets(ContainerBuilder $container, array $config)
     {
-        Assets::addNpmConfig($container, __DIR__.'/../package.json');
         Assets::addEntryPoint($container, 'perform', [__DIR__.'/../Resources/src/perform.js', __DIR__.'/../Resources/scss/perform.scss']);
         Assets::addNamespace($container, 'perform-base', __DIR__.'/../Resources');
         Assets::addExtraJavascript($container, 'base', 'perform-base/src/module');
