@@ -2,6 +2,11 @@ pipeline {
     agent any
 
     stages {
+        stage('lint') {
+            steps {
+                sh 'docker run -i --rm -v $PWD:/app milchundzucker/php-parallel-lint:latest /app/src /app/bin'
+            }
+        }
         stage('build') {
             steps {
                 sh 'docker run -i --rm -u $(id -u):$(id -g) -v $PWD:/app php:7.2-cli /app/bin/generate-root-composer-config.php'
