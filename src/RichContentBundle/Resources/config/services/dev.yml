@@ -1,0 +1,3 @@
+services:
+    Perform\RichContentBundle\Npm\Dependencies:
+        autoconfigure: true
