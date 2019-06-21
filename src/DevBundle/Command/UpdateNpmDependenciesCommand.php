@@ -9,10 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Perform\DevBundle\Packaging\NpmMergeResultCollection;
 use Perform\DevBundle\Packaging\NpmMerger;
 
-/**
- * @author Glynn Forrest <me@glynnforrest.com>
- **/
-class MergeNpmPackagesCommand extends Command
+class UpdateNpmDependenciesCommand extends Command
 {
     protected $projectDir;
     protected $deps;
@@ -26,8 +23,8 @@ class MergeNpmPackagesCommand extends Command
 
     protected function configure()
     {
-        $this->setName('perform-dev:merge-npm-packages')
-            ->setDescription('Fetch package.json dependencies from bundles and add them to this project\'s package.json')
+        $this->setName('perform:update-npm-dependencies')
+            ->setDescription('Automatically find npm dependencies from enabled bundles and add them to this project\'s package.json')
             ->addOption('dry-run', '', InputOption::VALUE_NONE)
             ->addOption('force', '', InputOption::VALUE_NONE);
     }
