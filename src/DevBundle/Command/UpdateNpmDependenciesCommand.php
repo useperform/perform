@@ -33,6 +33,10 @@ class UpdateNpmDependenciesCommand extends Command
     {
         $merger = new NpmMerger();
         $targetFile = $this->projectDir.'/package.json';
+        if (!file_exists($targetFile)) {
+            throw new \Exception(sprintf('%s does not exist. You can create a new package.json file quickly with the perform-dev:create:asset-config command.', $targetFile));
+        }
+
         $collection = new NpmMergeResultCollection($merger->loadRequirements($targetFile));
 
         foreach ($this->deps as $deps) {
