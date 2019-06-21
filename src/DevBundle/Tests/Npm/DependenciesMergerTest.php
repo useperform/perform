@@ -3,26 +3,21 @@
 namespace Perform\DevBundle\Tests\Packaging;
 
 use PHPUnit\Framework\TestCase;
-use Perform\DevBundle\Packaging\NpmMerger;
+use Perform\DevBundle\Npm\DependenciesMerger;
+use Perform\DevBundle\Npm\PackageUpdate;
+use Perform\DevBundle\Npm\PackageConflict;
 
-/**
- * @author Glynn Forrest <me@glynnforrest.com>
- **/
-class NpmMergerTest extends TestCase
+class DependenciesMergerTest extends TestCase
 {
-    public function setUp()
-    {
-        $this->merger = new NpmMerger();
-    }
-
-    public function testLoadRequirements()
+    public function testCreateFromFile()
     {
         $expected = [
             "vue" => "^2.5.3",
             "bootstrap" => "^4.0.0-beta.2",
             "bootstrap-vue" => "^1.0.2",
         ];
-        $this->assertSame($expected, $this->merger->loadRequirements(__DIR__.'/sample_package.json'));
+        $merger = DependenciesMerger::createFromPackageFile(__DIR__.'/sample_package.json');
+        $this->assertSame($expected, $merger->getDependencies());
     }
 
     public function validProvider()
@@ -42,9 +37,9 @@ class NpmMergerTest extends TestCase
                     'some-dep' => '^3.6.0',
                     'some-other-dep' => '^0.1',
                 ],
-                //expected new
+                //expected updates
                 [
-                    'some-other-dep' => [null, '^0.1'],
+                    'some-other-dep' => ['', '^0.1'],
                 ]
             ],
 
@@ -96,12 +91,24 @@ class NpmMergerTest extends TestCase
     /**
      * @dataProvider validProvider
      */
-    public function testMergeWithValidConstraints($existing, $new, $expected, $expectedNew)
+    public function testMergeWithValidConstraints($existing, $new, $expected, $expectedUpdates)
     {
-        $result = $this->merger->mergeRequirements($existing, $new);
-        $this->assertSame($expected, $result->getResolvedRequirements());
-        $this->assertSame($expectedNew, $result->getNewRequirements());
-        $this->assertEmpty($result->getUnresolvedRequirements());
+        $merger = new DependenciesMerger($existing);
+        $merger->mergeDependencies($new, 'test');
+        $this->assertSame($expected, $merger->getDependencies());
+
+        $actualUpdates = $merger->getUpdates();
+        $this->assertSame(count($expectedUpdates), count($actualUpdates));
+        foreach ($expectedUpdates as $package => $expectedUpdate) {
+            $actualUpdate = $actualUpdates[$package];
+            $this->assertInstanceOf(PackageUpdate::class, $actualUpdate);
+            $this->assertSame($expectedUpdate[0], $actualUpdate->getExistingVersion());
+            $this->assertSame($expectedUpdate[1], $actualUpdate->getNewVersion());
+            $this->assertSame('test', $actualUpdate->getSource());
+        }
+
+        $this->assertEmpty($merger->getConflicts());
+        $this->assertFalse($merger->hasConflicts());
     }
 
     public function invalidProvider()
@@ -124,7 +131,7 @@ class NpmMergerTest extends TestCase
                     'one-dep' => '^1.1.0',
                     'two-dep' => '4.2.9-beta',
                 ],
-                //expected unresolved
+                //expected conflicts
                 [
                     'some-dep' => ['^3.1.0', '^4.1'],
                 ]
@@ -135,10 +142,23 @@ class NpmMergerTest extends TestCase
     /**
      * @dataProvider invalidProvider
      */
-    public function testMergeWithInvalidConstraints($existing, $new, $expected, $expectedUnresolved)
+    public function testMergeWithInvalidConstraints($existing, $new, $expected, $expectedConflicts)
     {
-        $result = $this->merger->mergeRequirements($existing, $new);
-        $this->assertSame($expected, $result->getResolvedRequirements());
-        $this->assertSame($expectedUnresolved, $result->getUnresolvedRequirements());
+        $merger = new DependenciesMerger($existing);
+        $merger->mergeDependencies($new, 'test');
+
+        $this->assertSame($expected, $merger->getDependencies());
+
+        $actualConflicts = $merger->getConflicts();
+        $this->assertSame(count($expectedConflicts), count($actualConflicts));
+        foreach ($expectedConflicts as $package => $expectedConflict) {
+            $actualConflict = $actualConflicts[$package];
+            $this->assertInstanceOf(PackageConflict::class, $actualConflict);
+            $this->assertSame($expectedConflict[0], $actualConflict->getExistingVersion());
+            $this->assertSame($expectedConflict[1], $actualConflict->getConflictingVersion());
+            $this->assertSame('test', $actualConflict->getSource());
+        }
+
+        $this->assertTrue($merger->hasConflicts());
     }
 }
