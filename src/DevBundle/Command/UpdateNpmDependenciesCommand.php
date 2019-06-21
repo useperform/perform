@@ -6,8 +6,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Perform\DevBundle\Packaging\NpmMergeResultCollection;
-use Perform\DevBundle\Packaging\NpmMerger;
+use Perform\DevBundle\Npm\DependenciesMerger;
 
 class UpdateNpmDependenciesCommand extends Command
 {
@@ -31,13 +30,12 @@ class UpdateNpmDependenciesCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $merger = new NpmMerger();
         $targetFile = $this->projectDir.'/package.json';
         if (!file_exists($targetFile)) {
             throw new \Exception(sprintf('%s does not exist. You can create a new package.json file quickly with the perform-dev:create:asset-config command.', $targetFile));
         }
 
-        $collection = new NpmMergeResultCollection($merger->loadRequirements($targetFile));
+        $merger = DependenciesMerger::createFromPackageFile($targetFile);
 
         foreach ($this->deps as $deps) {
             $packages = $deps->getDependencies();
@@ -45,21 +43,20 @@ class UpdateNpmDependenciesCommand extends Command
                 $output->writeln(sprintf('<comment>%d</comment> dependencies returned from <comment>%s</comment>', count($packages), get_class($deps)));
             }
 
-            $result = $merger->mergeRequirements($collection->getResolvedRequirements(), $packages);
-            $collection->addResult($result);
+            $merger->mergeDependencies($packages, get_class($deps));
         }
 
-        $this->writeNew($output, $collection);
-        $this->writeUnresolved($output, $collection);
+        $this->showUpdates($output, $merger);
+        $this->showConflicts($output, $merger);
 
-        if ($collection->hasUnresolved() && !$input->getOption('force')) {
+        if ($merger->hasConflicts() && !$input->getOption('force')) {
             $output->writeln('Not writing to <comment>package.json</comment>. Use the --force argument for a best-effort attempt.');
 
             return;
         }
 
-        if (!$collection->hasNew()) {
-            $output->writeln('No new dependencies detected - your package.json is up to date.');
+        if (!$merger->hasUpdates()) {
+            $output->writeln('No dependency updates required - your package.json is up to date.');
 
             return;
         }
@@ -67,37 +64,38 @@ class UpdateNpmDependenciesCommand extends Command
             return;
         }
 
-        $merger->writeRequirements($targetFile, $collection->getResolvedRequirements());
+        $merger->writeToPackageFile($targetFile);
         $output->writeln('Updated <comment>package.json</comment>. Please confirm changes and commit the result to version control.');
     }
 
-    private function writeNew(OutputInterface $output, NpmMergeResultCollection $collection)
+    private function showUpdates(OutputInterface $output, DependenciesMerger $merger)
     {
-        if (!$collection->hasNew()) {
+        if (!$merger->hasUpdates()) {
             return;
         }
 
-        $new = $collection->getNewRequirements();
         $output->writeln(['', '<info>Package updates:</info>', '']);
 
-        foreach ($new as $package => $versions) {
-            $msg = $versions[0] ?
-                 sprintf('<comment>%s</comment>: Updating from %s to %s', $package, $versions[0], $versions[1]) :
-                 sprintf('<comment>%s</comment>: Adding %s', $package, $versions[1]);
+        foreach ($merger->getUpdates() as $package => $update) {
+            $msg = sprintf('<comment>%s</comment>', $package);
+            $msg .= $output->isVerbose() ? sprintf(' from <comment>%s</comment>: ', $update->getSource()) : ': ';
+            $msg .= $update->isNew() ?
+                sprintf('Adding %s', $update->getNewVersion()) :
+                sprintf('Updating from %s to %s', $update->getExistingVersion(), $update->getNewVersion());
+
             $output->writeln($msg);
         }
         $output->writeln('');
     }
 
-    private function writeUnresolved(OutputInterface $output, NpmMergeResultCollection $collection)
+    private function showConflicts(OutputInterface $output, DependenciesMerger $merger)
     {
-        if (!$collection->hasUnresolved()) {
+        if (!$merger->hasConflicts()) {
             return;
         }
-        $unresolved = $collection->getUnresolvedRequirements();
         $output->writeln(['', '<error>Package conflicts:</error>', '']);
-        foreach ($unresolved as $package => $conflict) {
-            $output->writeln(sprintf('<comment>%s</comment>: Versions %s and %s are not compatible', $package, $conflict[0], $conflict[1]));
+        foreach ($merger->getConflicts() as $package => $conflict) {
+            $output->writeln(sprintf('<comment>%s</comment> from <comment>%s</comment>: Versions %s and %s are not compatible', $package, $conflict->getSource(), $conflict->getExistingVersion(), $conflict->getConflictingVersion()));
         }
         $output->writeln('');
     }
