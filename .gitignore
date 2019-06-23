@@ -19,5 +19,5 @@ docs/_build
 docs/reference/field-types/*
 !docs/reference/field-types/index.rst
 docs/reference/sass.rst
-docs/_themes/perform/node_modules
+docs/node_modules
 docs/_themes/perform/static
