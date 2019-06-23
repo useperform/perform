@@ -14,7 +14,6 @@ src/MediaPlayerBundle/Resources/public
 src/RichContentBundle/Resources/js/components/blocktypes.js
 
 test_results.xml
-Dockerfile
 
 docs/_build
 docs/reference/field-types/*
