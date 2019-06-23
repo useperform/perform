@@ -25,9 +25,18 @@ gulp.task('sass', function () {
     .pipe(browserSync.stream());
 });
 
+gulp.task('generate', function () {
+  run('./bin/gendocs.php', {
+    cwd: '../'
+  })
+    .exec()
+    .on('error', handleError);
+});
+
 gulp.task('watch', function () {
   gulp.watch('scss/*.scss', ['sass']);
   gulp.watch('**/*.rst', ['html']);
+  gulp.watch('../src/*/FieldType/*.php', ['generate']);
   gulp.watch(themeDir+'/*.html', ['html']);
 });
 
