@@ -1,61 +1,63 @@
-var gulp = require('gulp');
-var sass = require('gulp-sass');
-var run = require('gulp-run');
-var browserSync = require('browser-sync').create();
+const { series, parallel, src, dest, watch } = require('gulp');
+const { exec } = require('child_process');
+const sass = require('gulp-sass');
+const browserSync = require('browser-sync');
 
-function handleError (err) {
-  console.log(err);
-  this.emit('end');
+const themeDir = '_themes/perform';
+const cssWatch = 'scss/*.scss';
+const fieldTypeWatch = '../src/*/FieldType/*.php';
+const htmlWatch = themeDir+'/*.html';
+const rstWatch = '**/*.rst';
+
+function js() {
+  return src('node_modules/bootstrap/dist/js/bootstrap.min.js')
+    .pipe(dest(themeDir+'/static/'));
 }
 
-var themeDir = '_themes/perform';
-
-gulp.task('js', function () {
-  return gulp.src('node_modules/bootstrap/dist/js/bootstrap.min.js')
-    .pipe(gulp.dest(themeDir+'/static/'));
-});
-
-gulp.task('sass', function () {
-  return gulp.src('scss/theme.scss')
+function css() {
+  return src('scss/theme.scss')
     .pipe(sass())
-    .on('error', handleError)
-    .pipe(gulp.dest(themeDir+'/static/'))
-  // need to pipe to the build output directory so browsersync works
-    .pipe(gulp.dest('_build/html/_static/'))
+    .pipe(dest(themeDir+'/static/'))
+  // need to pipe to the build output directory so browsersync notices the change
+    .pipe(dest('_build/html/_static/'))
     .pipe(browserSync.stream());
-});
+}
 
-gulp.task('generate', function () {
-  run('./bin/gendocs.php', {
-    cwd: '../'
-  })
-    .exec()
-    .on('error', handleError);
-});
+function generate() {
+  return exec('../bin/gendocs.php');
+}
 
-gulp.task('watch', function () {
-  gulp.watch('scss/*.scss', ['sass']);
-  gulp.watch('**/*.rst', ['html']);
-  gulp.watch('../src/*/FieldType/*.php', ['generate']);
-  gulp.watch(themeDir+'/*.html', ['html']);
-});
+function sphinx() {
+  return exec('make html');
+}
 
-gulp.task('html', function () {
-  run('make html', {
-  })
-    .exec()
-    .on('error', handleError);
-});
+function refresh_page(done) {
+  browserSync.reload();
+  done();
+}
 
-gulp.task('browser-sync', function () {
+exports.default = exports.build = series(
+  generate,
+  parallel(js, css),
+  sphinx
+);
+
+exports.watch = function() {
+  watch(cssWatch, css);
+  watch(fieldTypeWatch, generate);
+  watch(rstWatch, sphinx);
+  watch(htmlWatch, sphinx);
+}
+
+exports.dev = function() {
   browserSync.init({
     open: false,
     server: {
-      baseDir: "_build/html"
+      baseDir: '_build/html'
     }
   });
-});
-
-gulp.task('dev', ['watch', 'js', 'sass', 'browser-sync']);
-gulp.task('build', ['sass', 'js', 'html']);
-gulp.task('default', ['dev']);
+  watch(cssWatch, css);
+  watch(fieldTypeWatch, generate);
+  watch(rstWatch, series(sphinx, refresh_page));
+  watch(htmlWatch, series(sphinx, refresh_page));
+};
