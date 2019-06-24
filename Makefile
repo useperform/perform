@@ -5,9 +5,6 @@ build:
 test:
 	SYMFONY_DEPRECATIONS_HELPER="weak_vendors" ./vendor/bin/phpunit -v
 
-test_publish:
-	SYMFONY_DEPRECATIONS_HELPER="weak_vendors" ./vendor/bin/phpunit -v --log-junit test_results.xml
-
 test_quick:
 	./vendor/bin/phpunit -v --exclude-group kernel
 

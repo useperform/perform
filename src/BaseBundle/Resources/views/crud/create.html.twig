@@ -20,7 +20,7 @@
       {% for field, config in form.vars.fields %}
         {{perform_crud_create_context(entity, field, config, form)}}
       {% endfor %}
-      <a href="{{perform_crud_route(crudName, 'list')}}" class="btn btn-light" tabindex="-1">Cancel</a>
+      <a href="{{perform_referer(perform_crud_route(crudName, 'list'))}}" class="btn btn-light" tabindex="-1">Cancel</a>
       <button type="submit" class="btn btn-primary">Save</button>
       {{form_end(form)}}
     </div>

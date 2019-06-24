@@ -72,7 +72,7 @@ Open ``PageController.php`` to see the generated class:
     namespace AppBundle\Controller;
 
     use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-    use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+    use Symfony\Component\Routing\Annotation\Route;
     use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
     /**

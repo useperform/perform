@@ -10,8 +10,6 @@ use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Perform\DevBundle\File\YamlModifier;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Grab perform_dev configuration for use in skeleton templates, or
@@ -29,7 +27,6 @@ class ConfigExtension extends \Twig_Extension
     protected $configFile;
     protected $newVars = [];
     protected $introduced;
-    protected $saveEnabled = true;
 
     public function __construct(ConfigurationInterface $configuration, array $config, $configFile)
     {
@@ -47,43 +44,6 @@ class ConfigExtension extends \Twig_Extension
         $helperSet = $event->getCommand()->getHelperSet();
 
         $this->setConsoleEnvironment($input, $output, $helperSet);
-    }
-
-    public function onConsoleException($event)
-    {
-        if ($event->getException() instanceof \Twig_Error) {
-            //don't offer the chance to save config if there was a problem rendering a twig template
-            $this->saveEnabled = false;
-        }
-    }
-
-    public function onConsoleTerminate(ConsoleTerminateEvent $event)
-    {
-        if (empty($this->newVars) || !$this->saveEnabled) {
-            return;
-        }
-
-        $this->output->writeln('');
-        $msg = sprintf(
-            'Do you want to save the new %s for <info>%s</info> to config_dev.yml? (Y/n) ',
-            count($this->newVars) === 1 ? 'value' : 'values',
-            implode('</info>, <info>', array_keys($this->newVars))
-        );
-        $question = new ConfirmationQuestion($msg, true);
-
-        if (!$this->helperSet->get('question')->ask($this->input, $this->output, $question)) {
-            return;
-        }
-
-        $currentConfig = $this->config;
-        if (!isset($currentConfig['skeleton_vars'])) {
-            $currentConfig['skeleton_vars'] = [];
-        }
-
-        $currentConfig['skeleton_vars'] = array_merge($currentConfig['skeleton_vars'], $this->newVars);
-
-        $mod = new YamlModifier($this->configFile);
-        $mod->replaceSection('perform_dev', Yaml::dump(['perform_dev' => $currentConfig], 4));
     }
 
     public function setConsoleEnvironment(InputInterface $input, OutputInterface $output, HelperSet $helperSet)
@@ -151,7 +111,6 @@ class ConfigExtension extends \Twig_Extension
         $this->output->writeln([
             '',
             'Some <info>perform_dev</info> configuration values are required to render the skeleton templates.',
-            'You can give values for the missing configuration now, and optionally save them at the end of this command to avoid entering them again in the future.',
         ]);
 
         $this->introduced = true;

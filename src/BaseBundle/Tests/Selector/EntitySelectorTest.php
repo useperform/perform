@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Selector;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Selector\EntitySelector;
 use Pagerfanta\Pagerfanta;
 use Perform\BaseBundle\Config\FilterConfig;
@@ -20,7 +21,7 @@ use Perform\BaseBundle\Config\FieldConfig;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class EntitySelectorTest extends \PHPUnit_Framework_TestCase
+class EntitySelectorTest extends TestCase
 {
     protected $em;
     protected $qb;
@@ -30,7 +31,7 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $em = $this->getMock(EntityManagerInterface::class);
+        $em = $this->createMock(EntityManagerInterface::class);
         $this->qb = $this->getMockBuilder(QueryBuilder::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -38,8 +39,8 @@ class EntitySelectorTest extends \PHPUnit_Framework_TestCase
         $em->expects($this->any())
             ->method('createQueryBuilder')
             ->will($this->returnValue($this->qb));
-        $this->dispatcher = $this->getMock(EventDispatcherInterface::class);
-        $this->store = $this->getMock(ConfigStoreInterface::class);
+        $this->dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $this->store = $this->createMock(ConfigStoreInterface::class);
         $this->typeConfig = $this->getMockBuilder(FieldConfig::class)
                           ->disableOriginalConstructor()
                           ->getMock();

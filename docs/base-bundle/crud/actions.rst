@@ -1,18 +1,18 @@
 Actions
 =======
 
-On top of viewing, creating, editing, and deleting entities, you may
+On top of viewing, creating, and editing entities; you may
 want to define operations that act on entities in some way.
 
 For example, you might want operations to:
 
 - archive a message
 - trigger a report
-- email the selected entities to an administrator
+- email selected entities to an administrator
 
 .. note::
 
-    Deleting entities is actually a built-in action. See ``Perform\BaseBundle\Action\DeleteAction``.
+    Deleting entities is a built-in action. See ``Perform\BaseBundle\Action\DeleteAction``.
 
 Actions are a way of doing these operations without having to create new
 controllers, routes, and frontend code every time.
@@ -30,12 +30,12 @@ configured to only run after passing various conditions.
 Required configuration
 ----------------------
 
-Add ``routing_action.yml`` from the base bundle to your routing configuration:
+Add ``routing/actions.yml`` from the base bundle to your routing configuration:
 
 .. code-block:: yaml
 
     perform_base_action:
-        resource: "@PerformBaseBundle/Resources/config/routing_action.yml"
+        resource: "@PerformBaseBundle/Resources/config/routing/actions.yml"
         prefix: /admin/_action
 
 This resource loads routes for a controller in the `BaseBundle` that handles the different actions.
@@ -315,10 +315,10 @@ Use the ``isGranted`` option to restrict an action to certain conditions:
     }
 
 This option can either be a boolean or a function that returns a boolean.
-If a function, it is called with the entity in question and an
+If it's a function, it is called with the entity in question and an
 instance of
 ``Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface``,
-which you can use to query the Symfony security system.
+which you can then use to query the Symfony security system.
 If it evaluates to ``true``, the button will be displayed next to the entity.
 
 The default is ``true``.
@@ -331,7 +331,7 @@ Use the ``isButtonAvailable`` and ``isBatchOptionAvailable`` options to decide w
 ``isButtonAvailable`` decides when to show a button next to an entity.
 
 The value can be a boolean or a function that returns a boolean.
-If a function, it is called with the entity in question and a ``CrudRequest`` instance.
+If it's a function, it is called with the entity in question and a ``CrudRequest`` instance.
 
 The default is ``true``.
 
@@ -360,7 +360,7 @@ The default is ``true``.
 ``isBatchActionAvailable`` decides when to display a batch action option.
 
 This can also be a boolean or a function that returns a boolean.
-If a function, it is passed an ``CrudRequest`` instance.
+If it's a function, it is passed an ``CrudRequest`` instance.
 
 The default is ``true``.
 

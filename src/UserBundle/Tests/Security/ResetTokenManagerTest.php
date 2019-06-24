@@ -2,6 +2,7 @@
 
 namespace Perform\UserBundle\Tests\Security;
 
+use PHPUnit\Framework\TestCase;
 use Perform\UserBundle\Security\ResetTokenManager;
 use Perform\UserBundle\Entity\User;
 use Perform\UserBundle\Entity\ResetToken;
@@ -16,19 +17,19 @@ use Perform\UserBundle\Security\UserManager;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ResetTokenManagerTest extends \PHPUnit_Framework_TestCase
+class ResetTokenManagerTest extends TestCase
 {
     protected $em;
     protected $notifier;
 
     public function setUp()
     {
-        $this->em = $this->getMock(EntityManagerInterface::class);
+        $this->em = $this->createMock(EntityManagerInterface::class);
         $this->userManager = $this->getMockBuilder(UserManager::class)
                            ->disableOriginalConstructor()
                            ->getMock();
-        $this->resolver = $this->getMock(EntityResolver::class);
-        $this->repo = $this->getMock(ObjectRepository::class);
+        $this->resolver = $this->createMock(EntityResolver::class);
+        $this->repo = $this->createMock(ObjectRepository::class);
 
         $this->resolver->expects($this->any())
             ->method('resolve')
@@ -39,7 +40,7 @@ class ResetTokenManagerTest extends \PHPUnit_Framework_TestCase
             ->with('Perform\UserBundle\Entity\User')
             ->will($this->returnValue($this->repo));
 
-        $this->notifier = $this->getMock(NotifierInterface::class);
+        $this->notifier = $this->createMock(NotifierInterface::class);
 
         $this->manager = new ResetTokenManager($this->em, $this->userManager, $this->resolver, $this->notifier, 1800);
     }

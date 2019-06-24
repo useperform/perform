@@ -7,22 +7,24 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * AbstractType
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 abstract class AbstractType implements FieldTypeInterface
 {
-    protected $accessor;
+    private static $propertyAccessor;
 
-    public function __construct()
+    protected function getPropertyAccessor()
     {
-        $this->accessor = PropertyAccess::createPropertyAccessor();
+        if (!self::$propertyAccessor) {
+            self::$propertyAccessor = PropertyAccess::createPropertyAccessor();
+        }
+
+        return self::$propertyAccessor;
     }
 
     public function listContext($entity, $field, array $options = [])
     {
-        return $this->accessor->getValue($entity, $field);
+        return [];
     }
 
     public function viewContext($entity, $field, array $options = [])

@@ -46,19 +46,19 @@
         <table>
           <tr>
             <th>Type</th>
-            <td>{{dump(item[0].type)}}</td>
+            <td>{{item[0].type}}</td>
           </tr>
           <tr>
             <th>Context</th>
-            <td>{{dump(item[0].context)}}</td>
+            <td>{{profiler_dump(item[0].context, 1)}}</td>
           </tr>
           <tr>
             <th>Recipients</th>
-            <td>{{dump(item[0].recipients)}}</td>
+            <td>{{profiler_dump(item[0].recipients, 2)}}</td>
           </tr>
           <tr>
             <th>Publishers</th>
-            <td>{{dump(item[1])}}</td>
+            <td>{{profiler_dump(item[1], 1)}}</td>
           </tr>
         </table>
       </div>

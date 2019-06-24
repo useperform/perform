@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Config;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Config\FieldConfig;
 use Perform\BaseBundle\FieldType\FieldTypeRegistry;
 use Perform\BaseBundle\FieldType\StringType;
@@ -17,7 +18,7 @@ use Perform\BaseBundle\Crud\CrudRequest;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class FieldConfigTest extends \PHPUnit_Framework_TestCase
+class FieldConfigTest extends TestCase
 {
     protected $config;
     protected $typeRegistry;
@@ -29,7 +30,7 @@ class FieldConfigTest extends \PHPUnit_Framework_TestCase
             'string' => new StringType(),
             'datetime' => new DateTimeType(),
             'boolean' => new BooleanType(),
-            'stub' => $this->stubType = $this->getMock(FieldTypeInterface::class),
+            'stub' => $this->stubType = $this->createMock(FieldTypeInterface::class),
         ]);
         $this->config = new FieldConfig($this->typeRegistry);
     }
@@ -64,7 +65,7 @@ class FieldConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testTypeMustBeSupplied()
     {
-        $this->setExpectedException(InvalidFieldException::class);
+        $this->expectException(InvalidFieldException::class);
         $this->config->add('title', []);
     }
 
@@ -278,7 +279,7 @@ class FieldConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testDefaultSortWithIllegalDirection()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->config->setDefaultSort('title', 'foo');
     }
 
@@ -352,5 +353,46 @@ class FieldConfigTest extends \PHPUnit_Framework_TestCase
         $this->config->add('one', $second);
 
         $this->assertSame(['one' => [$first, $second]], $this->config->getAddedConfigs());
+    }
+
+    public function testDefaultContextsCanBeChanged()
+    {
+        $defaults = [
+            CrudRequest::CONTEXT_LIST,
+            CrudRequest::CONTEXT_VIEW,
+        ];
+        $this->assertSame($this->config, $this->config->setDefaultContexts($defaults));
+
+        $this->config->add('one', [
+            'type' => 'string',
+        ]);
+
+        $this->assertSame($defaults, $this->config->getAllTypes()['one']['contexts']);
+    }
+
+    public function testUnsetDefaultContextsDoNotOverrideContextsFromFieldType()
+    {
+        // default contexts have not been set, respect the default from the type
+        $this->stubType->expects($this->any())
+            ->method('getDefaultConfig')
+            ->will($this->returnValue([
+                'contexts' => [CrudRequest::CONTEXT_VIEW],
+            ]));
+
+        $this->config->add('one', [
+            'type' => 'stub',
+        ]);
+        $this->assertSame([CrudRequest::CONTEXT_VIEW], $this->config->getAllTypes()['one']['contexts']);
+
+        // default contexts have been set, should override the default from the type
+        $defaults = [
+            CrudRequest::CONTEXT_LIST,
+            CrudRequest::CONTEXT_VIEW,
+        ];
+        $this->config->setDefaultContexts($defaults);
+        $this->config->add('two', [
+            'type' => 'stub',
+        ]);
+        $this->assertSame($defaults, $this->config->getAllTypes()['two']['contexts']);
     }
 }

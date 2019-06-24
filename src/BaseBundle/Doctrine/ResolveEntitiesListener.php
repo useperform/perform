@@ -7,6 +7,8 @@ use Doctrine\ORM\Events;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Event\OnClassMetadataNotFoundEventArgs;
+use Perform\BaseBundle\Util\StringUtil;
+use Doctrine\ORM\Mapping\MappingException;
 
 /**
  * Resolve references to interfaces with concrete entities.
@@ -58,9 +60,9 @@ class ResolveEntitiesListener implements EventSubscriber
     }
 
     /**
-     * Support loading an entity interface, but only if the resolving entity isn't defined more than once.
+     * Directly load mapping for an entity interface, but only if it has a single implementation.
      *
-     * e.g. for loading AuthorInterface
+     * e.g. for loading AuthorInterface:
      *
      * Valid:
      * AuthorInterface: User
@@ -88,14 +90,21 @@ class ResolveEntitiesListener implements EventSubscriber
 
         $meta = $args->getObjectManager()
               ->getClassMetadata($target);
+
+        if ($meta->isMappedSuperclass) {
+            throw new MappingException(sprintf('Unable to use %s as an implementation of %s because it is a mapped superclass. Has %s been extended by another entity? If so, you should mark that entity as implementing %s instead.', $meta->name, $interface, StringUtil::classBasename($target), StringUtil::classBasename($interface)));
+        }
+
         $args->setFoundMetadata($meta);
     }
 
+    /**
+     * Replace relations that target an interface with concrete implementations.
+     */
     public function loadClassMetadata(LoadClassMetadataEventArgs $args)
     {
         $meta = $args->getClassMetadata();
 
-        // replace any mappings targeting a
         foreach ($meta->associationMappings as $property => $mapping) {
             $interface = $mapping['targetEntity'];
             if (!isset($this->entities[$interface])) {

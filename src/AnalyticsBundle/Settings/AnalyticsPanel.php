@@ -4,42 +4,58 @@ namespace Perform\AnalyticsBundle\Settings;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
-use Perform\BaseBundle\Settings\SettingsManager;
+use Perform\BaseBundle\Settings\Manager\SettingsManagerInterface;
 use Perform\BaseBundle\Settings\SettingsPanelInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 /**
- * AnalyticsPanel.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class AnalyticsPanel implements SettingsPanelInterface
 {
-    protected $enabled;
+    const KEY_ENABLED = 'perform_analytics.enabled';
+    const KEY_GOOGLE = 'perform_analytics.ga_key';
+
+    protected $manager;
+    protected $canEnable;
     protected $vendors;
 
-    public function __construct($enabled, array $vendors = [])
+    public function __construct(SettingsManagerInterface $manager, $canEnable, array $vendors = [])
     {
-        $this->enabled = (bool) $enabled;
+        // need to inject this to use it in getTemplateVars()
+        $this->manager = $manager;
+        $this->canEnable = $canEnable;
         $this->vendors = $vendors;
     }
 
-    public function buildForm(FormBuilderInterface $builder, SettingsManager $manager)
+    public function buildForm(FormBuilderInterface $builder, SettingsManagerInterface $manager)
     {
+        if ($this->canEnable) {
+            $builder->add('enabled', CheckboxType::class, [
+                'data' => $manager->getValue(self::KEY_ENABLED),
+                'label' => 'Enabled',
+                'required' => false,
+            ]);
+        }
+
         if (in_array('google', $this->vendors)) {
-            $key = 'perform_analytics_ga_key';
-            $builder->add($key, TextType::class, [
-                'data' => $manager->getValue($key),
+            $builder->add('google', TextType::class, [
+                'data' => $manager->getValue(self::KEY_GOOGLE),
                 'label' => 'Google analytics key',
+                'required' => false,
             ]);
         }
     }
 
-    public function handleSubmission(FormInterface $form, SettingsManager $manager)
+    public function handleSubmission(FormInterface $form, SettingsManagerInterface $manager)
     {
+        if ($this->canEnable) {
+            $manager->setValue(self::KEY_ENABLED, $form->get('enabled')->getData());
+        }
+
         if (in_array('google', $this->vendors)) {
-            $key = 'perform_analytics_ga_key';
-            $manager->setValue($key, $form->get($key)->getData());
+            $manager->setValue(self::KEY_GOOGLE, $form->get('google')->getData());
         }
     }
 
@@ -51,7 +67,9 @@ class AnalyticsPanel implements SettingsPanelInterface
     public function getTemplateVars()
     {
         return [
-            'enabled' => $this->enabled,
+            'enabled' => $this->manager->getValue(self::KEY_ENABLED, false),
+            'canEnable' => $this->canEnable,
+            'vendors' => $this->vendors,
         ];
     }
 

@@ -1,0 +1,11 @@
+{% extends '@PerformBase/field_type/simple.html.twig' %}
+
+{% block list %}
+  {% if value is null  %}
+    Unknown
+  {% elseif options.human %}
+    {{value|perform_human_date}}
+  {% else %}
+    {{value|date(options.format, options.view_timezone)}}
+  {% endif %}
+{% endblock %}

@@ -2,12 +2,13 @@
 
 namespace Perform\UserBundle\Tests\Entity;
 
+use PHPUnit\Framework\TestCase;
 use Perform\UserBundle\Entity\User;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class UserTest extends \PHPUnit_Framework_TestCase
+class UserTest extends TestCase
 {
     public function testGetFullname()
     {
@@ -47,5 +48,14 @@ class UserTest extends \PHPUnit_Framework_TestCase
 
         $user->removeRole('ROLE_MANAGER');
         $this->assertSame([0 => 'ROLE_USER', 1 => 'ROLE_EDITOR'], $user->getRoles());
+    }
+
+    public function testHasRole()
+    {
+        $user = new User();
+        $user->setRoles(['ROLE_USER', 'ROLE_ADMIN']);
+        $this->assertTrue($user->hasRole('ROLE_USER'));
+        $this->assertTrue($user->hasRole('ROLE_ADMIN'));
+        $this->assertFalse($user->hasRole('ROLE_SUPER_ADMIN'));
     }
 }

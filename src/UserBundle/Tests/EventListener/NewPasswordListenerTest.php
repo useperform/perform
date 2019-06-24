@@ -2,6 +2,7 @@
 
 namespace Perform\UserBundle\Tests\EventListener;
 
+use PHPUnit\Framework\TestCase;
 use Perform\UserBundle\Entity\User;
 use Perform\UserBundle\EventListener\NewPasswordListener;
 use Perform\UserBundle\Form\Type\ResetPasswordType;
@@ -21,7 +22,7 @@ use Symfony\Component\Security\Core\Role\SwitchUserRole;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class NewPasswordListenerTest extends \PHPUnit_Framework_TestCase
+class NewPasswordListenerTest extends TestCase
 {
     protected $token;
     protected $tokenStorage;
@@ -32,8 +33,8 @@ class NewPasswordListenerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->tokenStorage = $this->getMock(TokenStorageInterface::class);
-        $this->token = $this->getMock(TokenInterface::class);
+        $this->tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $this->token = $this->createMock(TokenInterface::class);
         $this->tokenStorage->expects($this->any())
             ->method('getToken')
             ->will($this->returnValue($this->token));
@@ -42,14 +43,14 @@ class NewPasswordListenerTest extends \PHPUnit_Framework_TestCase
                            ->disableOriginalConstructor()
                            ->getMock();
 
-        $this->form = $this->getMock(FormInterface::class);
-        $this->passwordField = $this->getMock(FormInterface::class);
+        $this->form = $this->createMock(FormInterface::class);
+        $this->passwordField = $this->createMock(FormInterface::class);
         $this->form->expects($this->any())
             ->method('get')
             ->with('password')
             ->will($this->returnValue($this->passwordField));
 
-        $formFactory = $this->getMock(FormFactoryInterface::class);
+        $formFactory = $this->createMock(FormFactoryInterface::class);
         $formFactory->expects($this->any())
             ->method('create')
             ->with(ResetPasswordType::class)
@@ -63,7 +64,7 @@ class NewPasswordListenerTest extends \PHPUnit_Framework_TestCase
 
     private function newEvent(array $roles = [])
     {
-        $kernel = $this->getMock(HttpKernelInterface::class);
+        $kernel = $this->createMock(HttpKernelInterface::class);
         $request = Request::create('/target-url');
 
         $this->token->expects($this->any())

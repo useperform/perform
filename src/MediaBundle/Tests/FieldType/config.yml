@@ -1,0 +1,21 @@
+services:
+    perform_media.bucket_registry:
+        class: Perform\MediaBundle\Bucket\BucketRegistry
+        public: true
+
+    test_filesystem:
+        class: League\Flysystem\Filesystem
+        arguments:
+            - '@test_adapter'
+    test_adapter:
+        class: League\Flysystem\Adapter\Local
+        arguments:
+            - '%kernel.root_dir%/uploads'
+
+perform_media:
+    buckets:
+        test_bucket:
+            flysystem: test_filesystem
+            url_generator: 'perform_media.url.simple'
+            types:
+                - {type: image}

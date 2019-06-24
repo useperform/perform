@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "bootstrap": "^4.0.0",
+    "browser-sync": "^2.23.6",
+    "gulp": "^4.0.2",
+    "gulp-sass": "^4.0.2"
+  },
+  "scripts": {
+    "build": "gulp build",
+    "dev": "gulp dev",
+    "watch": "gulp watch"
+  }
+}

@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Routing;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Crud\CrudInterface;
 use Perform\BaseBundle\Crud\CrudNotFoundException;
 use Perform\BaseBundle\Crud\CrudRegistry;
@@ -18,13 +19,13 @@ use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class CrudUrlGeneratorTest extends \PHPUnit_Framework_TestCase
+class CrudUrlGeneratorTest extends TestCase
 {
     protected $urlGenerator;
 
     public function setUp()
     {
-        $this->urlGenerator = $this->getMock(UrlGeneratorInterface::class);
+        $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
     }
 
     private function createGenerator(array $routeOptions = [])

@@ -1,20 +1,28 @@
 pipeline {
     agent any
 
-    triggers {
-        pollSCM('H/3 * * * *')
-    }
-
     stages {
+        stage('lint') {
+            steps {
+                sh 'docker run -i --rm -v $PWD:/app milchundzucker/php-parallel-lint:latest /app/src /app/bin'
+            }
+        }
+        stage('build-image') {
+            steps {
+                sh 'docker build -t perform --build-arg PHP_VERSION=7.1 .'
+                sh 'docker run -i --rm perform php -v'
+            }
+        }
         stage('build') {
             steps {
-                sh 'make clean'
-                sh 'make build'
+                sh 'docker run -i --rm -u $(id -u):$(id -g) -v $PWD:/code perform bin/generate-root-composer-config.php'
+                sh 'test -d ~/.composer || mkdir -v ~/.composer'
+                sh 'docker run -i --rm -u $(id -u):$(id -g) -v $PWD:/app -v ~/.composer:/tmp composer update --profile --ignore-platform-reqs'
             }
         }
         stage('test') {
             steps {
-                sh 'make test_publish'
+                sh 'docker run -i --rm -u $(id -u):$(id -g) -v $PWD:/code perform vendor/bin/phpunit --log-junit test_results.xml'
             }
         }
     }
@@ -22,11 +30,6 @@ pipeline {
     post {
         always {
             junit 'test_results.xml'
-        }
-        failure {
-            mail to: 'me@glynnforrest.com',
-            subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
-            body: "See ${env.BUILD_URL}"
         }
     }
 }

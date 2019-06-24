@@ -2,6 +2,7 @@
 
 namespace Perform\NotificationBundle\Tests\Notifier;
 
+use PHPUnit\Framework\TestCase;
 use Perform\NotificationBundle\Notifier\Notifier;
 use Perform\NotificationBundle\Notification;
 use Perform\NotificationBundle\Publisher\PublisherInterface;
@@ -10,23 +11,26 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
 use Perform\NotificationBundle\Notifier\NotifierInterface;
+use Perform\NotificationBundle\Event\SendEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class NotifierTest extends \PHPUnit_Framework_TestCase
+class NotifierTest extends TestCase
 {
     protected $notifier;
     protected $publisher;
+    protected $dispatcher;
 
     public function setUp()
     {
-        $this->publisher = $this->getMock(PublisherInterface::class);
+        $this->publisher = $this->createMock(PublisherInterface::class);
         $locator = new LoopableServiceLocator([
             'testPublisher' => function() { return $this->publisher; }
         ]);
-
-        $this->notifier = new Notifier($locator);
+        $this->dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $this->notifier = new Notifier($locator, $this->dispatcher);
     }
 
     public function testInterface()
@@ -38,7 +42,7 @@ class NotifierTest extends \PHPUnit_Framework_TestCase
     {
         $recipients = [];
         while ($recipientCount !== 0) {
-            $recipients[] = $this->getMock(RecipientInterface::class);
+            $recipients[] = $this->createMock(RecipientInterface::class);
             $recipientCount--;
         }
 
@@ -51,37 +55,17 @@ class NotifierTest extends \PHPUnit_Framework_TestCase
         $this->publisher->expects($this->once())
             ->method('send')
             ->with($n);
-        $this->notifier->send($n, ['testPublisher']);
-    }
-
-    public function testSendWithLogging()
-    {
-        $n = $this->newNotification();
-        $logger = $this->getMock(LoggerInterface::class);
-        $this->notifier->setLogger($logger);
-        $logger->expects($this->once())
-            ->method('log')
-            ->with('info', 'Sent notification of type "test" to 1 recipient.', [
-                'type' => 'test',
-                'recipient_count' => 1,
-                'publishers' => ['testPublisher'],
-            ]);
-
-        $this->notifier->send($n, ['testPublisher']);
-    }
-
-    public function testSendWithLogLevel()
-    {
-        $n = $this->newNotification(2);
-        $logger = $this->getMock(LoggerInterface::class);
-        $this->notifier->setLogger($logger, LogLevel::DEBUG);
-        $logger->expects($this->once())
-            ->method('log')
-            ->with('debug', 'Sent notification of type "test" to 2 recipients.', [
-                'type' => 'test',
-                'recipient_count' => 2,
-                'publishers' => ['testPublisher'],
-            ]);
+        $callback = function ($e) use ($n) {
+            return $e instanceof SendEvent
+                && $e->getNotification() === $n
+                && $e->getPublishers() === ['testPublisher'];
+        };
+        $this->dispatcher->expects($this->exactly(2))
+            ->method('dispatch')
+            ->withConsecutive(
+                [SendEvent::PRE_SEND, $this->callback($callback)],
+                [SendEvent::POST_SEND, $this->callback($callback)]
+            );
 
         $this->notifier->send($n, ['testPublisher']);
     }

@@ -6,19 +6,23 @@ use Perform\UserBundle\Entity\User;
 use Perform\BaseBundle\FieldType\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType as ChoiceFormType;
+use Perform\BaseBundle\Test\FieldTypeTestCase;
+use Perform\BaseBundle\Test\WhitespaceAssertions;
 
 /**
- * ChoiceTypeTest
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ChoiceTypeTest extends \PHPUnit_Framework_TestCase
+class ChoiceTypeTest extends FieldTypeTestCase
 {
+    use WhitespaceAssertions;
+
     protected $type;
 
-    public function setUp()
+    public function registerTypes()
     {
-        $this->type = new ChoiceType();
+        return [
+            'choice' => new ChoiceType(),
+        ];
     }
 
     public function testCreateContext()
@@ -27,59 +31,72 @@ class ChoiceTypeTest extends \PHPUnit_Framework_TestCase
             'Foo' => 'foo',
             'Bar' => 'bar',
         ];
-        $builder = $this->getMock(FormBuilderInterface::class);
+        $builder = $this->createMock(FormBuilderInterface::class);
         $builder->expects($this->once())
             ->method('add')
             ->with('field', ChoiceFormType::class, [
                 'choices' => $choices,
+                'label' => 'Choice Label',
             ]);
 
-        $this->type->createContext($builder, 'field', ['choices' => $choices]);
+        $vars = $this->getType('choice')->createContext($builder, 'field', [
+            'choices' => $choices,
+            'label' => 'Choice Label',
+            'form_options' => [],
+        ]);
+        $this->assertSame([], $vars);
     }
 
     public function testListContext()
     {
         $obj = new \stdClass();
         $obj->field = 'bar';
-        $options = [
-            'choices' => [
-                'Foo' => 'foo',
-                'Bar' => 'bar',
+        $this->config->add('field', [
+            'type' => 'choice',
+            'options' => [
+                'choices' => [
+                    'Foo' => 'foo',
+                    'Bar' => 'bar',
+                ],
             ],
-            'show_label' => true,
-        ];
+        ]);
 
-        $this->assertSame('Bar', $this->type->listContext($obj, 'field', $options));
+        $this->assertTrimmedString('Bar', $this->listContext($obj, 'field'));
     }
 
     public function testListContextShowValue()
     {
         $obj = new \stdClass();
         $obj->field = 'bar';
-        $options = [
-            'choices' => [
-                'Foo' => 'foo',
-                'Bar' => 'bar',
+        $this->config->add('field', [
+            'type' => 'choice',
+            'options' => [
+                'choices' => [
+                    'Foo' => 'foo',
+                    'Bar' => 'bar',
+                ],
+                'show_label' => false,
             ],
-            'show_label' => false,
-        ];
+        ]);
 
-        $this->assertSame('bar', $this->type->listContext($obj, 'field', $options));
+        $this->assertTrimmedString('bar', $this->listContext($obj, 'field'));
     }
 
     public function testListContextUnknownValue()
     {
         $obj = new \stdClass();
         $obj->field = 'quo';
-        $options = [
-            'choices' => [
-                'Foo' => 'foo',
-                'Bar' => 'bar',
+        $this->config->add('field', [
+            'type' => 'choice',
+            'options' => [
+                'choices' => [
+                    'Foo' => 'foo',
+                    'Bar' => 'bar',
+                ],
+                'unknown_label' => 'Unknown',
             ],
-            'show_label' => true,
-            'unknown_label' => 'Unknown',
-        ];
+        ]);
 
-        $this->assertSame('Unknown', $this->type->listContext($obj, 'field', $options));
+        $this->assertTrimmedString('Unknown', $this->listContext($obj, 'field'));
     }
 }

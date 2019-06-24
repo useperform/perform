@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Doctrine;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Test\TestKernel;
 use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\YamlParentBundle\YamlParentBundle;
 use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\XmlParentBundle\XmlParentBundle;
@@ -16,7 +17,7 @@ use Perform\BaseBundle\Tests\Fixtures\ExtendEntities\YamlChildBundle\Entity\XmlI
  * @author Glynn Forrest <me@glynnforrest.com>
  * @group kernel
  **/
-class ExtendEntitiesTest extends \PHPUnit_Framework_TestCase
+class ExtendEntitiesTest extends TestCase
 {
     protected $kernel;
 

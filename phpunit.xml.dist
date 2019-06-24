@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit bootstrap="vendor/autoload.php" colors="true">
+<phpunit bootstrap="vendor/autoload.php" colors="true" beStrictAboutTestsThatDoNotTestAnything="false">
   <testsuites>
     <testsuite name="Perform Bundles Test Suite">
       <directory suffix="Test.php">./src/*/Tests</directory>
     </testsuite>
   </testsuites>
+
+  <php>
+    <ini name="error_reporting" value="-1" />
+    <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak_vendors" />
+  </php>
 
   <filter>
     <whitelist>

@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Config;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Config\FilterConfig;
 use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 
@@ -10,7 +11,7 @@ use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class FilterConfigTest extends \PHPUnit_Framework_TestCase
+class FilterConfigTest extends TestCase
 {
     protected $config;
 
@@ -37,7 +38,7 @@ class FilterConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testQueryMustBeSupplied()
     {
-        $this->setExpectedException(MissingOptionsException::class);
+        $this->expectException(MissingOptionsException::class);
         $this->config->add('enabled', []);
     }
 

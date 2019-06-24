@@ -24,7 +24,6 @@ class CollectionType extends AbstractType
 
     public function __construct(EntityManagerInterface $entityManager, AssetContainer $assets)
     {
-        parent::__construct();
         $this->entityManager = $entityManager;
         $this->assets = $assets;
     }
@@ -43,7 +42,7 @@ class CollectionType extends AbstractType
     {
         $this->assets->addJs('/bundles/performbase/js/types/collection.js');
 
-        $builder->add($field, CollectionFormType::class, [
+        $formOptions = [
             'entry_type' => CrudType::class,
             'entry_options' => [
                 'crud_name' => $options['crud_name'],
@@ -52,17 +51,18 @@ class CollectionType extends AbstractType
             'allow_add' => true,
             'allow_delete' => true,
             'by_reference' => false,
-        ]);
+        ];
+        $builder->add($field, CollectionFormType::class, array_merge($formOptions, $options['form_options']));
 
         $entity = $builder->getData();
         $originalCollection = new ArrayCollection();
-        foreach ($this->accessor->getValue($entity, $field) as $item) {
+        foreach ($this->getPropertyAccessor()->getValue($entity, $field) as $item) {
             $originalCollection[] = $item;
         }
 
         $builder->addEventListener(FormEvents::POST_SUBMIT, function ($event) use ($field, $originalCollection) {
             $entity = $event->getData();
-            $collection = $this->accessor->getValue($entity, $field);
+            $collection = $this->getPropertyAccessor()->getValue($entity, $field);
             foreach ($originalCollection as $item) {
                 if (!$collection->contains($item)) {
                     $this->entityManager->remove($item);
@@ -71,7 +71,7 @@ class CollectionType extends AbstractType
         });
 
         return [
-            'sortField' => $options['sortField'],
+            'sort_field' => $options['sort_field'],
         ];
     }
 
@@ -84,27 +84,35 @@ class CollectionType extends AbstractType
     }
 
     /**
-     * @doc itemLabel The word to use when referring to one or many of the
-     * entities. Defaults to 'item' or 'items'. Use a string and the
-     * plural word will be guessed, or an array of two strings to
-     * define the plural word explicitly.
-     * @doc crud_name The crud name to use for the related entity
+     * @doc crud_name The crud name to use for the related entity.
+     *
+     * @doc item_label The translation key to use when referring to one or many
+     * entities, usually in the list context.
+     * The default label is 'item' or 'items', e.g. '1 item', '5
+     * items', defined in the BaseBundle translation catalogue.
+     * Either update the translation to change the label globally for
+     * all collection fields in your application, or set this option
+     * to use a different translation for just this field.
+     * To not use a label at all, set this option to false.
+     *
+     * @doc item_label_domain The translation domain to use when translating the item label.
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setRequired('crud_name');
         $resolver->setAllowedTypes('crud_name', 'string');
-        $resolver->setDefined('itemLabel');
-        $resolver->setAllowedTypes('itemLabel', ['string', 'array']);
         $resolver->setDefaults([
-            'sortField' => false,
+            'item_label' => 'field_type.collection.item_label',
+            'item_label_domain' => 'PerformBaseBundle',
+            'sort_field' => false,
         ]);
-        $resolver->setAllowedTypes('sortField', ['boolean', 'string']);
+        $resolver->setAllowedTypes('item_label', ['string', 'boolean']);
+        $resolver->setAllowedTypes('sort_field', ['boolean', 'string']);
     }
 
     public function viewContext($entity, $field, array $options = [])
     {
-        $collection = $this->accessor->getValue($entity, $field);
+        $collection = $this->getPropertyAccessor()->getValue($entity, $field);
         $this->ensureCollection($collection);
 
         return [
@@ -116,17 +124,13 @@ class CollectionType extends AbstractType
 
     public function listContext($entity, $field, array $options = [])
     {
-        $collection = $this->accessor->getValue($entity, $field);
+        $collection = $this->getPropertyAccessor()->getValue($entity, $field);
         $this->ensureCollection($collection);
 
-        $itemLabel = isset($options['itemLabel']) ? (array) $options['itemLabel'] : ['item'];
-        $label = $itemLabel[0];
-        $count = count($collection);
-        if ($count !== 1) {
-            $label = isset($itemLabel[1]) ? $itemLabel[1] : $label.'s';
-        }
-
-        return $count.' '.trim($label);
+        return [
+            'item_label' => $options['item_label'],
+            'count' => count($collection),
+        ];
     }
 
     protected function ensureCollection($value)

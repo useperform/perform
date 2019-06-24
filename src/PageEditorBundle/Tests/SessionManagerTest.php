@@ -2,6 +2,7 @@
 
 namespace Perform\PageEditorBundle\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Perform\PageEditorBundle\SessionManager;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -9,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class SessionManagerTest extends \PHPUnit_Framework_TestCase
+class SessionManagerTest extends TestCase
 {
     protected $manager;
     protected $session;
@@ -17,7 +18,7 @@ class SessionManagerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->manager = new SessionManager();
-        $this->session = $this->getMock(SessionInterface::class);
+        $this->session = $this->createMock(SessionInterface::class);
     }
 
     public function testStart()

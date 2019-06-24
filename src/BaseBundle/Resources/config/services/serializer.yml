@@ -1,0 +1,7 @@
+services:
+    perform_base.twig.serializer:
+        class: Perform\BaseBundle\Twig\Extension\SerializerExtension
+        arguments:
+            - "@serializer"
+        tags:
+            - {name: twig.extension}

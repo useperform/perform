@@ -1,6 +1,8 @@
 imports:
-    - { resource: services_actions.yml }
+    - { resource: services/actions.yml }
     - { resource: services/field_types.yml }
+    - { resource: services/settings.yml }
+    - services/console.yml
 
 services:
     perform_base.crud.registry:
@@ -8,6 +10,18 @@ services:
         arguments:
             - '@perform_base.doctrine.entity_resolver'
             - '@doctrine.orm.entity_manager'
+
+    Perform\BaseBundle\Controller\CrudController:
+        arguments:
+            - '@twig'
+            - '@perform_base.crud.registry'
+            - '@perform_base.selector.entity'
+            - '@perform_base.doctrine.entity_resolver'
+            - '@perform_base.template_populator'
+            - '@perform_base.entity_manager'
+            - '@perform_base.routing.crud_generator'
+        tags:
+            - controller.service_arguments
 
     perform_base.config_store:
         class: Perform\BaseBundle\Config\ConfigStore
@@ -59,7 +73,6 @@ services:
         arguments:
             - '@perform_base.crud.registry'
             - '@perform_base.config_store'
-            - '@security.access.decision_manager'
             - '%perform_base.extended_entities%'
         tags:
             -
@@ -86,9 +99,13 @@ services:
         arguments:
             - "@router"
 
+    perform_base.routing.info:
+        class: Perform\BaseBundle\Routing\RequestInfo
+        arguments:
+            - "@request_stack"
+
     perform_base.listener.crud_template:
         class: Perform\BaseBundle\EventListener\CrudTemplateListener
-        arguments: ['@service_container']
         tags:
             -
                 name: kernel.event_listener
@@ -138,9 +155,15 @@ services:
             - {name: twig.extension}
             - {name: kernel.event_listener, method: onKernelRequest, event: kernel.request}
 
-    perform_base.twig.util:
-        class: Perform\BaseBundle\Twig\Extension\UtilExtension
+    perform_base.twig.date:
+        class: Perform\BaseBundle\Twig\Extension\DateExtension
+        tags:
+            - {name: twig.extension}
+
+    perform_base.twig.routing:
+        class: Perform\BaseBundle\Twig\Extension\RoutingExtension
         arguments:
+            - "@perform_base.routing.info"
             - "@perform_base.routing.checker"
         tags:
             - {name: twig.extension}
@@ -233,23 +256,6 @@ services:
         arguments:
             - "%perform_base.auto_asset_version%"
 
-    perform_base.settings_importer:
-        class: Perform\BaseBundle\Settings\SettingsImporter
-        arguments: ["@doctrine.orm.entity_manager"]
-
-    perform_base.settings_manager:
-        class: Perform\BaseBundle\Settings\SettingsManager
-        arguments: ["@doctrine.orm.entity_manager"]
-
-    perform_base.settings_panel_registry:
-        class: Perform\BaseBundle\Settings\SettingsPanelRegistry
-        arguments: ["@twig", []]
-
-    perform_base.settings.account:
-        class: Perform\BaseBundle\Settings\AccountPanel
-        tags:
-            - { name: perform_base.settings_panel, alias: account }
-
     perform_base.markdown:
         class: League\CommonMark\CommonMarkConverter
 
@@ -300,3 +306,8 @@ services:
             - '%perform_base.assets.theme%'
         tags:
             - {name: kernel.event_listener, event: perform_base.asset_dump.add, method: onAddAssets}
+
+    perform_base.installer.assets:
+        class: Perform\BaseBundle\Installer\AssetsInstaller
+        tags:
+            - perform_base.installer

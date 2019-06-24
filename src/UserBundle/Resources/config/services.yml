@@ -1,3 +1,6 @@
+imports:
+    - services/console.yml
+
 services:
     perform_user.listener.login:
         class: Perform\UserBundle\EventListener\LoginListener
@@ -33,7 +36,6 @@ services:
 
     perform_user.doctrine.user_listener:
         class: Perform\UserBundle\Doctrine\UserListener
-        arguments: ["@service_container"]
         tags:
             - { name: doctrine.event_subscriber }
 
@@ -60,6 +62,7 @@ services:
             - "@perform_user.user_manager"
             - "@perform_base.doctrine.entity_resolver"
             - "@perform_notification.notifier"
+    Perform\UserBundle\Security\ResetTokenManager: '@perform_user.reset_token_manager'
 
     perform_user.action.create_reset_token:
         class: Perform\UserBundle\Action\CreateResetTokenAction
@@ -74,7 +77,17 @@ services:
         tags:
             - controller.service_arguments
 
+    Perform\UserBundle\Controller\UserController:
+        parent: Perform\BaseBundle\Controller\CrudController
+
     perform_user.auth.single_use:
         class: Perform\UserBundle\Security\SingleUseAuthenticator
         arguments:
             - '@uri_signer'
+
+    Perform\UserBundle\Installer\UsersInstaller:
+        arguments:
+            - '@perform_user.importer.user'
+            - '%kernel.root_dir%/config/perform_users.yml'
+        tags:
+            - perform_base.installer

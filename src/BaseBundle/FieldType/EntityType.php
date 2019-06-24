@@ -43,19 +43,19 @@ class EntityType extends AbstractType
 
     public function __construct(EntityManagerInterface $entityManager, CrudRegistry $crudRegistry)
     {
-        parent::__construct();
         $this->entityManager = $entityManager;
         $this->crudRegistry = $crudRegistry;
     }
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
-        $builder->add($field, EntityFormType::class, [
+        $formOptions = [
             'class' => $options['class'],
             'choice_label' => $options['display_field'],
             'label' => $options['label'],
             'multiple' => $options['multiple'],
-        ]);
+        ];
+        $builder->add($field, EntityFormType::class, array_merge($formOptions, $options['form_options']));
     }
 
     /**
@@ -89,36 +89,34 @@ class EntityType extends AbstractType
 
     public function listContext($entity, $field, array $options = [])
     {
-        $relatedEntity = $this->accessor->getValue($entity, $field);
+        $relatedEntity = $this->getPropertyAccessor()->getValue($entity, $field);
         $this->ensureEntity($field, $relatedEntity);
 
-        if (!$relatedEntity) {
-            return '';
-        }
-
-        if ($options['link_to'] === true && !$options['crud_name']) {
-            $options['crud_name'] = $this->crudRegistry->getNameForRelatedEntity($entity, $field);
-        }
-
-        return [
+        $ret = [
             'crud_name' => $options['crud_name'],
-            'value' => $relatedEntity,
-            'display_field' => $options['display_field'],
             'link_to' => $options['link_to'],
             'multiple' => $options['multiple'],
+            'display_field' => $options['display_field'],
+            'related_entity' => $relatedEntity,
         ];
+
+        if ($relatedEntity !== null && $options['link_to'] === true && !$options['crud_name']) {
+            $ret['crud_name'] = $this->crudRegistry->getNameForRelatedEntity($entity, $field);
+        }
+
+        return $ret;
     }
 
     public function exportContext($entity, $field, array $options = [])
     {
-        $relatedEntity = $this->accessor->getValue($entity, $field);
+        $relatedEntity = $this->getPropertyAccessor()->getValue($entity, $field);
         $this->ensureEntity($field, $relatedEntity);
 
         if (!$relatedEntity) {
             return '';
         }
 
-        return $this->accessor->getValue($relatedEntity, $options['display_field']);
+        return $this->getPropertyAccessor()->getValue($relatedEntity, $options['display_field']);
     }
 
     protected function ensureEntity($field, $value)

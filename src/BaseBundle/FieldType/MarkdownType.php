@@ -21,14 +21,13 @@ class MarkdownType extends AbstractType
 
     public function __construct(CommonMarkConverter $markdown, AssetContainer $assets)
     {
-        parent::__construct();
         $this->markdown = $markdown;
         $this->assets = $assets;
     }
 
     public function listContext($entity, $field, array $options = [])
     {
-        $markdown = $this->accessor->getValue($entity, $field);
+        $markdown = $this->getPropertyAccessor()->getValue($entity, $field);
 
         return [
             'markdown' => $markdown,
@@ -39,7 +38,10 @@ class MarkdownType extends AbstractType
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
         $this->assets->addJs('/bundles/performbase/js/types/markdown.js');
-        $builder->add($field, FormType::class);
+        $formOptions = [
+            'label' => $options['label'],
+        ];
+        $builder->add($field, FormType::class, array_merge($formOptions, $options['form_options']));
 
         return $options;
     }

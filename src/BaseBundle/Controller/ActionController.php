@@ -2,24 +2,33 @@
 
 namespace Perform\BaseBundle\Controller;
 
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Doctrine\ORM\EntityNotFoundException;
-use Perform\BaseBundle\Action\ActionResponse;
 use Perform\BaseBundle\Action\ActionFailedException;
+use Perform\BaseBundle\Action\ActionResponse;
+use Perform\BaseBundle\Action\ActionRunner;
 use Perform\BaseBundle\Crud\CrudRequest;
+use Perform\BaseBundle\Routing\CrudUrlGeneratorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class ActionController extends Controller
 {
+    protected $runner;
+    protected $urlGenerator;
+
+    public function __construct(ActionRunner $runner, CrudUrlGeneratorInterface $urlGenerator)
+    {
+        $this->runner = $runner;
+        $this->urlGenerator = $urlGenerator;
+    }
+
     /**
-     * @Route("/{action}")
-     * @Method("POST")
+     * @Route("/{action}", methods={"POST"})
      */
     public function indexAction($action, Request $request)
     {
@@ -28,8 +37,7 @@ class ActionController extends Controller
             $ids = $request->request->get('ids', []);
             $options = $request->request->get('options', []);
 
-            $response = $this->get('perform_base.action_runner')
-                      ->run($crudName, $action, $ids, $options);
+            $response = $this->runner->run($crudName, $action, $ids, $options);
         } catch (EntityNotFoundException $e) {
             return new JsonResponse([], JsonResponse::HTTP_NOT_FOUND);
         } catch (ActionFailedException $e) {
@@ -47,7 +55,7 @@ class ActionController extends Controller
             $json['redirect'] = $response->getUrl();
         }
         if ($response->getRedirect() === ActionResponse::REDIRECT_LIST_CONTEXT) {
-            $json['redirect'] = $this->get('perform_base.routing.crud_generator')->generate($crudName, CrudRequest::CONTEXT_LIST, $response->getRouteParams());
+            $json['redirect'] = $this->urlGenerator->generate($crudName, CrudRequest::CONTEXT_LIST, $response->getRouteParams());
         }
         if ($response->getRedirect() === ActionResponse::REDIRECT_ROUTE) {
             $json['redirect'] = $this->generateUrl($response->getRoute(), $response->getRouteParams());

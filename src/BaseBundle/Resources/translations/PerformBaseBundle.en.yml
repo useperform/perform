@@ -1,5 +1,5 @@
 header:
-    title: 'Site Administration'
+    title: 'Perform'
     links:
         logout: 'Logout'
         home: 'Go to site homepage'
@@ -12,6 +12,10 @@ crud:
         view: "%entity_label%"
         create: "New %entity_name%"
         edit: "Editing %entity_label%"
+
+field_type:
+    collection:
+        item_label: 'item|items'
 
 export:
     dropdown: 'Download'

@@ -2,12 +2,13 @@
 
 namespace BaseBundle\Tests\Util;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Util\StringUtil;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class StringUtilTest extends \PHPUnit_Framework_TestCase
+class StringUtilTest extends TestCase
 {
     public function sensibleProvider()
     {

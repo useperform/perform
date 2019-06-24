@@ -2,6 +2,7 @@
 
 namespace Perform\MailingListBundle\Tests\Entity;
 
+use PHPUnit\Framework\TestCase;
 use Perform\MailingListBundle\Entity\Subscriber;
 use Perform\MailingListBundle\Exception\MissingAttributeException;
 
@@ -10,7 +11,7 @@ use Perform\MailingListBundle\Exception\MissingAttributeException;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class SubscriberTest extends \PHPUnit_Framework_TestCase
+class SubscriberTest extends TestCase
 {
     public function testGetEmail()
     {
@@ -48,7 +49,7 @@ class SubscriberTest extends \PHPUnit_Framework_TestCase
     public function testGetUnknownAttribute()
     {
         $s = new Subscriber();
-        $this->setExpectedException(MissingAttributeException::class);
+        $this->expectException(MissingAttributeException::class);
         $s->getAttribute('unknown');
     }
 

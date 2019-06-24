@@ -2,11 +2,15 @@
 
 namespace Perform\DevBundle;
 
+use Perform\DevBundle\DependencyInjection\Compiler\NpmDependenciesPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-/**
- * @author Glynn Forrest <me@glynnforrest.com>
- **/
 class PerformDevBundle extends Bundle
 {
+    public function build(ContainerBuilder $container)
+    {
+        parent::build($container);
+        $container->addCompilerPass(new NpmDependenciesPass());
+    }
 }

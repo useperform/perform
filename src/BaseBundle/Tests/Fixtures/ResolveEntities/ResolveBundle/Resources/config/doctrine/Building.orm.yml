@@ -1,0 +1,2 @@
+Perform\BaseBundle\Tests\Fixtures\ResolveEntities\ResolveBundle\Entity\Building:
+    type: mappedSuperclass

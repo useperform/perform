@@ -4,29 +4,28 @@ namespace Perform\ContactBundle\Settings;
 
 use Perform\BaseBundle\Settings\SettingsPanelInterface;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
-use Perform\BaseBundle\Settings\SettingsManager;
+use Perform\BaseBundle\Settings\Manager\SettingsManagerInterface;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class ContactFormPanel implements SettingsPanelInterface
 {
-    public function buildForm(FormBuilderInterface $builder, SettingsManager $manager)
+    const KEY_NOTIFY_EMAIL = 'perform_contact.notify_address';
+
+    public function buildForm(FormBuilderInterface $builder, SettingsManagerInterface $manager)
     {
-        //auto add??
-        $key = 'perform_contact_notify_address';
-        $builder->add($key, TextType::class, [
-            'data' => $manager->getValue($key),
+        $builder->add('email', EmailType::class, [
+            'data' => $manager->getValue(self::KEY_NOTIFY_EMAIL),
             'label' => 'Email address to notify',
         ]);
     }
 
-    public function handleSubmission(FormInterface $form, SettingsManager $manager)
+    public function handleSubmission(FormInterface $form, SettingsManagerInterface $manager)
     {
-        $key = 'perform_contact_notify_address';
-        $manager->setValue($key, $form->get($key)->getData());
+        $manager->setValue(self::KEY_NOTIFY_EMAIL, $form->get('email')->getData());
     }
 
     public function getTemplate()

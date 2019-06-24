@@ -14,24 +14,18 @@ class CountryType extends AbstractType
 {
     public function listContext($entity, $field, array $options = [])
     {
-        $countryCode = $this->accessor->getValue($entity, $field);
+        $countryCode = $this->getPropertyAccessor()->getValue($entity, $field);
 
-        return Intl::getRegionBundle()->getCountryName($countryCode);
+        return [
+            'value' => Intl::getRegionBundle()->getCountryName($countryCode),
+        ];
     }
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
-        $builder->add($field, FormType::class, $options['form_options']);
-    }
-
-    /**
-     * @doc form_options The options to pass to the form type in the create and edit contexts.
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'form_options' => [],
-        ]);
-        $resolver->setAllowedTypes('form_options', 'array');
+        $formOptions = [
+            'label' => $options['label'],
+        ];
+        $builder->add($field, FormType::class, array_merge($formOptions, $options['form_options']));
     }
 }

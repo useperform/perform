@@ -2,16 +2,18 @@
 
 namespace Perform\BaseBundle\Tests\Doctrine;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Test\TestKernel;
 use Perform\BaseBundle\Tests\Fixtures\ResolveEntities\ResolveBundle\ResolveBundle;
 use Perform\BaseBundle\Tests\Fixtures\ResolveEntities\ResolveBundle\Entity\Dog;
 use Perform\BaseBundle\Tests\Fixtures\ResolveEntities\ResolveBundle\Entity\Cat;
+use Doctrine\ORM\Mapping\MappingException;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  * @group kernel
  **/
-class ResolveEntitiesTest extends \PHPUnit_Framework_TestCase
+class ResolveEntitiesTest extends TestCase
 {
     protected $kernel;
 
@@ -38,5 +40,12 @@ class ResolveEntitiesTest extends \PHPUnit_Framework_TestCase
         $woman = $em->getClassMetadata('ResolveBundle:Woman');
         $cat = $woman->getAssociationMapping('pet');
         $this->assertSame(Cat::class, $cat['targetEntity']);
+    }
+
+    public function testResolveToMappedSuperclassThrowException()
+    {
+        $em = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
+        $this->expectException(MappingException::class);
+        $em->getClassMetadata('ResolveBundle:BuildingInterface');
     }
 }

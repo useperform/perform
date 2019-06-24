@@ -11,15 +11,25 @@ $(function () {
     classExpand: 'dcjq-current-parent'
   });
 
+  var sidebar = $('#sidebar');
+  if (sidebar.is(':visible')) {
+    sidebar.addClass('open');
+  } else {
+    sidebar.addClass('closed');
+  }
+  var workspace = $('#workspace');
+
   $('.sidebar-toggler').click(function () {
-    var wrapper = $('.wrapper');
-    var sidebar = $('#sidebar');
-    if (wrapper.hasClass('sidebar-closed')) {
-      sidebar.show();
-      wrapper.removeClass('sidebar-closed');
+    if (sidebar.hasClass('open')) {
+      sidebar
+        .addClass('closed')
+        .removeClass('open');
+      workspace.addClass('sidebar-closed');
     } else {
-      sidebar.hide();
-      wrapper.addClass('sidebar-closed');
+      sidebar
+        .addClass('open')
+        .removeClass('closed');
+      workspace.removeClass('sidebar-closed');
     }
   });
 

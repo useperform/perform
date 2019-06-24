@@ -2,32 +2,57 @@
 
 namespace Perform\BaseBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bridge\Twig\Extension\FormExtension;
+use Perform\BaseBundle\Crud\CrudRegistry;
 use Perform\BaseBundle\Crud\CrudRequest;
+use Perform\BaseBundle\Crud\EntityManager;
+use Perform\BaseBundle\Crud\TemplatePopulator;
+use Perform\BaseBundle\Doctrine\EntityResolver;
+use Perform\BaseBundle\Routing\CrudUrlGeneratorInterface;
+use Perform\BaseBundle\Selector\EntitySelector;
 use Perform\BaseBundle\Twig\Extension\ActionExtension;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormRenderer;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Twig\Environment;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
 class CrudController extends Controller
 {
+    protected $twig;
+    protected $crudRegistry;
+    protected $entitySelector;
+    protected $entityResolver;
+    protected $templatePopulator;
+    protected $entityManager;
+    protected $urlGenerator;
+
     protected $crud;
+
+    public function __construct(Environment $twig, CrudRegistry $crudRegistry, EntitySelector $entitySelector, EntityResolver $entityResolver, TemplatePopulator $templatePopulator, EntityManager $entityManager, CrudUrlGeneratorInterface $urlGenerator)
+    {
+        $this->twig = $twig;
+        $this->crudRegistry = $crudRegistry;
+        $this->entitySelector = $entitySelector;
+        $this->entityResolver = $entityResolver;
+        $this->templatePopulator = $templatePopulator;
+        $this->entityManager = $entityManager;
+        $this->urlGenerator = $urlGenerator;
+    }
 
     protected function initialize(CrudRequest $crudRequest)
     {
-        $this->crud = $this->get('perform_base.crud.registry')->get($crudRequest->getCrudName());
-        $this->get('twig')
-            ->getExtension(ActionExtension::class)
+        $this->crud = $this->crudRegistry->get($crudRequest->getCrudName());
+        $this->twig->getExtension(ActionExtension::class)
             ->setCrudRequest($crudRequest);
     }
 
     protected function newEntity()
     {
         $crudClass = get_class($this->crud);
-        $class = $this->get('perform_base.doctrine.entity_resolver')->resolve($crudClass::getEntityClass());
+        $class = $this->entityResolver->resolve($crudClass::getEntityClass());
 
         return new $class();
     }
@@ -41,31 +66,28 @@ class CrudController extends Controller
 
     private function setFormTheme($formView)
     {
-        $this->get('twig')
-            ->getExtension(FormExtension::class)
-            ->renderer->setTheme($formView, '@PerformBase/form_theme.html.twig');
+        $this->twig->getRuntime(FormRenderer::class)
+            ->setTheme($formView, '@PerformBase/form_theme.html.twig');
     }
 
     public function listAction(Request $request)
     {
         $crudRequest = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_LIST);
         $this->initialize($crudRequest);
-        list($paginator, $orderBy) = $this->get('perform_base.selector.entity')->listContext($crudRequest);
-        $populator = $this->get('perform_base.template_populator');
+        list($paginator, $orderBy) = $this->entitySelector->listContext($crudRequest);
 
-        return $populator->listContext($crudRequest, $paginator, $orderBy);
+        return $this->templatePopulator->listContext($crudRequest, $paginator, $orderBy);
     }
 
     public function viewAction(Request $request, $id)
     {
         $crudRequest = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_VIEW);
         $this->initialize($crudRequest);
-        $entity = $this->get('perform_base.selector.entity')->viewContext($crudRequest, $id);
+        $entity = $this->entitySelector->viewContext($crudRequest, $id);
         $this->throwNotFoundIfNull($entity, $id);
         $this->denyAccessUnlessGranted('VIEW', $entity);
-        $populator = $this->get('perform_base.template_populator');
 
-        return $populator->viewContext($crudRequest, $entity);
+        return $this->templatePopulator->viewContext($crudRequest, $entity);
     }
 
     public function createAction(Request $request)
@@ -73,6 +95,7 @@ class CrudController extends Controller
         $crudRequest = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_CREATE);
         $this->initialize($crudRequest);
         $crudName = $crudRequest->getCrudName();
+        $this->denyAccessUnlessGranted('CREATE', $crudName);
         $builder = $this->createFormBuilder($entity = $this->newEntity());
         $form = $this->createForm($this->crud->getFormType(), $entity, [
             'crud_name' => $crudName,
@@ -82,10 +105,10 @@ class CrudController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->get('perform_base.entity_manager')->create($crudRequest, $entity);
+                $this->entityManager->create($crudRequest, $entity);
                 $this->addFlash('success', 'Item created successfully.');
 
-                return $this->redirect($this->get('perform_base.routing.crud_generator')->generate($crudName, CrudRequest::CONTEXT_LIST));
+                return $this->redirect($this->urlGenerator->generate($crudName, CrudRequest::CONTEXT_LIST));
             } catch (\Exception $e) {
                 $this->addFlash('danger', 'An error occurred.');
             }
@@ -93,9 +116,8 @@ class CrudController extends Controller
 
         $formView = $form->createView();
         $this->setFormTheme($formView);
-        $populator = $this->get('perform_base.template_populator');
 
-        return $populator->editContext($crudRequest, $formView, $entity);
+        return $this->templatePopulator->editContext($crudRequest, $formView, $entity);
     }
 
     public function editAction(Request $request, $id)
@@ -103,7 +125,7 @@ class CrudController extends Controller
         $crudRequest = CrudRequest::fromRequest($request, CrudRequest::CONTEXT_EDIT);
         $this->initialize($crudRequest);
         $crudName = $crudRequest->getCrudName();
-        $entity = $this->get('perform_base.selector.entity')->editContext($crudRequest, $id);
+        $entity = $this->entitySelector->editContext($crudRequest, $id);
         $this->throwNotFoundIfNull($entity, $id);
         $this->denyAccessUnlessGranted('EDIT', $entity);
         $form = $this->createForm($this->crud->getFormType(), $entity, [
@@ -114,10 +136,10 @@ class CrudController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->get('perform_base.entity_manager')->update($crudRequest, $entity);
+                $this->entityManager->update($crudRequest, $entity);
                 $this->addFlash('success', 'Item updated successfully.');
 
-                return $this->redirect($this->get('perform_base.routing.crud_generator')->generate($crudName, CrudRequest::CONTEXT_LIST));
+                return $this->redirect($this->urlGenerator->generate($crudName, CrudRequest::CONTEXT_LIST));
             } catch (\Exception $e) {
                 $this->addFlash('danger', 'An error occurred.');
             }
@@ -125,8 +147,7 @@ class CrudController extends Controller
 
         $formView = $form->createView();
         $this->setFormTheme($formView);
-        $populator = $this->get('perform_base.template_populator');
 
-        return $populator->editContext($crudRequest, $formView, $entity);
+        return $this->templatePopulator->editContext($crudRequest, $formView, $entity);
     }
 }

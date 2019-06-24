@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Routing;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Routing\CrudLoader;
 use Perform\BaseBundle\Crud\CrudRegistry;
 use Perform\BaseBundle\Crud\CrudInterface;
@@ -14,7 +15,7 @@ use Symfony\Component\Config\Loader\LoaderResolver;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class CrudLoaderTest extends \PHPUnit_Framework_TestCase
+class CrudLoaderTest extends TestCase
 {
     protected $registry;
     protected $loader;
@@ -33,7 +34,7 @@ class CrudLoaderTest extends \PHPUnit_Framework_TestCase
 
     protected function expectCrud($crudName, $controller)
     {
-        $crud = $this->getMock(CrudInterface::class);
+        $crud = $this->createMock(CrudInterface::class);
         $crud->expects($this->any())
             ->method('getControllerName')
             ->will($this->returnValue($controller));

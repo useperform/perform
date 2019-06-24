@@ -24,7 +24,7 @@ Quickstart for common operating systems
 ---------------------------------------
 
 Here are some basic commands to install the requirements.
-They're not particularly robust or secure, but can help get you get started quickly.
+They're not particularly robust or secure, but can help you get started quickly.
 
 Ubuntu 16.04 LTS
 ~~~~~~~~~~~~~~~~

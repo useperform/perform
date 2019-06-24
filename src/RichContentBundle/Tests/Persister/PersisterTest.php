@@ -2,6 +2,7 @@
 
 namespace Perform\RichContentBundle\Tests\Persister;
 
+use PHPUnit\Framework\TestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\RichContentBundle\Repository\BlockRepository;
 use Perform\RichContentBundle\Repository\ContentRepository;
@@ -15,7 +16,7 @@ use Perform\RichContentBundle\Persister\OperationResult;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class PersisterTest extends \PHPUnit_Framework_TestCase
+class PersisterTest extends TestCase
 {
     protected $em;
     protected $blockRepo;
@@ -24,7 +25,7 @@ class PersisterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->em = $this->getMock(EntityManagerInterface::class);
+        $this->em = $this->createMock(EntityManagerInterface::class);
         $this->blockRepo = $this->getMockBuilder(BlockRepository::class)
                          ->disableOriginalConstructor()
                          ->getMock();

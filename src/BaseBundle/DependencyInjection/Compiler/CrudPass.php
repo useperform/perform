@@ -8,6 +8,8 @@ use Perform\BaseBundle\Crud\InvalidCrudException;
 use Symfony\Component\DependencyInjection\Reference;
 use Perform\BaseBundle\DependencyInjection\LoopableServiceLocator;
 use Perform\BaseBundle\Crud\DuplicateCrudException;
+use Symfony\Component\DependencyInjection\Definition;
+use Perform\BaseBundle\Util\StringUtil;
 
 /**
  * Register Crud services.
@@ -33,9 +35,11 @@ class CrudPass implements CompilerPassInterface
                 $crudEntityMap[$entityClass] = [];
             }
 
+            $tags = $this->filterAutoconfiguredTags($tags);
+
             foreach ($tags as $tag) {
                 if (!isset($tag['crud_name'])) {
-                    $tag['crud_name'] = $this->createCrudName($service);
+                    $tag['crud_name'] = $this->createCrudName($container->getDefinition($service));
                 }
                 $crudName = $tag['crud_name'];
 
@@ -60,10 +64,9 @@ class CrudPass implements CompilerPassInterface
             ->setArgument(1, $crudRoutes);
     }
 
-    private function createCrudName($service)
+    private function createCrudName(Definition $definition)
     {
-        // generate a sensible name from the class or service definition
-        return $service;
+        return strtolower(preg_replace('/([A-Z])/', '_\1', lcfirst(StringUtil::classBasename($definition->getClass(), 'Crud'))));
     }
 
     private function getRouteOptionsFromTag(array $tag)
@@ -102,5 +105,27 @@ class CrudPass implements CompilerPassInterface
     private function createRouteNamePrefix($crudName)
     {
         return preg_replace('/([^_a-z0-9])/', '_', strtolower($crudName)).'_';
+    }
+
+    /**
+     * Prevent a duplicate crud exception with a service like the following:
+     *
+     * TestCrud:
+     *    tags:
+     *        - {name: perform_base.crud, crud_name: test}
+     *
+     * An empty tag will be added with autoconfiguration, giving 2 crud names of 'test'.
+     *
+     * Remove this empty tag if one exists already.
+     */
+    private function filterAutoconfiguredTags(array $tags)
+    {
+        if (count($tags) < 2) {
+            return $tags;
+        }
+
+        return array_filter($tags, function($tag) {
+            return !empty($tag);
+        });
     }
 }

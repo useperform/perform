@@ -2,10 +2,12 @@
 
 namespace Perform\Tools\Documentation;
 
-use phpDocumentor\Reflection\DocBlockFactory;
-use Symfony\Component\Filesystem\Filesystem;
 use Perform\BaseBundle\FieldType\FieldTypeInterface;
+use Perform\BaseBundle\FieldType\FieldTypeRegistry;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Twig\Environment;
+use phpDocumentor\Reflection\DocBlockFactory;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -15,11 +17,23 @@ class FieldTypeReferenceGenerator
     protected $twig;
     protected $registry;
 
-    public function __construct($twig, $registry)
+    public function __construct(Environment $twig, FieldTypeRegistry $registry)
     {
         $this->twig = $twig;
         $this->registry = $registry;
         $this->docblock = DocBlockFactory::createInstance();
+    }
+
+    public function generateAllFiles(string $baseDirectory): array
+    {
+        $files = [];
+        foreach (array_keys($this->registry->getAll()) as $name) {
+            $file = sprintf('%s/%s.rst', $baseDirectory, $name);
+            $this->generateFile($name, $file);
+            $files[] = $file;
+        }
+
+        return $files;
     }
 
     public function generateFile($name, $filename)
@@ -75,9 +89,11 @@ class FieldTypeReferenceGenerator
             $options[$key]['defaults'] = $defaults[$key];
             $options[$key]['allowed_types'] = isset($allowedTypes[$key]) ? $allowedTypes[$key] : [];
         }
-        //tweak label slightly, since it will always have a value from FieldConfig
-        $options['label']['required'] = false;
+        // set descriptions for common options manually
+        $options['form_options']['description'] = "An array of options to pass to the underlying form type in the ``create`` and ``edit`` contexts. These will be merged with (and will overwrite) any form options that have been created as a result of the field type's other options.";
         $options['label']['description'] = 'The label to use for form labels and table headings. If no label is provided, a sensible label will be created automatically.';
+        //set label to be not required, since it will always have a value from FieldConfig
+        $options['label']['required'] = false;
 
         ksort($options);
         return $options;

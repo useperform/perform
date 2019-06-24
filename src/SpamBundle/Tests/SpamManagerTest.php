@@ -2,6 +2,7 @@
 
 namespace Perform\SpamBundle\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Test\Services;
 use Perform\SpamBundle\Checker\CheckResult;
 use Perform\SpamBundle\Checker\FormCheckerInterface;
@@ -14,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class SpamManagerTest extends \PHPUnit_Framework_TestCase
+class SpamManagerTest extends TestCase
 {
     private function create(array $textCheckers, array $formCheckers, array $requestCheckers)
     {
@@ -28,8 +29,8 @@ class SpamManagerTest extends \PHPUnit_Framework_TestCase
     public function testCheckText()
     {
         $manager = $this->create([
-            'one' => $one = $this->getMock(TextCheckerInterface::class),
-            'two' => $two = $this->getMock(TextCheckerInterface::class),
+            'one' => $one = $this->createMock(TextCheckerInterface::class),
+            'two' => $two = $this->createMock(TextCheckerInterface::class),
         ], [], []);
         foreach ([$one, $two] as $checker) {
             $checker->expects($this->once())
@@ -44,10 +45,10 @@ class SpamManagerTest extends \PHPUnit_Framework_TestCase
     public function testCheckForm()
     {
         $manager = $this->create([], [
-            'one' => $one = $this->getMock(FormCheckerInterface::class),
-            'two' => $two = $this->getMock(FormCheckerInterface::class),
+            'one' => $one = $this->createMock(FormCheckerInterface::class),
+            'two' => $two = $this->createMock(FormCheckerInterface::class),
         ], []);
-        $form = $this->getMock(FormInterface::class);
+        $form = $this->createMock(FormInterface::class);
         foreach ([$one, $two] as $checker) {
             $checker->expects($this->once())
                 ->method('checkForm')
@@ -61,8 +62,8 @@ class SpamManagerTest extends \PHPUnit_Framework_TestCase
     public function testCheckRequest()
     {
         $manager = $this->create([], [], [
-            'one' => $one = $this->getMock(RequestCheckerInterface::class),
-            'two' => $two = $this->getMock(RequestCheckerInterface::class),
+            'one' => $one = $this->createMock(RequestCheckerInterface::class),
+            'two' => $two = $this->createMock(RequestCheckerInterface::class),
         ]);
         $request = new Request();
         foreach ([$one, $two] as $checker) {

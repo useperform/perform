@@ -2,6 +2,7 @@
 
 namespace Perform\MediaBundle\Tests\MediaType;
 
+use PHPUnit\Framework\TestCase;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
@@ -15,7 +16,7 @@ use VirtualFileSystem\FileSystem;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ImageTypeTest extends \PHPUnit_Framework_TestCase
+class ImageTypeTest extends TestCase
 {
     protected $imagine;
     protected $type;
@@ -23,7 +24,7 @@ class ImageTypeTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->imagine = $this->getMock(ImagineInterface::class);
+        $this->imagine = $this->createMock(ImagineInterface::class);
         $this->vfs = new FileSystem();
     }
 
@@ -39,7 +40,7 @@ class ImageTypeTest extends \PHPUnit_Framework_TestCase
 
     private function mockImage($width, $height)
     {
-        $image = $this->getMock(ImageInterface::class);
+        $image = $this->createMock(ImageInterface::class);
         $image->expects($this->any())
             ->method('getSize')
             ->will($this->returnValue(new Box($width, $height)));
@@ -53,7 +54,7 @@ class ImageTypeTest extends \PHPUnit_Framework_TestCase
         $file->setPrimaryLocation(Location::file('/some_image.jpg'));
         $this->vfs->createFile('/some_image.jpg', 'Image binary content');
         $resource = new MediaResource($this->vfs->path('/some_image.jpg'));
-        $bucket = $this->getMock(BucketInterface::class);
+        $bucket = $this->createMock(BucketInterface::class);
         $type = new ImageType($this->imagine);
 
         $this->expectRead($this->mockImage(1200, 600));
@@ -67,7 +68,7 @@ class ImageTypeTest extends \PHPUnit_Framework_TestCase
         $file = new File();
         $this->vfs->createFile('/some_image.jpg', 'Image binary content');
         $resource = new MediaResource($this->vfs->path('/some_image.jpg'));
-        $bucket = $this->getMock(BucketInterface::class);
+        $bucket = $this->createMock(BucketInterface::class);
         $type = new ImageType($this->imagine, [200]);
 
 

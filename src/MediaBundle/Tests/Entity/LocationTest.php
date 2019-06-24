@@ -2,12 +2,13 @@
 
 namespace Perform\MediaBundle\Tests\Entity;
 
+use PHPUnit\Framework\TestCase;
 use Perform\MediaBundle\Entity\Location;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class LocationTest extends \PHPUnit_Framework_TestCase
+class LocationTest extends TestCase
 {
     // public function testFile()
     // {

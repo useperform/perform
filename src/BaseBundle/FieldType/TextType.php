@@ -18,14 +18,23 @@ class TextType extends AbstractType
 {
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
-        $builder->add($field, TextareaType::class);
+        $formOptions = [
+            'label' => $options['label'],
+        ];
+        $builder->add($field, TextareaType::class, array_merge($formOptions, $options['form_options']));
     }
 
     public function listContext($entity, $field, array $options = [])
     {
-        $text = $this->accessor->getValue($entity, $field);
+        $text = $this->getPropertyAccessor()->getValue($entity, $field);
 
-        return $options['preview'] ? StringUtil::preview($text) : $text;
+        if ($options['preview']) {
+            $text = StringUtil::preview(str_replace(PHP_EOL, ' ', $text));
+        }
+
+        return [
+            'value' => $text,
+        ];
     }
 
     public function getDefaultConfig()

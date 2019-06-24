@@ -9,7 +9,7 @@
       {% endblock %}
     </title>
     {% block css %}
-      <link rel="stylesheet" type="text/css" href="{{asset('/perform.css')}}" />
+      <link rel="stylesheet" type="text/css" href="{{asset('perform.css')}}" />
       {% for css in perform_asset_css() %}
         <link rel="stylesheet" type="text/css" href="{{asset(css)}}" />
       {% endfor %}
@@ -23,8 +23,8 @@
       </div>
 
       <div class="wrapper">
-        <div id="sidebar" class="col-md-3">
-          {{ knp_menu_render('perform_sidebar', {}, 'perform_sidebar') }}
+        <div id="sidebar">
+          {% include '@PerformBase/_sidebar.html.twig' %}
         </div>
 
         <div id="workspace" class="container-fluid">

@@ -2,13 +2,13 @@
 
 namespace Perform\DevBundle\DependencyInjection;
 
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Perform\DevBundle\Npm\DependenciesInterface;
+use Perform\Licensing\Licensing;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Perform\DevBundle\BundleResource as R;
-use Perform\Licensing\Licensing;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -32,15 +32,7 @@ class PerformDevExtension extends Extension
                 $devConfigFile,
             ]);
 
-        $this->defineBundleResources($container);
-    }
-
-    protected function defineBundleResources(ContainerBuilder $container)
-    {
-        $registry = $container->getDefinition('perform_dev.resource_registry');
-        $registry->addMethodCall('addParentResource', [new Definition(R\ContactBundleResource::class)]);
-        $registry->addMethodCall('addParentResource', [new Definition(R\MediaBundleResource::class)]);
-        $registry->addMethodCall('addParentResource', [new Definition(R\UserResource::class)]);
-        $registry->addMethodCall('addResource', [new Definition(R\OneupFlysystemResource::class)]);
+        $container->registerForAutoconfiguration(DependenciesInterface::class)
+            ->addTag('perform_dev.npm_dependencies');
     }
 }

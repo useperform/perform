@@ -6,8 +6,8 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Perform\UserBundle\Entity\User;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 
 /**
  * Update the password hash when saving a user.
@@ -17,14 +17,17 @@ use Perform\UserBundle\Entity\User;
 class UserListener implements EventSubscriber
 {
     protected $encoder;
-    protected $container;
+    protected $locator;
 
     /**
-     * @param ContainerInterface $container
+     * Inject a service locator so the encoder factory is lazily
+     * loaded when required.
+     *
+     * @param ServiceLocator $locator
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ServiceLocator $locator)
     {
-        $this->container = $container;
+        $this->locator = $locator;
     }
 
     public function getSubscribedEvents()
@@ -74,8 +77,7 @@ class UserListener implements EventSubscriber
             return;
         }
         if (!$this->encoder) {
-            $factory = $this->container->get('security.encoder_factory');
-            $this->encoder = $factory->getEncoder($user);
+            $this->encoder = $this->locator->get('encoder_factory')->getEncoder($user);
         }
         $user->setPassword($this->encoder->encodePassword($password, $user->getSalt()));
         $user->eraseCredentials();

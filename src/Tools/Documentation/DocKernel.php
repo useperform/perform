@@ -31,7 +31,6 @@ class DocKernel extends Kernel
             new \Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle(),
             new \Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new \Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-            new \Oneup\FlysystemBundle\OneupFlysystemBundle(),
             new \Knp\Bundle\MenuBundle\KnpMenuBundle(),
 
             new \Perform\BaseBundle\PerformBaseBundle(),

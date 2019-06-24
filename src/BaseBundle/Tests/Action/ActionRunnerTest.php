@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Action;
 
+use PHPUnit\Framework\TestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Perform\BaseBundle\Action\ActionRunner;
 use Doctrine\Common\Persistence\ObjectRepository;
@@ -18,7 +19,7 @@ use Perform\BaseBundle\Crud\CrudRequest;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ActionRunnerTest extends \PHPUnit_Framework_TestCase
+class ActionRunnerTest extends TestCase
 {
     protected $em;
     protected $repo;
@@ -29,8 +30,8 @@ class ActionRunnerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->repo = $this->getMock(ObjectRepository::class);
-        $this->em = $this->getMock(EntityManagerInterface::class);
+        $this->repo = $this->createMock(ObjectRepository::class);
+        $this->em = $this->createMock(EntityManagerInterface::class);
         $this->em->expects($this->any())
             ->method('getRepository')
             ->with('FooBundle\\Foo')
@@ -41,13 +42,13 @@ class ActionRunnerTest extends \PHPUnit_Framework_TestCase
         $this->config = $this->getMockBuilder(ActionConfig::class)
                         ->disableOriginalConstructor()
                         ->getMock();
-        $this->store = $this->getMock(ConfigStoreInterface::class);
+        $this->store = $this->createMock(ConfigStoreInterface::class);
         $this->store->expects($this->any())
             ->method('getEntityClass')
             ->with('some_crud')
             ->will($this->returnValue('FooBundle\\Foo'));
 
-        $this->authChecker = $this->getMock(AuthorizationCheckerInterface::class);
+        $this->authChecker = $this->createMock(AuthorizationCheckerInterface::class);
 
         $this->runner = new ActionRunner($this->em, $this->store, $this->authChecker);
     }
@@ -111,7 +112,7 @@ class ActionRunnerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($entity));
         $this->action->expects($this->never())
             ->method('run');
-        $this->setExpectedException(AccessDeniedException::class);
+        $this->expectException(AccessDeniedException::class);
 
         $this->runner->run($crudName, $actionName, ['some-id'], []);
     }

@@ -19,7 +19,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->booleanNode('enabled')
+                ->booleanNode('settings_panel_can_enable')
                     ->defaultFalse()
                 ->end()
                 ->arrayNode('vendors')

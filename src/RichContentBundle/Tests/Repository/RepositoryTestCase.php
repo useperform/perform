@@ -2,6 +2,7 @@
 
 namespace Perform\RichContentBundle\Tests\Repository;
 
+use PHPUnit\Framework\TestCase;
 use Perform\RichContentBundle\Entity\Content;
 use Perform\BaseBundle\Test\TestKernel;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -10,7 +11,7 @@ use Perform\RichContentBundle\Entity\Block;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-abstract class RepositoryTestCase extends \PHPUnit_Framework_TestCase
+abstract class RepositoryTestCase extends TestCase
 {
     protected $kernel;
     protected $em;

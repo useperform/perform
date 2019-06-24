@@ -1,3 +1,0 @@
-blog:
-    resource: "perform_blog.markdown_post"
-    type:     crud

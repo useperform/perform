@@ -7,16 +7,11 @@ services:
         tags:
             - {name: kernel.event_listener, method: onConsoleCommand, event: console.command}
 
-    perform_dev.resource_registry:
-        class: Perform\DevBundle\BundleResource\BundleResourceRegistry
-
     perform_dev.twig.config:
         class: Perform\DevBundle\Twig\Extension\ConfigExtension
         tags:
             - {name: twig.extension}
             - {name: kernel.event_listener, method: onConsoleCommand, event: console.command}
-            - {name: kernel.event_listener, method: onConsoleException, event: console.exception}
-            - {name: kernel.event_listener, method: onConsoleTerminate, event: console.terminate}
 
     Perform\DevBundle\Command\CreateThemeCommand:
         class: Perform\DevBundle\Command\CreateThemeCommand
@@ -33,10 +28,9 @@ services:
         tags:
             - console.command
 
-    Perform\DevBundle\Command\MergeNpmPackagesCommand:
-        class: Perform\DevBundle\Command\MergeNpmPackagesCommand
+    Perform\DevBundle\Command\UpdateNpmDependenciesCommand:
         arguments:
             - '%kernel.project_dir%'
-            - '%perform_base.assets.npm_configs%'
+            - []
         tags:
             - console.command

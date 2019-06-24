@@ -2,13 +2,14 @@
 
 namespace Perform\SpamBundle\Tests\Checker;
 
+use PHPUnit\Framework\TestCase;
 use Perform\SpamBundle\Entity\Report;
 use Perform\SpamBundle\Checker\CheckResult;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class CheckResultTest extends \PHPUnit_Framework_TestCase
+class CheckResultTest extends TestCase
 {
     public function testNotSpamByDefault()
     {

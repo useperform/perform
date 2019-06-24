@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Util;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Util\BundleSearcher;
 use Perform\BaseBundle\Tests\MockKernel;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
@@ -14,7 +15,7 @@ use Symfony\Component\Finder\Finder;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class BundleSearcherTest extends \PHPUnit_Framework_TestCase
+class BundleSearcherTest extends TestCase
 {
     protected $kernel;
     protected $searcher;
@@ -28,7 +29,7 @@ class BundleSearcherTest extends \PHPUnit_Framework_TestCase
 
     protected function bundle($name)
     {
-        $bundle = $this->getMock(BundleInterface::class);
+        $bundle = $this->createMock(BundleInterface::class);
         $bundle->expects($this->any())
             ->method('getName')
             ->will($this->returnValue($name));

@@ -36,6 +36,10 @@ framework:
     assets:
         version_strategy: perform_base.asset_strategy
 
+sensio_framework_extra:
+    router:
+        annotations: false
+
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"

@@ -1,5 +1,13 @@
 {% extends '@PerformBase/field_type/simple.html.twig' %}
 
+{% block list %}
+  {% if item_label == false %}
+    {{count}}
+  {% else %}
+    {{count}} {{item_label|transchoice(count, {}, 'PerformBaseBundle')}}
+  {% endif %}
+{% endblock %}
+
 {% block view %}
   {% if has_items is not null %}
     <ul class="list-unstyled">
@@ -16,7 +24,7 @@
   <a class="btn btn-sm btn-danger remove-item" href="#">
     <i class="fa fa-times"></i>
   </a>
-  {% if type_vars.sortField != false %}
+  {% if type_vars.sort_field != false %}
     <a class="btn btn-sm btn-light move-up" href="#">
       <i class="fa fa-chevron-up"></i>
     </a>
@@ -27,7 +35,7 @@
 {% endblock %}
 
 {% block create %}
-  <div class="collection" data-field="{{field}}" data-sort-field="{{type_vars.sortField}}">
+  <div class="collection" data-field="{{field}}" data-sort-field="{{type_vars.sort_field}}">
     <div class="collection-rows" id="collection-{{field}}">
       {% for childForm in form[field] %}
         <div class="collection-row row" data-form-id="{{childForm.vars.id}}">

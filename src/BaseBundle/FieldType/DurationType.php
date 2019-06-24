@@ -28,24 +28,33 @@ class DurationType extends AbstractType
 
     public function listContext($entity, $field, array $options = [])
     {
-        $duration = $this->accessor->getValue($entity, $field);
+        $duration = $this->getPropertyAccessor()->getValue($entity, $field);
 
         switch ($options['format']) {
         case static::FORMAT_DIGITAL:
-            return DurationUtil::toDigital($duration);
+            $value = DurationUtil::toDigital($duration);
+            break;
         case static::FORMAT_HUMAN:
-            return DurationUtil::toHuman($duration);
+            $value = DurationUtil::toHuman($duration);
+            break;
         case static::FORMAT_VERBOSE:
-            return DurationUtil::toVerbose($duration);
+            $value = DurationUtil::toVerbose($duration);
+            break;
         default:
             throw new \InvalidArgumentException(sprintf('Invalid "format" option passed to "%s"', __CLASS__));
         }
 
+        return [
+            'value' => $value,
+        ];
     }
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
-        $builder->add($field, FormType::class, []);
+        $formOptions = [
+            'label' => $options['label'],
+        ];
+        $builder->add($field, FormType::class, array_merge($formOptions, $options['form_options']));
     }
 
     /**

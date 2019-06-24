@@ -2,6 +2,7 @@
 
 namespace BaseBundle\Tests\DependencyInjection\Compiler;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\DependencyInjection\Compiler\CrudPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Perform\BaseBundle\Crud\InvalidCrudException;
@@ -17,7 +18,7 @@ use Perform\BaseBundle\Routing\CrudLoader;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class CrudPassTest extends \PHPUnit_Framework_TestCase
+class CrudPassTest extends TestCase
 {
     protected $pass;
     protected $container;
@@ -60,7 +61,25 @@ class CrudPassTest extends \PHPUnit_Framework_TestCase
         $this->container->register('crud.invalid', InvalidCrud::class)
             ->addTag('perform_base.crud', ['crud_name' => 'invalid']);
 
-        $this->setExpectedException(InvalidCrudException::class);
+        $this->expectException(InvalidCrudException::class);
         $this->pass->process($this->container);
+    }
+
+    public function testServicesAreGivenSensibleNames()
+    {
+        $this->container->register(TestCrud::class, TestCrud::class)
+            ->addTag('perform_base.crud');
+        $this->container->register(OtherTestCrud::class, OtherTestCrud::class)
+            ->addTag('perform_base.crud');
+
+        $this->pass->process($this->container);
+
+        $locator = $this->registry->getArgument(2);
+        $this->assertSame(LoopableServiceLocator::class, $locator->getClass());
+        $expectedFactories = [
+            'test' => new Reference(TestCrud::class),
+            'other_test' => new Reference(OtherTestCrud::class),
+        ];
+        $this->assertEquals($expectedFactories, $locator->getArgument(0));
     }
 }

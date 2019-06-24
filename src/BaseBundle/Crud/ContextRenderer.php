@@ -28,11 +28,16 @@ class ContextRenderer
     public function listContext($entity, $field, array $config)
     {
         $type = $this->typeRegistry->getType($config['type']);
-        $value = $type->listContext($entity, $field, $config['listOptions']);
-        $vars = is_array($value) ? $value : ['value' => $value];
-        $template = $config['template'];
+        $vars = $type->listContext($entity, $field, $config['listOptions']);
+        if (!is_array($vars)) {
+            throw new \UnexpectedValueException(sprintf('%s#listContext must return an array.', get_class($type)));
+        }
+        $vars = array_merge([
+            'entity' => $entity,
+            'field' => $field,
+        ], $vars);
 
-        return $this->twig->loadTemplate($template)->renderBlock('list', $vars);
+        return $this->twig->loadTemplate($config['template'])->renderBlock('list', $vars);
     }
 
     /**
@@ -41,11 +46,16 @@ class ContextRenderer
     public function viewContext($entity, $field, array $config)
     {
         $type = $this->typeRegistry->getType($config['type']);
-        $value = $type->viewContext($entity, $field, $config['viewOptions']);
-        $vars = is_array($value) ? $value : ['value' => $value];
-        $template = $config['template'];
+        $typeVars = $type->viewContext($entity, $field, $config['viewOptions']);
+        if (!is_array($typeVars)) {
+            throw new \UnexpectedValueException(sprintf('%s#viewContext must return an array.', get_class($type)));
+        }
+        $vars = array_merge([
+            'entity' => $entity,
+            'field' => $field,
+        ], $typeVars);
 
-        return $this->twig->loadTemplate($template)->renderBlock('view', $vars);
+        return $this->twig->loadTemplate($config['template'])->renderBlock('view', $vars);
     }
 
     /**

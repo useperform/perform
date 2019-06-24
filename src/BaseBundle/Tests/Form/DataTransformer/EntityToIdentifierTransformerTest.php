@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Form\DataTransformer;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Form\DataTransformer\EntityToIdentifierTransformer;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\UnitOfWork;
@@ -10,7 +11,7 @@ use Doctrine\ORM\EntityRepository;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class EntityToIdentifierTransformerTest extends \PHPUnit_Framework_TestCase
+class EntityToIdentifierTransformerTest extends TestCase
 {
     protected $em;
     protected $uow;
@@ -19,7 +20,7 @@ class EntityToIdentifierTransformerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->em = $this->getMock(EntityManagerInterface::class);
+        $this->em = $this->createMock(EntityManagerInterface::class);
         $this->uow = $this->getMockBuilder(UnitOfWork::class)
                    ->disableOriginalConstructor()
                    ->getMock();

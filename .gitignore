@@ -1,5 +1,6 @@
-vendor/
-composer.lock
+/vendor/
+/composer.json
+/composer.lock
 
 src/*/vendor
 src/*/composer.lock
@@ -13,11 +14,10 @@ src/MediaPlayerBundle/Resources/public
 src/RichContentBundle/Resources/js/components/blocktypes.js
 
 test_results.xml
-Dockerfile
 
 docs/_build
 docs/reference/field-types/*
 !docs/reference/field-types/index.rst
 docs/reference/sass.rst
-docs/_themes/perform/node_modules
+docs/node_modules
 docs/_themes/perform/static

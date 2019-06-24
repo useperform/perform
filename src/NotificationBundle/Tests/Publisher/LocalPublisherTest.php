@@ -2,6 +2,7 @@
 
 namespace NotificationBundle\Tests\Publisher;
 
+use PHPUnit\Framework\TestCase;
 use Perform\NotificationBundle\Publisher\LocalPublisher;
 use Perform\NotificationBundle\Notification;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -12,7 +13,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class LocalPublisherTest extends \PHPUnit_Framework_TestCase
+class LocalPublisherTest extends TestCase
 {
     protected $entityManager;
     protected $renderer;
@@ -20,8 +21,8 @@ class LocalPublisherTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->entityManager = $this->getMock(ObjectManager::class);
-        $this->renderer = $this->getMock(RendererInterface::class);
+        $this->entityManager = $this->createMock(ObjectManager::class);
+        $this->renderer = $this->createMock(RendererInterface::class);
         $this->publisher = new LocalPublisher($this->entityManager, $this->renderer);
     }
 
@@ -50,7 +51,7 @@ class LocalPublisherTest extends \PHPUnit_Framework_TestCase
 
     public function testNonUsersAreIgnored()
     {
-        $recipient = $this->getMock(RecipientInterface::class);
+        $recipient = $this->createMock(RecipientInterface::class);
         $notification = new Notification([$recipient], 'foo');
         $this->renderer->expects($this->once())
             ->method('getTemplateName')

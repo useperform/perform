@@ -25,6 +25,14 @@ class FieldConfig
     protected $resolver;
     protected $fields = [];
     protected $addedConfigs = [];
+    protected $defaultContexts = [
+        CrudRequest::CONTEXT_LIST,
+        CrudRequest::CONTEXT_VIEW,
+        CrudRequest::CONTEXT_CREATE,
+        CrudRequest::CONTEXT_EDIT,
+        CrudRequest::CONTEXT_EXPORT,
+    ];
+    protected $defaultContextsChanged = false;
     protected $defaultSort;
 
     public function __construct(FieldTypeRegistry $registry)
@@ -39,13 +47,7 @@ class FieldConfig
         $this->resolver
             ->setRequired(['type'])
             ->setDefaults([
-                'contexts' => [
-                    CrudRequest::CONTEXT_LIST,
-                    CrudRequest::CONTEXT_VIEW,
-                    CrudRequest::CONTEXT_CREATE,
-                    CrudRequest::CONTEXT_EDIT,
-                    CrudRequest::CONTEXT_EXPORT,
-                ],
+                'contexts' => [],
                 'sort' => true,
             ])
             ->setAllowedTypes('contexts', 'array')
@@ -108,8 +110,15 @@ class FieldConfig
             if (!isset($config['type'])) {
                 throw new InvalidFieldException('FieldConfig#add() requires "type" to be set.');
             }
-
             $this->fields[$name] = $this->registry->getType($config['type'])->getDefaultConfig();
+
+            // set default contexts if the field type didn't provide
+            // any with its default config, or if the default contexts
+            // have been explicitly changed
+            if (!isset($this->fields[$name]['contexts']) || $this->defaultContextsChanged) {
+                $this->fields[$name]['contexts'] = $this->defaultContexts;
+            }
+
             $this->normaliseOptions($this->fields[$name]);
         }
 
@@ -193,5 +202,24 @@ class FieldConfig
         }
 
         return $this->defaultSort;
+    }
+
+    /**
+     * Set the default contexts for added fields.
+     *
+     * The new defaults will only apply to add() invocations after
+     * this method has been called.
+     *
+     * You may call this method multiple times.
+     * Each call to add() will use the latest given defaults.
+     *
+     * @param array $contexts
+     */
+    public function setDefaultContexts(array $contexts)
+    {
+        $this->defaultContexts = $contexts;
+        $this->defaultContextsChanged = true;
+
+        return $this;
     }
 }

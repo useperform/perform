@@ -1,7 +1,7 @@
 {% extends '@PerformBase/field_type/simple.html.twig' %}
 
 {% block list %}
-  {% if link %}
+  {% if link and email %}
     <a href="mailto:{{email}}">
       {{email}}
     </a>

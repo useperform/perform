@@ -2,10 +2,10 @@
 
 namespace Perform\BaseBundle\EventListener;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Perform\BaseBundle\Controller\CrudController;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 
 /**
  * Allows crud controllers to optionally override crud templates.
@@ -14,14 +14,14 @@ use Perform\BaseBundle\Controller\CrudController;
  */
 class CrudTemplateListener
 {
-    protected $container;
+    protected $locator;
 
-    // inject the container instead of dependencies for the sake of speed.
+    // inject a service locator instead of dependencies for the sake of speed.
     // this listener will run every request, so don't build and inject
-    // admin services just for them not to be used.
-    public function __construct(ContainerInterface $container)
+    // services just for them not to be used.
+    public function __construct(ServiceLocator $locator)
     {
-        $this->container = $container;
+        $this->locator = $locator;
     }
 
     /**
@@ -50,9 +50,9 @@ class CrudTemplateListener
         //remove Action
         $context = substr($controller[1], 0, -6);
 
-        $template = $this->container->get('perform_base.crud.registry')
+        $template = $this->locator->get('registry')
                   ->get($crudName)
-                  ->getTemplate($this->container->get('twig'), $crudName, $context);
+                  ->getTemplate($this->locator->get('twig'), $crudName, $context);
 
         $annotation = new Template([]);
         $annotation->setTemplate($template);

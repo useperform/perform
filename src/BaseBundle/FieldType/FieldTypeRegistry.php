@@ -29,7 +29,11 @@ class FieldTypeRegistry
     }
 
     /**
-     * Get a configured OptionsResolver for a given type.
+     * Get a configured OptionsResolver for a given field type.
+     *
+     * The resolver will be used to validate each of the options keys
+     * when adding the field: 'options', 'listOptions', 'viewOptions',
+     * 'createOptions', 'editOptions'.
      *
      * @return OptionsResolver
      */
@@ -39,6 +43,8 @@ class FieldTypeRegistry
             $resolver = new OptionsResolver();
             $resolver->setRequired('label');
             $resolver->setAllowedTypes('label', 'string');
+            $resolver->setDefault('form_options', []);
+            $resolver->setAllowedTypes('form_options', 'array');
 
             $this->getType($name)->configureOptions($resolver);
             $this->resolvers[$name] = $resolver;

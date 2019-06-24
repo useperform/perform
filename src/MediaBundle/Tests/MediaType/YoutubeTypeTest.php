@@ -2,6 +2,7 @@
 
 namespace Perform\MediaBundle\Tests\MediaType;
 
+use PHPUnit\Framework\TestCase;
 use Perform\MediaBundle\MediaType\YoutubeType;
 use Perform\MediaBundle\MediaResource;
 use Perform\MediaBundle\Event\ImportUrlEvent;
@@ -9,7 +10,7 @@ use Perform\MediaBundle\Event\ImportUrlEvent;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class YoutubeTypeTest extends \PHPUnit_Framework_TestCase
+class YoutubeTypeTest extends TestCase
 {
     protected $type;
 

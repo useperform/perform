@@ -22,7 +22,6 @@ class TestKernel extends Kernel
 
             #other third party
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-            new Oneup\FlysystemBundle\OneupFlysystemBundle(),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
 
             #perform

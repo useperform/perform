@@ -264,7 +264,7 @@ class User implements UserInterface, RecipientInterface
      */
     public function removeRole($role)
     {
-        if (!in_array($role, $this->roles)) {
+        if (!in_array($role, $this->roles, true)) {
             return;
         }
 
@@ -272,6 +272,17 @@ class User implements UserInterface, RecipientInterface
         $this->roles = array_values($this->roles);
 
         return $this;
+    }
+
+    /**
+     * Return true if the user has the given role.
+     *
+     * @param string $role
+     * @return bool
+     */
+    public function hasRole($role)
+    {
+        return in_array($role, $this->getRoles(), true);
     }
 
     /**

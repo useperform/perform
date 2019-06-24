@@ -2,6 +2,7 @@
 
 namespace Perform\MediaBundle\Tests\DependencyInjection;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Definition;
 use Perform\MediaBundle\MediaType\AudioType;
 use Perform\MediaBundle\MediaType\ImageType;
@@ -14,7 +15,7 @@ use Perform\MediaBundle\MediaType\YoutubeType;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class MediaTypeDefinitionFactoryTest extends \PHPUnit_Framework_TestCase
+class MediaTypeDefinitionFactoryTest extends TestCase
 {
     public function setUp()
     {
@@ -76,7 +77,7 @@ class MediaTypeDefinitionFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testUnknownType()
     {
-        $this->setExpectedException(MediaTypeException::class);
+        $this->expectException(MediaTypeException::class);
         $this->factory->create([
             'type' => 'unknown',
         ]);

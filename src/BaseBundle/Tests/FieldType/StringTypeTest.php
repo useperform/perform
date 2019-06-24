@@ -2,49 +2,60 @@
 
 namespace Perform\BaseBundle\Tests\Type;
 
-use Perform\UserBundle\Entity\User;
 use Perform\BaseBundle\FieldType\StringType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Perform\BaseBundle\Test\FieldTypeTestCase;
+use Perform\BaseBundle\Test\WhitespaceAssertions;
 
 /**
- * StringTypeTest
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class StringTypeTest extends \PHPUnit_Framework_TestCase
+class StringTypeTest extends FieldTypeTestCase
 {
-    protected $type;
+    use WhitespaceAssertions;
 
-    public function setUp()
+    protected function registerTypes()
     {
-        $this->type = new StringType();
-        $user = new User();
+        return [
+            'string' => new StringType(),
+        ];
     }
 
     public function testCreateContext()
     {
-        $builder = $this->getMock('Symfony\Component\Form\FormBuilderInterface');
+        $builder = $this->createMock(FormBuilderInterface::class);
         $builder->expects($this->once())
             ->method('add')
-            ->with('forename', 'Symfony\Component\Form\Extension\Core\Type\TextType');
+            ->with('forename', TextType::class);
 
-        $this->type->createContext($builder, 'forename');
+        $this->getType('string')->createContext($builder, 'forename', [
+            'label' => 'String',
+            'form_options' => [],
+        ]);
     }
 
     public function testEditContext()
     {
-        $builder = $this->getMock('Symfony\Component\Form\FormBuilderInterface');
+        $builder = $this->createMock(FormBuilderInterface::class);
         $builder->expects($this->once())
             ->method('add')
-            ->with('forename', 'Symfony\Component\Form\Extension\Core\Type\TextType');
+            ->with('forename', TextType::class);
 
-        $this->type->createContext($builder, 'forename');
+        $this->getType('string')->editContext($builder, 'forename', [
+            'label' => 'String',
+            'form_options' => [],
+        ]);
     }
 
     public function testListContext()
     {
-        $user = new User();
-        //html escaping is the job of twig functions in the presentation layer
-        $user->setForename('<p>foo</p>');
-        $this->assertSame('<p>foo</p>', $this->type->listContext($user, 'forename'));
+        $user = new \stdClass();
+        $user->forename = 'Test';
+
+        $this->config->add('forename', [
+            'type' => 'string',
+        ]);
+        $this->assertTrimmedString('Test', $this->listContext($user, 'forename'));
     }
 }

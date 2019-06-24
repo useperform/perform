@@ -10,8 +10,9 @@ Perform introduces the concept of `crud` classes that configure CRUD operations 
    :maxdepth: 2
 
    ./create
-   ./types
+   ./fields
    ./filters
    ./actions
    ./exporting
    ./events
+   ./security

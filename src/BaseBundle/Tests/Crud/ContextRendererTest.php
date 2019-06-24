@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Crud;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\FieldType\FieldTypeRegistry;
 use Perform\BaseBundle\Crud\ContextRenderer;
 use Perform\BaseBundle\FieldType\FieldTypeInterface;
@@ -12,7 +13,7 @@ use Perform\BaseBundle\Crud\CrudRequest;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class ContextRendererTest extends \PHPUnit_Framework_TestCase
+class ContextRendererTest extends TestCase
 {
     protected $registry;
     protected $twig;
@@ -31,14 +32,11 @@ class ContextRendererTest extends \PHPUnit_Framework_TestCase
 
     protected function mockType($name, $templateName)
     {
-        $type = $this->getMock(FieldTypeInterface::class);
+        $type = $this->createMock(FieldTypeInterface::class);
         $this->registry->expects($this->any())
             ->method('getType')
             ->with($name)
             ->will($this->returnValue($type));
-        $type->expects($this->any())
-            ->method('getTemplate')
-            ->will($this->returnValue($templateName));
         $template = $this->getMockBuilder(Template::class)
                   ->disableOriginalConstructor()
                   ->getMock();
@@ -63,10 +61,10 @@ class ContextRendererTest extends \PHPUnit_Framework_TestCase
         $type->expects($this->any())
             ->method('listContext')
             ->with($entity, 'title', $listOptions)
-            ->will($this->returnValue('Entity title'));
+            ->will($this->returnValue([]));
         $template->expects($this->any())
             ->method('renderBlock')
-            ->with('list', ['value' => 'Entity title'])
+            ->with('list', ['entity' => $entity, 'field' => 'title'])
             ->will($this->returnValue('<span>Entity title</span>'));
 
         $this->assertSame('<span>Entity title</span>', $this->renderer->listContext($entity, 'title', $config));
@@ -85,10 +83,10 @@ class ContextRendererTest extends \PHPUnit_Framework_TestCase
         $type->expects($this->any())
             ->method('viewContext')
             ->with($entity, 'title', $viewOptions)
-            ->will($this->returnValue('Entity title'));
+            ->will($this->returnValue([]));
         $template->expects($this->any())
             ->method('renderBlock')
-            ->with('view', ['value' => 'Entity title'])
+            ->with('view', ['entity' => $entity, 'field' => 'title'])
             ->will($this->returnValue('<span>Entity title</span>'));
 
         $this->assertSame('<span>Entity title</span>', $this->renderer->viewContext($entity, 'title', $config));

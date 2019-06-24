@@ -8,7 +8,7 @@
 {% block workspace %}
   <h3><i class="fa fa-angle-right"></i> {{title}}</h3>
   {% block actions %}
-    {% if perform_crud_route_exists(crudName, 'create') %}
+    {% if is_granted('CREATE', crudName) %}
       <a href="{{perform_crud_route(crudName, 'create')}}" class="btn btn-primary">Create</a>
     {% endif %}
   {% endblock %}

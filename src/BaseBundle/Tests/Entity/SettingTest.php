@@ -2,15 +2,14 @@
 
 namespace Perform\BaseBundle\Tests\Entity;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Entity\Setting;
 use Perform\UserBundle\Entity\User;
 
 /**
- * SettingTest.
- *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class SettingTest extends \PHPUnit_Framework_TestCase
+class SettingTest extends TestCase
 {
     public function testKeyIsSet()
     {
@@ -18,100 +17,9 @@ class SettingTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('foo', $setting->getKey());
     }
 
-    public function testDoesNotRequireUpdateWhenEmpty()
-    {
-        $setting = new Setting('foo');
-        $this->assertFalse($setting->requiresUpdate(new Setting('foo')));
-    }
-
-    public function testDoesNotRequireUpdateWhenKeysAreDifferent()
-    {
-        $setting = new Setting('foo');
-        $this->assertFalse($setting->requiresUpdate(new Setting('bar')));
-    }
-
-    public function testDoesNotRequireUpdateWhenValuesAreDifferent()
-    {
-        $existing = new Setting('foo');
-        $existing->setValue('foo existing');
-        $new = new Setting('foo');
-        $new->setValue('foo new');
-        $this->assertFalse($existing->requiresUpdate($new));
-    }
-
-    public function testRequiresUpdateWhenFieldsHaveChanged()
-    {
-        $existing = (new Setting('foo'))
-                  ->setGlobal(false)
-                  ->setRequiredRole('ROLE_ADMIN')
-                  ->setType('string')
-                  ->setDefaultValue('foo default');
-
-        $new = (new Setting('foo'))
-             ->setGlobal(true)
-             ->setRequiredRole('ROLE_ADMIN')
-             ->setType('string')
-             ->setDefaultValue('foo default');
-        $this->assertTrue($existing->requiresUpdate($new));
-
-        $new = (new Setting('foo'))
-             ->setGlobal(false)
-             ->setRequiredRole('ROLE_SUPER_ADMIN')
-             ->setType('string')
-             ->setDefaultValue('foo default');
-        $this->assertTrue($existing->requiresUpdate($new));
-
-        $new = (new Setting('foo'))
-             ->setGlobal(false)
-             ->setRequiredRole('ROLE_SUPER_ADMIN')
-             ->setType('varchar')
-             ->setDefaultValue('foo default');
-        $this->assertTrue($existing->requiresUpdate($new));
-
-        $new = (new Setting('foo'))
-             ->setGlobal(false)
-             ->setRequiredRole('ROLE_ADMIN')
-             ->setType('string')
-             ->setDefaultValue('foo new default');
-        $this->assertTrue($existing->requiresUpdate($new));
-    }
-
-    public function testUpdate()
-    {
-        $existing = (new Setting('foo'))
-                  ->setGlobal(false)
-                  ->setRequiredRole('ROLE_ADMIN')
-                  ->setType('string')
-                  ->setValue('foo value')
-                  ->setDefaultValue('foo default');
-        $new = (new Setting('foo'))
-             ->setGlobal(true)
-             ->setRequiredRole('ROLE_SUPER_ADMIN')
-             ->setType('varchar')
-             ->setValue('foo new value')
-             ->setDefaultValue('foo new default');
-        $existing->update($new);
-
-        $this->assertSame(true, $existing->isGlobal());
-        $this->assertSame('ROLE_SUPER_ADMIN', $existing->getRequiredRole());
-        $this->assertSame('varchar', $existing->getType());
-        $this->assertSame('foo new default', $existing->getDefaultValue());
-        //value shouldn't have changed
-        $this->assertSame('foo value', $existing->getValue());
-    }
-
-    public function testExceptionThrownWhenUpdatingDifferentKey()
-    {
-        $this->setExpectedException('\InvalidArgumentException');
-        (new Setting('foo'))->update(new Setting('bar'));
-    }
-
     public function illegalKeyProvider()
     {
         return [
-            ['FOO'],
-            ['bar-bar'],
-            ['bundle.something'],
             ['  '],
             [''],
             [[]],
@@ -123,7 +31,7 @@ class SettingTest extends \PHPUnit_Framework_TestCase
      */
     public function testKeyCannotContainIllegalCharacters($key)
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         new Setting($key);
     }
 
@@ -133,5 +41,53 @@ class SettingTest extends \PHPUnit_Framework_TestCase
         $setting = new Setting('key');
         $this->assertSame($setting, $setting->setUser($user));
         $this->assertSame($user, $setting->getUser());
+    }
+
+    public function testGetNullValue()
+    {
+        $setting = new Setting('key');
+        $this->assertNull($setting->getValue());
+    }
+
+
+    public function valuesProvider()
+    {
+        return [
+            [true],
+            [false],
+            ['value'],
+            [['list', 'of', 'values']],
+            [new \stdClass],
+            [[new \DateTime, new \DateTime]],
+        ];
+    }
+
+    /**
+     * @dataProvider valuesProvider
+     */
+    public function testGetSetValue($value)
+    {
+        $setting = new Setting('key');
+        $this->assertSame($setting, $setting->setValue($value));
+        $this->assertEquals($value, $setting->getValue());
+    }
+
+    /**
+     * e.g. when doctrine retrieves an invalid value from the database
+     */
+    public function testInvalidValueIsUnserializedToNull()
+    {
+        $setting = new Setting('key');
+        $prop = (new \ReflectionObject($setting))->getProperty('value');
+        $prop->setAccessible(true);
+        $prop->setValue($setting, 'invalid serialized value');
+        $this->assertNull($setting->getValue());
+    }
+
+    public function testFalseValueIsNotConvertedToNull()
+    {
+        $setting = new Setting('key');
+        $setting->setValue(false);
+        $this->assertSame(false, $setting->getValue());
     }
 }

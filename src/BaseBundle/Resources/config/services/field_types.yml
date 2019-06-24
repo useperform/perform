@@ -3,6 +3,9 @@ services:
         public: false
         autoconfigure: true
 
+    perform_base.field_type_registry:
+        class: Perform\BaseBundle\FieldType\FieldTypeRegistry
+
     Perform\BaseBundle\FieldType\:
         resource: '../../FieldType'
 

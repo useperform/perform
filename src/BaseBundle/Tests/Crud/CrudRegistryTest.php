@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Crud;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Crud\CrudRegistry;
 use Perform\UserBundle\Entity\User;
 use Perform\BaseBundle\Doctrine\EntityResolver;
@@ -14,7 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class CrudRegistryTest extends \PHPUnit_Framework_TestCase
+class CrudRegistryTest extends TestCase
 {
     protected $crudOne;
     protected $crudTwo;
@@ -22,9 +23,9 @@ class CrudRegistryTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->em = $this->getMock(EntityManagerInterface::class);
-        $this->crudOne = $this->getMock(CrudInterface::class);
-        $this->crudTwo = $this->getMock(CrudInterface::class);
+        $this->em = $this->createMock(EntityManagerInterface::class);
+        $this->crudOne = $this->createMock(CrudInterface::class);
+        $this->crudTwo = $this->createMock(CrudInterface::class);
         $cruds = Services::serviceLocator([
             'one' => $this->crudOne,
             'two' => $this->crudTwo,
@@ -44,13 +45,13 @@ class CrudRegistryTest extends \PHPUnit_Framework_TestCase
 
     public function testGetUnknown()
     {
-        $this->setExpectedException(CrudNotFoundException::class);
+        $this->expectException(CrudNotFoundException::class);
         $this->registry->get('unknown');
     }
 
     public function testGetInvalidArgument()
     {
-        $this->setExpectedException(CrudNotFoundException::class);
+        $this->expectException(CrudNotFoundException::class);
         $this->registry->get(false);
     }
 
@@ -90,7 +91,7 @@ class CrudRegistryTest extends \PHPUnit_Framework_TestCase
         ];
         $registry = new CrudRegistry(new EntityResolver([]), $this->em, $cruds, $entityMap);
 
-        $this->setExpectedException(DuplicateCrudException::class);
+        $this->expectException(DuplicateCrudException::class);
         $registry->getNameForEntity('Entity\Item');
     }
 }

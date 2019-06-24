@@ -3,39 +3,47 @@
 namespace Perform\BaseBundle\FieldType;
 
 use Symfony\Component\Form\FormBuilderInterface;
-use Perform\BaseBundle\Exception\InvalidFieldException;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType as EntityFormType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Perform\BaseBundle\Entity\Tag;
 
 /**
- * Use the ``tag`` type for adding tags to different entities.
+ * Use the ``tag`` type for tagging entities with instances of ``Perform\BaseBundle\Entity\Tag``.
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class TagType extends EntityType
+class TagType extends AbstractType
 {
     /**
-     * @doc discriminator A string to distinguish this entity from
-     * others, e.g. 'blog_category' or 'project_group'
+     * @doc discriminator A string to distinguish this group of tags from
+     * others, e.g. 'blog_post_category' or 'project_group'
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        parent::configureOptions($resolver);
+        $resolver->setDefaults([
+            'class' => Tag::class,
+            'display_field' => 'title',
+            'multiple' => true,
+        ]);
+        $resolver->setAllowedTypes('class', 'string');
+        $resolver->setAllowedTypes('display_field', 'string');
+        $resolver->setAllowedTypes('multiple', 'boolean');
         $resolver->setRequired('discriminator');
         $resolver->setAllowedTypes('discriminator', 'string');
     }
 
     public function createContext(FormBuilderInterface $builder, $field, array $options = [])
     {
-        $builder->add($field, EntityFormType::class, [
+        $formOptions = [
             'class' => $options['class'],
             'choice_label' => $options['display_field'],
             'label' => $options['label'],
             'multiple' => $options['multiple'],
-            'query_builder' => function($repo) use ($options) {
+            'query_builder' => function ($repo) use ($options) {
                 return $repo->queryByDiscriminator($options['discriminator']);
-            }]);
+            },
+        ];
+        $builder->add($field, EntityFormType::class, array_merge($formOptions, $options['form_options']));
     }
 
     public function getDefaultConfig()
@@ -43,12 +51,6 @@ class TagType extends EntityType
         return [
             'template' => '@PerformBase/field_type/tag.html.twig',
             'sort' => false,
-            'options' => [
-                'multiple' => true,
-                'class' => 'PerformBaseBundle:Tag',
-                'display_field' => 'title',
-                'link_to' => false,
-            ]
         ];
     }
 }

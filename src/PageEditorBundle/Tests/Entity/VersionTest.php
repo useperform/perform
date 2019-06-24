@@ -2,6 +2,7 @@
 
 namespace Perform\PageEditorBundle\Tests\Entity;
 
+use PHPUnit\Framework\TestCase;
 use Perform\PageEditorBundle\Entity\Version;
 use Perform\PageEditorBundle\Entity\Section;
 use Perform\RichContentBundle\Entity\Content;
@@ -9,7 +10,7 @@ use Perform\RichContentBundle\Entity\Content;
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class VersionTest extends \PHPUnit_Framework_TestCase
+class VersionTest extends TestCase
 {
     public function testAddSection()
     {

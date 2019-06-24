@@ -10,10 +10,18 @@ use Symfony\Component\Finder\Finder;
 use Perform\BaseBundle\Doctrine\EntityResolver;
 use Perform\Licensing\Licensing;
 use Perform\BaseBundle\FieldType\FieldTypeInterface;
-use Perform\BaseBundle\FieldType\FieldTypeRegistry;
 use Money\Money;
 use Perform\BaseBundle\EventListener\SimpleMenuListener;
 use Perform\BaseBundle\Event\MenuEvent;
+use Perform\BaseBundle\Crud\CrudInterface;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Definition;
+use Perform\BaseBundle\Entity\Setting;
+use Perform\BaseBundle\Settings\Manager\DoctrineManager;
+use Perform\BaseBundle\Settings\Manager\CacheableManager;
+use Perform\BaseBundle\Settings\Manager\ParametersManager;
+use Symfony\Component\Serializer\Serializer;
+use Perform\DevBundle\PerformDevBundle;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -35,22 +43,41 @@ class PerformBaseExtension extends Extension
         if (class_exists(Money::class)) {
             $loader->load('services/money.yml');
         }
+        if (\class_exists(Serializer::class)) {
+            $loader->load('services/serializer.yml');
+        }
+        if (\class_exists(PerformDevBundle::class)) {
+            $loader->load('services/dev.yml');
+        }
 
         $container->setParameter('perform_base.menu_order', $config['menu']['order']);
         $container->setParameter('perform_base.auto_asset_version', uniqid());
         $container->setParameter('perform_base.assets.theme', $config['assets']['theme']);
-        $this->configureFieldTypeRegistry($container);
+        $this->configureCrud($container, $config);
         $this->findExtendedEntities($container, $config);
         $this->configureResolvedEntities($container, $config);
         $this->createSimpleMenus($container, $config['menu']['simple']);
         $this->configureAssets($container, $config['assets']);
+        $this->configureSettings($container, $config['settings']);
     }
 
-    protected function configureFieldTypeRegistry(ContainerBuilder $container)
+    protected function configureCrud(ContainerBuilder $container, array $config)
     {
-        $container->register('perform_base.field_type_registry', FieldTypeRegistry::class);
         $container->registerForAutoconfiguration(FieldTypeInterface::class)
             ->addTag('perform_base.field_type');
+
+        $container->registerForAutoconfiguration(CrudInterface::class)
+            ->addTag('perform_base.crud');
+
+        $container->getDefinition('perform_base.listener.crud_template')
+            ->setArgument(0, LoopableServiceLocator::createDefinition([
+                'registry' => new Reference('perform_base.crud.registry'),
+                'twig' => new Reference('twig'),
+            ]));
+
+        if ($config['security']['crud_voter'] !== true) {
+            $container->removeDefinition('perform_base.voter.crud');
+        }
     }
 
     protected function configureResolvedEntities(ContainerBuilder $container, array $config)
@@ -133,7 +160,6 @@ class PerformBaseExtension extends Extension
 
     protected function configureAssets(ContainerBuilder $container, array $config)
     {
-        Assets::addNpmConfig($container, __DIR__.'/../package.json');
         Assets::addEntryPoint($container, 'perform', [__DIR__.'/../Resources/src/perform.js', __DIR__.'/../Resources/scss/perform.scss']);
         Assets::addNamespace($container, 'perform-base', __DIR__.'/../Resources');
         Assets::addExtraJavascript($container, 'base', 'perform-base/src/module');
@@ -153,6 +179,36 @@ class PerformBaseExtension extends Extension
         // if no sass has been added, ensure that the extra_sass parameter will still be created
         if (!$container->hasParameter(Assets::PARAM_EXTRA_SASS)) {
             $container->setParameter(Assets::PARAM_EXTRA_SASS, []);
+        }
+    }
+
+    public function configureSettings(ContainerBuilder $container, array $config)
+    {
+        $managerService = 'perform_base.settings_manager';
+
+        switch ($config['manager']) {
+        case 'doctrine':
+            Doctrine::addExtraMapping($container, Setting::class, __DIR__.'/../Resources/config/doctrine_extra/Setting.orm.yml');
+            $manager = $container->register($managerService, DoctrineManager::class);
+            $manager->setArgument(0, new Reference('perform_base.repo.setting'));
+            $manager->setArgument(1, new Reference('doctrine.orm.entity_manager'));
+            break;
+        case 'parameters':
+            $manager = $container->register($managerService, ParametersManager::class);
+            $manager->setArgument(0, new Reference('service_container'));
+            break;
+        default:
+            // service
+            $container->setAlias($managerService, $config['manager']);
+            $manager = new Reference($config['manager']);
+        }
+
+        if (isset($config['cache'])) {
+            $cacheableManager = new Definition(CacheableManager::class);
+            $cacheableManager->setArgument(0, $manager);
+            $cacheableManager->setArgument(1, new Reference($config['cache']));
+            $cacheableManager->setArgument(2, $config['cache_expiry']);
+            $container->setDefinition($managerService, $cacheableManager);
         }
     }
 }

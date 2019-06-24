@@ -2,6 +2,7 @@
 
 namespace Perform\BaseBundle\Tests\Type;
 
+use PHPUnit\Framework\TestCase;
 use Perform\BaseBundle\Form\DataTransformer\IntegerToDurationTransformer;
 
 /**
@@ -9,7 +10,7 @@ use Perform\BaseBundle\Form\DataTransformer\IntegerToDurationTransformer;
  *
  * @author Glynn Forrest <me@glynnforrest.com>
  **/
-class IntegerToDurationTransformerTest extends \PHPUnit_Framework_TestCase
+class IntegerToDurationTransformerTest extends TestCase
 {
     public function setUp()
     {
