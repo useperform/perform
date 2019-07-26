@@ -1,0 +1,26 @@
+// Bootstrap functions are required by all imports.
+@import "~bootstrap/scss/functions";
+
+// Load a theme, which may contain customised bootstrap variables.
+@import "~perform-base/scss/themes/default.scss";
+
+// Import bootstrap for basic styles.
+// You could opt for a modular build by only importing select parts of bootstrap.
+@import "~bootstrap/scss/bootstrap";
+
+// Import styles from different bundles as required.
+// You must import the variables they require first.
+@import "~perform-base/scss/variables";
+@import "~perform-base/scss/font-awesome/global";
+@import "~perform-base/scss/header";
+@import "~perform-base/scss/sidebar";
+@import "~perform-base/scss/components";
+@import "~perform-base/scss/workspace";
+@import "~perform-base/scss/crud";
+@import "~perform-base/scss/types";
+
+// Load imports dumped by enabled components.
+@import "~select2/src/scss/core";
+
+// Add any extra styles here.
+// @import "custom"

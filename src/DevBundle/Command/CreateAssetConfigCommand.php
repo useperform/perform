@@ -35,6 +35,7 @@ class CreateAssetConfigCommand extends Command
         $files = [
             'package.json' => 'package.json.twig',
             'webpack.config.js' => 'webpack.config.js.twig',
+            'assets/scss/app.scss' => 'app.scss.twig',
         ];
         foreach ($files as $target => $source) {
             $this->creator->create($this->projectDir.'/'.$target, $this->creator->render($source));
