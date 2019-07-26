@@ -3,3 +3,11 @@ services:
         arguments:
         tags:
             - console.command
+
+    Perform\BaseBundle\Command\GenerateAssetNamespacesCommand:
+        arguments:
+            - '@perform_base.asset.dumper'
+            - '%kernel.project_dir%'
+            - '%perform_base.assets.namespaces%'
+        tags:
+            - console.command
