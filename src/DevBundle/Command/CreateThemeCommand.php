@@ -24,18 +24,40 @@ class CreateThemeCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this->setName('perform-dev:create:theme')
-            ->setDescription('Create scss theme files in a given directory')
-            ->addArgument('directory', InputArgument::REQUIRED, 'The directory to store the theme files, e.g. src/Resources/scss/themes/my-theme');
+            ->setDescription('Create a scss theme in a given directory')
+            ->addArgument('filename', InputArgument::REQUIRED, 'The filename, e.g. assets/scss/themes/my-theme.scss');
 
         FileCreator::addInputOptions($this);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $dir = trim($input->getArgument('directory'), '/').'/';
-        $this->creator->create($dir.'variables.scss', $this->creator->render('theme_variables.scss.twig'));
-        $this->creator->create($dir.'theme.scss', $this->creator->render('theme.scss.twig'));
+        $filename = $input->getArgument('filename');
 
-        $output->writeln(['', 'To use this theme, ensure an asset namespace exists for a parent directory (e.g. app -> src/Resources), then set the <comment>perform_base.assets.theme</comment> configuration node to the theme directory (e.g. "~app/scss/themes/my-theme).', 'Remember to start the reference with a tilde (~).']);
+        $this->creator->create($filename, $this->creator->render('theme.scss.twig'));
+
+        $withoutExtension = pathinfo($filename, PATHINFO_FILENAME);
+
+        $output->writeln(['', 'To use this theme, import it at the top of a scss file:', '']);
+        $output->write(<<<EOF
+<info>---</info>
+@import "~bootstrap/scss/functions";
+
+@import "path/to/themes/{$withoutExtension}";
+<info>---</info>
+
+EOF
+        );
+        $output->writeln(['', 'Or if you have an asset namespace configured:', '']);
+        $output->write(<<<EOF
+<info>---</info>
+@import "~bootstrap/scss/functions";
+
+@import "~myapp/scss/themes/{$withoutExtension}";
+<info>---</info>
+
+EOF
+        );
+        $output->writeln(['', 'Import paths are relative to the file they are imported from.', 'Remember to start a namespaced import with a tilde (~).']);
     }
 }
