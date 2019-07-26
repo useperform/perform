@@ -15,10 +15,19 @@
   }
 }
 
-.admin-flash-messages {
+@keyframes fade-out {
+  from {opacity:1;}
+  to {opacity:0;}
+}
+
+.p-flashes {
   position: fixed;
   width:600px;
   top: 100px;
   right: 50px;
   z-index: 1;
+
+  .removing {
+    animation: fade-out .5s;
+  }
 }
