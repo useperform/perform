@@ -118,3 +118,14 @@ $('.batch-action-button').click(function(e) {
   }
   runAction(href, action, $(this));
 });
+
+$('.table-crud tbody tr td').click(function(e) {
+  if (e.target === this) {
+    var checkbox = $(this).parent().find('.selector');
+    checkbox.prop('checked', !checkbox.prop('checked'));
+  }
+});
+
+$('.table-crud thead .batch-selector').change(function(e) {
+  $('.table-crud tbody input[type=checkbox].selector').prop('checked', $(this).prop('checked'));
+});
