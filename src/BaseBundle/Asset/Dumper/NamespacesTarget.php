@@ -23,10 +23,20 @@ class NamespacesTarget implements TargetInterface
 
     public function getContents()
     {
+        $lines = [];
         foreach ($this->namespaces as $name => $path) {
-            $data[$name] = rtrim($path, '/').'/';
+            $lines[] = sprintf('    "%s": path.resolve(__dirname, "../", "%s")', $name, rtrim($path, '/').'/');
         }
 
-        return sprintf('module.exports = %s'.PHP_EOL, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        $joinedLines = implode(','.PHP_EOL, $lines);
+
+        return <<<EOF
+var path = require('path');
+
+module.exports = {
+${joinedLines}
+}
+
+EOF;
     }
 }

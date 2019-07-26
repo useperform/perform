@@ -7,6 +7,7 @@ services:
     Perform\BaseBundle\Command\GenerateAssetNamespacesCommand:
         arguments:
             - '@perform_base.asset.dumper'
+            - '@filesystem'
             - '%kernel.project_dir%'
             - '%perform_base.assets.namespaces%'
         tags:

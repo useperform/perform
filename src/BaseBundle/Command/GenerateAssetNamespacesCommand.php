@@ -7,6 +7,7 @@ use Perform\BaseBundle\Asset\Dumper\NamespacesTarget;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 class GenerateAssetNamespacesCommand extends Command
 {
@@ -14,10 +15,14 @@ class GenerateAssetNamespacesCommand extends Command
     private $projectDir;
     private $namespaces;
 
-    public function __construct(Dumper $dumper, string $projectDir, array $namespaces)
+    public function __construct(Dumper $dumper, Filesystem $fs, string $projectDir, array $namespaces)
     {
         $this->dumper = $dumper;
         $this->projectDir = $projectDir;
+        foreach ($namespaces as $name => $path) {
+            $namespaces[$name] = $fs->makePathRelative($path, $this->projectDir);
+        }
+
         $this->namespaces = $namespaces;
         parent::__construct();
     }
