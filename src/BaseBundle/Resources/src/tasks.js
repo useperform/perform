@@ -6,26 +6,6 @@ const store = {
   tasks: [],
 };
 
-export function renderDropdown(el) {
-  new Vue({
-    el: el,
-    data: store,
-    render(h) {
-      return h(TaskList, {props: {tasks: this.tasks}});
-    }
-  });
-}
-
-export function renderCounter(el) {
-  new Vue({
-    el: el,
-    data: store,
-    render(h) {
-      return h(TaskCounter, {props: {tasks: this.tasks}});
-    }
-  });
-}
-
 export function add(title, current, max) {
   if (!current) {
     current = 0;
@@ -67,3 +47,26 @@ export function cancel(id) {
     return task.id !== id;
   });
 };
+
+new Vue({
+  el: '#p-tasks-dropdown',
+  data: store,
+  render(h) {
+    return h(TaskList, {props: {tasks: this.tasks}});
+  }
+});
+new Vue({
+  el: '#p-tasks-counter',
+  data: store,
+  render(h) {
+    return h(TaskCounter, {props: {tasks: this.tasks}});
+  }
+});
+
+window.addEventListener('beforeunload', function(e) {
+  if (getUnfinished().length > 0) {
+    var confirmationMessage = "You have unfinished tasks. Leave this page?";
+    e.returnValue = confirmationMessage;
+    return confirmationMessage;
+  }
+});
