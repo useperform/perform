@@ -16,9 +16,6 @@
     {% block body %}
       {% include '@PerformBase/_header.html.twig' %}
 
-      <div class="admin-flash-messages">
-      </div>
-
       <div class="wrapper">
         <div id="sidebar">
           {% include '@PerformBase/_sidebar.html.twig' %}
@@ -40,13 +37,23 @@
     {% endblock %}
 
     {% block js %}
-      {% include '@PerformBase/_scripts.html.twig' %}
-      {% include '@PerformBase/_flash_messages.html.twig' %}
-      {% for js in perform_asset_js() %}
-        <script type="text/javascript" src="{{asset(js)}}"></script>
-      {% endfor %}
+      <script src="{{asset('app.js')}}"></script>
+    {% endblock %}
+
+    {% block inline_js %}
       <script>
-       {% for js in perform_asset_inline_js() %}
+       {% if app.session.flashbag.peekAll() | length > 0 %}
+       (function() {
+         {% for class, messages in app.session.flashbag.all %}
+         {% for message in messages %}
+         Perform.showMessage('{{class}}', '{{message}}');
+         {% endfor %}
+         {% endfor %}
+       })();
+       {% endif %}
+
+       {% for index, js in perform_asset_inline_js() %}
+       // inline js {{index}}
        {{js|raw}}
        {% endfor %}
       </script>
