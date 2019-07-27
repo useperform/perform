@@ -52,7 +52,6 @@ class PerformBaseExtension extends Extension
 
         $container->setParameter('perform_base.menu_order', $config['menu']['order']);
         $container->setParameter('perform_base.auto_asset_version', uniqid());
-        $container->setParameter('perform_base.assets.theme', $config['assets']['theme']);
         $this->configureCrud($container, $config);
         $this->findExtendedEntities($container, $config);
         $this->configureResolvedEntities($container, $config);
@@ -160,26 +159,11 @@ class PerformBaseExtension extends Extension
 
     protected function configureAssets(ContainerBuilder $container, array $config)
     {
-        Assets::addEntryPoint($container, 'perform', [__DIR__.'/../Resources/src/perform.js', __DIR__.'/../Resources/scss/perform.scss']);
-        Assets::addNamespace($container, 'perform-base', __DIR__.'/../Resources');
-        Assets::addExtraJavascript($container, 'base', 'perform-base/src/module');
-
-        foreach ($config['entrypoints'] as $name => $path) {
-            Assets::addEntryPoint($container, $name, $path);
-        }
         foreach ($config['namespaces'] as $name => $path) {
             Assets::addNamespace($container, $name, $path);
         }
-        foreach ($config['extra_js'] as $name => $path) {
-            Assets::addExtraJavascript($container, $name, $path);
-        }
-        foreach ($config['extra_sass'] as $path) {
-            Assets::addExtraSass($container, $path);
-        }
-        // if no sass has been added, ensure that the extra_sass parameter will still be created
-        if (!$container->hasParameter(Assets::PARAM_EXTRA_SASS)) {
-            $container->setParameter(Assets::PARAM_EXTRA_SASS, []);
-        }
+
+        Assets::addNamespace($container, 'perform-base', __DIR__.'/../Resources');
     }
 
     public function configureSettings(ContainerBuilder $container, array $config)

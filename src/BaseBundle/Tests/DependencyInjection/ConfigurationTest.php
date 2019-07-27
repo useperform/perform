@@ -116,52 +116,9 @@ class ConfigurationTest extends TestCase
     {
         $config = $this->process([]);
         $expected = [
-            'entrypoints' => [],
             'namespaces' => [],
-            'extra_js' => [],
-            'extra_sass' => [],
-            'theme' => '~perform-base/scss/themes/default',
         ];
 
         $this->assertSame($expected, $config['assets']);
-    }
-
-    public function testValidAssetEntrypoints()
-    {
-        $config = $this->process([
-            'perform_base' => [
-                'assets' => [
-                    'entrypoints' => [
-                        'site' => 'site.js',
-                    ],
-                ],
-            ],
-        ]);
-        $this->assertSame('site.js', $config['assets']['entrypoints']['site']);
-
-        $config = $this->process([
-            'perform_base' => [
-                'assets' => [
-                    'entrypoints' => [
-                        'site' => ['site.js', 'site.scss'],
-                    ],
-                ],
-            ],
-        ]);
-        $this->assertSame(['site.js', 'site.scss'], $config['assets']['entrypoints']['site']);
-    }
-
-    public function testInvalidAssetEntrypoints()
-    {
-        $this->expectException(InvalidConfigurationException::class);
-        $this->process([
-            'perform_base' => [
-                'assets' => [
-                    'entrypoints' => [
-                        'site' => ['site.js', []],
-                    ],
-                ],
-            ],
-        ]);
     }
 }
