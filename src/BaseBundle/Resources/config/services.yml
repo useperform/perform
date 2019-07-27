@@ -295,18 +295,6 @@ services:
         tags:
             - {name: kernel.cache_warmer}
 
-    perform_base.listener.assets:
-        class: Perform\BaseBundle\EventListener\AssetsListener
-        arguments:
-            - '%kernel.project_dir%/asset-paths.js'
-            - '%perform_base.assets.namespaces%'
-            - '%perform_base.assets.entrypoints%'
-            - '%perform_base.assets.extra_sass%'
-            - '%perform_base.assets.extra_js%'
-            - '%perform_base.assets.theme%'
-        tags:
-            - {name: kernel.event_listener, event: perform_base.asset_dump.add, method: onAddAssets}
-
     perform_base.installer.assets:
         class: Perform\BaseBundle\Installer\AssetsInstaller
         tags:
