@@ -4,12 +4,6 @@
 
 src/*/vendor
 src/*/composer.lock
-src/BaseBundle/Resources/node_modules
-src/BaseBundle/Resources/public
-src/BaseBundle/Resources/scss/_extras.scss
-src/BaseBundle/Resources/scss/_theme.scss
-src/BaseBundle/Resources/scss/_theme_variables.scss
-src/BaseBundle/Resources/src/modules.js
 src/MediaPlayerBundle/Resources/public
 src/RichContentBundle/Resources/js/components/blocktypes.js
 
