@@ -22,7 +22,7 @@ class UpdateNpmDependenciesCommand extends Command
 
     protected function configure()
     {
-        $this->setName('perform:update-npm-dependencies')
+        $this->setName('perform:assets:update-npm-dependencies')
             ->setDescription('Automatically find npm dependencies from enabled bundles and add them to this project\'s package.json')
             ->addOption('dry-run', '', InputOption::VALUE_NONE)
             ->addOption('force', '', InputOption::VALUE_NONE);
