@@ -48,6 +48,11 @@ export function cancel(id) {
   });
 };
 
+let confirmOnExit;
+export function confirmExit(confirm) {
+  confirmOnExit = !!confirm;
+}
+
 new Vue({
   el: '#p-tasks-dropdown',
   data: store,
@@ -64,7 +69,7 @@ new Vue({
 });
 
 window.addEventListener('beforeunload', function(e) {
-  if (getUnfinished().length > 0) {
+  if (confirmOnExit && getUnfinished().length > 0) {
     var confirmationMessage = "You have unfinished tasks. Leave this page?";
     e.returnValue = confirmationMessage;
     return confirmationMessage;
