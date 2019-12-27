@@ -1,0 +1,12 @@
+steps:
+  - label: 'lint'
+    commands:
+      - 'docker run -i --rm --user $(id -u):$(id -g) -v $(pwd):/code milchundzucker/php-parallel-lint:latest /code/src'
+
+  - label: 'test'
+    commands:
+      - 'docker build -t perform:$BUILDKITE_COMMIT --build-arg PHP_VERSION=7.1 .'
+      - 'docker run -i --rm perform:$BUILDKITE_COMMIT php -v'
+      - 'docker run -i --rm --user $(id -u):$(id -g) -v $(pwd):/code perform:$BUILDKITE_COMMIT bin/generate-root-composer-config.php'
+      - 'docker run -i --rm --user $(id -u):$(id -g) -v $(pwd):/app composer update --profile --ignore-platform-reqs'
+      - 'docker run -i --rm --user $(id -u):$(id -g) -v $(pwd):/code -w /code perform:$BUILDKITE_COMMIT ./vendor/bin/phpunit'
