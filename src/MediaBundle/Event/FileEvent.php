@@ -3,13 +3,9 @@
 namespace Perform\MediaBundle\Event;
 
 use Perform\MediaBundle\Entity\File;
+use Perform\MediaBundle\MediaResource;
 use Symfony\Component\EventDispatcher\Event;
 
-/**
- * FileEvent.
- *
- * @author Glynn Forrest <me@glynnforrest.com>
- **/
 class FileEvent extends Event
 {
     //called when adding a new file
@@ -21,15 +17,22 @@ class FileEvent extends Event
     //called when a file is deleted
     const DELETE = 'perform_media.file.delete';
 
-    protected $file;
+    private $file;
+    private $resource;
 
-    public function __construct(File $file)
+    public function __construct(File $file, MediaResource $resource = null)
     {
         $this->file = $file;
+        $this->resource = $resource;
     }
 
     public function getFile()
     {
         return $this->file;
+    }
+
+    public function getResource()
+    {
+        return $this->resource;
     }
 }

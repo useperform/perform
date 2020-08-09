@@ -96,7 +96,7 @@ class FileImporter
         }
         $file->setPrimaryLocation($location);
 
-        $this->dispatcher->dispatch(FileEvent::CREATE, new FileEvent($file));
+        $this->dispatcher->dispatch(FileEvent::CREATE, new FileEvent($file, $resource));
         $this->entityManager->persist($file);
         $this->entityManager->flush();
 
