@@ -7,6 +7,7 @@ use Imagine\Image\ImagineInterface;
 use Perform\MediaBundle\MediaResource;
 use Perform\MediaBundle\Bucket\BucketInterface;
 use Perform\MediaBundle\Entity\Location;
+use Imagine\Exception\RuntimeException;
 
 /**
  * @author Glynn Forrest <me@glynnforrest.com>
@@ -34,16 +35,20 @@ class ImageType implements MediaTypeInterface
         }
 
         $mimeType = $resource->getParseResult()->getMimeType();
-        if (substr($mimeType, 0, 6) !== 'image/') {
-            return false;
-        }
-        //no support for icon files for now - GD blows up
-        return $mimeType !== 'image/x-icon';
+
+        return substr($mimeType, 0, 6) === 'image/';
     }
 
     public function process(File $file, MediaResource $resource, BucketInterface $bucket)
     {
-        $image = $this->imagine->read(fopen($resource->getPath(), 'r'));
+        try {
+            $image = $this->imagine->read(fopen($resource->getPath(), 'r'));
+        } catch (RuntimeException $e) {
+            // Likely an image that can't be opened by imagine - SVG, icon,
+            // etc.
+            return;
+        }
+
         $box = $image->getSize();
         $location = $file->getPrimaryLocation();
         $location->setAttribute('width', $box->getWidth());
